@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_switch
 description:
     - Configure slb switch
-short_description: Configures A10 slb.switch
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -115,288 +126,377 @@ options:
           'ip_not_found_arp_drop'= ARP PKT dropped due to IP not found;
           'dev_link_down_arp_drop'= ARP PKT dropped due to interface is down;
           'lacp_tx_intf_err_drop'= LACP interface error corrected;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            bwl_drop:
-                description:
-                - "BW Limit Drop"
-            ipfrag_tcp:
-                description:
-                - "IP(TCP) Fragment Rcvd"
-            ipipv6_jumbo_frag_drop:
-                description:
-                - "IPIPv6 Jumbo Frag Drop"
-            ipfrag_ospf:
-                description:
-                - "IP(OSPF) Fragment Rcvd"
-            dev_based_arp_drop:
-                description:
-                - "ARP PKT dropped due to interface state checks"
-            rx_arp_resp:
-                description:
-                - "ARP RESP Rcvd"
-            l4_process:
-                description:
-                - "L4 Process"
-            ipv6frag_tcp:
-                description:
-                - "IPv6 Frag TCP"
-            redirect_fwd_sent:
-                description:
-                - "Redirect succeeded in the fwd direction"
-            ipv4_frag_6rd_drop:
-                description:
-                - "IPv4 Frag 6RD Dropped"
-            sport_drop:
-                description:
-                - "SPORT Drop"
-            ipfrag_overlap:
-                description:
-                - "IP Fragment Overlap"
-            bpdu_sent:
-                description:
-                - "BPDUs Sent"
-            invalid_rx_arp_pkt:
-                description:
-                - "Invalid ARP PKT Rcvd"
-            ipfrag_ipip_dropped:
-                description:
-                - "IP Frag IPIP Drop"
-            linkdown_drop:
-                description:
-                - "Link Down Drop"
-            ipfrag_reasmoks:
-                description:
-                - "IP Fragment Reasm OKs"
-            ipv6_novlanfwd_drop:
-                description:
-                - "IPv6 No L3 VLAN FWD Drop"
-            badpkt_drop:
-                description:
-                - "Bad Pkt Drop"
-            l2_forward:
-                description:
-                - "L2 Forward"
-            rx_arp_req:
-                description:
-                - "ARP REQ Rcvd"
-            ipv4_frag_6rd_ok:
-                description:
-                - "IPv4 Frag 6RD OK"
-            no_ip_drop:
-                description:
-                - "No IP Drop"
-            l2_def_vlan_drop:
-                description:
-                - "L2 Default Vlan FWD Drop"
-            ip_frag_sent:
-                description:
-                - "IP frag sent"
-            ipv6frag_tcp_dropped:
-                description:
-                - "IPv6 Frag TCP Dropped"
-            bpdu_rcvd:
-                description:
-                - "BPDUs Received"
-            licexpire_drop:
-                description:
-                - "License Expire Drop"
-            prot_down_drop:
-                description:
-                - "Prot Down Drop"
-            unknown_prot_drop:
-                description:
-                - "Unknown Prot Drop"
-            fpga_error_pkt1:
-                description:
-                - "FPGA Error PKT1"
-            fpga_error_pkt2:
-                description:
-                - "FPGA Error PKT2"
-            ipfrag_udp:
-                description:
-                - "IP(UDP) Fragment Rcvd"
-            mgmt_svc_drop:
-                description:
-                - "Management Service Drop"
-            ipfrag_reasmfails:
-                description:
-                - "IP Fragment Reasm Fails"
-            ip_not_found_arp_drop:
-                description:
-                - "ARP PKT dropped due to IP not found"
-            l3_forward_ip:
-                description:
-                - "L3 IP Forward"
-            l3_forward_ipv6:
-                description:
-                - "L3 IPv6 Forward"
-            ipfrag_overload:
-                description:
-                - "IP Frag Overload Drops"
-            ip_frag_oversize:
-                description:
-                - "IP Fragment oversize"
-            ipfrag_udp_dropped:
-                description:
-                - "IP Frag UDP Dropped"
-            ipv6frag_udp:
-                description:
-                - "IPv6 Frag UDP"
-            jumbo_frag_drop:
-                description:
-                - "Jumbo Frag Drop"
-            ipv6_ndisc_dad_solicits:
-                description:
-                - "IPv6 DAD on Solicits"
-            lacp_tx_intf_err_drop:
-                description:
-                - "LACP interface error corrected"
             fwlb:
                 description:
                 - "FWLB"
-            redirect_fwd_fail:
+                type: str
+            licexpire_drop:
                 description:
-                - "Redirect failed in the fwd direction"
-            ipv6frag_ipip_ok:
+                - "License Expire Drop"
+                type: str
+            bwl_drop:
                 description:
-                - "IPv6 Frag IPIP OKs"
-            ipfrag_esp:
-                description:
-                - "IP(ESP) Fragment Rcvd"
-            redirect_rev_fail:
-                description:
-                - "Redirect failed in the rev direction"
+                - "BW Limit Drop"
+                type: str
             rx_kernel:
                 description:
                 - "Received kernel"
-            fw_smp_zone_mismatch:
+                type: str
+            rx_arp_req:
                 description:
-                - "FW SMP Zone Mismatch"
-            ctrl_syn_rate_drop:
+                - "ARP REQ Rcvd"
+                type: str
+            rx_arp_resp:
                 description:
-                - "SYN rate exceeded Drop"
-            self_grat_nat_ip_arp_drop:
-                description:
-                - "Self generated grat ARP PKT dropped for NAT IP"
-            ipv6frag_udp_dropped:
-                description:
-                - "IPv6 Frag UDP Dropped"
-            ip_frag_too_many:
-                description:
-                - "IP Fragment too many"
-            ipfrag_tcp_dropped:
-                description:
-                - "IP Frag TCP Dropped"
-            ipv6_jumbo_frag_drop:
-                description:
-                - "IPv6 Jumbo Frag Drop"
-            invalid_sender_mac_arp_drop:
-                description:
-                - "ARP PKT dropped due to invalid sender MAC"
-            inactive_static_nat_pool_arp_drop:
-                description:
-                - "ARP PKT dropped due to inactive static nat pool"
-            ipsec_drop:
-                description:
-                - "IPSec Drop"
-            self_grat_arp_drop:
-                description:
-                - "Self generated grat ARP PKT dropped"
-            inactive_nat_pool_arp_drop:
-                description:
-                - "ARP PKT dropped due to inactive nat pool"
-            scaleout_hairpin_arp_drop:
-                description:
-                - "ARP PKT dropped due to scaleout hairpin checks"
-            urpf_pkt_drop:
-                description:
-                - "URPF check packet drop"
-            l4_in_ctrl_cpu:
-                description:
-                - "L4 In Ctrl CPU"
-            ipfrag_icmp:
-                description:
-                - "IP(ICMP) Fragment Rcvd"
-            redirect_setup_fail:
-                description:
-                - "Redirect connection setup failed"
-            ipfrag_timeout:
-                description:
-                - "IP Fragment Timeout"
+                - "ARP RESP Rcvd"
+                type: str
             vlan_flood:
                 description:
                 - "VLAN Flood"
-            scaleout_arp_drop:
+                type: str
+            l2_def_vlan_drop:
                 description:
-                - "ARP PKT dropped due to scaleout checks"
-            ttl_exceeded_drop:
-                description:
-                - "TTL Exceeded Drop"
-            acl_deny:
-                description:
-                - "ACL Denys"
-            ip_defrag:
-                description:
-                - "IP Defrag"
-            incorrect_len_drop:
-                description:
-                - "Incorrect Length Drop"
-            ip_defrag_invalid_len:
-                description:
-                - "IP Invalid Length Frag"
-            ipv6_ndisc_out_of_memory:
-                description:
-                - "IPv6 DAD Out-of-memory"
-            sp_non_ctrl_pkt_drop:
-                description:
-                - "Shared IP mode non ctrl packet to linux drop"
-            virtual_ip_not_found_arp_drop:
-                description:
-                - "ARP PKT dropped due to virtual IP not found"
-            ipv6frag_ipip_dropped:
-                description:
-                - "IPv6 Frag IPIP Drop"
-            ipv6_ndisc_mac_changes:
-                description:
-                - "IPv6 DAD MAC Changed"
-            ipv6_noroute_drop:
-                description:
-                - "IPv6 No Route Drop"
-            ipv6frag_icmp:
-                description:
-                - "IPv6 Frag ICMP"
+                - "L2 Default Vlan FWD Drop"
+                type: str
             ipv4_noroute_drop:
                 description:
                 - "IPv4 No Route Drop"
-            max_arp_drop:
+                type: str
+            ipv6_noroute_drop:
                 description:
-                - "Max ARP Drop"
-            ipv6_ndisc_dad_adverts:
+                - "IPv6 No Route Drop"
+                type: str
+            prot_down_drop:
                 description:
-                - "IPv6 DAD on Adverts"
-            redirect_rev_sent:
+                - "Prot Down Drop"
+                type: str
+            l2_forward:
                 description:
-                - "Redirect succeeded in the rev direction"
-            ipv6frag_esp:
+                - "L2 Forward"
+                type: str
+            l3_forward_ip:
                 description:
-                - "IPv6 Frag ESP"
-            ipv6frag_ospf:
+                - "L3 IP Forward"
+                type: str
+            l3_forward_ipv6:
                 description:
-                - "IPv6 Frag OSPF"
-            dev_link_down_arp_drop:
+                - "L3 IPv6 Forward"
+                type: str
+            l4_process:
                 description:
-                - "ARP PKT dropped due to interface is down"
+                - "L4 Process"
+                type: str
+            unknown_prot_drop:
+                description:
+                - "Unknown Prot Drop"
+                type: str
+            ttl_exceeded_drop:
+                description:
+                - "TTL Exceeded Drop"
+                type: str
+            linkdown_drop:
+                description:
+                - "Link Down Drop"
+                type: str
+            sport_drop:
+                description:
+                - "SPORT Drop"
+                type: str
+            incorrect_len_drop:
+                description:
+                - "Incorrect Length Drop"
+                type: str
+            ip_defrag:
+                description:
+                - "IP Defrag"
+                type: str
+            acl_deny:
+                description:
+                - "ACL Denys"
+                type: str
+            ipfrag_tcp:
+                description:
+                - "IP(TCP) Fragment Rcvd"
+                type: str
+            ipfrag_overlap:
+                description:
+                - "IP Fragment Overlap"
+                type: str
+            ipfrag_timeout:
+                description:
+                - "IP Fragment Timeout"
+                type: str
+            ipfrag_overload:
+                description:
+                - "IP Frag Overload Drops"
+                type: str
+            ipfrag_reasmoks:
+                description:
+                - "IP Fragment Reasm OKs"
+                type: str
+            ipfrag_reasmfails:
+                description:
+                - "IP Fragment Reasm Fails"
+                type: str
+            badpkt_drop:
+                description:
+                - "Bad Pkt Drop"
+                type: str
+            ipsec_drop:
+                description:
+                - "IPSec Drop"
+                type: str
+            bpdu_rcvd:
+                description:
+                - "BPDUs Received"
+                type: str
+            bpdu_sent:
+                description:
+                - "BPDUs Sent"
+                type: str
+            ctrl_syn_rate_drop:
+                description:
+                - "SYN rate exceeded Drop"
+                type: str
+            ip_defrag_invalid_len:
+                description:
+                - "IP Invalid Length Frag"
+                type: str
+            ipv4_frag_6rd_ok:
+                description:
+                - "IPv4 Frag 6RD OK"
+                type: str
+            ipv4_frag_6rd_drop:
+                description:
+                - "IPv4 Frag 6RD Dropped"
+                type: str
+            no_ip_drop:
+                description:
+                - "No IP Drop"
+                type: str
+            ipv6frag_udp:
+                description:
+                - "IPv6 Frag UDP"
+                type: str
+            ipv6frag_udp_dropped:
+                description:
+                - "IPv6 Frag UDP Dropped"
+                type: str
+            ipv6frag_tcp_dropped:
+                description:
+                - "IPv6 Frag TCP Dropped"
+                type: str
+            ipv6frag_ipip_ok:
+                description:
+                - "IPv6 Frag IPIP OKs"
+                type: str
+            ipv6frag_ipip_dropped:
+                description:
+                - "IPv6 Frag IPIP Drop"
+                type: str
+            ip_frag_oversize:
+                description:
+                - "IP Fragment oversize"
+                type: str
+            ip_frag_too_many:
+                description:
+                - "IP Fragment too many"
+                type: str
             ipv4_novlanfwd_drop:
                 description:
                 - "IPv4 No L3 VLAN FWD Drop"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ipv6_novlanfwd_drop:
+                description:
+                - "IPv6 No L3 VLAN FWD Drop"
+                type: str
+            fpga_error_pkt1:
+                description:
+                - "FPGA Error PKT1"
+                type: str
+            fpga_error_pkt2:
+                description:
+                - "FPGA Error PKT2"
+                type: str
+            max_arp_drop:
+                description:
+                - "Max ARP Drop"
+                type: str
+            ipv6frag_tcp:
+                description:
+                - "IPv6 Frag TCP"
+                type: str
+            ipv6frag_icmp:
+                description:
+                - "IPv6 Frag ICMP"
+                type: str
+            ipv6frag_ospf:
+                description:
+                - "IPv6 Frag OSPF"
+                type: str
+            ipv6frag_esp:
+                description:
+                - "IPv6 Frag ESP"
+                type: str
+            l4_in_ctrl_cpu:
+                description:
+                - "L4 In Ctrl CPU"
+                type: str
+            mgmt_svc_drop:
+                description:
+                - "Management Service Drop"
+                type: str
+            jumbo_frag_drop:
+                description:
+                - "Jumbo Frag Drop"
+                type: str
+            ipv6_jumbo_frag_drop:
+                description:
+                - "IPv6 Jumbo Frag Drop"
+                type: str
+            ipipv6_jumbo_frag_drop:
+                description:
+                - "IPIPv6 Jumbo Frag Drop"
+                type: str
+            ipv6_ndisc_dad_solicits:
+                description:
+                - "IPv6 DAD on Solicits"
+                type: str
+            ipv6_ndisc_dad_adverts:
+                description:
+                - "IPv6 DAD on Adverts"
+                type: str
+            ipv6_ndisc_mac_changes:
+                description:
+                - "IPv6 DAD MAC Changed"
+                type: str
+            ipv6_ndisc_out_of_memory:
+                description:
+                - "IPv6 DAD Out-of-memory"
+                type: str
+            sp_non_ctrl_pkt_drop:
+                description:
+                - "Shared IP mode non ctrl packet to linux drop"
+                type: str
+            urpf_pkt_drop:
+                description:
+                - "URPF check packet drop"
+                type: str
+            fw_smp_zone_mismatch:
+                description:
+                - "FW SMP Zone Mismatch"
+                type: str
+            ipfrag_udp:
+                description:
+                - "IP(UDP) Fragment Rcvd"
+                type: str
+            ipfrag_icmp:
+                description:
+                - "IP(ICMP) Fragment Rcvd"
+                type: str
+            ipfrag_ospf:
+                description:
+                - "IP(OSPF) Fragment Rcvd"
+                type: str
+            ipfrag_esp:
+                description:
+                - "IP(ESP) Fragment Rcvd"
+                type: str
+            ipfrag_tcp_dropped:
+                description:
+                - "IP Frag TCP Dropped"
+                type: str
+            ipfrag_udp_dropped:
+                description:
+                - "IP Frag UDP Dropped"
+                type: str
+            ipfrag_ipip_dropped:
+                description:
+                - "IP Frag IPIP Drop"
+                type: str
+            redirect_fwd_fail:
+                description:
+                - "Redirect failed in the fwd direction"
+                type: str
+            redirect_fwd_sent:
+                description:
+                - "Redirect succeeded in the fwd direction"
+                type: str
+            redirect_rev_fail:
+                description:
+                - "Redirect failed in the rev direction"
+                type: str
+            redirect_rev_sent:
+                description:
+                - "Redirect succeeded in the rev direction"
+                type: str
+            redirect_setup_fail:
+                description:
+                - "Redirect connection setup failed"
+                type: str
+            ip_frag_sent:
+                description:
+                - "IP frag sent"
+                type: str
+            invalid_rx_arp_pkt:
+                description:
+                - "Invalid ARP PKT Rcvd"
+                type: str
+            invalid_sender_mac_arp_drop:
+                description:
+                - "ARP PKT dropped due to invalid sender MAC"
+                type: str
+            dev_based_arp_drop:
+                description:
+                - "ARP PKT dropped due to interface state checks"
+                type: str
+            scaleout_arp_drop:
+                description:
+                - "ARP PKT dropped due to scaleout checks"
+                type: str
+            virtual_ip_not_found_arp_drop:
+                description:
+                - "ARP PKT dropped due to virtual IP not found"
+                type: str
+            inactive_static_nat_pool_arp_drop:
+                description:
+                - "ARP PKT dropped due to inactive static nat pool"
+                type: str
+            inactive_nat_pool_arp_drop:
+                description:
+                - "ARP PKT dropped due to inactive nat pool"
+                type: str
+            scaleout_hairpin_arp_drop:
+                description:
+                - "ARP PKT dropped due to scaleout hairpin checks"
+                type: str
+            self_grat_arp_drop:
+                description:
+                - "Self generated grat ARP PKT dropped"
+                type: str
+            self_grat_nat_ip_arp_drop:
+                description:
+                - "Self generated grat ARP PKT dropped for NAT IP"
+                type: str
+            ip_not_found_arp_drop:
+                description:
+                - "ARP PKT dropped due to IP not found"
+                type: str
+            dev_link_down_arp_drop:
+                description:
+                - "ARP PKT dropped due to interface is down"
+                type: str
+            lacp_tx_intf_err_drop:
+                description:
+                - "LACP interface error corrected"
+                type: str
 
 '''
 
@@ -451,6 +551,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -503,112 +606,40 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'bwl_drop': {
-                'type': 'str',
-            },
-            'ipfrag_tcp': {
-                'type': 'str',
-            },
-            'ipipv6_jumbo_frag_drop': {
-                'type': 'str',
-            },
-            'ipfrag_ospf': {
-                'type': 'str',
-            },
-            'dev_based_arp_drop': {
-                'type': 'str',
-            },
-            'rx_arp_resp': {
-                'type': 'str',
-            },
-            'l4_process': {
-                'type': 'str',
-            },
-            'ipv6frag_tcp': {
-                'type': 'str',
-            },
-            'redirect_fwd_sent': {
-                'type': 'str',
-            },
-            'ipv4_frag_6rd_drop': {
-                'type': 'str',
-            },
-            'sport_drop': {
-                'type': 'str',
-            },
-            'ipfrag_overlap': {
-                'type': 'str',
-            },
-            'bpdu_sent': {
-                'type': 'str',
-            },
-            'invalid_rx_arp_pkt': {
-                'type': 'str',
-            },
-            'ipfrag_ipip_dropped': {
-                'type': 'str',
-            },
-            'linkdown_drop': {
-                'type': 'str',
-            },
-            'ipfrag_reasmoks': {
-                'type': 'str',
-            },
-            'ipv6_novlanfwd_drop': {
-                'type': 'str',
-            },
-            'badpkt_drop': {
-                'type': 'str',
-            },
-            'l2_forward': {
-                'type': 'str',
-            },
-            'rx_arp_req': {
-                'type': 'str',
-            },
-            'ipv4_frag_6rd_ok': {
-                'type': 'str',
-            },
-            'no_ip_drop': {
-                'type': 'str',
-            },
-            'l2_def_vlan_drop': {
-                'type': 'str',
-            },
-            'ip_frag_sent': {
-                'type': 'str',
-            },
-            'ipv6frag_tcp_dropped': {
-                'type': 'str',
-            },
-            'bpdu_rcvd': {
+            'fwlb': {
                 'type': 'str',
             },
             'licexpire_drop': {
                 'type': 'str',
             },
+            'bwl_drop': {
+                'type': 'str',
+            },
+            'rx_kernel': {
+                'type': 'str',
+            },
+            'rx_arp_req': {
+                'type': 'str',
+            },
+            'rx_arp_resp': {
+                'type': 'str',
+            },
+            'vlan_flood': {
+                'type': 'str',
+            },
+            'l2_def_vlan_drop': {
+                'type': 'str',
+            },
+            'ipv4_noroute_drop': {
+                'type': 'str',
+            },
+            'ipv6_noroute_drop': {
+                'type': 'str',
+            },
             'prot_down_drop': {
                 'type': 'str',
             },
-            'unknown_prot_drop': {
-                'type': 'str',
-            },
-            'fpga_error_pkt1': {
-                'type': 'str',
-            },
-            'fpga_error_pkt2': {
-                'type': 'str',
-            },
-            'ipfrag_udp': {
-                'type': 'str',
-            },
-            'mgmt_svc_drop': {
-                'type': 'str',
-            },
-            'ipfrag_reasmfails': {
-                'type': 'str',
-            },
-            'ip_not_found_arp_drop': {
+            'l2_forward': {
                 'type': 'str',
             },
             'l3_forward_ip': {
@@ -617,118 +648,145 @@ def get_argspec():
             'l3_forward_ipv6': {
                 'type': 'str',
             },
-            'ipfrag_overload': {
+            'l4_process': {
                 'type': 'str',
             },
-            'ip_frag_oversize': {
-                'type': 'str',
-            },
-            'ipfrag_udp_dropped': {
-                'type': 'str',
-            },
-            'ipv6frag_udp': {
-                'type': 'str',
-            },
-            'jumbo_frag_drop': {
-                'type': 'str',
-            },
-            'ipv6_ndisc_dad_solicits': {
-                'type': 'str',
-            },
-            'lacp_tx_intf_err_drop': {
-                'type': 'str',
-            },
-            'fwlb': {
-                'type': 'str',
-            },
-            'redirect_fwd_fail': {
-                'type': 'str',
-            },
-            'ipv6frag_ipip_ok': {
-                'type': 'str',
-            },
-            'ipfrag_esp': {
-                'type': 'str',
-            },
-            'redirect_rev_fail': {
-                'type': 'str',
-            },
-            'rx_kernel': {
-                'type': 'str',
-            },
-            'fw_smp_zone_mismatch': {
-                'type': 'str',
-            },
-            'ctrl_syn_rate_drop': {
-                'type': 'str',
-            },
-            'self_grat_nat_ip_arp_drop': {
-                'type': 'str',
-            },
-            'ipv6frag_udp_dropped': {
-                'type': 'str',
-            },
-            'ip_frag_too_many': {
-                'type': 'str',
-            },
-            'ipfrag_tcp_dropped': {
-                'type': 'str',
-            },
-            'ipv6_jumbo_frag_drop': {
-                'type': 'str',
-            },
-            'invalid_sender_mac_arp_drop': {
-                'type': 'str',
-            },
-            'inactive_static_nat_pool_arp_drop': {
-                'type': 'str',
-            },
-            'ipsec_drop': {
-                'type': 'str',
-            },
-            'self_grat_arp_drop': {
-                'type': 'str',
-            },
-            'inactive_nat_pool_arp_drop': {
-                'type': 'str',
-            },
-            'scaleout_hairpin_arp_drop': {
-                'type': 'str',
-            },
-            'urpf_pkt_drop': {
-                'type': 'str',
-            },
-            'l4_in_ctrl_cpu': {
-                'type': 'str',
-            },
-            'ipfrag_icmp': {
-                'type': 'str',
-            },
-            'redirect_setup_fail': {
-                'type': 'str',
-            },
-            'ipfrag_timeout': {
-                'type': 'str',
-            },
-            'vlan_flood': {
-                'type': 'str',
-            },
-            'scaleout_arp_drop': {
+            'unknown_prot_drop': {
                 'type': 'str',
             },
             'ttl_exceeded_drop': {
                 'type': 'str',
             },
-            'acl_deny': {
+            'linkdown_drop': {
                 'type': 'str',
             },
-            'ip_defrag': {
+            'sport_drop': {
                 'type': 'str',
             },
             'incorrect_len_drop': {
                 'type': 'str',
             },
+            'ip_defrag': {
+                'type': 'str',
+            },
+            'acl_deny': {
+                'type': 'str',
+            },
+            'ipfrag_tcp': {
+                'type': 'str',
+            },
+            'ipfrag_overlap': {
+                'type': 'str',
+            },
+            'ipfrag_timeout': {
+                'type': 'str',
+            },
+            'ipfrag_overload': {
+                'type': 'str',
+            },
+            'ipfrag_reasmoks': {
+                'type': 'str',
+            },
+            'ipfrag_reasmfails': {
+                'type': 'str',
+            },
+            'badpkt_drop': {
+                'type': 'str',
+            },
+            'ipsec_drop': {
+                'type': 'str',
+            },
+            'bpdu_rcvd': {
+                'type': 'str',
+            },
+            'bpdu_sent': {
+                'type': 'str',
+            },
+            'ctrl_syn_rate_drop': {
+                'type': 'str',
+            },
             'ip_defrag_invalid_len': {
+                'type': 'str',
+            },
+            'ipv4_frag_6rd_ok': {
+                'type': 'str',
+            },
+            'ipv4_frag_6rd_drop': {
+                'type': 'str',
+            },
+            'no_ip_drop': {
+                'type': 'str',
+            },
+            'ipv6frag_udp': {
+                'type': 'str',
+            },
+            'ipv6frag_udp_dropped': {
+                'type': 'str',
+            },
+            'ipv6frag_tcp_dropped': {
+                'type': 'str',
+            },
+            'ipv6frag_ipip_ok': {
+                'type': 'str',
+            },
+            'ipv6frag_ipip_dropped': {
+                'type': 'str',
+            },
+            'ip_frag_oversize': {
+                'type': 'str',
+            },
+            'ip_frag_too_many': {
+                'type': 'str',
+            },
+            'ipv4_novlanfwd_drop': {
+                'type': 'str',
+            },
+            'ipv6_novlanfwd_drop': {
+                'type': 'str',
+            },
+            'fpga_error_pkt1': {
+                'type': 'str',
+            },
+            'fpga_error_pkt2': {
+                'type': 'str',
+            },
+            'max_arp_drop': {
+                'type': 'str',
+            },
+            'ipv6frag_tcp': {
+                'type': 'str',
+            },
+            'ipv6frag_icmp': {
+                'type': 'str',
+            },
+            'ipv6frag_ospf': {
+                'type': 'str',
+            },
+            'ipv6frag_esp': {
+                'type': 'str',
+            },
+            'l4_in_ctrl_cpu': {
+                'type': 'str',
+            },
+            'mgmt_svc_drop': {
+                'type': 'str',
+            },
+            'jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'ipv6_jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'ipipv6_jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_dad_solicits': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_dad_adverts': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_mac_changes': {
                 'type': 'str',
             },
             'ipv6_ndisc_out_of_memory': {
@@ -737,48 +795,90 @@ def get_argspec():
             'sp_non_ctrl_pkt_drop': {
                 'type': 'str',
             },
-            'virtual_ip_not_found_arp_drop': {
+            'urpf_pkt_drop': {
                 'type': 'str',
             },
-            'ipv6frag_ipip_dropped': {
+            'fw_smp_zone_mismatch': {
                 'type': 'str',
             },
-            'ipv6_ndisc_mac_changes': {
+            'ipfrag_udp': {
                 'type': 'str',
             },
-            'ipv6_noroute_drop': {
+            'ipfrag_icmp': {
                 'type': 'str',
             },
-            'ipv6frag_icmp': {
+            'ipfrag_ospf': {
                 'type': 'str',
             },
-            'ipv4_noroute_drop': {
+            'ipfrag_esp': {
                 'type': 'str',
             },
-            'max_arp_drop': {
+            'ipfrag_tcp_dropped': {
                 'type': 'str',
             },
-            'ipv6_ndisc_dad_adverts': {
+            'ipfrag_udp_dropped': {
+                'type': 'str',
+            },
+            'ipfrag_ipip_dropped': {
+                'type': 'str',
+            },
+            'redirect_fwd_fail': {
+                'type': 'str',
+            },
+            'redirect_fwd_sent': {
+                'type': 'str',
+            },
+            'redirect_rev_fail': {
                 'type': 'str',
             },
             'redirect_rev_sent': {
                 'type': 'str',
             },
-            'ipv6frag_esp': {
+            'redirect_setup_fail': {
                 'type': 'str',
             },
-            'ipv6frag_ospf': {
+            'ip_frag_sent': {
+                'type': 'str',
+            },
+            'invalid_rx_arp_pkt': {
+                'type': 'str',
+            },
+            'invalid_sender_mac_arp_drop': {
+                'type': 'str',
+            },
+            'dev_based_arp_drop': {
+                'type': 'str',
+            },
+            'scaleout_arp_drop': {
+                'type': 'str',
+            },
+            'virtual_ip_not_found_arp_drop': {
+                'type': 'str',
+            },
+            'inactive_static_nat_pool_arp_drop': {
+                'type': 'str',
+            },
+            'inactive_nat_pool_arp_drop': {
+                'type': 'str',
+            },
+            'scaleout_hairpin_arp_drop': {
+                'type': 'str',
+            },
+            'self_grat_arp_drop': {
+                'type': 'str',
+            },
+            'self_grat_nat_ip_arp_drop': {
+                'type': 'str',
+            },
+            'ip_not_found_arp_drop': {
                 'type': 'str',
             },
             'dev_link_down_arp_drop': {
                 'type': 'str',
             },
-            'ipv4_novlanfwd_drop': {
+            'lacp_tx_intf_err_drop': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

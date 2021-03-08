@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy_connection_load
 description:
     - Select Service-IP with the lowest connection-load
-short_description: Configures A10 gslb.policy.connection-load
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,62 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     connection_load_enable:
         description:
         - "Enable connection-load"
+        type: bool
         required: False
-    connection_load_interval:
+    connection_load_fail_break:
         description:
-        - "Interval between two samples, Unit= second (Interval value,default is 5)"
-        required: False
-    limit:
-        description:
-        - "Limit of maxinum connection load, default is unlimited"
+        - "Break when exceed limit"
+        type: bool
         required: False
     connection_load_samples:
         description:
         - "Specify samples for connection-load (Number of samples used to calculate the
           connection load, default is 5)"
+        type: int
+        required: False
+    connection_load_interval:
+        description:
+        - "Interval between two samples, Unit= second (Interval value,default is 5)"
+        type: int
+        required: False
+    limit:
+        description:
+        - "Limit of maxinum connection load, default is unlimited"
+        type: bool
         required: False
     connection_load_limit:
         description:
         - "The value of the connection-load limit, default is unlimited"
+        type: int
         required: False
-    connection_load_fail_break:
+    uuid:
         description:
-        - "Break when exceed limit"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -139,11 +154,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'connection_load_enable': {
             'type': 'bool',
+        },
+        'connection_load_fail_break': {
+            'type': 'bool',
+        },
+        'connection_load_samples': {
+            'type': 'int',
         },
         'connection_load_interval': {
             'type': 'int',
@@ -151,14 +169,11 @@ def get_argspec():
         'limit': {
             'type': 'bool',
         },
-        'connection_load_samples': {
-            'type': 'int',
-        },
         'connection_load_limit': {
             'type': 'int',
         },
-        'connection_load_fail_break': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

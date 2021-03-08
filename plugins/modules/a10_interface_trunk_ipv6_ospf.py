@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_trunk_ipv6_ospf
 description:
     - Open Shortest Path First for IPv6 (OSPFv3)
-short_description: Configures A10 interface.trunk.ipv6.ospf
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,135 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     trunk_ifnum:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    bfd:
-        description:
-        - "Bidirectional Forwarding Detection (BFD)"
-        required: False
-    cost_cfg:
-        description:
-        - "Field cost_cfg"
-        required: False
-        suboptions:
-            cost:
-                description:
-                - "Interface cost"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    priority_cfg:
-        description:
-        - "Field priority_cfg"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "Router priority"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    hello_interval_cfg:
-        description:
-        - "Field hello_interval_cfg"
-        required: False
-        suboptions:
-            hello_interval:
-                description:
-                - "Time between HELLO packets (Seconds)"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    mtu_ignore_cfg:
-        description:
-        - "Field mtu_ignore_cfg"
-        required: False
-        suboptions:
-            mtu_ignore:
-                description:
-                - "Ignores the MTU in DBD packets"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    retransmit_interval_cfg:
-        description:
-        - "Field retransmit_interval_cfg"
-        required: False
-        suboptions:
-            retransmit_interval:
-                description:
-                - "Time between retransmitting lost link state advertisements (Seconds)"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    disable:
-        description:
-        - "Disable BFD"
-        required: False
-    transmit_delay_cfg:
-        description:
-        - "Field transmit_delay_cfg"
-        required: False
-        suboptions:
-            transmit_delay:
-                description:
-                - "Link state transmit delay (Seconds)"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    neighbor_cfg:
-        description:
-        - "Field neighbor_cfg"
-        required: False
-        suboptions:
-            neighbor_priority:
-                description:
-                - "OSPF priority of non-broadcast neighbor"
-            neighbor_poll_interval:
-                description:
-                - "OSPF dead-router polling interval (Seconds)"
-            neig_inst:
-                description:
-                - "Specify the interface instance ID"
-            neighbor:
-                description:
-                - "OSPFv3 neighbor (Neighbor IPv6 address)"
-            neighbor_cost:
-                description:
-                - "OSPF cost for point-to-multipoint neighbor (metric)"
+        - Key to identify parent object
+        type: str
+        required: True
     network_list:
         description:
         - "Field network_list"
+        type: list
         required: False
         suboptions:
             broadcast_type:
@@ -160,23 +71,154 @@ options:
                 - "'broadcast'= Specify OSPF broadcast multi-access network; 'non-broadcast'=
           Specify OSPF NBMA network; 'point-to-point'= Specify OSPF point-to-point
           network; 'point-to-multipoint'= Specify OSPF point-to-multipoint network;"
+                type: str
             p2mp_nbma:
                 description:
                 - "Specify non-broadcast point-to-multipoint network"
+                type: bool
             network_instance_id:
                 description:
                 - "Specify the interface instance ID"
+                type: int
+    bfd:
+        description:
+        - "Bidirectional Forwarding Detection (BFD)"
+        type: bool
+        required: False
+    disable:
+        description:
+        - "Disable BFD"
+        type: bool
+        required: False
+    cost_cfg:
+        description:
+        - "Field cost_cfg"
+        type: list
+        required: False
+        suboptions:
+            cost:
+                description:
+                - "Interface cost"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
     dead_interval_cfg:
         description:
         - "Field dead_interval_cfg"
+        type: list
         required: False
         suboptions:
             dead_interval:
                 description:
                 - "Interval after which a neighbor is declared dead (Seconds)"
+                type: int
             instance_id:
                 description:
                 - "Specify the interface instance ID"
+                type: int
+    hello_interval_cfg:
+        description:
+        - "Field hello_interval_cfg"
+        type: list
+        required: False
+        suboptions:
+            hello_interval:
+                description:
+                - "Time between HELLO packets (Seconds)"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    mtu_ignore_cfg:
+        description:
+        - "Field mtu_ignore_cfg"
+        type: list
+        required: False
+        suboptions:
+            mtu_ignore:
+                description:
+                - "Ignores the MTU in DBD packets"
+                type: bool
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    neighbor_cfg:
+        description:
+        - "Field neighbor_cfg"
+        type: list
+        required: False
+        suboptions:
+            neighbor:
+                description:
+                - "OSPFv3 neighbor (Neighbor IPv6 address)"
+                type: str
+            neig_inst:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+            neighbor_cost:
+                description:
+                - "OSPF cost for point-to-multipoint neighbor (metric)"
+                type: int
+            neighbor_poll_interval:
+                description:
+                - "OSPF dead-router polling interval (Seconds)"
+                type: int
+            neighbor_priority:
+                description:
+                - "OSPF priority of non-broadcast neighbor"
+                type: int
+    priority_cfg:
+        description:
+        - "Field priority_cfg"
+        type: list
+        required: False
+        suboptions:
+            priority:
+                description:
+                - "Router priority"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    retransmit_interval_cfg:
+        description:
+        - "Field retransmit_interval_cfg"
+        type: list
+        required: False
+        suboptions:
+            retransmit_interval:
+                description:
+                - "Time between retransmitting lost link state advertisements (Seconds)"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    transmit_delay_cfg:
+        description:
+        - "Field transmit_delay_cfg"
+        type: list
+        required: False
+        suboptions:
+            transmit_delay:
+                description:
+                - "Link state transmit delay (Seconds)"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -240,10 +282,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
+        'network_list': {
+            'type': 'list',
+            'broadcast_type': {
+                'type':
+                'str',
+                'choices': [
+                    'broadcast', 'non-broadcast', 'point-to-point',
+                    'point-to-multipoint'
+                ]
+            },
+            'p2mp_nbma': {
+                'type': 'bool',
+            },
+            'network_instance_id': {
+                'type': 'int',
+            }
         },
         'bfd': {
+            'type': 'bool',
+        },
+        'disable': {
             'type': 'bool',
         },
         'cost_cfg': {
@@ -255,9 +314,9 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'priority_cfg': {
+        'dead_interval_cfg': {
             'type': 'list',
-            'priority': {
+            'dead_interval': {
                 'type': 'int',
             },
             'instance_id': {
@@ -282,6 +341,33 @@ def get_argspec():
                 'type': 'int',
             }
         },
+        'neighbor_cfg': {
+            'type': 'list',
+            'neighbor': {
+                'type': 'str',
+            },
+            'neig_inst': {
+                'type': 'int',
+            },
+            'neighbor_cost': {
+                'type': 'int',
+            },
+            'neighbor_poll_interval': {
+                'type': 'int',
+            },
+            'neighbor_priority': {
+                'type': 'int',
+            }
+        },
+        'priority_cfg': {
+            'type': 'list',
+            'priority': {
+                'type': 'int',
+            },
+            'instance_id': {
+                'type': 'int',
+            }
+        },
         'retransmit_interval_cfg': {
             'type': 'list',
             'retransmit_interval': {
@@ -290,9 +376,6 @@ def get_argspec():
             'instance_id': {
                 'type': 'int',
             }
-        },
-        'disable': {
-            'type': 'bool',
         },
         'transmit_delay_cfg': {
             'type': 'list',
@@ -303,49 +386,8 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'neighbor_cfg': {
-            'type': 'list',
-            'neighbor_priority': {
-                'type': 'int',
-            },
-            'neighbor_poll_interval': {
-                'type': 'int',
-            },
-            'neig_inst': {
-                'type': 'int',
-            },
-            'neighbor': {
-                'type': 'str',
-            },
-            'neighbor_cost': {
-                'type': 'int',
-            }
-        },
-        'network_list': {
-            'type': 'list',
-            'broadcast_type': {
-                'type':
-                'str',
-                'choices': [
-                    'broadcast', 'non-broadcast', 'point-to-point',
-                    'point-to-multipoint'
-                ]
-            },
-            'p2mp_nbma': {
-                'type': 'bool',
-            },
-            'network_instance_id': {
-                'type': 'int',
-            }
-        },
-        'dead_interval_cfg': {
-            'type': 'list',
-            'dead_interval': {
-                'type': 'int',
-            },
-            'instance_id': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

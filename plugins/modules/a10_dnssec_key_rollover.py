@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_dnssec_key_rollover
 description:
     - DNSSEC Key rollover
-short_description: Configures A10 dnssec.key-rollover
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,51 +22,63 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    dnssec_key_type:
-        description:
-        - "'ZSK'= Zone Signing Key; 'KSK'= Key Signing Key;"
-        required: False
-    zsk_start:
-        description:
-        - "start ZSK rollover in emergency mode"
-        required: False
-    ksk_start:
-        description:
-        - "start KSK rollover in emergency mode"
-        required: False
-    ds_ready_in_parent_zone:
-        description:
-        - "DS RR is already ready in the parent zone"
+        type: str
         required: False
     zone_name:
         description:
         - "Specify the name for the DNS zone"
+        type: str
+        required: False
+    dnssec_key_type:
+        description:
+        - "'ZSK'= Zone Signing Key; 'KSK'= Key Signing Key;"
+        type: str
+        required: False
+    zsk_start:
+        description:
+        - "start ZSK rollover in emergency mode"
+        type: bool
+        required: False
+    ksk_start:
+        description:
+        - "start KSK rollover in emergency mode"
+        type: bool
+        required: False
+    ds_ready_in_parent_zone:
+        description:
+        - "DS RR is already ready in the parent zone"
+        type: bool
         required: False
 
 '''
@@ -126,6 +136,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'zone_name': {
+            'type': 'str',
+        },
         'dnssec_key_type': {
             'type': 'str',
             'choices': ['ZSK', 'KSK']
@@ -138,9 +151,6 @@ def get_argspec():
         },
         'ds_ready_in_parent_zone': {
             'type': 'bool',
-        },
-        'zone_name': {
-            'type': 'str',
         }
     })
     return rv

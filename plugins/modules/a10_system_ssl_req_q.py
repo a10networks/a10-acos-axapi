@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ssl_req_q
 description:
     - System SSL Request Queue statistics
-short_description: Configures A10 system.ssl-req-q
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,66 +22,82 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'num-ssl-queues'= num-ssl-queues; 'ssl-req-q-depth-tot'= ssl-req-q
-          -depth-tot; 'ssl-req-q-inuse-tot'= ssl-req-q-inuse-tot; 'ssl-hw-q-depth-tot'=
+                - "'all'= all; 'num-ssl-queues'= num-ssl-queues; 'ssl-req-q-depth-tot'= ssl-req-q-
+          depth-tot; 'ssl-req-q-inuse-tot'= ssl-req-q-inuse-tot; 'ssl-hw-q-depth-tot'=
           ssl-hw-q-depth-tot; 'ssl-hw-q-inuse-tot'= ssl-hw-q-inuse-tot;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             num_ssl_queues:
                 description:
                 - "Field num_ssl_queues"
-            ssl_req_q_inuse_tot:
-                description:
-                - "Field ssl_req_q_inuse_tot"
+                type: str
             ssl_req_q_depth_tot:
                 description:
                 - "Field ssl_req_q_depth_tot"
+                type: str
+            ssl_req_q_inuse_tot:
+                description:
+                - "Field ssl_req_q_inuse_tot"
+                type: str
             ssl_hw_q_depth_tot:
                 description:
                 - "Field ssl_hw_q_depth_tot"
+                type: str
             ssl_hw_q_inuse_tot:
                 description:
                 - "Field ssl_hw_q_inuse_tot"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -138,6 +152,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -155,10 +172,10 @@ def get_argspec():
             'num_ssl_queues': {
                 'type': 'str',
             },
-            'ssl_req_q_inuse_tot': {
+            'ssl_req_q_depth_tot': {
                 'type': 'str',
             },
-            'ssl_req_q_depth_tot': {
+            'ssl_req_q_inuse_tot': {
                 'type': 'str',
             },
             'ssl_hw_q_depth_tot': {
@@ -167,9 +184,6 @@ def get_argspec():
             'ssl_hw_q_inuse_tot': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_http2
 description:
     - Configure http2
-short_description: Configures A10 slb.http2
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            http2_cpu_list:
-                description:
-                - "Field http2_cpu_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -145,345 +145,467 @@ options:
           'err_sent_your_calm'= Error Sent - ENHANCE_YOUR_CALM;
           'err_sent_inadequate_security'= Error Sent - INADEQUATE_SECURITY;
           'err_sent_http11_required'= Error Sent - HTTP_1_1_REQUIRED;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            http2_cpu_list:
+                description:
+                - "Field http2_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            total_proxy:
-                description:
-                - "Total Proxy Conns"
-            headers_frame:
-                description:
-                - "HEADERS Frame Rcvd"
-            cant_allocate_ping_frame:
-                description:
-                - "Cant allocate PING frame"
-            err_sent_inadequate_security:
-                description:
-                - "Error Sent - INADEQUATE_SECURITY"
-            err_sent_frame_size_err:
-                description:
-                - "Error Sent - FRAME_SIZE_ERROR"
-            headers_after_continuation:
-                description:
-                - "headers frame before CONTINUATION was complete"
-            invalid_window_update:
-                description:
-                - "window-update value out of range"
-            goaway_frame:
-                description:
-                - "GOAWAY Frame Rcvd"
-            refused_stream:
-                description:
-                - "Refused Stream"
-            control_frame:
-                description:
-                - "Control Frame Rcvd"
-            data_no_stream:
-                description:
-                - "DATA Frame Rcvd on non-existent stream"
-            rst_frame_rcvd:
-                description:
-                - "RST_STREAM Frame Rcvd"
-            half_closed_remote_state_unexpected_frame:
-                description:
-                - "Unexpected frame received in half closed remote state"
-            reserved_local_state_unexpected_frame:
-                description:
-                - "Unexpected frame received in reserved local state"
-            http_1_1_required:
-                description:
-                - "HTTP1.1 Required"
-            continuation_frame:
-                description:
-                - "CONTINUATION Frame Rcvd"
-            cant_allocate_settings_frame:
-                description:
-                - "Cant allocate SETTINGS frame"
-            connection_preface_sent:
-                description:
-                - "Connection preface sent"
-            settings_frame:
-                description:
-                - "SETTINGS Frame Rcvd"
-            unknown_frame:
-                description:
-                - "Unknown Frame Recvd"
-            streams_gt_max_concur_streams:
-                description:
-                - "Streams greater than max allowed concurrent streams"
-            bad_connection_preface:
-                description:
-                - "Bad Connection Preface"
-            error_max_invalid_stream:
-                description:
-                - "Max Invalid Stream Rcvd"
-            stream_closed:
-                description:
-                - "stream closed"
-            header_padlen_gt_frame_payload:
-                description:
-                - "Header padlen greater than frame payload size"
-            protocol_error:
-                description:
-                - "Protocol Error"
-            split_buff_fail:
-                description:
-                - "Splitting Buffer Failed"
-            invalid_stream_id:
-                description:
-                - "received invalid stream ID"
-            inflate_alloc_fail:
-                description:
-                - "inflate alloc fail"
-            cancel:
-                description:
-                - "cancel"
-            err_sent_http11_required:
-                description:
-                - "Error Sent - HTTP_1_1_REQUIRED"
-            err_sent_your_calm:
-                description:
-                - "Error Sent - ENHANCE_YOUR_CALM"
-            trailers_no_end_stream:
-                description:
-                - "trailers not marked as end-of-stream"
-            wrong_stream_state:
-                description:
-                - "Wrong Stream State"
-            idle_state_unexpected_frame:
-                description:
-                - "Unxpected frame received in idle state"
-            frame_header_bytes_received:
-                description:
-                - "frame header bytes received"
-            inflate_header_fail:
-                description:
-                - "Inflate Header Fail"
-            ping_frame:
-                description:
-                - "PING Frame Rcvd"
-            data_bytes_sent:
-                description:
-                - "HTTP/2 data bytes sent"
-            header_to_app:
-                description:
-                - "HEADER Frame to HTTP"
-            total_bytes_sent:
-                description:
-                - "HTTP/2 total bytes sent"
-            peak_proxy:
-                description:
-                - "Peak Proxy Conns"
-            err_sent_setting_timeout:
-                description:
-                - "Error Sent - SETTINGS_TIMEOUT"
-            ping_frame_sent:
-                description:
-                - "PING Frame Sent"
-            invalid_frame_during_headers:
-                description:
-                - "frame before headers were complete"
-            reserved_remote_state_unexpected_frame:
-                description:
-                - "Unexpected frame received in reserved remote state"
-            priority_frame_sent:
-                description:
-                - "PRIORITY Frame Sent"
             curr_proxy:
                 description:
                 - "Curr Proxy Conns"
-            deflate_alloc_fail:
+                type: str
+            total_proxy:
                 description:
-                - "deflate alloc fail"
-            settings_frame_sent:
-                description:
-                - "SETTINGS Frame Sent"
-            compression_error:
-                description:
-                - "compression error"
-            settings_timeout:
-                description:
-                - "Settings Timeout"
-            empty_settings_rcvd:
-                description:
-                - "Empty SETTINGS Frame Rcvd"
-            err_sent_total:
-                description:
-                - "Error Rent - Total"
-            control_bytes_received:
-                description:
-                - "HTTP/2 control frame bytes received"
-            continuation_before_headers:
-                description:
-                - "CONTINUATION frame with no headers frame"
-            err_sent_stream_closed:
-                description:
-                - "Error Sent - STREAM_CLOSED"
-            bad_frame_type_for_stream_state:
-                description:
-                - "Bad frame type for stream state"
-            err_sent_refused_stream:
-                description:
-                - "Error Sent - REFUSED_STREAM"
-            connect_error:
-                description:
-                - "connect error"
-            data_frame_sent:
-                description:
-                - "DATA Frame Sent"
-            proxy_alloc_error:
-                description:
-                - "HTTP2 Proxy alloc Error"
-            cant_allocate_goaway_frame:
-                description:
-                - "Cant allocate GOAWAY frame"
-            buff_alloc_error:
-                description:
-                - "Buff alloc error"
-            window_update_frame:
-                description:
-                - "WINDOW_UPDATE Frame Rcvd"
-            err_sent_flow_control:
-                description:
-                - "Error Sent - FLOW_CONTROL_ERROR"
-            inadequate_security:
-                description:
-                - "inadequate security"
-            zero_window_size_on_stream:
-                description:
-                - "Window Update with zero increment rcvd"
-            frame_header_bytes_sent:
-                description:
-                - "frame header bytes sent"
-            cant_allocate_window_frame:
-                description:
-                - "Cant allocate WINDOW_UPDATE frame"
-            control_frame_sent:
-                description:
-                - "Control Frame Sent"
-            goaway_frame_sent:
-                description:
-                - "GOAWAY Frame Sent"
-            window_update_frame_sent:
-                description:
-                - "WINDOW_UPDATE Frame Sent"
-            rst_frame_sent:
-                description:
-                - "RST_STREAM Frame Sent"
-            invalid_frame_size:
-                description:
-                - "Invalid Frame Size Rcvd"
-            header_no_stream:
-                description:
-                - "header no stream"
-            settings_ack_rcvd:
-                description:
-                - "SETTINGS ACK Frame Rcvd"
-            data_queue_alloc_error:
-                description:
-                - "Data Queue Alloc Error"
-            err_sent_compression_err:
-                description:
-                - "Error Sent - COMPRESSION_ERROR"
-            internal_error:
-                description:
-                - "Internal Error"
-            header_bytes_sent:
-                description:
-                - "HTTP/2 header bytes sent"
-            empty_settings_sent:
-                description:
-                - "Empty SETTINGS Frame Sent"
-            err_sent_cancel:
-                description:
-                - "Error Sent - CANCEL"
-            continuation_frame_sent:
-                description:
-                - "CONTINUATION Frame Sent"
-            total_bytes_received:
-                description:
-                - "HTTP/2 total bytes received"
-            priority_frame:
-                description:
-                - "PRIORITY Frame Rcvd"
-            enhance_your_calm:
-                description:
-                - "enhance your calm error"
-            data_to_app:
-                description:
-                - "DATA Frame to HTTP"
-            cant_allocate_rst_frame:
-                description:
-                - "Cant allocate RST_STREAM frame"
-            cant_allocate_control_frame:
-                description:
-                - "Cant allocate control frame"
-            flow_control_error:
-                description:
-                - "Flow Control Error"
-            control_bytes_sent:
-                description:
-                - "HTTP/2 control frame bytes sent"
-            invalid_push_promise:
-                description:
-                - "unexpected PUSH_PROMISE frame"
-            closed_state_unexpected_frame:
-                description:
-                - "Unexpected frame received in closed state"
-            err_sent_connect_err:
-                description:
-                - "Error Sent - CONNECT_ERROR"
-            header_bytes_received:
-                description:
-                - "HTTP/2 header bytes received"
-            data_bytes_received:
-                description:
-                - "HTTP/2 data bytes received"
-            settings_ack_sent:
-                description:
-                - "SETTINGS ACK Frame Sent"
+                - "Total Proxy Conns"
+                type: str
             connection_preface_rcvd:
                 description:
                 - "Connection preface rcvd"
-            exceeds_max_window_size_stream:
+                type: str
+            control_frame:
                 description:
-                - "Window Update with increment that results in exceeding max window"
-            cant_allocate_stream:
+                - "Control Frame Rcvd"
+                type: str
+            headers_frame:
                 description:
-                - "Cant allocate stream"
+                - "HEADERS Frame Rcvd"
+                type: str
+            continuation_frame:
+                description:
+                - "CONTINUATION Frame Rcvd"
+                type: str
+            rst_frame_rcvd:
+                description:
+                - "RST_STREAM Frame Rcvd"
+                type: str
+            settings_frame:
+                description:
+                - "SETTINGS Frame Rcvd"
+                type: str
+            window_update_frame:
+                description:
+                - "WINDOW_UPDATE Frame Rcvd"
+                type: str
+            ping_frame:
+                description:
+                - "PING Frame Rcvd"
+                type: str
+            goaway_frame:
+                description:
+                - "GOAWAY Frame Rcvd"
+                type: str
+            priority_frame:
+                description:
+                - "PRIORITY Frame Rcvd"
+                type: str
             data_frame:
                 description:
                 - "DATA Frame Recvd"
-            invalid_setting_value:
+                type: str
+            unknown_frame:
                 description:
-                - "invalid setting-frame value"
-            err_rcvd_total:
+                - "Unknown Frame Recvd"
+                type: str
+            connection_preface_sent:
                 description:
-                - "Error Rcvd - Total"
+                - "Connection preface sent"
+                type: str
+            settings_frame_sent:
+                description:
+                - "SETTINGS Frame Sent"
+                type: str
+            settings_ack_sent:
+                description:
+                - "SETTINGS ACK Frame Sent"
+                type: str
+            empty_settings_sent:
+                description:
+                - "Empty SETTINGS Frame Sent"
+                type: str
+            ping_frame_sent:
+                description:
+                - "PING Frame Sent"
+                type: str
+            window_update_frame_sent:
+                description:
+                - "WINDOW_UPDATE Frame Sent"
+                type: str
+            rst_frame_sent:
+                description:
+                - "RST_STREAM Frame Sent"
+                type: str
+            goaway_frame_sent:
+                description:
+                - "GOAWAY Frame Sent"
+                type: str
+            header_to_app:
+                description:
+                - "HEADER Frame to HTTP"
+                type: str
+            data_to_app:
+                description:
+                - "DATA Frame to HTTP"
+                type: str
+            protocol_error:
+                description:
+                - "Protocol Error"
+                type: str
+            internal_error:
+                description:
+                - "Internal Error"
+                type: str
+            proxy_alloc_error:
+                description:
+                - "HTTP2 Proxy alloc Error"
+                type: str
+            split_buff_fail:
+                description:
+                - "Splitting Buffer Failed"
+                type: str
+            invalid_frame_size:
+                description:
+                - "Invalid Frame Size Rcvd"
+                type: str
+            error_max_invalid_stream:
+                description:
+                - "Max Invalid Stream Rcvd"
+                type: str
+            data_no_stream:
+                description:
+                - "DATA Frame Rcvd on non-existent stream"
+                type: str
+            flow_control_error:
+                description:
+                - "Flow Control Error"
+                type: str
+            settings_timeout:
+                description:
+                - "Settings Timeout"
+                type: str
             frame_size_error:
                 description:
                 - "Frame Size Error"
-            err_sent_internal_err:
+                type: str
+            refused_stream:
                 description:
-                - "Error Sent - INTERNAL_ERROR"
-            alloc_fail_total:
+                - "Refused Stream"
+                type: str
+            cancel:
                 description:
-                - "Alloc Fail - Total"
-            err_sent_proto_err:
+                - "cancel"
+                type: str
+            compression_error:
                 description:
-                - "Error Sent - PROTOCOL_ERROR"
-            headers_frame_sent:
+                - "compression error"
+                type: str
+            connect_error:
                 description:
-                - "HEADERS Frame Sent"
+                - "connect error"
+                type: str
+            enhance_your_calm:
+                description:
+                - "enhance your calm error"
+                type: str
+            inadequate_security:
+                description:
+                - "inadequate security"
+                type: str
+            http_1_1_required:
+                description:
+                - "HTTP1.1 Required"
+                type: str
+            deflate_alloc_fail:
+                description:
+                - "deflate alloc fail"
+                type: str
+            inflate_alloc_fail:
+                description:
+                - "inflate alloc fail"
+                type: str
+            inflate_header_fail:
+                description:
+                - "Inflate Header Fail"
+                type: str
+            bad_connection_preface:
+                description:
+                - "Bad Connection Preface"
+                type: str
+            cant_allocate_control_frame:
+                description:
+                - "Cant allocate control frame"
+                type: str
+            cant_allocate_settings_frame:
+                description:
+                - "Cant allocate SETTINGS frame"
+                type: str
+            bad_frame_type_for_stream_state:
+                description:
+                - "Bad frame type for stream state"
+                type: str
+            wrong_stream_state:
+                description:
+                - "Wrong Stream State"
+                type: str
+            data_queue_alloc_error:
+                description:
+                - "Data Queue Alloc Error"
+                type: str
+            buff_alloc_error:
+                description:
+                - "Buff alloc error"
+                type: str
+            cant_allocate_rst_frame:
+                description:
+                - "Cant allocate RST_STREAM frame"
+                type: str
+            cant_allocate_goaway_frame:
+                description:
+                - "Cant allocate GOAWAY frame"
+                type: str
+            cant_allocate_ping_frame:
+                description:
+                - "Cant allocate PING frame"
+                type: str
+            cant_allocate_stream:
+                description:
+                - "Cant allocate stream"
+                type: str
+            cant_allocate_window_frame:
+                description:
+                - "Cant allocate WINDOW_UPDATE frame"
+                type: str
+            header_no_stream:
+                description:
+                - "header no stream"
+                type: str
+            header_padlen_gt_frame_payload:
+                description:
+                - "Header padlen greater than frame payload size"
+                type: str
+            streams_gt_max_concur_streams:
+                description:
+                - "Streams greater than max allowed concurrent streams"
+                type: str
+            idle_state_unexpected_frame:
+                description:
+                - "Unxpected frame received in idle state"
+                type: str
+            reserved_local_state_unexpected_frame:
+                description:
+                - "Unexpected frame received in reserved local state"
+                type: str
+            reserved_remote_state_unexpected_frame:
+                description:
+                - "Unexpected frame received in reserved remote state"
+                type: str
+            half_closed_remote_state_unexpected_frame:
+                description:
+                - "Unexpected frame received in half closed remote state"
+                type: str
+            closed_state_unexpected_frame:
+                description:
+                - "Unexpected frame received in closed state"
+                type: str
+            zero_window_size_on_stream:
+                description:
+                - "Window Update with zero increment rcvd"
+                type: str
+            exceeds_max_window_size_stream:
+                description:
+                - "Window Update with increment that results in exceeding max window"
+                type: str
+            stream_closed:
+                description:
+                - "stream closed"
+                type: str
+            continuation_before_headers:
+                description:
+                - "CONTINUATION frame with no headers frame"
+                type: str
+            invalid_frame_during_headers:
+                description:
+                - "frame before headers were complete"
+                type: str
+            headers_after_continuation:
+                description:
+                - "headers frame before CONTINUATION was complete"
+                type: str
+            invalid_push_promise:
+                description:
+                - "unexpected PUSH_PROMISE frame"
+                type: str
+            invalid_stream_id:
+                description:
+                - "received invalid stream ID"
+                type: str
             headers_interleaved:
                 description:
                 - "headers interleaved on streams"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            trailers_no_end_stream:
+                description:
+                - "trailers not marked as end-of-stream"
+                type: str
+            invalid_setting_value:
+                description:
+                - "invalid setting-frame value"
+                type: str
+            invalid_window_update:
+                description:
+                - "window-update value out of range"
+                type: str
+            frame_header_bytes_received:
+                description:
+                - "frame header bytes received"
+                type: str
+            frame_header_bytes_sent:
+                description:
+                - "frame header bytes sent"
+                type: str
+            control_bytes_received:
+                description:
+                - "HTTP/2 control frame bytes received"
+                type: str
+            control_bytes_sent:
+                description:
+                - "HTTP/2 control frame bytes sent"
+                type: str
+            header_bytes_received:
+                description:
+                - "HTTP/2 header bytes received"
+                type: str
+            header_bytes_sent:
+                description:
+                - "HTTP/2 header bytes sent"
+                type: str
+            data_bytes_received:
+                description:
+                - "HTTP/2 data bytes received"
+                type: str
+            data_bytes_sent:
+                description:
+                - "HTTP/2 data bytes sent"
+                type: str
+            total_bytes_received:
+                description:
+                - "HTTP/2 total bytes received"
+                type: str
+            total_bytes_sent:
+                description:
+                - "HTTP/2 total bytes sent"
+                type: str
+            peak_proxy:
+                description:
+                - "Peak Proxy Conns"
+                type: str
+            control_frame_sent:
+                description:
+                - "Control Frame Sent"
+                type: str
+            continuation_frame_sent:
+                description:
+                - "CONTINUATION Frame Sent"
+                type: str
+            data_frame_sent:
+                description:
+                - "DATA Frame Sent"
+                type: str
+            headers_frame_sent:
+                description:
+                - "HEADERS Frame Sent"
+                type: str
+            priority_frame_sent:
+                description:
+                - "PRIORITY Frame Sent"
+                type: str
+            settings_ack_rcvd:
+                description:
+                - "SETTINGS ACK Frame Rcvd"
+                type: str
+            empty_settings_rcvd:
+                description:
+                - "Empty SETTINGS Frame Rcvd"
+                type: str
+            alloc_fail_total:
+                description:
+                - "Alloc Fail - Total"
+                type: str
+            err_rcvd_total:
+                description:
+                - "Error Rcvd - Total"
+                type: str
+            err_sent_total:
+                description:
+                - "Error Rent - Total"
+                type: str
+            err_sent_proto_err:
+                description:
+                - "Error Sent - PROTOCOL_ERROR"
+                type: str
+            err_sent_internal_err:
+                description:
+                - "Error Sent - INTERNAL_ERROR"
+                type: str
+            err_sent_flow_control:
+                description:
+                - "Error Sent - FLOW_CONTROL_ERROR"
+                type: str
+            err_sent_setting_timeout:
+                description:
+                - "Error Sent - SETTINGS_TIMEOUT"
+                type: str
+            err_sent_stream_closed:
+                description:
+                - "Error Sent - STREAM_CLOSED"
+                type: str
+            err_sent_frame_size_err:
+                description:
+                - "Error Sent - FRAME_SIZE_ERROR"
+                type: str
+            err_sent_refused_stream:
+                description:
+                - "Error Sent - REFUSED_STREAM"
+                type: str
+            err_sent_cancel:
+                description:
+                - "Error Sent - CANCEL"
+                type: str
+            err_sent_compression_err:
+                description:
+                - "Error Sent - COMPRESSION_ERROR"
+                type: str
+            err_sent_connect_err:
+                description:
+                - "Error Sent - CONNECT_ERROR"
+                type: str
+            err_sent_your_calm:
+                description:
+                - "Error Sent - ENHANCE_YOUR_CALM"
+                type: str
+            err_sent_inadequate_security:
+                description:
+                - "Error Sent - INADEQUATE_SECURITY"
+                type: str
+            err_sent_http11_required:
+                description:
+                - "Error Sent - HTTP_1_1_REQUIRED"
+                type: str
 
 '''
 
@@ -539,344 +661,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'cpu_count': {
-                'type': 'int',
-            },
-            'http2_cpu_list': {
-                'type': 'list',
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'headers_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_ping_frame': {
-                    'type': 'int',
-                },
-                'err_sent_inadequate_security': {
-                    'type': 'int',
-                },
-                'err_sent_frame_size_err': {
-                    'type': 'int',
-                },
-                'headers_after_continuation': {
-                    'type': 'int',
-                },
-                'invalid_window_update': {
-                    'type': 'int',
-                },
-                'goaway_frame': {
-                    'type': 'int',
-                },
-                'refused_stream': {
-                    'type': 'int',
-                },
-                'control_frame': {
-                    'type': 'int',
-                },
-                'data_no_stream': {
-                    'type': 'int',
-                },
-                'rst_frame_rcvd': {
-                    'type': 'int',
-                },
-                'half_closed_remote_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'reserved_local_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'http_1_1_required': {
-                    'type': 'int',
-                },
-                'continuation_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_settings_frame': {
-                    'type': 'int',
-                },
-                'connection_preface_sent': {
-                    'type': 'int',
-                },
-                'settings_frame': {
-                    'type': 'int',
-                },
-                'unknown_frame': {
-                    'type': 'int',
-                },
-                'streams_gt_max_concur_streams': {
-                    'type': 'int',
-                },
-                'bad_connection_preface': {
-                    'type': 'int',
-                },
-                'error_max_invalid_stream': {
-                    'type': 'int',
-                },
-                'stream_closed': {
-                    'type': 'int',
-                },
-                'header_padlen_gt_frame_payload': {
-                    'type': 'int',
-                },
-                'protocol_error': {
-                    'type': 'int',
-                },
-                'split_buff_fail': {
-                    'type': 'int',
-                },
-                'invalid_stream_id': {
-                    'type': 'int',
-                },
-                'inflate_alloc_fail': {
-                    'type': 'int',
-                },
-                'cancel': {
-                    'type': 'int',
-                },
-                'err_sent_http11_required': {
-                    'type': 'int',
-                },
-                'err_sent_your_calm': {
-                    'type': 'int',
-                },
-                'trailers_no_end_stream': {
-                    'type': 'int',
-                },
-                'wrong_stream_state': {
-                    'type': 'int',
-                },
-                'idle_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'frame_header_bytes_received': {
-                    'type': 'int',
-                },
-                'inflate_header_fail': {
-                    'type': 'int',
-                },
-                'ping_frame': {
-                    'type': 'int',
-                },
-                'data_bytes_sent': {
-                    'type': 'int',
-                },
-                'header_to_app': {
-                    'type': 'int',
-                },
-                'total_bytes_sent': {
-                    'type': 'int',
-                },
-                'peak_proxy': {
-                    'type': 'int',
-                },
-                'err_sent_setting_timeout': {
-                    'type': 'int',
-                },
-                'ping_frame_sent': {
-                    'type': 'int',
-                },
-                'invalid_frame_during_headers': {
-                    'type': 'int',
-                },
-                'reserved_remote_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'priority_frame_sent': {
-                    'type': 'int',
-                },
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'deflate_alloc_fail': {
-                    'type': 'int',
-                },
-                'settings_frame_sent': {
-                    'type': 'int',
-                },
-                'compression_error': {
-                    'type': 'int',
-                },
-                'settings_timeout': {
-                    'type': 'int',
-                },
-                'empty_settings_rcvd': {
-                    'type': 'int',
-                },
-                'err_sent_total': {
-                    'type': 'int',
-                },
-                'control_bytes_received': {
-                    'type': 'int',
-                },
-                'continuation_before_headers': {
-                    'type': 'int',
-                },
-                'err_sent_stream_closed': {
-                    'type': 'int',
-                },
-                'bad_frame_type_for_stream_state': {
-                    'type': 'int',
-                },
-                'err_sent_refused_stream': {
-                    'type': 'int',
-                },
-                'connect_error': {
-                    'type': 'int',
-                },
-                'data_frame_sent': {
-                    'type': 'int',
-                },
-                'proxy_alloc_error': {
-                    'type': 'int',
-                },
-                'cant_allocate_goaway_frame': {
-                    'type': 'int',
-                },
-                'err_sent_compression_err': {
-                    'type': 'int',
-                },
-                'buff_alloc_error': {
-                    'type': 'int',
-                },
-                'window_update_frame': {
-                    'type': 'int',
-                },
-                'err_sent_flow_control': {
-                    'type': 'int',
-                },
-                'inadequate_security': {
-                    'type': 'int',
-                },
-                'zero_window_size_on_stream': {
-                    'type': 'int',
-                },
-                'cant_allocate_window_frame': {
-                    'type': 'int',
-                },
-                'control_frame_sent': {
-                    'type': 'int',
-                },
-                'goaway_frame_sent': {
-                    'type': 'int',
-                },
-                'window_update_frame_sent': {
-                    'type': 'int',
-                },
-                'rst_frame_sent': {
-                    'type': 'int',
-                },
-                'invalid_frame_size': {
-                    'type': 'int',
-                },
-                'settings_ack_rcvd': {
-                    'type': 'int',
-                },
-                'header_no_stream': {
-                    'type': 'int',
-                },
-                'data_queue_alloc_error': {
-                    'type': 'int',
-                },
-                'frame_header_bytes_sent': {
-                    'type': 'int',
-                },
-                'internal_error': {
-                    'type': 'int',
-                },
-                'header_bytes_sent': {
-                    'type': 'int',
-                },
-                'empty_settings_sent': {
-                    'type': 'int',
-                },
-                'err_sent_cancel': {
-                    'type': 'int',
-                },
-                'continuation_frame_sent': {
-                    'type': 'int',
-                },
-                'total_bytes_received': {
-                    'type': 'int',
-                },
-                'priority_frame': {
-                    'type': 'int',
-                },
-                'enhance_your_calm': {
-                    'type': 'int',
-                },
-                'data_to_app': {
-                    'type': 'int',
-                },
-                'cant_allocate_rst_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_control_frame': {
-                    'type': 'int',
-                },
-                'flow_control_error': {
-                    'type': 'int',
-                },
-                'control_bytes_sent': {
-                    'type': 'int',
-                },
-                'invalid_push_promise': {
-                    'type': 'int',
-                },
-                'closed_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'err_sent_connect_err': {
-                    'type': 'int',
-                },
-                'header_bytes_received': {
-                    'type': 'int',
-                },
-                'data_bytes_received': {
-                    'type': 'int',
-                },
-                'settings_ack_sent': {
-                    'type': 'int',
-                },
-                'connection_preface_rcvd': {
-                    'type': 'int',
-                },
-                'exceeds_max_window_size_stream': {
-                    'type': 'int',
-                },
-                'cant_allocate_stream': {
-                    'type': 'int',
-                },
-                'data_frame': {
-                    'type': 'int',
-                },
-                'invalid_setting_value': {
-                    'type': 'int',
-                },
-                'err_rcvd_total': {
-                    'type': 'int',
-                },
-                'frame_size_error': {
-                    'type': 'int',
-                },
-                'err_sent_internal_err': {
-                    'type': 'int',
-                },
-                'alloc_fail_total': {
-                    'type': 'int',
-                },
-                'err_sent_proto_err': {
-                    'type': 'int',
-                },
-                'headers_frame_sent': {
-                    'type': 'int',
-                },
-                'headers_interleaved': {
-                    'type': 'int',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -944,222 +730,402 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'http2_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'peak_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'connection_preface_rcvd': {
+                    'type': 'int',
+                },
+                'connection_preface_sent': {
+                    'type': 'int',
+                },
+                'control_frame': {
+                    'type': 'int',
+                },
+                'control_frame_sent': {
+                    'type': 'int',
+                },
+                'continuation_frame': {
+                    'type': 'int',
+                },
+                'continuation_frame_sent': {
+                    'type': 'int',
+                },
+                'data_frame': {
+                    'type': 'int',
+                },
+                'data_frame_sent': {
+                    'type': 'int',
+                },
+                'data_to_app': {
+                    'type': 'int',
+                },
+                'goaway_frame': {
+                    'type': 'int',
+                },
+                'goaway_frame_sent': {
+                    'type': 'int',
+                },
+                'headers_frame': {
+                    'type': 'int',
+                },
+                'headers_frame_sent': {
+                    'type': 'int',
+                },
+                'header_to_app': {
+                    'type': 'int',
+                },
+                'ping_frame': {
+                    'type': 'int',
+                },
+                'ping_frame_sent': {
+                    'type': 'int',
+                },
+                'priority_frame': {
+                    'type': 'int',
+                },
+                'priority_frame_sent': {
+                    'type': 'int',
+                },
+                'rst_frame_rcvd': {
+                    'type': 'int',
+                },
+                'rst_frame_sent': {
+                    'type': 'int',
+                },
+                'settings_frame': {
+                    'type': 'int',
+                },
+                'settings_frame_sent': {
+                    'type': 'int',
+                },
+                'settings_ack_rcvd': {
+                    'type': 'int',
+                },
+                'settings_ack_sent': {
+                    'type': 'int',
+                },
+                'empty_settings_rcvd': {
+                    'type': 'int',
+                },
+                'empty_settings_sent': {
+                    'type': 'int',
+                },
+                'window_update_frame': {
+                    'type': 'int',
+                },
+                'window_update_frame_sent': {
+                    'type': 'int',
+                },
+                'unknown_frame': {
+                    'type': 'int',
+                },
+                'split_buff_fail': {
+                    'type': 'int',
+                },
+                'invalid_frame_size': {
+                    'type': 'int',
+                },
+                'error_max_invalid_stream': {
+                    'type': 'int',
+                },
+                'data_no_stream': {
+                    'type': 'int',
+                },
+                'bad_connection_preface': {
+                    'type': 'int',
+                },
+                'bad_frame_type_for_stream_state': {
+                    'type': 'int',
+                },
+                'wrong_stream_state': {
+                    'type': 'int',
+                },
+                'alloc_fail_total': {
+                    'type': 'int',
+                },
+                'proxy_alloc_error': {
+                    'type': 'int',
+                },
+                'deflate_alloc_fail': {
+                    'type': 'int',
+                },
+                'inflate_alloc_fail': {
+                    'type': 'int',
+                },
+                'data_queue_alloc_error': {
+                    'type': 'int',
+                },
+                'buff_alloc_error': {
+                    'type': 'int',
+                },
+                'cant_allocate_control_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_settings_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_rst_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_goaway_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_ping_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_stream': {
+                    'type': 'int',
+                },
+                'cant_allocate_window_frame': {
+                    'type': 'int',
+                },
+                'inflate_header_fail': {
+                    'type': 'int',
+                },
+                'header_no_stream': {
+                    'type': 'int',
+                },
+                'header_padlen_gt_frame_payload': {
+                    'type': 'int',
+                },
+                'streams_gt_max_concur_streams': {
+                    'type': 'int',
+                },
+                'idle_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'reserved_local_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'reserved_remote_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'half_closed_remote_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'closed_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'zero_window_size_on_stream': {
+                    'type': 'int',
+                },
+                'exceeds_max_window_size_stream': {
+                    'type': 'int',
+                },
+                'continuation_before_headers': {
+                    'type': 'int',
+                },
+                'invalid_frame_during_headers': {
+                    'type': 'int',
+                },
+                'headers_after_continuation': {
+                    'type': 'int',
+                },
+                'invalid_push_promise': {
+                    'type': 'int',
+                },
+                'invalid_stream_id': {
+                    'type': 'int',
+                },
+                'headers_interleaved': {
+                    'type': 'int',
+                },
+                'trailers_no_end_stream': {
+                    'type': 'int',
+                },
+                'invalid_setting_value': {
+                    'type': 'int',
+                },
+                'invalid_window_update': {
+                    'type': 'int',
+                },
+                'err_rcvd_total': {
+                    'type': 'int',
+                },
+                'protocol_error': {
+                    'type': 'int',
+                },
+                'internal_error': {
+                    'type': 'int',
+                },
+                'flow_control_error': {
+                    'type': 'int',
+                },
+                'settings_timeout': {
+                    'type': 'int',
+                },
+                'stream_closed': {
+                    'type': 'int',
+                },
+                'frame_size_error': {
+                    'type': 'int',
+                },
+                'refused_stream': {
+                    'type': 'int',
+                },
+                'cancel': {
+                    'type': 'int',
+                },
+                'compression_error': {
+                    'type': 'int',
+                },
+                'connect_error': {
+                    'type': 'int',
+                },
+                'enhance_your_calm': {
+                    'type': 'int',
+                },
+                'inadequate_security': {
+                    'type': 'int',
+                },
+                'http_1_1_required': {
+                    'type': 'int',
+                },
+                'err_sent_total': {
+                    'type': 'int',
+                },
+                'err_sent_proto_err': {
+                    'type': 'int',
+                },
+                'err_sent_internal_err': {
+                    'type': 'int',
+                },
+                'err_sent_flow_control': {
+                    'type': 'int',
+                },
+                'err_sent_setting_timeout': {
+                    'type': 'int',
+                },
+                'err_sent_stream_closed': {
+                    'type': 'int',
+                },
+                'err_sent_frame_size_err': {
+                    'type': 'int',
+                },
+                'err_sent_refused_stream': {
+                    'type': 'int',
+                },
+                'err_sent_cancel': {
+                    'type': 'int',
+                },
+                'err_sent_compression_err': {
+                    'type': 'int',
+                },
+                'err_sent_connect_err': {
+                    'type': 'int',
+                },
+                'err_sent_your_calm': {
+                    'type': 'int',
+                },
+                'err_sent_inadequate_security': {
+                    'type': 'int',
+                },
+                'err_sent_http11_required': {
+                    'type': 'int',
+                },
+                'frame_header_bytes_received': {
+                    'type': 'int',
+                },
+                'frame_header_bytes_sent': {
+                    'type': 'int',
+                },
+                'control_bytes_received': {
+                    'type': 'int',
+                },
+                'control_bytes_sent': {
+                    'type': 'int',
+                },
+                'header_bytes_received': {
+                    'type': 'int',
+                },
+                'header_bytes_sent': {
+                    'type': 'int',
+                },
+                'data_bytes_received': {
+                    'type': 'int',
+                },
+                'data_bytes_sent': {
+                    'type': 'int',
+                },
+                'total_bytes_received': {
+                    'type': 'int',
+                },
+                'total_bytes_sent': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
+            'curr_proxy': {
+                'type': 'str',
+            },
             'total_proxy': {
                 'type': 'str',
             },
-            'headers_frame': {
-                'type': 'str',
-            },
-            'cant_allocate_ping_frame': {
-                'type': 'str',
-            },
-            'err_sent_inadequate_security': {
-                'type': 'str',
-            },
-            'err_sent_frame_size_err': {
-                'type': 'str',
-            },
-            'headers_after_continuation': {
-                'type': 'str',
-            },
-            'invalid_window_update': {
-                'type': 'str',
-            },
-            'goaway_frame': {
-                'type': 'str',
-            },
-            'refused_stream': {
+            'connection_preface_rcvd': {
                 'type': 'str',
             },
             'control_frame': {
                 'type': 'str',
             },
-            'data_no_stream': {
-                'type': 'str',
-            },
-            'rst_frame_rcvd': {
-                'type': 'str',
-            },
-            'half_closed_remote_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'reserved_local_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'http_1_1_required': {
+            'headers_frame': {
                 'type': 'str',
             },
             'continuation_frame': {
                 'type': 'str',
             },
-            'cant_allocate_settings_frame': {
-                'type': 'str',
-            },
-            'connection_preface_sent': {
+            'rst_frame_rcvd': {
                 'type': 'str',
             },
             'settings_frame': {
                 'type': 'str',
             },
-            'unknown_frame': {
-                'type': 'str',
-            },
-            'streams_gt_max_concur_streams': {
-                'type': 'str',
-            },
-            'bad_connection_preface': {
-                'type': 'str',
-            },
-            'error_max_invalid_stream': {
-                'type': 'str',
-            },
-            'stream_closed': {
-                'type': 'str',
-            },
-            'header_padlen_gt_frame_payload': {
-                'type': 'str',
-            },
-            'protocol_error': {
-                'type': 'str',
-            },
-            'split_buff_fail': {
-                'type': 'str',
-            },
-            'invalid_stream_id': {
-                'type': 'str',
-            },
-            'inflate_alloc_fail': {
-                'type': 'str',
-            },
-            'cancel': {
-                'type': 'str',
-            },
-            'err_sent_http11_required': {
-                'type': 'str',
-            },
-            'err_sent_your_calm': {
-                'type': 'str',
-            },
-            'trailers_no_end_stream': {
-                'type': 'str',
-            },
-            'wrong_stream_state': {
-                'type': 'str',
-            },
-            'idle_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'frame_header_bytes_received': {
-                'type': 'str',
-            },
-            'inflate_header_fail': {
+            'window_update_frame': {
                 'type': 'str',
             },
             'ping_frame': {
                 'type': 'str',
             },
-            'data_bytes_sent': {
+            'goaway_frame': {
                 'type': 'str',
             },
-            'header_to_app': {
+            'priority_frame': {
                 'type': 'str',
             },
-            'total_bytes_sent': {
+            'data_frame': {
                 'type': 'str',
             },
-            'peak_proxy': {
+            'unknown_frame': {
                 'type': 'str',
             },
-            'err_sent_setting_timeout': {
-                'type': 'str',
-            },
-            'ping_frame_sent': {
-                'type': 'str',
-            },
-            'invalid_frame_during_headers': {
-                'type': 'str',
-            },
-            'reserved_remote_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'priority_frame_sent': {
-                'type': 'str',
-            },
-            'curr_proxy': {
-                'type': 'str',
-            },
-            'deflate_alloc_fail': {
+            'connection_preface_sent': {
                 'type': 'str',
             },
             'settings_frame_sent': {
                 'type': 'str',
             },
-            'compression_error': {
+            'settings_ack_sent': {
                 'type': 'str',
             },
-            'settings_timeout': {
+            'empty_settings_sent': {
                 'type': 'str',
             },
-            'empty_settings_rcvd': {
-                'type': 'str',
-            },
-            'err_sent_total': {
-                'type': 'str',
-            },
-            'control_bytes_received': {
-                'type': 'str',
-            },
-            'continuation_before_headers': {
-                'type': 'str',
-            },
-            'err_sent_stream_closed': {
-                'type': 'str',
-            },
-            'bad_frame_type_for_stream_state': {
-                'type': 'str',
-            },
-            'err_sent_refused_stream': {
-                'type': 'str',
-            },
-            'connect_error': {
-                'type': 'str',
-            },
-            'data_frame_sent': {
-                'type': 'str',
-            },
-            'proxy_alloc_error': {
-                'type': 'str',
-            },
-            'cant_allocate_goaway_frame': {
-                'type': 'str',
-            },
-            'buff_alloc_error': {
-                'type': 'str',
-            },
-            'window_update_frame': {
-                'type': 'str',
-            },
-            'err_sent_flow_control': {
-                'type': 'str',
-            },
-            'inadequate_security': {
-                'type': 'str',
-            },
-            'zero_window_size_on_stream': {
-                'type': 'str',
-            },
-            'frame_header_bytes_sent': {
-                'type': 'str',
-            },
-            'cant_allocate_window_frame': {
-                'type': 'str',
-            },
-            'control_frame_sent': {
-                'type': 'str',
-            },
-            'goaway_frame_sent': {
+            'ping_frame_sent': {
                 'type': 'str',
             },
             'window_update_frame_sent': {
@@ -1168,117 +1134,273 @@ def get_argspec():
             'rst_frame_sent': {
                 'type': 'str',
             },
-            'invalid_frame_size': {
+            'goaway_frame_sent': {
                 'type': 'str',
             },
-            'header_no_stream': {
-                'type': 'str',
-            },
-            'settings_ack_rcvd': {
-                'type': 'str',
-            },
-            'data_queue_alloc_error': {
-                'type': 'str',
-            },
-            'err_sent_compression_err': {
-                'type': 'str',
-            },
-            'internal_error': {
-                'type': 'str',
-            },
-            'header_bytes_sent': {
-                'type': 'str',
-            },
-            'empty_settings_sent': {
-                'type': 'str',
-            },
-            'err_sent_cancel': {
-                'type': 'str',
-            },
-            'continuation_frame_sent': {
-                'type': 'str',
-            },
-            'total_bytes_received': {
-                'type': 'str',
-            },
-            'priority_frame': {
-                'type': 'str',
-            },
-            'enhance_your_calm': {
+            'header_to_app': {
                 'type': 'str',
             },
             'data_to_app': {
                 'type': 'str',
             },
-            'cant_allocate_rst_frame': {
+            'protocol_error': {
                 'type': 'str',
             },
-            'cant_allocate_control_frame': {
+            'internal_error': {
+                'type': 'str',
+            },
+            'proxy_alloc_error': {
+                'type': 'str',
+            },
+            'split_buff_fail': {
+                'type': 'str',
+            },
+            'invalid_frame_size': {
+                'type': 'str',
+            },
+            'error_max_invalid_stream': {
+                'type': 'str',
+            },
+            'data_no_stream': {
                 'type': 'str',
             },
             'flow_control_error': {
                 'type': 'str',
             },
-            'control_bytes_sent': {
-                'type': 'str',
-            },
-            'invalid_push_promise': {
-                'type': 'str',
-            },
-            'closed_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'err_sent_connect_err': {
-                'type': 'str',
-            },
-            'header_bytes_received': {
-                'type': 'str',
-            },
-            'data_bytes_received': {
-                'type': 'str',
-            },
-            'settings_ack_sent': {
-                'type': 'str',
-            },
-            'connection_preface_rcvd': {
-                'type': 'str',
-            },
-            'exceeds_max_window_size_stream': {
-                'type': 'str',
-            },
-            'cant_allocate_stream': {
-                'type': 'str',
-            },
-            'data_frame': {
-                'type': 'str',
-            },
-            'invalid_setting_value': {
-                'type': 'str',
-            },
-            'err_rcvd_total': {
+            'settings_timeout': {
                 'type': 'str',
             },
             'frame_size_error': {
                 'type': 'str',
             },
-            'err_sent_internal_err': {
+            'refused_stream': {
                 'type': 'str',
             },
-            'alloc_fail_total': {
+            'cancel': {
                 'type': 'str',
             },
-            'err_sent_proto_err': {
+            'compression_error': {
+                'type': 'str',
+            },
+            'connect_error': {
+                'type': 'str',
+            },
+            'enhance_your_calm': {
+                'type': 'str',
+            },
+            'inadequate_security': {
+                'type': 'str',
+            },
+            'http_1_1_required': {
+                'type': 'str',
+            },
+            'deflate_alloc_fail': {
+                'type': 'str',
+            },
+            'inflate_alloc_fail': {
+                'type': 'str',
+            },
+            'inflate_header_fail': {
+                'type': 'str',
+            },
+            'bad_connection_preface': {
+                'type': 'str',
+            },
+            'cant_allocate_control_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_settings_frame': {
+                'type': 'str',
+            },
+            'bad_frame_type_for_stream_state': {
+                'type': 'str',
+            },
+            'wrong_stream_state': {
+                'type': 'str',
+            },
+            'data_queue_alloc_error': {
+                'type': 'str',
+            },
+            'buff_alloc_error': {
+                'type': 'str',
+            },
+            'cant_allocate_rst_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_goaway_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_ping_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_stream': {
+                'type': 'str',
+            },
+            'cant_allocate_window_frame': {
+                'type': 'str',
+            },
+            'header_no_stream': {
+                'type': 'str',
+            },
+            'header_padlen_gt_frame_payload': {
+                'type': 'str',
+            },
+            'streams_gt_max_concur_streams': {
+                'type': 'str',
+            },
+            'idle_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'reserved_local_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'reserved_remote_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'half_closed_remote_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'closed_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'zero_window_size_on_stream': {
+                'type': 'str',
+            },
+            'exceeds_max_window_size_stream': {
+                'type': 'str',
+            },
+            'stream_closed': {
+                'type': 'str',
+            },
+            'continuation_before_headers': {
+                'type': 'str',
+            },
+            'invalid_frame_during_headers': {
+                'type': 'str',
+            },
+            'headers_after_continuation': {
+                'type': 'str',
+            },
+            'invalid_push_promise': {
+                'type': 'str',
+            },
+            'invalid_stream_id': {
+                'type': 'str',
+            },
+            'headers_interleaved': {
+                'type': 'str',
+            },
+            'trailers_no_end_stream': {
+                'type': 'str',
+            },
+            'invalid_setting_value': {
+                'type': 'str',
+            },
+            'invalid_window_update': {
+                'type': 'str',
+            },
+            'frame_header_bytes_received': {
+                'type': 'str',
+            },
+            'frame_header_bytes_sent': {
+                'type': 'str',
+            },
+            'control_bytes_received': {
+                'type': 'str',
+            },
+            'control_bytes_sent': {
+                'type': 'str',
+            },
+            'header_bytes_received': {
+                'type': 'str',
+            },
+            'header_bytes_sent': {
+                'type': 'str',
+            },
+            'data_bytes_received': {
+                'type': 'str',
+            },
+            'data_bytes_sent': {
+                'type': 'str',
+            },
+            'total_bytes_received': {
+                'type': 'str',
+            },
+            'total_bytes_sent': {
+                'type': 'str',
+            },
+            'peak_proxy': {
+                'type': 'str',
+            },
+            'control_frame_sent': {
+                'type': 'str',
+            },
+            'continuation_frame_sent': {
+                'type': 'str',
+            },
+            'data_frame_sent': {
                 'type': 'str',
             },
             'headers_frame_sent': {
                 'type': 'str',
             },
-            'headers_interleaved': {
+            'priority_frame_sent': {
+                'type': 'str',
+            },
+            'settings_ack_rcvd': {
+                'type': 'str',
+            },
+            'empty_settings_rcvd': {
+                'type': 'str',
+            },
+            'alloc_fail_total': {
+                'type': 'str',
+            },
+            'err_rcvd_total': {
+                'type': 'str',
+            },
+            'err_sent_total': {
+                'type': 'str',
+            },
+            'err_sent_proto_err': {
+                'type': 'str',
+            },
+            'err_sent_internal_err': {
+                'type': 'str',
+            },
+            'err_sent_flow_control': {
+                'type': 'str',
+            },
+            'err_sent_setting_timeout': {
+                'type': 'str',
+            },
+            'err_sent_stream_closed': {
+                'type': 'str',
+            },
+            'err_sent_frame_size_err': {
+                'type': 'str',
+            },
+            'err_sent_refused_stream': {
+                'type': 'str',
+            },
+            'err_sent_cancel': {
+                'type': 'str',
+            },
+            'err_sent_compression_err': {
+                'type': 'str',
+            },
+            'err_sent_connect_err': {
+                'type': 'str',
+            },
+            'err_sent_your_calm': {
+                'type': 'str',
+            },
+            'err_sent_inadequate_security': {
+                'type': 'str',
+            },
+            'err_sent_http11_required': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

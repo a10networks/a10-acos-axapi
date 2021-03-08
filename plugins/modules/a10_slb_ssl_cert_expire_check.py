@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_cert_expire_check
 description:
     - Field ssl_cert_expire_check
-short_description: Configures A10 slb.ssl-cert-expire-check
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             expire_check_status:
                 description:
                 - "Field expire_check_status"
-            interval:
-                description:
-                - "Field interval"
+                type: str
             email_address:
                 description:
                 - "Field email_address"
+                type: str
             email_address2:
                 description:
                 - "Field email_address2"
-            ssl_exception:
-                description:
-                - "Field ssl_exception"
+                type: str
             before:
                 description:
                 - "Field before"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            interval:
+                description:
+                - "Field interval"
+                type: int
+            ssl_exception:
+                description:
+                - "Field ssl_exception"
+                type: list
 
 '''
 
@@ -130,14 +143,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'expire_check_status': {
                 'type': 'str',
                 'choices': ['Enabled', 'Disabled']
-            },
-            'interval': {
-                'type': 'int',
             },
             'email_address': {
                 'type': 'str',
@@ -145,18 +158,18 @@ def get_argspec():
             'email_address2': {
                 'type': 'str',
             },
+            'before': {
+                'type': 'int',
+            },
+            'interval': {
+                'type': 'int',
+            },
             'ssl_exception': {
                 'type': 'list',
                 'exception_cert': {
                     'type': 'str',
                 }
-            },
-            'before': {
-                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

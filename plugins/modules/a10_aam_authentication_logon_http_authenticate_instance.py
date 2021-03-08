@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_logon_http_authenticate_instance
 description:
     - HTTP-authenticate Logon
-short_description: Configures A10 aam.authentication.logon.http.authenticate.instance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,92 +22,115 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    retry:
-        description:
-        - "Maximum number of consecutive failed logon attempts (default 3)"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            spn_krb_success:
-                description:
-                - "SPN Kerberos Success"
-            spn_krb_request:
-                description:
-                - "SPN Kerberos Request"
-            name:
-                description:
-                - "Specify HTTP-Authenticate logon name"
-            spn_krb_faiure:
-                description:
-                - "SPN Kerberos Failure"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     name:
         description:
         - "Specify HTTP-Authenticate logon name"
+        type: str
         required: True
+    auth_method:
+        description:
+        - "Field auth_method"
+        type: dict
+        required: False
+        suboptions:
+            basic:
+                description:
+                - "Field basic"
+                type: dict
+            ntlm:
+                description:
+                - "Field ntlm"
+                type: dict
+            negotiate:
+                description:
+                - "Field negotiate"
+                type: dict
+    retry:
+        description:
+        - "Maximum number of consecutive failed logon attempts (default 3)"
+        type: int
+        required: False
+    account_lock:
+        description:
+        - "Lock the account when the failed logon attempts is exceeded"
+        type: bool
+        required: False
+    duration:
+        description:
+        - "The time an account remains locked in seconds (default 1800)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'spn_krb_request'= SPN Kerberos Request; 'spn_krb_success'= SPN
           Kerberos Success; 'spn_krb_faiure'= SPN Kerberos Failure;"
-    account_lock:
+                type: str
+    stats:
         description:
-        - "Lock the account when the failed logon attempts is exceeded"
-        required: False
-    duration:
-        description:
-        - "The time an account remains locked in seconds (default 1800)"
-        required: False
-    auth_method:
-        description:
-        - "Field auth_method"
+        - "Field stats"
+        type: dict
         required: False
         suboptions:
-            ntlm:
+            spn_krb_request:
                 description:
-                - "Field ntlm"
-            negotiate:
+                - "SPN Kerberos Request"
+                type: str
+            spn_krb_success:
                 description:
-                - "Field negotiate"
-            basic:
+                - "SPN Kerberos Success"
+                type: str
+            spn_krb_faiure:
                 description:
-                - "Field basic"
+                - "SPN Kerberos Failure"
+                type: str
+            name:
+                description:
+                - "Specify HTTP-Authenticate logon name"
+                type: str
 
 '''
 
@@ -169,31 +190,66 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'retry': {
-            'type': 'int',
-        },
-        'stats': {
-            'type': 'dict',
-            'spn_krb_success': {
-                'type': 'str',
-            },
-            'spn_krb_request': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'spn_krb_faiure': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'name': {
             'type': 'str',
             'required': True,
+        },
+        'auth_method': {
+            'type': 'dict',
+            'basic': {
+                'type': 'dict',
+                'basic_realm': {
+                    'type': 'str',
+                },
+                'challenge_response_form': {
+                    'type': 'str',
+                },
+                'challenge_page': {
+                    'type': 'str',
+                },
+                'challenge_variable': {
+                    'type': 'str',
+                },
+                'new_pin_page': {
+                    'type': 'str',
+                },
+                'next_token_page': {
+                    'type': 'str',
+                },
+                'new_pin_variable': {
+                    'type': 'str',
+                },
+                'next_token_variable': {
+                    'type': 'str',
+                },
+                'basic_enable': {
+                    'type': 'bool',
+                }
+            },
+            'ntlm': {
+                'type': 'dict',
+                'ntlm_enable': {
+                    'type': 'bool',
+                }
+            },
+            'negotiate': {
+                'type': 'dict',
+                'negotiate_enable': {
+                    'type': 'bool',
+                }
+            }
+        },
+        'retry': {
+            'type': 'int',
+        },
+        'account_lock': {
+            'type': 'bool',
+        },
+        'duration': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -206,55 +262,20 @@ def get_argspec():
                 ]
             }
         },
-        'account_lock': {
-            'type': 'bool',
-        },
-        'duration': {
-            'type': 'int',
-        },
-        'auth_method': {
+        'stats': {
             'type': 'dict',
-            'ntlm': {
-                'type': 'dict',
-                'ntlm_enable': {
-                    'type': 'bool',
-                }
+            'spn_krb_request': {
+                'type': 'str',
             },
-            'negotiate': {
-                'type': 'dict',
-                'negotiate_enable': {
-                    'type': 'bool',
-                }
+            'spn_krb_success': {
+                'type': 'str',
             },
-            'basic': {
-                'type': 'dict',
-                'new_pin_page': {
-                    'type': 'str',
-                },
-                'basic_enable': {
-                    'type': 'bool',
-                },
-                'challenge_page': {
-                    'type': 'str',
-                },
-                'next_token_variable': {
-                    'type': 'str',
-                },
-                'next_token_page': {
-                    'type': 'str',
-                },
-                'challenge_variable': {
-                    'type': 'str',
-                },
-                'basic_realm': {
-                    'type': 'str',
-                },
-                'new_pin_variable': {
-                    'type': 'str',
-                },
-                'challenge_response_form': {
-                    'type': 'str',
-                }
+            'spn_krb_faiure': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_sip
 description:
     - SIP Template
-short_description: Configures A10 slb.template.sip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,223 +22,278 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    server_request_header:
+    name:
         description:
-        - "Field server_request_header"
+        - "SIP Template Name"
+        type: str
+        required: True
+    alg_source_nat:
+        description:
+        - "Translate source IP to NAT IP in SIP message when source NAT is used"
+        type: bool
         required: False
-        suboptions:
-            server_request_header_insert:
-                description:
-                - "Insert a SIP header (Header Content (Format= 'name=value'))"
-            server_request_erase_all:
-                description:
-                - "Erase all headers"
-            insert_condition_server_request:
-                description:
-                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
-          always'= Always insert the header even when there is a header with the same
-          name;"
-            server_request_header_erase:
-                description:
-                - "Erase a SIP header (Header Name)"
-    smp_call_id_rtp_session:
+    alg_dest_nat:
         description:
-        - "Create the across cpu call-id rtp session"
+        - "Translate VIP to real server IP in SIP message when destination NAT is used"
+        type: bool
         required: False
-    keep_server_ip_if_match_acl:
+    call_id_persist_disable:
         description:
-        - "Use Real Server IP for addresses matching the ACL for a Call-Id"
+        - "Disable call-ID persistence"
+        type: bool
         required: False
     client_keep_alive:
         description:
         - "Respond client keep-alive packet directly instead of forwarding to server"
+        type: bool
         required: False
-    alg_source_nat:
+    pstn_gw:
         description:
-        - "Translate source IP to NAT IP in SIP message when source NAT is used"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    server_response_header:
-        description:
-        - "Field server_response_header"
-        required: False
-        suboptions:
-            server_response_header_insert:
-                description:
-                - "Insert a SIP header (Header Content (Format= 'name=value'))"
-            insert_condition_server_response:
-                description:
-                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
-          always'= Always insert the header even when there is a header with the same
-          name;"
-            server_response_header_erase:
-                description:
-                - "Erase a SIP header (Header Name)"
-            server_response_erase_all:
-                description:
-                - "Erase all headers"
-    server_selection_per_request:
-        description:
-        - "Force server selection on every SIP request"
+        - "configure pstn gw host name for tel= uri translate to sip= uri (Hostname
+          String, default is 'pstn')"
+        type: str
         required: False
     client_request_header:
         description:
         - "Field client_request_header"
+        type: list
         required: False
         suboptions:
             client_request_header_erase:
                 description:
                 - "Erase a SIP header (Header Name)"
-            client_request_header_insert:
-                description:
-                - "Insert a SIP header (Header Content (Format= 'name=value'))"
+                type: str
             client_request_erase_all:
                 description:
                 - "Erase all headers"
+                type: bool
+            client_request_header_insert:
+                description:
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
+                type: str
             insert_condition_client_request:
                 description:
                 - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
           always'= Always insert the header even when there is a header with the same
           name;"
-    pstn_gw:
-        description:
-        - "configure pstn gw host name for tel= uri translate to sip= uri (Hostname
-          String, default is 'pstn')"
-        required: False
-    service_group:
-        description:
-        - "service group name"
-        required: False
-    insert_client_ip:
-        description:
-        - "Insert Client IP address into SIP header"
-        required: False
-    failed_client_selection:
-        description:
-        - "Define action when select client fail"
-        required: False
-    failed_client_selection_message:
-        description:
-        - "Send SIP message (includs status code) to server when select client
-          fail(Format= 3 digits(1XX~6XX) space reason)"
-        required: False
-    call_id_persist_disable:
-        description:
-        - "Disable call-ID persistence"
-        required: False
-    acl_id:
-        description:
-        - "ACL id"
-        required: False
-    alg_dest_nat:
-        description:
-        - "Translate VIP to real server IP in SIP message when destination NAT is used"
-        required: False
-    server_keep_alive:
-        description:
-        - "Send server keep-alive packet for every persist connection when enable conn-
-          reuse"
-        required: False
+                type: str
     client_response_header:
         description:
         - "Field client_response_header"
+        type: list
         required: False
         suboptions:
+            client_response_header_erase:
+                description:
+                - "Erase a SIP header (Header Name)"
+                type: str
             client_response_erase_all:
                 description:
                 - "Erase all headers"
+                type: bool
+            client_response_header_insert:
+                description:
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
+                type: str
             insert_condition_client_response:
                 description:
                 - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
           always'= Always insert the header even when there is a header with the same
           name;"
-            client_response_header_erase:
-                description:
-                - "Erase a SIP header (Header Name)"
-            client_response_header_insert:
-                description:
-                - "Insert a SIP header (Header Content (Format= 'name=value'))"
-    failed_server_selection_message:
-        description:
-        - "Send SIP message (includs status code) to client when select server
-          fail(Format= 3 digits(1XX~6XX) space reason)"
-        required: False
-    name:
-        description:
-        - "SIP Template Name"
-        required: True
+                type: str
     exclude_translation:
         description:
         - "Field exclude_translation"
+        type: list
         required: False
         suboptions:
             translation_value:
                 description:
                 - "'start-line'= SIP request line or status line; 'header'= SIP message headers;
           'body'= SIP message body;"
+                type: str
             header_string:
                 description:
                 - "SIP header name"
-    interval:
+                type: str
+    failed_client_selection:
         description:
-        - "The interval of keep-alive packet for each persist connection (second)"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    dialog_aware:
-        description:
-        - "Permit system processes dialog session"
-        required: False
-    failed_server_selection:
-        description:
-        - "Define action when select server fail"
+        - "Define action when select client fail"
+        type: bool
         required: False
     drop_when_client_fail:
         description:
         - "Drop current SIP message when select client fail"
+        type: bool
         required: False
-    timeout:
+    failed_client_selection_message:
         description:
-        - "Time in minutes"
+        - "Send SIP message (includs status code) to server when select client
+          fail(Format= 3 digits(1XX~6XX) space reason)"
+        type: str
+        required: False
+    failed_server_selection:
+        description:
+        - "Define action when select server fail"
+        type: bool
         required: False
     drop_when_server_fail:
         description:
         - "Drop current SIP message when select server fail"
+        type: bool
+        required: False
+    failed_server_selection_message:
+        description:
+        - "Send SIP message (includs status code) to client when select server
+          fail(Format= 3 digits(1XX~6XX) space reason)"
+        type: str
+        required: False
+    insert_client_ip:
+        description:
+        - "Insert Client IP address into SIP header"
+        type: bool
+        required: False
+    keep_server_ip_if_match_acl:
+        description:
+        - "Use Real Server IP for addresses matching the ACL for a Call-Id"
+        type: bool
+        required: False
+    acl_id:
+        description:
+        - "ACL id"
+        type: int
         required: False
     acl_name_value:
         description:
         - "IPv4 Access List Name"
+        type: str
+        required: False
+    service_group:
+        description:
+        - "service group name"
+        type: str
+        required: False
+    server_keep_alive:
+        description:
+        - "Send server keep-alive packet for every persist connection when enable conn-
+          reuse"
+        type: bool
+        required: False
+    interval:
+        description:
+        - "The interval of keep-alive packet for each persist connection (second)"
+        type: int
+        required: False
+    server_request_header:
+        description:
+        - "Field server_request_header"
+        type: list
+        required: False
+        suboptions:
+            server_request_header_erase:
+                description:
+                - "Erase a SIP header (Header Name)"
+                type: str
+            server_request_erase_all:
+                description:
+                - "Erase all headers"
+                type: bool
+            server_request_header_insert:
+                description:
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
+                type: str
+            insert_condition_server_request:
+                description:
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
+          always'= Always insert the header even when there is a header with the same
+          name;"
+                type: str
+    server_response_header:
+        description:
+        - "Field server_response_header"
+        type: list
+        required: False
+        suboptions:
+            server_response_header_erase:
+                description:
+                - "Erase a SIP header (Header Name)"
+                type: str
+            server_response_erase_all:
+                description:
+                - "Erase all headers"
+                type: bool
+            server_response_header_insert:
+                description:
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
+                type: str
+            insert_condition_server_response:
+                description:
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
+          always'= Always insert the header even when there is a header with the same
+          name;"
+                type: str
+    smp_call_id_rtp_session:
+        description:
+        - "Create the across cpu call-id rtp session"
+        type: bool
+        required: False
+    server_selection_per_request:
+        description:
+        - "Force server selection on every SIP request"
+        type: bool
+        required: False
+    timeout:
+        description:
+        - "Time in minutes"
+        type: int
+        required: False
+    dialog_aware:
+        description:
+        - "Permit system processes dialog session"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -323,121 +376,56 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'server_request_header': {
-            'type': 'list',
-            'server_request_header_insert': {
-                'type': 'str',
-            },
-            'server_request_erase_all': {
-                'type': 'bool',
-            },
-            'insert_condition_server_request': {
-                'type': 'str',
-                'choices': ['insert-if-not-exist', 'insert-always']
-            },
-            'server_request_header_erase': {
-                'type': 'str',
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
         },
-        'smp_call_id_rtp_session': {
+        'alg_source_nat': {
             'type': 'bool',
         },
-        'keep_server_ip_if_match_acl': {
+        'alg_dest_nat': {
+            'type': 'bool',
+        },
+        'call_id_persist_disable': {
             'type': 'bool',
         },
         'client_keep_alive': {
             'type': 'bool',
         },
-        'alg_source_nat': {
-            'type': 'bool',
-        },
-        'uuid': {
+        'pstn_gw': {
             'type': 'str',
-        },
-        'server_response_header': {
-            'type': 'list',
-            'server_response_header_insert': {
-                'type': 'str',
-            },
-            'insert_condition_server_response': {
-                'type': 'str',
-                'choices': ['insert-if-not-exist', 'insert-always']
-            },
-            'server_response_header_erase': {
-                'type': 'str',
-            },
-            'server_response_erase_all': {
-                'type': 'bool',
-            }
-        },
-        'server_selection_per_request': {
-            'type': 'bool',
         },
         'client_request_header': {
             'type': 'list',
             'client_request_header_erase': {
                 'type': 'str',
             },
-            'client_request_header_insert': {
-                'type': 'str',
-            },
             'client_request_erase_all': {
                 'type': 'bool',
+            },
+            'client_request_header_insert': {
+                'type': 'str',
             },
             'insert_condition_client_request': {
                 'type': 'str',
                 'choices': ['insert-if-not-exist', 'insert-always']
             }
         },
-        'pstn_gw': {
-            'type': 'str',
-        },
-        'service_group': {
-            'type': 'str',
-        },
-        'insert_client_ip': {
-            'type': 'bool',
-        },
-        'failed_client_selection': {
-            'type': 'bool',
-        },
-        'failed_client_selection_message': {
-            'type': 'str',
-        },
-        'call_id_persist_disable': {
-            'type': 'bool',
-        },
-        'acl_id': {
-            'type': 'int',
-        },
-        'alg_dest_nat': {
-            'type': 'bool',
-        },
-        'server_keep_alive': {
-            'type': 'bool',
-        },
         'client_response_header': {
             'type': 'list',
+            'client_response_header_erase': {
+                'type': 'str',
+            },
             'client_response_erase_all': {
                 'type': 'bool',
+            },
+            'client_response_header_insert': {
+                'type': 'str',
             },
             'insert_condition_client_response': {
                 'type': 'str',
                 'choices': ['insert-if-not-exist', 'insert-always']
-            },
-            'client_response_header_erase': {
-                'type': 'str',
-            },
-            'client_response_header_insert': {
-                'type': 'str',
             }
-        },
-        'failed_server_selection_message': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         },
         'exclude_translation': {
             'type': 'list',
@@ -449,28 +437,93 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'interval': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'dialog_aware': {
-            'type': 'bool',
-        },
-        'failed_server_selection': {
+        'failed_client_selection': {
             'type': 'bool',
         },
         'drop_when_client_fail': {
             'type': 'bool',
         },
-        'timeout': {
-            'type': 'int',
+        'failed_client_selection_message': {
+            'type': 'str',
+        },
+        'failed_server_selection': {
+            'type': 'bool',
         },
         'drop_when_server_fail': {
             'type': 'bool',
         },
+        'failed_server_selection_message': {
+            'type': 'str',
+        },
+        'insert_client_ip': {
+            'type': 'bool',
+        },
+        'keep_server_ip_if_match_acl': {
+            'type': 'bool',
+        },
+        'acl_id': {
+            'type': 'int',
+        },
         'acl_name_value': {
+            'type': 'str',
+        },
+        'service_group': {
+            'type': 'str',
+        },
+        'server_keep_alive': {
+            'type': 'bool',
+        },
+        'interval': {
+            'type': 'int',
+        },
+        'server_request_header': {
+            'type': 'list',
+            'server_request_header_erase': {
+                'type': 'str',
+            },
+            'server_request_erase_all': {
+                'type': 'bool',
+            },
+            'server_request_header_insert': {
+                'type': 'str',
+            },
+            'insert_condition_server_request': {
+                'type': 'str',
+                'choices': ['insert-if-not-exist', 'insert-always']
+            }
+        },
+        'server_response_header': {
+            'type': 'list',
+            'server_response_header_erase': {
+                'type': 'str',
+            },
+            'server_response_erase_all': {
+                'type': 'bool',
+            },
+            'server_response_header_insert': {
+                'type': 'str',
+            },
+            'insert_condition_server_response': {
+                'type': 'str',
+                'choices': ['insert-if-not-exist', 'insert-always']
+            }
+        },
+        'smp_call_id_rtp_session': {
+            'type': 'bool',
+        },
+        'server_selection_per_request': {
+            'type': 'bool',
+        },
+        'timeout': {
+            'type': 'int',
+        },
+        'dialog_aware': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ipsec
 description:
     - Configure Crypto Cores for IPsec processing
-short_description: Configures A10 system.ipsec
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,58 +22,71 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     packet_round_robin:
         description:
         - "Enable packet round robin for IPsec packets"
+        type: bool
         required: False
     crypto_core:
         description:
         - "Crypto cores assigned for IPsec processing"
+        type: int
+        required: False
+    crypto_mem:
+        description:
+        - "Crypto memory percentage assigned for IPsec processing (rounded to increments
+          of 10)"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     fpga_decrypt:
         description:
         - "Field fpga_decrypt"
+        type: dict
         required: False
         suboptions:
             action:
                 description:
                 - "'enable'= Enable FPGA decryption offload; 'disable'= Disable FPGA decryption
           offload;"
-    crypto_mem:
-        description:
-        - "Crypto memory percentage assigned for IPsec processing (rounded to increments
-          of 10)"
-        required: False
+                type: str
 
 '''
 
@@ -138,6 +149,9 @@ def get_argspec():
         'crypto_core': {
             'type': 'int',
         },
+        'crypto_mem': {
+            'type': 'int',
+        },
         'uuid': {
             'type': 'str',
         },
@@ -147,9 +161,6 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['enable', 'disable']
             }
-        },
-        'crypto_mem': {
-            'type': 'int',
         }
     })
     return rv

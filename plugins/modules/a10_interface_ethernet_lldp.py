@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ethernet_lldp
 description:
     - Interface lldp configuration
-short_description: Configures A10 interface.ethernet.lldp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,102 +22,132 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ethernet_ifnum:
         description:
-        - Key to identify parent object    tx_dot1_cfg:
+        - Key to identify parent object
+        type: str
+        required: True
+    enable_cfg:
         description:
-        - "Field tx_dot1_cfg"
+        - "Field enable_cfg"
+        type: dict
         required: False
         suboptions:
-            link_aggregation:
+            rt_enable:
                 description:
-                - "Interface link aggregation information"
-            vlan:
+                - "Interface lldp enable/disable"
+                type: bool
+            rx:
                 description:
-                - "Interface vlan information"
-            tx_dot1_tlvs:
+                - "Enable lldp rx"
+                type: bool
+            tx:
                 description:
-                - "Interface lldp tx IEEE 802.1 Organizationally specific TLVs configuration"
+                - "Enable lldp tx"
+                type: bool
     notification_cfg:
         description:
         - "Field notification_cfg"
+        type: dict
         required: False
         suboptions:
             notification:
                 description:
                 - "Interface lldp notification configuration"
+                type: bool
             notif_enable:
                 description:
                 - "Interface lldp notification enable"
-    enable_cfg:
+                type: bool
+    tx_dot1_cfg:
         description:
-        - "Field enable_cfg"
+        - "Field tx_dot1_cfg"
+        type: dict
         required: False
         suboptions:
-            rx:
+            tx_dot1_tlvs:
                 description:
-                - "Enable lldp rx"
-            tx:
+                - "Interface lldp tx IEEE 802.1 Organizationally specific TLVs configuration"
+                type: bool
+            link_aggregation:
                 description:
-                - "Enable lldp tx"
-            rt_enable:
+                - "Interface link aggregation information"
+                type: bool
+            vlan:
                 description:
-                - "Interface lldp enable/disable"
+                - "Interface vlan information"
+                type: bool
     tx_tlvs_cfg:
         description:
         - "Field tx_tlvs_cfg"
+        type: dict
         required: False
         suboptions:
-            system_capabilities:
-                description:
-                - "Interface lldp system capabilities"
-            system_description:
-                description:
-                - "Interface lldp system description"
-            management_address:
-                description:
-                - "Interface lldp management address"
             tx_tlvs:
                 description:
                 - "Interface lldp tx TLVs configuration"
+                type: bool
             exclude:
                 description:
                 - "Configure which TLVs excluded. All basic TLVs will be included by default"
+                type: bool
+            management_address:
+                description:
+                - "Interface lldp management address"
+                type: bool
             port_description:
                 description:
                 - "Interface lldp port description"
+                type: bool
+            system_capabilities:
+                description:
+                - "Interface lldp system capabilities"
+                type: bool
+            system_description:
+                description:
+                - "Interface lldp system description"
+                type: bool
             system_name:
                 description:
                 - "Interface lldp system name"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -177,15 +205,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'tx_dot1_cfg': {
+        'enable_cfg': {
             'type': 'dict',
-            'link_aggregation': {
+            'rt_enable': {
                 'type': 'bool',
             },
-            'vlan': {
+            'rx': {
                 'type': 'bool',
             },
-            'tx_dot1_tlvs': {
+            'tx': {
                 'type': 'bool',
             }
         },
@@ -198,36 +226,36 @@ def get_argspec():
                 'type': 'bool',
             }
         },
-        'enable_cfg': {
+        'tx_dot1_cfg': {
             'type': 'dict',
-            'rx': {
+            'tx_dot1_tlvs': {
                 'type': 'bool',
             },
-            'tx': {
+            'link_aggregation': {
                 'type': 'bool',
             },
-            'rt_enable': {
+            'vlan': {
                 'type': 'bool',
             }
         },
         'tx_tlvs_cfg': {
             'type': 'dict',
-            'system_capabilities': {
-                'type': 'bool',
-            },
-            'system_description': {
-                'type': 'bool',
-            },
-            'management_address': {
-                'type': 'bool',
-            },
             'tx_tlvs': {
                 'type': 'bool',
             },
             'exclude': {
                 'type': 'bool',
             },
+            'management_address': {
+                'type': 'bool',
+            },
             'port_description': {
+                'type': 'bool',
+            },
+            'system_capabilities': {
+                'type': 'bool',
+            },
+            'system_description': {
                 'type': 'bool',
             },
             'system_name': {

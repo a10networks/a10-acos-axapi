@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility
 description:
     - Display Network statistics
-short_description: Configures A10 visibility
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,194 +22,63 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    flow_collector:
+    granularity:
         description:
-        - "Field flow_collector"
+        - "Granularity for rate based calculations in seconds (default 5)"
+        type: int
         required: False
-        suboptions:
-            netflow:
-                description:
-                - "Field netflow"
-            sflow:
-                description:
-                - "Field sflow"
-    resource_usage:
-        description:
-        - "Field resource_usage"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            flow_collector:
-                description:
-                - "Field flow_collector"
-            ha_entity_delete_sent:
-                description:
-                - "Total montior entity HA delete messages sent"
-            out_of_memory_alloc_failures:
-                description:
-                - "Out of memory allocation failures"
-            reporting:
-                description:
-                - "Field reporting"
-            mon_entity_telemetry_data:
-                description:
-                - "Field mon_entity_telemetry_data"
-            monitor:
-                description:
-                - "Field monitor"
-            mon_entity_rrd_file_timestamp_err:
-                description:
-                - "Total monitor entity rrd file timestamp errors"
-            lw_mon_entity_limit_exceed:
-                description:
-                - "Light weight limit exceeded errors"
-            ha_entity_periodic_sync_sent:
-                description:
-                - "Total monitor entity periodic sync messages sent"
-            mon_entity_rrd_last_update_fetch_failed_err:
-                description:
-                - "Total monitor entity rrd last update fetch failed error"
-            ha_entity_create_sent:
-                description:
-                - "Total montior entity HA create messages sent"
-            lw_out_of_memory_alloc_failures:
-                description:
-                - "Light Weight Out-of-memory allocation failures"
-            mon_entity_rrd_update_err:
-                description:
-                - "Total monitor entity rrd update error"
-            ha_entity_anomaly_off_sent:
-                description:
-                - "Total anomaly off HA messages sent"
-            mon_entity_rrd_tune_err:
-                description:
-                - "Total monitor entity rrd tune error"
-            lw_mon_entity_created:
-                description:
-                - "Total Light-weight entities created"
-            mon_entity_rrd_file_create_err:
-                description:
-                - "Total monitor entity rrd file create error"
-            mon_entity_rrd_out_of_memory_err:
-                description:
-                - "Total monitor entity rrd load failed, out of memory error"
-            ha_entity_anomaly_on_sent:
-                description:
-                - "Total anomaly on HA messages sent"
-            mon_entity_limit_exceed:
-                description:
-                - "Total monitor entity limit exceed failures"
-            lw_mon_entity_deleted:
-                description:
-                - "Total Light-weight entities deleted"
-    mon_entity_telemetry_data:
-        description:
-        - "Field mon_entity_telemetry_data"
-        required: False
-        suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    reporting:
-        description:
-        - "Field reporting"
-        required: False
-        suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-            template:
-                description:
-                - "Field template"
-            telemetry_export_interval:
-                description:
-                - "Field telemetry_export_interval"
-    topk:
-        description:
-        - "Field topk"
-        required: False
-        suboptions:
-            sources:
-                description:
-                - "Field sources"
     initial_learning_interval:
         description:
         - "Initial learning interval (in hours) before processing"
+        type: int
         required: False
-    monitored_entity:
+    source_entity_topk:
         description:
-        - "Field monitored_entity"
+        - "Enable topk for sources"
+        type: bool
         required: False
-        suboptions:
-            detail:
-                description:
-                - "Field detail"
-            sessions:
-                description:
-                - "Field sessions"
-            topk:
-                description:
-                - "Field topk"
-            uuid:
-                description:
-                - "uuid of the object"
-            secondary:
-                description:
-                - "Field secondary"
-    debug_files:
+    uuid:
         description:
-        - "Field debug_files"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -233,25 +100,171 @@ options:
           monitor entity rrd tune error; 'mon-entity-rrd-out-of-memory-err'= Total
           monitor entity rrd load failed, out of memory error; 'mon-entity-rrd-file-
           create-err'= Total monitor entity rrd file create error;"
-    source_entity_topk:
+                type: str
+    mon_entity_telemetry_data:
         description:
-        - "Enable topk for sources"
+        - "Field mon_entity_telemetry_data"
+        type: dict
         required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    debug_files:
+        description:
+        - "Field debug_files"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    topk:
+        description:
+        - "Field topk"
+        type: dict
+        required: False
+        suboptions:
+            sources:
+                description:
+                - "Field sources"
+                type: dict
+    monitored_entity:
+        description:
+        - "Field monitored_entity"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            detail:
+                description:
+                - "Field detail"
+                type: dict
+            sessions:
+                description:
+                - "Field sessions"
+                type: dict
+            topk:
+                description:
+                - "Field topk"
+                type: dict
+            secondary:
+                description:
+                - "Field secondary"
+                type: dict
     file:
         description:
         - "Field file"
+        type: dict
         required: False
         suboptions:
             metrics:
                 description:
                 - "Field metrics"
-    granularity:
+                type: dict
+    reporting:
         description:
-        - "Granularity for rate based calculations in seconds (default 5)"
+        - "Field reporting"
+        type: dict
         required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+            telemetry_export_interval:
+                description:
+                - "Field telemetry_export_interval"
+                type: dict
+            template:
+                description:
+                - "Field template"
+                type: dict
+    monitor:
+        description:
+        - "Field monitor"
+        type: dict
+        required: False
+        suboptions:
+            primary_monitor:
+                description:
+                - "'traffic'= Mointor traffic;"
+                type: str
+            monitor_key:
+                description:
+                - "'source'= Monitor traffic from all sources; 'dest'= Monitor traffic to any
+          destination; 'service'= Monitor traffic to any service; 'source-nat-ip'=
+          Monitor traffic to all source nat IPs;"
+                type: str
+            mon_entity_topk:
+                description:
+                - "Enable topk for primary entities"
+                type: bool
+            source_entity_topk:
+                description:
+                - "Enable topk for sources to primary-entities"
+                type: bool
+            index_sessions:
+                description:
+                - "Start indexing associated sessions"
+                type: bool
+            index_sessions_type:
+                description:
+                - "'per-cpu'= Use per cpu list;"
+                type: str
+            template:
+                description:
+                - "Field template"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            agent_list:
+                description:
+                - "Field agent_list"
+                type: list
+            sflow:
+                description:
+                - "Field sflow"
+                type: dict
+            netflow:
+                description:
+                - "Field netflow"
+                type: dict
+            debug_list:
+                description:
+                - "Field debug_list"
+                type: list
+            replay_debug_file:
+                description:
+                - "Field replay_debug_file"
+                type: dict
+            delete_debug_file:
+                description:
+                - "Field delete_debug_file"
+                type: dict
+            secondary_monitor:
+                description:
+                - "Field secondary_monitor"
+                type: dict
     anomaly_detection:
         description:
         - "Field anomaly_detection"
+        type: dict
         required: False
         suboptions:
             sensitivity:
@@ -259,70 +272,136 @@ options:
                 - "'high'= Highly sensitive anomaly detection. Can lead to false positives; 'low'=
           Low sensitivity anomaly detection. Can cause delay in detection and might not
           detect certain attacks. (default);"
+                type: str
+            feature_status:
+                description:
+                - "'enable'= Enable anomaly-detection; 'disable'= Disable anomaly detection
+          (default);"
+                type: str
             logging:
                 description:
                 - "'per-entity'= Enable per entity logging; 'per-metric'= Enable per metric
           logging with threshold details; 'disable'= Disable anomaly notifications
           (Default);"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-            feature_status:
-                description:
-                - "'enable'= Enable anomaly-detection; 'disable'= Disable anomaly detection
-          (default);"
-    monitor:
+                type: str
+    flow_collector:
         description:
-        - "Field monitor"
+        - "Field flow_collector"
+        type: dict
         required: False
         suboptions:
-            primary_monitor:
-                description:
-                - "'traffic'= Mointor traffic;"
-            mon_entity_topk:
-                description:
-                - "Enable topk for primary entities"
-            monitor_key:
-                description:
-                - "'source'= Monitor traffic from all sources; 'dest'= Monitor traffic to any
-          destination; 'service'= Monitor traffic to any service; 'source-nat-ip'=
-          Monitor traffic to all source nat IPs;"
-            debug_list:
-                description:
-                - "Field debug_list"
-            uuid:
-                description:
-                - "uuid of the object"
             sflow:
                 description:
                 - "Field sflow"
-            delete_debug_file:
-                description:
-                - "Field delete_debug_file"
-            index_sessions:
-                description:
-                - "Start indexing associated sessions"
-            source_entity_topk:
-                description:
-                - "Enable topk for sources to primary-entities"
-            template:
-                description:
-                - "Field template"
-            replay_debug_file:
-                description:
-                - "Field replay_debug_file"
+                type: dict
             netflow:
                 description:
                 - "Field netflow"
-            index_sessions_type:
+                type: dict
+    resource_usage:
+        description:
+        - "Field resource_usage"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
                 description:
-                - "'per-cpu'= Use per cpu list;"
-            secondary_monitor:
+                - "uuid of the object"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            mon_entity_limit_exceed:
                 description:
-                - "Field secondary_monitor"
-            agent_list:
+                - "Total monitor entity limit exceed failures"
+                type: str
+            ha_entity_create_sent:
                 description:
-                - "Field agent_list"
+                - "Total montior entity HA create messages sent"
+                type: str
+            ha_entity_delete_sent:
+                description:
+                - "Total montior entity HA delete messages sent"
+                type: str
+            ha_entity_anomaly_on_sent:
+                description:
+                - "Total anomaly on HA messages sent"
+                type: str
+            ha_entity_anomaly_off_sent:
+                description:
+                - "Total anomaly off HA messages sent"
+                type: str
+            ha_entity_periodic_sync_sent:
+                description:
+                - "Total monitor entity periodic sync messages sent"
+                type: str
+            out_of_memory_alloc_failures:
+                description:
+                - "Out of memory allocation failures"
+                type: str
+            lw_mon_entity_created:
+                description:
+                - "Total Light-weight entities created"
+                type: str
+            lw_mon_entity_deleted:
+                description:
+                - "Total Light-weight entities deleted"
+                type: str
+            lw_mon_entity_limit_exceed:
+                description:
+                - "Light weight limit exceeded errors"
+                type: str
+            lw_out_of_memory_alloc_failures:
+                description:
+                - "Light Weight Out-of-memory allocation failures"
+                type: str
+            mon_entity_rrd_file_timestamp_err:
+                description:
+                - "Total monitor entity rrd file timestamp errors"
+                type: str
+            mon_entity_rrd_update_err:
+                description:
+                - "Total monitor entity rrd update error"
+                type: str
+            mon_entity_rrd_last_update_fetch_failed_err:
+                description:
+                - "Total monitor entity rrd last update fetch failed error"
+                type: str
+            mon_entity_rrd_tune_err:
+                description:
+                - "Total monitor entity rrd tune error"
+                type: str
+            mon_entity_rrd_out_of_memory_err:
+                description:
+                - "Total monitor entity rrd load failed, out of memory error"
+                type: str
+            mon_entity_rrd_file_create_err:
+                description:
+                - "Total monitor entity rrd file create error"
+                type: str
+            mon_entity_telemetry_data:
+                description:
+                - "Field mon_entity_telemetry_data"
+                type: dict
+            reporting:
+                description:
+                - "Field reporting"
+                type: dict
+            monitor:
+                description:
+                - "Field monitor"
+                type: dict
+            flow_collector:
+                description:
+                - "Field flow_collector"
+                type: dict
 
 '''
 
@@ -390,478 +469,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'flow_collector': {
-            'type': 'dict',
-            'netflow': {
-                'type': 'dict',
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'all', 'pkts-rcvd', 'v9-templates-created',
-                            'v9-templates-deleted', 'v10-templates-created',
-                            'v10-templates-deleted', 'template-drop-exceeded',
-                            'template-drop-out-of-memory', 'frag-dropped',
-                            'agent-not-found', 'version-not-supported',
-                            'unknown-dir'
-                        ]
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'template': {
-                    'type': 'dict',
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type':
-                            'str',
-                            'choices': [
-                                'all', 'templates-added-to-delq',
-                                'templates-removed-from-delq'
-                            ]
-                        }
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'detail': {
-                        'type': 'dict',
-                        'uuid': {
-                            'type': 'str',
-                        }
-                    }
-                }
-            },
-            'sflow': {
-                'type': 'dict',
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'all', 'pkts-received', 'frag-dropped',
-                            'agent-not-found', 'version-not-supported',
-                            'unknown-dir'
-                        ]
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'resource_usage': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'flow_collector': {
-                'type': 'dict',
-            },
-            'ha_entity_delete_sent': {
-                'type': 'str',
-            },
-            'out_of_memory_alloc_failures': {
-                'type': 'str',
-            },
-            'reporting': {
-                'type': 'dict',
-                'stats': {
-                    'type': 'dict',
-                    'buffer_alloc_failure': {
-                        'type': 'str',
-                    },
-                    'dequeued': {
-                        'type': 'str',
-                    },
-                    'enqueue_pass': {
-                        'type': 'str',
-                    },
-                    'notif_jobs_in_queue': {
-                        'type': 'str',
-                    },
-                    'enqueue_fail': {
-                        'type': 'str',
-                    },
-                    'log_transmit_failure': {
-                        'type': 'str',
-                    }
-                },
-                'template': {
-                    'type': 'dict',
-                }
-            },
-            'mon_entity_telemetry_data': {
-                'type': 'dict',
-                'stats': {
-                    'type': 'dict',
-                    'in_bytes': {
-                        'type': 'str',
-                    },
-                    'tcp_in_empty_ack': {
-                        'type': 'str',
-                    },
-                    'in_small_pkt': {
-                        'type': 'str',
-                    },
-                    'tcp_out_empty_ack': {
-                        'type': 'str',
-                    },
-                    'concurrent_conn': {
-                        'type': 'str',
-                    },
-                    'out_frag': {
-                        'type': 'str',
-                    },
-                    'tcp_out_rst': {
-                        'type': 'str',
-                    },
-                    'tcp_out_zero_wnd': {
-                        'type': 'str',
-                    },
-                    'errors': {
-                        'type': 'str',
-                    },
-                    'out_small_pkt': {
-                        'type': 'str',
-                    },
-                    'tcp_in_rexmit': {
-                        'type': 'str',
-                    },
-                    'tcp_out_fin': {
-                        'type': 'str',
-                    },
-                    'in_bytes_per_out_bytes': {
-                        'type': 'str',
-                    },
-                    'tcp_in_payload': {
-                        'type': 'str',
-                    },
-                    'tcp_out_syn': {
-                        'type': 'str',
-                    },
-                    'tcp_out_rexmit': {
-                        'type': 'str',
-                    },
-                    'tcp_in_zero_wnd': {
-                        'type': 'str',
-                    },
-                    'tcp_in_fin': {
-                        'type': 'str',
-                    },
-                    'out_pkts': {
-                        'type': 'str',
-                    },
-                    'tcp_fwd_syn_per_fin': {
-                        'type': 'str',
-                    },
-                    'in_pkts': {
-                        'type': 'str',
-                    },
-                    'out_bytes': {
-                        'type': 'str',
-                    },
-                    'in_frag': {
-                        'type': 'str',
-                    },
-                    'drop_pkts_per_pkts': {
-                        'type': 'str',
-                    },
-                    'tcp_in_syn': {
-                        'type': 'str',
-                    },
-                    'tcp_out_payload': {
-                        'type': 'str',
-                    },
-                    'new_conn': {
-                        'type': 'str',
-                    },
-                    'tcp_in_rst': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'monitor': {
-                'type': 'dict',
-            },
-            'mon_entity_rrd_file_timestamp_err': {
-                'type': 'str',
-            },
-            'lw_mon_entity_limit_exceed': {
-                'type': 'str',
-            },
-            'ha_entity_periodic_sync_sent': {
-                'type': 'str',
-            },
-            'mon_entity_rrd_last_update_fetch_failed_err': {
-                'type': 'str',
-            },
-            'ha_entity_create_sent': {
-                'type': 'str',
-            },
-            'lw_out_of_memory_alloc_failures': {
-                'type': 'str',
-            },
-            'mon_entity_rrd_update_err': {
-                'type': 'str',
-            },
-            'ha_entity_anomaly_off_sent': {
-                'type': 'str',
-            },
-            'mon_entity_rrd_tune_err': {
-                'type': 'str',
-            },
-            'lw_mon_entity_created': {
-                'type': 'str',
-            },
-            'mon_entity_rrd_file_create_err': {
-                'type': 'str',
-            },
-            'mon_entity_rrd_out_of_memory_err': {
-                'type': 'str',
-            },
-            'ha_entity_anomaly_on_sent': {
-                'type': 'str',
-            },
-            'mon_entity_limit_exceed': {
-                'type': 'str',
-            },
-            'lw_mon_entity_deleted': {
-                'type': 'str',
-            }
-        },
-        'mon_entity_telemetry_data': {
-            'type': 'dict',
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes',
-                        'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt',
-                        'out_frag', 'new-conn', 'concurrent-conn',
-                        'in_bytes_per_out_bytes', 'drop_pkts_per_pkts',
-                        'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin',
-                        'tcp_out_fin', 'tcp_in_payload', 'tcp_out_payload',
-                        'tcp_in_rexmit', 'tcp_out_rexmit', 'tcp_in_rst',
-                        'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack',
-                        'tcp_in_zero_wnd', 'tcp_out_zero_wnd',
-                        'tcp_fwd_syn_per_fin'
-                    ]
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'reporting': {
-            'type': 'dict',
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'log-transmit-failure', 'buffer-alloc-failure',
-                        'notif-jobs-in-queue', 'enqueue-fail', 'enqueue-pass',
-                        'dequeued'
-                    ]
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'template': {
-                'type': 'dict',
-                'notification': {
-                    'type': 'dict',
-                    'debug': {
-                        'type': 'dict',
-                        'uuid': {
-                            'type': 'str',
-                        }
-                    },
-                    'template_name_list': {
-                        'type': 'list',
-                        'protocol': {
-                            'type': 'str',
-                            'choices': ['http', 'https']
-                        },
-                        'name': {
-                            'type': 'str',
-                            'required': True,
-                        },
-                        'use_mgmt_port': {
-                            'type': 'bool',
-                        },
-                        'https_port': {
-                            'type': 'int',
-                        },
-                        'debug_mode': {
-                            'type': 'bool',
-                        },
-                        'relative_uri': {
-                            'type': 'str',
-                        },
-                        'authentication': {
-                            'type': 'dict',
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'encrypted': {
-                                'type': 'str',
-                            },
-                            'relative_logoff_uri': {
-                                'type': 'str',
-                            },
-                            'api_key_encrypted': {
-                                'type': 'str',
-                            },
-                            'api_key': {
-                                'type': 'bool',
-                            },
-                            'auth_password_string': {
-                                'type': 'str',
-                            },
-                            'auth_password': {
-                                'type': 'bool',
-                            },
-                            'api_key_string': {
-                                'type': 'str',
-                            },
-                            'relative_login_uri': {
-                                'type': 'str',
-                            },
-                            'auth_username': {
-                                'type': 'str',
-                            }
-                        },
-                        'host_name': {
-                            'type': 'str',
-                        },
-                        'sampling_enable': {
-                            'type': 'list',
-                            'counters1': {
-                                'type':
-                                'str',
-                                'choices': [
-                                    'all', 'sent_successful', 'send_fail',
-                                    'response_fail'
-                                ]
-                            }
-                        },
-                        'http_port': {
-                            'type': 'int',
-                        },
-                        'ipv6_address': {
-                            'type': 'str',
-                        },
-                        'test_connectivity': {
-                            'type': 'bool',
-                        },
-                        'ipv4_address': {
-                            'type': 'str',
-                        },
-                        'action': {
-                            'type': 'str',
-                            'choices': ['enable', 'disable']
-                        },
-                        'uuid': {
-                            'type': 'str',
-                        }
-                    }
-                }
-            },
-            'telemetry_export_interval': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
-                'value': {
-                    'type': 'int',
-                }
-            }
-        },
-        'topk': {
-            'type': 'dict',
-            'sources': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                }
-            }
+        'granularity': {
+            'type': 'int',
         },
         'initial_learning_interval': {
             'type': 'int',
         },
-        'monitored_entity': {
-            'type': 'dict',
-            'detail': {
-                'type': 'dict',
-                'debug': {
-                    'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'sessions': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'topk': {
-                'type': 'dict',
-                'sources': {
-                    'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'secondary': {
-                'type': 'dict',
-                'topk': {
-                    'type': 'dict',
-                    'sources': {
-                        'type': 'dict',
-                        'uuid': {
-                            'type': 'str',
-                        }
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                }
-            }
+        'source_entity_topk': {
+            'type': 'bool',
         },
-        'debug_files': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -885,8 +503,96 @@ def get_argspec():
                 ]
             }
         },
-        'source_entity_topk': {
-            'type': 'bool',
+        'mon_entity_telemetry_data': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'in_pkts', 'out_pkts', 'in_bytes', 'out_bytes',
+                        'errors', 'in_small_pkt', 'in_frag', 'out_small_pkt',
+                        'out_frag', 'new-conn', 'concurrent-conn',
+                        'in_bytes_per_out_bytes', 'drop_pkts_per_pkts',
+                        'tcp_in_syn', 'tcp_out_syn', 'tcp_in_fin',
+                        'tcp_out_fin', 'tcp_in_payload', 'tcp_out_payload',
+                        'tcp_in_rexmit', 'tcp_out_rexmit', 'tcp_in_rst',
+                        'tcp_out_rst', 'tcp_in_empty_ack', 'tcp_out_empty_ack',
+                        'tcp_in_zero_wnd', 'tcp_out_zero_wnd',
+                        'tcp_fwd_syn_per_fin'
+                    ]
+                }
+            }
+        },
+        'debug_files': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'topk': {
+            'type': 'dict',
+            'sources': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'monitored_entity': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'detail': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                },
+                'debug': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'sessions': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'topk': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                },
+                'sources': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'secondary': {
+                'type': 'dict',
+                'topk': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sources': {
+                        'type': 'dict',
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            }
         },
         'file': {
             'type': 'dict',
@@ -901,25 +607,132 @@ def get_argspec():
                 }
             }
         },
-        'granularity': {
-            'type': 'int',
-        },
-        'anomaly_detection': {
+        'reporting': {
             'type': 'dict',
-            'sensitivity': {
-                'type': 'str',
-                'choices': ['high', 'low']
-            },
-            'logging': {
-                'type': 'str',
-                'choices': ['per-entity', 'per-metric', 'disable']
-            },
             'uuid': {
                 'type': 'str',
             },
-            'feature_status': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'log-transmit-failure', 'buffer-alloc-failure',
+                        'notif-jobs-in-queue', 'enqueue-fail', 'enqueue-pass',
+                        'dequeued'
+                    ]
+                }
+            },
+            'telemetry_export_interval': {
+                'type': 'dict',
+                'value': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'template': {
+                'type': 'dict',
+                'notification': {
+                    'type': 'dict',
+                    'template_name_list': {
+                        'type': 'list',
+                        'name': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'ipv4_address': {
+                            'type': 'str',
+                        },
+                        'ipv6_address': {
+                            'type': 'str',
+                        },
+                        'host_name': {
+                            'type': 'str',
+                        },
+                        'use_mgmt_port': {
+                            'type': 'bool',
+                        },
+                        'protocol': {
+                            'type': 'str',
+                            'choices': ['http', 'https']
+                        },
+                        'http_port': {
+                            'type': 'int',
+                        },
+                        'https_port': {
+                            'type': 'int',
+                        },
+                        'relative_uri': {
+                            'type': 'str',
+                        },
+                        'action': {
+                            'type': 'str',
+                            'choices': ['enable', 'disable']
+                        },
+                        'debug_mode': {
+                            'type': 'bool',
+                        },
+                        'test_connectivity': {
+                            'type': 'bool',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type':
+                                'str',
+                                'choices': [
+                                    'all', 'sent_successful', 'send_fail',
+                                    'response_fail'
+                                ]
+                            }
+                        },
+                        'authentication': {
+                            'type': 'dict',
+                            'relative_login_uri': {
+                                'type': 'str',
+                            },
+                            'relative_logoff_uri': {
+                                'type': 'str',
+                            },
+                            'auth_username': {
+                                'type': 'str',
+                            },
+                            'auth_password': {
+                                'type': 'bool',
+                            },
+                            'auth_password_string': {
+                                'type': 'str',
+                            },
+                            'encrypted': {
+                                'type': 'str',
+                            },
+                            'api_key': {
+                                'type': 'bool',
+                            },
+                            'api_key_string': {
+                                'type': 'str',
+                            },
+                            'api_key_encrypted': {
+                                'type': 'str',
+                            },
+                            'uuid': {
+                                'type': 'str',
+                            }
+                        }
+                    },
+                    'debug': {
+                        'type': 'dict',
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
+                }
             }
         },
         'monitor': {
@@ -928,62 +741,22 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['traffic']
             },
-            'mon_entity_topk': {
-                'type': 'bool',
-            },
             'monitor_key': {
                 'type': 'str',
                 'choices': ['source', 'dest', 'service', 'source-nat-ip']
             },
-            'debug_list': {
-                'type': 'list',
-                'debug_port': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'debug_ip_addr': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'sflow': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
-                'listening_port': {
-                    'type': 'int',
-                }
-            },
-            'delete_debug_file': {
-                'type': 'dict',
-                'debug_port': {
-                    'type': 'int',
-                },
-                'debug_ip_addr': {
-                    'type': 'str',
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                }
-            },
-            'index_sessions': {
+            'mon_entity_topk': {
                 'type': 'bool',
             },
             'source_entity_topk': {
                 'type': 'bool',
+            },
+            'index_sessions': {
+                'type': 'bool',
+            },
+            'index_sessions_type': {
+                'type': 'str',
+                'choices': ['per-cpu']
             },
             'template': {
                 'type': 'dict',
@@ -994,105 +767,22 @@ def get_argspec():
                     }
                 }
             },
-            'replay_debug_file': {
-                'type': 'dict',
-                'debug_port': {
-                    'type': 'int',
-                },
-                'debug_ip_addr': {
-                    'type': 'str',
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                }
-            },
-            'netflow': {
-                'type': 'dict',
-                'template_active_timeout': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'listening_port': {
-                    'type': 'int',
-                }
-            },
-            'index_sessions_type': {
+            'uuid': {
                 'type': 'str',
-                'choices': ['per-cpu']
-            },
-            'secondary_monitor': {
-                'type': 'dict',
-                'mon_entity_topk': {
-                    'type': 'bool',
-                },
-                'debug_list': {
-                    'type': 'list',
-                    'debug_port': {
-                        'type': 'int',
-                        'required': True,
-                    },
-                    'debug_ip_addr': {
-                        'type': 'str',
-                        'required': True,
-                    },
-                    'debug_protocol': {
-                        'type': 'str',
-                        'required': True,
-                        'choices': ['TCP', 'UDP', 'ICMP']
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'secondary_monitoring_key': {
-                    'type': 'str',
-                    'choices': ['service']
-                },
-                'delete_debug_file': {
-                    'type': 'dict',
-                    'debug_port': {
-                        'type': 'int',
-                    },
-                    'debug_ip_addr': {
-                        'type': 'str',
-                    },
-                    'debug_protocol': {
-                        'type': 'str',
-                        'choices': ['TCP', 'UDP', 'ICMP']
-                    }
-                },
-                'source_entity_topk': {
-                    'type': 'bool',
-                },
-                'replay_debug_file': {
-                    'type': 'dict',
-                    'debug_port': {
-                        'type': 'int',
-                    },
-                    'debug_ip_addr': {
-                        'type': 'str',
-                    },
-                    'debug_protocol': {
-                        'type': 'str',
-                        'choices': ['TCP', 'UDP', 'ICMP']
-                    }
-                }
             },
             'agent_list': {
                 'type': 'list',
-                'uuid': {
+                'agent_name': {
                     'type': 'str',
+                    'required': True,
                 },
                 'agent_v4_addr': {
                     'type': 'str',
                 },
                 'agent_v6_addr': {
+                    'type': 'str',
+                },
+                'uuid': {
                     'type': 'str',
                 },
                 'user_tag': {
@@ -1136,11 +826,400 @@ def get_argspec():
                             'netflow-sample-flow-dur-error'
                         ]
                     }
+                }
+            },
+            'sflow': {
+                'type': 'dict',
+                'listening_port': {
+                    'type': 'int',
                 },
-                'agent_name': {
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'netflow': {
+                'type': 'dict',
+                'listening_port': {
+                    'type': 'int',
+                },
+                'template_active_timeout': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'debug_list': {
+                'type': 'list',
+                'debug_ip_addr': {
                     'type': 'str',
                     'required': True,
+                },
+                'debug_port': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'debug_protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['TCP', 'UDP', 'ICMP']
+                },
+                'uuid': {
+                    'type': 'str',
                 }
+            },
+            'replay_debug_file': {
+                'type': 'dict',
+                'debug_ip_addr': {
+                    'type': 'str',
+                },
+                'debug_port': {
+                    'type': 'int',
+                },
+                'debug_protocol': {
+                    'type': 'str',
+                    'choices': ['TCP', 'UDP', 'ICMP']
+                }
+            },
+            'delete_debug_file': {
+                'type': 'dict',
+                'debug_ip_addr': {
+                    'type': 'str',
+                },
+                'debug_port': {
+                    'type': 'int',
+                },
+                'debug_protocol': {
+                    'type': 'str',
+                    'choices': ['TCP', 'UDP', 'ICMP']
+                }
+            },
+            'secondary_monitor': {
+                'type': 'dict',
+                'secondary_monitoring_key': {
+                    'type': 'str',
+                    'choices': ['service']
+                },
+                'mon_entity_topk': {
+                    'type': 'bool',
+                },
+                'source_entity_topk': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'debug_list': {
+                    'type': 'list',
+                    'debug_ip_addr': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'debug_port': {
+                        'type': 'int',
+                        'required': True,
+                    },
+                    'debug_protocol': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['TCP', 'UDP', 'ICMP']
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'delete_debug_file': {
+                    'type': 'dict',
+                    'debug_ip_addr': {
+                        'type': 'str',
+                    },
+                    'debug_port': {
+                        'type': 'int',
+                    },
+                    'debug_protocol': {
+                        'type': 'str',
+                        'choices': ['TCP', 'UDP', 'ICMP']
+                    }
+                },
+                'replay_debug_file': {
+                    'type': 'dict',
+                    'debug_ip_addr': {
+                        'type': 'str',
+                    },
+                    'debug_port': {
+                        'type': 'int',
+                    },
+                    'debug_protocol': {
+                        'type': 'str',
+                        'choices': ['TCP', 'UDP', 'ICMP']
+                    }
+                }
+            }
+        },
+        'anomaly_detection': {
+            'type': 'dict',
+            'sensitivity': {
+                'type': 'str',
+                'choices': ['high', 'low']
+            },
+            'feature_status': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'logging': {
+                'type': 'str',
+                'choices': ['per-entity', 'per-metric', 'disable']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'flow_collector': {
+            'type': 'dict',
+            'sflow': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'all', 'pkts-received', 'frag-dropped',
+                            'agent-not-found', 'version-not-supported',
+                            'unknown-dir'
+                        ]
+                    }
+                }
+            },
+            'netflow': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'all', 'pkts-rcvd', 'v9-templates-created',
+                            'v9-templates-deleted', 'v10-templates-created',
+                            'v10-templates-deleted', 'template-drop-exceeded',
+                            'template-drop-out-of-memory', 'frag-dropped',
+                            'agent-not-found', 'version-not-supported',
+                            'unknown-dir'
+                        ]
+                    }
+                },
+                'template': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type':
+                            'str',
+                            'choices': [
+                                'all', 'templates-added-to-delq',
+                                'templates-removed-from-delq'
+                            ]
+                        }
+                    },
+                    'detail': {
+                        'type': 'dict',
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            }
+        },
+        'resource_usage': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'mon_entity_limit_exceed': {
+                'type': 'str',
+            },
+            'ha_entity_create_sent': {
+                'type': 'str',
+            },
+            'ha_entity_delete_sent': {
+                'type': 'str',
+            },
+            'ha_entity_anomaly_on_sent': {
+                'type': 'str',
+            },
+            'ha_entity_anomaly_off_sent': {
+                'type': 'str',
+            },
+            'ha_entity_periodic_sync_sent': {
+                'type': 'str',
+            },
+            'out_of_memory_alloc_failures': {
+                'type': 'str',
+            },
+            'lw_mon_entity_created': {
+                'type': 'str',
+            },
+            'lw_mon_entity_deleted': {
+                'type': 'str',
+            },
+            'lw_mon_entity_limit_exceed': {
+                'type': 'str',
+            },
+            'lw_out_of_memory_alloc_failures': {
+                'type': 'str',
+            },
+            'mon_entity_rrd_file_timestamp_err': {
+                'type': 'str',
+            },
+            'mon_entity_rrd_update_err': {
+                'type': 'str',
+            },
+            'mon_entity_rrd_last_update_fetch_failed_err': {
+                'type': 'str',
+            },
+            'mon_entity_rrd_tune_err': {
+                'type': 'str',
+            },
+            'mon_entity_rrd_out_of_memory_err': {
+                'type': 'str',
+            },
+            'mon_entity_rrd_file_create_err': {
+                'type': 'str',
+            },
+            'mon_entity_telemetry_data': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'in_pkts': {
+                        'type': 'str',
+                    },
+                    'out_pkts': {
+                        'type': 'str',
+                    },
+                    'in_bytes': {
+                        'type': 'str',
+                    },
+                    'out_bytes': {
+                        'type': 'str',
+                    },
+                    'errors': {
+                        'type': 'str',
+                    },
+                    'in_small_pkt': {
+                        'type': 'str',
+                    },
+                    'in_frag': {
+                        'type': 'str',
+                    },
+                    'out_small_pkt': {
+                        'type': 'str',
+                    },
+                    'out_frag': {
+                        'type': 'str',
+                    },
+                    'new_conn': {
+                        'type': 'str',
+                    },
+                    'concurrent_conn': {
+                        'type': 'str',
+                    },
+                    'in_bytes_per_out_bytes': {
+                        'type': 'str',
+                    },
+                    'drop_pkts_per_pkts': {
+                        'type': 'str',
+                    },
+                    'tcp_in_syn': {
+                        'type': 'str',
+                    },
+                    'tcp_out_syn': {
+                        'type': 'str',
+                    },
+                    'tcp_in_fin': {
+                        'type': 'str',
+                    },
+                    'tcp_out_fin': {
+                        'type': 'str',
+                    },
+                    'tcp_in_payload': {
+                        'type': 'str',
+                    },
+                    'tcp_out_payload': {
+                        'type': 'str',
+                    },
+                    'tcp_in_rexmit': {
+                        'type': 'str',
+                    },
+                    'tcp_out_rexmit': {
+                        'type': 'str',
+                    },
+                    'tcp_in_rst': {
+                        'type': 'str',
+                    },
+                    'tcp_out_rst': {
+                        'type': 'str',
+                    },
+                    'tcp_in_empty_ack': {
+                        'type': 'str',
+                    },
+                    'tcp_out_empty_ack': {
+                        'type': 'str',
+                    },
+                    'tcp_in_zero_wnd': {
+                        'type': 'str',
+                    },
+                    'tcp_out_zero_wnd': {
+                        'type': 'str',
+                    },
+                    'tcp_fwd_syn_per_fin': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'reporting': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'log_transmit_failure': {
+                        'type': 'str',
+                    },
+                    'buffer_alloc_failure': {
+                        'type': 'str',
+                    },
+                    'notif_jobs_in_queue': {
+                        'type': 'str',
+                    },
+                    'enqueue_fail': {
+                        'type': 'str',
+                    },
+                    'enqueue_pass': {
+                        'type': 'str',
+                    },
+                    'dequeued': {
+                        'type': 'str',
+                    }
+                },
+                'template': {
+                    'type': 'dict',
+                }
+            },
+            'monitor': {
+                'type': 'dict',
+            },
+            'flow_collector': {
+                'type': 'dict',
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_trunk_map
 description:
     - Configure MAP on this interface
-short_description: Configures A10 interface.trunk.map
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     trunk_ifnum:
         description:
-        - Key to identify parent object    inside:
+        - Key to identify parent object
+        type: str
+        required: True
+    inside:
         description:
         - "Configure MAP inside interface (connected to MAP domains)"
-        required: False
-    map_t_inside:
-        description:
-        - "Configure MAP inside interface (connected to MAP domains)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    map_t_outside:
-        description:
-        - "Configure MAP outside interface"
+        type: bool
         required: False
     outside:
         description:
         - "Configure MAP outside interface"
+        type: bool
+        required: False
+    map_t_inside:
+        description:
+        - "Configure MAP inside interface (connected to MAP domains)"
+        type: bool
+        required: False
+    map_t_outside:
+        description:
+        - "Configure MAP outside interface"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -131,17 +144,17 @@ def get_argspec():
         'inside': {
             'type': 'bool',
         },
-        'map_t_inside': {
+        'outside': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
+        'map_t_inside': {
+            'type': 'bool',
         },
         'map_t_outside': {
             'type': 'bool',
         },
-        'outside': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

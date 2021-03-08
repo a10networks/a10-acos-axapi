@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_hw_compress
 description:
     - Configure HW compression
-short_description: Configures A10 slb.hw-compress
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            hw_compress_disabled:
-                description:
-                - "Field hw_compress_disabled"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -76,39 +73,63 @@ options:
           count; 'failure_code'= Last failure code; 'ring_full_count'= Compression queue
           full; 'max_outstanding_request_count'= Max queued request count;
           'max_outstanding_submit_count'= Max queued submit count;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
+            hw_compress_disabled:
+                description:
+                - "Field hw_compress_disabled"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            max_outstanding_request_count:
-                description:
-                - "Max queued request count"
-            failure_count:
-                description:
-                - "Total failure count"
-            response_count:
-                description:
-                - "Total response count"
-            ring_full_count:
-                description:
-                - "Compression queue full"
-            submit_count:
-                description:
-                - "Total submit count"
             request_count:
                 description:
                 - "Total request count"
-            max_outstanding_submit_count:
+                type: str
+            submit_count:
                 description:
-                - "Max queued submit count"
+                - "Total submit count"
+                type: str
+            response_count:
+                description:
+                - "Total response count"
+                type: str
+            failure_count:
+                description:
+                - "Total failure count"
+                type: str
             failure_code:
                 description:
                 - "Last failure code"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ring_full_count:
+                description:
+                - "Compression queue full"
+                type: str
+            max_outstanding_request_count:
+                description:
+                - "Max queued request count"
+                type: str
+            max_outstanding_submit_count:
+                description:
+                - "Max queued submit count"
+                type: str
 
 '''
 
@@ -164,41 +185,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'max_outstanding_request_count': {
-                    'type': 'int',
-                },
-                'failure_count': {
-                    'type': 'int',
-                },
-                'response_count': {
-                    'type': 'int',
-                },
-                'ring_full_count': {
-                    'type': 'int',
-                },
-                'submit_count': {
-                    'type': 'int',
-                },
-                'request_count': {
-                    'type': 'int',
-                },
-                'max_outstanding_submit_count': {
-                    'type': 'int',
-                },
-                'failure_code': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            },
-            'hw_compress_disabled': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -213,35 +201,68 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'request_count': {
+                    'type': 'int',
+                },
+                'submit_count': {
+                    'type': 'int',
+                },
+                'response_count': {
+                    'type': 'int',
+                },
+                'failure_count': {
+                    'type': 'int',
+                },
+                'failure_code': {
+                    'type': 'int',
+                },
+                'ring_full_count': {
+                    'type': 'int',
+                },
+                'max_outstanding_request_count': {
+                    'type': 'int',
+                },
+                'max_outstanding_submit_count': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            },
+            'hw_compress_disabled': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'max_outstanding_request_count': {
-                'type': 'str',
-            },
-            'failure_count': {
-                'type': 'str',
-            },
-            'response_count': {
-                'type': 'str',
-            },
-            'ring_full_count': {
+            'request_count': {
                 'type': 'str',
             },
             'submit_count': {
                 'type': 'str',
             },
-            'request_count': {
+            'response_count': {
                 'type': 'str',
             },
-            'max_outstanding_submit_count': {
+            'failure_count': {
                 'type': 'str',
             },
             'failure_code': {
                 'type': 'str',
+            },
+            'ring_full_count': {
+                'type': 'str',
+            },
+            'max_outstanding_request_count': {
+                'type': 'str',
+            },
+            'max_outstanding_submit_count': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

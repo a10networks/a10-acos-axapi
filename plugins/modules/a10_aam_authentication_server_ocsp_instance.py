@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_ocsp_instance
 description:
     - Specify OCSP authentication server name
-short_description: Configures A10 aam.authentication.server.ocsp.instance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,108 +22,104 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    health_check_string:
-        description:
-        - "Health monitor name"
-        required: False
-    responder_ca:
-        description:
-        - "Specify the trusted OCSP responder's CA cert filename"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            stapling_timeout:
-                description:
-                - "OCSP Stapling Timeout"
-            name:
-                description:
-                - "Specify OCSP authentication server name"
-            stapling_fail:
-                description:
-                - "Handle OCSP response failed"
-            certificate_revoked:
-                description:
-                - "Revoked Certificate Response"
-            request:
-                description:
-                - "Request"
-            stapling_certificate_revoked:
-                description:
-                - "OCSP Stapling Revoked Certificate Response"
-            certificate_unknown:
-                description:
-                - "Unknown Certificate Response"
-            stapling_certificate_unknown:
-                description:
-                - "OCSP Stapling Unknown Certificate Response"
-            stapling_certificate_good:
-                description:
-                - "OCSP Stapling Good Certificate Response"
-            timeout:
-                description:
-                - "Timeout"
-            fail:
-                description:
-                - "Handle OCSP response failed"
-            certificate_good:
-                description:
-                - "Good Certificate Response"
-            stapling_request:
-                description:
-                - "OCSP Stapling Request Send"
     name:
         description:
         - "Specify OCSP authentication server name"
+        type: str
         required: True
     url:
         description:
         - "Specify the OCSP server's address (Format= http=//host[=port]/) (The OCSP
           server's address(Format= http=//host[=port]/))"
+        type: str
+        required: False
+    responder_ca:
+        description:
+        - "Specify the trusted OCSP responder's CA cert filename"
+        type: str
         required: False
     responder_cert:
         description:
         - "Specify the trusted OCSP responder's cert filename"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Check server's health status"
+        type: bool
+        required: False
+    health_check_string:
+        description:
+        - "Health monitor name"
+        type: str
         required: False
     health_check_disable:
         description:
         - "Disable configured health check configuration"
+        type: bool
+        required: False
+    port_health_check:
+        description:
+        - "Check port's health status"
+        type: str
+        required: False
+    port_health_check_disable:
+        description:
+        - "Disable configured port health check configuration"
+        type: bool
         required: False
     http_version:
         description:
         - "Set HTTP version (default 1.0)"
+        type: bool
+        required: False
+    version_type:
+        description:
+        - "'1.1'= HTTP version 1.1;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -138,26 +132,65 @@ options:
           OCSP Stapling Revoked Certificate Response; 'stapling-certificate-unknown'=
           OCSP Stapling Unknown Certificate Response; 'stapling-timeout'= OCSP Stapling
           Timeout; 'stapling-fail'= Handle OCSP response failed;"
-    version_type:
+                type: str
+    stats:
         description:
-        - "'1.1'= HTTP version 1.1;"
+        - "Field stats"
+        type: dict
         required: False
-    port_health_check_disable:
-        description:
-        - "Disable configured port health check configuration"
-        required: False
-    port_health_check:
-        description:
-        - "Check port's health status"
-        required: False
-    health_check:
-        description:
-        - "Check server's health status"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            request:
+                description:
+                - "Request"
+                type: str
+            certificate_good:
+                description:
+                - "Good Certificate Response"
+                type: str
+            certificate_revoked:
+                description:
+                - "Revoked Certificate Response"
+                type: str
+            certificate_unknown:
+                description:
+                - "Unknown Certificate Response"
+                type: str
+            timeout:
+                description:
+                - "Timeout"
+                type: str
+            fail:
+                description:
+                - "Handle OCSP response failed"
+                type: str
+            stapling_request:
+                description:
+                - "OCSP Stapling Request Send"
+                type: str
+            stapling_certificate_good:
+                description:
+                - "OCSP Stapling Good Certificate Response"
+                type: str
+            stapling_certificate_revoked:
+                description:
+                - "OCSP Stapling Revoked Certificate Response"
+                type: str
+            stapling_certificate_unknown:
+                description:
+                - "OCSP Stapling Unknown Certificate Response"
+                type: str
+            stapling_timeout:
+                description:
+                - "OCSP Stapling Timeout"
+                type: str
+            stapling_fail:
+                description:
+                - "Handle OCSP response failed"
+                type: str
+            name:
+                description:
+                - "Specify OCSP authentication server name"
+                type: str
 
 '''
 
@@ -223,55 +256,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'health_check_string': {
-            'type': 'str',
-        },
-        'responder_ca': {
-            'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'stapling_timeout': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'stapling_fail': {
-                'type': 'str',
-            },
-            'certificate_revoked': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'stapling_certificate_revoked': {
-                'type': 'str',
-            },
-            'certificate_unknown': {
-                'type': 'str',
-            },
-            'stapling_certificate_unknown': {
-                'type': 'str',
-            },
-            'stapling_certificate_good': {
-                'type': 'str',
-            },
-            'timeout': {
-                'type': 'str',
-            },
-            'fail': {
-                'type': 'str',
-            },
-            'certificate_good': {
-                'type': 'str',
-            },
-            'stapling_request': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
@@ -279,14 +263,36 @@ def get_argspec():
         'url': {
             'type': 'str',
         },
+        'responder_ca': {
+            'type': 'str',
+        },
         'responder_cert': {
+            'type': 'str',
+        },
+        'health_check': {
+            'type': 'bool',
+        },
+        'health_check_string': {
             'type': 'str',
         },
         'health_check_disable': {
             'type': 'bool',
         },
+        'port_health_check': {
+            'type': 'str',
+        },
+        'port_health_check_disable': {
+            'type': 'bool',
+        },
         'http_version': {
             'type': 'bool',
+        },
+        'version_type': {
+            'type': 'str',
+            'choices': ['1.1']
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -303,21 +309,48 @@ def get_argspec():
                 ]
             }
         },
-        'version_type': {
-            'type': 'str',
-            'choices': ['1.1']
-        },
-        'port_health_check_disable': {
-            'type': 'bool',
-        },
-        'port_health_check': {
-            'type': 'str',
-        },
-        'health_check': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'request': {
+                'type': 'str',
+            },
+            'certificate_good': {
+                'type': 'str',
+            },
+            'certificate_revoked': {
+                'type': 'str',
+            },
+            'certificate_unknown': {
+                'type': 'str',
+            },
+            'timeout': {
+                'type': 'str',
+            },
+            'fail': {
+                'type': 'str',
+            },
+            'stapling_request': {
+                'type': 'str',
+            },
+            'stapling_certificate_good': {
+                'type': 'str',
+            },
+            'stapling_certificate_revoked': {
+                'type': 'str',
+            },
+            'stapling_certificate_unknown': {
+                'type': 'str',
+            },
+            'stapling_timeout': {
+                'type': 'str',
+            },
+            'stapling_fail': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

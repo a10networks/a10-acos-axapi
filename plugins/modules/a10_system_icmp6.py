@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_icmp6
 description:
     - Display ICMPv6 statistics
-short_description: Configures A10 system.icmp6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -76,126 +87,161 @@ options:
           advertisement; 'err_ns'= Error Neighbor solicitation; 'err_na'= Error Neighbor
           advertisement; 'err_redirects'= Error Redirects; 'err_echoes'= Error Echo
           requests; 'err_echo_replies'= Error Echo replies;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            out_echo_req:
-                description:
-                - "Out Echo requests"
-            out_param_prob:
-                description:
-                - "Out Parameter Problem"
-            out_pkt_too_big:
-                description:
-                - "Out Packet too big"
-            out_na:
-                description:
-                - "Out neighbor advertisement"
-            out_rs:
-                description:
-                - "Out Router solicitation"
-            err_ns:
-                description:
-                - "Error Neighbor solicitation"
-            in_grp_mem_resp:
-                description:
-                - "In Group member reply"
-            in_echoes:
-                description:
-                - "In Echo requests"
-            out_ns:
-                description:
-                - "Out neighbor solicitation"
-            err_na:
-                description:
-                - "Error Neighbor advertisement"
-            out_ra:
-                description:
-                - "Out Router advertisement"
-            out_mem_reductions:
-                description:
-                - "Out Group member reduction"
-            out_dst_un_reach:
-                description:
-                - "Out Destination Unreachable"
             in_msgs:
                 description:
                 - "In messages"
-            in_param_prob:
-                description:
-                - "In Parameter Problem"
-            in_pkt_too_big:
-                description:
-                - "In Packet too big"
-            err_ra:
-                description:
-                - "Error Router advertisement"
-            in_redirect:
-                description:
-                - "In Redirects"
-            err_echoes:
-                description:
-                - "Error Echo requests"
+                type: str
             in_errors:
                 description:
                 - "In Errors"
-            out_echo_replies:
-                description:
-                - "Out Echo replies"
-            in_na:
-                description:
-                - "In neighbor advertisement"
-            in_ra:
-                description:
-                - "In Router advertisement"
-            err_rs:
-                description:
-                - "Error Router solicitation"
-            err_redirects:
-                description:
-                - "Error Redirects"
-            err_echo_replies:
-                description:
-                - "Error Echo replies"
-            in_ns:
-                description:
-                - "In neighbor solicitation"
-            out_msg:
-                description:
-                - "Out Messages"
-            out_mem_resp:
-                description:
-                - "Out Group member reply"
-            out_time_exceeds:
-                description:
-                - "Out TTL Exceeds"
-            in_exho_reply:
-                description:
-                - "In Echo replies"
-            in_router_sol:
-                description:
-                - "In Router solicitation"
-            in_grp_mem_query:
-                description:
-                - "In Group member query"
-            out_redirects:
-                description:
-                - "Out Redirects"
-            in_time_exceeds:
-                description:
-                - "In TTL Exceeds"
-            in_grp_mem_reduction:
-                description:
-                - "In Group member reduction"
+                type: str
             in_dest_un_reach:
                 description:
                 - "In Destunation Unreachable"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            in_pkt_too_big:
+                description:
+                - "In Packet too big"
+                type: str
+            in_time_exceeds:
+                description:
+                - "In TTL Exceeds"
+                type: str
+            in_param_prob:
+                description:
+                - "In Parameter Problem"
+                type: str
+            in_echoes:
+                description:
+                - "In Echo requests"
+                type: str
+            in_exho_reply:
+                description:
+                - "In Echo replies"
+                type: str
+            in_grp_mem_query:
+                description:
+                - "In Group member query"
+                type: str
+            in_grp_mem_resp:
+                description:
+                - "In Group member reply"
+                type: str
+            in_grp_mem_reduction:
+                description:
+                - "In Group member reduction"
+                type: str
+            in_router_sol:
+                description:
+                - "In Router solicitation"
+                type: str
+            in_ra:
+                description:
+                - "In Router advertisement"
+                type: str
+            in_ns:
+                description:
+                - "In neighbor solicitation"
+                type: str
+            in_na:
+                description:
+                - "In neighbor advertisement"
+                type: str
+            in_redirect:
+                description:
+                - "In Redirects"
+                type: str
+            out_msg:
+                description:
+                - "Out Messages"
+                type: str
+            out_dst_un_reach:
+                description:
+                - "Out Destination Unreachable"
+                type: str
+            out_pkt_too_big:
+                description:
+                - "Out Packet too big"
+                type: str
+            out_time_exceeds:
+                description:
+                - "Out TTL Exceeds"
+                type: str
+            out_param_prob:
+                description:
+                - "Out Parameter Problem"
+                type: str
+            out_echo_req:
+                description:
+                - "Out Echo requests"
+                type: str
+            out_echo_replies:
+                description:
+                - "Out Echo replies"
+                type: str
+            out_rs:
+                description:
+                - "Out Router solicitation"
+                type: str
+            out_ra:
+                description:
+                - "Out Router advertisement"
+                type: str
+            out_ns:
+                description:
+                - "Out neighbor solicitation"
+                type: str
+            out_na:
+                description:
+                - "Out neighbor advertisement"
+                type: str
+            out_redirects:
+                description:
+                - "Out Redirects"
+                type: str
+            out_mem_resp:
+                description:
+                - "Out Group member reply"
+                type: str
+            out_mem_reductions:
+                description:
+                - "Out Group member reduction"
+                type: str
+            err_rs:
+                description:
+                - "Error Router solicitation"
+                type: str
+            err_ra:
+                description:
+                - "Error Router advertisement"
+                type: str
+            err_ns:
+                description:
+                - "Error Neighbor solicitation"
+                type: str
+            err_na:
+                description:
+                - "Error Neighbor advertisement"
+                type: str
+            err_redirects:
+                description:
+                - "Error Redirects"
+                type: str
+            err_echoes:
+                description:
+                - "Error Echo requests"
+                type: str
+            err_echo_replies:
+                description:
+                - "Error Echo replies"
+                type: str
 
 '''
 
@@ -250,6 +296,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -272,120 +321,117 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'out_echo_req': {
-                'type': 'str',
-            },
-            'out_param_prob': {
-                'type': 'str',
-            },
-            'out_pkt_too_big': {
-                'type': 'str',
-            },
-            'out_na': {
-                'type': 'str',
-            },
-            'out_rs': {
-                'type': 'str',
-            },
-            'err_ns': {
-                'type': 'str',
-            },
-            'in_grp_mem_resp': {
-                'type': 'str',
-            },
-            'in_echoes': {
-                'type': 'str',
-            },
-            'out_ns': {
-                'type': 'str',
-            },
-            'err_na': {
-                'type': 'str',
-            },
-            'out_ra': {
-                'type': 'str',
-            },
-            'out_mem_reductions': {
-                'type': 'str',
-            },
-            'out_dst_un_reach': {
-                'type': 'str',
-            },
             'in_msgs': {
-                'type': 'str',
-            },
-            'in_param_prob': {
-                'type': 'str',
-            },
-            'in_pkt_too_big': {
-                'type': 'str',
-            },
-            'err_ra': {
-                'type': 'str',
-            },
-            'in_redirect': {
-                'type': 'str',
-            },
-            'err_echoes': {
                 'type': 'str',
             },
             'in_errors': {
                 'type': 'str',
             },
-            'out_echo_replies': {
+            'in_dest_un_reach': {
                 'type': 'str',
             },
-            'in_na': {
-                'type': 'str',
-            },
-            'in_ra': {
-                'type': 'str',
-            },
-            'err_rs': {
-                'type': 'str',
-            },
-            'err_redirects': {
-                'type': 'str',
-            },
-            'err_echo_replies': {
-                'type': 'str',
-            },
-            'in_ns': {
-                'type': 'str',
-            },
-            'out_msg': {
-                'type': 'str',
-            },
-            'out_mem_resp': {
-                'type': 'str',
-            },
-            'out_time_exceeds': {
-                'type': 'str',
-            },
-            'in_exho_reply': {
-                'type': 'str',
-            },
-            'in_router_sol': {
-                'type': 'str',
-            },
-            'in_grp_mem_query': {
-                'type': 'str',
-            },
-            'out_redirects': {
+            'in_pkt_too_big': {
                 'type': 'str',
             },
             'in_time_exceeds': {
                 'type': 'str',
             },
+            'in_param_prob': {
+                'type': 'str',
+            },
+            'in_echoes': {
+                'type': 'str',
+            },
+            'in_exho_reply': {
+                'type': 'str',
+            },
+            'in_grp_mem_query': {
+                'type': 'str',
+            },
+            'in_grp_mem_resp': {
+                'type': 'str',
+            },
             'in_grp_mem_reduction': {
                 'type': 'str',
             },
-            'in_dest_un_reach': {
+            'in_router_sol': {
+                'type': 'str',
+            },
+            'in_ra': {
+                'type': 'str',
+            },
+            'in_ns': {
+                'type': 'str',
+            },
+            'in_na': {
+                'type': 'str',
+            },
+            'in_redirect': {
+                'type': 'str',
+            },
+            'out_msg': {
+                'type': 'str',
+            },
+            'out_dst_un_reach': {
+                'type': 'str',
+            },
+            'out_pkt_too_big': {
+                'type': 'str',
+            },
+            'out_time_exceeds': {
+                'type': 'str',
+            },
+            'out_param_prob': {
+                'type': 'str',
+            },
+            'out_echo_req': {
+                'type': 'str',
+            },
+            'out_echo_replies': {
+                'type': 'str',
+            },
+            'out_rs': {
+                'type': 'str',
+            },
+            'out_ra': {
+                'type': 'str',
+            },
+            'out_ns': {
+                'type': 'str',
+            },
+            'out_na': {
+                'type': 'str',
+            },
+            'out_redirects': {
+                'type': 'str',
+            },
+            'out_mem_resp': {
+                'type': 'str',
+            },
+            'out_mem_reductions': {
+                'type': 'str',
+            },
+            'err_rs': {
+                'type': 'str',
+            },
+            'err_ra': {
+                'type': 'str',
+            },
+            'err_ns': {
+                'type': 'str',
+            },
+            'err_na': {
+                'type': 'str',
+            },
+            'err_redirects': {
+                'type': 'str',
+            },
+            'err_echoes': {
+                'type': 'str',
+            },
+            'err_echo_replies': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

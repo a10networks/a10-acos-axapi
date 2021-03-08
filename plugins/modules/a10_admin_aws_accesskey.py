@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin_aws_accesskey
 description:
     - Config AWS authorized access key
-short_description: Configures A10 admin.aws-accesskey
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     admin_user:
         description:
-        - Key to identify parent object    nimport:
+        - Key to identify parent object
+        type: str
+        required: True
+    nimport:
         description:
         - "Import an aws-accesskey"
-        required: False
-    delete:
-        description:
-        - "Delete an authorized aws accesskey"
+        type: bool
         required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
+        type: bool
         required: False
     file_url:
         description:
         - "File URL"
+        type: str
+        required: False
+    delete:
+        description:
+        - "Delete an authorized aws accesskey"
+        type: bool
         required: False
     show:
         description:
         - "Show authorized aws accesskey"
+        type: bool
         required: False
 
 '''
@@ -131,14 +144,14 @@ def get_argspec():
         'nimport': {
             'type': 'bool',
         },
-        'delete': {
-            'type': 'bool',
-        },
         'use_mgmt_port': {
             'type': 'bool',
         },
         'file_url': {
             'type': 'str',
+        },
+        'delete': {
+            'type': 'bool',
         },
         'show': {
             'type': 'bool',

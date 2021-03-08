@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_template_l3
 description:
     - L3 packet paramters
-short_description: Configures A10 sys.ut.template.l3
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,96 +22,124 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    protocol:
+        - Key to identify parent object
+        type: str
+        required: True
+    protocol:
         description:
         - "L4 Protocol"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    checksum:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    value:
-        description:
-        - "protocol number"
-        required: False
-    ip_list:
-        description:
-        - "Field ip_list"
-        required: False
-        suboptions:
-            ipv4_end_address:
-                description:
-                - "IP end address"
-            ipv6_start_address:
-                description:
-                - "Ipv6 address"
-            src_dst:
-                description:
-                - "'dest'= dest; 'src'= src;"
-            ve:
-                description:
-                - "Virtual Ethernet interface"
-            nat_pool:
-                description:
-                - "Nat pool"
-            ipv4_start_address:
-                description:
-                - "IP address"
-            ipv6_end_address:
-                description:
-                - "Ipv6 end address"
-            virtual_server:
-                description:
-                - "vip"
-            ethernet:
-                description:
-                - "Ethernet interface"
-            trunk:
-                description:
-                - "Trunk number"
-            uuid:
-                description:
-                - "uuid of the object"
-    ttl:
-        description:
-        - "Field ttl"
+        type: bool
         required: False
     ntype:
         description:
         - "'tcp'= tcp; 'udp'= udp; 'icmp'= icmp;"
+        type: str
         required: False
+    value:
+        description:
+        - "protocol number"
+        type: int
+        required: False
+    checksum:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    ttl:
+        description:
+        - "Field ttl"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    ip_list:
+        description:
+        - "Field ip_list"
+        type: list
+        required: False
+        suboptions:
+            src_dst:
+                description:
+                - "'dest'= dest; 'src'= src;"
+                type: str
+            ipv4_start_address:
+                description:
+                - "IP address"
+                type: str
+            ipv4_end_address:
+                description:
+                - "IP end address"
+                type: str
+            ipv6_start_address:
+                description:
+                - "Ipv6 address"
+                type: str
+            ipv6_end_address:
+                description:
+                - "Ipv6 end address"
+                type: str
+            virtual_server:
+                description:
+                - "vip"
+                type: str
+            nat_pool:
+                description:
+                - "Nat pool"
+                type: str
+            ethernet:
+                description:
+                - "Ethernet interface"
+                type: str
+            ve:
+                description:
+                - "Virtual Ethernet interface"
+                type: str
+            trunk:
+                description:
+                - "Trunk number"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -175,36 +201,37 @@ def get_argspec():
         'protocol': {
             'type': 'bool',
         },
-        'uuid': {
+        'ntype': {
             'type': 'str',
+            'choices': ['tcp', 'udp', 'icmp']
+        },
+        'value': {
+            'type': 'int',
         },
         'checksum': {
             'type': 'str',
             'choices': ['valid', 'invalid']
         },
-        'value': {
+        'ttl': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'ip_list': {
             'type': 'list',
-            'ipv4_end_address': {
-                'type': 'str',
-            },
-            'ipv6_start_address': {
-                'type': 'str',
-            },
             'src_dst': {
                 'type': 'str',
                 'required': True,
                 'choices': ['dest', 'src']
             },
-            've': {
-                'type': 'str',
-            },
-            'nat_pool': {
-                'type': 'str',
-            },
             'ipv4_start_address': {
+                'type': 'str',
+            },
+            'ipv4_end_address': {
+                'type': 'str',
+            },
+            'ipv6_start_address': {
                 'type': 'str',
             },
             'ipv6_end_address': {
@@ -213,7 +240,13 @@ def get_argspec():
             'virtual_server': {
                 'type': 'str',
             },
+            'nat_pool': {
+                'type': 'str',
+            },
             'ethernet': {
+                'type': 'str',
+            },
+            've': {
                 'type': 'str',
             },
             'trunk': {
@@ -222,13 +255,6 @@ def get_argspec():
             'uuid': {
                 'type': 'str',
             }
-        },
-        'ttl': {
-            'type': 'int',
-        },
-        'ntype': {
-            'type': 'str',
-            'choices': ['tcp', 'udp', 'icmp']
         }
     })
     # Parent keys

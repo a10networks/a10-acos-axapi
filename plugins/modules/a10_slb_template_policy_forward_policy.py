@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy
 description:
     - Forward Policy commands
-short_description: Configures A10 slb.template.policy.forward-policy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,37 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    filtering:
+        - Key to identify parent object
+        type: str
+        required: True
+    no_client_conn_reuse:
+        description:
+        - "Inspects only first request of a connection"
+        type: bool
+        required: False
+    acos_event_log:
+        description:
+        - "Enable acos event logging"
+        type: bool
+        required: False
+    local_logging:
+        description:
+        - "Enable local logging"
+        type: bool
+        required: False
+    require_web_category:
+        description:
+        - "Wait for web category to be resolved before taking proxy decision"
+        type: bool
+        required: False
+    filtering:
         description:
         - "Field filtering"
+        type: list
         required: False
         suboptions:
             ssli_url_filtering:
@@ -65,17 +94,11 @@ options:
           filtering for intercepted URL's(enabled by default); 'no-sni-allow'= Allow
           connection if SNI filtering is enabled and SNI header is not present(Drop by
           default);"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    local_logging:
-        description:
-        - "Enable local logging"
-        required: False
+                type: str
     san_filtering:
         description:
         - "Field san_filtering"
+        type: list
         required: False
         suboptions:
             ssli_url_filtering_san:
@@ -85,103 +108,123 @@ options:
           'intercepted-san-enable'= Enable SAN filtering for intercepted URL's(disabled
           by default); 'no-san-allow'= Allow connection if SAN filtering is enabled and
           SAN field is not present(Drop by default);"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     action_list:
         description:
         - "Field action_list"
+        type: list
         required: False
         suboptions:
-            log:
+            name:
                 description:
-                - "enable logging"
-            http_status_code:
-                description:
-                - "'301'= Moved permanently; '302'= Found;"
-            forward_snat:
-                description:
-                - "Source NAT pool or pool group"
-            uuid:
-                description:
-                - "uuid of the object"
-            drop_response_code:
-                description:
-                - "Specify response code for drop action"
+                - "Action policy name"
+                type: str
             action1:
                 description:
                 - "'forward-to-internet'= Forward request to Internet; 'forward-to-service-group'=
           Forward request to service group; 'forward-to-proxy'= Forward request to HTTP
           proxy server; 'drop'= Drop request;"
+                type: str
             fake_sg:
                 description:
                 - "service group to forward the packets to Internet"
-            user_tag:
-                description:
-                - "Customized tag"
+                type: str
             real_sg:
                 description:
                 - "service group to forward the packets"
+                type: str
+            forward_snat:
+                description:
+                - "Source NAT pool or pool group"
+                type: str
+            fall_back:
+                description:
+                - "Fallback service group for Internet"
+                type: str
+            fall_back_snat:
+                description:
+                - "Source NAT pool or pool group for fallback server"
+                type: str
+            log:
+                description:
+                - "enable logging"
+                type: bool
+            drop_response_code:
+                description:
+                - "Specify response code for drop action"
+                type: int
             drop_message:
                 description:
                 - "drop-message sent to the client as webpage(html tags are included and quotation
           marks are required for white spaces)"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            fall_back:
-                description:
-                - "Fallback service group for Internet"
-            fall_back_snat:
-                description:
-                - "Source NAT pool or pool group for fallback server"
+                type: str
             drop_redirect_url:
                 description:
                 - "Specify URL to which client request is redirected upon being dropped"
-            name:
+                type: str
+            http_status_code:
                 description:
-                - "Action policy name"
-    no_client_conn_reuse:
-        description:
-        - "Inspects only first request of a connection"
-        required: False
-    require_web_category:
-        description:
-        - "Wait for web category to be resolved before taking proxy decision"
-        required: False
-    acos_event_log:
-        description:
-        - "Enable acos event logging"
-        required: False
-    source_list:
-        description:
-        - "Field source_list"
-        required: False
-        suboptions:
-            match_any:
-                description:
-                - "Match any source"
-            name:
-                description:
-                - "source destination match rule name"
-            match_authorize_policy:
-                description:
-                - "Authorize-policy for user and group based policy"
-            destination:
-                description:
-                - "Field destination"
-            user_tag:
-                description:
-                - "Customized tag"
-            priority:
-                description:
-                - "Priority of the source(higher the number higher the priority, default 0)"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            match_class_list:
-                description:
-                - "Class List Name"
+                - "'301'= Moved permanently; '302'= Found;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    source_list:
+        description:
+        - "Field source_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "source destination match rule name"
+                type: str
+            match_class_list:
+                description:
+                - "Class List Name"
+                type: str
+            match_any:
+                description:
+                - "Match any source"
+                type: bool
+            match_authorize_policy:
+                description:
+                - "Authorize-policy for user and group based policy"
+                type: str
+            priority:
+                description:
+                - "Priority of the source(higher the number higher the priority, default 0)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+            destination:
+                description:
+                - "Field destination"
+                type: dict
 
 '''
 
@@ -242,6 +285,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'no_client_conn_reuse': {
+            'type': 'bool',
+        },
+        'acos_event_log': {
+            'type': 'bool',
+        },
+        'local_logging': {
+            'type': 'bool',
+        },
+        'require_web_category': {
+            'type': 'bool',
+        },
         'filtering': {
             'type': 'list',
             'ssli_url_filtering': {
@@ -252,12 +307,6 @@ def get_argspec():
                     'intercepted-http-disable', 'no-sni-allow'
                 ]
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'local_logging': {
-            'type': 'bool',
         },
         'san_filtering': {
             'type': 'list',
@@ -270,23 +319,14 @@ def get_argspec():
                 ]
             }
         },
+        'uuid': {
+            'type': 'str',
+        },
         'action_list': {
             'type': 'list',
-            'log': {
-                'type': 'bool',
-            },
-            'http_status_code': {
+            'name': {
                 'type': 'str',
-                'choices': ['301', '302']
-            },
-            'forward_snat': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'drop_response_code': {
-                'type': 'int',
+                'required': True,
             },
             'action1': {
                 'type':
@@ -299,13 +339,38 @@ def get_argspec():
             'fake_sg': {
                 'type': 'str',
             },
-            'user_tag': {
-                'type': 'str',
-            },
             'real_sg': {
                 'type': 'str',
             },
+            'forward_snat': {
+                'type': 'str',
+            },
+            'fall_back': {
+                'type': 'str',
+            },
+            'fall_back_snat': {
+                'type': 'str',
+            },
+            'log': {
+                'type': 'bool',
+            },
+            'drop_response_code': {
+                'type': 'int',
+            },
             'drop_message': {
+                'type': 'str',
+            },
+            'drop_redirect_url': {
+                'type': 'str',
+            },
+            'http_status_code': {
+                'type': 'str',
+                'choices': ['301', '302']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
                 'type': 'str',
             },
             'sampling_enable': {
@@ -314,120 +379,31 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['all', 'hits']
                 }
-            },
-            'fall_back': {
-                'type': 'str',
-            },
-            'fall_back_snat': {
-                'type': 'str',
-            },
-            'drop_redirect_url': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
             }
-        },
-        'no_client_conn_reuse': {
-            'type': 'bool',
-        },
-        'require_web_category': {
-            'type': 'bool',
-        },
-        'acos_event_log': {
-            'type': 'bool',
         },
         'source_list': {
             'type': 'list',
-            'match_any': {
-                'type': 'bool',
-            },
             'name': {
                 'type': 'str',
                 'required': True,
+            },
+            'match_class_list': {
+                'type': 'str',
+            },
+            'match_any': {
+                'type': 'bool',
             },
             'match_authorize_policy': {
                 'type': 'str',
             },
-            'destination': {
-                'type': 'dict',
-                'class_list_list': {
-                    'type': 'list',
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'dest_class_list': {
-                        'type': 'str',
-                        'required': True,
-                    },
-                    'priority': {
-                        'type': 'int',
-                    },
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'hits']
-                        }
-                    },
-                    'action': {
-                        'type': 'str',
-                    },
-                    'ntype': {
-                        'type': 'str',
-                        'choices': ['host', 'url', 'ip']
-                    }
-                },
-                'web_category_list_list': {
-                    'type': 'list',
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'web_category_list': {
-                        'type': 'str',
-                        'required': True,
-                    },
-                    'priority': {
-                        'type': 'int',
-                    },
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'hits']
-                        }
-                    },
-                    'action': {
-                        'type': 'str',
-                    },
-                    'ntype': {
-                        'type': 'str',
-                        'choices': ['host', 'url']
-                    }
-                },
-                'any': {
-                    'type': 'dict',
-                    'action': {
-                        'type': 'str',
-                    },
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'hits']
-                        }
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                }
+            'priority': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
             },
             'user_tag': {
                 'type': 'str',
-            },
-            'priority': {
-                'type': 'int',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -440,11 +416,78 @@ def get_argspec():
                     ]
                 }
             },
-            'match_class_list': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
+            'destination': {
+                'type': 'dict',
+                'class_list_list': {
+                    'type': 'list',
+                    'dest_class_list': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'action': {
+                        'type': 'str',
+                    },
+                    'ntype': {
+                        'type': 'str',
+                        'choices': ['host', 'url', 'ip']
+                    },
+                    'priority': {
+                        'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'hits']
+                        }
+                    }
+                },
+                'web_category_list_list': {
+                    'type': 'list',
+                    'web_category_list': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'action': {
+                        'type': 'str',
+                    },
+                    'ntype': {
+                        'type': 'str',
+                        'choices': ['host', 'url']
+                    },
+                    'priority': {
+                        'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'hits']
+                        }
+                    }
+                },
+                'any': {
+                    'type': 'dict',
+                    'action': {
+                        'type': 'str',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'hits']
+                        }
+                    }
+                }
             }
         }
     })

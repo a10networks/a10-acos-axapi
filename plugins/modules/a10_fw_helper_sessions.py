@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_helper_sessions
 description:
     - Configure firewall helper-session (TAC use only)
-short_description: Configures A10 fw.helper-sessions
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,47 +22,58 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    idle_timeout:
-        description:
-        - "helper-sessions idle-timeout time (Idle-timeout in minutes (default= 1 minute))"
-        required: False
-    limit:
-        description:
-        - "Limit number of helper-sessions (Limit helper-sessions number)"
+        type: str
         required: False
     mode:
         description:
         - "'disable'= Disable helper-sessions;"
+        type: str
+        required: False
+    idle_timeout:
+        description:
+        - "helper-sessions idle-timeout time (Idle-timeout in minutes (default= 1 minute))"
+        type: int
+        required: False
+    limit:
+        description:
+        - "Limit number of helper-sessions (Limit helper-sessions number)"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -121,15 +130,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'mode': {
+            'type': 'str',
+            'choices': ['disable']
+        },
         'idle_timeout': {
             'type': 'int',
         },
         'limit': {
             'type': 'int',
-        },
-        'mode': {
-            'type': 'str',
-            'choices': ['disable']
         },
         'uuid': {
             'type': 'str',

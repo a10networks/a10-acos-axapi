@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import
 description:
     - Get files from remote site
-short_description: Configures A10 import
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,306 +21,387 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    geo_location:
+    cloud_config:
         description:
-        - "Geo-location CSV File"
+        - "Cloud Configuration File"
+        type: str
+        required: False
+    cloud_creds:
+        description:
+        - "Cloud Credentials File"
+        type: str
+        required: False
+    ssl_cert:
+        description:
+        - "SSL Cert File(enter bulk when import an archive file)"
+        type: str
+        required: False
+    ca_cert:
+        description:
+        - "CA Cert File(enter bulk when import an archive file)"
+        type: str
+        required: False
+    ssl_key:
+        description:
+        - "SSL Key File(enter bulk when import an archive file)"
+        type: str
+        required: False
+    ssl_crl:
+        description:
+        - "SSL Crl File"
+        type: str
         required: False
     ssl_cert_key:
         description:
         - "'bulk'= import an archive file;"
-        required: False
-    class_list_convert:
-        description:
-        - "Convert Class List File to A10 format"
-        required: False
-    bw_list:
-        description:
-        - "Black white List File"
-        required: False
-    usb_license:
-        description:
-        - "USB License File"
-        required: False
-    ip_map_list:
-        description:
-        - "IP Map List File"
-        required: False
-    health_external:
-        description:
-        - "Field health_external"
-        required: False
-        suboptions:
-            description:
-                description:
-                - "Describe the Program Function briefly"
-            remote_file:
-                description:
-                - "Field remote_file"
-            externalfilename:
-                description:
-                - "Specify the Program Name"
-            password:
-                description:
-                - "password for the remote site"
-            use_mgmt_port:
-                description:
-                - "Use management port as source port"
-            overwrite:
-                description:
-                - "Overwrite existing file"
-    auth_portal:
-        description:
-        - "Portal file for http authentication"
-        required: False
-    local_uri_file:
-        description:
-        - "Local URI files for http response"
+        type: str
         required: False
     aflex:
         description:
         - "aFleX Script Source File"
+        type: str
         required: False
-    overwrite:
+    xml_schema:
         description:
-        - "Overwrite existing file"
+        - "XML-Schema File"
+        type: str
+        required: False
+    wsdl:
+        description:
+        - "Web Service Definition Language File"
+        type: str
+        required: False
+    policy:
+        description:
+        - "WAF policy File"
+        type: str
+        required: False
+    bw_list:
+        description:
+        - "Black white List File"
+        type: str
+        required: False
+    file_inspection_bw_list:
+        description:
+        - "Black white List File"
+        type: str
+        required: False
+    class_list:
+        description:
+        - "Class List File"
+        type: str
+        required: False
+    class_list_convert:
+        description:
+        - "Convert Class List File to A10 format"
+        type: str
+        required: False
+    lw_4o6:
+        description:
+        - "LW-4over6 Binding Table File"
+        type: str
+        required: False
+    geo_location:
+        description:
+        - "Geo-location CSV File"
+        type: str
+        required: False
+    dnssec_dnskey:
+        description:
+        - "DNSSEC DNSKEY(KSK) file for child zone"
+        type: str
+        required: False
+    dnssec_ds:
+        description:
+        - "DNSSEC DS file for child zone"
+        type: str
+        required: False
+    thales_secworld:
+        description:
+        - "Thales security world files"
+        type: str
+        required: False
+    thales_kmdata:
+        description:
+        - "Thales Kmdata files"
+        type: str
+        required: False
+    auth_portal:
+        description:
+        - "Portal file for http authentication"
+        type: str
+        required: False
+    auth_portal_image:
+        description:
+        - "Image file for default portal"
+        type: str
+        required: False
+    ip_map_list:
+        description:
+        - "IP Map List File"
+        type: str
+        required: False
+    local_uri_file:
+        description:
+        - "Local URI files for http response"
+        type: str
+        required: False
+    glm_license:
+        description:
+        - "License File"
+        type: str
+        required: False
+    usb_license:
+        description:
+        - "USB License File"
+        type: str
+        required: False
+    glm_cert:
+        description:
+        - "GLM certificate"
+        type: str
+        required: False
+    auth_jwks:
+        description:
+        - "JSON web key"
+        type: str
+        required: False
+    certificate_type:
+        description:
+        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b;"
+        type: str
         required: False
     class_list_type:
         description:
         - "'ac'= ac; 'ipv4'= ipv4; 'ipv6'= ipv6; 'string'= string; 'string-case-
           insensitive'= string-case-insensitive;"
+        type: str
         required: False
     pfx_password:
         description:
         - "The password for certificate file (pfx type only)"
-        required: False
-    web_category_license:
-        description:
-        - "License file to enable web-category feature"
-        required: False
-    thales_kmdata:
-        description:
-        - "Thales Kmdata files"
+        type: str
         required: False
     secured:
         description:
         - "Mark as non-exportable"
+        type: bool
         required: False
-    ssl_crl:
+    web_category_license:
         description:
-        - "SSL Crl File"
+        - "License file to enable web-category feature"
+        type: str
         required: False
     terminal:
         description:
         - "terminal vi"
+        type: bool
         required: False
-    policy:
+    user_tag:
         description:
-        - "WAF policy File"
+        - "Customized tag"
+        type: str
         required: False
-    file_inspection_bw_list:
+    overwrite:
         description:
-        - "Black white List File"
+        - "Overwrite existing file"
+        type: bool
         required: False
-    thales_secworld:
+    use_mgmt_port:
         description:
-        - "Thales security world files"
+        - "Use management port as source port"
+        type: bool
         required: False
-    lw_4o6:
+    remote_file:
         description:
-        - "LW-4over6 Binding Table File"
+        - "profile name for remote url"
+        type: str
         required: False
-    auth_portal_image:
+    password:
         description:
-        - "Image file for default portal"
+        - "password for the remote site"
+        type: str
         required: False
+    store_name:
+        description:
+        - "Import store name"
+        type: str
+        required: False
+    to_device:
+        description:
+        - "Field to_device"
+        type: dict
+        required: False
+        suboptions:
+            device:
+                description:
+                - "Device (Device ID)"
+                type: int
+            glm_license:
+                description:
+                - "License File"
+                type: str
+            glm_cert:
+                description:
+                - "GLM certificate"
+                type: str
+            web_category_license:
+                description:
+                - "License file to enable web-category feature"
+                type: str
+            overwrite:
+                description:
+                - "Overwrite existing file"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            remote_file:
+                description:
+                - "profile name for remote url"
+                type: str
+    store:
+        description:
+        - "Field store"
+        type: dict
+        required: False
+        suboptions:
+            delete:
+                description:
+                - "Delete an import store profile"
+                type: bool
+            create:
+                description:
+                - "Create an import store profile"
+                type: bool
+            name:
+                description:
+                - "profile name to store remote url"
+                type: str
+            remote_file:
+                description:
+                - "Field remote_file"
+                type: str
+    auth_saml_idp:
+        description:
+        - "Field auth_saml_idp"
+        type: dict
+        required: False
+        suboptions:
+            saml_idp_name:
+                description:
+                - "Metadata name"
+                type: str
+            verify_xml_signature:
+                description:
+                - "Verify metadata's XML signature"
+                type: bool
+            overwrite:
+                description:
+                - "Overwrite existing file"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            remote_file:
+                description:
+                - "Profile name for remote url"
+                type: str
+            password:
+                description:
+                - "password for the remote site"
+                type: str
     health_postfile:
         description:
         - "Field health_postfile"
+        type: dict
         required: False
         suboptions:
             postfilename:
                 description:
                 - "Specify the File Name"
-            password:
+                type: str
+            overwrite:
                 description:
-                - "password for the remote site"
+                - "Overwrite existing file"
+                type: bool
             use_mgmt_port:
                 description:
                 - "Use management port as source port"
+                type: bool
             remote_file:
                 description:
                 - "Profile name for remote url"
+                type: str
+            password:
+                description:
+                - "password for the remote site"
+                type: str
+    health_external:
+        description:
+        - "Field health_external"
+        type: dict
+        required: False
+        suboptions:
+            externalfilename:
+                description:
+                - "Specify the Program Name"
+                type: str
+            description:
+                description:
+                - "Describe the Program Function briefly"
+                type: str
             overwrite:
                 description:
                 - "Overwrite existing file"
-    class_list:
-        description:
-        - "Class List File"
-        required: False
-    glm_license:
-        description:
-        - "License File"
-        required: False
-    dnssec_ds:
-        description:
-        - "DNSSEC DS file for child zone"
-        required: False
-    cloud_creds:
-        description:
-        - "Cloud Credentials File"
-        required: False
-    auth_jwks:
-        description:
-        - "JSON web key"
-        required: False
-    wsdl:
-        description:
-        - "Web Service Definition Language File"
-        required: False
-    password:
-        description:
-        - "password for the remote site"
-        required: False
-    ssl_key:
-        description:
-        - "SSL Key File(enter bulk when import an archive file)"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
-    remote_file:
-        description:
-        - "profile name for remote url"
-        required: False
-    cloud_config:
-        description:
-        - "Cloud Configuration File"
-        required: False
-    to_device:
-        description:
-        - "Field to_device"
-        required: False
-        suboptions:
-            web_category_license:
-                description:
-                - "License file to enable web-category feature"
-            remote_file:
-                description:
-                - "profile name for remote url"
-            glm_license:
-                description:
-                - "License File"
-            glm_cert:
-                description:
-                - "GLM certificate"
-            device:
-                description:
-                - "Device (Device ID)"
+                type: bool
             use_mgmt_port:
                 description:
                 - "Use management port as source port"
-            overwrite:
-                description:
-                - "Overwrite existing file"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    store_name:
-        description:
-        - "Import store name"
-        required: False
-    ca_cert:
-        description:
-        - "CA Cert File(enter bulk when import an archive file)"
-        required: False
-    glm_cert:
-        description:
-        - "GLM certificate"
-        required: False
-    store:
-        description:
-        - "Field store"
-        required: False
-        suboptions:
-            create:
-                description:
-                - "Create an import store profile"
-            name:
-                description:
-                - "profile name to store remote url"
+                type: bool
             remote_file:
                 description:
                 - "Field remote_file"
-            delete:
-                description:
-                - "Delete an import store profile"
-    xml_schema:
-        description:
-        - "XML-Schema File"
-        required: False
-    certificate_type:
-        description:
-        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b;"
-        required: False
-    auth_saml_idp:
-        description:
-        - "Field auth_saml_idp"
-        required: False
-        suboptions:
-            remote_file:
-                description:
-                - "Profile name for remote url"
-            saml_idp_name:
-                description:
-                - "Metadata name"
-            verify_xml_signature:
-                description:
-                - "Verify metadata's XML signature"
+                type: str
             password:
                 description:
                 - "password for the remote site"
-            use_mgmt_port:
-                description:
-                - "Use management port as source port"
-            overwrite:
-                description:
-                - "Overwrite existing file"
-    ssl_cert:
-        description:
-        - "SSL Cert File(enter bulk when import an archive file)"
-        required: False
-    dnssec_dnskey:
-        description:
-        - "DNSSEC DNSKEY(KSK) file for child zone"
-        required: False
+                type: str
 
 '''
 
@@ -418,57 +497,97 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'geo_location': {
+        'cloud_config': {
+            'type': 'str',
+        },
+        'cloud_creds': {
+            'type': 'str',
+        },
+        'ssl_cert': {
+            'type': 'str',
+        },
+        'ca_cert': {
+            'type': 'str',
+        },
+        'ssl_key': {
+            'type': 'str',
+        },
+        'ssl_crl': {
             'type': 'str',
         },
         'ssl_cert_key': {
             'type': 'str',
             'choices': ['bulk']
         },
-        'class_list_convert': {
+        'aflex': {
+            'type': 'str',
+        },
+        'xml_schema': {
+            'type': 'str',
+        },
+        'wsdl': {
+            'type': 'str',
+        },
+        'policy': {
             'type': 'str',
         },
         'bw_list': {
             'type': 'str',
         },
-        'usb_license': {
+        'file_inspection_bw_list': {
+            'type': 'str',
+        },
+        'class_list': {
+            'type': 'str',
+        },
+        'class_list_convert': {
+            'type': 'str',
+        },
+        'lw_4o6': {
+            'type': 'str',
+        },
+        'geo_location': {
+            'type': 'str',
+        },
+        'dnssec_dnskey': {
+            'type': 'str',
+        },
+        'dnssec_ds': {
+            'type': 'str',
+        },
+        'thales_secworld': {
+            'type': 'str',
+        },
+        'thales_kmdata': {
+            'type': 'str',
+        },
+        'auth_portal': {
+            'type': 'str',
+        },
+        'auth_portal_image': {
             'type': 'str',
         },
         'ip_map_list': {
             'type': 'str',
         },
-        'health_external': {
-            'type': 'dict',
-            'description': {
-                'type': 'str',
-            },
-            'remote_file': {
-                'type': 'str',
-            },
-            'externalfilename': {
-                'type': 'str',
-            },
-            'password': {
-                'type': 'str',
-            },
-            'use_mgmt_port': {
-                'type': 'bool',
-            },
-            'overwrite': {
-                'type': 'bool',
-            }
-        },
-        'auth_portal': {
-            'type': 'str',
-        },
         'local_uri_file': {
             'type': 'str',
         },
-        'aflex': {
+        'glm_license': {
             'type': 'str',
         },
-        'overwrite': {
-            'type': 'bool',
+        'usb_license': {
+            'type': 'str',
+        },
+        'glm_cert': {
+            'type': 'str',
+        },
+        'auth_jwks': {
+            'type': 'str',
+        },
+        'certificate_type': {
+            'type': 'str',
+            'choices': ['pem', 'der', 'pfx', 'p7b']
         },
         'class_list_type': {
             'type': 'str',
@@ -478,77 +597,20 @@ def get_argspec():
         'pfx_password': {
             'type': 'str',
         },
-        'web_category_license': {
-            'type': 'str',
-        },
-        'thales_kmdata': {
-            'type': 'str',
-        },
         'secured': {
             'type': 'bool',
         },
-        'ssl_crl': {
+        'web_category_license': {
             'type': 'str',
         },
         'terminal': {
             'type': 'bool',
         },
-        'policy': {
+        'user_tag': {
             'type': 'str',
         },
-        'file_inspection_bw_list': {
-            'type': 'str',
-        },
-        'thales_secworld': {
-            'type': 'str',
-        },
-        'lw_4o6': {
-            'type': 'str',
-        },
-        'auth_portal_image': {
-            'type': 'str',
-        },
-        'health_postfile': {
-            'type': 'dict',
-            'postfilename': {
-                'type': 'str',
-            },
-            'password': {
-                'type': 'str',
-            },
-            'use_mgmt_port': {
-                'type': 'bool',
-            },
-            'remote_file': {
-                'type': 'str',
-            },
-            'overwrite': {
-                'type': 'bool',
-            }
-        },
-        'class_list': {
-            'type': 'str',
-        },
-        'glm_license': {
-            'type': 'str',
-        },
-        'dnssec_ds': {
-            'type': 'str',
-        },
-        'cloud_creds': {
-            'type': 'str',
-        },
-        'auth_jwks': {
-            'type': 'str',
-        },
-        'wsdl': {
-            'type': 'str',
-        },
-        'password': {
-            'type': 'str',
-        },
-        'ssl_key': {
-            'type': 'str',
+        'overwrite': {
+            'type': 'bool',
         },
         'use_mgmt_port': {
             'type': 'bool',
@@ -556,16 +618,16 @@ def get_argspec():
         'remote_file': {
             'type': 'str',
         },
-        'cloud_config': {
+        'password': {
+            'type': 'str',
+        },
+        'store_name': {
             'type': 'str',
         },
         'to_device': {
             'type': 'dict',
-            'web_category_license': {
-                'type': 'str',
-            },
-            'remote_file': {
-                'type': 'str',
+            'device': {
+                'type': 'int',
             },
             'glm_license': {
                 'type': 'str',
@@ -573,30 +635,24 @@ def get_argspec():
             'glm_cert': {
                 'type': 'str',
             },
-            'device': {
-                'type': 'int',
+            'web_category_license': {
+                'type': 'str',
+            },
+            'overwrite': {
+                'type': 'bool',
             },
             'use_mgmt_port': {
                 'type': 'bool',
             },
-            'overwrite': {
-                'type': 'bool',
+            'remote_file': {
+                'type': 'str',
             }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'store_name': {
-            'type': 'str',
-        },
-        'ca_cert': {
-            'type': 'str',
-        },
-        'glm_cert': {
-            'type': 'str',
         },
         'store': {
             'type': 'dict',
+            'delete': {
+                'type': 'bool',
+            },
             'create': {
                 'type': 'bool',
             },
@@ -605,44 +661,67 @@ def get_argspec():
             },
             'remote_file': {
                 'type': 'str',
-            },
-            'delete': {
-                'type': 'bool',
             }
-        },
-        'xml_schema': {
-            'type': 'str',
-        },
-        'certificate_type': {
-            'type': 'str',
-            'choices': ['pem', 'der', 'pfx', 'p7b']
         },
         'auth_saml_idp': {
             'type': 'dict',
-            'remote_file': {
-                'type': 'str',
-            },
             'saml_idp_name': {
                 'type': 'str',
             },
             'verify_xml_signature': {
                 'type': 'bool',
             },
-            'password': {
-                'type': 'str',
+            'overwrite': {
+                'type': 'bool',
             },
             'use_mgmt_port': {
                 'type': 'bool',
             },
-            'overwrite': {
-                'type': 'bool',
+            'remote_file': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'str',
             }
         },
-        'ssl_cert': {
-            'type': 'str',
+        'health_postfile': {
+            'type': 'dict',
+            'postfilename': {
+                'type': 'str',
+            },
+            'overwrite': {
+                'type': 'bool',
+            },
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'remote_file': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'str',
+            }
         },
-        'dnssec_dnskey': {
-            'type': 'str',
+        'health_external': {
+            'type': 'dict',
+            'externalfilename': {
+                'type': 'str',
+            },
+            'description': {
+                'type': 'str',
+            },
+            'overwrite': {
+                'type': 'bool',
+            },
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'remote_file': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'str',
+            }
         }
     })
     return rv

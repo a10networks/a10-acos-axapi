@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_sip
 description:
     - Change LSN SIP ALG Settings
-short_description: Configures A10 cgnv6.lsn.alg.sip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,58 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    sip_value:
+        description:
+        - "'enable'= Enable SIP ALG for LSN;"
+        type: str
+        required: False
+    rtp_stun_timeout:
+        description:
+        - "RTP/RTCP STUN timeout in minutes (Default is 5 minutes)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -85,68 +106,73 @@ options:
           Helper Conn Found; 'helper-created'= SMP Helper Conn Created; 'helper-deleted'=
           SMP Helper Conn Already Deleted; 'helper-freed'= SMP Helper Conn Freed;
           'helper-failure'= SMP Helper Failure;"
-    rtp_stun_timeout:
-        description:
-        - "RTP/RTCP STUN timeout in minutes (Default is 5 minutes)"
-        required: False
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             method_register:
                 description:
                 - "SIP Method REGISTER"
+                type: str
             method_invite:
                 description:
                 - "SIP Method INVITE"
-            method_publish:
-                description:
-                - "SIP Method PUBLISH"
-            method_unknown:
-                description:
-                - "SIP Method UNKNOWN"
-            method_update:
-                description:
-                - "SIP Method UPDATE"
-            method_subscribe:
-                description:
-                - "SIP Method SUBSCRIBE"
-            method_options:
-                description:
-                - "SIP Method OPTIONS"
-            method_prack:
-                description:
-                - "SIP Method PRACK"
-            method_notify:
-                description:
-                - "SIP Method NOTIFY"
-            method_info:
-                description:
-                - "SIP Method INFO"
+                type: str
             method_ack:
                 description:
                 - "SIP Method ACK"
-            method_refer:
-                description:
-                - "SIP Method REFER"
+                type: str
             method_cancel:
                 description:
                 - "SIP Method CANCEL"
+                type: str
             method_bye:
                 description:
                 - "SIP Method BYE"
+                type: str
+            method_options:
+                description:
+                - "SIP Method OPTIONS"
+                type: str
+            method_prack:
+                description:
+                - "SIP Method PRACK"
+                type: str
+            method_subscribe:
+                description:
+                - "SIP Method SUBSCRIBE"
+                type: str
+            method_notify:
+                description:
+                - "SIP Method NOTIFY"
+                type: str
+            method_publish:
+                description:
+                - "SIP Method PUBLISH"
+                type: str
+            method_info:
+                description:
+                - "SIP Method INFO"
+                type: str
+            method_refer:
+                description:
+                - "SIP Method REFER"
+                type: str
             method_message:
                 description:
                 - "SIP Method MESSAGE"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    sip_value:
-        description:
-        - "'enable'= Enable SIP ALG for LSN;"
-        required: False
+                type: str
+            method_update:
+                description:
+                - "SIP Method UPDATE"
+                type: str
+            method_unknown:
+                description:
+                - "SIP Method UNKNOWN"
+                type: str
 
 '''
 
@@ -203,6 +229,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'sip_value': {
+            'type': 'str',
+            'choices': ['enable']
+        },
+        'rtp_stun_timeout': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -232,9 +268,6 @@ def get_argspec():
                 ]
             }
         },
-        'rtp_stun_timeout': {
-            'type': 'int',
-        },
         'stats': {
             'type': 'dict',
             'method_register': {
@@ -243,34 +276,7 @@ def get_argspec():
             'method_invite': {
                 'type': 'str',
             },
-            'method_publish': {
-                'type': 'str',
-            },
-            'method_unknown': {
-                'type': 'str',
-            },
-            'method_update': {
-                'type': 'str',
-            },
-            'method_subscribe': {
-                'type': 'str',
-            },
-            'method_options': {
-                'type': 'str',
-            },
-            'method_prack': {
-                'type': 'str',
-            },
-            'method_notify': {
-                'type': 'str',
-            },
-            'method_info': {
-                'type': 'str',
-            },
             'method_ack': {
-                'type': 'str',
-            },
-            'method_refer': {
                 'type': 'str',
             },
             'method_cancel': {
@@ -279,16 +285,36 @@ def get_argspec():
             'method_bye': {
                 'type': 'str',
             },
+            'method_options': {
+                'type': 'str',
+            },
+            'method_prack': {
+                'type': 'str',
+            },
+            'method_subscribe': {
+                'type': 'str',
+            },
+            'method_notify': {
+                'type': 'str',
+            },
+            'method_publish': {
+                'type': 'str',
+            },
+            'method_info': {
+                'type': 'str',
+            },
+            'method_refer': {
+                'type': 'str',
+            },
             'method_message': {
                 'type': 'str',
+            },
+            'method_update': {
+                'type': 'str',
+            },
+            'method_unknown': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'sip_value': {
-            'type': 'str',
-            'choices': ['enable']
         }
     })
     return rv

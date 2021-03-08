@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_cluster_devices_device_id
 description:
     - Configure Scaleout devices
-short_description: Configures A10 scaleout.cluster.cluster.devices.device-id
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     cluster_id:
         description:
-        - Key to identify parent object    action:
-        description:
-        - "'enable'= enable; 'disable'= disable;"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     device_id:
         description:
         - "scaleout device id"
+        type: int
         required: True
+    ip:
+        description:
+        - "Field ip"
+        type: str
+        required: False
+    action:
+        description:
+        - "'enable'= enable; 'disable'= disable;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
-        required: False
-    ip:
-        description:
-        - "Field ip"
+        type: str
         required: False
 
 '''
@@ -128,21 +141,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
         'device_id': {
             'type': 'int',
             'required': True,
+        },
+        'ip': {
+            'type': 'str',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
         },
         'uuid': {
             'type': 'str',
         },
         'user_tag': {
-            'type': 'str',
-        },
-        'ip': {
             'type': 'str',
         }
     })

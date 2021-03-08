@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_template
 description:
     - Packet config template
-short_description: Configures A10 sys-ut.template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,209 +22,270 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    udp:
-        description:
-        - "Field udp"
-        required: False
-        suboptions:
-            src_port_range:
-                description:
-                - "Field src_port_range"
-            uuid:
-                description:
-                - "uuid of the object"
-            checksum:
-                description:
-                - "'valid'= valid; 'invalid'= invalid;"
-            nat_pool:
-                description:
-                - "Nat pool port"
-            length:
-                description:
-                - "Total packet length starting at UDP header"
-            dest_port:
-                description:
-                - "Dest port"
-            dest_port_value:
-                description:
-                - "Dest port value"
     name:
         description:
         - "template name"
+        type: str
         required: True
-    ignore_validation:
+    uuid:
         description:
-        - "Field ignore_validation"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            all:
-                description:
-                - "Skip validation"
-            uuid:
-                description:
-                - "uuid of the object"
-            l4:
-                description:
-                - "Dont validate L4 header"
-            l2:
-                description:
-                - "Dont validate L2 header"
-            l3:
-                description:
-                - "Dont validate L3 header"
-            l1:
-                description:
-                - "Dont validate TX descriptor. This includes Tx port, Len & vlan"
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
-    l2:
+    ignore_validation:
         description:
-        - "Field l2"
+        - "Field ignore_validation"
+        type: dict
         required: False
         suboptions:
-            protocol:
+            l1:
                 description:
-                - "'arp'= arp; 'ipv4'= ipv4; 'ipv6'= ipv6;"
+                - "Dont validate TX descriptor. This includes Tx port, Len & vlan"
+                type: bool
+            l2:
+                description:
+                - "Dont validate L2 header"
+                type: bool
+            l3:
+                description:
+                - "Dont validate L3 header"
+                type: bool
+            l4:
+                description:
+                - "Dont validate L4 header"
+                type: bool
+            all:
+                description:
+                - "Skip validation"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
-            ethertype:
-                description:
-                - "L2 frame type"
-            mac_list:
-                description:
-                - "Field mac_list"
-            vlan:
-                description:
-                - "Vlan ID on the packet. 0 is untagged"
-            value:
-                description:
-                - "ethertype number"
-    l3:
-        description:
-        - "Field l3"
-        required: False
-        suboptions:
-            protocol:
-                description:
-                - "L4 Protocol"
-            uuid:
-                description:
-                - "uuid of the object"
-            checksum:
-                description:
-                - "'valid'= valid; 'invalid'= invalid;"
-            value:
-                description:
-                - "protocol number"
-            ip_list:
-                description:
-                - "Field ip_list"
-            ttl:
-                description:
-                - "Field ttl"
-            ntype:
-                description:
-                - "'tcp'= tcp; 'udp'= udp; 'icmp'= icmp;"
+                type: str
     l1:
         description:
         - "Field l1"
+        type: dict
         required: False
         suboptions:
             eth_list:
                 description:
                 - "Field eth_list"
-            uuid:
-                description:
-                - "uuid of the object"
-            auto:
-                description:
-                - "Auto calculate pkt len"
-            drop:
-                description:
-                - "Packet drop. Only allowed for output spec"
-            value:
-                description:
-                - "Total packet length starting at L2 header"
-            length:
-                description:
-                - "packet length"
+                type: list
             trunk_list:
                 description:
                 - "Field trunk_list"
+                type: list
+            drop:
+                description:
+                - "Packet drop. Only allowed for output spec"
+                type: bool
+            length:
+                description:
+                - "packet length"
+                type: bool
+            value:
+                description:
+                - "Total packet length starting at L2 header"
+                type: int
+            auto:
+                description:
+                - "Auto calculate pkt len"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    l2:
+        description:
+        - "Field l2"
+        type: dict
+        required: False
+        suboptions:
+            ethertype:
+                description:
+                - "L2 frame type"
+                type: bool
+            protocol:
+                description:
+                - "'arp'= arp; 'ipv4'= ipv4; 'ipv6'= ipv6;"
+                type: str
+            value:
+                description:
+                - "ethertype number"
+                type: int
+            vlan:
+                description:
+                - "Vlan ID on the packet. 0 is untagged"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            mac_list:
+                description:
+                - "Field mac_list"
+                type: list
+    l3:
+        description:
+        - "Field l3"
+        type: dict
+        required: False
+        suboptions:
+            protocol:
+                description:
+                - "L4 Protocol"
+                type: bool
+            ntype:
+                description:
+                - "'tcp'= tcp; 'udp'= udp; 'icmp'= icmp;"
+                type: str
+            value:
+                description:
+                - "protocol number"
+                type: int
+            checksum:
+                description:
+                - "'valid'= valid; 'invalid'= invalid;"
+                type: str
+            ttl:
+                description:
+                - "Field ttl"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            ip_list:
+                description:
+                - "Field ip_list"
+                type: list
     tcp:
         description:
         - "Field tcp"
+        type: dict
         required: False
         suboptions:
             src_port_range:
                 description:
                 - "Field src_port_range"
-            uuid:
-                description:
-                - "uuid of the object"
-            checksum:
-                description:
-                - "'valid'= valid; 'invalid'= invalid;"
-            seq_number:
-                description:
-                - "'valid'= valid; 'invalid'= invalid;"
-            nat_pool:
-                description:
-                - "Nat pool port"
-            urgent:
-                description:
-                - "'valid'= valid; 'invalid'= invalid;"
-            window:
-                description:
-                - "'valid'= valid; 'invalid'= invalid;"
-            ack_seq_number:
-                description:
-                - "'valid'= valid; 'invalid'= invalid;"
-            flags:
-                description:
-                - "Field flags"
+                type: list
             dest_port:
                 description:
                 - "Dest port"
+                type: bool
             dest_port_value:
                 description:
                 - "Dest port value"
+                type: int
+            nat_pool:
+                description:
+                - "Nat pool port"
+                type: str
+            seq_number:
+                description:
+                - "'valid'= valid; 'invalid'= invalid;"
+                type: str
+            ack_seq_number:
+                description:
+                - "'valid'= valid; 'invalid'= invalid;"
+                type: str
+            checksum:
+                description:
+                - "'valid'= valid; 'invalid'= invalid;"
+                type: str
+            urgent:
+                description:
+                - "'valid'= valid; 'invalid'= invalid;"
+                type: str
+            window:
+                description:
+                - "'valid'= valid; 'invalid'= invalid;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            flags:
+                description:
+                - "Field flags"
+                type: dict
             options:
                 description:
                 - "Field options"
-    uuid:
+                type: dict
+    udp:
         description:
-        - "uuid of the object"
+        - "Field udp"
+        type: dict
         required: False
+        suboptions:
+            src_port_range:
+                description:
+                - "Field src_port_range"
+                type: list
+            dest_port:
+                description:
+                - "Dest port"
+                type: bool
+            dest_port_value:
+                description:
+                - "Dest port value"
+                type: int
+            nat_pool:
+                description:
+                - "Nat pool port"
+                type: str
+            length:
+                description:
+                - "Total packet length starting at UDP header"
+                type: int
+            checksum:
+                description:
+                - "'valid'= valid; 'invalid'= invalid;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -287,50 +346,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'udp': {
-            'type': 'dict',
-            'src_port_range': {
-                'type': 'list',
-                'src_port_end': {
-                    'type': 'int',
-                },
-                'src_port_start': {
-                    'type': 'int',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'checksum': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'nat_pool': {
-                'type': 'str',
-            },
-            'length': {
-                'type': 'int',
-            },
-            'dest_port': {
-                'type': 'bool',
-            },
-            'dest_port_value': {
-                'type': 'int',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'ignore_validation': {
             'type': 'dict',
-            'all': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'l4': {
+            'l1': {
                 'type': 'bool',
             },
             'l2': {
@@ -339,124 +367,14 @@ def get_argspec():
             'l3': {
                 'type': 'bool',
             },
-            'l1': {
-                'type': 'bool',
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'l2': {
-            'type': 'dict',
-            'protocol': {
-                'type': 'str',
-                'choices': ['arp', 'ipv4', 'ipv6']
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ethertype': {
+            'l4': {
                 'type': 'bool',
             },
-            'mac_list': {
-                'type': 'list',
-                'ethernet': {
-                    'type': 'str',
-                },
-                've': {
-                    'type': 'str',
-                },
-                'src_dst': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['dest', 'src']
-                },
-                'address_type': {
-                    'type': 'str',
-                    'choices': ['broadcast', 'multicast']
-                },
-                'nat_pool': {
-                    'type': 'str',
-                },
-                'value': {
-                    'type': 'str',
-                },
-                'trunk': {
-                    'type': 'str',
-                },
-                'virtual_server': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'vlan': {
-                'type': 'int',
-            },
-            'value': {
-                'type': 'int',
-            }
-        },
-        'l3': {
-            'type': 'dict',
-            'protocol': {
+            'all': {
                 'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
-            },
-            'checksum': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'value': {
-                'type': 'int',
-            },
-            'ip_list': {
-                'type': 'list',
-                'ipv4_end_address': {
-                    'type': 'str',
-                },
-                'ipv6_start_address': {
-                    'type': 'str',
-                },
-                'src_dst': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['dest', 'src']
-                },
-                've': {
-                    'type': 'str',
-                },
-                'nat_pool': {
-                    'type': 'str',
-                },
-                'ipv4_start_address': {
-                    'type': 'str',
-                },
-                'ipv6_end_address': {
-                    'type': 'str',
-                },
-                'virtual_server': {
-                    'type': 'str',
-                },
-                'ethernet': {
-                    'type': 'str',
-                },
-                'trunk': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'ntype': {
-                'type': 'str',
-                'choices': ['tcp', 'udp', 'icmp']
             }
         },
         'l1': {
@@ -470,21 +388,6 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'uuid': {
-                'type': 'str',
-            },
-            'auto': {
-                'type': 'bool',
-            },
-            'drop': {
-                'type': 'bool',
-            },
-            'value': {
-                'type': 'int',
-            },
-            'length': {
-                'type': 'bool',
-            },
             'trunk_list': {
                 'type': 'list',
                 'trunk_start': {
@@ -493,32 +396,167 @@ def get_argspec():
                 'trunk_end': {
                     'type': 'int',
                 }
+            },
+            'drop': {
+                'type': 'bool',
+            },
+            'length': {
+                'type': 'bool',
+            },
+            'value': {
+                'type': 'int',
+            },
+            'auto': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'l2': {
+            'type': 'dict',
+            'ethertype': {
+                'type': 'bool',
+            },
+            'protocol': {
+                'type': 'str',
+                'choices': ['arp', 'ipv4', 'ipv6']
+            },
+            'value': {
+                'type': 'int',
+            },
+            'vlan': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'mac_list': {
+                'type': 'list',
+                'src_dst': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['dest', 'src']
+                },
+                'address_type': {
+                    'type': 'str',
+                    'choices': ['broadcast', 'multicast']
+                },
+                'virtual_server': {
+                    'type': 'str',
+                },
+                'nat_pool': {
+                    'type': 'str',
+                },
+                'ethernet': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'value': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'l3': {
+            'type': 'dict',
+            'protocol': {
+                'type': 'bool',
+            },
+            'ntype': {
+                'type': 'str',
+                'choices': ['tcp', 'udp', 'icmp']
+            },
+            'value': {
+                'type': 'int',
+            },
+            'checksum': {
+                'type': 'str',
+                'choices': ['valid', 'invalid']
+            },
+            'ttl': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'ip_list': {
+                'type': 'list',
+                'src_dst': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['dest', 'src']
+                },
+                'ipv4_start_address': {
+                    'type': 'str',
+                },
+                'ipv4_end_address': {
+                    'type': 'str',
+                },
+                'ipv6_start_address': {
+                    'type': 'str',
+                },
+                'ipv6_end_address': {
+                    'type': 'str',
+                },
+                'virtual_server': {
+                    'type': 'str',
+                },
+                'nat_pool': {
+                    'type': 'str',
+                },
+                'ethernet': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
             }
         },
         'tcp': {
             'type': 'dict',
             'src_port_range': {
                 'type': 'list',
-                'src_port_end': {
+                'src_port_start': {
                     'type': 'int',
                 },
-                'src_port_start': {
+                'src_port_end': {
                     'type': 'int',
                 }
             },
-            'uuid': {
-                'type': 'str',
+            'dest_port': {
+                'type': 'bool',
             },
-            'checksum': {
+            'dest_port_value': {
+                'type': 'int',
+            },
+            'nat_pool': {
                 'type': 'str',
-                'choices': ['valid', 'invalid']
             },
             'seq_number': {
                 'type': 'str',
                 'choices': ['valid', 'invalid']
             },
-            'nat_pool': {
+            'ack_seq_number': {
                 'type': 'str',
+                'choices': ['valid', 'invalid']
+            },
+            'checksum': {
+                'type': 'str',
+                'choices': ['valid', 'invalid']
             },
             'urgent': {
                 'type': 'str',
@@ -528,52 +566,45 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['valid', 'invalid']
             },
-            'ack_seq_number': {
+            'uuid': {
                 'type': 'str',
-                'choices': ['valid', 'invalid']
             },
             'flags': {
                 'type': 'dict',
+                'syn': {
+                    'type': 'bool',
+                },
+                'ack': {
+                    'type': 'bool',
+                },
+                'fin': {
+                    'type': 'bool',
+                },
+                'rst': {
+                    'type': 'bool',
+                },
+                'psh': {
+                    'type': 'bool',
+                },
                 'ece': {
                     'type': 'bool',
                 },
                 'urg': {
                     'type': 'bool',
                 },
-                'uuid': {
-                    'type': 'str',
-                },
-                'ack': {
-                    'type': 'bool',
-                },
                 'cwr': {
                     'type': 'bool',
                 },
-                'psh': {
-                    'type': 'bool',
-                },
-                'syn': {
-                    'type': 'bool',
-                },
-                'rst': {
-                    'type': 'bool',
-                },
-                'fin': {
-                    'type': 'bool',
+                'uuid': {
+                    'type': 'str',
                 }
-            },
-            'dest_port': {
-                'type': 'bool',
-            },
-            'dest_port_value': {
-                'type': 'int',
             },
             'options': {
                 'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
                 'mss': {
+                    'type': 'int',
+                },
+                'wscale': {
                     'type': 'int',
                 },
                 'sack_type': {
@@ -586,13 +617,41 @@ def get_argspec():
                 'nop': {
                     'type': 'bool',
                 },
-                'wscale': {
-                    'type': 'int',
+                'uuid': {
+                    'type': 'str',
                 }
             }
         },
-        'uuid': {
-            'type': 'str',
+        'udp': {
+            'type': 'dict',
+            'src_port_range': {
+                'type': 'list',
+                'src_port_start': {
+                    'type': 'int',
+                },
+                'src_port_end': {
+                    'type': 'int',
+                }
+            },
+            'dest_port': {
+                'type': 'bool',
+            },
+            'dest_port_value': {
+                'type': 'int',
+            },
+            'nat_pool': {
+                'type': 'str',
+            },
+            'length': {
+                'type': 'int',
+            },
+            'checksum': {
+                'type': 'str',
+                'choices': ['valid', 'invalid']
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

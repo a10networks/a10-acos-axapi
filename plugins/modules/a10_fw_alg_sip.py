@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg_sip
 description:
     - Change Firewall SIP ALG Settings
-short_description: Configures A10 fw.alg.sip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,95 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     default_port_disable:
         description:
         - "'default-port-disable'= Disable SIP ALG default port 5060;"
+        type: str
         required: False
-    stats:
+    uuid:
         description:
-        - "Field stats"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            method_register:
-                description:
-                - "Method REGISTER"
-            stat_request:
-                description:
-                - "Request Received"
-            method_publish:
-                description:
-                - "Method PUBLISH"
-            method_cancel:
-                description:
-                - "Method CANCEL"
-            method_unknown:
-                description:
-                - "Method Unknown"
-            method_update:
-                description:
-                - "Method UPDATE"
-            method_subscribe:
-                description:
-                - "Method SUBSCRIBE"
-            method_invite:
-                description:
-                - "Method INVITE"
-            method_options:
-                description:
-                - "Method OPTIONS"
-            method_prack:
-                description:
-                - "Method PRACK"
-            method_notify:
-                description:
-                - "Method NOTIFY"
-            method_info:
-                description:
-                - "Method INFO"
-            method_ack:
-                description:
-                - "Method ACK"
-            method_refer:
-                description:
-                - "Method REFER"
-            stat_response:
-                description:
-                - "Response Received"
-            method_bye:
-                description:
-                - "Method BYE"
-            method_message:
-                description:
-                - "Method MESSAGE"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -136,10 +92,81 @@ options:
           Helper Conn Found; 'helper-created'= SMP Helper Conn Created; 'helper-deleted'=
           SMP Helper Conn Already Deleted; 'helper-freed'= SMP Helper Conn Freed;
           'helper-failure'= SMP Helper Failure;"
-    uuid:
+                type: str
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            stat_request:
+                description:
+                - "Request Received"
+                type: str
+            stat_response:
+                description:
+                - "Response Received"
+                type: str
+            method_register:
+                description:
+                - "Method REGISTER"
+                type: str
+            method_invite:
+                description:
+                - "Method INVITE"
+                type: str
+            method_ack:
+                description:
+                - "Method ACK"
+                type: str
+            method_cancel:
+                description:
+                - "Method CANCEL"
+                type: str
+            method_bye:
+                description:
+                - "Method BYE"
+                type: str
+            method_options:
+                description:
+                - "Method OPTIONS"
+                type: str
+            method_prack:
+                description:
+                - "Method PRACK"
+                type: str
+            method_subscribe:
+                description:
+                - "Method SUBSCRIBE"
+                type: str
+            method_notify:
+                description:
+                - "Method NOTIFY"
+                type: str
+            method_publish:
+                description:
+                - "Method PUBLISH"
+                type: str
+            method_info:
+                description:
+                - "Method INFO"
+                type: str
+            method_refer:
+                description:
+                - "Method REFER"
+                type: str
+            method_message:
+                description:
+                - "Method MESSAGE"
+                type: str
+            method_update:
+                description:
+                - "Method UPDATE"
+                type: str
+            method_unknown:
+                description:
+                - "Method Unknown"
+                type: str
 
 '''
 
@@ -199,59 +226,8 @@ def get_argspec():
             'type': 'str',
             'choices': ['default-port-disable']
         },
-        'stats': {
-            'type': 'dict',
-            'method_register': {
-                'type': 'str',
-            },
-            'stat_request': {
-                'type': 'str',
-            },
-            'method_publish': {
-                'type': 'str',
-            },
-            'method_cancel': {
-                'type': 'str',
-            },
-            'method_unknown': {
-                'type': 'str',
-            },
-            'method_update': {
-                'type': 'str',
-            },
-            'method_subscribe': {
-                'type': 'str',
-            },
-            'method_invite': {
-                'type': 'str',
-            },
-            'method_options': {
-                'type': 'str',
-            },
-            'method_prack': {
-                'type': 'str',
-            },
-            'method_notify': {
-                'type': 'str',
-            },
-            'method_info': {
-                'type': 'str',
-            },
-            'method_ack': {
-                'type': 'str',
-            },
-            'method_refer': {
-                'type': 'str',
-            },
-            'stat_response': {
-                'type': 'str',
-            },
-            'method_bye': {
-                'type': 'str',
-            },
-            'method_message': {
-                'type': 'str',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -277,8 +253,59 @@ def get_argspec():
                 ]
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'stat_request': {
+                'type': 'str',
+            },
+            'stat_response': {
+                'type': 'str',
+            },
+            'method_register': {
+                'type': 'str',
+            },
+            'method_invite': {
+                'type': 'str',
+            },
+            'method_ack': {
+                'type': 'str',
+            },
+            'method_cancel': {
+                'type': 'str',
+            },
+            'method_bye': {
+                'type': 'str',
+            },
+            'method_options': {
+                'type': 'str',
+            },
+            'method_prack': {
+                'type': 'str',
+            },
+            'method_subscribe': {
+                'type': 'str',
+            },
+            'method_notify': {
+                'type': 'str',
+            },
+            'method_publish': {
+                'type': 'str',
+            },
+            'method_info': {
+                'type': 'str',
+            },
+            'method_refer': {
+                'type': 'str',
+            },
+            'method_message': {
+                'type': 'str',
+            },
+            'method_update': {
+                'type': 'str',
+            },
+            'method_unknown': {
+                'type': 'str',
+            }
         }
     })
     return rv

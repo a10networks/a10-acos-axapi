@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ipmi
 description:
     - Perform IPMI related operations
-short_description: Configures A10 system.ipmi
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,110 +22,140 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     reset:
         description:
         - "Reset IPMI Controller"
+        type: bool
         required: False
     ip:
         description:
         - "Field ip"
+        type: dict
         required: False
         suboptions:
             ipv4_address:
                 description:
                 - "IP address"
-            default_gateway:
-                description:
-                - "Default gateway address"
+                type: str
             ipv4_netmask:
                 description:
                 - "IP subnet mask"
+                type: str
+            default_gateway:
+                description:
+                - "Default gateway address"
+                type: str
     ipsrc:
         description:
         - "Field ipsrc"
+        type: dict
         required: False
         suboptions:
             dhcp:
                 description:
                 - "IP addr obtained by BMC running DHCP"
+                type: bool
             static:
                 description:
                 - "Manually configured static IP address"
+                type: bool
+    user:
+        description:
+        - "Field user"
+        type: dict
+        required: False
+        suboptions:
+            add:
+                description:
+                - "Add a new IPMI user (IPMI User Name)"
+                type: str
+            password:
+                description:
+                - "Password"
+                type: str
+            administrator:
+                description:
+                - "Full control"
+                type: bool
+            callback:
+                description:
+                - "Lowest privilege level"
+                type: bool
+            operator:
+                description:
+                - "Most BMC commands are allowed"
+                type: bool
+            user:
+                description:
+                - "Only 'benign' commands are allowed"
+                type: bool
+            disable:
+                description:
+                - "Disable an existing IPMI user (IPMI User Name)"
+                type: str
+            privilege:
+                description:
+                - "Change an existing IPMI user privilege (IPMI User Name)"
+                type: str
+            setname:
+                description:
+                - "Change User Name (Current IPMI User Name)"
+                type: str
+            newname:
+                description:
+                - "New IPMI User Name"
+                type: str
+            setpass:
+                description:
+                - "Change Password (IPMI User Name)"
+                type: str
+            newpass:
+                description:
+                - "New Password"
+                type: str
     tool:
         description:
         - "Field tool"
+        type: dict
         required: False
         suboptions:
             cmd:
                 description:
                 - "Command to execute in double quotes"
-    user:
-        description:
-        - "Field user"
-        required: False
-        suboptions:
-            administrator:
-                description:
-                - "Full control"
-            setname:
-                description:
-                - "Change User Name (Current IPMI User Name)"
-            newname:
-                description:
-                - "New IPMI User Name"
-            newpass:
-                description:
-                - "New Password"
-            callback:
-                description:
-                - "Lowest privilege level"
-            add:
-                description:
-                - "Add a new IPMI user (IPMI User Name)"
-            disable:
-                description:
-                - "Disable an existing IPMI user (IPMI User Name)"
-            setpass:
-                description:
-                - "Change Password (IPMI User Name)"
-            user:
-                description:
-                - "Only 'benign' commands are allowed"
-            operator:
-                description:
-                - "Most BMC commands are allowed"
-            password:
-                description:
-                - "Password"
-            privilege:
-                description:
-                - "Change an existing IPMI user privilege (IPMI User Name)"
+                type: str
 
 '''
 
@@ -192,10 +220,10 @@ def get_argspec():
             'ipv4_address': {
                 'type': 'str',
             },
-            'default_gateway': {
+            'ipv4_netmask': {
                 'type': 'str',
             },
-            'ipv4_netmask': {
+            'default_gateway': {
                 'type': 'str',
             }
         },
@@ -208,16 +236,31 @@ def get_argspec():
                 'type': 'bool',
             }
         },
-        'tool': {
-            'type': 'dict',
-            'cmd': {
-                'type': 'str',
-            }
-        },
         'user': {
             'type': 'dict',
+            'add': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'str',
+            },
             'administrator': {
                 'type': 'bool',
+            },
+            'callback': {
+                'type': 'bool',
+            },
+            'operator': {
+                'type': 'bool',
+            },
+            'user': {
+                'type': 'bool',
+            },
+            'disable': {
+                'type': 'str',
+            },
+            'privilege': {
+                'type': 'str',
             },
             'setname': {
                 'type': 'str',
@@ -225,31 +268,16 @@ def get_argspec():
             'newname': {
                 'type': 'str',
             },
-            'newpass': {
-                'type': 'str',
-            },
-            'callback': {
-                'type': 'bool',
-            },
-            'add': {
-                'type': 'str',
-            },
-            'disable': {
-                'type': 'str',
-            },
             'setpass': {
                 'type': 'str',
             },
-            'user': {
-                'type': 'bool',
-            },
-            'operator': {
-                'type': 'bool',
-            },
-            'password': {
+            'newpass': {
                 'type': 'str',
-            },
-            'privilege': {
+            }
+        },
+        'tool': {
+            'type': 'dict',
+            'cmd': {
                 'type': 'str',
             }
         }

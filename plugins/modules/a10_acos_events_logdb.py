@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_logdb
 description:
     - Configure global logging template
-short_description: Configures A10 acos.events.logdb
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,63 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    enable_http_forward_proxy:
-        description:
-        - "Enable HTTP forward proxy logging"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    enable_file_inspection:
-        description:
-        - "Enable file-inspection logging"
+        type: str
         required: False
     enable_all:
         description:
         - "Enable logging for all widgets"
+        type: bool
+        required: False
+    enable_file_inspection:
+        description:
+        - "Enable file-inspection logging"
+        type: bool
         required: False
     enable_ssli:
         description:
         - "Enable SSLi logging"
-        required: False
-    enable_cgn:
-        description:
-        - "Enable CGN logging"
+        type: bool
         required: False
     enable_smtp:
         description:
         - "Enable SMTP logging"
+        type: bool
         required: False
     enable_fw:
         description:
         - "Enable Firewall logging"
+        type: bool
+        required: False
+    enable_http_forward_proxy:
+        description:
+        - "Enable HTTP forward proxy logging"
+        type: bool
+        required: False
+    enable_cgn:
+        description:
+        - "Enable CGN logging"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -141,22 +154,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'enable_http_forward_proxy': {
+        'enable_all': {
             'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
         },
         'enable_file_inspection': {
             'type': 'bool',
         },
-        'enable_all': {
-            'type': 'bool',
-        },
         'enable_ssli': {
-            'type': 'bool',
-        },
-        'enable_cgn': {
             'type': 'bool',
         },
         'enable_smtp': {
@@ -164,6 +168,15 @@ def get_argspec():
         },
         'enable_fw': {
             'type': 'bool',
+        },
+        'enable_http_forward_proxy': {
+            'type': 'bool',
+        },
+        'enable_cgn': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

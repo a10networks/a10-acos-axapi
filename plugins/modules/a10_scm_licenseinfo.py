@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scm_licenseinfo
 description:
     - license opers
-short_description: Configures A10 scm.licenseinfo
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,65 +22,82 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            product:
-                description:
-                - "Field product"
-            billing_serial:
-                description:
-                - "Field billing_serial"
             uuid:
                 description:
                 - "Field uuid"
+                type: str
             usb_uuid:
                 description:
                 - "Field usb_uuid"
-            glm_ping_interval:
+                type: str
+            billing_serial:
                 description:
-                - "Field glm_ping_interval"
-            platform:
-                description:
-                - "Field platform"
+                - "Field billing_serial"
+                type: str
             token:
                 description:
                 - "Field token"
+                type: str
+            product:
+                description:
+                - "Field product"
+                type: str
+            platform:
+                description:
+                - "Field platform"
+                type: str
+            glm_ping_interval:
+                description:
+                - "Field glm_ping_interval"
+                type: int
             module_list:
                 description:
                 - "Field module_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -136,44 +151,44 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'product': {
-                'type': 'str',
-            },
-            'billing_serial': {
-                'type': 'str',
-            },
             'uuid': {
                 'type': 'str',
             },
             'usb_uuid': {
                 'type': 'str',
             },
-            'glm_ping_interval': {
-                'type': 'int',
-            },
-            'platform': {
+            'billing_serial': {
                 'type': 'str',
             },
             'token': {
                 'type': 'str',
             },
+            'product': {
+                'type': 'str',
+            },
+            'platform': {
+                'type': 'str',
+            },
+            'glm_ping_interval': {
+                'type': 'int',
+            },
             'module_list': {
                 'type': 'list',
-                'notes': {
-                    'type': 'str',
-                },
                 'module': {
                     'type': 'str',
                 },
                 'expiry': {
                     'type': 'str',
+                },
+                'notes': {
+                    'type': 'str',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_disable_traps
 description:
     - Disable l3v partition SNMP traps
-short_description: Configures A10 snmp.server.disable.traps
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Disable all traps on this partition"
-        required: False
-    slb_change:
-        description:
-        - "Disable all slb-change traps on this partition"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    vrrp_a:
-        description:
-        - "Disable all vrrp-a on this partition"
+        type: bool
         required: False
     snmp:
         description:
         - "Disable all snmp traps on this partition"
+        type: bool
         required: False
     gslb:
         description:
         - "Disable all gslb traps on this partition"
+        type: bool
+        required: False
+    vrrp_a:
+        description:
+        - "Disable all vrrp-a on this partition"
+        type: bool
         required: False
     slb:
         description:
         - "Disable all slb traps on this partition"
+        type: bool
+        required: False
+    slb_change:
+        description:
+        - "Disable all slb-change traps on this partition"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -139,23 +151,23 @@ def get_argspec():
         'all': {
             'type': 'bool',
         },
-        'slb_change': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'vrrp_a': {
-            'type': 'bool',
-        },
         'snmp': {
             'type': 'bool',
         },
         'gslb': {
             'type': 'bool',
         },
+        'vrrp_a': {
+            'type': 'bool',
+        },
         'slb': {
             'type': 'bool',
+        },
+        'slb_change': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

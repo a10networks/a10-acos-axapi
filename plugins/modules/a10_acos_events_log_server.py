@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_log_server
 description:
     - Acos logging Server
-short_description: Configures A10 acos-events.log-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,121 +22,152 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    health_check_disable:
-        description:
-        - "Disable configured health check configuration"
-        required: False
-    port_list:
-        description:
-        - "Field port_list"
-        required: False
-        suboptions:
-            health_check_disable:
-                description:
-                - "Disable health check"
-            protocol:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            port_number:
-                description:
-                - "Port Number"
-            action:
-                description:
-                - "'enable'= enable; 'disable'= disable;"
-            health_check:
-                description:
-                - "Health Check (Monitor Name)"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            port_list:
-                description:
-                - "Field port_list"
-            name:
-                description:
-                - "Server Name"
-            msgs_sent:
-                description:
-                - "Number of log messages sent"
     name:
         description:
         - "Server Name"
+        type: str
         required: True
+    server_ipv6_addr:
+        description:
+        - "IPV6 address"
+        type: str
+        required: False
+    host:
+        description:
+        - "IP Address"
+        type: str
+        required: False
     resolve_as:
         description:
         - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use
           AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as
           AAAA Query to resolve FQDN;"
+        type: str
+        required: False
+    action:
+        description:
+        - "'enable'= Enable this Logging Server; 'disable'= Disable this Logging Server;"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check Monitor (Health monitor name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable configured health check configuration"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'msgs_sent'= Number of log messages sent;"
-    user_tag:
+                type: str
+    port_list:
         description:
-        - "Customized tag"
+        - "Field port_list"
+        type: list
         required: False
-    host:
+        suboptions:
+            port_number:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            action:
+                description:
+                - "'enable'= enable; 'disable'= disable;"
+                type: str
+            health_check:
+                description:
+                - "Health Check (Monitor Name)"
+                type: str
+            health_check_disable:
+                description:
+                - "Disable health check"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    stats:
         description:
-        - "IP Address"
+        - "Field stats"
+        type: dict
         required: False
-    action:
-        description:
-        - "'enable'= Enable this Logging Server; 'disable'= Disable this Logging Server;"
-        required: False
-    server_ipv6_addr:
-        description:
-        - "IPV6 address"
-        required: False
-    health_check:
-        description:
-        - "Health Check Monitor (Health monitor name)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            msgs_sent:
+                description:
+                - "Number of log messages sent"
+                type: str
+            name:
+                description:
+                - "Server Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
 
 '''
 
@@ -202,18 +231,65 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'server_ipv6_addr': {
+            'type': 'str',
+        },
+        'host': {
+            'type': 'str',
+        },
+        'resolve_as': {
+            'type':
+            'str',
+            'choices':
+            ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'health_check': {
+            'type': 'str',
+        },
         'health_check_disable': {
             'type': 'bool',
         },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'msgs_sent']
+            }
+        },
         'port_list': {
             'type': 'list',
-            'health_check_disable': {
-                'type': 'bool',
+            'port_number': {
+                'type': 'int',
+                'required': True,
             },
             'protocol': {
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'health_check': {
+                'type': 'str',
+            },
+            'health_check_disable': {
+                'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
@@ -227,23 +303,23 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['all', 'msgs_sent']
                 }
-            },
-            'port_number': {
-                'type': 'int',
-                'required': True,
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'health_check': {
-                'type': 'str',
             }
         },
         'stats': {
             'type': 'dict',
+            'msgs_sent': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
             'port_list': {
                 'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                },
                 'protocol': {
                     'type': 'str',
                     'required': True,
@@ -254,55 +330,8 @@ def get_argspec():
                     'msgs_sent': {
                         'type': 'str',
                     }
-                },
-                'port_number': {
-                    'type': 'int',
-                    'required': True,
                 }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'msgs_sent': {
-                'type': 'str',
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'resolve_as': {
-            'type':
-            'str',
-            'choices':
-            ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'msgs_sent']
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'host': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'server_ipv6_addr': {
-            'type': 'str',
-        },
-        'health_check': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

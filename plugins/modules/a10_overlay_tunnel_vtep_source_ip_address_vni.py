@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_source_ip_address_vni
 description:
     - IP Address of the local tunnel end point
-short_description: Configures A10 overlay-tunnel.vtep.source.ip.address.vni
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     vtep_id:
         description:
-        - Key to identify parent object    lif:
+        - Key to identify parent object
+        type: str
+        required: True
+    segment:
         description:
-        - "Logical interface binding the Provider Partition to the User Partition (logical
-          interface number)"
-        required: False
+        - "Id of the segment that is being extended"
+        type: int
+        required: True
     partition:
         description:
         - "Name of the Partition with the L2 segment being extended (Name of the User
           Partition with the L2 segment being extended)"
+        type: str
         required: False
-    segment:
-        description:
-        - "Id of the segment that is being extended"
-        required: True
     gateway:
         description:
         - "This is a Gateway segment id"
+        type: bool
+        required: False
+    lif:
+        description:
+        - "Logical interface binding the Provider Partition to the User Partition (logical
+          interface number)"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -130,18 +143,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'lif': {
-            'type': 'int',
-        },
-        'partition': {
-            'type': 'str',
-        },
         'segment': {
             'type': 'int',
             'required': True,
         },
+        'partition': {
+            'type': 'str',
+        },
         'gateway': {
             'type': 'bool',
+        },
+        'lif': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

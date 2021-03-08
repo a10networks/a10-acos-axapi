@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_fast_http_proxy
 description:
     - Configure Fast-HTTP Proxy
-short_description: Configures A10 slb.fast-http-proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            debug_fields:
-                description:
-                - "Field debug_fields"
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            fast_http_proxy_cpu_list:
-                description:
-                - "Field fast_http_proxy_cpu_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -174,6 +171,7 @@ options:
           req (cache succ); 'close_on_ddos'= Close on DDoS; 'req_http10_keepalive'= 1.0
           Keepalive; 'req_sz_1k'= Req less than equal to 1K; 'req_sz_2k'= Req less than
           equal to 2K;"
+                type: str
             counters2:
                 description:
                 - "'req_sz_4k'= Req less than equal to 4K; 'req_sz_8k'= Req less than equal to 8K;
@@ -206,96 +204,139 @@ options:
           seq fHTTP packets; 'http_pkts_retx'= Tot Re-Tx fHTTP packets;
           'http_client_retx'= Client Re-Tx fHTTP packets; 'http_server_retx'= Server Re-
           Tx fHTTP packets; 'http_pkts_ofo'= fHTTP Out of Order packets;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            fast_http_proxy_cpu_list:
+                description:
+                - "Field fast_http_proxy_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
+            debug_fields:
+                description:
+                - "Field debug_fields"
+                type: bool
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            new_svrconn:
-                description:
-                - "Server conn made"
-            svrsel_fail:
-                description:
-                - "Server selection fail"
-            total_proxy:
-                description:
-                - "Total Proxy Conns"
-            fwdreqdata_fail:
-                description:
-                - "Fwd req data fail"
-            client_rst:
-                description:
-                - "Client RST"
-            req_retran:
-                description:
-                - "Packets retrans"
-            close_on_ddos:
-                description:
-                - "Close on DDoS"
-            req_over_limit:
-                description:
-                - "Request over limit"
-            noproxy:
-                description:
-                - "No proxy error"
-            svr_prem_close:
-                description:
-                - "Server premature close"
-            parsereq_fail:
-                description:
-                - "Parse req fail"
-            tcpoutrst:
-                description:
-                - "Out RSTs"
-            full_proxy:
-                description:
-                - "Full proxy tot"
-            full_proxy_put:
-                description:
-                - "Full proxy PUT"
-            full_proxy_fpga_err:
-                description:
-                - "Full proxy fpga err"
-            server_rst:
-                description:
-                - "Server RST"
-            notuple:
-                description:
-                - "No tuple error"
             curr_proxy:
                 description:
                 - "Curr Proxy Conns"
-            server_resel:
+                type: str
+            total_proxy:
                 description:
-                - "Server reselection"
-            req_ofo:
-                description:
-                - "Packets ofo"
-            full_proxy_post:
-                description:
-                - "Full proxy POST"
-            snat_fail:
-                description:
-                - "Source NAT failure"
-            req_rate_over_limit:
-                description:
-                - "Request rate over limit"
-            full_proxy_pipeline:
-                description:
-                - "Full proxy pipeline"
+                - "Total Proxy Conns"
+                type: str
             req:
                 description:
                 - "HTTP requests"
-            fwdreq_fail:
-                description:
-                - "Fwd req fail"
+                type: str
             req_succ:
                 description:
                 - "HTTP requests(succ)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            noproxy:
+                description:
+                - "No proxy error"
+                type: str
+            client_rst:
+                description:
+                - "Client RST"
+                type: str
+            server_rst:
+                description:
+                - "Server RST"
+                type: str
+            notuple:
+                description:
+                - "No tuple error"
+                type: str
+            parsereq_fail:
+                description:
+                - "Parse req fail"
+                type: str
+            svrsel_fail:
+                description:
+                - "Server selection fail"
+                type: str
+            fwdreq_fail:
+                description:
+                - "Fwd req fail"
+                type: str
+            fwdreqdata_fail:
+                description:
+                - "Fwd req data fail"
+                type: str
+            req_retran:
+                description:
+                - "Packets retrans"
+                type: str
+            req_ofo:
+                description:
+                - "Packets ofo"
+                type: str
+            server_resel:
+                description:
+                - "Server reselection"
+                type: str
+            svr_prem_close:
+                description:
+                - "Server premature close"
+                type: str
+            new_svrconn:
+                description:
+                - "Server conn made"
+                type: str
+            snat_fail:
+                description:
+                - "Source NAT failure"
+                type: str
+            tcpoutrst:
+                description:
+                - "Out RSTs"
+                type: str
+            full_proxy:
+                description:
+                - "Full proxy tot"
+                type: str
+            full_proxy_post:
+                description:
+                - "Full proxy POST"
+                type: str
+            full_proxy_pipeline:
+                description:
+                - "Full proxy pipeline"
+                type: str
+            full_proxy_fpga_err:
+                description:
+                - "Full proxy fpga err"
+                type: str
+            req_over_limit:
+                description:
+                - "Request over limit"
+                type: str
+            req_rate_over_limit:
+                description:
+                - "Request rate over limit"
+                type: str
+            close_on_ddos:
+                description:
+                - "Close on DDoS"
+                type: str
+            full_proxy_put:
+                description:
+                - "Full proxy PUT"
+                type: str
 
 '''
 
@@ -351,740 +392,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'debug_fields': {
-                'type': 'bool',
-            },
-            'cpu_count': {
-                'type': 'int',
-            },
-            'fast_http_proxy_cpu_list': {
-                'type': 'list',
-                'new_svrconn': {
-                    'type': 'int',
-                },
-                'snat_fail': {
-                    'type': 'int',
-                },
-                'req_sz_32k': {
-                    'type': 'int',
-                },
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'req_get': {
-                    'type': 'int',
-                },
-                'fwdreqdata_fail': {
-                    'type': 'int',
-                },
-                'aflex_switching_enqueue': {
-                    'type': 'int',
-                },
-                'invalid_header': {
-                    'type': 'int',
-                },
-                'response_501': {
-                    'type': 'int',
-                },
-                'negative_resp_remain': {
-                    'type': 'int',
-                },
-                'response_503': {
-                    'type': 'int',
-                },
-                'response_502': {
-                    'type': 'int',
-                },
-                'response_505': {
-                    'type': 'int',
-                },
-                'response_504': {
-                    'type': 'int',
-                },
-                'chunk_sz_2k': {
-                    'type': 'int',
-                },
-                'response_506': {
-                    'type': 'int',
-                },
-                'response_509': {
-                    'type': 'int',
-                },
-                'response_508': {
-                    'type': 'int',
-                },
-                'rsp_sz_8k': {
-                    'type': 'int',
-                },
-                'compress_no_content_type': {
-                    'type': 'int',
-                },
-                'pkts_retrans_rst': {
-                    'type': 'int',
-                },
-                'req_put': {
-                    'type': 'int',
-                },
-                'response_2xx': {
-                    'type': 'int',
-                },
-                'req_over_limit': {
-                    'type': 'int',
-                },
-                'req_sz_gt_256k': {
-                    'type': 'int',
-                },
-                'svr_prem_close': {
-                    'type': 'int',
-                },
-                'parsereq_fail': {
-                    'type': 'int',
-                },
-                'tcpoutrst': {
-                    'type': 'int',
-                },
-                'full_proxy': {
-                    'type': 'int',
-                },
-                'connecting_rst_ofo': {
-                    'type': 'int',
-                },
-                'response_102': {
-                    'type': 'int',
-                },
-                'compress_resp_already_compressed': {
-                    'type': 'int',
-                },
-                'req_post': {
-                    'type': 'int',
-                },
-                'req_over_5s': {
-                    'type': 'int',
-                },
-                'rsp_chunk': {
-                    'type': 'int',
-                },
-                'lb_switching_ok': {
-                    'type': 'int',
-                },
-                'req_ofo': {
-                    'type': 'int',
-                },
-                'req_200m': {
-                    'type': 'int',
-                },
-                'chunk_sz_1k': {
-                    'type': 'int',
-                },
-                'full_proxy_post': {
-                    'type': 'int',
-                },
-                'header_delete': {
-                    'type': 'int',
-                },
-                'response_6xx': {
-                    'type': 'int',
-                },
-                'fwdreq_fail_buff': {
-                    'type': 'int',
-                },
-                'response_500': {
-                    'type': 'int',
-                },
-                'req_succ': {
-                    'type': 'int',
-                },
-                'aflex_lb_reselect': {
-                    'type': 'int',
-                },
-                'rsp_sz_32k': {
-                    'type': 'int',
-                },
-                'req_100u': {
-                    'type': 'int',
-                },
-                'req_500m': {
-                    'type': 'int',
-                },
-                'req_http10_keepalive': {
-                    'type': 'int',
-                },
-                'aflex_retry': {
-                    'type': 'int',
-                },
-                'req_100m': {
-                    'type': 'int',
-                },
-                'response_3xx': {
-                    'type': 'int',
-                },
-                'rsp_sz_gt_256k': {
-                    'type': 'int',
-                },
-                'connecting_ack': {
-                    'type': 'int',
-                },
-                'connecting_fin_ofo': {
-                    'type': 'int',
-                },
-                'rsp_sz_2k': {
-                    'type': 'int',
-                },
-                'response_507': {
-                    'type': 'int',
-                },
-                'huge_cookie_header': {
-                    'type': 'int',
-                },
-                'response_http11': {
-                    'type': 'int',
-                },
-                'response_408': {
-                    'type': 'int',
-                },
-                'client_rst': {
-                    'type': 'int',
-                },
-                'client_rst_connected': {
-                    'type': 'int',
-                },
-                'chunk_sz_512': {
-                    'type': 'int',
-                },
-                'response_400': {
-                    'type': 'int',
-                },
-                'response_401': {
-                    'type': 'int',
-                },
-                'response_402': {
-                    'type': 'int',
-                },
-                'response_403': {
-                    'type': 'int',
-                },
-                'response_404': {
-                    'type': 'int',
-                },
-                'response_405': {
-                    'type': 'int',
-                },
-                'response_406': {
-                    'type': 'int',
-                },
-                'response_407': {
-                    'type': 'int',
-                },
-                'l4_switching': {
-                    'type': 'int',
-                },
-                'req_sz_256k': {
-                    'type': 'int',
-                },
-                'noproxy': {
-                    'type': 'int',
-                },
-                'chunk_sz_gt_4k': {
-                    'type': 'int',
-                },
-                'asm_setcookie_header_fail': {
-                    'type': 'int',
-                },
-                'req': {
-                    'type': 'int',
-                },
-                'client_req_unexp_flag': {
-                    'type': 'int',
-                },
-                'fwdreq_fail_persist': {
-                    'type': 'int',
-                },
-                'url_switching_ok': {
-                    'type': 'int',
-                },
-                'cookie_switching_enqueue': {
-                    'type': 'int',
-                },
-                'rsp_sz_64k': {
-                    'type': 'int',
-                },
-                'large_cookie': {
-                    'type': 'int',
-                },
-                'asm_setcookie_fail': {
-                    'type': 'int',
-                },
-                'rsp_content_len': {
-                    'type': 'int',
-                },
-                'client_rst_request': {
-                    'type': 'int',
-                },
-                'host_switching_enqueue': {
-                    'type': 'int',
-                },
-                'rsp_sz_1k': {
-                    'type': 'int',
-                },
-                'full_proxy_fpga_err': {
-                    'type': 'int',
-                },
-                'response_306': {
-                    'type': 'int',
-                },
-                'connecting_fin_retrans': {
-                    'type': 'int',
-                },
-                'wrong_resp_header': {
-                    'type': 'int',
-                },
-                'compress_rsp': {
-                    'type': 'int',
-                },
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'req_chunk': {
-                    'type': 'int',
-                },
-                'full_proxy_pipeline': {
-                    'type': 'int',
-                },
-                'response_418': {
-                    'type': 'int',
-                },
-                'response_413': {
-                    'type': 'int',
-                },
-                'response_412': {
-                    'type': 'int',
-                },
-                'response_411': {
-                    'type': 'int',
-                },
-                'response_410': {
-                    'type': 'int',
-                },
-                'response_417': {
-                    'type': 'int',
-                },
-                'insert_client_ip': {
-                    'type': 'int',
-                },
-                'response_415': {
-                    'type': 'int',
-                },
-                'host_switching_ok': {
-                    'type': 'int',
-                },
-                'pkts_ofo': {
-                    'type': 'int',
-                },
-                'skip_insert_client_port': {
-                    'type': 'int',
-                },
-                'req_1m': {
-                    'type': 'int',
-                },
-                'compress_del_accept_enc': {
-                    'type': 'int',
-                },
-                'compress_resp_lt_min': {
-                    'type': 'int',
-                },
-                'compress_content_type_excluded': {
-                    'type': 'int',
-                },
-                'skip_insert_client_ip': {
-                    'type': 'int',
-                },
-                'server_rst_connected': {
-                    'type': 'int',
-                },
-                'client_rst_connecting': {
-                    'type': 'int',
-                },
-                'fwdreq_fail_tuple': {
-                    'type': 'int',
-                },
-                'req_1s': {
-                    'type': 'int',
-                },
-                'server_resel_failed': {
-                    'type': 'int',
-                },
-                'pkts_retrans_fin': {
-                    'type': 'int',
-                },
-                'response_510': {
-                    'type': 'int',
-                },
-                'too_many_headers': {
-                    'type': 'int',
-                },
-                'rsp_sz_4k': {
-                    'type': 'int',
-                },
-                'response_426': {
-                    'type': 'int',
-                },
-                'response_424': {
-                    'type': 'int',
-                },
-                'response_425': {
-                    'type': 'int',
-                },
-                'response_422': {
-                    'type': 'int',
-                },
-                'response_1xx': {
-                    'type': 'int',
-                },
-                'url_switching': {
-                    'type': 'int',
-                },
-                'asm_cookie_fail': {
-                    'type': 'int',
-                },
-                'url_switching_enqueue': {
-                    'type': 'int',
-                },
-                'req_500u': {
-                    'type': 'int',
-                },
-                'response_unknown': {
-                    'type': 'int',
-                },
-                'cache_rsp': {
-                    'type': 'int',
-                },
-                'req_2s': {
-                    'type': 'int',
-                },
-                'response_5xx': {
-                    'type': 'int',
-                },
-                'response_305': {
-                    'type': 'int',
-                },
-                'response_304': {
-                    'type': 'int',
-                },
-                'response_303': {
-                    'type': 'int',
-                },
-                'req_rate_over_limit': {
-                    'type': 'int',
-                },
-                'response_301': {
-                    'type': 'int',
-                },
-                'response_300': {
-                    'type': 'int',
-                },
-                'pconn_connected': {
-                    'type': 'int',
-                },
-                'response_416': {
-                    'type': 'int',
-                },
-                'fwdreq_fail_server': {
-                    'type': 'int',
-                },
-                'req_trace': {
-                    'type': 'int',
-                },
-                'fwdreq_fail_route': {
-                    'type': 'int',
-                },
-                'response_4xx': {
-                    'type': 'int',
-                },
-                'response_101': {
-                    'type': 'int',
-                },
-                'response_414': {
-                    'type': 'int',
-                },
-                'parse_cookie_fail': {
-                    'type': 'int',
-                },
-                'req_track': {
-                    'type': 'int',
-                },
-                'req_2m': {
-                    'type': 'int',
-                },
-                'response_307': {
-                    'type': 'int',
-                },
-                'full_proxy_put': {
-                    'type': 'int',
-                },
-                'server_rst': {
-                    'type': 'int',
-                },
-                'req_10u': {
-                    'type': 'int',
-                },
-                'header_insert': {
-                    'type': 'int',
-                },
-                'response_http10': {
-                    'type': 'int',
-                },
-                'notuple': {
-                    'type': 'int',
-                },
-                'req_sz_2k': {
-                    'type': 'int',
-                },
-                'negative_req_remain': {
-                    'type': 'int',
-                },
-                'rsp_sz_256k': {
-                    'type': 'int',
-                },
-                'aflex_lb_reselect_ok': {
-                    'type': 'int',
-                },
-                'l4_switching_ok': {
-                    'type': 'int',
-                },
-                'connecting_rst': {
-                    'type': 'int',
-                },
-                'asm_cookie_header_fail': {
-                    'type': 'int',
-                },
-                'server_rst_request': {
-                    'type': 'int',
-                },
-                'req_10m': {
-                    'type': 'int',
-                },
-                'req_50u': {
-                    'type': 'int',
-                },
-                'response_409': {
-                    'type': 'int',
-                },
-                'req_unknown': {
-                    'type': 'int',
-                },
-                'fwdreq_fail': {
-                    'type': 'int',
-                },
-                'req_options': {
-                    'type': 'int',
-                },
-                'lb_switching_enqueue': {
-                    'type': 'int',
-                },
-                'lb_switching': {
-                    'type': 'int',
-                },
-                'req_50m': {
-                    'type': 'int',
-                },
-                'cookie_switching': {
-                    'type': 'int',
-                },
-                'aflex_switching': {
-                    'type': 'int',
-                },
-                'fwdreq_fail_rport': {
-                    'type': 'int',
-                },
-                'server_rst_response': {
-                    'type': 'int',
-                },
-                'svrsel_fail': {
-                    'type': 'int',
-                },
-                'req_sz_8k': {
-                    'type': 'int',
-                },
-                'retry_503': {
-                    'type': 'int',
-                },
-                'huge_cookie': {
-                    'type': 'int',
-                },
-                'large_cookie_header': {
-                    'type': 'int',
-                },
-                'req_retran': {
-                    'type': 'int',
-                },
-                'pkts_retrans_ack_finwait': {
-                    'type': 'int',
-                },
-                'aflex_switching_ok': {
-                    'type': 'int',
-                },
-                'header_name_too_long': {
-                    'type': 'int',
-                },
-                'chunk_bad': {
-                    'type': 'int',
-                },
-                'compress_resp_no_cl_or_ce': {
-                    'type': 'int',
-                },
-                'close_on_ddos': {
-                    'type': 'int',
-                },
-                'pkts_retrans': {
-                    'type': 'int',
-                },
-                'req_200u': {
-                    'type': 'int',
-                },
-                'response_423': {
-                    'type': 'int',
-                },
-                'req_delete': {
-                    'type': 'int',
-                },
-                'req_20u': {
-                    'type': 'int',
-                },
-                'response_206': {
-                    'type': 'int',
-                },
-                'chunk_sz_4k': {
-                    'type': 'int',
-                },
-                'response_204': {
-                    'type': 'int',
-                },
-                'response_205': {
-                    'type': 'int',
-                },
-                'response_202': {
-                    'type': 'int',
-                },
-                'response_203': {
-                    'type': 'int',
-                },
-                'response_200': {
-                    'type': 'int',
-                },
-                'response_201': {
-                    'type': 'int',
-                },
-                'cookie_switching_ok': {
-                    'type': 'int',
-                },
-                'req_content_len': {
-                    'type': 'int',
-                },
-                'rsp_sz_16k': {
-                    'type': 'int',
-                },
-                'req_http10': {
-                    'type': 'int',
-                },
-                'req_http11': {
-                    'type': 'int',
-                },
-                'req_connect': {
-                    'type': 'int',
-                },
-                'parse_setcookie_fail': {
-                    'type': 'int',
-                },
-                'non_http_bypass': {
-                    'type': 'int',
-                },
-                'response_449': {
-                    'type': 'int',
-                },
-                'req_sz_4k': {
-                    'type': 'int',
-                },
-                'insert_client_port': {
-                    'type': 'int',
-                },
-                'client_rst_response': {
-                    'type': 'int',
-                },
-                'server_resel': {
-                    'type': 'int',
-                },
-                'stale_sess': {
-                    'type': 'int',
-                },
-                'req_sz_16k': {
-                    'type': 'int',
-                },
-                'response_302': {
-                    'type': 'int',
-                },
-                'req_sz_64k': {
-                    'type': 'int',
-                },
-                'line_too_long': {
-                    'type': 'int',
-                },
-                'compress_ratio_too_high': {
-                    'type': 'int',
-                },
-                'pconn_connecting': {
-                    'type': 'int',
-                },
-                'response_100': {
-                    'type': 'int',
-                },
-                'host_switching': {
-                    'type': 'int',
-                },
-                'http_pkts_ofo': {
-                    'type': 'int',
-                },
-                'response_450': {
-                    'type': 'int',
-                },
-                'connecting_rst_retrans': {
-                    'type': 'int',
-                },
-                'server_rst_connecting': {
-                    'type': 'int',
-                },
-                'req_5m': {
-                    'type': 'int',
-                },
-                'pconn_connecting_failed': {
-                    'type': 'int',
-                },
-                'req_sz_1k': {
-                    'type': 'int',
-                },
-                'req_head': {
-                    'type': 'int',
-                },
-                'req_20m': {
-                    'type': 'int',
-                },
-                'req_5s': {
-                    'type': 'int',
-                },
-                'connecting_fin': {
-                    'type': 'int',
-                },
-                'response_207': {
-                    'type': 'int',
-                },
-                'pkts_retrans_push': {
-                    'type': 'int',
-                },
-                'l4_switching_enqueue': {
-                    'type': 'int',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -1192,51 +501,759 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'fast_http_proxy_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'req': {
+                    'type': 'int',
+                },
+                'req_succ': {
+                    'type': 'int',
+                },
+                'noproxy': {
+                    'type': 'int',
+                },
+                'client_rst': {
+                    'type': 'int',
+                },
+                'server_rst': {
+                    'type': 'int',
+                },
+                'notuple': {
+                    'type': 'int',
+                },
+                'parsereq_fail': {
+                    'type': 'int',
+                },
+                'svrsel_fail': {
+                    'type': 'int',
+                },
+                'fwdreq_fail': {
+                    'type': 'int',
+                },
+                'fwdreq_fail_buff': {
+                    'type': 'int',
+                },
+                'fwdreq_fail_rport': {
+                    'type': 'int',
+                },
+                'fwdreq_fail_route': {
+                    'type': 'int',
+                },
+                'fwdreq_fail_persist': {
+                    'type': 'int',
+                },
+                'fwdreq_fail_server': {
+                    'type': 'int',
+                },
+                'fwdreq_fail_tuple': {
+                    'type': 'int',
+                },
+                'fwdreqdata_fail': {
+                    'type': 'int',
+                },
+                'req_retran': {
+                    'type': 'int',
+                },
+                'req_ofo': {
+                    'type': 'int',
+                },
+                'server_resel': {
+                    'type': 'int',
+                },
+                'svr_prem_close': {
+                    'type': 'int',
+                },
+                'new_svrconn': {
+                    'type': 'int',
+                },
+                'snat_fail': {
+                    'type': 'int',
+                },
+                'tcpoutrst': {
+                    'type': 'int',
+                },
+                'full_proxy': {
+                    'type': 'int',
+                },
+                'full_proxy_post': {
+                    'type': 'int',
+                },
+                'full_proxy_put': {
+                    'type': 'int',
+                },
+                'full_proxy_pipeline': {
+                    'type': 'int',
+                },
+                'full_proxy_fpga_err': {
+                    'type': 'int',
+                },
+                'req_over_limit': {
+                    'type': 'int',
+                },
+                'req_rate_over_limit': {
+                    'type': 'int',
+                },
+                'l4_switching': {
+                    'type': 'int',
+                },
+                'cookie_switching': {
+                    'type': 'int',
+                },
+                'aflex_switching': {
+                    'type': 'int',
+                },
+                'url_switching': {
+                    'type': 'int',
+                },
+                'host_switching': {
+                    'type': 'int',
+                },
+                'lb_switching': {
+                    'type': 'int',
+                },
+                'l4_switching_ok': {
+                    'type': 'int',
+                },
+                'cookie_switching_ok': {
+                    'type': 'int',
+                },
+                'aflex_switching_ok': {
+                    'type': 'int',
+                },
+                'url_switching_ok': {
+                    'type': 'int',
+                },
+                'host_switching_ok': {
+                    'type': 'int',
+                },
+                'lb_switching_ok': {
+                    'type': 'int',
+                },
+                'l4_switching_enqueue': {
+                    'type': 'int',
+                },
+                'cookie_switching_enqueue': {
+                    'type': 'int',
+                },
+                'aflex_switching_enqueue': {
+                    'type': 'int',
+                },
+                'url_switching_enqueue': {
+                    'type': 'int',
+                },
+                'host_switching_enqueue': {
+                    'type': 'int',
+                },
+                'lb_switching_enqueue': {
+                    'type': 'int',
+                },
+                'retry_503': {
+                    'type': 'int',
+                },
+                'aflex_retry': {
+                    'type': 'int',
+                },
+                'aflex_lb_reselect': {
+                    'type': 'int',
+                },
+                'aflex_lb_reselect_ok': {
+                    'type': 'int',
+                },
+                'client_rst_request': {
+                    'type': 'int',
+                },
+                'client_rst_connecting': {
+                    'type': 'int',
+                },
+                'client_rst_connected': {
+                    'type': 'int',
+                },
+                'client_rst_response': {
+                    'type': 'int',
+                },
+                'server_rst_request': {
+                    'type': 'int',
+                },
+                'server_rst_connecting': {
+                    'type': 'int',
+                },
+                'server_rst_connected': {
+                    'type': 'int',
+                },
+                'server_rst_response': {
+                    'type': 'int',
+                },
+                'invalid_header': {
+                    'type': 'int',
+                },
+                'too_many_headers': {
+                    'type': 'int',
+                },
+                'line_too_long': {
+                    'type': 'int',
+                },
+                'header_name_too_long': {
+                    'type': 'int',
+                },
+                'wrong_resp_header': {
+                    'type': 'int',
+                },
+                'header_insert': {
+                    'type': 'int',
+                },
+                'header_delete': {
+                    'type': 'int',
+                },
+                'insert_client_ip': {
+                    'type': 'int',
+                },
+                'negative_req_remain': {
+                    'type': 'int',
+                },
+                'negative_resp_remain': {
+                    'type': 'int',
+                },
+                'large_cookie': {
+                    'type': 'int',
+                },
+                'large_cookie_header': {
+                    'type': 'int',
+                },
+                'huge_cookie': {
+                    'type': 'int',
+                },
+                'huge_cookie_header': {
+                    'type': 'int',
+                },
+                'parse_cookie_fail': {
+                    'type': 'int',
+                },
+                'parse_setcookie_fail': {
+                    'type': 'int',
+                },
+                'asm_cookie_fail': {
+                    'type': 'int',
+                },
+                'asm_cookie_header_fail': {
+                    'type': 'int',
+                },
+                'asm_setcookie_fail': {
+                    'type': 'int',
+                },
+                'asm_setcookie_header_fail': {
+                    'type': 'int',
+                },
+                'client_req_unexp_flag': {
+                    'type': 'int',
+                },
+                'connecting_fin': {
+                    'type': 'int',
+                },
+                'connecting_fin_retrans': {
+                    'type': 'int',
+                },
+                'connecting_fin_ofo': {
+                    'type': 'int',
+                },
+                'connecting_rst': {
+                    'type': 'int',
+                },
+                'connecting_rst_retrans': {
+                    'type': 'int',
+                },
+                'connecting_rst_ofo': {
+                    'type': 'int',
+                },
+                'connecting_ack': {
+                    'type': 'int',
+                },
+                'pkts_ofo': {
+                    'type': 'int',
+                },
+                'pkts_retrans': {
+                    'type': 'int',
+                },
+                'pkts_retrans_ack_finwait': {
+                    'type': 'int',
+                },
+                'pkts_retrans_fin': {
+                    'type': 'int',
+                },
+                'pkts_retrans_rst': {
+                    'type': 'int',
+                },
+                'pkts_retrans_push': {
+                    'type': 'int',
+                },
+                'stale_sess': {
+                    'type': 'int',
+                },
+                'server_resel_failed': {
+                    'type': 'int',
+                },
+                'response_1xx': {
+                    'type': 'int',
+                },
+                'response_100': {
+                    'type': 'int',
+                },
+                'response_101': {
+                    'type': 'int',
+                },
+                'response_102': {
+                    'type': 'int',
+                },
+                'response_2xx': {
+                    'type': 'int',
+                },
+                'response_200': {
+                    'type': 'int',
+                },
+                'response_201': {
+                    'type': 'int',
+                },
+                'response_202': {
+                    'type': 'int',
+                },
+                'response_203': {
+                    'type': 'int',
+                },
+                'response_204': {
+                    'type': 'int',
+                },
+                'response_205': {
+                    'type': 'int',
+                },
+                'response_206': {
+                    'type': 'int',
+                },
+                'response_207': {
+                    'type': 'int',
+                },
+                'response_3xx': {
+                    'type': 'int',
+                },
+                'response_300': {
+                    'type': 'int',
+                },
+                'response_301': {
+                    'type': 'int',
+                },
+                'response_302': {
+                    'type': 'int',
+                },
+                'response_303': {
+                    'type': 'int',
+                },
+                'response_304': {
+                    'type': 'int',
+                },
+                'response_305': {
+                    'type': 'int',
+                },
+                'response_306': {
+                    'type': 'int',
+                },
+                'response_307': {
+                    'type': 'int',
+                },
+                'response_4xx': {
+                    'type': 'int',
+                },
+                'response_400': {
+                    'type': 'int',
+                },
+                'response_401': {
+                    'type': 'int',
+                },
+                'response_402': {
+                    'type': 'int',
+                },
+                'response_403': {
+                    'type': 'int',
+                },
+                'response_404': {
+                    'type': 'int',
+                },
+                'response_405': {
+                    'type': 'int',
+                },
+                'response_406': {
+                    'type': 'int',
+                },
+                'response_407': {
+                    'type': 'int',
+                },
+                'response_408': {
+                    'type': 'int',
+                },
+                'response_409': {
+                    'type': 'int',
+                },
+                'response_410': {
+                    'type': 'int',
+                },
+                'response_411': {
+                    'type': 'int',
+                },
+                'response_412': {
+                    'type': 'int',
+                },
+                'response_413': {
+                    'type': 'int',
+                },
+                'response_414': {
+                    'type': 'int',
+                },
+                'response_415': {
+                    'type': 'int',
+                },
+                'response_416': {
+                    'type': 'int',
+                },
+                'response_417': {
+                    'type': 'int',
+                },
+                'response_418': {
+                    'type': 'int',
+                },
+                'response_422': {
+                    'type': 'int',
+                },
+                'response_423': {
+                    'type': 'int',
+                },
+                'response_424': {
+                    'type': 'int',
+                },
+                'response_425': {
+                    'type': 'int',
+                },
+                'response_426': {
+                    'type': 'int',
+                },
+                'response_449': {
+                    'type': 'int',
+                },
+                'response_450': {
+                    'type': 'int',
+                },
+                'response_5xx': {
+                    'type': 'int',
+                },
+                'response_500': {
+                    'type': 'int',
+                },
+                'response_501': {
+                    'type': 'int',
+                },
+                'response_502': {
+                    'type': 'int',
+                },
+                'response_503': {
+                    'type': 'int',
+                },
+                'response_504': {
+                    'type': 'int',
+                },
+                'response_505': {
+                    'type': 'int',
+                },
+                'response_506': {
+                    'type': 'int',
+                },
+                'response_507': {
+                    'type': 'int',
+                },
+                'response_508': {
+                    'type': 'int',
+                },
+                'response_509': {
+                    'type': 'int',
+                },
+                'response_510': {
+                    'type': 'int',
+                },
+                'response_6xx': {
+                    'type': 'int',
+                },
+                'response_unknown': {
+                    'type': 'int',
+                },
+                'req_http10': {
+                    'type': 'int',
+                },
+                'req_http11': {
+                    'type': 'int',
+                },
+                'response_http10': {
+                    'type': 'int',
+                },
+                'response_http11': {
+                    'type': 'int',
+                },
+                'req_get': {
+                    'type': 'int',
+                },
+                'req_head': {
+                    'type': 'int',
+                },
+                'req_put': {
+                    'type': 'int',
+                },
+                'req_post': {
+                    'type': 'int',
+                },
+                'req_trace': {
+                    'type': 'int',
+                },
+                'req_options': {
+                    'type': 'int',
+                },
+                'req_connect': {
+                    'type': 'int',
+                },
+                'req_delete': {
+                    'type': 'int',
+                },
+                'req_unknown': {
+                    'type': 'int',
+                },
+                'req_content_len': {
+                    'type': 'int',
+                },
+                'rsp_content_len': {
+                    'type': 'int',
+                },
+                'rsp_chunk': {
+                    'type': 'int',
+                },
+                'req_chunk': {
+                    'type': 'int',
+                },
+                'compress_rsp': {
+                    'type': 'int',
+                },
+                'compress_del_accept_enc': {
+                    'type': 'int',
+                },
+                'compress_resp_already_compressed': {
+                    'type': 'int',
+                },
+                'compress_content_type_excluded': {
+                    'type': 'int',
+                },
+                'compress_no_content_type': {
+                    'type': 'int',
+                },
+                'compress_resp_lt_min': {
+                    'type': 'int',
+                },
+                'compress_resp_no_cl_or_ce': {
+                    'type': 'int',
+                },
+                'compress_ratio_too_high': {
+                    'type': 'int',
+                },
+                'cache_rsp': {
+                    'type': 'int',
+                },
+                'close_on_ddos': {
+                    'type': 'int',
+                },
+                'req_http10_keepalive': {
+                    'type': 'int',
+                },
+                'req_sz_1k': {
+                    'type': 'int',
+                },
+                'req_sz_2k': {
+                    'type': 'int',
+                },
+                'req_sz_4k': {
+                    'type': 'int',
+                },
+                'req_sz_8k': {
+                    'type': 'int',
+                },
+                'req_sz_16k': {
+                    'type': 'int',
+                },
+                'req_sz_32k': {
+                    'type': 'int',
+                },
+                'req_sz_64k': {
+                    'type': 'int',
+                },
+                'req_sz_256k': {
+                    'type': 'int',
+                },
+                'req_sz_gt_256k': {
+                    'type': 'int',
+                },
+                'rsp_sz_1k': {
+                    'type': 'int',
+                },
+                'rsp_sz_2k': {
+                    'type': 'int',
+                },
+                'rsp_sz_4k': {
+                    'type': 'int',
+                },
+                'rsp_sz_8k': {
+                    'type': 'int',
+                },
+                'rsp_sz_16k': {
+                    'type': 'int',
+                },
+                'rsp_sz_32k': {
+                    'type': 'int',
+                },
+                'rsp_sz_64k': {
+                    'type': 'int',
+                },
+                'rsp_sz_256k': {
+                    'type': 'int',
+                },
+                'rsp_sz_gt_256k': {
+                    'type': 'int',
+                },
+                'chunk_sz_512': {
+                    'type': 'int',
+                },
+                'chunk_sz_1k': {
+                    'type': 'int',
+                },
+                'chunk_sz_2k': {
+                    'type': 'int',
+                },
+                'chunk_sz_4k': {
+                    'type': 'int',
+                },
+                'chunk_sz_gt_4k': {
+                    'type': 'int',
+                },
+                'pconn_connecting': {
+                    'type': 'int',
+                },
+                'pconn_connected': {
+                    'type': 'int',
+                },
+                'pconn_connecting_failed': {
+                    'type': 'int',
+                },
+                'chunk_bad': {
+                    'type': 'int',
+                },
+                'req_10u': {
+                    'type': 'int',
+                },
+                'req_20u': {
+                    'type': 'int',
+                },
+                'req_50u': {
+                    'type': 'int',
+                },
+                'req_100u': {
+                    'type': 'int',
+                },
+                'req_200u': {
+                    'type': 'int',
+                },
+                'req_500u': {
+                    'type': 'int',
+                },
+                'req_1m': {
+                    'type': 'int',
+                },
+                'req_2m': {
+                    'type': 'int',
+                },
+                'req_5m': {
+                    'type': 'int',
+                },
+                'req_10m': {
+                    'type': 'int',
+                },
+                'req_20m': {
+                    'type': 'int',
+                },
+                'req_50m': {
+                    'type': 'int',
+                },
+                'req_100m': {
+                    'type': 'int',
+                },
+                'req_200m': {
+                    'type': 'int',
+                },
+                'req_500m': {
+                    'type': 'int',
+                },
+                'req_1s': {
+                    'type': 'int',
+                },
+                'req_2s': {
+                    'type': 'int',
+                },
+                'req_5s': {
+                    'type': 'int',
+                },
+                'req_over_5s': {
+                    'type': 'int',
+                },
+                'insert_client_port': {
+                    'type': 'int',
+                },
+                'req_track': {
+                    'type': 'int',
+                },
+                'non_http_bypass': {
+                    'type': 'int',
+                },
+                'skip_insert_client_ip': {
+                    'type': 'int',
+                },
+                'skip_insert_client_port': {
+                    'type': 'int',
+                },
+                'http_pkts_ofo': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            },
+            'debug_fields': {
+                'type': 'bool',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'new_svrconn': {
-                'type': 'str',
-            },
-            'svrsel_fail': {
+            'curr_proxy': {
                 'type': 'str',
             },
             'total_proxy': {
                 'type': 'str',
             },
-            'fwdreqdata_fail': {
+            'req': {
                 'type': 'str',
             },
-            'client_rst': {
-                'type': 'str',
-            },
-            'req_retran': {
-                'type': 'str',
-            },
-            'close_on_ddos': {
-                'type': 'str',
-            },
-            'req_over_limit': {
+            'req_succ': {
                 'type': 'str',
             },
             'noproxy': {
                 'type': 'str',
             },
-            'svr_prem_close': {
-                'type': 'str',
-            },
-            'parsereq_fail': {
-                'type': 'str',
-            },
-            'tcpoutrst': {
-                'type': 'str',
-            },
-            'full_proxy': {
-                'type': 'str',
-            },
-            'full_proxy_put': {
-                'type': 'str',
-            },
-            'full_proxy_fpga_err': {
+            'client_rst': {
                 'type': 'str',
             },
             'server_rst': {
@@ -1245,39 +1262,63 @@ def get_argspec():
             'notuple': {
                 'type': 'str',
             },
-            'curr_proxy': {
+            'parsereq_fail': {
                 'type': 'str',
             },
-            'server_resel': {
-                'type': 'str',
-            },
-            'req_ofo': {
-                'type': 'str',
-            },
-            'full_proxy_post': {
-                'type': 'str',
-            },
-            'snat_fail': {
-                'type': 'str',
-            },
-            'req_rate_over_limit': {
-                'type': 'str',
-            },
-            'full_proxy_pipeline': {
-                'type': 'str',
-            },
-            'req': {
+            'svrsel_fail': {
                 'type': 'str',
             },
             'fwdreq_fail': {
                 'type': 'str',
             },
-            'req_succ': {
+            'fwdreqdata_fail': {
+                'type': 'str',
+            },
+            'req_retran': {
+                'type': 'str',
+            },
+            'req_ofo': {
+                'type': 'str',
+            },
+            'server_resel': {
+                'type': 'str',
+            },
+            'svr_prem_close': {
+                'type': 'str',
+            },
+            'new_svrconn': {
+                'type': 'str',
+            },
+            'snat_fail': {
+                'type': 'str',
+            },
+            'tcpoutrst': {
+                'type': 'str',
+            },
+            'full_proxy': {
+                'type': 'str',
+            },
+            'full_proxy_post': {
+                'type': 'str',
+            },
+            'full_proxy_pipeline': {
+                'type': 'str',
+            },
+            'full_proxy_fpga_err': {
+                'type': 'str',
+            },
+            'req_over_limit': {
+                'type': 'str',
+            },
+            'req_rate_over_limit': {
+                'type': 'str',
+            },
+            'close_on_ddos': {
+                'type': 'str',
+            },
+            'full_proxy_put': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_mac_address_static
 description:
     - Static MAC commands
-short_description: Configures A10 network.mac.address.static
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,51 +22,63 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    dest:
-        description:
-        - "Trap MAC with this DA to CPU"
+        type: str
         required: False
     mac:
         description:
         - "Configure a Static MAC address"
-        required: True
-    vlan:
-        description:
-        - "VLAN Id"
+        type: str
         required: True
     port:
         description:
         - "Ethernet Port on which the Address is applicable (Port Value)"
+        type: str
+        required: False
+    vlan:
+        description:
+        - "VLAN Id"
+        type: int
+        required: True
+    dest:
+        description:
+        - "Trap MAC with this DA to CPU"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -126,19 +136,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dest': {
-            'type': 'bool',
-        },
         'mac': {
             'type': 'str',
             'required': True,
+        },
+        'port': {
+            'type': 'str',
         },
         'vlan': {
             'type': 'int',
             'required': True,
         },
-        'port': {
-            'type': 'str',
+        'dest': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',

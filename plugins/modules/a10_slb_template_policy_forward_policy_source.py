@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_source
 description:
     - proxy source list
-short_description: Configures A10 slb.template.policy.forward.policy.source
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    match_any:
-        description:
-        - "Match any source"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            destination_match_not_found:
-                description:
-                - "Number of requests without matching destination rule"
-            hits:
-                description:
-                - "Number of requests matching this source rule"
-            destination:
-                description:
-                - "Field destination"
-            no_host_info:
-                description:
-                - "Failed to parse ip or host information from request"
-            name:
-                description:
-                - "source destination match rule name"
+        - Key to identify parent object
+        type: str
+        required: True
     name:
         description:
         - "source destination match rule name"
+        type: str
         required: True
+    match_class_list:
+        description:
+        - "Class List Name"
+        type: str
+        required: False
+    match_any:
+        description:
+        - "Match any source"
+        type: bool
+        required: False
     match_authorize_policy:
         description:
         - "Authorize-policy for user and group based policy"
-        required: False
-    destination:
-        description:
-        - "Field destination"
-        required: False
-        suboptions:
-            class_list_list:
-                description:
-                - "Field class_list_list"
-            web_category_list_list:
-                description:
-                - "Field web_category_list_list"
-            any:
-                description:
-                - "Field any"
-    user_tag:
-        description:
-        - "Customized tag"
+        type: str
         required: False
     priority:
         description:
         - "Priority of the source(higher the number higher the priority, default 0)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -116,14 +106,51 @@ options:
                 - "'all'= all; 'hits'= Number of requests matching this source rule; 'destination-
           match-not-found'= Number of requests without matching destination rule; 'no-
           host-info'= Failed to parse ip or host information from request;"
-    match_class_list:
+                type: str
+    destination:
         description:
-        - "Class List Name"
+        - "Field destination"
+        type: dict
         required: False
-    uuid:
+        suboptions:
+            class_list_list:
+                description:
+                - "Field class_list_list"
+                type: list
+            web_category_list_list:
+                description:
+                - "Field web_category_list_list"
+                type: list
+            any:
+                description:
+                - "Field any"
+                type: dict
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            hits:
+                description:
+                - "Number of requests matching this source rule"
+                type: str
+            destination_match_not_found:
+                description:
+                - "Number of requests without matching destination rule"
+                type: str
+            no_host_info:
+                description:
+                - "Failed to parse ip or host information from request"
+                type: str
+            name:
+                description:
+                - "source destination match rule name"
+                type: str
+            destination:
+                description:
+                - "Field destination"
+                type: dict
 
 '''
 
@@ -185,113 +212,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'match_any': {
-            'type': 'bool',
-        },
-        'stats': {
-            'type': 'dict',
-            'destination_match_not_found': {
-                'type': 'str',
-            },
-            'hits': {
-                'type': 'str',
-            },
-            'destination': {
-                'type': 'dict',
-            },
-            'no_host_info': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'match_authorize_policy': {
+        'match_class_list': {
             'type': 'str',
         },
-        'destination': {
-            'type': 'dict',
-            'class_list_list': {
-                'type': 'list',
-                'uuid': {
-                    'type': 'str',
-                },
-                'dest_class_list': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'priority': {
-                    'type': 'int',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
-                },
-                'action': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type': 'str',
-                    'choices': ['host', 'url', 'ip']
-                }
-            },
-            'web_category_list_list': {
-                'type': 'list',
-                'uuid': {
-                    'type': 'str',
-                },
-                'web_category_list': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'priority': {
-                    'type': 'int',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
-                },
-                'action': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type': 'str',
-                    'choices': ['host', 'url']
-                }
-            },
-            'any': {
-                'type': 'dict',
-                'action': {
-                    'type': 'str',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
+        'match_any': {
+            'type': 'bool',
         },
-        'user_tag': {
+        'match_authorize_policy': {
             'type': 'str',
         },
         'priority': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -302,11 +243,97 @@ def get_argspec():
                 ['all', 'hits', 'destination-match-not-found', 'no-host-info']
             }
         },
-        'match_class_list': {
-            'type': 'str',
+        'destination': {
+            'type': 'dict',
+            'class_list_list': {
+                'type': 'list',
+                'dest_class_list': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'action': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['host', 'url', 'ip']
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            },
+            'web_category_list_list': {
+                'type': 'list',
+                'web_category_list': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'action': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['host', 'url']
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            },
+            'any': {
+                'type': 'dict',
+                'action': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'hits': {
+                'type': 'str',
+            },
+            'destination_match_not_found': {
+                'type': 'str',
+            },
+            'no_host_info': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'destination': {
+                'type': 'dict',
+            }
         }
     })
     # Parent keys

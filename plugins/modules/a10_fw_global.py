@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_global
 description:
     - Configure firewall parameters
-short_description: Configures A10 fw.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,236 +22,87 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    disable_ip_fw_sessions:
+        description:
+        - "disable create sessions for non TCP/UDP/ICMP"
+        type: bool
         required: False
     alg_processing:
         description:
         - "'honor-rule-set'= Honors firewall rule-sets (Default); 'override-rule-set'=
           Override firewall rule-sets;"
+        type: str
         required: False
-    stats:
+    extended_matching:
         description:
-        - "Field stats"
+        - "'disable'= Disable extended matching;"
+        type: str
         required: False
-        suboptions:
-            data_session_freed:
-                description:
-                - "Data Session Freed"
-            rev_egress_pkt_size_range1:
-                description:
-                - "Reverse Egress Packet size between 0 and 200"
-            udp_fullcone_freed:
-                description:
-                - "UDP Full-cone Freed"
-            fwd_ingress_bytes_others:
-                description:
-                - "Forward Ingress Bytes OTHERS"
-            tcp_fullcone_freed:
-                description:
-                - "TCP Full-cone Freed"
-            fwd_ingress_packets_others:
-                description:
-                - "Forward Ingress Packets OTHERS"
-            fwd_ingress_packets_udp:
-                description:
-                - "Forward Ingress Packets UDP"
-            rev_ingress_bytes_icmp:
-                description:
-                - "Reverse Ingress Bytes ICMP"
-            fwd_egress_packets_others:
-                description:
-                - "Forward Egress Packets OTHERS"
-            fwd_ingress_bytes_tcp:
-                description:
-                - "Forward Ingress Bytes TCP"
-            fwd_egress_packets_tcp:
-                description:
-                - "Forward Egress Packets TCP"
-            fullcone_creation_failure:
-                description:
-                - "Full-Cone Creation Failure"
-            rev_egress_bytes_tcp:
-                description:
-                - "Reverse Egress Bytes TCP"
-            fwd_egress_bytes_others:
-                description:
-                - "Forward Egress Bytes OTHERS"
-            fwd_egress_bytes_udp:
-                description:
-                - "Forward Egress Bytes UDP"
-            rev_egress_bytes_others:
-                description:
-                - "Reverse Egress Bytes OTHERS"
-            udp_fullcone_created:
-                description:
-                - "UDP Full-cone Created"
-            active_fullcone_session:
-                description:
-                - "Total Active Full-cone sessions"
-            rev_egress_packets_udp:
-                description:
-                - "Reverse Egress Packets UDP"
-            fwd_egress_bytes_icmp:
-                description:
-                - "Forward Egress Bytes ICMP"
-            rev_ingress_packets_tcp:
-                description:
-                - "Reverse Ingress Packets TCP"
-            rev_ingress_packets_udp:
-                description:
-                - "Reverse Ingress Packets UDP"
-            rev_egress_bytes_icmp:
-                description:
-                - "Reverse Egress Bytes ICMP"
-            rev_egress_bytes_udp:
-                description:
-                - "Reverse Egress Bytes UDP"
-            fwd_ingress_bytes_icmp:
-                description:
-                - "Forward Ingress Bytes ICMP"
-            rev_ingress_packets_icmp:
-                description:
-                - "Reverse Ingress Packets ICMP"
-            rev_ingress_packets_others:
-                description:
-                - "Reverse Ingress Packets OTHERS"
-            fwd_egress_pkt_size_range3:
-                description:
-                - "Forward Egress Packet size between 801 and 1550"
-            fwd_egress_pkt_size_range2:
-                description:
-                - "Forward Egress Packet size between 201 and 800"
-            fwd_egress_pkt_size_range1:
-                description:
-                - "Forward Egress Packet size between 0 and 200"
-            fwd_egress_packets_icmp:
-                description:
-                - "Forward Egress Packets ICMP"
-            limit_entry_created:
-                description:
-                - "Limit Entry Created"
-            fwd_ingress_packets_tcp:
-                description:
-                - "Forward Ingress Packets TCP"
-            fwd_egress_pkt_size_range4:
-                description:
-                - "Forward Egress Packet size between 1551 and 9000"
-            rev_egress_packets_icmp:
-                description:
-                - "Reverse Egress Packets ICMP"
-            fwd_ingress_pkt_size_range3:
-                description:
-                - "Forward Ingress Packet size between 801 and 1550"
-            rev_egress_pkt_size_range4:
-                description:
-                - "Reverse Egress Packet size between 1551 and 9000"
-            rev_egress_pkt_size_range3:
-                description:
-                - "Reverse Egress Packet size between 801 and 1550"
-            rev_egress_pkt_size_range2:
-                description:
-                - "Reverse Egress Packet size between 201 and 800"
-            fwd_ingress_pkt_size_range4:
-                description:
-                - "Forward Ingress Packet size between 1551 and 9000"
-            tcp_fullcone_created:
-                description:
-                - "TCP Full-cone Created"
-            fwd_egress_bytes_tcp:
-                description:
-                - "Forward Egress Bytes TCP"
-            rev_egress_packets_others:
-                description:
-                - "Reverse Egress Packets OTHERS"
-            fwd_ingress_pkt_size_range2:
-                description:
-                - "Forward Ingress Packet size between 201 and 800"
-            fwd_ingress_pkt_size_range1:
-                description:
-                - "Forward Ingress Packet size between 0 and 200"
-            data_session_created:
-                description:
-                - "Data Session Created"
-            rev_ingress_bytes_udp:
-                description:
-                - "Reverse Ingress Bytes UDP"
-            rev_ingress_pkt_size_range4:
-                description:
-                - "Reverse Ingress Packet size between 1551 and 9000"
-            rev_egress_packets_tcp:
-                description:
-                - "Reverse Egress Packets TCP"
-            rev_ingress_pkt_size_range2:
-                description:
-                - "Reverse Ingress Packet size between 201 and 800"
-            rev_ingress_pkt_size_range3:
-                description:
-                - "Reverse Ingress Packet size between 801 and 1550"
-            rev_ingress_pkt_size_range1:
-                description:
-                - "Reverse Ingress Packet size between 0 and 200"
-            fwd_ingress_bytes_udp:
-                description:
-                - "Forward Ingress Bytes UDP"
-            limit_entry_marked_deleted:
-                description:
-                - "Limit Entry Marked Deleted"
-            rev_ingress_bytes_tcp:
-                description:
-                - "Reverse Ingress Bytes TCP"
-            fwd_ingress_packets_icmp:
-                description:
-                - "Forward Ingress Packets ICMP"
-            rev_ingress_bytes_others:
-                description:
-                - "Reverse Ingress Bytes OTHERS"
-            fwd_egress_packets_udp:
-                description:
-                - "Forward Egress Packets UDP"
-    uuid:
+    permit_default_action:
         description:
-        - "uuid of the object"
+        - "'forward'= Forward; 'next-service-mode'= Service to be applied chosen based on
+          configuration;"
+        type: str
+        required: False
+    natip_ddos_protection:
+        description:
+        - "'enable'= Enable; 'disable'= Disable;"
+        type: str
         required: False
     listen_on_port_timeout:
         description:
         - "STUN timeout (default= 2 minutes)"
+        type: int
         required: False
-    disable_ip_fw_sessions:
+    respond_to_user_mac:
         description:
-        - "disable create sessions for non TCP/UDP/ICMP"
+        - "Use the user's source MAC for the next hop rather than the routing table
+          (default= off)"
+        type: bool
         required: False
     disable_app_list:
         description:
         - "Field disable_app_list"
+        type: list
         required: False
         suboptions:
             disable_application_protocol:
                 description:
                 - "Disable specific application protocol"
+                type: str
             disable_application_category:
                 description:
                 - "'aaa'= Protocol/application used for AAA (Authentification, Authorization and
@@ -265,28 +114,30 @@ options:
           Blogging platform.; 'cdn'= Protocol/application used for Content-Delivery
           Networks.; 'chat'= Protocol/application used for Text Chat.; 'classified-ads'=
           Protocol/application used for Classified ads.; 'cloud-based-services'= SaaS
-          and/or PaaS cloud based services.; 'cryptocurrency'= Cryptocurrency.;
-          'database'= Database-specific protocols.; 'disposable-email'= Disposable email
-          accounts.; 'email'= Native email protocol.; 'enterprise'= Protocol/application
-          used in an enterprise network.; 'file-management'= Protocol/application
-          designed specifically for file management and exchange, e.g., Dropbox, SMB;
-          'file-transfer'= Protocol that offers file transferring as a functionality as a
-          secondary feature. e.g., Skype, Whatsapp; 'forum'= Online forum.; 'gaming'=
-          Protocol/application used by games.; 'instant-messaging-and-multimedia-
-          conferencing'= Protocol/application used for Instant messaging or
+          and/or PaaS cloud based services.; 'crowdfunding'= Service for funding a
+          project or venture by raising small amounts of money from a large number of
+          people.; 'cryptocurrency'= Cryptocurrency.; 'database'= Database-specific
+          protocols.; 'disposable-email'= Disposable email accounts.; 'ebook-reader'=
+          Services for e-book readers.; 'email'= Native email protocol.; 'enterprise'=
+          Protocol/application used in an enterprise network.; 'file-management'=
+          Protocol/application designed specifically for file management and exchange,
+          e.g., Dropbox, SMB; 'file-transfer'= Protocol that offers file transferring as
+          a functionality as a secondary feature. e.g., Skype, Whatsapp; 'forum'= Online
+          forum.; 'gaming'= Protocol/application used by games.; 'instant-messaging-and-
+          multimedia-conferencing'= Protocol/application used for Instant messaging or
           multiconferencing.; 'internet-of-things'= Internet Of Things
-          protocol/application.; 'mobile'= Mobile-specific protocol/application.;
-          'multimedia-streaming'= Protocol/application used for multimedia streaming.;
-          'networking'= Protocol used for (inter) networking purpose.; 'news-portal'=
-          Protocol/application used for News Portals.; 'peer-to-peer'=
-          Protocol/application used for Peer-to-peer purposes.; 'remote-access'=
-          Protocol/application used for remote access.; 'scada'= SCADA (Supervisory
-          control and data acquisition) protocols, all generations.; 'social-networks'=
-          Social networking application.; 'software-update'= Auto-update protocol.;
-          'standards-based'= Protocol issued from standardized bodies such as IETF, ITU,
-          IEEE, ETSI, OIF.; 'transportation'= Transportation.; 'video-chat'=
-          Protocol/application used for Video Chat.; 'voip'= Application used for Voice
-          over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
+          protocol/application.; 'mobile'= Mobile-specific protocol/application.; 'map-
+          service'= Digital Maps service.; 'multimedia-streaming'= Protocol/application
+          used for multimedia streaming.; 'networking'= Protocol used for (inter)
+          networking purpose.; 'news-portal'= Protocol/application used for News
+          Portals.; 'peer-to-peer'= Protocol/application used for Peer-to-peer purposes.;
+          'remote-access'= Protocol/application used for remote access.; 'scada'= SCADA
+          (Supervisory control and data acquisition) protocols, all generations.;
+          'social-networks'= Social networking application.; 'software-update'= Auto-
+          update protocol.; 'standards-based'= Protocol issued from standardized bodies
+          such as IETF, ITU, IEEE, ETSI, OIF.; 'transportation'= Transportation.; 'video-
+          chat'= Protocol/application used for Video Chat.; 'voip'= Application used for
+          Voice over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
           purposes.; 'web'= Application based on HTTP/HTTPS.; 'web-e-commerce'=
           Protocol/application used for E-commerce websites.; 'web-search-engines'=
           Protocol/application used for Web search portals.; 'web-websites'=
@@ -324,13 +175,16 @@ options:
           Advertisements; 'web-ext-web-based-email'= Web Extension Web based Email; 'web-
           ext-web-hosting'= Web Extension Web Hosting; 'web-ext-web-service'= Web
           Extension Web Service;"
-    extended_matching:
+                type: str
+    uuid:
         description:
-        - "'disable'= Disable extended matching;"
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -414,20 +268,245 @@ options:
           and 800; 'rev_egress_pkt_size_range3'= Reverse Egress Packet size between 801
           and 1550; 'rev_egress_pkt_size_range4'= Reverse Egress Packet size between 1551
           and 9000;"
-    respond_to_user_mac:
+                type: str
+    stats:
         description:
-        - "Use the user's source MAC for the next hop rather than the routing table
-          (default= off)"
+        - "Field stats"
+        type: dict
         required: False
-    permit_default_action:
-        description:
-        - "'forward'= Forward; 'next-service-mode'= Service to be applied chosen based on
-          configuration;"
-        required: False
-    natip_ddos_protection:
-        description:
-        - "'enable'= Enable; 'disable'= Disable;"
-        required: False
+        suboptions:
+            tcp_fullcone_created:
+                description:
+                - "TCP Full-cone Created"
+                type: str
+            tcp_fullcone_freed:
+                description:
+                - "TCP Full-cone Freed"
+                type: str
+            udp_fullcone_created:
+                description:
+                - "UDP Full-cone Created"
+                type: str
+            udp_fullcone_freed:
+                description:
+                - "UDP Full-cone Freed"
+                type: str
+            fullcone_creation_failure:
+                description:
+                - "Full-Cone Creation Failure"
+                type: str
+            data_session_created:
+                description:
+                - "Data Session Created"
+                type: str
+            data_session_freed:
+                description:
+                - "Data Session Freed"
+                type: str
+            active_fullcone_session:
+                description:
+                - "Total Active Full-cone sessions"
+                type: str
+            limit_entry_created:
+                description:
+                - "Limit Entry Created"
+                type: str
+            limit_entry_marked_deleted:
+                description:
+                - "Limit Entry Marked Deleted"
+                type: str
+            fwd_ingress_packets_tcp:
+                description:
+                - "Forward Ingress Packets TCP"
+                type: str
+            fwd_egress_packets_tcp:
+                description:
+                - "Forward Egress Packets TCP"
+                type: str
+            rev_ingress_packets_tcp:
+                description:
+                - "Reverse Ingress Packets TCP"
+                type: str
+            rev_egress_packets_tcp:
+                description:
+                - "Reverse Egress Packets TCP"
+                type: str
+            fwd_ingress_bytes_tcp:
+                description:
+                - "Forward Ingress Bytes TCP"
+                type: str
+            fwd_egress_bytes_tcp:
+                description:
+                - "Forward Egress Bytes TCP"
+                type: str
+            rev_ingress_bytes_tcp:
+                description:
+                - "Reverse Ingress Bytes TCP"
+                type: str
+            rev_egress_bytes_tcp:
+                description:
+                - "Reverse Egress Bytes TCP"
+                type: str
+            fwd_ingress_packets_udp:
+                description:
+                - "Forward Ingress Packets UDP"
+                type: str
+            fwd_egress_packets_udp:
+                description:
+                - "Forward Egress Packets UDP"
+                type: str
+            rev_ingress_packets_udp:
+                description:
+                - "Reverse Ingress Packets UDP"
+                type: str
+            rev_egress_packets_udp:
+                description:
+                - "Reverse Egress Packets UDP"
+                type: str
+            fwd_ingress_bytes_udp:
+                description:
+                - "Forward Ingress Bytes UDP"
+                type: str
+            fwd_egress_bytes_udp:
+                description:
+                - "Forward Egress Bytes UDP"
+                type: str
+            rev_ingress_bytes_udp:
+                description:
+                - "Reverse Ingress Bytes UDP"
+                type: str
+            rev_egress_bytes_udp:
+                description:
+                - "Reverse Egress Bytes UDP"
+                type: str
+            fwd_ingress_packets_icmp:
+                description:
+                - "Forward Ingress Packets ICMP"
+                type: str
+            fwd_egress_packets_icmp:
+                description:
+                - "Forward Egress Packets ICMP"
+                type: str
+            rev_ingress_packets_icmp:
+                description:
+                - "Reverse Ingress Packets ICMP"
+                type: str
+            rev_egress_packets_icmp:
+                description:
+                - "Reverse Egress Packets ICMP"
+                type: str
+            fwd_ingress_bytes_icmp:
+                description:
+                - "Forward Ingress Bytes ICMP"
+                type: str
+            fwd_egress_bytes_icmp:
+                description:
+                - "Forward Egress Bytes ICMP"
+                type: str
+            rev_ingress_bytes_icmp:
+                description:
+                - "Reverse Ingress Bytes ICMP"
+                type: str
+            rev_egress_bytes_icmp:
+                description:
+                - "Reverse Egress Bytes ICMP"
+                type: str
+            fwd_ingress_packets_others:
+                description:
+                - "Forward Ingress Packets OTHERS"
+                type: str
+            fwd_egress_packets_others:
+                description:
+                - "Forward Egress Packets OTHERS"
+                type: str
+            rev_ingress_packets_others:
+                description:
+                - "Reverse Ingress Packets OTHERS"
+                type: str
+            rev_egress_packets_others:
+                description:
+                - "Reverse Egress Packets OTHERS"
+                type: str
+            fwd_ingress_bytes_others:
+                description:
+                - "Forward Ingress Bytes OTHERS"
+                type: str
+            fwd_egress_bytes_others:
+                description:
+                - "Forward Egress Bytes OTHERS"
+                type: str
+            rev_ingress_bytes_others:
+                description:
+                - "Reverse Ingress Bytes OTHERS"
+                type: str
+            rev_egress_bytes_others:
+                description:
+                - "Reverse Egress Bytes OTHERS"
+                type: str
+            fwd_ingress_pkt_size_range1:
+                description:
+                - "Forward Ingress Packet size between 0 and 200"
+                type: str
+            fwd_ingress_pkt_size_range2:
+                description:
+                - "Forward Ingress Packet size between 201 and 800"
+                type: str
+            fwd_ingress_pkt_size_range3:
+                description:
+                - "Forward Ingress Packet size between 801 and 1550"
+                type: str
+            fwd_ingress_pkt_size_range4:
+                description:
+                - "Forward Ingress Packet size between 1551 and 9000"
+                type: str
+            fwd_egress_pkt_size_range1:
+                description:
+                - "Forward Egress Packet size between 0 and 200"
+                type: str
+            fwd_egress_pkt_size_range2:
+                description:
+                - "Forward Egress Packet size between 201 and 800"
+                type: str
+            fwd_egress_pkt_size_range3:
+                description:
+                - "Forward Egress Packet size between 801 and 1550"
+                type: str
+            fwd_egress_pkt_size_range4:
+                description:
+                - "Forward Egress Packet size between 1551 and 9000"
+                type: str
+            rev_ingress_pkt_size_range1:
+                description:
+                - "Reverse Ingress Packet size between 0 and 200"
+                type: str
+            rev_ingress_pkt_size_range2:
+                description:
+                - "Reverse Ingress Packet size between 201 and 800"
+                type: str
+            rev_ingress_pkt_size_range3:
+                description:
+                - "Reverse Ingress Packet size between 801 and 1550"
+                type: str
+            rev_ingress_pkt_size_range4:
+                description:
+                - "Reverse Ingress Packet size between 1551 and 9000"
+                type: str
+            rev_egress_pkt_size_range1:
+                description:
+                - "Reverse Egress Packet size between 0 and 200"
+                type: str
+            rev_egress_pkt_size_range2:
+                description:
+                - "Reverse Egress Packet size between 201 and 800"
+                type: str
+            rev_egress_pkt_size_range3:
+                description:
+                - "Reverse Egress Packet size between 801 and 1550"
+                type: str
+            rev_egress_pkt_size_range4:
+                description:
+                - "Reverse Egress Packet size between 1551 and 9000"
+                type: str
 
 '''
 
@@ -490,194 +569,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'disable_ip_fw_sessions': {
+            'type': 'bool',
+        },
         'alg_processing': {
             'type': 'str',
             'choices': ['honor-rule-set', 'override-rule-set']
         },
-        'stats': {
-            'type': 'dict',
-            'data_session_freed': {
-                'type': 'str',
-            },
-            'rev_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'udp_fullcone_freed': {
-                'type': 'str',
-            },
-            'fwd_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'tcp_fullcone_freed': {
-                'type': 'str',
-            },
-            'fwd_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fwd_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'rev_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fwd_egress_packets_others': {
-                'type': 'str',
-            },
-            'fwd_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fwd_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fullcone_creation_failure': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_others': {
-                'type': 'str',
-            },
-            'udp_fullcone_created': {
-                'type': 'str',
-            },
-            'active_fullcone_session': {
-                'type': 'str',
-            },
-            'rev_egress_packets_udp': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'rev_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'rev_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'fwd_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'rev_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'rev_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fwd_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fwd_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fwd_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fwd_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'limit_entry_created': {
-                'type': 'str',
-            },
-            'fwd_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'fwd_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'rev_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'rev_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'rev_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'rev_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'tcp_fullcone_created': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'rev_egress_packets_others': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'data_session_created': {
-                'type': 'str',
-            },
-            'rev_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'rev_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'rev_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'rev_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'rev_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'rev_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fwd_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'limit_entry_marked_deleted': {
-                'type': 'str',
-            },
-            'rev_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fwd_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'rev_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'fwd_egress_packets_udp': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
+        'extended_matching': {
             'type': 'str',
+            'choices': ['disable']
+        },
+        'permit_default_action': {
+            'type': 'str',
+            'choices': ['forward', 'next-service-mode']
+        },
+        'natip_ddos_protection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
         },
         'listen_on_port_timeout': {
             'type': 'int',
         },
-        'disable_ip_fw_sessions': {
+        'respond_to_user_mac': {
             'type': 'bool',
         },
         'disable_app_list': {
@@ -692,19 +606,21 @@ def get_argspec():
                     'aaa', 'adult-content', 'advertising',
                     'analytics-and-statistics', 'anonymizers-and-proxies',
                     'audio-chat', 'basic', 'blog', 'cdn', 'chat',
-                    'classified-ads', 'cloud-based-services', 'cryptocurrency',
-                    'database', 'disposable-email', 'email', 'enterprise',
-                    'file-management', 'file-transfer', 'forum', 'gaming',
+                    'classified-ads', 'cloud-based-services', 'crowdfunding',
+                    'cryptocurrency', 'database', 'disposable-email',
+                    'ebook-reader', 'email', 'enterprise', 'file-management',
+                    'file-transfer', 'forum', 'gaming',
                     'instant-messaging-and-multimedia-conferencing',
-                    'internet-of-things', 'mobile', 'multimedia-streaming',
-                    'networking', 'news-portal', 'peer-to-peer',
-                    'remote-access', 'scada', 'social-networks',
-                    'software-update', 'standards-based', 'transportation',
-                    'video-chat', 'voip', 'vpn-tunnels', 'web',
-                    'web-e-commerce', 'web-search-engines', 'web-websites',
-                    'webmails', 'web-ext-adult', 'web-ext-auctions',
-                    'web-ext-blogs', 'web-ext-business-and-economy',
-                    'web-ext-cdns', 'web-ext-collaboration',
+                    'internet-of-things', 'mobile', 'map-service',
+                    'multimedia-streaming', 'networking', 'news-portal',
+                    'peer-to-peer', 'remote-access', 'scada',
+                    'social-networks', 'software-update', 'standards-based',
+                    'transportation', 'video-chat', 'voip', 'vpn-tunnels',
+                    'web', 'web-e-commerce', 'web-search-engines',
+                    'web-websites', 'webmails', 'web-ext-adult',
+                    'web-ext-auctions', 'web-ext-blogs',
+                    'web-ext-business-and-economy', 'web-ext-cdns',
+                    'web-ext-collaboration',
                     'web-ext-computer-and-internet-info',
                     'web-ext-computer-and-internet-security', 'web-ext-dating',
                     'web-ext-educational-institutions',
@@ -730,9 +646,8 @@ def get_argspec():
                 ]
             }
         },
-        'extended_matching': {
+        'uuid': {
             'type': 'str',
-            'choices': ['disable']
         },
         'sampling_enable': {
             'type': 'list',
@@ -796,16 +711,182 @@ def get_argspec():
                 ]
             }
         },
-        'respond_to_user_mac': {
-            'type': 'bool',
-        },
-        'permit_default_action': {
-            'type': 'str',
-            'choices': ['forward', 'next-service-mode']
-        },
-        'natip_ddos_protection': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
+        'stats': {
+            'type': 'dict',
+            'tcp_fullcone_created': {
+                'type': 'str',
+            },
+            'tcp_fullcone_freed': {
+                'type': 'str',
+            },
+            'udp_fullcone_created': {
+                'type': 'str',
+            },
+            'udp_fullcone_freed': {
+                'type': 'str',
+            },
+            'fullcone_creation_failure': {
+                'type': 'str',
+            },
+            'data_session_created': {
+                'type': 'str',
+            },
+            'data_session_freed': {
+                'type': 'str',
+            },
+            'active_fullcone_session': {
+                'type': 'str',
+            },
+            'limit_entry_created': {
+                'type': 'str',
+            },
+            'limit_entry_marked_deleted': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_udp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_udp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_udp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_udp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_udp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_udp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_udp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_udp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_icmp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_others': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_others': {
+                'type': 'str',
+            },
+            'rev_egress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range4': {
+                'type': 'str',
+            }
         }
     })
     return rv

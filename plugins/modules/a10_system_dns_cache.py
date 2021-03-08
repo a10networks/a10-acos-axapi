@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_dns_cache
 description:
     - DNS Cache Statistics
-short_description: Configures A10 system.dns-cache
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            entry:
-                description:
-                - "Field entry"
-            cache_entry:
-                description:
-                - "Field cache_entry"
-            total:
-                description:
-                - "Field total"
-            cache_client:
-                description:
-                - "Field cache_client"
-            client:
-                description:
-                - "Field client"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -87,78 +78,123 @@ options:
           for lower weight; 'total_log'= Total stats log sent; 'total_alloc'= Total
           allocated; 'total_freed'= Total freed; 'current_allocate'= Current allocate;
           'current_data_allocate'= Current data allocate;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            cache_client:
+                description:
+                - "Field cache_client"
+                type: list
+            cache_entry:
+                description:
+                - "Field cache_entry"
+                type: list
+            total:
+                description:
+                - "Field total"
+                type: int
+            client:
+                description:
+                - "Field client"
+                type: bool
+            entry:
+                description:
+                - "Field entry"
+                type: bool
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            ageout:
-                description:
-                - "Total aged out"
-            hit:
-                description:
-                - "Total cache hit"
-            ageout_weight:
-                description:
-                - "Total aged for lower weight"
-            bad_answer:
-                description:
-                - "Bad Answer"
-            multiple_r:
-                description:
-                - "Response with multiple questions"
-            multiple_q:
-                description:
-                - "Query with multiple questions"
-            current_allocate:
-                description:
-                - "Current allocate"
-            bad_q:
-                description:
-                - "Query not passed"
-            total_freed:
-                description:
-                - "Total freed"
-            bad_r:
-                description:
-                - "Response not passed"
-            oversize_r:
-                description:
-                - "Response exceed cache size"
-            answer_r:
-                description:
-                - "Response with multiple answers"
-            encode_q:
-                description:
-                - "Query encoded"
-            total_alloc:
-                description:
-                - "Total allocated"
             total_q:
                 description:
                 - "Total query"
+                type: str
             total_r:
                 description:
                 - "Total server response"
+                type: str
+            hit:
+                description:
+                - "Total cache hit"
+                type: str
+            bad_q:
+                description:
+                - "Query not passed"
+                type: str
+            encode_q:
+                description:
+                - "Query encoded"
+                type: str
+            multiple_q:
+                description:
+                - "Query with multiple questions"
+                type: str
             oversize_q:
                 description:
                 - "Query exceed cache size"
-            total_log:
+                type: str
+            bad_r:
                 description:
-                - "Total stats log sent"
-            current_data_allocate:
+                - "Response not passed"
+                type: str
+            oversize_r:
                 description:
-                - "Current data allocate"
-            ttl_r:
-                description:
-                - "Response with short TTL"
+                - "Response exceed cache size"
+                type: str
             encode_r:
                 description:
                 - "Response encoded"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            multiple_r:
+                description:
+                - "Response with multiple questions"
+                type: str
+            answer_r:
+                description:
+                - "Response with multiple answers"
+                type: str
+            ttl_r:
+                description:
+                - "Response with short TTL"
+                type: str
+            ageout:
+                description:
+                - "Total aged out"
+                type: str
+            bad_answer:
+                description:
+                - "Bad Answer"
+                type: str
+            ageout_weight:
+                description:
+                - "Total aged for lower weight"
+                type: str
+            total_log:
+                description:
+                - "Total stats log sent"
+                type: str
+            total_alloc:
+                description:
+                - "Total allocated"
+                type: str
+            total_freed:
+                description:
+                - "Total freed"
+                type: str
+            current_allocate:
+                description:
+                - "Current allocate"
+                type: str
+            current_data_allocate:
+                description:
+                - "Current data allocate"
+                type: str
 
 '''
 
@@ -214,77 +250,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'entry': {
-                'type': 'bool',
-            },
-            'cache_entry': {
-                'type': 'list',
-                'cache_class': {
-                    'type': 'int',
-                },
-                'domain': {
-                    'type': 'str',
-                },
-                'name': {
-                    'type': 'str',
-                },
-                'dnssec': {
-                    'type': 'int',
-                },
-                'cache_type': {
-                    'type': 'int',
-                },
-                'age': {
-                    'type': 'int',
-                },
-                'hits': {
-                    'type': 'int',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'q_length': {
-                    'type': 'int',
-                },
-                'ttl': {
-                    'type': 'int',
-                },
-                'r_length': {
-                    'type': 'int',
-                }
-            },
-            'total': {
-                'type': 'int',
-            },
-            'cache_client': {
-                'type': 'list',
-                'lockup': {
-                    'type': 'int',
-                },
-                'domain': {
-                    'type': 'str',
-                },
-                'over_rate_limit_times': {
-                    'type': 'int',
-                },
-                'unit_type': {
-                    'type': 'str',
-                },
-                'address': {
-                    'type': 'str',
-                },
-                'lockup_time': {
-                    'type': 'int',
-                },
-                'curr_rate': {
-                    'type': 'int',
-                }
-            },
-            'client': {
-                'type': 'bool',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -300,33 +267,99 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'cache_client': {
+                'type': 'list',
+                'domain': {
+                    'type': 'str',
+                },
+                'address': {
+                    'type': 'str',
+                },
+                'unit_type': {
+                    'type': 'str',
+                },
+                'curr_rate': {
+                    'type': 'int',
+                },
+                'over_rate_limit_times': {
+                    'type': 'int',
+                },
+                'lockup': {
+                    'type': 'int',
+                },
+                'lockup_time': {
+                    'type': 'int',
+                }
+            },
+            'cache_entry': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                },
+                'domain': {
+                    'type': 'str',
+                },
+                'dnssec': {
+                    'type': 'int',
+                },
+                'cache_type': {
+                    'type': 'int',
+                },
+                'cache_class': {
+                    'type': 'int',
+                },
+                'q_length': {
+                    'type': 'int',
+                },
+                'r_length': {
+                    'type': 'int',
+                },
+                'ttl': {
+                    'type': 'int',
+                },
+                'age': {
+                    'type': 'int',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'hits': {
+                    'type': 'int',
+                }
+            },
+            'total': {
+                'type': 'int',
+            },
+            'client': {
+                'type': 'bool',
+            },
+            'entry': {
+                'type': 'bool',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'ageout': {
+            'total_q': {
+                'type': 'str',
+            },
+            'total_r': {
                 'type': 'str',
             },
             'hit': {
                 'type': 'str',
             },
-            'ageout_weight': {
+            'bad_q': {
                 'type': 'str',
             },
-            'bad_answer': {
-                'type': 'str',
-            },
-            'multiple_r': {
+            'encode_q': {
                 'type': 'str',
             },
             'multiple_q': {
                 'type': 'str',
             },
-            'current_allocate': {
-                'type': 'str',
-            },
-            'bad_q': {
-                'type': 'str',
-            },
-            'total_freed': {
+            'oversize_q': {
                 'type': 'str',
             },
             'bad_r': {
@@ -335,39 +368,42 @@ def get_argspec():
             'oversize_r': {
                 'type': 'str',
             },
+            'encode_r': {
+                'type': 'str',
+            },
+            'multiple_r': {
+                'type': 'str',
+            },
             'answer_r': {
-                'type': 'str',
-            },
-            'encode_q': {
-                'type': 'str',
-            },
-            'total_alloc': {
-                'type': 'str',
-            },
-            'total_q': {
-                'type': 'str',
-            },
-            'total_r': {
-                'type': 'str',
-            },
-            'oversize_q': {
-                'type': 'str',
-            },
-            'total_log': {
-                'type': 'str',
-            },
-            'current_data_allocate': {
                 'type': 'str',
             },
             'ttl_r': {
                 'type': 'str',
             },
-            'encode_r': {
+            'ageout': {
+                'type': 'str',
+            },
+            'bad_answer': {
+                'type': 'str',
+            },
+            'ageout_weight': {
+                'type': 'str',
+            },
+            'total_log': {
+                'type': 'str',
+            },
+            'total_alloc': {
+                'type': 'str',
+            },
+            'total_freed': {
+                'type': 'str',
+            },
+            'current_allocate': {
+                'type': 'str',
+            },
+            'current_data_allocate': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

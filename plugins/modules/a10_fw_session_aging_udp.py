@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_session_aging_udp
 description:
     - UDP Aging options
-short_description: Configures A10 fw.session.aging.udp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,52 +22,67 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     session_aging_name:
         description:
-        - Key to identify parent object    port_cfg:
-        description:
-        - "Field port_cfg"
-        required: False
-        suboptions:
-            udp_idle_timeout:
-                description:
-                - "Idle Timeout (sec), default is 120 (number)"
-            udp_port:
-                description:
-                - "Field udp_port"
+        - Key to identify parent object
+        type: str
+        required: True
     udp_idle_timeout:
         description:
         - "Idle Timeout (sec), default is 120 (number)"
+        type: int
         required: False
+    port_cfg:
+        description:
+        - "Field port_cfg"
+        type: list
+        required: False
+        suboptions:
+            udp_port:
+                description:
+                - "Field udp_port"
+                type: int
+            udp_idle_timeout:
+                description:
+                - "Idle Timeout (sec), default is 120 (number)"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -125,17 +138,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'port_cfg': {
-            'type': 'list',
-            'udp_idle_timeout': {
-                'type': 'int',
-            },
-            'udp_port': {
-                'type': 'int',
-            }
-        },
         'udp_idle_timeout': {
             'type': 'int',
+        },
+        'port_cfg': {
+            'type': 'list',
+            'udp_port': {
+                'type': 'int',
+            },
+            'udp_idle_timeout': {
+                'type': 'int',
+            }
         },
         'uuid': {
             'type': 'str',

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_route_map_match
 description:
     - Match values from routing table
-short_description: Configures A10 route.map.match
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,183 +22,238 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     sequence:
         description:
-        - Key to identify parent object    action:
+        - Key to identify parent object
+        type: str
+        required: True
+    action:
         description:
-        - Key to identify parent object    route_map_tag:
+        - Key to identify parent object
+        type: str
+        required: True
+    route_map_tag:
         description:
-        - Key to identify parent object    extcommunity:
-        description:
-        - "Field extcommunity"
-        required: False
-        suboptions:
-            extcommunity_l_name:
-                description:
-                - "Field extcommunity_l_name"
-    origin:
-        description:
-        - "Field origin"
-        required: False
-        suboptions:
-            egp:
-                description:
-                - "remote EGP"
-            incomplete:
-                description:
-                - "unknown heritage"
-            igp:
-                description:
-                - "local IGP"
-    group:
-        description:
-        - "Field group"
-        required: False
-        suboptions:
-            group_id:
-                description:
-                - "HA or VRRP-A group id"
-            ha_state:
-                description:
-                - "'active'= HA or VRRP-A in Active State; 'standby'= HA or VRRP-A in Standby
-          State;"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ip:
-        description:
-        - "Field ip"
-        required: False
-        suboptions:
-            peer:
-                description:
-                - "Field peer"
-            next_hop:
-                description:
-                - "Field next_hop"
-            address:
-                description:
-                - "Field address"
-    metric:
-        description:
-        - "Field metric"
-        required: False
-        suboptions:
-            value:
-                description:
-                - "Metric value"
+        - Key to identify parent object
+        type: str
+        required: True
     as_path:
         description:
         - "Field as_path"
+        type: dict
         required: False
         suboptions:
             name:
                 description:
                 - "AS path access-list name"
+                type: str
     community:
         description:
         - "Field community"
+        type: dict
         required: False
         suboptions:
             name_cfg:
                 description:
                 - "Field name_cfg"
-    local_preference:
+                type: dict
+    extcommunity:
         description:
-        - "Field local_preference"
+        - "Field extcommunity"
+        type: dict
         required: False
         suboptions:
-            val:
+            extcommunity_l_name:
                 description:
-                - "Preference value"
-    route_type:
+                - "Field extcommunity_l_name"
+                type: dict
+    group:
         description:
-        - "Field route_type"
+        - "Field group"
+        type: dict
         required: False
         suboptions:
-            external:
+            group_id:
                 description:
-                - "Field external"
-    tag:
-        description:
-        - "Field tag"
-        required: False
-        suboptions:
-            value:
+                - "HA or VRRP-A group id"
+                type: int
+            ha_state:
                 description:
-                - "Tag value"
-    ipv6:
-        description:
-        - "Field ipv6"
-        required: False
-        suboptions:
-            next_hop_1:
-                description:
-                - "Field next_hop_1"
-            peer_1:
-                description:
-                - "Field peer_1"
-            address_1:
-                description:
-                - "Field address_1"
-    interface:
-        description:
-        - "Field interface"
-        required: False
-        suboptions:
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
-            ethernet:
-                description:
-                - "Ethernet interface (Port number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
-            trunk:
-                description:
-                - "Trunk Interface (Trunk interface number)"
+                - "'active'= HA or VRRP-A in Active State; 'standby'= HA or VRRP-A in Standby
+          State;"
+                type: str
     scaleout:
         description:
         - "Field scaleout"
+        type: dict
         required: False
         suboptions:
             cluster_id:
                 description:
                 - "Scaleout Cluster-id"
+                type: int
             operational_state:
                 description:
                 - "'up'= Scaleout is up and running; 'down'= Scaleout is down or disabled;"
+                type: str
+    interface:
+        description:
+        - "Field interface"
+        type: dict
+        required: False
+        suboptions:
+            ethernet:
+                description:
+                - "Ethernet interface (Port number)"
+                type: str
+            loopback:
+                description:
+                - "Loopback interface (Port number)"
+                type: int
+            trunk:
+                description:
+                - "Trunk Interface (Trunk interface number)"
+                type: int
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: int
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+                type: str
+    local_preference:
+        description:
+        - "Field local_preference"
+        type: dict
+        required: False
+        suboptions:
+            val:
+                description:
+                - "Preference value"
+                type: int
+    origin:
+        description:
+        - "Field origin"
+        type: dict
+        required: False
+        suboptions:
+            egp:
+                description:
+                - "remote EGP"
+                type: bool
+            igp:
+                description:
+                - "local IGP"
+                type: bool
+            incomplete:
+                description:
+                - "unknown heritage"
+                type: bool
+    ip:
+        description:
+        - "Field ip"
+        type: dict
+        required: False
+        suboptions:
+            address:
+                description:
+                - "Field address"
+                type: dict
+            next_hop:
+                description:
+                - "Field next_hop"
+                type: dict
+            peer:
+                description:
+                - "Field peer"
+                type: dict
+    ipv6:
+        description:
+        - "Field ipv6"
+        type: dict
+        required: False
+        suboptions:
+            address_1:
+                description:
+                - "Field address_1"
+                type: dict
+            next_hop_1:
+                description:
+                - "Field next_hop_1"
+                type: dict
+            peer_1:
+                description:
+                - "Field peer_1"
+                type: dict
+    metric:
+        description:
+        - "Field metric"
+        type: dict
+        required: False
+        suboptions:
+            value:
+                description:
+                - "Metric value"
+                type: int
+    route_type:
+        description:
+        - "Field route_type"
+        type: dict
+        required: False
+        suboptions:
+            external:
+                description:
+                - "Field external"
+                type: dict
+    tag:
+        description:
+        - "Field tag"
+        type: dict
+        required: False
+        suboptions:
+            value:
+                description:
+                - "Tag value"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -266,28 +319,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'as_path': {
+            'type': 'dict',
+            'name': {
+                'type': 'str',
+            }
+        },
+        'community': {
+            'type': 'dict',
+            'name_cfg': {
+                'type': 'dict',
+                'name': {
+                    'type': 'str',
+                },
+                'exact_match': {
+                    'type': 'bool',
+                }
+            }
+        },
         'extcommunity': {
             'type': 'dict',
             'extcommunity_l_name': {
                 'type': 'dict',
-                'exact_match': {
-                    'type': 'bool',
-                },
                 'name': {
                     'type': 'str',
+                },
+                'exact_match': {
+                    'type': 'bool',
                 }
-            }
-        },
-        'origin': {
-            'type': 'dict',
-            'egp': {
-                'type': 'bool',
-            },
-            'incomplete': {
-                'type': 'bool',
-            },
-            'igp': {
-                'type': 'bool',
             }
         },
         'group': {
@@ -300,12 +359,55 @@ def get_argspec():
                 'choices': ['active', 'standby']
             }
         },
-        'uuid': {
-            'type': 'str',
+        'scaleout': {
+            'type': 'dict',
+            'cluster_id': {
+                'type': 'int',
+            },
+            'operational_state': {
+                'type': 'str',
+                'choices': ['up', 'down']
+            }
+        },
+        'interface': {
+            'type': 'dict',
+            'ethernet': {
+                'type': 'str',
+            },
+            'loopback': {
+                'type': 'int',
+            },
+            'trunk': {
+                'type': 'int',
+            },
+            've': {
+                'type': 'int',
+            },
+            'tunnel': {
+                'type': 'str',
+            }
+        },
+        'local_preference': {
+            'type': 'dict',
+            'val': {
+                'type': 'int',
+            }
+        },
+        'origin': {
+            'type': 'dict',
+            'egp': {
+                'type': 'bool',
+            },
+            'igp': {
+                'type': 'bool',
+            },
+            'incomplete': {
+                'type': 'bool',
+            }
         },
         'ip': {
             'type': 'dict',
-            'peer': {
+            'address': {
                 'type': 'dict',
                 'acl1': {
                     'type': 'int',
@@ -315,6 +417,12 @@ def get_argspec():
                 },
                 'name': {
                     'type': 'str',
+                },
+                'prefix_list': {
+                    'type': 'dict',
+                    'name': {
+                        'type': 'str',
+                    }
                 }
             },
             'next_hop': {
@@ -335,7 +443,7 @@ def get_argspec():
                     }
                 }
             },
-            'address': {
+            'peer': {
                 'type': 'dict',
                 'acl1': {
                     'type': 'int',
@@ -343,11 +451,44 @@ def get_argspec():
                 'acl2': {
                     'type': 'int',
                 },
-                'prefix_list': {
+                'name': {
+                    'type': 'str',
+                }
+            }
+        },
+        'ipv6': {
+            'type': 'dict',
+            'address_1': {
+                'type': 'dict',
+                'name': {
+                    'type': 'str',
+                },
+                'prefix_list_2': {
                     'type': 'dict',
                     'name': {
                         'type': 'str',
                     }
+                }
+            },
+            'next_hop_1': {
+                'type': 'dict',
+                'next_hop_acl_name': {
+                    'type': 'str',
+                },
+                'v6_addr': {
+                    'type': 'str',
+                },
+                'prefix_list_name': {
+                    'type': 'str',
+                }
+            },
+            'peer_1': {
+                'type': 'dict',
+                'acl1': {
+                    'type': 'int',
+                },
+                'acl2': {
+                    'type': 'int',
                 },
                 'name': {
                     'type': 'str',
@@ -357,30 +498,6 @@ def get_argspec():
         'metric': {
             'type': 'dict',
             'value': {
-                'type': 'int',
-            }
-        },
-        'as_path': {
-            'type': 'dict',
-            'name': {
-                'type': 'str',
-            }
-        },
-        'community': {
-            'type': 'dict',
-            'name_cfg': {
-                'type': 'dict',
-                'exact_match': {
-                    'type': 'bool',
-                },
-                'name': {
-                    'type': 'str',
-                }
-            }
-        },
-        'local_preference': {
-            'type': 'dict',
-            'val': {
                 'type': 'int',
             }
         },
@@ -400,72 +517,8 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'ipv6': {
-            'type': 'dict',
-            'next_hop_1': {
-                'type': 'dict',
-                'prefix_list_name': {
-                    'type': 'str',
-                },
-                'v6_addr': {
-                    'type': 'str',
-                },
-                'next_hop_acl_name': {
-                    'type': 'str',
-                }
-            },
-            'peer_1': {
-                'type': 'dict',
-                'acl1': {
-                    'type': 'int',
-                },
-                'acl2': {
-                    'type': 'int',
-                },
-                'name': {
-                    'type': 'str',
-                }
-            },
-            'address_1': {
-                'type': 'dict',
-                'name': {
-                    'type': 'str',
-                },
-                'prefix_list_2': {
-                    'type': 'dict',
-                    'name': {
-                        'type': 'str',
-                    }
-                }
-            }
-        },
-        'interface': {
-            'type': 'dict',
-            'tunnel': {
-                'type': 'str',
-            },
-            'ethernet': {
-                'type': 'str',
-            },
-            'loopback': {
-                'type': 'int',
-            },
-            've': {
-                'type': 'int',
-            },
-            'trunk': {
-                'type': 'int',
-            }
-        },
-        'scaleout': {
-            'type': 'dict',
-            'cluster_id': {
-                'type': 'int',
-            },
-            'operational_state': {
-                'type': 'str',
-                'choices': ['up', 'down']
-            }
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

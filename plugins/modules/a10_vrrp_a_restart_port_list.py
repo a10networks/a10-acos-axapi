@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_restart_port_list
 description:
     - Ports to be restarted on standby system after transition
-short_description: Configures A10 vrrp.a.restart-port-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,64 +21,80 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    ethernet_cfg:
+        description:
+        - "Field ethernet_cfg"
+        type: list
+        required: False
+        suboptions:
+            flap_ethernet_start:
+                description:
+                - "Ethernet Port"
+                type: str
+            flap_ethernet_end:
+                description:
+                - "Ethernet Port"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     vrid_list:
         description:
         - "Field vrid_list"
+        type: list
         required: False
         suboptions:
-            ethernet_cfg:
-                description:
-                - "Field ethernet_cfg"
             vrid_val:
                 description:
                 - "Specify ha VRRP-A vrid"
-            user_tag:
+                type: int
+            ethernet_cfg:
                 description:
-                - "Customized tag"
+                - "Field ethernet_cfg"
+                type: list
             uuid:
                 description:
                 - "uuid of the object"
-    ethernet_cfg:
-        description:
-        - "Field ethernet_cfg"
-        required: False
-        suboptions:
-            flap_ethernet_end:
+                type: str
+            user_tag:
                 description:
-                - "Ethernet Port"
-            flap_ethernet_start:
-                description:
-                - "Ethernet Port"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -133,39 +147,39 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'vrid_list': {
-            'type': 'list',
-            'ethernet_cfg': {
-                'type': 'list',
-                'flap_ethernet_end': {
-                    'type': 'str',
-                },
-                'flap_ethernet_start': {
-                    'type': 'str',
-                }
-            },
-            'vrid_val': {
-                'type': 'int',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
         'ethernet_cfg': {
             'type': 'list',
-            'flap_ethernet_end': {
+            'flap_ethernet_start': {
                 'type': 'str',
             },
-            'flap_ethernet_start': {
+            'flap_ethernet_end': {
                 'type': 'str',
             }
         },
         'uuid': {
             'type': 'str',
+        },
+        'vrid_list': {
+            'type': 'list',
+            'vrid_val': {
+                'type': 'int',
+                'required': True,
+            },
+            'ethernet_cfg': {
+                'type': 'list',
+                'flap_ethernet_start': {
+                    'type': 'str',
+                },
+                'flap_ethernet_end': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
         }
     })
     return rv

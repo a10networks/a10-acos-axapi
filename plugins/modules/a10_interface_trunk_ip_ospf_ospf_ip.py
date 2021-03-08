@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_trunk_ip_ospf_ospf_ip
 description:
     - IP address configuration for Open Shortest Path First for IPv4 (OSPF)
-short_description: Configures A10 interface.trunk.ip.ospf.ospf-ip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,105 +22,133 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     trunk_ifnum:
         description:
-        - Key to identify parent object    dead_interval:
+        - Key to identify parent object
+        type: str
+        required: True
+    ip_addr:
         description:
-        - "Interval after which a neighbor is declared dead (Seconds)"
-        required: False
-    authentication_key:
+        - "Address of interface"
+        type: str
+        required: True
+    authentication:
         description:
-        - "Authentication password (key) (The OSPF password (key))"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    mtu_ignore:
-        description:
-        - "Ignores the MTU in DBD packets"
-        required: False
-    transmit_delay:
-        description:
-        - "Link state transmit delay (Seconds)"
+        - "Enable authentication"
+        type: bool
         required: False
     value:
         description:
         - "'message-digest'= Use message-digest authentication; 'null'= Use no
           authentication;"
+        type: str
         required: False
-    priority:
+    authentication_key:
         description:
-        - "Router priority"
-        required: False
-    authentication:
-        description:
-        - "Enable authentication"
+        - "Authentication password (key) (The OSPF password (key))"
+        type: str
         required: False
     cost:
         description:
         - "Interface cost"
+        type: int
         required: False
     database_filter:
         description:
         - "'all'= Filter all LSA;"
+        type: str
+        required: False
+    out:
+        description:
+        - "Outgoing LSA"
+        type: bool
+        required: False
+    dead_interval:
+        description:
+        - "Interval after which a neighbor is declared dead (Seconds)"
+        type: int
         required: False
     hello_interval:
         description:
         - "Time between HELLO packets (Seconds)"
-        required: False
-    ip_addr:
-        description:
-        - "Address of interface"
-        required: True
-    retransmit_interval:
-        description:
-        - "Time between retransmitting lost link state advertisements (Seconds)"
+        type: int
         required: False
     message_digest_cfg:
         description:
         - "Field message_digest_cfg"
+        type: list
         required: False
         suboptions:
-            md5_value:
-                description:
-                - "The OSPF password (1-16)"
             message_digest_key:
                 description:
                 - "Message digest authentication password (key) (Key id)"
+                type: int
+            md5_value:
+                description:
+                - "The OSPF password (1-16)"
+                type: str
             encrypted:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
-    out:
+                type: str
+    mtu_ignore:
         description:
-        - "Outgoing LSA"
+        - "Ignores the MTU in DBD packets"
+        type: bool
+        required: False
+    priority:
+        description:
+        - "Router priority"
+        type: int
+        required: False
+    retransmit_interval:
+        description:
+        - "Time between retransmitting lost link state advertisements (Seconds)"
+        type: int
+        required: False
+    transmit_delay:
+        description:
+        - "Link state transmit delay (Seconds)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -190,30 +216,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dead_interval': {
-            'type': 'int',
-        },
-        'authentication_key': {
+        'ip_addr': {
             'type': 'str',
+            'required': True,
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'mtu_ignore': {
+        'authentication': {
             'type': 'bool',
-        },
-        'transmit_delay': {
-            'type': 'int',
         },
         'value': {
             'type': 'str',
             'choices': ['message-digest', 'null']
         },
-        'priority': {
-            'type': 'int',
-        },
-        'authentication': {
-            'type': 'bool',
+        'authentication_key': {
+            'type': 'str',
         },
         'cost': {
             'type': 'int',
@@ -222,30 +237,41 @@ def get_argspec():
             'type': 'str',
             'choices': ['all']
         },
-        'hello_interval': {
+        'out': {
+            'type': 'bool',
+        },
+        'dead_interval': {
             'type': 'int',
         },
-        'ip_addr': {
-            'type': 'str',
-            'required': True,
-        },
-        'retransmit_interval': {
+        'hello_interval': {
             'type': 'int',
         },
         'message_digest_cfg': {
             'type': 'list',
-            'md5_value': {
-                'type': 'str',
-            },
             'message_digest_key': {
                 'type': 'int',
+            },
+            'md5_value': {
+                'type': 'str',
             },
             'encrypted': {
                 'type': 'str',
             }
         },
-        'out': {
+        'mtu_ignore': {
             'type': 'bool',
+        },
+        'priority': {
+            'type': 'int',
+        },
+        'retransmit_interval': {
+            'type': 'int',
+        },
+        'transmit_delay': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

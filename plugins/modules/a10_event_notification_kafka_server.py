@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_event_notification_kafka_server
 description:
     - Set remote kafka server ip address
-short_description: Configures A10 event.notification.kafka.server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,43 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    host_ipv4:
         description:
-        - "Field oper"
+        - "Set kafka Broker ip address or hostname"
+        type: str
         required: False
-        suboptions:
-            kafka_broker_state:
-                description:
-                - "Field kafka_broker_state"
+    use_mgmt_port:
+        description:
+        - "Use management port for connections"
+        type: bool
+        required: False
+    port:
+        description:
+        - "Set remote kafka port number (Remote kafka port number 1-32767, default is
+          9092)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -117,190 +136,239 @@ options:
           dequeue error; 'ssli-pe-acos-harmony-topic'= SSLi PE topic counter from acos to
           harmony; 'ssli-pe-acos-harmony-topic-dequeue-err'= SSLi PE topic to harmony
           dequeue error; 'analytics-bus-restart'= Analytics bus restart count;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            kafka_broker_state:
+                description:
+                - "Field kafka_broker_state"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            rule_set_application_metrics_topic:
-                description:
-                - "AppFW metrics from acos to harmony"
-            cgn_summary_error_acos_harmony_topic:
-                description:
-                - "CGN Summary PE topic counter from acos to harmony"
-            cgn_pe_acos_harmony_topic:
-                description:
-                - "CGN PE topic counter from acos to harmony"
-            pr_out_latency_anomaly:
-                description:
-                - "PR out latency negative"
-            cgn_pc_acos_harmony_topic_dequeue_err:
-                description:
-                - "CGN PC topic to harmony dequeue error"
-            pr_in_latency_threshold_exceed:
-                description:
-                - "PR in latency threshold exceeded"
-            avro_generic_failed_sending:
-                description:
-                - "Telemetry exported via avro failed sending"
-            pr_throttle_drop:
-                description:
-                - "L7 PR dropped,log throttling"
-            pc_encoding_failed:
-                description:
-                - "Telemetry exported via avro failed encoding"
-            kafka_topic_error:
-                description:
-                - "Telemetry dropped because kafka topic not created"
-            avro_device_status_topic_dequeue_err:
-                description:
-                - "AVRO device status dequeue error"
-            slb_client_ssl_counters_metrics_topic_dequeue_err:
-                description:
-                - "Cilent SSL metrics dropped,enq error analytics qs"
             pr_acos_harmony_topic:
                 description:
                 - "PR topic counter from acos to harmony"
-            fw_rst_pc_acos_harmony_topic:
-                description:
-                - "FW RST PC topic counter from acos to harmony"
-            pr_out_latency_threshold_exceed:
-                description:
-                - "PR out latency threshold exceeded"
-            pr_in_latency_anomaly:
-                description:
-                - "PR in latency negative"
-            pr_acos_harmony_topic_enqueue_err:
-                description:
-                - "PR topic to harmony enqueue error"
-            fw_pc_acos_harmony_topic_dequeue_err:
-                description:
-                - "FW PC topic to harmony dequeue error"
-            kafka_broker_down:
-                description:
-                - "Telemetry drop because kafka broker is down"
-            cgn_summary_error_acos_harmony_topic_dequeue_err:
-                description:
-                - "CGN Summary PE topic to harmony dequeue error"
-            avro_partition_metrics_topic_enqueue_err:
-                description:
-                - "Part metrics dropped,enq error on acos queues"
-            avro_device_status_topic_enqueue_err:
-                description:
-                - "AVRO device status enqueue error"
-            kafka_queue_full_err:
-                description:
-                - "Telemetry drop because kafka Queue is full"
-            ssli_pe_acos_harmony_topic:
-                description:
-                - "SSLi PE topic counter from acos to harmony"
-            slb_ssl_stats_metrics_topic:
-                description:
-                - "SSL stats metrics from acos to harmony"
-            avro_partition_metrics_topic:
-                description:
-                - "AVRO partition metrics from acos to harmony"
-            pc_acos_harmony_topic:
-                description:
-                - "PC topic counter from acos to harmony"
-            fw_deny_pc_acos_harmony_topic:
-                description:
-                - "FW DENY PC topic counter from acos to harmony"
-            pc_acos_harmony_topic_dequeue_err:
-                description:
-                - "PC topic to harmony  dequeue error"
-            pr_acos_harmony_topic_dequeue_err:
-                description:
-                - "PR topic to harmony  dequeue error"
-            rule_set_application_metrics_topic_dequeue_err:
-                description:
-                - "AppFW metrics dequeue error"
-            slb_ssl_stats_metrics_topic_dequeue_err:
-                description:
-                - "SSL stats metrics dequeue error"
-            avro_generic_sent:
-                description:
-                - "Telemetry exported via avro"
-            slb_server_ssl_counters_metrics_topic:
-                description:
-                - "Server SSL counters metrics from acos to harmony"
-            fw_pc_acos_harmony_topic:
-                description:
-                - "FW PC topic counter from acos to harmony"
-            kafka_unknown_topic_dequeue_err:
-                description:
-                - "Unknown type dropped,enq error analytics queues"
-            fw_rst_pc_acos_harmony_topic_dequeue_err:
-                description:
-                - "FW RST PC topic to harmony dequeue error"
+                type: str
             avro_device_status_topic:
                 description:
                 - "AVRO device status from acos to harmony"
-            analytics_bus_restart:
+                type: str
+            avro_partition_metrics_topic:
                 description:
-                - "Analytics bus restart count"
-            fw_deny_pc_acos_harmony_topic_dequeue_err:
+                - "AVRO partition metrics from acos to harmony"
+                type: str
+            avro_generic_sent:
                 description:
-                - "FW DENY PC logs dropped,enq error analytics queues"
-            pc_throttle_drop:
+                - "Telemetry exported via avro"
+                type: str
+            pr_acos_harmony_topic_enqueue_err:
                 description:
-                - "PC drop due to throttling"
-            pr_be_ttfb_anomaly:
+                - "PR topic to harmony enqueue error"
+                type: str
+            pr_acos_harmony_topic_dequeue_err:
                 description:
-                - "PR back-end ttfb is negative"
-            slb_server_ssl_counters_metrics_topic_dequeue_err:
-                description:
-                - "Server SSL metrics dropped,enq error analytics qs"
-            avro_partition_metrics_topic_dequeue_err:
-                description:
-                - "Part metrics dropped,enq error analytics queues"
-            pr_be_ttlb_anomaly:
-                description:
-                - "PR back-end ttlb is negative"
-            pr_not_allowed_drop:
-                description:
-                - "PR drop because not allowed to log"
-            cgn_pc_acos_harmony_topic:
-                description:
-                - "CGN PC topic counter from acos to harmony"
+                - "PR topic to harmony  dequeue error"
+                type: str
             avro_generic_failed_encoding:
                 description:
                 - "Telemetry exported via avro failed encoding"
+                type: str
+            avro_generic_failed_sending:
+                description:
+                - "Telemetry exported via avro failed sending"
+                type: str
+            avro_device_status_topic_enqueue_err:
+                description:
+                - "AVRO device status enqueue error"
+                type: str
+            avro_device_status_topic_dequeue_err:
+                description:
+                - "AVRO device status dequeue error"
+                type: str
+            avro_partition_metrics_topic_enqueue_err:
+                description:
+                - "Part metrics dropped,enq error on acos queues"
+                type: str
+            avro_partition_metrics_topic_dequeue_err:
+                description:
+                - "Part metrics dropped,enq error analytics queues"
+                type: str
+            kafka_unknown_topic_dequeue_err:
+                description:
+                - "Unknown type dropped,enq error analytics queues"
+                type: str
+            kafka_broker_down:
+                description:
+                - "Telemetry drop because kafka broker is down"
+                type: str
+            kafka_queue_full_err:
+                description:
+                - "Telemetry drop because kafka Queue is full"
+                type: str
+            pr_throttle_drop:
+                description:
+                - "L7 PR dropped,log throttling"
+                type: str
+            pr_not_allowed_drop:
+                description:
+                - "PR drop because not allowed to log"
+                type: str
+            pr_be_ttfb_anomaly:
+                description:
+                - "PR back-end ttfb is negative"
+                type: str
+            pr_be_ttlb_anomaly:
+                description:
+                - "PR back-end ttlb is negative"
+                type: str
+            pr_in_latency_threshold_exceed:
+                description:
+                - "PR in latency threshold exceeded"
+                type: str
+            pr_out_latency_threshold_exceed:
+                description:
+                - "PR out latency threshold exceeded"
+                type: str
+            pr_out_latency_anomaly:
+                description:
+                - "PR out latency negative"
+                type: str
+            pr_in_latency_anomaly:
+                description:
+                - "PR in latency negative"
+                type: str
+            kafka_topic_error:
+                description:
+                - "Telemetry dropped because kafka topic not created"
+                type: str
+            pc_encoding_failed:
+                description:
+                - "Telemetry exported via avro failed encoding"
+                type: str
+            pc_acos_harmony_topic:
+                description:
+                - "PC topic counter from acos to harmony"
+                type: str
+            pc_acos_harmony_topic_dequeue_err:
+                description:
+                - "PC topic to harmony  dequeue error"
+                type: str
+            cgn_pc_acos_harmony_topic:
+                description:
+                - "CGN PC topic counter from acos to harmony"
+                type: str
+            cgn_pc_acos_harmony_topic_dequeue_err:
+                description:
+                - "CGN PC topic to harmony dequeue error"
+                type: str
+            cgn_pe_acos_harmony_topic:
+                description:
+                - "CGN PE topic counter from acos to harmony"
+                type: str
             cgn_pe_acos_harmony_topic_dequeue_err:
                 description:
                 - "CGN PE topic to harmony dequeue error"
-            ssli_pc_acos_harmony_topic:
+                type: str
+            fw_pc_acos_harmony_topic:
                 description:
-                - "SSLi PC topic counter from acos to harmony"
-            ssli_pc_acos_harmony_topic_dequeue_err:
+                - "FW PC topic counter from acos to harmony"
+                type: str
+            fw_pc_acos_harmony_topic_dequeue_err:
                 description:
-                - "SSLi PC topic to harmony dequeue error"
-            metrics_dropped_pt_missing:
+                - "FW PC topic to harmony dequeue error"
+                type: str
+            fw_deny_pc_acos_harmony_topic:
                 description:
-                - "Partition-Tenant mapping not saved on HC"
-            ssli_pe_acos_harmony_topic_dequeue_err:
+                - "FW DENY PC topic counter from acos to harmony"
+                type: str
+            fw_deny_pc_acos_harmony_topic_dequeue_err:
                 description:
-                - "SSLi PE topic to harmony dequeue error"
+                - "FW DENY PC logs dropped,enq error analytics queues"
+                type: str
+            fw_rst_pc_acos_harmony_topic:
+                description:
+                - "FW RST PC topic counter from acos to harmony"
+                type: str
+            fw_rst_pc_acos_harmony_topic_dequeue_err:
+                description:
+                - "FW RST PC topic to harmony dequeue error"
+                type: str
+            cgn_summary_error_acos_harmony_topic:
+                description:
+                - "CGN Summary PE topic counter from acos to harmony"
+                type: str
+            cgn_summary_error_acos_harmony_topic_dequeue_err:
+                description:
+                - "CGN Summary PE topic to harmony dequeue error"
+                type: str
+            rule_set_application_metrics_topic:
+                description:
+                - "AppFW metrics from acos to harmony"
+                type: str
+            rule_set_application_metrics_topic_dequeue_err:
+                description:
+                - "AppFW metrics dequeue error"
+                type: str
+            slb_ssl_stats_metrics_topic:
+                description:
+                - "SSL stats metrics from acos to harmony"
+                type: str
+            slb_ssl_stats_metrics_topic_dequeue_err:
+                description:
+                - "SSL stats metrics dequeue error"
+                type: str
             slb_client_ssl_counters_metrics_topic:
                 description:
                 - "Client SSL counters metrics from acos to harmony"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port for connections"
-        required: False
-    host_ipv4:
-        description:
-        - "Set kafka Broker ip address or hostname"
-        required: False
-    port:
-        description:
-        - "Set remote kafka port number (Remote kafka port number 1-32767, default is
-          9092)"
-        required: False
+                type: str
+            slb_client_ssl_counters_metrics_topic_dequeue_err:
+                description:
+                - "Cilent SSL metrics dropped,enq error analytics qs"
+                type: str
+            slb_server_ssl_counters_metrics_topic:
+                description:
+                - "Server SSL counters metrics from acos to harmony"
+                type: str
+            slb_server_ssl_counters_metrics_topic_dequeue_err:
+                description:
+                - "Server SSL metrics dropped,enq error analytics qs"
+                type: str
+            pc_throttle_drop:
+                description:
+                - "PC drop due to throttling"
+                type: str
+            metrics_dropped_pt_missing:
+                description:
+                - "Partition-Tenant mapping not saved on HC"
+                type: str
+            ssli_pc_acos_harmony_topic:
+                description:
+                - "SSLi PC topic counter from acos to harmony"
+                type: str
+            ssli_pc_acos_harmony_topic_dequeue_err:
+                description:
+                - "SSLi PC topic to harmony dequeue error"
+                type: str
+            ssli_pe_acos_harmony_topic:
+                description:
+                - "SSLi PE topic counter from acos to harmony"
+                type: str
+            ssli_pe_acos_harmony_topic_dequeue_err:
+                description:
+                - "SSLi PE topic to harmony dequeue error"
+                type: str
+            analytics_bus_restart:
+                description:
+                - "Analytics bus restart count"
+                type: str
 
 '''
 
@@ -359,12 +427,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'kafka_broker_state': {
-                'type': 'str',
-                'choices': ['Up', 'Down']
-            }
+        'host_ipv4': {
+            'type': 'str',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'port': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -420,153 +493,160 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'kafka_broker_state': {
+                'type': 'str',
+                'choices': ['Up', 'Down']
+            }
+        },
         'stats': {
             'type': 'dict',
-            'rule_set_application_metrics_topic': {
-                'type': 'str',
-            },
-            'cgn_summary_error_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'cgn_pe_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'pr_out_latency_anomaly': {
-                'type': 'str',
-            },
-            'cgn_pc_acos_harmony_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'pr_in_latency_threshold_exceed': {
-                'type': 'str',
-            },
-            'avro_generic_failed_sending': {
-                'type': 'str',
-            },
-            'pr_throttle_drop': {
-                'type': 'str',
-            },
-            'pc_encoding_failed': {
-                'type': 'str',
-            },
-            'kafka_topic_error': {
-                'type': 'str',
-            },
-            'avro_device_status_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'slb_client_ssl_counters_metrics_topic_dequeue_err': {
-                'type': 'str',
-            },
             'pr_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'fw_rst_pc_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'pr_out_latency_threshold_exceed': {
-                'type': 'str',
-            },
-            'pr_in_latency_anomaly': {
-                'type': 'str',
-            },
-            'pr_acos_harmony_topic_enqueue_err': {
-                'type': 'str',
-            },
-            'fw_pc_acos_harmony_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'kafka_broker_down': {
-                'type': 'str',
-            },
-            'cgn_summary_error_acos_harmony_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'avro_partition_metrics_topic_enqueue_err': {
-                'type': 'str',
-            },
-            'avro_device_status_topic_enqueue_err': {
-                'type': 'str',
-            },
-            'kafka_queue_full_err': {
-                'type': 'str',
-            },
-            'ssli_pe_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'slb_ssl_stats_metrics_topic': {
-                'type': 'str',
-            },
-            'avro_partition_metrics_topic': {
-                'type': 'str',
-            },
-            'pc_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'fw_deny_pc_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'pc_acos_harmony_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'pr_acos_harmony_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'rule_set_application_metrics_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'slb_ssl_stats_metrics_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'avro_generic_sent': {
-                'type': 'str',
-            },
-            'slb_server_ssl_counters_metrics_topic': {
-                'type': 'str',
-            },
-            'fw_pc_acos_harmony_topic': {
-                'type': 'str',
-            },
-            'kafka_unknown_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'fw_rst_pc_acos_harmony_topic_dequeue_err': {
                 'type': 'str',
             },
             'avro_device_status_topic': {
                 'type': 'str',
             },
-            'analytics_bus_restart': {
+            'avro_partition_metrics_topic': {
                 'type': 'str',
             },
-            'fw_deny_pc_acos_harmony_topic_dequeue_err': {
+            'avro_generic_sent': {
                 'type': 'str',
             },
-            'pc_throttle_drop': {
+            'pr_acos_harmony_topic_enqueue_err': {
                 'type': 'str',
             },
-            'pr_be_ttfb_anomaly': {
-                'type': 'str',
-            },
-            'slb_server_ssl_counters_metrics_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'avro_partition_metrics_topic_dequeue_err': {
-                'type': 'str',
-            },
-            'pr_be_ttlb_anomaly': {
-                'type': 'str',
-            },
-            'pr_not_allowed_drop': {
-                'type': 'str',
-            },
-            'cgn_pc_acos_harmony_topic': {
+            'pr_acos_harmony_topic_dequeue_err': {
                 'type': 'str',
             },
             'avro_generic_failed_encoding': {
                 'type': 'str',
             },
+            'avro_generic_failed_sending': {
+                'type': 'str',
+            },
+            'avro_device_status_topic_enqueue_err': {
+                'type': 'str',
+            },
+            'avro_device_status_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'avro_partition_metrics_topic_enqueue_err': {
+                'type': 'str',
+            },
+            'avro_partition_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'kafka_unknown_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'kafka_broker_down': {
+                'type': 'str',
+            },
+            'kafka_queue_full_err': {
+                'type': 'str',
+            },
+            'pr_throttle_drop': {
+                'type': 'str',
+            },
+            'pr_not_allowed_drop': {
+                'type': 'str',
+            },
+            'pr_be_ttfb_anomaly': {
+                'type': 'str',
+            },
+            'pr_be_ttlb_anomaly': {
+                'type': 'str',
+            },
+            'pr_in_latency_threshold_exceed': {
+                'type': 'str',
+            },
+            'pr_out_latency_threshold_exceed': {
+                'type': 'str',
+            },
+            'pr_out_latency_anomaly': {
+                'type': 'str',
+            },
+            'pr_in_latency_anomaly': {
+                'type': 'str',
+            },
+            'kafka_topic_error': {
+                'type': 'str',
+            },
+            'pc_encoding_failed': {
+                'type': 'str',
+            },
+            'pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'cgn_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'cgn_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'cgn_pe_acos_harmony_topic': {
+                'type': 'str',
+            },
             'cgn_pe_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'fw_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'fw_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'fw_deny_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'fw_deny_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'fw_rst_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'fw_rst_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'cgn_summary_error_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'cgn_summary_error_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'rule_set_application_metrics_topic': {
+                'type': 'str',
+            },
+            'rule_set_application_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'slb_ssl_stats_metrics_topic': {
+                'type': 'str',
+            },
+            'slb_ssl_stats_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'slb_client_ssl_counters_metrics_topic': {
+                'type': 'str',
+            },
+            'slb_client_ssl_counters_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'slb_server_ssl_counters_metrics_topic': {
+                'type': 'str',
+            },
+            'slb_server_ssl_counters_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'pc_throttle_drop': {
+                'type': 'str',
+            },
+            'metrics_dropped_pt_missing': {
                 'type': 'str',
             },
             'ssli_pc_acos_harmony_topic': {
@@ -575,27 +655,15 @@ def get_argspec():
             'ssli_pc_acos_harmony_topic_dequeue_err': {
                 'type': 'str',
             },
-            'metrics_dropped_pt_missing': {
+            'ssli_pe_acos_harmony_topic': {
                 'type': 'str',
             },
             'ssli_pe_acos_harmony_topic_dequeue_err': {
                 'type': 'str',
             },
-            'slb_client_ssl_counters_metrics_topic': {
+            'analytics_bus_restart': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
-        'host_ipv4': {
-            'type': 'str',
-        },
-        'port': {
-            'type': 'int',
         }
     })
     return rv

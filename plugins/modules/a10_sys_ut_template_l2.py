@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_template_l2
 description:
     - L2 packet paramters
-short_description: Configures A10 sys.ut.template.l2
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,86 +22,111 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    protocol:
-        description:
-        - "'arp'= arp; 'ipv4'= ipv4; 'ipv6'= ipv6;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     ethertype:
         description:
         - "L2 frame type"
+        type: bool
         required: False
-    mac_list:
+    protocol:
         description:
-        - "Field mac_list"
-        required: False
-        suboptions:
-            ethernet:
-                description:
-                - "Ethernet interface"
-            ve:
-                description:
-                - "Virtual Ethernet interface"
-            src_dst:
-                description:
-                - "'dest'= dest; 'src'= src;"
-            address_type:
-                description:
-                - "'broadcast'= broadcast; 'multicast'= multicast;"
-            nat_pool:
-                description:
-                - "Nat pool"
-            value:
-                description:
-                - "Mac Address"
-            trunk:
-                description:
-                - "Trunk number"
-            virtual_server:
-                description:
-                - "vip"
-            uuid:
-                description:
-                - "uuid of the object"
-    vlan:
-        description:
-        - "Vlan ID on the packet. 0 is untagged"
+        - "'arp'= arp; 'ipv4'= ipv4; 'ipv6'= ipv6;"
+        type: str
         required: False
     value:
         description:
         - "ethertype number"
+        type: int
         required: False
+    vlan:
+        description:
+        - "Vlan ID on the packet. 0 is untagged"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    mac_list:
+        description:
+        - "Field mac_list"
+        type: list
+        required: False
+        suboptions:
+            src_dst:
+                description:
+                - "'dest'= dest; 'src'= src;"
+                type: str
+            address_type:
+                description:
+                - "'broadcast'= broadcast; 'multicast'= multicast;"
+                type: str
+            virtual_server:
+                description:
+                - "vip"
+                type: str
+            nat_pool:
+                description:
+                - "Nat pool"
+                type: str
+            ethernet:
+                description:
+                - "Ethernet interface"
+                type: str
+            ve:
+                description:
+                - "Virtual Ethernet interface"
+                type: str
+            trunk:
+                description:
+                - "Trunk number"
+                type: str
+            value:
+                description:
+                - "Mac Address"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -161,24 +184,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ethertype': {
+            'type': 'bool',
+        },
         'protocol': {
             'type': 'str',
             'choices': ['arp', 'ipv4', 'ipv6']
         },
+        'value': {
+            'type': 'int',
+        },
+        'vlan': {
+            'type': 'int',
+        },
         'uuid': {
             'type': 'str',
         },
-        'ethertype': {
-            'type': 'bool',
-        },
         'mac_list': {
             'type': 'list',
-            'ethernet': {
-                'type': 'str',
-            },
-            've': {
-                'type': 'str',
-            },
             'src_dst': {
                 'type': 'str',
                 'required': True,
@@ -188,27 +211,27 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['broadcast', 'multicast']
             },
+            'virtual_server': {
+                'type': 'str',
+            },
             'nat_pool': {
                 'type': 'str',
             },
-            'value': {
+            'ethernet': {
+                'type': 'str',
+            },
+            've': {
                 'type': 'str',
             },
             'trunk': {
                 'type': 'str',
             },
-            'virtual_server': {
+            'value': {
                 'type': 'str',
             },
             'uuid': {
                 'type': 'str',
             }
-        },
-        'vlan': {
-            'type': 'int',
-        },
-        'value': {
-            'type': 'int',
         }
     })
     # Parent keys

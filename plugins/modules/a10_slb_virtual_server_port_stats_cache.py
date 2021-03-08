@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_cache
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.cache
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
-        - Key to identify parent object    port_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - Key to identify parent object    virtual_server_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    virtual_server_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
+        description:
+        - "Specify cache template name"
+        type: str
+        required: True
+    stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             cache:
                 description:
                 - "Field cache"
-    name:
-        description:
-        - "Specify cache template name"
-        required: True
+                type: dict
 
 '''
 
@@ -121,65 +138,33 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
         'stats': {
             'type': 'dict',
             'cache': {
                 'type': 'dict',
-                'nm_response': {
-                    'type': 'str',
-                },
-                'rsp_type_304': {
-                    'type': 'str',
-                },
-                'rsp_other': {
-                    'type': 'str',
-                },
-                'content_toosmall': {
-                    'type': 'str',
-                },
-                'entry_create_failures': {
-                    'type': 'str',
-                },
-                'nocache_match': {
-                    'type': 'str',
-                },
-                'content_toobig': {
-                    'type': 'str',
-                },
-                'replaced_entry': {
+                'hits': {
                     'type': 'str',
                 },
                 'miss': {
                     'type': 'str',
                 },
-                'nc_req_header': {
-                    'type': 'str',
-                },
-                'aging_entry': {
-                    'type': 'str',
-                },
-                'mem_size': {
-                    'type': 'str',
-                },
-                'rsp_deflate': {
-                    'type': 'str',
-                },
-                'invalidate_match': {
-                    'type': 'str',
-                },
-                'match': {
-                    'type': 'str',
-                },
-                'cleaned_entry': {
-                    'type': 'str',
-                },
-                'entry_num': {
+                'bytes_served': {
                     'type': 'str',
                 },
                 'total_req': {
                     'type': 'str',
                 },
-                'bytes_served': {
+                'caching_req': {
+                    'type': 'str',
+                },
+                'nc_req_header': {
+                    'type': 'str',
+                },
+                'nc_res_header': {
                     'type': 'str',
                 },
                 'rv_success': {
@@ -188,38 +173,70 @@ def get_argspec():
                 'rv_failure': {
                     'type': 'str',
                 },
-                'rsp_gzip': {
+                'ims_request': {
                     'type': 'str',
                 },
-                'hits': {
-                    'type': 'str',
-                },
-                'rsp_type_other': {
-                    'type': 'str',
-                },
-                'rsp_type_CE': {
+                'nm_response': {
                     'type': 'str',
                 },
                 'rsp_type_CL': {
                     'type': 'str',
                 },
+                'rsp_type_CE': {
+                    'type': 'str',
+                },
+                'rsp_type_304': {
+                    'type': 'str',
+                },
+                'rsp_type_other': {
+                    'type': 'str',
+                },
                 'rsp_no_compress': {
                     'type': 'str',
                 },
-                'nc_res_header': {
+                'rsp_gzip': {
                     'type': 'str',
                 },
-                'caching_req': {
+                'rsp_deflate': {
                     'type': 'str',
                 },
-                'ims_request': {
+                'rsp_other': {
+                    'type': 'str',
+                },
+                'nocache_match': {
+                    'type': 'str',
+                },
+                'match': {
+                    'type': 'str',
+                },
+                'invalidate_match': {
+                    'type': 'str',
+                },
+                'content_toobig': {
+                    'type': 'str',
+                },
+                'content_toosmall': {
+                    'type': 'str',
+                },
+                'entry_create_failures': {
+                    'type': 'str',
+                },
+                'mem_size': {
+                    'type': 'str',
+                },
+                'entry_num': {
+                    'type': 'str',
+                },
+                'replaced_entry': {
+                    'type': 'str',
+                },
+                'aging_entry': {
+                    'type': 'str',
+                },
+                'cleaned_entry': {
                     'type': 'str',
                 }
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     # Parent keys

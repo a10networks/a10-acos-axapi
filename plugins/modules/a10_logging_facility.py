@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_facility
 description:
     - Facility parameter for syslog messages
-short_description: Configures A10 logging.facility
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,41 +22,50 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     facilityname:
         description:
         - "'local0'= Local use; 'local1'= Local use; 'local2'= Local use; 'local3'= Local
           use; 'local4'= Local use; 'local5'= Local use; 'local6'= Local use; 'local7'=
           Local use;  (Facility parameter for syslog messages)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -113,9 +120,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'facilityname': {
             'type':
             'str',
@@ -123,6 +127,9 @@ def get_argspec():
                 'local0', 'local1', 'local2', 'local3', 'local4', 'local5',
                 'local6', 'local7'
             ]
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

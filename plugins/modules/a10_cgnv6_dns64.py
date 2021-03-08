@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_dns64
 description:
     - DNS64 Statistics
-short_description: Configures A10 cgnv6.dns64
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -63,60 +74,73 @@ options:
           Response Bad Query; 'resp-chg'= Response Changed; 'resp-err'= Response Error;
           'resp-empty'= Response Empty; 'resp-local'= Response Local; 'adjust'=
           Translated; 'cache'= Cache; 'drop'= Dropped;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            query_passive:
-                description:
-                - "Query Passive"
-            resp_local:
-                description:
-                - "Response Local"
-            drop:
-                description:
-                - "Dropped"
-            query_bad_pkt:
-                description:
-                - "Query Bad Packet"
-            resp:
-                description:
-                - "Response"
-            cache:
-                description:
-                - "Cache"
-            resp_empty:
-                description:
-                - "Response Empty"
-            resp_chg:
-                description:
-                - "Response Changed"
-            query_parallel:
-                description:
-                - "Query Parallel"
-            adjust:
-                description:
-                - "Translated"
-            resp_bad_qr:
-                description:
-                - "Response Bad Query"
             query:
                 description:
                 - "Query"
-            resp_err:
+                type: str
+            query_bad_pkt:
                 description:
-                - "Response Error"
-            resp_bad_pkt:
-                description:
-                - "Response Bad Packet"
+                - "Query Bad Packet"
+                type: str
             query_chg:
                 description:
                 - "Query Changed"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            query_parallel:
+                description:
+                - "Query Parallel"
+                type: str
+            query_passive:
+                description:
+                - "Query Passive"
+                type: str
+            resp:
+                description:
+                - "Response"
+                type: str
+            resp_bad_pkt:
+                description:
+                - "Response Bad Packet"
+                type: str
+            resp_bad_qr:
+                description:
+                - "Response Bad Query"
+                type: str
+            resp_chg:
+                description:
+                - "Response Changed"
+                type: str
+            resp_err:
+                description:
+                - "Response Error"
+                type: str
+            resp_empty:
+                description:
+                - "Response Empty"
+                type: str
+            resp_local:
+                description:
+                - "Response Local"
+                type: str
+            adjust:
+                description:
+                - "Translated"
+                type: str
+            cache:
+                description:
+                - "Cache"
+                type: str
+            drop:
+                description:
+                - "Dropped"
+                type: str
 
 '''
 
@@ -171,6 +195,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -186,54 +213,51 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'query_passive': {
-                'type': 'str',
-            },
-            'resp_local': {
-                'type': 'str',
-            },
-            'drop': {
+            'query': {
                 'type': 'str',
             },
             'query_bad_pkt': {
                 'type': 'str',
             },
-            'resp': {
-                'type': 'str',
-            },
-            'cache': {
-                'type': 'str',
-            },
-            'resp_empty': {
-                'type': 'str',
-            },
-            'resp_chg': {
+            'query_chg': {
                 'type': 'str',
             },
             'query_parallel': {
                 'type': 'str',
             },
-            'adjust': {
+            'query_passive': {
                 'type': 'str',
             },
-            'resp_bad_qr': {
-                'type': 'str',
-            },
-            'query': {
-                'type': 'str',
-            },
-            'resp_err': {
+            'resp': {
                 'type': 'str',
             },
             'resp_bad_pkt': {
                 'type': 'str',
             },
-            'query_chg': {
+            'resp_bad_qr': {
+                'type': 'str',
+            },
+            'resp_chg': {
+                'type': 'str',
+            },
+            'resp_err': {
+                'type': 'str',
+            },
+            'resp_empty': {
+                'type': 'str',
+            },
+            'resp_local': {
+                'type': 'str',
+            },
+            'adjust': {
+                'type': 'str',
+            },
+            'cache': {
+                'type': 'str',
+            },
+            'drop': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_template_logging
 description:
     - NAT Logging Template
-short_description: Configures A10 ip.nat.template.logging
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    uuid:
+    name:
         description:
-        - "uuid of the object"
+        - "NAT logging template name"
+        type: str
+        required: True
+    log:
+        description:
+        - "Field log"
+        type: dict
+        required: False
+        suboptions:
+            port_mappings:
+                description:
+                - "'creation'= Log creation of NAT mappgins; 'disable'= Disable Log creation and
+          deletion of NAT mappings;"
+                type: str
+    include_destination:
+        description:
+        - "Include the destination IP and port in logs"
+        type: bool
+        required: False
+    include_rip_rport:
+        description:
+        - "Include the IP and port of real server in logs"
+        type: bool
         required: False
     facility:
         description:
@@ -65,50 +92,12 @@ options:
           16= Local use 0; 'local1'= 17= Local use 1; 'local2'= 18= Local use 2;
           'local3'= 19= Local use 3; 'local4'= 20= Local use 4; 'local5'= 21= Local use
           5; 'local6'= 22= Local use 6; 'local7'= 23= Local use 7;"
-        required: False
-    include_destination:
-        description:
-        - "Include the destination IP and port in logs"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    name:
-        description:
-        - "NAT logging template name"
-        required: True
-    service_group:
-        description:
-        - "Set NAT logging service-group"
-        required: False
-    log:
-        description:
-        - "Field log"
-        required: False
-        suboptions:
-            port_mappings:
-                description:
-                - "'creation'= Log creation of NAT mappgins; 'disable'= Disable Log creation and
-          deletion of NAT mappings;"
-    source_port:
-        description:
-        - "Field source_port"
-        required: False
-        suboptions:
-            source_port_num:
-                description:
-                - "Set source port for sending NAT syslogs (default= 514)"
-            any:
-                description:
-                - "Use any source port"
-    include_rip_rport:
-        description:
-        - "Include the IP and port of real server in logs"
+        type: str
         required: False
     severity:
         description:
         - "Field severity"
+        type: dict
         required: False
         suboptions:
             severity_string:
@@ -116,9 +105,40 @@ options:
                 - "'emergency'= 0= Emergency; 'alert'= 1= Alert; 'critical'= 2= Critical; 'error'=
           3= Error; 'warning'= 4= Warning; 'notice'= 5= Notice; 'informational'= 6=
           Informational; 'debug'= 7= Debug;"
+                type: str
             severity_val:
                 description:
                 - "Logging severity level"
+                type: int
+    service_group:
+        description:
+        - "Set NAT logging service-group"
+        type: str
+        required: False
+    source_port:
+        description:
+        - "Field source_port"
+        type: dict
+        required: False
+        suboptions:
+            source_port_num:
+                description:
+                - "Set source port for sending NAT syslogs (default= 514)"
+                type: int
+            any:
+                description:
+                - "Use any source port"
+                type: bool
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -180,8 +200,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
+        'name': {
             'type': 'str',
+            'required': True,
+        },
+        'log': {
+            'type': 'dict',
+            'port_mappings': {
+                'type': 'str',
+                'choices': ['creation', 'disable']
+            }
+        },
+        'include_destination': {
+            'type': 'bool',
+        },
+        'include_rip_rport': {
+            'type': 'bool',
         },
         'facility': {
             'type':
@@ -193,38 +227,6 @@ def get_argspec():
                 'alert', 'clock', 'local0', 'local1', 'local2', 'local3',
                 'local4', 'local5', 'local6', 'local7'
             ]
-        },
-        'include_destination': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'service_group': {
-            'type': 'str',
-        },
-        'log': {
-            'type': 'dict',
-            'port_mappings': {
-                'type': 'str',
-                'choices': ['creation', 'disable']
-            }
-        },
-        'source_port': {
-            'type': 'dict',
-            'source_port_num': {
-                'type': 'int',
-            },
-            'any': {
-                'type': 'bool',
-            }
-        },
-        'include_rip_rport': {
-            'type': 'bool',
         },
         'severity': {
             'type': 'dict',
@@ -239,6 +241,24 @@ def get_argspec():
             'severity_val': {
                 'type': 'int',
             }
+        },
+        'service_group': {
+            'type': 'str',
+        },
+        'source_port': {
+            'type': 'dict',
+            'source_port_num': {
+                'type': 'int',
+            },
+            'any': {
+                'type': 'bool',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_port_mapping_files
 description:
     - Fixed NAT Port Mapping Files
-short_description: Configures A10 cgnv6.fixed.nat.port-mapping-files
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,66 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            ntype:
-                description:
-                - "Field type"
-            contain_case_sensitive:
-                description:
-                - "Field contain_case_sensitive"
             file_list:
                 description:
                 - "Field file_list"
+                type: list
+            ntype:
+                description:
+                - "Field type"
+                type: str
             contain:
                 description:
                 - "Field contain"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            contain_case_sensitive:
+                description:
+                - "Field contain_case_sensitive"
+                type: str
 
 '''
 
@@ -124,30 +135,30 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'file_list': {
+                'type': 'list',
+                'file_name': {
+                    'type': 'str',
+                },
+                'write_status': {
+                    'type': 'str',
+                }
+            },
             'ntype': {
                 'type': 'str',
                 'choices': ['all', 'archive', 'regular']
             },
-            'contain_case_sensitive': {
-                'type': 'str',
-            },
-            'file_list': {
-                'type': 'list',
-                'write_status': {
-                    'type': 'str',
-                },
-                'file_name': {
-                    'type': 'str',
-                }
-            },
             'contain': {
                 'type': 'str',
+            },
+            'contain_case_sensitive': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

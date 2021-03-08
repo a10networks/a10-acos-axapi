@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -14,9 +14,7 @@ module: a10_system_password_policy
 description:
     - Configure Password Complexity, Passsword Aging, Password history under password
       policy
-short_description: Configures A10 system.password-policy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -25,36 +23,38 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    aging:
-        description:
-        - "'Strict'= Strict= Max Age-60 Days; 'Medium'= Medium= Max Age- 90 Days;
-          'Simple'= Simple= Max Age-120 Days;"
+        type: str
         required: False
     complexity:
         description:
@@ -63,20 +63,30 @@ options:
           Case=2, Min Upper Case=2, Min Numbers=1, Min Special Character=1; 'Simple'=
           Simple= Min length=4, Min Lower Case=1, Min Upper Case=1, Min Numbers=1, Min
           Special Character=0;"
+        type: str
+        required: False
+    aging:
+        description:
+        - "'Strict'= Strict= Max Age-60 Days; 'Medium'= Medium= Max Age- 90 Days;
+          'Simple'= Simple= Max Age-120 Days;"
+        type: str
         required: False
     history:
         description:
         - "'Strict'= Strict= Does not allow upto 5 old passwords; 'Medium'= Medium= Does
           not allow upto 4 old passwords; 'Simple'= Simple= Does not allow upto 3 old
           passwords;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     min_pswd_len:
         description:
         - "Configure custom password length"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -134,11 +144,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'aging': {
+        'complexity': {
             'type': 'str',
             'choices': ['Strict', 'Medium', 'Simple']
         },
-        'complexity': {
+        'aging': {
             'type': 'str',
             'choices': ['Strict', 'Medium', 'Simple']
         },
@@ -146,11 +156,11 @@ def get_argspec():
             'type': 'str',
             'choices': ['Strict', 'Medium', 'Simple']
         },
-        'uuid': {
-            'type': 'str',
-        },
         'min_pswd_len': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

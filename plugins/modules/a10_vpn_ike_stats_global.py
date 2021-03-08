@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ike_stats_global
 description:
     - IKE-stats-global statistic
-short_description: Configures A10 vpn.ike-stats-global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,41 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'v2-init-rekey'= Initiate Rekey; 'v2-rsp-rekey'= Respond Rekey; 'v2
-          -child-sa-rekey'= Child SA Rekey; 'v2-in-invalid'= Incoming Invalid; 'v2-in-
+                - "'all'= all; 'v2-init-rekey'= Initiate Rekey; 'v2-rsp-rekey'= Respond Rekey;
+          'v2-child-sa-rekey'= Child SA Rekey; 'v2-in-invalid'= Incoming Invalid; 'v2-in-
           invalid-spi'= Incoming Invalid SPI; 'v2-in-init-req'= Incoming Init Request;
           'v2-in-init-rsp'= Incoming Init Response; 'v2-out-init-req'= Outgoing Init
           Request; 'v2-out-init-rsp'= Outgoing Init Response; 'v2-in-auth-req'= Incoming
@@ -66,186 +77,233 @@ options:
           Outgoing Auth Request; 'v2-out-auth-rsp'= Outgoing Auth Response; 'v2-in-
           create-child-req'= Incoming Create Child Request; 'v2-in-create-child-rsp'=
           Incoming Create Child Response; 'v2-out-create-child-req'= Outgoing Create
-          Child Request; 'v2-out-create-child-rsp'= Outgoing Create Child Response; 'v2
-          -in-info-req'= Incoming Info Request; 'v2-in-info-rsp'= Incoming Info Response;
-          'v2-out-info-req'= Outgoing Info Request; 'v2-out-info-rsp'= Outgoing Info
-          Response; 'v1-in-id-prot-req'= Incoming ID Protection Request; 'v1-in-id-prot-
-          rsp'= Incoming ID Protection Response; 'v1-out-id-prot-req'= Outgoing ID
-          Protection Request; 'v1-out-id-prot-rsp'= Outgoing ID Protection Response; 'v1
-          -in-auth-only-req'= Incoming Auth Only Request; 'v1-in-auth-only-rsp'= Incoming
-          Auth Only Response; 'v1-out-auth-only-req'= Outgoing Auth Only Request; 'v1
-          -out-auth-only-rsp'= Outgoing Auth Only Response; 'v1-in-aggressive-req'=
-          Incoming Aggressive Request; 'v1-in-aggressive-rsp'= Incoming Aggressive
-          Response; 'v1-out-aggressive-req'= Outgoing Aggressive Request; 'v1-out-
-          aggressive-rsp'= Outgoing Aggressive Response; 'v1-in-info-v1-req'= Incoming
-          Info Request; 'v1-in-info-v1-rsp'= Incoming Info Response; 'v1-out-
+          Child Request; 'v2-out-create-child-rsp'= Outgoing Create Child Response;
+          'v2-in-info-req'= Incoming Info Request; 'v2-in-info-rsp'= Incoming Info
+          Response; 'v2-out-info-req'= Outgoing Info Request; 'v2-out-info-rsp'= Outgoing
+          Info Response; 'v1-in-id-prot-req'= Incoming ID Protection Request; 'v1-in-id-
+          prot-rsp'= Incoming ID Protection Response; 'v1-out-id-prot-req'= Outgoing ID
+          Protection Request; 'v1-out-id-prot-rsp'= Outgoing ID Protection Response;
+          'v1-in-auth-only-req'= Incoming Auth Only Request; 'v1-in-auth-only-rsp'=
+          Incoming Auth Only Response; 'v1-out-auth-only-req'= Outgoing Auth Only
+          Request; 'v1-out-auth-only-rsp'= Outgoing Auth Only Response; 'v1-in-
+          aggressive-req'= Incoming Aggressive Request; 'v1-in-aggressive-rsp'= Incoming
+          Aggressive Response; 'v1-out-aggressive-req'= Outgoing Aggressive Request;
+          'v1-out-aggressive-rsp'= Outgoing Aggressive Response; 'v1-in-info-v1-req'=
+          Incoming Info Request; 'v1-in-info-v1-rsp'= Incoming Info Response; 'v1-out-
           info-v1-req'= Outgoing Info Request; 'v1-out-info-v1-rsp'= Outgoing Info
           Response; 'v1-in-transaction-req'= Incoming Transaction Request; 'v1-in-
           transaction-rsp'= Incoming Transaction Response; 'v1-out-transaction-req'=
           Outgoing Transaction Request; 'v1-out-transaction-rsp'= Outgoing Transaction
           Response; 'v1-in-quick-mode-req'= Incoming Quick Mode Request; 'v1-in-quick-
           mode-rsp'= Incoming Quick Mode Response; 'v1-out-quick-mode-req'= Outgoing
-          Quick Mode Request; 'v1-out-quick-mode-rsp'= Outgoing Quick Mode Response; 'v1
-          -in-new-group-mode-req'= Incoming New Group Mode Request; 'v1-in-new-group-
+          Quick Mode Request; 'v1-out-quick-mode-rsp'= Outgoing Quick Mode Response;
+          'v1-in-new-group-mode-req'= Incoming New Group Mode Request; 'v1-in-new-group-
           mode-rsp'= Incoming New Group Mode Response; 'v1-out-new-group-mode-req'=
           Outgoing New Group Mode Request; 'v1-out-new-group-mode-rsp'= Outgoing New
           Group Mode Response;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            v1_in_id_prot_rsp:
-                description:
-                - "Incoming ID Protection Response"
-            v1_in_auth_only_rsp:
-                description:
-                - "Incoming Auth Only Response"
-            v1_out_quick_mode_req:
-                description:
-                - "Outgoing Quick Mode Request"
-            v1_out_aggressive_req:
-                description:
-                - "Outgoing Aggressive Request"
-            v2_child_sa_rekey:
-                description:
-                - "Child SA Rekey"
-            v2_out_auth_req:
-                description:
-                - "Outgoing Auth Request"
-            v2_rsp_rekey:
-                description:
-                - "Respond Rekey"
-            v2_out_info_req:
-                description:
-                - "Outgoing Info Request"
-            v2_out_init_req:
-                description:
-                - "Outgoing Init Request"
-            v1_in_info_v1_rsp:
-                description:
-                - "Incoming Info Response"
-            v1_out_id_prot_req:
-                description:
-                - "Outgoing ID Protection Request"
-            v2_in_invalid:
-                description:
-                - "Incoming Invalid"
-            v1_in_aggressive_req:
-                description:
-                - "Incoming Aggressive Request"
-            v2_in_info_rsp:
-                description:
-                - "Incoming Info Response"
-            v1_out_new_group_mode_rsp:
-                description:
-                - "Outgoing New Group Mode Response"
-            v2_out_auth_rsp:
-                description:
-                - "Outgoing Auth Response"
-            v1_in_auth_only_req:
-                description:
-                - "Incoming Auth Only Request"
-            v1_in_info_v1_req:
-                description:
-                - "Incoming Info Request"
-            v2_in_create_child_req:
-                description:
-                - "Incoming Create Child Request"
-            v2_out_info_rsp:
-                description:
-                - "Outgoing Info Response"
-            v2_out_create_child_req:
-                description:
-                - "Outgoing Create Child Request"
-            v2_in_auth_rsp:
-                description:
-                - "Incoming Auth Response"
-            v2_in_init_req:
-                description:
-                - "Incoming Init Request"
-            v1_out_info_v1_req:
-                description:
-                - "Outgoing Info Request"
             v2_init_rekey:
                 description:
                 - "Initiate Rekey"
-            v1_in_id_prot_req:
+                type: str
+            v2_rsp_rekey:
                 description:
-                - "Incoming ID Protection Request"
-            v1_out_transaction_rsp:
+                - "Respond Rekey"
+                type: str
+            v2_child_sa_rekey:
                 description:
-                - "Outgoing Transaction Response"
-            v1_out_quick_mode_rsp:
+                - "Child SA Rekey"
+                type: str
+            v2_in_invalid:
                 description:
-                - "Outgoing Quick Mode Response"
-            v1_out_auth_only_rsp:
-                description:
-                - "Outgoing Auth Only Response"
-            v1_in_quick_mode_rsp:
-                description:
-                - "Incoming Quick Mode Response"
-            v1_in_new_group_mode_req:
-                description:
-                - "Incoming New Group Mode Request"
-            v1_out_id_prot_rsp:
-                description:
-                - "Outgoing ID Protection Response"
-            v1_in_transaction_rsp:
-                description:
-                - "Incoming Transaction Response"
-            v1_in_aggressive_rsp:
-                description:
-                - "Incoming Aggressive Response"
-            v1_in_transaction_req:
-                description:
-                - "Incoming Transaction Request"
-            v1_in_quick_mode_req:
-                description:
-                - "Incoming Quick Mode Request"
+                - "Incoming Invalid"
+                type: str
             v2_in_invalid_spi:
                 description:
                 - "Incoming Invalid SPI"
-            v1_out_auth_only_req:
+                type: str
+            v2_in_init_req:
                 description:
-                - "Outgoing Auth Only Request"
-            v1_out_transaction_req:
-                description:
-                - "Outgoing Transaction Request"
-            v1_out_new_group_mode_req:
-                description:
-                - "Outgoing New Group Mode Request"
-            v1_out_info_v1_rsp:
-                description:
-                - "Outgoing Info Response"
+                - "Incoming Init Request"
+                type: str
             v2_in_init_rsp:
                 description:
                 - "Incoming Init Response"
-            v2_in_create_child_rsp:
+                type: str
+            v2_out_init_req:
                 description:
-                - "Incoming Create Child Response"
-            v2_in_auth_req:
-                description:
-                - "Incoming Auth Request"
+                - "Outgoing Init Request"
+                type: str
             v2_out_init_rsp:
                 description:
                 - "Outgoing Init Response"
-            v1_in_new_group_mode_rsp:
+                type: str
+            v2_in_auth_req:
                 description:
-                - "Incoming New Group Mode Response"
+                - "Incoming Auth Request"
+                type: str
+            v2_in_auth_rsp:
+                description:
+                - "Incoming Auth Response"
+                type: str
+            v2_out_auth_req:
+                description:
+                - "Outgoing Auth Request"
+                type: str
+            v2_out_auth_rsp:
+                description:
+                - "Outgoing Auth Response"
+                type: str
+            v2_in_create_child_req:
+                description:
+                - "Incoming Create Child Request"
+                type: str
+            v2_in_create_child_rsp:
+                description:
+                - "Incoming Create Child Response"
+                type: str
+            v2_out_create_child_req:
+                description:
+                - "Outgoing Create Child Request"
+                type: str
             v2_out_create_child_rsp:
                 description:
                 - "Outgoing Create Child Response"
-            v1_out_aggressive_rsp:
-                description:
-                - "Outgoing Aggressive Response"
+                type: str
             v2_in_info_req:
                 description:
                 - "Incoming Info Request"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            v2_in_info_rsp:
+                description:
+                - "Incoming Info Response"
+                type: str
+            v2_out_info_req:
+                description:
+                - "Outgoing Info Request"
+                type: str
+            v2_out_info_rsp:
+                description:
+                - "Outgoing Info Response"
+                type: str
+            v1_in_id_prot_req:
+                description:
+                - "Incoming ID Protection Request"
+                type: str
+            v1_in_id_prot_rsp:
+                description:
+                - "Incoming ID Protection Response"
+                type: str
+            v1_out_id_prot_req:
+                description:
+                - "Outgoing ID Protection Request"
+                type: str
+            v1_out_id_prot_rsp:
+                description:
+                - "Outgoing ID Protection Response"
+                type: str
+            v1_in_auth_only_req:
+                description:
+                - "Incoming Auth Only Request"
+                type: str
+            v1_in_auth_only_rsp:
+                description:
+                - "Incoming Auth Only Response"
+                type: str
+            v1_out_auth_only_req:
+                description:
+                - "Outgoing Auth Only Request"
+                type: str
+            v1_out_auth_only_rsp:
+                description:
+                - "Outgoing Auth Only Response"
+                type: str
+            v1_in_aggressive_req:
+                description:
+                - "Incoming Aggressive Request"
+                type: str
+            v1_in_aggressive_rsp:
+                description:
+                - "Incoming Aggressive Response"
+                type: str
+            v1_out_aggressive_req:
+                description:
+                - "Outgoing Aggressive Request"
+                type: str
+            v1_out_aggressive_rsp:
+                description:
+                - "Outgoing Aggressive Response"
+                type: str
+            v1_in_info_v1_req:
+                description:
+                - "Incoming Info Request"
+                type: str
+            v1_in_info_v1_rsp:
+                description:
+                - "Incoming Info Response"
+                type: str
+            v1_out_info_v1_req:
+                description:
+                - "Outgoing Info Request"
+                type: str
+            v1_out_info_v1_rsp:
+                description:
+                - "Outgoing Info Response"
+                type: str
+            v1_in_transaction_req:
+                description:
+                - "Incoming Transaction Request"
+                type: str
+            v1_in_transaction_rsp:
+                description:
+                - "Incoming Transaction Response"
+                type: str
+            v1_out_transaction_req:
+                description:
+                - "Outgoing Transaction Request"
+                type: str
+            v1_out_transaction_rsp:
+                description:
+                - "Outgoing Transaction Response"
+                type: str
+            v1_in_quick_mode_req:
+                description:
+                - "Incoming Quick Mode Request"
+                type: str
+            v1_in_quick_mode_rsp:
+                description:
+                - "Incoming Quick Mode Response"
+                type: str
+            v1_out_quick_mode_req:
+                description:
+                - "Outgoing Quick Mode Request"
+                type: str
+            v1_out_quick_mode_rsp:
+                description:
+                - "Outgoing Quick Mode Response"
+                type: str
+            v1_in_new_group_mode_req:
+                description:
+                - "Incoming New Group Mode Request"
+                type: str
+            v1_in_new_group_mode_rsp:
+                description:
+                - "Incoming New Group Mode Response"
+                type: str
+            v1_out_new_group_mode_req:
+                description:
+                - "Outgoing New Group Mode Request"
+                type: str
+            v1_out_new_group_mode_rsp:
+                description:
+                - "Outgoing New Group Mode Response"
+                type: str
 
 '''
 
@@ -300,6 +358,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -334,156 +395,153 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'v1_in_id_prot_rsp': {
-                'type': 'str',
-            },
-            'v1_in_auth_only_rsp': {
-                'type': 'str',
-            },
-            'v1_out_quick_mode_req': {
-                'type': 'str',
-            },
-            'v1_out_aggressive_req': {
-                'type': 'str',
-            },
-            'v2_child_sa_rekey': {
-                'type': 'str',
-            },
-            'v2_out_auth_req': {
+            'v2_init_rekey': {
                 'type': 'str',
             },
             'v2_rsp_rekey': {
                 'type': 'str',
             },
-            'v2_out_info_req': {
-                'type': 'str',
-            },
-            'v2_out_init_req': {
-                'type': 'str',
-            },
-            'v1_in_info_v1_rsp': {
-                'type': 'str',
-            },
-            'v1_out_id_prot_req': {
+            'v2_child_sa_rekey': {
                 'type': 'str',
             },
             'v2_in_invalid': {
                 'type': 'str',
             },
-            'v1_in_aggressive_req': {
-                'type': 'str',
-            },
-            'v2_in_info_rsp': {
-                'type': 'str',
-            },
-            'v1_out_new_group_mode_rsp': {
-                'type': 'str',
-            },
-            'v2_out_auth_rsp': {
-                'type': 'str',
-            },
-            'v1_in_auth_only_req': {
-                'type': 'str',
-            },
-            'v1_in_info_v1_req': {
-                'type': 'str',
-            },
-            'v2_in_create_child_req': {
-                'type': 'str',
-            },
-            'v2_out_info_rsp': {
-                'type': 'str',
-            },
-            'v2_out_create_child_req': {
-                'type': 'str',
-            },
-            'v2_in_auth_rsp': {
+            'v2_in_invalid_spi': {
                 'type': 'str',
             },
             'v2_in_init_req': {
                 'type': 'str',
             },
-            'v1_out_info_v1_req': {
-                'type': 'str',
-            },
-            'v2_init_rekey': {
-                'type': 'str',
-            },
-            'v1_in_id_prot_req': {
-                'type': 'str',
-            },
-            'v1_out_transaction_rsp': {
-                'type': 'str',
-            },
-            'v1_out_quick_mode_rsp': {
-                'type': 'str',
-            },
-            'v1_out_auth_only_rsp': {
-                'type': 'str',
-            },
-            'v1_in_quick_mode_rsp': {
-                'type': 'str',
-            },
-            'v1_in_new_group_mode_req': {
-                'type': 'str',
-            },
-            'v1_out_id_prot_rsp': {
-                'type': 'str',
-            },
-            'v1_in_transaction_rsp': {
-                'type': 'str',
-            },
-            'v1_in_aggressive_rsp': {
-                'type': 'str',
-            },
-            'v1_in_transaction_req': {
-                'type': 'str',
-            },
-            'v1_in_quick_mode_req': {
-                'type': 'str',
-            },
-            'v2_in_invalid_spi': {
-                'type': 'str',
-            },
-            'v1_out_auth_only_req': {
-                'type': 'str',
-            },
-            'v1_out_transaction_req': {
-                'type': 'str',
-            },
-            'v1_out_new_group_mode_req': {
-                'type': 'str',
-            },
-            'v1_out_info_v1_rsp': {
-                'type': 'str',
-            },
             'v2_in_init_rsp': {
                 'type': 'str',
             },
-            'v2_in_create_child_rsp': {
-                'type': 'str',
-            },
-            'v2_in_auth_req': {
+            'v2_out_init_req': {
                 'type': 'str',
             },
             'v2_out_init_rsp': {
                 'type': 'str',
             },
-            'v1_in_new_group_mode_rsp': {
+            'v2_in_auth_req': {
+                'type': 'str',
+            },
+            'v2_in_auth_rsp': {
+                'type': 'str',
+            },
+            'v2_out_auth_req': {
+                'type': 'str',
+            },
+            'v2_out_auth_rsp': {
+                'type': 'str',
+            },
+            'v2_in_create_child_req': {
+                'type': 'str',
+            },
+            'v2_in_create_child_rsp': {
+                'type': 'str',
+            },
+            'v2_out_create_child_req': {
                 'type': 'str',
             },
             'v2_out_create_child_rsp': {
                 'type': 'str',
             },
+            'v2_in_info_req': {
+                'type': 'str',
+            },
+            'v2_in_info_rsp': {
+                'type': 'str',
+            },
+            'v2_out_info_req': {
+                'type': 'str',
+            },
+            'v2_out_info_rsp': {
+                'type': 'str',
+            },
+            'v1_in_id_prot_req': {
+                'type': 'str',
+            },
+            'v1_in_id_prot_rsp': {
+                'type': 'str',
+            },
+            'v1_out_id_prot_req': {
+                'type': 'str',
+            },
+            'v1_out_id_prot_rsp': {
+                'type': 'str',
+            },
+            'v1_in_auth_only_req': {
+                'type': 'str',
+            },
+            'v1_in_auth_only_rsp': {
+                'type': 'str',
+            },
+            'v1_out_auth_only_req': {
+                'type': 'str',
+            },
+            'v1_out_auth_only_rsp': {
+                'type': 'str',
+            },
+            'v1_in_aggressive_req': {
+                'type': 'str',
+            },
+            'v1_in_aggressive_rsp': {
+                'type': 'str',
+            },
+            'v1_out_aggressive_req': {
+                'type': 'str',
+            },
             'v1_out_aggressive_rsp': {
                 'type': 'str',
             },
-            'v2_in_info_req': {
+            'v1_in_info_v1_req': {
+                'type': 'str',
+            },
+            'v1_in_info_v1_rsp': {
+                'type': 'str',
+            },
+            'v1_out_info_v1_req': {
+                'type': 'str',
+            },
+            'v1_out_info_v1_rsp': {
+                'type': 'str',
+            },
+            'v1_in_transaction_req': {
+                'type': 'str',
+            },
+            'v1_in_transaction_rsp': {
+                'type': 'str',
+            },
+            'v1_out_transaction_req': {
+                'type': 'str',
+            },
+            'v1_out_transaction_rsp': {
+                'type': 'str',
+            },
+            'v1_in_quick_mode_req': {
+                'type': 'str',
+            },
+            'v1_in_quick_mode_rsp': {
+                'type': 'str',
+            },
+            'v1_out_quick_mode_req': {
+                'type': 'str',
+            },
+            'v1_out_quick_mode_rsp': {
+                'type': 'str',
+            },
+            'v1_in_new_group_mode_req': {
+                'type': 'str',
+            },
+            'v1_in_new_group_mode_rsp': {
+                'type': 'str',
+            },
+            'v1_out_new_group_mode_req': {
+                'type': 'str',
+            },
+            'v1_out_new_group_mode_rsp': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,6 +1,6 @@
 namespace: a10
 name: acos_axapi
-version: 1.0.0
+version: 1.1.2
 readme: README.md
 authors:
     - "opensource@a10networks.com"

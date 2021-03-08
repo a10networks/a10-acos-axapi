@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_resource_usage
 description:
     - Firewall resource usage
-short_description: Configures A10 fw.resource-usage
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,122 +22,158 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            fw_ip_range_total_count:
-                description:
-                - "Field fw_ip_range_total_count"
-            clause_per_obj_grp:
-                description:
-                - "Field clause_per_obj_grp"
-            fw_rule_set_total_count:
-                description:
-                - "Field fw_rule_set_total_count"
-            fw_zone_total_count:
-                description:
-                - "Field fw_zone_total_count"
-            fw_helper_sessions_total_count:
-                description:
-                - "Field fw_helper_sessions_total_count"
-            fw_rule_total_count:
-                description:
-                - "Field fw_rule_total_count"
-            fw_helper_sessions_current_count:
-                description:
-                - "Field fw_helper_sessions_current_count"
-            fw_ip_range_current_count:
-                description:
-                - "Field fw_ip_range_current_count"
-            zone:
-                description:
-                - "Field zone"
-            clause_per_obj_grp_total_count:
-                description:
-                - "Field clause_per_obj_grp_total_count"
-            fw_object_group_total_count:
-                description:
-                - "Field fw_object_group_total_count"
-            fw_object_total_count:
-                description:
-                - "Field fw_object_total_count"
-            fw_rule_set_current_count:
-                description:
-                - "Field fw_rule_set_current_count"
-            ip_range:
-                description:
-                - "Field ip_range"
-            fw_object_group_current_count:
-                description:
-                - "Field fw_object_group_current_count"
-            object:
-                description:
-                - "Field object"
-            rule_set:
-                description:
-                - "Field rule_set"
-            radius_table_total_count:
-                description:
-                - "Field radius_table_total_count"
-            clause_per_obj_grp_current_count:
-                description:
-                - "Field clause_per_obj_grp_current_count"
-            fw_rule_current_count:
-                description:
-                - "Field fw_rule_current_count"
-            radius_table_size:
-                description:
-                - "Field radius_table_size"
-            radius_table_current_count:
-                description:
-                - "Field radius_table_current_count"
-            helper_sessions:
-                description:
-                - "Field helper_sessions"
-            rule:
-                description:
-                - "Field rule"
             fw_object_current_count:
                 description:
                 - "Field fw_object_current_count"
-            object_group:
+                type: int
+            fw_object_total_count:
                 description:
-                - "Field object_group"
+                - "Field fw_object_total_count"
+                type: int
+            fw_object_group_current_count:
+                description:
+                - "Field fw_object_group_current_count"
+                type: int
+            fw_object_group_total_count:
+                description:
+                - "Field fw_object_group_total_count"
+                type: int
+            fw_rule_set_current_count:
+                description:
+                - "Field fw_rule_set_current_count"
+                type: int
+            fw_rule_set_total_count:
+                description:
+                - "Field fw_rule_set_total_count"
+                type: int
+            fw_rule_current_count:
+                description:
+                - "Field fw_rule_current_count"
+                type: int
+            fw_rule_total_count:
+                description:
+                - "Field fw_rule_total_count"
+                type: int
             fw_zone_current_count:
                 description:
                 - "Field fw_zone_current_count"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            fw_zone_total_count:
+                description:
+                - "Field fw_zone_total_count"
+                type: int
+            fw_ip_range_current_count:
+                description:
+                - "Field fw_ip_range_current_count"
+                type: int
+            fw_ip_range_total_count:
+                description:
+                - "Field fw_ip_range_total_count"
+                type: int
+            fw_helper_sessions_current_count:
+                description:
+                - "Field fw_helper_sessions_current_count"
+                type: int
+            fw_helper_sessions_total_count:
+                description:
+                - "Field fw_helper_sessions_total_count"
+                type: int
+            radius_table_current_count:
+                description:
+                - "Field radius_table_current_count"
+                type: int
+            radius_table_total_count:
+                description:
+                - "Field radius_table_total_count"
+                type: int
+            clause_per_obj_grp_current_count:
+                description:
+                - "Field clause_per_obj_grp_current_count"
+                type: str
+            clause_per_obj_grp_total_count:
+                description:
+                - "Field clause_per_obj_grp_total_count"
+                type: int
+            object:
+                description:
+                - "Field object"
+                type: bool
+            object_group:
+                description:
+                - "Field object_group"
+                type: bool
+            rule_set:
+                description:
+                - "Field rule_set"
+                type: bool
+            rule:
+                description:
+                - "Field rule"
+                type: bool
+            zone:
+                description:
+                - "Field zone"
+                type: bool
+            ip_range:
+                description:
+                - "Field ip_range"
+                type: bool
+            helper_sessions:
+                description:
+                - "Field helper_sessions"
+                type: bool
+            radius_table_size:
+                description:
+                - "Field radius_table_size"
+                type: bool
+            clause_per_obj_grp:
+                description:
+                - "Field clause_per_obj_grp"
+                type: bool
 
 '''
 
@@ -193,58 +227,55 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'fw_ip_range_total_count': {
-                'type': 'int',
-            },
-            'clause_per_obj_grp': {
-                'type': 'bool',
-            },
-            'fw_rule_set_total_count': {
-                'type': 'int',
-            },
-            'fw_zone_total_count': {
-                'type': 'int',
-            },
-            'fw_helper_sessions_total_count': {
-                'type': 'int',
-            },
-            'fw_rule_total_count': {
-                'type': 'int',
-            },
-            'fw_helper_sessions_current_count': {
-                'type': 'int',
-            },
-            'fw_ip_range_current_count': {
-                'type': 'int',
-            },
-            'zone': {
-                'type': 'bool',
-            },
-            'clause_per_obj_grp_total_count': {
-                'type': 'int',
-            },
-            'fw_object_group_total_count': {
+            'fw_object_current_count': {
                 'type': 'int',
             },
             'fw_object_total_count': {
                 'type': 'int',
             },
-            'fw_rule_set_current_count': {
-                'type': 'int',
-            },
-            'ip_range': {
-                'type': 'bool',
-            },
             'fw_object_group_current_count': {
                 'type': 'int',
             },
-            'object': {
-                'type': 'bool',
+            'fw_object_group_total_count': {
+                'type': 'int',
             },
-            'rule_set': {
-                'type': 'bool',
+            'fw_rule_set_current_count': {
+                'type': 'int',
+            },
+            'fw_rule_set_total_count': {
+                'type': 'int',
+            },
+            'fw_rule_current_count': {
+                'type': 'int',
+            },
+            'fw_rule_total_count': {
+                'type': 'int',
+            },
+            'fw_zone_current_count': {
+                'type': 'int',
+            },
+            'fw_zone_total_count': {
+                'type': 'int',
+            },
+            'fw_ip_range_current_count': {
+                'type': 'int',
+            },
+            'fw_ip_range_total_count': {
+                'type': 'int',
+            },
+            'fw_helper_sessions_current_count': {
+                'type': 'int',
+            },
+            'fw_helper_sessions_total_count': {
+                'type': 'int',
+            },
+            'radius_table_current_count': {
+                'type': 'int',
             },
             'radius_table_total_count': {
                 'type': 'int',
@@ -252,33 +283,36 @@ def get_argspec():
             'clause_per_obj_grp_current_count': {
                 'type': 'str',
             },
-            'fw_rule_current_count': {
+            'clause_per_obj_grp_total_count': {
                 'type': 'int',
             },
-            'radius_table_size': {
+            'object': {
                 'type': 'bool',
             },
-            'radius_table_current_count': {
-                'type': 'int',
+            'object_group': {
+                'type': 'bool',
             },
-            'helper_sessions': {
+            'rule_set': {
                 'type': 'bool',
             },
             'rule': {
                 'type': 'bool',
             },
-            'fw_object_current_count': {
-                'type': 'int',
-            },
-            'object_group': {
+            'zone': {
                 'type': 'bool',
             },
-            'fw_zone_current_count': {
-                'type': 'int',
+            'ip_range': {
+                'type': 'bool',
+            },
+            'helper_sessions': {
+                'type': 'bool',
+            },
+            'radius_table_size': {
+                'type': 'bool',
+            },
+            'clause_per_obj_grp': {
+                'type': 'bool',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

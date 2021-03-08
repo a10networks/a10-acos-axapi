@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_template
 description:
     - Authentication template
-short_description: Configures A10 aam.authentication.template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,153 +22,206 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Authentication template name"
+        type: str
+        required: True
+    ntype:
+        description:
+        - "'saml'= SAML authentication template; 'standard'= Standard authentication
+          template;"
+        type: str
+        required: False
+    auth_sess_mode:
+        description:
+        - "'cookie-based'= Track auth-session by cookie (default); 'ip-based'= Track auth-
+          session by client IP;"
+        type: str
+        required: False
+    saml_sp:
+        description:
+        - "Specify SAML service provider"
+        type: str
+        required: False
+    saml_idp:
+        description:
+        - "Specify SAML identity provider"
+        type: str
+        required: False
+    cookie_domain:
+        description:
+        - "Field cookie_domain"
+        type: list
+        required: False
+        suboptions:
+            cookie_dmn:
+                description:
+                - "Specify domain scope for the authentication (ex= .a10networks.com)"
+                type: str
+    cookie_domain_group:
+        description:
+        - "Field cookie_domain_group"
+        type: list
+        required: False
+        suboptions:
+            cookie_dmngrp:
+                description:
+                - "Specify group id to join in the cookie-domain"
+                type: int
+    cookie_max_age:
+        description:
+        - "Configure Max-Age for authentication session cookie (Configure Max-Age in
+          seconds. System will not set Max-Age/Expires for value 0 and default is 604800
+          (1 week).)"
+        type: int
+        required: False
+    cookie_secure_enable:
+        description:
+        - "Enable secure attribute for AAM cookies"
+        type: bool
+        required: False
+    cookie_httponly_enable:
+        description:
+        - "Enable httponly attribute for AAM cookies"
+        type: bool
+        required: False
+    cookie_samesite:
+        description:
+        - "'strict'= Specify SameSite attribute as Strict for AAM cookie; 'lax'= Specify
+          SameSite attribute as Lax for AAM cookie; 'none'= Specify SameSite attribute as
+          None for AAM cookie;"
+        type: str
         required: False
     max_session_time:
         description:
         - "Specify default SAML token lifetime (Specify lifetime (in seconds) of SAML
           token when it not provided by token attributes, default is 28800. (0 for
           indefinite))"
-        required: False
-    accounting_server:
-        description:
-        - "Specify a RADIUS accounting server"
-        required: False
-    saml_idp:
-        description:
-        - "Specify SAML identity provider"
-        required: False
-    cookie_max_age:
-        description:
-        - "Configure Max-Age for authentication session cookie (Configure Max-Age in
-          seconds. Default is 604800 (1 week).)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: int
         required: False
     local_logging:
         description:
         - "Enable local logging"
+        type: bool
         required: False
-    auth_sess_mode:
+    logon:
         description:
-        - "'cookie-based'= Track auth-session by cookie (default); 'ip-based'= Track auth-
-          session by client IP;"
+        - "Specify authentication logon (Specify authentication logon template name)"
+        type: str
+        required: False
+    logout_idle_timeout:
+        description:
+        - "Specify idle logout time (Specify idle timeout in seconds, default is 300)"
+        type: int
+        required: False
+    logout_url:
+        description:
+        - "Specify logout url (Specify logout url string)"
+        type: str
+        required: False
+    forward_logout_disable:
+        description:
+        - "Disable forward logout request to backend application server. The config-field
+          logout-url must be configured first"
+        type: bool
+        required: False
+    relay:
+        description:
+        - "Specify authentication relay (Specify authentication relay template name)"
+        type: str
+        required: False
+    jwt:
+        description:
+        - "Specify authentication jwt template"
+        type: str
+        required: False
+    server:
+        description:
+        - "Specify authentication server (Specify authentication server template name)"
+        type: str
         required: False
     service_group:
         description:
         - "Bind an authentication service group to this template (Specify authentication
           service group name)"
+        type: str
         required: False
-    ntype:
+    account:
         description:
-        - "'saml'= SAML authentication template; 'standard'= Standard authentication
-          template;"
+        - "Specify AD domain account"
+        type: str
+        required: False
+    accounting_server:
+        description:
+        - "Specify a RADIUS accounting server"
+        type: str
+        required: False
+    accounting_service_group:
+        description:
+        - "Specify an authentication service group for RADIUS accounting"
+        type: str
+        required: False
+    redirect_hostname:
+        description:
+        - "Hostname(Length 1-31) for transparent-proxy authentication"
+        type: str
         required: False
     modify_content_security_policy:
         description:
         - "Put redirect-uri or service-principal-name into CSP header to avoid CPS break
           authentication process"
-        required: False
-    relay:
-        description:
-        - "Specify authentication relay (Specify authentication relay template name)"
-        required: False
-    saml_sp:
-        description:
-        - "Specify SAML service provider"
-        required: False
-    cookie_domain:
-        description:
-        - "Field cookie_domain"
-        required: False
-        suboptions:
-            cookie_dmn:
-                description:
-                - "Specify domain scope for the authentication (ex= .a10networks.com)"
-    cookie_domain_group:
-        description:
-        - "Field cookie_domain_group"
-        required: False
-        suboptions:
-            cookie_dmngrp:
-                description:
-                - "Specify group id to join in the cookie-domain"
-    forward_logout_disable:
-        description:
-        - "Disable forward logout request to backend application server. The config-field
-          logout-url must be configured first"
-        required: False
-    accounting_service_group:
-        description:
-        - "Specify an authentication service group for RADIUS accounting"
+        type: bool
         required: False
     log:
         description:
         - "'use-partition-level-config'= Use configuration of authentication-log enable
           command; 'enable'= Enable authentication logs for this template; 'disable'=
           Disable authentication logs for this template;"
+        type: str
         required: False
-    logout_idle_timeout:
+    uuid:
         description:
-        - "Specify idle logout time (Specify idle timeout in seconds, default is 300)"
-        required: False
-    account:
-        description:
-        - "Specify AD domain account"
-        required: False
-    name:
-        description:
-        - "Authentication template name"
-        required: True
-    logout_url:
-        description:
-        - "Specify logout url (Specify logout url string)"
-        required: False
-    jwt:
-        description:
-        - "Specify authentication jwt template"
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
-        required: False
-    server:
-        description:
-        - "Specify authentication server (Specify authentication server template name)"
-        required: False
-    redirect_hostname:
-        description:
-        - "Hostname(Length 1-31) for transparent-proxy authentication"
-        required: False
-    logon:
-        description:
-        - "Specify authentication logon (Specify authentication logon template name)"
+        type: str
         required: False
 
 '''
@@ -192,7 +243,10 @@ AVAILABLE_PROPERTIES = [
     "auth_sess_mode",
     "cookie_domain",
     "cookie_domain_group",
+    "cookie_httponly_enable",
     "cookie_max_age",
+    "cookie_samesite",
+    "cookie_secure_enable",
     "forward_logout_disable",
     "jwt",
     "local_logging",
@@ -249,42 +303,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'max_session_time': {
-            'type': 'int',
-        },
-        'accounting_server': {
+        'name': {
             'type': 'str',
-        },
-        'saml_idp': {
-            'type': 'str',
-        },
-        'cookie_max_age': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'local_logging': {
-            'type': 'bool',
-        },
-        'auth_sess_mode': {
-            'type': 'str',
-            'choices': ['cookie-based', 'ip-based']
-        },
-        'service_group': {
-            'type': 'str',
+            'required': True,
         },
         'ntype': {
             'type': 'str',
             'choices': ['saml', 'standard']
         },
-        'modify_content_security_policy': {
-            'type': 'bool',
-        },
-        'relay': {
+        'auth_sess_mode': {
             'type': 'str',
+            'choices': ['cookie-based', 'ip-based']
         },
         'saml_sp': {
+            'type': 'str',
+        },
+        'saml_idp': {
             'type': 'str',
         },
         'cookie_domain': {
@@ -299,42 +333,72 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'forward_logout_disable': {
+        'cookie_max_age': {
+            'type': 'int',
+        },
+        'cookie_secure_enable': {
             'type': 'bool',
         },
-        'accounting_service_group': {
-            'type': 'str',
+        'cookie_httponly_enable': {
+            'type': 'bool',
         },
-        'log': {
+        'cookie_samesite': {
             'type': 'str',
-            'choices': ['use-partition-level-config', 'enable', 'disable']
+            'choices': ['strict', 'lax', 'none']
+        },
+        'max_session_time': {
+            'type': 'int',
+        },
+        'local_logging': {
+            'type': 'bool',
+        },
+        'logon': {
+            'type': 'str',
         },
         'logout_idle_timeout': {
             'type': 'int',
         },
-        'account': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
         'logout_url': {
+            'type': 'str',
+        },
+        'forward_logout_disable': {
+            'type': 'bool',
+        },
+        'relay': {
             'type': 'str',
         },
         'jwt': {
             'type': 'str',
         },
-        'user_tag': {
+        'server': {
             'type': 'str',
         },
-        'server': {
+        'service_group': {
+            'type': 'str',
+        },
+        'account': {
+            'type': 'str',
+        },
+        'accounting_server': {
+            'type': 'str',
+        },
+        'accounting_service_group': {
             'type': 'str',
         },
         'redirect_hostname': {
             'type': 'str',
         },
-        'logon': {
+        'modify_content_security_policy': {
+            'type': 'bool',
+        },
+        'log': {
+            'type': 'str',
+            'choices': ['use-partition-level-config', 'enable', 'disable']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

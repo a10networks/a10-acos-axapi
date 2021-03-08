@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_fragmentation_inbound
 description:
     - DS-Lite fragmentation rules for inbound oversize packets (default= ipv6)
-short_description: Configures A10 cgnv6.ds.lite.fragmentation.inbound
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,61 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    count:
-        description:
-        - "Configure number of ICMP messages sent when DF set. Default is 1"
-        required: False
-    frag_action:
-        description:
-        - "'drop'= Drop Silently; 'ipv4'= Use IPv4 fragmentation for oversize packets;
-          'ipv6'= Use IPv6 fragmentation for oversize packets (default);"
+        type: str
         required: False
     df_set:
         description:
         - "'drop'= Drop Silently; 'ipv4'= Use IPv4 Fragmentation; 'ipv6'= Use IPv6
           fragmentation for oversize packets; 'send-icmp'= Send ICMP Type 3 Code 4
           (Fragmentation Needed and DF Set) (default);"
+        type: str
+        required: False
+    count:
+        description:
+        - "Configure number of ICMP messages sent when DF set. Default is 1"
+        type: int
+        required: False
+    frag_action:
+        description:
+        - "'drop'= Drop Silently; 'ipv4'= Use IPv4 fragmentation for oversize packets;
+          'ipv6'= Use IPv6 fragmentation for oversize packets (default);"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -124,16 +133,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'df_set': {
+            'type': 'str',
+            'choices': ['drop', 'ipv4', 'ipv6', 'send-icmp']
+        },
         'count': {
             'type': 'int',
         },
         'frag_action': {
             'type': 'str',
             'choices': ['drop', 'ipv4', 'ipv6']
-        },
-        'df_set': {
-            'type': 'str',
-            'choices': ['drop', 'ipv4', 'ipv6', 'send-icmp']
         },
         'uuid': {
             'type': 'str',

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_class_list_convert
 description:
     - Convert Class List File to A10 format
-short_description: Configures A10 import-periodic.class-list-convert
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    class_list_type:
-        description:
-        - "'ac'= ac; 'ipv4'= ipv4; 'ipv6'= ipv6; 'string'= string; 'string-case-
-          insensitive'= string-case-insensitive;"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
-    period:
-        description:
-        - "Specify the period in second"
-        required: False
-    remote_file:
-        description:
-        - "profile name for remote url"
+        type: str
         required: False
     class_list_convert:
         description:
         - "Class List File"
+        type: str
         required: True
+    class_list_type:
+        description:
+        - "'ac'= ac; 'ipv4'= ipv4; 'ipv6'= ipv6; 'string'= string; 'string-case-
+          insensitive'= string-case-insensitive;"
+        type: str
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
+        required: False
+    remote_file:
+        description:
+        - "profile name for remote url"
+        type: str
+        required: False
+    period:
+        description:
+        - "Specify the period in second"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -132,6 +143,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'class_list_convert': {
+            'type': 'str',
+            'required': True,
+        },
         'class_list_type': {
             'type': 'str',
             'choices':
@@ -140,15 +155,11 @@ def get_argspec():
         'use_mgmt_port': {
             'type': 'bool',
         },
-        'period': {
-            'type': 'int',
-        },
         'remote_file': {
             'type': 'str',
         },
-        'class_list_convert': {
-            'type': 'str',
-            'required': True,
+        'period': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

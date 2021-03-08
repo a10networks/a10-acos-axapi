@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_packet
 description:
     - Debug packet
-short_description: Configures A10 debug.packet
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,108 +22,134 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     count:
         description:
         - "Maximum packets to capture. Default is 3000 (Specify maximum packet number. For
           umlimited, specify 0)"
-        required: False
-    arp:
-        description:
-        - "ARP"
-        required: False
-    all:
-        description:
-        - "All"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ip:
-        description:
-        - "IP"
-        required: False
-    l4_protocol:
-        description:
-        - "Layer 4 protocol"
+        type: int
         required: False
     detail:
         description:
         - "Print packet content"
-        required: False
-    tcp:
-        description:
-        - "Field tcp"
-        required: False
-    port_range:
-        description:
-        - "Port Number"
-        required: False
-    icmpv6:
-        description:
-        - "Field icmpv6"
-        required: False
-    ipv4ad:
-        description:
-        - "IP Address"
-        required: False
-    neighbor:
-        description:
-        - "IPv6 Neighbor/Router"
-        required: False
-    ipv6:
-        description:
-        - "IPV6"
+        type: bool
         required: False
     interface:
         description:
         - "Interface to debug"
-        required: False
-    ethernet:
-        description:
-        - "Ethernet interface number"
-        required: False
-    icmp:
-        description:
-        - "Field icmp"
-        required: False
-    udp:
-        description:
-        - "Field udp"
-        required: False
-    ipv6ad:
-        description:
-        - "IPV6 Address"
+        type: bool
         required: False
     l3_protocol:
         description:
         - "Layer 3 protocol"
+        type: bool
+        required: False
+    l4_protocol:
+        description:
+        - "Layer 4 protocol"
+        type: bool
+        required: False
+    ethernet:
+        description:
+        - "Ethernet interface number"
+        type: str
+        required: False
+    arp:
+        description:
+        - "ARP"
+        type: bool
+        required: False
+    all:
+        description:
+        - "All"
+        type: bool
+        required: False
+    ip:
+        description:
+        - "IP"
+        type: bool
+        required: False
+    ipv6:
+        description:
+        - "IPV6"
+        type: bool
+        required: False
+    ipv4ad:
+        description:
+        - "IP Address"
+        type: str
+        required: False
+    ipv6ad:
+        description:
+        - "IPV6 Address"
+        type: str
+        required: False
+    neighbor:
+        description:
+        - "IPv6 Neighbor/Router"
+        type: bool
+        required: False
+    icmp:
+        description:
+        - "Field icmp"
+        type: bool
+        required: False
+    icmpv6:
+        description:
+        - "Field icmpv6"
+        type: bool
+        required: False
+    tcp:
+        description:
+        - "Field tcp"
+        type: bool
+        required: False
+    port_range:
+        description:
+        - "Port Number"
+        type: int
+        required: False
+    udp:
+        description:
+        - "Field udp"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -200,22 +224,46 @@ def get_argspec():
         'count': {
             'type': 'int',
         },
+        'detail': {
+            'type': 'bool',
+        },
+        'interface': {
+            'type': 'bool',
+        },
+        'l3_protocol': {
+            'type': 'bool',
+        },
+        'l4_protocol': {
+            'type': 'bool',
+        },
+        'ethernet': {
+            'type': 'str',
+        },
         'arp': {
             'type': 'bool',
         },
         'all': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
         'ip': {
             'type': 'bool',
         },
-        'l4_protocol': {
+        'ipv6': {
             'type': 'bool',
         },
-        'detail': {
+        'ipv4ad': {
+            'type': 'str',
+        },
+        'ipv6ad': {
+            'type': 'str',
+        },
+        'neighbor': {
+            'type': 'bool',
+        },
+        'icmp': {
+            'type': 'bool',
+        },
+        'icmpv6': {
             'type': 'bool',
         },
         'tcp': {
@@ -224,35 +272,11 @@ def get_argspec():
         'port_range': {
             'type': 'int',
         },
-        'icmpv6': {
-            'type': 'bool',
-        },
-        'ipv4ad': {
-            'type': 'str',
-        },
-        'neighbor': {
-            'type': 'bool',
-        },
-        'ipv6': {
-            'type': 'bool',
-        },
-        'interface': {
-            'type': 'bool',
-        },
-        'ethernet': {
-            'type': 'str',
-        },
-        'icmp': {
-            'type': 'bool',
-        },
         'udp': {
             'type': 'bool',
         },
-        'ipv6ad': {
+        'uuid': {
             'type': 'str',
-        },
-        'l3_protocol': {
-            'type': 'bool',
         }
     })
     return rv

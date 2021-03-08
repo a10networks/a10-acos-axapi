@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_one_to_one_global
 description:
     - Set one-to-one NAT config parameters
-short_description: Configures A10 cgnv6.one.to.one.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    mapping_timeout:
+        description:
+        - "Configure timeout for the one-to-one NAT mapping (Timeout in minutes (default=
+          10 minutes))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -64,29 +81,25 @@ options:
           'map-not-found'= Mapping to be Released Not Found; 'ha-map-mismatch'= HA
           Standby Mapping Mismatch; 'ha-select-addr-failure'= HA Standby Allocate Address
           Failure; 'ha-alloc-map-conflicts'= HA Standby Allocate Mapping Conflicts;"
-    mapping_timeout:
-        description:
-        - "Configure timeout for the one-to-one NAT mapping (Timeout in minutes (default=
-          10 minutes))"
-        required: False
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            total_map_freed:
-                description:
-                - "Total One-to-One Address Mapping Freed"
-            map_alloc_failure:
-                description:
-                - "One-to-One Address Mapping Allocation Failure"
             total_map_allocated:
                 description:
                 - "Total One-to-One Address Mapping Allocated"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            total_map_freed:
+                description:
+                - "Total One-to-One Address Mapping Freed"
+                type: str
+            map_alloc_failure:
+                description:
+                - "One-to-One Address Mapping Allocation Failure"
+                type: str
 
 '''
 
@@ -142,6 +155,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'mapping_timeout': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -155,23 +174,17 @@ def get_argspec():
                 ]
             }
         },
-        'mapping_timeout': {
-            'type': 'int',
-        },
         'stats': {
             'type': 'dict',
+            'total_map_allocated': {
+                'type': 'str',
+            },
             'total_map_freed': {
                 'type': 'str',
             },
             'map_alloc_failure': {
                 'type': 'str',
-            },
-            'total_map_allocated': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

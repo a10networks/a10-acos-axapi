@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_geo_location
 description:
     - Configure system global geo-location
-short_description: Configures A10 system.geo-location
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,86 +22,107 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    geo_location_iana:
+        description:
+        - "Load built-in IANA Database"
+        type: bool
+        required: False
+    geo_location_geolite2_city:
+        description:
+        - "Load built-in Maxmind GeoLite2-City database. Database available from
+          http=//www.maxmind.com"
+        type: bool
         required: False
     geolite2_city_include_ipv6:
         description:
         - "Include IPv6 address"
-        required: False
-    geolite2_country_include_ipv6:
-        description:
-        - "Include IPv6 address"
+        type: bool
         required: False
     geo_location_geolite2_country:
         description:
         - "Load built-in Maxmind GeoLite2-Country database. Database available from
           http=//www.maxmind.com"
+        type: bool
         required: False
-    entry_list:
+    geolite2_country_include_ipv6:
         description:
-        - "Field entry_list"
-        required: False
-        suboptions:
-            geo_locn_obj_name:
-                description:
-                - "Specify geo-location name, section range is (1-15)"
-            geo_locn_multiple_addresses:
-                description:
-                - "Field geo_locn_multiple_addresses"
-            user_tag:
-                description:
-                - "Customized tag"
-            uuid:
-                description:
-                - "uuid of the object"
-    geo_location_geolite2_city:
-        description:
-        - "Load built-in Maxmind GeoLite2-City database. Database available from
-          http=//www.maxmind.com"
+        - "Include IPv6 address"
+        type: bool
         required: False
     geoloc_load_file_list:
         description:
         - "Field geoloc_load_file_list"
+        type: list
         required: False
         suboptions:
             geo_location_load_filename:
                 description:
                 - "Specify file to be loaded"
+                type: str
             template_name:
                 description:
                 - "CSV template to load this file"
-    geo_location_iana:
-        description:
-        - "Load built-in IANA Database"
-        required: False
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    entry_list:
+        description:
+        - "Field entry_list"
+        type: list
+        required: False
+        suboptions:
+            geo_locn_obj_name:
+                description:
+                - "Specify geo-location name, section range is (1-15)"
+                type: str
+            geo_locn_multiple_addresses:
+                description:
+                - "Field geo_locn_multiple_addresses"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -163,14 +182,32 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'geo_location_iana': {
+            'type': 'bool',
+        },
+        'geo_location_geolite2_city': {
+            'type': 'bool',
+        },
         'geolite2_city_include_ipv6': {
+            'type': 'bool',
+        },
+        'geo_location_geolite2_country': {
             'type': 'bool',
         },
         'geolite2_country_include_ipv6': {
             'type': 'bool',
         },
-        'geo_location_geolite2_country': {
-            'type': 'bool',
+        'geoloc_load_file_list': {
+            'type': 'list',
+            'geo_location_load_filename': {
+                'type': 'str',
+            },
+            'template_name': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
         },
         'entry_list': {
             'type': 'list',
@@ -183,46 +220,28 @@ def get_argspec():
                 'first_ip_address': {
                     'type': 'str',
                 },
-                'first_ipv6_address': {
-                    'type': 'str',
-                },
                 'geol_ipv4_mask': {
                     'type': 'str',
                 },
                 'ip_addr2': {
                     'type': 'str',
                 },
-                'ipv6_addr2': {
+                'first_ipv6_address': {
                     'type': 'str',
                 },
                 'geol_ipv6_mask': {
                     'type': 'int',
+                },
+                'ipv6_addr2': {
+                    'type': 'str',
                 }
-            },
-            'user_tag': {
-                'type': 'str',
             },
             'uuid': {
                 'type': 'str',
-            }
-        },
-        'geo_location_geolite2_city': {
-            'type': 'bool',
-        },
-        'geoloc_load_file_list': {
-            'type': 'list',
-            'geo_location_load_filename': {
-                'type': 'str',
             },
-            'template_name': {
+            'user_tag': {
                 'type': 'str',
             }
-        },
-        'geo_location_iana': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

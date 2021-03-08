@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_startup_config
 description:
     - Contents of Startup Configuration
-short_description: Configures A10 file.startup-config
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,82 +22,102 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            current_startup_config:
-                description:
-                - "Field current_startup_config"
-            pri_startup_config:
-                description:
-                - "Field pri_startup_config"
-            sec_startup_config:
-                description:
-                - "Field sec_startup_config"
-            dirty:
-                description:
-                - "Field dirty"
-            file_list:
-                description:
-                - "Field file_list"
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
         required: False
     file:
         description:
         - "startup-config local file name"
-        required: False
-    action:
-        description:
-        - "'import'= import;"
-        required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
+        type: str
         required: False
     size:
         description:
         - "startup-config file size in byte"
+        type: int
         required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
+        type: str
+        required: False
+    action:
+        description:
+        - "'import'= import;"
+        type: str
+        required: False
+    dst_file:
+        description:
+        - "destination file name for copy and rename action"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            dirty:
+                description:
+                - "Field dirty"
+                type: int
+            current_startup_config:
+                description:
+                - "Field current_startup_config"
+                type: str
+            pri_startup_config:
+                description:
+                - "Field pri_startup_config"
+                type: str
+            sec_startup_config:
+                description:
+                - "Field sec_startup_config"
+                type: str
+            file_list:
+                description:
+                - "Field file_list"
+                type: list
 
 '''
 
@@ -161,8 +179,30 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
+        'file': {
+            'type': 'str',
+        },
+        'size': {
+            'type': 'int',
+        },
+        'file_handle': {
+            'type': 'str',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['import']
+        },
+        'dst_file': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'dirty': {
+                'type': 'int',
+            },
             'current_startup_config': {
                 'type': 'str',
             },
@@ -172,40 +212,18 @@ def get_argspec():
             'sec_startup_config': {
                 'type': 'str',
             },
-            'dirty': {
-                'type': 'int',
-            },
             'file_list': {
                 'type': 'list',
-                'update_time': {
-                    'type': 'str',
-                },
                 'Profile_Name': {
                     'type': 'str',
                 },
                 'Size': {
                     'type': 'int',
+                },
+                'update_time': {
+                    'type': 'str',
                 }
             }
-        },
-        'dst_file': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'file': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['import']
-        },
-        'file_handle': {
-            'type': 'str',
-        },
-        'size': {
-            'type': 'int',
         }
     })
     return rv

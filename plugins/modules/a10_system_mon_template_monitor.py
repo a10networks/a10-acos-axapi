@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_mon_template_monitor
 description:
     - Monitor template
-short_description: Configures A10 system.mon.template.monitor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,132 +22,167 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    id:
+        description:
+        - "Monitor template ID Number"
+        type: int
+        required: True
     clear_cfg:
         description:
         - "Field clear_cfg"
+        type: list
         required: False
         suboptions:
-            clear_sequence:
-                description:
-                - "Specify the port physical port number"
-            clear_all_sequence:
-                description:
-                - "Sequence number (Specify the port physical port number)"
             sessions:
                 description:
                 - "'all'= Clear all sessions; 'sequence'= Sequence number;"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    link_enable_cfg:
-        description:
-        - "Field link_enable_cfg"
-        required: False
-        suboptions:
-            ena_sequence:
+                type: str
+            clear_all_sequence:
                 description:
-                - "Sequence number (Specify the sequence number)"
-            enaeth:
+                - "Sequence number (Specify the port physical port number)"
+                type: int
+            clear_sequence:
                 description:
-                - "Specify the physical port number (Ethernet interface number)"
-    link_up_cfg:
-        description:
-        - "Field link_up_cfg"
-        required: False
-        suboptions:
-            linkup_ethernet3:
-                description:
-                - "Specify the port physical port number (Ethernet interface number)"
-            linkup_ethernet2:
-                description:
-                - "Specify the port physical port number (Ethernet interface number)"
-            linkup_ethernet1:
-                description:
-                - "Specify the port physical port number (Ethernet interface number)"
-            link_up_sequence1:
-                description:
-                - "Sequence number (Specify the sequence number)"
-            link_up_sequence3:
-                description:
-                - "Sequence number (Specify the sequece number)"
-            link_up_sequence2:
-                description:
-                - "Sequence number (Specify the sequence number)"
-    link_down_cfg:
-        description:
-        - "Field link_down_cfg"
-        required: False
-        suboptions:
-            link_down_sequence1:
-                description:
-                - "Sequence number (Specify the sequence number)"
-            link_down_sequence2:
-                description:
-                - "Sequence number (Specify the seqeuence number)"
-            link_down_sequence3:
-                description:
-                - "Sequence number (Specify the sequence number)"
-            linkdown_ethernet2:
-                description:
-                - "Specify the port physical port number (Ethernet interface number)"
-            linkdown_ethernet3:
-                description:
-                - "Specify the port physical port number (Ethernet interface number)"
-            linkdown_ethernet1:
-                description:
-                - "Specify the port physical port number (Ethernet interface number)"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+                - "Specify the port physical port number"
+                type: int
     link_disable_cfg:
         description:
         - "Field link_disable_cfg"
+        type: list
         required: False
         suboptions:
-            dis_sequence:
-                description:
-                - "Sequence number (Specify the sequence number)"
             diseth:
                 description:
                 - "Specify the physical port number (Ethernet interface number)"
+                type: str
+            dis_sequence:
+                description:
+                - "Sequence number (Specify the sequence number)"
+                type: int
+    link_enable_cfg:
+        description:
+        - "Field link_enable_cfg"
+        type: list
+        required: False
+        suboptions:
+            enaeth:
+                description:
+                - "Specify the physical port number (Ethernet interface number)"
+                type: str
+            ena_sequence:
+                description:
+                - "Sequence number (Specify the sequence number)"
+                type: int
     monitor_relation:
         description:
         - "'monitor-and'= Configures the monitors in current template to work with AND
           logic; 'monitor-or'= Configures the monitors in current template to work with
           OR logic;"
+        type: str
         required: False
-    id:
+    link_up_cfg:
         description:
-        - "Monitor template ID Number"
-        required: True
+        - "Field link_up_cfg"
+        type: list
+        required: False
+        suboptions:
+            linkup_ethernet1:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+                type: str
+            link_up_sequence1:
+                description:
+                - "Sequence number (Specify the sequence number)"
+                type: int
+            linkup_ethernet2:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+                type: str
+            link_up_sequence2:
+                description:
+                - "Sequence number (Specify the sequence number)"
+                type: int
+            linkup_ethernet3:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+                type: str
+            link_up_sequence3:
+                description:
+                - "Sequence number (Specify the sequece number)"
+                type: int
+    link_down_cfg:
+        description:
+        - "Field link_down_cfg"
+        type: list
+        required: False
+        suboptions:
+            linkdown_ethernet1:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+                type: str
+            link_down_sequence1:
+                description:
+                - "Sequence number (Specify the sequence number)"
+                type: int
+            linkdown_ethernet2:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+                type: str
+            link_down_sequence2:
+                description:
+                - "Sequence number (Specify the seqeuence number)"
+                type: int
+            linkdown_ethernet3:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+                type: str
+            link_down_sequence3:
+                description:
+                - "Sequence number (Specify the sequence number)"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -210,92 +243,92 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'id': {
+            'type': 'int',
+            'required': True,
+        },
         'clear_cfg': {
             'type': 'list',
-            'clear_sequence': {
-                'type': 'int',
+            'sessions': {
+                'type': 'str',
+                'choices': ['all', 'sequence']
             },
             'clear_all_sequence': {
                 'type': 'int',
             },
-            'sessions': {
-                'type': 'str',
-                'choices': ['all', 'sequence']
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'link_enable_cfg': {
-            'type': 'list',
-            'ena_sequence': {
-                'type': 'int',
-            },
-            'enaeth': {
-                'type': 'str',
-            }
-        },
-        'link_up_cfg': {
-            'type': 'list',
-            'linkup_ethernet3': {
-                'type': 'str',
-            },
-            'linkup_ethernet2': {
-                'type': 'str',
-            },
-            'linkup_ethernet1': {
-                'type': 'str',
-            },
-            'link_up_sequence1': {
-                'type': 'int',
-            },
-            'link_up_sequence3': {
-                'type': 'int',
-            },
-            'link_up_sequence2': {
+            'clear_sequence': {
                 'type': 'int',
             }
-        },
-        'link_down_cfg': {
-            'type': 'list',
-            'link_down_sequence1': {
-                'type': 'int',
-            },
-            'link_down_sequence2': {
-                'type': 'int',
-            },
-            'link_down_sequence3': {
-                'type': 'int',
-            },
-            'linkdown_ethernet2': {
-                'type': 'str',
-            },
-            'linkdown_ethernet3': {
-                'type': 'str',
-            },
-            'linkdown_ethernet1': {
-                'type': 'str',
-            }
-        },
-        'user_tag': {
-            'type': 'str',
         },
         'link_disable_cfg': {
             'type': 'list',
-            'dis_sequence': {
-                'type': 'int',
-            },
             'diseth': {
                 'type': 'str',
+            },
+            'dis_sequence': {
+                'type': 'int',
+            }
+        },
+        'link_enable_cfg': {
+            'type': 'list',
+            'enaeth': {
+                'type': 'str',
+            },
+            'ena_sequence': {
+                'type': 'int',
             }
         },
         'monitor_relation': {
             'type': 'str',
             'choices': ['monitor-and', 'monitor-or']
         },
-        'id': {
-            'type': 'int',
-            'required': True,
+        'link_up_cfg': {
+            'type': 'list',
+            'linkup_ethernet1': {
+                'type': 'str',
+            },
+            'link_up_sequence1': {
+                'type': 'int',
+            },
+            'linkup_ethernet2': {
+                'type': 'str',
+            },
+            'link_up_sequence2': {
+                'type': 'int',
+            },
+            'linkup_ethernet3': {
+                'type': 'str',
+            },
+            'link_up_sequence3': {
+                'type': 'int',
+            }
+        },
+        'link_down_cfg': {
+            'type': 'list',
+            'linkdown_ethernet1': {
+                'type': 'str',
+            },
+            'link_down_sequence1': {
+                'type': 'int',
+            },
+            'linkdown_ethernet2': {
+                'type': 'str',
+            },
+            'link_down_sequence2': {
+                'type': 'int',
+            },
+            'linkdown_ethernet3': {
+                'type': 'str',
+            },
+            'link_down_sequence3': {
+                'type': 'int',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

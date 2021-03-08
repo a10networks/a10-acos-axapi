@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_isis_address_family_ipv6_redistribute
 description:
     - Redistribute information from another routing protocol
-short_description: Configures A10 router.isis.address.family.ipv6.redistribute
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,97 +22,123 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     isis_tag:
         description:
-        - Key to identify parent object    vip_list:
-        description:
-        - "Field vip_list"
-        required: False
-        suboptions:
-            vip_metric:
-                description:
-                - "Metric for redistributed routes (IS-IS default metric)"
-            vip_level:
-                description:
-                - "'level-1'= IS-IS level-1 routes only; 'level-1-2'= IS-IS level-1 and level-2
-          routes; 'level-2'= IS-IS level-2 routes only;"
-            vip_metric_type:
-                description:
-                - "'external'= Set IS-IS External metric type; 'internal'= Set IS-IS Internal
-          metric type;"
-            vip_type:
-                description:
-                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not
-          flagged;"
-            vip_route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
+        - Key to identify parent object
+        type: str
+        required: True
     redist_list:
         description:
         - "Field redist_list"
+        type: list
         required: False
         suboptions:
-            metric:
-                description:
-                - "Metric for redistributed routes (IS-IS default metric)"
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
             ntype:
                 description:
                 - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'=
           Floating IP; 'ip-nat-list'= IP NAT list; 'ip-nat'= IP NAT; 'lw4o6'= LW4O6
-          Prefix; 'nat-map'= NAT MAP Prefix; 'nat64'= NAT64 Prefix; 'ospf'= Open Shortest
-          Path First (OSPF); 'rip'= Routing Information Protocol (RIP); 'static'= Static
-          routes;"
+          Prefix; 'nat-map'= NAT MAP Prefix; 'static-nat'= Static NAT; 'nat64'= NAT64
+          Prefix; 'ospf'= Open Shortest Path First (OSPF); 'rip'= Routing Information
+          Protocol (RIP); 'static'= Static routes;"
+                type: str
+            metric:
+                description:
+                - "Metric for redistributed routes (IS-IS default metric)"
+                type: int
             metric_type:
                 description:
                 - "'external'= Set IS-IS External metric type; 'internal'= Set IS-IS Internal
           metric type;"
+                type: str
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
             level:
                 description:
                 - "'level-1'= IS-IS level-1 routes only; 'level-1-2'= IS-IS level-1 and level-2
           routes; 'level-2'= IS-IS level-2 routes only;"
+                type: str
+    vip_list:
+        description:
+        - "Field vip_list"
+        type: list
+        required: False
+        suboptions:
+            vip_type:
+                description:
+                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not
+          flagged;"
+                type: str
+            vip_metric:
+                description:
+                - "Metric for redistributed routes (IS-IS default metric)"
+                type: int
+            vip_route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+            vip_metric_type:
+                description:
+                - "'external'= Set IS-IS External metric type; 'internal'= Set IS-IS Internal
+          metric type;"
+                type: str
+            vip_level:
+                description:
+                - "'level-1'= IS-IS level-1 routes only; 'level-1-2'= IS-IS level-1 and level-2
+          routes; 'level-2'= IS-IS level-2 routes only;"
+                type: str
     isis:
         description:
         - "Field isis"
+        type: dict
         required: False
         suboptions:
-            level_2_from:
-                description:
-                - "Field level_2_from"
             level_1_from:
                 description:
                 - "Field level_1_from"
+                type: dict
+            level_2_from:
+                description:
+                - "Field level_2_from"
+                type: dict
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -171,71 +195,72 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'vip_list': {
-            'type': 'list',
-            'vip_metric': {
-                'type': 'int',
-            },
-            'vip_level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-1-2', 'level-2']
-            },
-            'vip_metric_type': {
-                'type': 'str',
-                'choices': ['external', 'internal']
-            },
-            'vip_type': {
-                'type': 'str',
-                'choices': ['only-flagged', 'only-not-flagged']
-            },
-            'vip_route_map': {
-                'type': 'str',
-            }
-        },
         'redist_list': {
             'type': 'list',
-            'metric': {
-                'type': 'int',
-            },
-            'route_map': {
-                'type': 'str',
-            },
             'ntype': {
                 'type':
                 'str',
                 'choices': [
                     'bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat',
-                    'lw4o6', 'nat-map', 'nat64', 'ospf', 'rip', 'static'
+                    'lw4o6', 'nat-map', 'static-nat', 'nat64', 'ospf', 'rip',
+                    'static'
                 ]
+            },
+            'metric': {
+                'type': 'int',
             },
             'metric_type': {
                 'type': 'str',
                 'choices': ['external', 'internal']
+            },
+            'route_map': {
+                'type': 'str',
             },
             'level': {
                 'type': 'str',
                 'choices': ['level-1', 'level-1-2', 'level-2']
             }
         },
+        'vip_list': {
+            'type': 'list',
+            'vip_type': {
+                'type': 'str',
+                'choices': ['only-flagged', 'only-not-flagged']
+            },
+            'vip_metric': {
+                'type': 'int',
+            },
+            'vip_route_map': {
+                'type': 'str',
+            },
+            'vip_metric_type': {
+                'type': 'str',
+                'choices': ['external', 'internal']
+            },
+            'vip_level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-1-2', 'level-2']
+            }
+        },
         'isis': {
             'type': 'dict',
-            'level_2_from': {
-                'type': 'dict',
-                'into_2': {
-                    'type': 'dict',
-                    'distribute_list': {
-                        'type': 'str',
-                    },
-                    'level_1': {
-                        'type': 'bool',
-                    }
-                }
-            },
             'level_1_from': {
                 'type': 'dict',
                 'into_1': {
                     'type': 'dict',
                     'level_2': {
+                        'type': 'bool',
+                    },
+                    'distribute_list': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'level_2_from': {
+                'type': 'dict',
+                'into_2': {
+                    'type': 'dict',
+                    'level_1': {
                         'type': 'bool',
                     },
                     'distribute_list': {

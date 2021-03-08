@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_object_network
 description:
     - Configure Network Object
-short_description: Configures A10 object.network
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,71 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    ipv6_subnet:
-        description:
-        - "IPv6 Network Address"
-        required: False
-    subnet:
-        description:
-        - "IPv4 Network Address"
-        required: False
-    description:
-        description:
-        - "Description of the object instance"
-        required: False
-    ip_range_end:
-        description:
-        - "IPV4 Host address end"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    ipv6_range_start:
-        description:
-        - "IPv6 Host Address start"
+        type: str
         required: False
     net_name:
         description:
         - "Network Object Name"
+        type: str
         required: True
-    ipv6_range_end:
+    description:
         description:
-        - "IPV6 Host address end"
+        - "Description of the object instance"
+        type: str
         required: False
     ip_range_start:
         description:
         - "IPv4 Host Address start"
+        type: str
+        required: False
+    ip_range_end:
+        description:
+        - "IPV4 Host address end"
+        type: str
+        required: False
+    ipv6_range_start:
+        description:
+        - "IPv6 Host Address start"
+        type: str
+        required: False
+    ipv6_range_end:
+        description:
+        - "IPV6 Host address end"
+        type: str
+        required: False
+    subnet:
+        description:
+        - "IPv4 Network Address"
+        type: str
+        required: False
+    ipv6_subnet:
+        description:
+        - "IPv6 Network Address"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -151,35 +166,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ipv6_subnet': {
-            'type': 'str',
-        },
-        'subnet': {
-            'type': 'str',
-        },
-        'description': {
-            'type': 'str',
-        },
-        'ip_range_end': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'ipv6_range_start': {
-            'type': 'str',
-        },
         'net_name': {
             'type': 'str',
             'required': True,
         },
-        'ipv6_range_end': {
+        'description': {
             'type': 'str',
         },
         'ip_range_start': {
             'type': 'str',
         },
+        'ip_range_end': {
+            'type': 'str',
+        },
+        'ipv6_range_start': {
+            'type': 'str',
+        },
+        'ipv6_range_end': {
+            'type': 'str',
+        },
+        'subnet': {
+            'type': 'str',
+        },
+        'ipv6_subnet': {
+            'type': 'str',
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

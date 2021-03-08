@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_statistics
 description:
     - acos events global statistics
-short_description: Configures A10 acos.events.statistics
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -90,57 +101,69 @@ options:
           active member in collector grp in Logd; 'msg_dropped_other_logd'= Messages
           Dropped, unexpected error in Logd; 'msg_dropped_invalid_part'= Messages
           Dropped, Invalid partition Id;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            msg_dropped_no_active_member:
-                description:
-                - "Messages Dropped, no active member in collector grp"
-            msg_dropped_local_log_ratelimit:
-                description:
-                - "Messages Dropped, local log ratelimited"
-            msg_dropped_no_template:
-                description:
-                - "Messages Dropped, no active template"
-            msg_dropped_too_long:
-                description:
-                - "Messages Dropped, invalid length"
-            msg_dropped_other:
-                description:
-                - "Messages Dropped, unexpected error"
-            msg_dropped_format_not_defined:
-                description:
-                - "Messages Dropped, format not defined"
-            msg_dropped_remote_log_ratelimit:
-                description:
-                - "Messages Dropped, remote log ratelimited"
             msg_sent:
                 description:
                 - "Messages sent, to Remote"
+                type: str
             msg_sent_logdb:
                 description:
                 - "Messages sent, to LogDB"
-            msg_dropped_send_failed:
+                type: str
+            msg_dropped_format_not_defined:
                 description:
-                - "Messages Dropped, send failed"
-            msg_dropped_route_fail:
-                description:
-                - "Messages Dropped, Route lookup failed"
-            msg_dropped_selector:
-                description:
-                - "Messages Dropped, selector does not enable msg"
+                - "Messages Dropped, format not defined"
+                type: str
             msg_dropped_malloc_failure:
                 description:
                 - "Messages Dropped, malloc failure"
+                type: str
+            msg_dropped_no_template:
+                description:
+                - "Messages Dropped, no active template"
+                type: str
+            msg_dropped_selector:
+                description:
+                - "Messages Dropped, selector does not enable msg"
+                type: str
+            msg_dropped_too_long:
+                description:
+                - "Messages Dropped, invalid length"
+                type: str
             msg_dropped_craft_fail:
                 description:
                 - "Messages Dropped, msg crafting failed"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            msg_dropped_local_log_ratelimit:
+                description:
+                - "Messages Dropped, local log ratelimited"
+                type: str
+            msg_dropped_remote_log_ratelimit:
+                description:
+                - "Messages Dropped, remote log ratelimited"
+                type: str
+            msg_dropped_send_failed:
+                description:
+                - "Messages Dropped, send failed"
+                type: str
+            msg_dropped_no_active_member:
+                description:
+                - "Messages Dropped, no active member in collector grp"
+                type: str
+            msg_dropped_route_fail:
+                description:
+                - "Messages Dropped, Route lookup failed"
+                type: str
+            msg_dropped_other:
+                description:
+                - "Messages Dropped, unexpected error"
+                type: str
 
 '''
 
@@ -195,6 +218,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -230,51 +256,48 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'msg_dropped_no_active_member': {
-                'type': 'str',
-            },
-            'msg_dropped_local_log_ratelimit': {
-                'type': 'str',
-            },
-            'msg_dropped_no_template': {
-                'type': 'str',
-            },
-            'msg_dropped_too_long': {
-                'type': 'str',
-            },
-            'msg_dropped_other': {
-                'type': 'str',
-            },
-            'msg_dropped_format_not_defined': {
-                'type': 'str',
-            },
-            'msg_dropped_remote_log_ratelimit': {
-                'type': 'str',
-            },
             'msg_sent': {
                 'type': 'str',
             },
             'msg_sent_logdb': {
                 'type': 'str',
             },
-            'msg_dropped_send_failed': {
-                'type': 'str',
-            },
-            'msg_dropped_route_fail': {
-                'type': 'str',
-            },
-            'msg_dropped_selector': {
+            'msg_dropped_format_not_defined': {
                 'type': 'str',
             },
             'msg_dropped_malloc_failure': {
                 'type': 'str',
             },
+            'msg_dropped_no_template': {
+                'type': 'str',
+            },
+            'msg_dropped_selector': {
+                'type': 'str',
+            },
+            'msg_dropped_too_long': {
+                'type': 'str',
+            },
             'msg_dropped_craft_fail': {
                 'type': 'str',
+            },
+            'msg_dropped_local_log_ratelimit': {
+                'type': 'str',
+            },
+            'msg_dropped_remote_log_ratelimit': {
+                'type': 'str',
+            },
+            'msg_dropped_send_failed': {
+                'type': 'str',
+            },
+            'msg_dropped_no_active_member': {
+                'type': 'str',
+            },
+            'msg_dropped_route_fail': {
+                'type': 'str',
+            },
+            'msg_dropped_other': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

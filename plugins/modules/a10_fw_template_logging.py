@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_template_logging
 description:
     - Logging Template
-short_description: Configures A10 fw.template.logging
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,97 +22,137 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    include_http:
-        description:
-        - "Field include_http"
-        required: False
-        suboptions:
-            header_cfg:
-                description:
-                - "Field header_cfg"
-            request_number:
-                description:
-                - "HTTP Request Number"
-            file_extension:
-                description:
-                - "HTTP file extension"
-            method:
-                description:
-                - "Log the HTTP Request Method"
-            l4_session_info:
-                description:
-                - "Log the L4 session information of the HTTP request"
-    merged_style:
-        description:
-        - "Merge creation and deletion of session logs to one"
+        type: str
         required: False
     name:
         description:
         - "Logging Template Name"
+        type: str
         required: True
-    source_address:
+    resolution:
         description:
-        - "Field source_address"
+        - "'seconds'= Logging timestamp resolution in seconds (default);
+          '10-milliseconds'= Logging timestamp resolution in 10s of milli-seconds;"
+        type: str
         required: False
-        suboptions:
-            ip:
-                description:
-                - "Specify source IP address"
-            uuid:
-                description:
-                - "uuid of the object"
-            ipv6:
-                description:
-                - "Specify source IPv6 address"
-    format:
+    include_dest_fqdn:
         description:
-        - "'ascii'= A10 Text logging format (ASCII); 'cef'= Common Event Format for
-          logging (default);"
+        - "Include destination FQDN string"
+        type: bool
+        required: False
+    merged_style:
+        description:
+        - "Merge creation and deletion of session logs to one"
+        type: bool
         required: False
     log:
         description:
         - "Field log"
+        type: dict
         required: False
         suboptions:
             http_requests:
                 description:
                 - "'host'= Log the HTTP Host Header; 'url'= Log the HTTP Request URL;"
-    severity:
+                type: str
+    include_radius_attribute:
         description:
-        - "'emergency'= 0= Emergency; 'alert'= 1= Alert; 'critical'= 2= Critical; 'error'=
-          3= Error; 'warning'= 4= Warning; 'notice'= 5= Notice; 'informational'= 6=
-          Informational; 'debug'= 7= Debug;"
+        - "Field include_radius_attribute"
+        type: dict
         required: False
-    include_dest_fqdn:
+        suboptions:
+            attr_cfg:
+                description:
+                - "Field attr_cfg"
+                type: list
+            no_quote:
+                description:
+                - "No quotation marks for RADIUS attributes in logs"
+                type: bool
+            framed_ipv6_prefix:
+                description:
+                - "Include radius attributes for the prefix"
+                type: bool
+            prefix_length:
+                description:
+                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'=
+          Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112;"
+                type: str
+            insert_if_not_existing:
+                description:
+                - "Configure what string is to be inserted for custom RADIUS attributes"
+                type: bool
+            zero_in_custom_attr:
+                description:
+                - "Insert 0000 for standard and custom attributes in log string"
+                type: bool
+    include_http:
         description:
-        - "Include destination FQDN string"
+        - "Field include_http"
+        type: dict
         required: False
+        suboptions:
+            header_cfg:
+                description:
+                - "Field header_cfg"
+                type: list
+            l4_session_info:
+                description:
+                - "Log the L4 session information of the HTTP request"
+                type: bool
+            method:
+                description:
+                - "Log the HTTP Request Method"
+                type: bool
+            request_number:
+                description:
+                - "HTTP Request Number"
+                type: bool
+            file_extension:
+                description:
+                - "HTTP file extension"
+                type: bool
+    rule:
+        description:
+        - "Field rule"
+        type: dict
+        required: False
+        suboptions:
+            rule_http_requests:
+                description:
+                - "Field rule_http_requests"
+                type: dict
     facility:
         description:
         - "'kernel'= 0= Kernel; 'user'= 1= User-level; 'mail'= 2= Mail; 'daemon'= 3=
@@ -126,56 +164,54 @@ options:
           16= Local use 0; 'local1'= 17= Local use 1; 'local2'= 18= Local use 2;
           'local3'= 19= Local use 3; 'local4'= 20= Local use 4; 'local5'= 21= Local use
           5; 'local6'= 22= Local use 6; 'local7'= 23= Local use 7;"
+        type: str
         required: False
-    include_radius_attribute:
+    severity:
         description:
-        - "Field include_radius_attribute"
+        - "'emergency'= 0= Emergency; 'alert'= 1= Alert; 'critical'= 2= Critical; 'error'=
+          3= Error; 'warning'= 4= Warning; 'notice'= 5= Notice; 'informational'= 6=
+          Informational; 'debug'= 7= Debug;"
+        type: str
         required: False
-        suboptions:
-            framed_ipv6_prefix:
-                description:
-                - "Include radius attributes for the prefix"
-            prefix_length:
-                description:
-                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'=
-          Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112;"
-            insert_if_not_existing:
-                description:
-                - "Configure what string is to be inserted for custom RADIUS attributes"
-            zero_in_custom_attr:
-                description:
-                - "Insert 0000 for standard and custom attributes in log string"
-            no_quote:
-                description:
-                - "No quotation marks for RADIUS attributes in logs"
-            attr_cfg:
-                description:
-                - "Field attr_cfg"
-    rule:
+    format:
         description:
-        - "Field rule"
+        - "'ascii'= A10 Text logging format (ASCII); 'cef'= Common Event Format for
+          logging (default);"
+        type: str
         required: False
-        suboptions:
-            rule_http_requests:
-                description:
-                - "Field rule_http_requests"
     service_group:
         description:
         - "Bind a Service Group to the logging template (Service Group Name)"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    resolution:
-        description:
-        - "'seconds'= Logging timestamp resolution in seconds (default);
-          '10-milliseconds'= Logging timestamp resolution in 10s of milli-seconds;"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    source_address:
+        description:
+        - "Field source_address"
+        type: dict
+        required: False
+        suboptions:
+            ip:
+                description:
+                - "Specify source IP address"
+                type: str
+            ipv6:
+                description:
+                - "Specify source IPv6 address"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -242,13 +278,65 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'resolution': {
+            'type': 'str',
+            'choices': ['seconds', '10-milliseconds']
+        },
+        'include_dest_fqdn': {
+            'type': 'bool',
+        },
+        'merged_style': {
+            'type': 'bool',
+        },
+        'log': {
+            'type': 'dict',
+            'http_requests': {
+                'type': 'str',
+                'choices': ['host', 'url']
+            }
+        },
+        'include_radius_attribute': {
+            'type': 'dict',
+            'attr_cfg': {
+                'type': 'list',
+                'attr': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'imei', 'imsi', 'msisdn', 'custom1', 'custom2',
+                        'custom3'
+                    ]
+                },
+                'attr_event': {
+                    'type': 'str',
+                    'choices': ['http-requests', 'sessions']
+                }
+            },
+            'no_quote': {
+                'type': 'bool',
+            },
+            'framed_ipv6_prefix': {
+                'type': 'bool',
+            },
+            'prefix_length': {
+                'type': 'str',
+                'choices': ['32', '48', '64', '80', '96', '112']
+            },
+            'insert_if_not_existing': {
+                'type': 'bool',
+            },
+            'zero_in_custom_attr': {
+                'type': 'bool',
+            }
+        },
         'include_http': {
             'type': 'dict',
             'header_cfg': {
                 'type': 'list',
-                'custom_max_length': {
-                    'type': 'int',
-                },
                 'http_header': {
                     'type':
                     'str',
@@ -262,61 +350,50 @@ def get_argspec():
                 },
                 'custom_header_name': {
                     'type': 'str',
+                },
+                'custom_max_length': {
+                    'type': 'int',
                 }
+            },
+            'l4_session_info': {
+                'type': 'bool',
+            },
+            'method': {
+                'type': 'bool',
             },
             'request_number': {
                 'type': 'bool',
             },
             'file_extension': {
                 'type': 'bool',
-            },
-            'method': {
-                'type': 'bool',
-            },
-            'l4_session_info': {
-                'type': 'bool',
             }
         },
-        'merged_style': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'source_address': {
+        'rule': {
             'type': 'dict',
-            'ip': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ipv6': {
-                'type': 'str',
+            'rule_http_requests': {
+                'type': 'dict',
+                'dest_port': {
+                    'type': 'list',
+                    'dest_port_number': {
+                        'type': 'int',
+                    },
+                    'include_byte_count': {
+                        'type': 'bool',
+                    }
+                },
+                'log_every_http_request': {
+                    'type': 'bool',
+                },
+                'max_url_len': {
+                    'type': 'int',
+                },
+                'include_all_headers': {
+                    'type': 'bool',
+                },
+                'disable_sequence_check': {
+                    'type': 'bool',
+                }
             }
-        },
-        'format': {
-            'type': 'str',
-            'choices': ['ascii', 'cef']
-        },
-        'log': {
-            'type': 'dict',
-            'http_requests': {
-                'type': 'str',
-                'choices': ['host', 'url']
-            }
-        },
-        'severity': {
-            'type':
-            'str',
-            'choices': [
-                'emergency', 'alert', 'critical', 'error', 'warning', 'notice',
-                'informational', 'debug'
-            ]
-        },
-        'include_dest_fqdn': {
-            'type': 'bool',
         },
         'facility': {
             'type':
@@ -329,79 +406,38 @@ def get_argspec():
                 'local4', 'local5', 'local6', 'local7'
             ]
         },
-        'include_radius_attribute': {
-            'type': 'dict',
-            'framed_ipv6_prefix': {
-                'type': 'bool',
-            },
-            'prefix_length': {
-                'type': 'str',
-                'choices': ['32', '48', '64', '80', '96', '112']
-            },
-            'insert_if_not_existing': {
-                'type': 'bool',
-            },
-            'zero_in_custom_attr': {
-                'type': 'bool',
-            },
-            'no_quote': {
-                'type': 'bool',
-            },
-            'attr_cfg': {
-                'type': 'list',
-                'attr_event': {
-                    'type': 'str',
-                    'choices': ['http-requests', 'sessions']
-                },
-                'attr': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'imei', 'imsi', 'msisdn', 'custom1', 'custom2',
-                        'custom3'
-                    ]
-                }
-            }
+        'severity': {
+            'type':
+            'str',
+            'choices': [
+                'emergency', 'alert', 'critical', 'error', 'warning', 'notice',
+                'informational', 'debug'
+            ]
         },
-        'rule': {
-            'type': 'dict',
-            'rule_http_requests': {
-                'type': 'dict',
-                'log_every_http_request': {
-                    'type': 'bool',
-                },
-                'disable_sequence_check': {
-                    'type': 'bool',
-                },
-                'include_all_headers': {
-                    'type': 'bool',
-                },
-                'dest_port': {
-                    'type': 'list',
-                    'include_byte_count': {
-                        'type': 'bool',
-                    },
-                    'dest_port_number': {
-                        'type': 'int',
-                    }
-                },
-                'max_url_len': {
-                    'type': 'int',
-                }
-            }
+        'format': {
+            'type': 'str',
+            'choices': ['ascii', 'cef']
         },
         'service_group': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         },
         'user_tag': {
             'type': 'str',
         },
-        'resolution': {
-            'type': 'str',
-            'choices': ['seconds', '10-milliseconds']
-        },
-        'uuid': {
-            'type': 'str',
+        'source_address': {
+            'type': 'dict',
+            'ip': {
+                'type': 'str',
+            },
+            'ipv6': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

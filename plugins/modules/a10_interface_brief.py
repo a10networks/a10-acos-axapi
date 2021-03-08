@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_brief
 description:
     - Interface statistics information
-short_description: Configures A10 interface.brief
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             interfaces:
                 description:
                 - "Field interfaces"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -115,20 +123,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'interfaces': {
                 'type': 'list',
-                'ipv6_addr_count': {
-                    'type': 'int',
+                'port_num': {
+                    'type': 'str',
                 },
-                'ipv6_addr': {
+                'speed': {
                     'type': 'str',
                 },
                 'duplexity': {
                     'type': 'str',
                 },
-                'port_num': {
+                'trunk_group': {
+                    'type': 'str',
+                },
+                'vlan_info': {
                     'type': 'str',
                 },
                 'state': {
@@ -146,25 +160,19 @@ def get_argspec():
                 'ipv4_mask': {
                     'type': 'str',
                 },
-                'intf_name': {
+                'ipv6_addr_count': {
+                    'type': 'int',
+                },
+                'ipv6_addr': {
                     'type': 'str',
                 },
                 'ipv6_prefix': {
                     'type': 'str',
                 },
-                'vlan_info': {
-                    'type': 'str',
-                },
-                'speed': {
-                    'type': 'str',
-                },
-                'trunk_group': {
+                'intf_name': {
                     'type': 'str',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

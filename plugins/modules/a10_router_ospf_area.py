@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ospf_area
 description:
     - OSPF area parameters
-short_description: Configures A10 router.ospf.area
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,178 +22,228 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ospf_process_id:
         description:
-        - Key to identify parent object    nssa_cfg:
+        - Key to identify parent object
+        type: str
+        required: True
+    area_ipv4:
         description:
-        - "Field nssa_cfg"
-        required: False
-        suboptions:
-            default_information_originate:
-                description:
-                - "Originate Type 7 default into NSSA area"
-            translator_role:
-                description:
-                - "'always'= Translate always; 'candidate'= Candidate for translator (default);
-          'never'= Do not translate;"
-            metric:
-                description:
-                - "OSPF default metric (OSPF metric)"
-            nssa:
-                description:
-                - "Specify a NSSA area"
-            no_redistribution:
-                description:
-                - "No redistribution into this NSSA area"
-            no_summary:
-                description:
-                - "Do not send summary LSA into NSSA"
-            metric_type:
-                description:
-                - "OSPF metric type (OSPF metric type for default routes)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    filter_lists:
-        description:
-        - "Field filter_lists"
-        required: False
-        suboptions:
-            acl_name:
-                description:
-                - "Filter networks by access-list (Name of an access-list)"
-            acl_direction:
-                description:
-                - "'in'= Filter networks sent to this area; 'out'= Filter networks sent from this
-          area;"
-            filter_list:
-                description:
-                - "Filter networks between OSPF areas"
-            plist_name:
-                description:
-                - "Filter networks by prefix-list (Name of an IP prefix-list)"
-            plist_direction:
-                description:
-                - "'in'= Filter networks sent to this area; 'out'= Filter networks sent from this
-          area;"
+        - "OSPF area ID in IP address format"
+        type: str
+        required: True
     area_num:
         description:
         - "OSPF area ID as a decimal value"
+        type: int
         required: True
-    virtual_link_list:
-        description:
-        - "Field virtual_link_list"
-        required: False
-        suboptions:
-            dead_interval:
-                description:
-                - "Dead router detection time (Seconds)"
-            message_digest_key:
-                description:
-                - "Set message digest key (Key ID)"
-            hello_interval:
-                description:
-                - "Hello packet interval (Seconds)"
-            bfd:
-                description:
-                - "Bidirectional Forwarding Detection (BFD)"
-            transmit_delay:
-                description:
-                - "LSA transmission delay (Seconds)"
-            virtual_link_authentication:
-                description:
-                - "Enable authentication"
-            virtual_link_ip_addr:
-                description:
-                - "ID (IP addr) associated with virtual link neighbor"
-            virtual_link_auth_type:
-                description:
-                - "'message-digest'= Use message-digest authentication; 'null'= Use null
-          authentication;"
-            authentication_key:
-                description:
-                - "Set authentication key (Authentication key (8 chars))"
-            retransmit_interval:
-                description:
-                - "LSA retransmit interval (Seconds)"
-            md5:
-                description:
-                - "Use MD5 algorithm (Authentication key (16 chars))"
-    stub_cfg:
-        description:
-        - "Field stub_cfg"
-        required: False
-        suboptions:
-            stub:
-                description:
-                - "Configure OSPF area as stub"
-            no_summary:
-                description:
-                - "Do not inject inter-area routes into area"
-    shortcut:
-        description:
-        - "'default'= Set default shortcutting behavior; 'disable'= Disable shortcutting
-          through the area; 'enable'= Enable shortcutting through the area;"
-        required: False
     auth_cfg:
         description:
         - "Field auth_cfg"
+        type: dict
         required: False
         suboptions:
             authentication:
                 description:
                 - "Enable authentication"
+                type: bool
             message_digest:
                 description:
                 - "Use message-digest authentication"
+                type: bool
+    filter_lists:
+        description:
+        - "Field filter_lists"
+        type: list
+        required: False
+        suboptions:
+            filter_list:
+                description:
+                - "Filter networks between OSPF areas"
+                type: bool
+            acl_name:
+                description:
+                - "Filter networks by access-list (Name of an access-list)"
+                type: str
+            acl_direction:
+                description:
+                - "'in'= Filter networks sent to this area; 'out'= Filter networks sent from this
+          area;"
+                type: str
+            plist_name:
+                description:
+                - "Filter networks by prefix-list (Name of an IP prefix-list)"
+                type: str
+            plist_direction:
+                description:
+                - "'in'= Filter networks sent to this area; 'out'= Filter networks sent from this
+          area;"
+                type: str
+    nssa_cfg:
+        description:
+        - "Field nssa_cfg"
+        type: dict
+        required: False
+        suboptions:
+            nssa:
+                description:
+                - "Specify a NSSA area"
+                type: bool
+            no_redistribution:
+                description:
+                - "No redistribution into this NSSA area"
+                type: bool
+            no_summary:
+                description:
+                - "Do not send summary LSA into NSSA"
+                type: bool
+            translator_role:
+                description:
+                - "'always'= Translate always; 'candidate'= Candidate for translator (default);
+          'never'= Do not translate;"
+                type: str
+            default_information_originate:
+                description:
+                - "Originate Type 7 default into NSSA area"
+                type: bool
+            metric:
+                description:
+                - "OSPF default metric (OSPF metric)"
+                type: int
+            metric_type:
+                description:
+                - "OSPF metric type (OSPF metric type for default routes)"
+                type: int
+    default_cost:
+        description:
+        - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default
+          summary cost)"
+        type: int
+        required: False
     range_list:
         description:
         - "Field range_list"
+        type: list
         required: False
         suboptions:
             area_range_prefix:
                 description:
                 - "Area range for IPv4 prefix"
+                type: str
             option:
                 description:
                 - "'advertise'= Advertise this range (default); 'not-advertise'= DoNotAdvertise
           this range;"
-    default_cost:
+                type: str
+    shortcut:
         description:
-        - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default
-          summary cost)"
+        - "'default'= Set default shortcutting behavior; 'disable'= Disable shortcutting
+          through the area; 'enable'= Enable shortcutting through the area;"
+        type: str
         required: False
-    area_ipv4:
+    stub_cfg:
         description:
-        - "OSPF area ID in IP address format"
-        required: True
+        - "Field stub_cfg"
+        type: dict
+        required: False
+        suboptions:
+            stub:
+                description:
+                - "Configure OSPF area as stub"
+                type: bool
+            no_summary:
+                description:
+                - "Do not inject inter-area routes into area"
+                type: bool
+    virtual_link_list:
+        description:
+        - "Field virtual_link_list"
+        type: list
+        required: False
+        suboptions:
+            virtual_link_ip_addr:
+                description:
+                - "ID (IP addr) associated with virtual link neighbor"
+                type: str
+            bfd:
+                description:
+                - "Bidirectional Forwarding Detection (BFD)"
+                type: bool
+            hello_interval:
+                description:
+                - "Hello packet interval (Seconds)"
+                type: int
+            dead_interval:
+                description:
+                - "Dead router detection time (Seconds)"
+                type: int
+            retransmit_interval:
+                description:
+                - "LSA retransmit interval (Seconds)"
+                type: int
+            transmit_delay:
+                description:
+                - "LSA transmission delay (Seconds)"
+                type: int
+            virtual_link_authentication:
+                description:
+                - "Enable authentication"
+                type: bool
+            virtual_link_auth_type:
+                description:
+                - "'message-digest'= Use message-digest authentication; 'null'= Use null
+          authentication;"
+                type: str
+            authentication_key:
+                description:
+                - "Set authentication key (Authentication key (8 chars))"
+                type: str
+            message_digest_key:
+                description:
+                - "Set message digest key (Key ID)"
+                type: int
+            md5:
+                description:
+                - "Use MD5 algorithm (Authentication key (16 chars))"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -258,107 +306,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'nssa_cfg': {
-            'type': 'dict',
-            'default_information_originate': {
-                'type': 'bool',
-            },
-            'translator_role': {
-                'type': 'str',
-                'choices': ['always', 'candidate', 'never']
-            },
-            'metric': {
-                'type': 'int',
-            },
-            'nssa': {
-                'type': 'bool',
-            },
-            'no_redistribution': {
-                'type': 'bool',
-            },
-            'no_summary': {
-                'type': 'bool',
-            },
-            'metric_type': {
-                'type': 'int',
-            }
-        },
-        'uuid': {
+        'area_ipv4': {
             'type': 'str',
-        },
-        'filter_lists': {
-            'type': 'list',
-            'acl_name': {
-                'type': 'str',
-            },
-            'acl_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-            },
-            'filter_list': {
-                'type': 'bool',
-            },
-            'plist_name': {
-                'type': 'str',
-            },
-            'plist_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-            }
+            'required': True,
         },
         'area_num': {
             'type': 'int',
             'required': True,
-        },
-        'virtual_link_list': {
-            'type': 'list',
-            'dead_interval': {
-                'type': 'int',
-            },
-            'message_digest_key': {
-                'type': 'int',
-            },
-            'hello_interval': {
-                'type': 'int',
-            },
-            'bfd': {
-                'type': 'bool',
-            },
-            'transmit_delay': {
-                'type': 'int',
-            },
-            'virtual_link_authentication': {
-                'type': 'bool',
-            },
-            'virtual_link_ip_addr': {
-                'type': 'str',
-            },
-            'virtual_link_auth_type': {
-                'type': 'str',
-                'choices': ['message-digest', 'null']
-            },
-            'authentication_key': {
-                'type': 'str',
-            },
-            'retransmit_interval': {
-                'type': 'int',
-            },
-            'md5': {
-                'type': 'str',
-            }
-        },
-        'stub_cfg': {
-            'type': 'dict',
-            'stub': {
-                'type': 'bool',
-            },
-            'no_summary': {
-                'type': 'bool',
-            }
-        },
-        'shortcut': {
-            'type': 'str',
-            'choices': ['default', 'disable', 'enable']
         },
         'auth_cfg': {
             'type': 'dict',
@@ -368,6 +322,54 @@ def get_argspec():
             'message_digest': {
                 'type': 'bool',
             }
+        },
+        'filter_lists': {
+            'type': 'list',
+            'filter_list': {
+                'type': 'bool',
+            },
+            'acl_name': {
+                'type': 'str',
+            },
+            'acl_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            },
+            'plist_name': {
+                'type': 'str',
+            },
+            'plist_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'nssa_cfg': {
+            'type': 'dict',
+            'nssa': {
+                'type': 'bool',
+            },
+            'no_redistribution': {
+                'type': 'bool',
+            },
+            'no_summary': {
+                'type': 'bool',
+            },
+            'translator_role': {
+                'type': 'str',
+                'choices': ['always', 'candidate', 'never']
+            },
+            'default_information_originate': {
+                'type': 'bool',
+            },
+            'metric': {
+                'type': 'int',
+            },
+            'metric_type': {
+                'type': 'int',
+            }
+        },
+        'default_cost': {
+            'type': 'int',
         },
         'range_list': {
             'type': 'list',
@@ -379,12 +381,58 @@ def get_argspec():
                 'choices': ['advertise', 'not-advertise']
             }
         },
-        'default_cost': {
-            'type': 'int',
-        },
-        'area_ipv4': {
+        'shortcut': {
             'type': 'str',
-            'required': True,
+            'choices': ['default', 'disable', 'enable']
+        },
+        'stub_cfg': {
+            'type': 'dict',
+            'stub': {
+                'type': 'bool',
+            },
+            'no_summary': {
+                'type': 'bool',
+            }
+        },
+        'virtual_link_list': {
+            'type': 'list',
+            'virtual_link_ip_addr': {
+                'type': 'str',
+            },
+            'bfd': {
+                'type': 'bool',
+            },
+            'hello_interval': {
+                'type': 'int',
+            },
+            'dead_interval': {
+                'type': 'int',
+            },
+            'retransmit_interval': {
+                'type': 'int',
+            },
+            'transmit_delay': {
+                'type': 'int',
+            },
+            'virtual_link_authentication': {
+                'type': 'bool',
+            },
+            'virtual_link_auth_type': {
+                'type': 'str',
+                'choices': ['message-digest', 'null']
+            },
+            'authentication_key': {
+                'type': 'str',
+            },
+            'message_digest_key': {
+                'type': 'int',
+            },
+            'md5': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

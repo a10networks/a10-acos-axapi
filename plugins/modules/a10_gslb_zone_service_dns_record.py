@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_record
 description:
     - Specify DNS Record
-short_description: Configures A10 gslb.zone.service.dns-record
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    service-name:
+    service_name:
         description:
-        - Key to identify parent object    service_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_port:
         description:
-        - Key to identify parent object    zone_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    zone_name:
         description:
-        - Key to identify parent object    ntype:
+        - Key to identify parent object
+        type: str
+        required: True
+    ntype:
         description:
         - "Specify DNS Type"
+        type: int
         required: True
     data:
         description:
         - "Specify DNS Data"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -136,7 +153,7 @@ def get_argspec():
     # Parent keys
     rv.update(
         dict(
-            service - name=dict(type='str', required=True),
+            service_name=dict(type='str', required=True),
             service_port=dict(type='str', required=True),
             zone_name=dict(type='str', required=True),
         ))
@@ -150,7 +167,7 @@ def existing_url(module):
 
     f_dict = {}
     f_dict["type"] = module.params["type"]
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 
@@ -210,7 +227,7 @@ def new_url(module):
 
     f_dict = {}
     f_dict["type"] = ""
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 

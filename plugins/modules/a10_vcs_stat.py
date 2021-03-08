@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_stat
 description:
     - Show aVCS statistics information
-short_description: Configures A10 vcs.stat
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -129,234 +140,305 @@ options:
           counter of aVCS daemon receive; 'daemon_n_sent'= counter of aVCS daemon sent;
           'daemon_msg_inval'= counter of aVCS daemon invalid message;
           'daemon_msg_handle_failure'= counter of aVCS daemon message handle failure;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            elect_master_discard_challenger:
-                description:
-                - "vMaster discard challenger counter of aVCS election"
-            elect_pdu_master_sent:
-                description:
-                - "Sent vMaster-PDU counter of aVCS election"
-            elect_pdu_cluster_mismatch:
-                description:
-                - "PDU Chassis-ID mismatch counter of aVCS election"
-            daemon_sent_bytes:
-                description:
-                - "bytes of aVCS daemon sent"
-            elect_slave_too_many_neighbour:
-                description:
-                - "vBlade too many neighbours counter of aVCS election"
-            elect_mc_reset_timer_by_mc:
-                description:
-                - "MC timers reset by MC-PDU counter of aVCS election"
-            elect_pdu_slave_recv:
-                description:
-                - "Received vBlade-PDU counter of aVCS election"
-            daemon_n_elec_stop:
-                description:
-                - "times of aVCS election stop"
-            elect_pdu_unknown_sent:
-                description:
-                - "Sent Unknown-PDU counter of aVCS election"
-            elect_recv_byte:
-                description:
-                - "Receive bytes counter of aVCS election"
-            elect_mc_dup_masterr:
-                description:
-                - "MC duplicate vMaster-PDU counter of aVCS election"
-            elect_enter_master_take_over:
-                description:
-                - "Enter MTO counter of aVCS election"
-            elect_pdu_slave_sent:
-                description:
-                - "Sent vBlade-PDU counter of aVCS election"
-            master_slave_start_err:
-                description:
-                - "vMaster Start vBlade Errors counter of aVCS election"
-            elect_master_replace_challenger:
-                description:
-                - "vMaster replace challenger counter of aVCS election"
-            elect_slave_discard_challenger:
-                description:
-                - "vBlade discard challenger counter of aVCS election"
-            elect_pdu_unknown_recv:
-                description:
-                - "Received Unknown-PDU counter of aVCS election"
-            elect_mc_discard_master:
-                description:
-                - "MC discarded vMaster-PDU counter of aVCS election"
-            daemon_recv_err:
-                description:
-                - "counter of aVCS daemon receive error"
-            elect_pdu_master_recv:
-                description:
-                - "Received vMaster-PDU counter of aVCS election"
-            slave_cfg_upd:
-                description:
-                - "vBlade Received Configuration Updates counter of aVCS election"
-            master_cfg_upd_r_fail:
-                description:
-                - "vMaster Remote Configuration Update Errors counter of aVCS election"
-            slave_msg_inval:
-                description:
-                - "vBlade Invalid Messages counter of aVCS election"
-            elect_pdu_dev_id_collision:
-                description:
-                - "PDU Device-ID collision counter of aVCS election"
-            slave_n_recv:
-                description:
-                - "vBlade Received Messages counter of aVCS election"
-            elect_mc_reset_timer_by_mto:
-                description:
-                - "MC timers reset by MTO-PDU counter of aVCS election"
-            master_slave_start:
-                description:
-                - "vMaster vBlades Started counter of aVCS election"
-            elect_slave_discard_neighbour:
-                description:
-                - "vBlade discard neighbour counter of aVCS election"
-            elect_slave_dup_neighbour:
-                description:
-                - "send vBlade duplicate neighbours of aVCS election"
-            elect_pdu_master_cand_recv:
-                description:
-                - "Received MC-PDU counter of aVCS election"
-            elect_master_discard_neighbour:
-                description:
-                - "vMaster discard neighbour counter of aVCS election"
-            elect_slave_dup_master:
-                description:
-                - "vBlade duplicate vMaster-PDU counter of aVCS election"
-            elect_send_err:
-                description:
-                - "Send error counter of aVCS election"
-            elect_pdu_master_cand_sent:
-                description:
-                - "Sent MC-PDU counter of aVCS election"
-            master_cfg_upd:
-                description:
-                - "Received vMaster Configuration Updates counter of aVCS election"
-            slave_sent_bytes:
-                description:
-                - "vBlade Sent Bytes counter of aVCS election"
-            elect_send_byte:
-                description:
-                - "Send bytes counter of aVCS election"
-            elect_pdu_hw_mismatch:
-                description:
-                - "PDU HW mismatch counter of aVCS election"
-            master_slave_stop:
-                description:
-                - "vMaster vBlades stopped counter of aVCS election"
-            daemon_msg_inval:
-                description:
-                - "counter of aVCS daemon invalid message"
-            elect_master_too_many_neighbour:
-                description:
-                - "vMaster too many neighbours counter of aVCS election"
-            slave_keepalive:
-                description:
-                - "vBlade Received Keepalives counter of aVCS election"
-            elect_leave_master:
-                description:
-                - "Leave vMaster counter of aVCS election"
-            slave_recv_err:
-                description:
-                - "vBlade Receive Errors counter of aVCS election"
-            elect_enter_master:
-                description:
-                - "Enter vMaster counter of aVCS election"
-            elect_enter_master_cand_stat:
-                description:
-                - "Enter MC counter of aVCS election"
-            elect_pdu_master_take_over_recv:
-                description:
-                - "Received MTO-PDU counter of aVCS election"
-            elect_master_dup_challenger:
-                description:
-                - "vMaster duplicate challenger counter of aVCS election"
             elect_recv_err:
                 description:
                 - "Receive error counter of aVCS election"
-            daemon_send_err:
+                type: str
+            elect_send_err:
                 description:
-                - "counter of aVCS daemon sent error"
-            daemon_n_elec_start:
+                - "Send error counter of aVCS election"
+                type: str
+            elect_recv_byte:
                 description:
-                - "times of aVCS election start"
-            master_cfg_upd_l_fail:
+                - "Receive bytes counter of aVCS election"
+                type: str
+            elect_send_byte:
                 description:
-                - "vMaster Local Configuration Update Errors counter of aVCS election"
-            slave_n_sent:
+                - "Send bytes counter of aVCS election"
+                type: str
+            elect_pdu_master_recv:
                 description:
-                - "vBlade Sent Messages counter of aVCS election"
-            elect_slave_replace_challenger:
+                - "Received vMaster-PDU counter of aVCS election"
+                type: str
+            elect_pdu_master_cand_recv:
                 description:
-                - "vBlade replace challenger counter of aVCS election"
-            elect_master_dup_neighbour:
+                - "Received MC-PDU counter of aVCS election"
+                type: str
+            elect_pdu_slave_recv:
                 description:
-                - "vMaster duplicate neighbours counter of aVCS election"
-            elect_enter_slave:
+                - "Received vBlade-PDU counter of aVCS election"
+                type: str
+            elect_pdu_master_take_over_recv:
                 description:
-                - "Enter vBlade counter of aVCS election"
-            slave_recv_bytes:
+                - "Received MTO-PDU counter of aVCS election"
+                type: str
+            elect_pdu_unknown_recv:
                 description:
-                - "vBlade Received Bytes counter of aVCS election"
-            elect_slave_dup_challenger:
+                - "Received Unknown-PDU counter of aVCS election"
+                type: str
+            elect_pdu_master_sent:
                 description:
-                - "vBlade duplicate challenger counter of aVCS election"
-            daemon_msg_handle_failure:
+                - "Sent vMaster-PDU counter of aVCS election"
+                type: str
+            elect_pdu_master_cand_sent:
                 description:
-                - "counter of aVCS daemon message handle failure"
-            daemon_n_sent:
+                - "Sent MC-PDU counter of aVCS election"
+                type: str
+            elect_pdu_slave_sent:
                 description:
-                - "counter of aVCS daemon sent"
-            elect_mc_replace_master:
-                description:
-                - "MC replaced vMaster-PDU counter of aVCS election"
-            daemon_n_recv:
-                description:
-                - "counter of aVCS daemon receive"
-            master_cfg_upd_notif_err:
-                description:
-                - "vMaster Configuration Update Notif Errors counter of aVCS election"
-            elect_pdu_inval:
-                description:
-                - "Invalid PDU counter of aVCS election"
-            elect_leave_master_cand:
-                description:
-                - "Leave MC counter of aVCS election"
-            elect_master_new_challenger:
-                description:
-                - "vMaster new challenger counter of aVCS election"
-            daemon_recv_bytes:
-                description:
-                - "bytes of aVCS daemon receive"
-            master_cfg_upd_result_err:
-                description:
-                - "vMaster Configuration Update Result Errors counter of aVCS election"
-            elect_leave_slave:
-                description:
-                - "Leave vBlade counter of aVCS election"
-            slave_send_err:
-                description:
-                - "vBlade Send Errors counter of aVCS election"
+                - "Sent vBlade-PDU counter of aVCS election"
+                type: str
             elect_pdu_master_take_over_sent:
                 description:
                 - "Sent MTO-PDU counter of aVCS election"
-            slave_cfg_upd_fail:
+                type: str
+            elect_pdu_unknown_sent:
                 description:
-                - "vBlade Configuration Update Failures counter of aVCS election"
+                - "Sent Unknown-PDU counter of aVCS election"
+                type: str
+            elect_pdu_inval:
+                description:
+                - "Invalid PDU counter of aVCS election"
+                type: str
+            elect_pdu_hw_mismatch:
+                description:
+                - "PDU HW mismatch counter of aVCS election"
+                type: str
+            elect_pdu_cluster_mismatch:
+                description:
+                - "PDU Chassis-ID mismatch counter of aVCS election"
+                type: str
+            elect_pdu_dev_id_collision:
+                description:
+                - "PDU Device-ID collision counter of aVCS election"
+                type: str
+            elect_mc_discard_master:
+                description:
+                - "MC discarded vMaster-PDU counter of aVCS election"
+                type: str
+            elect_mc_replace_master:
+                description:
+                - "MC replaced vMaster-PDU counter of aVCS election"
+                type: str
+            elect_mc_dup_masterr:
+                description:
+                - "MC duplicate vMaster-PDU counter of aVCS election"
+                type: str
+            elect_mc_reset_timer_by_mc:
+                description:
+                - "MC timers reset by MC-PDU counter of aVCS election"
+                type: str
+            elect_mc_reset_timer_by_mto:
+                description:
+                - "MC timers reset by MTO-PDU counter of aVCS election"
+                type: str
+            elect_slave_dup_master:
+                description:
+                - "vBlade duplicate vMaster-PDU counter of aVCS election"
+                type: str
+            elect_slave_discard_challenger:
+                description:
+                - "vBlade discard challenger counter of aVCS election"
+                type: str
+            elect_slave_replace_challenger:
+                description:
+                - "vBlade replace challenger counter of aVCS election"
+                type: str
+            elect_slave_dup_challenger:
+                description:
+                - "vBlade duplicate challenger counter of aVCS election"
+                type: str
+            elect_slave_discard_neighbour:
+                description:
+                - "vBlade discard neighbour counter of aVCS election"
+                type: str
+            elect_slave_too_many_neighbour:
+                description:
+                - "vBlade too many neighbours counter of aVCS election"
+                type: str
+            elect_slave_dup_neighbour:
+                description:
+                - "send vBlade duplicate neighbours of aVCS election"
+                type: str
+            elect_master_discard_challenger:
+                description:
+                - "vMaster discard challenger counter of aVCS election"
+                type: str
+            elect_master_new_challenger:
+                description:
+                - "vMaster new challenger counter of aVCS election"
+                type: str
+            elect_master_replace_challenger:
+                description:
+                - "vMaster replace challenger counter of aVCS election"
+                type: str
+            elect_master_dup_challenger:
+                description:
+                - "vMaster duplicate challenger counter of aVCS election"
+                type: str
+            elect_master_discard_neighbour:
+                description:
+                - "vMaster discard neighbour counter of aVCS election"
+                type: str
+            elect_master_too_many_neighbour:
+                description:
+                - "vMaster too many neighbours counter of aVCS election"
+                type: str
+            elect_master_dup_neighbour:
+                description:
+                - "vMaster duplicate neighbours counter of aVCS election"
+                type: str
+            elect_enter_master_cand_stat:
+                description:
+                - "Enter MC counter of aVCS election"
+                type: str
+            elect_enter_slave:
+                description:
+                - "Enter vBlade counter of aVCS election"
+                type: str
+            elect_enter_master:
+                description:
+                - "Enter vMaster counter of aVCS election"
+                type: str
+            elect_enter_master_take_over:
+                description:
+                - "Enter MTO counter of aVCS election"
+                type: str
+            elect_leave_master_cand:
+                description:
+                - "Leave MC counter of aVCS election"
+                type: str
+            elect_leave_slave:
+                description:
+                - "Leave vBlade counter of aVCS election"
+                type: str
+            elect_leave_master:
+                description:
+                - "Leave vMaster counter of aVCS election"
+                type: str
             elect_leave_master_take_over:
                 description:
                 - "Leave MTO counter of aVCS election"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            master_slave_start_err:
+                description:
+                - "vMaster Start vBlade Errors counter of aVCS election"
+                type: str
+            master_slave_start:
+                description:
+                - "vMaster vBlades Started counter of aVCS election"
+                type: str
+            master_slave_stop:
+                description:
+                - "vMaster vBlades stopped counter of aVCS election"
+                type: str
+            master_cfg_upd:
+                description:
+                - "Received vMaster Configuration Updates counter of aVCS election"
+                type: str
+            master_cfg_upd_l_fail:
+                description:
+                - "vMaster Local Configuration Update Errors counter of aVCS election"
+                type: str
+            master_cfg_upd_r_fail:
+                description:
+                - "vMaster Remote Configuration Update Errors counter of aVCS election"
+                type: str
+            master_cfg_upd_notif_err:
+                description:
+                - "vMaster Configuration Update Notif Errors counter of aVCS election"
+                type: str
+            master_cfg_upd_result_err:
+                description:
+                - "vMaster Configuration Update Result Errors counter of aVCS election"
+                type: str
+            slave_recv_err:
+                description:
+                - "vBlade Receive Errors counter of aVCS election"
+                type: str
+            slave_send_err:
+                description:
+                - "vBlade Send Errors counter of aVCS election"
+                type: str
+            slave_recv_bytes:
+                description:
+                - "vBlade Received Bytes counter of aVCS election"
+                type: str
+            slave_sent_bytes:
+                description:
+                - "vBlade Sent Bytes counter of aVCS election"
+                type: str
+            slave_n_recv:
+                description:
+                - "vBlade Received Messages counter of aVCS election"
+                type: str
+            slave_n_sent:
+                description:
+                - "vBlade Sent Messages counter of aVCS election"
+                type: str
+            slave_msg_inval:
+                description:
+                - "vBlade Invalid Messages counter of aVCS election"
+                type: str
+            slave_keepalive:
+                description:
+                - "vBlade Received Keepalives counter of aVCS election"
+                type: str
+            slave_cfg_upd:
+                description:
+                - "vBlade Received Configuration Updates counter of aVCS election"
+                type: str
+            slave_cfg_upd_fail:
+                description:
+                - "vBlade Configuration Update Failures counter of aVCS election"
+                type: str
+            daemon_n_elec_start:
+                description:
+                - "times of aVCS election start"
+                type: str
+            daemon_n_elec_stop:
+                description:
+                - "times of aVCS election stop"
+                type: str
+            daemon_recv_err:
+                description:
+                - "counter of aVCS daemon receive error"
+                type: str
+            daemon_send_err:
+                description:
+                - "counter of aVCS daemon sent error"
+                type: str
+            daemon_recv_bytes:
+                description:
+                - "bytes of aVCS daemon receive"
+                type: str
+            daemon_sent_bytes:
+                description:
+                - "bytes of aVCS daemon sent"
+                type: str
+            daemon_n_recv:
+                description:
+                - "counter of aVCS daemon receive"
+                type: str
+            daemon_n_sent:
+                description:
+                - "counter of aVCS daemon sent"
+                type: str
+            daemon_msg_inval:
+                description:
+                - "counter of aVCS daemon invalid message"
+                type: str
+            daemon_msg_handle_failure:
+                description:
+                - "counter of aVCS daemon message handle failure"
+                type: str
 
 '''
 
@@ -411,6 +493,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -464,228 +549,225 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'elect_master_discard_challenger': {
-                'type': 'str',
-            },
-            'elect_pdu_master_sent': {
-                'type': 'str',
-            },
-            'elect_pdu_cluster_mismatch': {
-                'type': 'str',
-            },
-            'daemon_sent_bytes': {
-                'type': 'str',
-            },
-            'elect_slave_too_many_neighbour': {
-                'type': 'str',
-            },
-            'elect_mc_reset_timer_by_mc': {
-                'type': 'str',
-            },
-            'elect_pdu_slave_recv': {
-                'type': 'str',
-            },
-            'daemon_n_elec_stop': {
-                'type': 'str',
-            },
-            'elect_pdu_unknown_sent': {
-                'type': 'str',
-            },
-            'elect_recv_byte': {
-                'type': 'str',
-            },
-            'elect_mc_dup_masterr': {
-                'type': 'str',
-            },
-            'elect_enter_master_take_over': {
-                'type': 'str',
-            },
-            'elect_pdu_slave_sent': {
-                'type': 'str',
-            },
-            'master_slave_start_err': {
-                'type': 'str',
-            },
-            'elect_master_replace_challenger': {
-                'type': 'str',
-            },
-            'elect_slave_discard_challenger': {
-                'type': 'str',
-            },
-            'elect_pdu_unknown_recv': {
-                'type': 'str',
-            },
-            'elect_mc_discard_master': {
-                'type': 'str',
-            },
-            'daemon_recv_err': {
-                'type': 'str',
-            },
-            'elect_pdu_master_recv': {
-                'type': 'str',
-            },
-            'slave_cfg_upd': {
-                'type': 'str',
-            },
-            'master_cfg_upd_r_fail': {
-                'type': 'str',
-            },
-            'slave_msg_inval': {
-                'type': 'str',
-            },
-            'elect_pdu_dev_id_collision': {
-                'type': 'str',
-            },
-            'slave_n_recv': {
-                'type': 'str',
-            },
-            'elect_mc_reset_timer_by_mto': {
-                'type': 'str',
-            },
-            'master_slave_start': {
-                'type': 'str',
-            },
-            'elect_slave_discard_neighbour': {
-                'type': 'str',
-            },
-            'elect_slave_dup_neighbour': {
-                'type': 'str',
-            },
-            'elect_pdu_master_cand_recv': {
-                'type': 'str',
-            },
-            'elect_master_discard_neighbour': {
-                'type': 'str',
-            },
-            'elect_slave_dup_master': {
+            'elect_recv_err': {
                 'type': 'str',
             },
             'elect_send_err': {
                 'type': 'str',
             },
-            'elect_pdu_master_cand_sent': {
-                'type': 'str',
-            },
-            'master_cfg_upd': {
-                'type': 'str',
-            },
-            'slave_sent_bytes': {
+            'elect_recv_byte': {
                 'type': 'str',
             },
             'elect_send_byte': {
                 'type': 'str',
             },
-            'elect_pdu_hw_mismatch': {
+            'elect_pdu_master_recv': {
                 'type': 'str',
             },
-            'master_slave_stop': {
+            'elect_pdu_master_cand_recv': {
                 'type': 'str',
             },
-            'daemon_msg_inval': {
-                'type': 'str',
-            },
-            'elect_master_too_many_neighbour': {
-                'type': 'str',
-            },
-            'slave_keepalive': {
-                'type': 'str',
-            },
-            'elect_leave_master': {
-                'type': 'str',
-            },
-            'slave_recv_err': {
-                'type': 'str',
-            },
-            'elect_enter_master': {
-                'type': 'str',
-            },
-            'elect_enter_master_cand_stat': {
+            'elect_pdu_slave_recv': {
                 'type': 'str',
             },
             'elect_pdu_master_take_over_recv': {
                 'type': 'str',
             },
-            'elect_master_dup_challenger': {
+            'elect_pdu_unknown_recv': {
                 'type': 'str',
             },
-            'elect_recv_err': {
+            'elect_pdu_master_sent': {
                 'type': 'str',
             },
-            'daemon_send_err': {
+            'elect_pdu_master_cand_sent': {
                 'type': 'str',
             },
-            'daemon_n_elec_start': {
-                'type': 'str',
-            },
-            'master_cfg_upd_l_fail': {
-                'type': 'str',
-            },
-            'slave_n_sent': {
-                'type': 'str',
-            },
-            'elect_slave_replace_challenger': {
-                'type': 'str',
-            },
-            'elect_master_dup_neighbour': {
-                'type': 'str',
-            },
-            'elect_enter_slave': {
-                'type': 'str',
-            },
-            'slave_recv_bytes': {
-                'type': 'str',
-            },
-            'elect_slave_dup_challenger': {
-                'type': 'str',
-            },
-            'daemon_msg_handle_failure': {
-                'type': 'str',
-            },
-            'daemon_n_sent': {
-                'type': 'str',
-            },
-            'elect_mc_replace_master': {
-                'type': 'str',
-            },
-            'daemon_n_recv': {
-                'type': 'str',
-            },
-            'master_cfg_upd_notif_err': {
-                'type': 'str',
-            },
-            'elect_pdu_inval': {
-                'type': 'str',
-            },
-            'elect_leave_master_cand': {
-                'type': 'str',
-            },
-            'elect_master_new_challenger': {
-                'type': 'str',
-            },
-            'daemon_recv_bytes': {
-                'type': 'str',
-            },
-            'master_cfg_upd_result_err': {
-                'type': 'str',
-            },
-            'elect_leave_slave': {
-                'type': 'str',
-            },
-            'slave_send_err': {
+            'elect_pdu_slave_sent': {
                 'type': 'str',
             },
             'elect_pdu_master_take_over_sent': {
                 'type': 'str',
             },
-            'slave_cfg_upd_fail': {
+            'elect_pdu_unknown_sent': {
+                'type': 'str',
+            },
+            'elect_pdu_inval': {
+                'type': 'str',
+            },
+            'elect_pdu_hw_mismatch': {
+                'type': 'str',
+            },
+            'elect_pdu_cluster_mismatch': {
+                'type': 'str',
+            },
+            'elect_pdu_dev_id_collision': {
+                'type': 'str',
+            },
+            'elect_mc_discard_master': {
+                'type': 'str',
+            },
+            'elect_mc_replace_master': {
+                'type': 'str',
+            },
+            'elect_mc_dup_masterr': {
+                'type': 'str',
+            },
+            'elect_mc_reset_timer_by_mc': {
+                'type': 'str',
+            },
+            'elect_mc_reset_timer_by_mto': {
+                'type': 'str',
+            },
+            'elect_slave_dup_master': {
+                'type': 'str',
+            },
+            'elect_slave_discard_challenger': {
+                'type': 'str',
+            },
+            'elect_slave_replace_challenger': {
+                'type': 'str',
+            },
+            'elect_slave_dup_challenger': {
+                'type': 'str',
+            },
+            'elect_slave_discard_neighbour': {
+                'type': 'str',
+            },
+            'elect_slave_too_many_neighbour': {
+                'type': 'str',
+            },
+            'elect_slave_dup_neighbour': {
+                'type': 'str',
+            },
+            'elect_master_discard_challenger': {
+                'type': 'str',
+            },
+            'elect_master_new_challenger': {
+                'type': 'str',
+            },
+            'elect_master_replace_challenger': {
+                'type': 'str',
+            },
+            'elect_master_dup_challenger': {
+                'type': 'str',
+            },
+            'elect_master_discard_neighbour': {
+                'type': 'str',
+            },
+            'elect_master_too_many_neighbour': {
+                'type': 'str',
+            },
+            'elect_master_dup_neighbour': {
+                'type': 'str',
+            },
+            'elect_enter_master_cand_stat': {
+                'type': 'str',
+            },
+            'elect_enter_slave': {
+                'type': 'str',
+            },
+            'elect_enter_master': {
+                'type': 'str',
+            },
+            'elect_enter_master_take_over': {
+                'type': 'str',
+            },
+            'elect_leave_master_cand': {
+                'type': 'str',
+            },
+            'elect_leave_slave': {
+                'type': 'str',
+            },
+            'elect_leave_master': {
                 'type': 'str',
             },
             'elect_leave_master_take_over': {
                 'type': 'str',
+            },
+            'master_slave_start_err': {
+                'type': 'str',
+            },
+            'master_slave_start': {
+                'type': 'str',
+            },
+            'master_slave_stop': {
+                'type': 'str',
+            },
+            'master_cfg_upd': {
+                'type': 'str',
+            },
+            'master_cfg_upd_l_fail': {
+                'type': 'str',
+            },
+            'master_cfg_upd_r_fail': {
+                'type': 'str',
+            },
+            'master_cfg_upd_notif_err': {
+                'type': 'str',
+            },
+            'master_cfg_upd_result_err': {
+                'type': 'str',
+            },
+            'slave_recv_err': {
+                'type': 'str',
+            },
+            'slave_send_err': {
+                'type': 'str',
+            },
+            'slave_recv_bytes': {
+                'type': 'str',
+            },
+            'slave_sent_bytes': {
+                'type': 'str',
+            },
+            'slave_n_recv': {
+                'type': 'str',
+            },
+            'slave_n_sent': {
+                'type': 'str',
+            },
+            'slave_msg_inval': {
+                'type': 'str',
+            },
+            'slave_keepalive': {
+                'type': 'str',
+            },
+            'slave_cfg_upd': {
+                'type': 'str',
+            },
+            'slave_cfg_upd_fail': {
+                'type': 'str',
+            },
+            'daemon_n_elec_start': {
+                'type': 'str',
+            },
+            'daemon_n_elec_stop': {
+                'type': 'str',
+            },
+            'daemon_recv_err': {
+                'type': 'str',
+            },
+            'daemon_send_err': {
+                'type': 'str',
+            },
+            'daemon_recv_bytes': {
+                'type': 'str',
+            },
+            'daemon_sent_bytes': {
+                'type': 'str',
+            },
+            'daemon_n_recv': {
+                'type': 'str',
+            },
+            'daemon_n_sent': {
+                'type': 'str',
+            },
+            'daemon_msg_inval': {
+                'type': 'str',
+            },
+            'daemon_msg_handle_failure': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

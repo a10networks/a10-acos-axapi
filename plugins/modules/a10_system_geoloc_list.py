@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_geoloc_list
 description:
     - Configure geolocation list
-short_description: Configures A10 system.geoloc-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,101 +22,126 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            geoloc_list:
-                description:
-                - "Field geoloc_list"
-            name:
-                description:
-                - "Specify name of Geolocation list"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            total_geoloc:
-                description:
-                - "Field total_geoloc"
-            total_active:
-                description:
-                - "Field total_active"
-            hit_count:
-                description:
-                - "Field hit_count"
-            name:
-                description:
-                - "Specify name of Geolocation list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        type: str
         required: False
     name:
         description:
         - "Specify name of Geolocation list"
+        type: str
         required: True
+    shared:
+        description:
+        - "Enable sharing with other partitions"
+        type: bool
+        required: False
+    include_geoloc_name_list:
+        description:
+        - "Field include_geoloc_name_list"
+        type: list
+        required: False
+        suboptions:
+            include_geoloc_name_val:
+                description:
+                - "Geolocation name to add"
+                type: str
+    exclude_geoloc_name_list:
+        description:
+        - "Field exclude_geoloc_name_list"
+        type: list
+        required: False
+        suboptions:
+            exclude_geoloc_name_val:
+                description:
+                - "Geolocation name to exclude"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'hit-count'= hit-count; 'total-geoloc'= total-geoloc; 'total-
           active'= total-active;"
-    shared:
+                type: str
+    oper:
         description:
-        - "Enable sharing with other partitions"
-        required: False
-    exclude_geoloc_name_list:
-        description:
-        - "Field exclude_geoloc_name_list"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            exclude_geoloc_name_val:
+            geoloc_list:
                 description:
-                - "Geolocation name to exclude"
-    include_geoloc_name_list:
+                - "Field geoloc_list"
+                type: list
+            name:
+                description:
+                - "Specify name of Geolocation list"
+                type: str
+    stats:
         description:
-        - "Field include_geoloc_name_list"
+        - "Field stats"
+        type: dict
         required: False
         suboptions:
-            include_geoloc_name_val:
+            hit_count:
                 description:
-                - "Geolocation name to add"
+                - "Field hit_count"
+                type: str
+            total_geoloc:
+                description:
+                - "Field total_geoloc"
+                type: str
+            total_active:
+                description:
+                - "Field total_active"
+                type: str
+            name:
+                description:
+                - "Specify name of Geolocation list"
+                type: str
 
 '''
 
@@ -179,13 +202,43 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'shared': {
+            'type': 'bool',
+        },
+        'include_geoloc_name_list': {
+            'type': 'list',
+            'include_geoloc_name_val': {
+                'type': 'str',
+            }
+        },
+        'exclude_geoloc_name_list': {
+            'type': 'list',
+            'exclude_geoloc_name_val': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices':
+                ['all', 'hit-count', 'total-geoloc', 'total-active']
+            }
+        },
         'oper': {
             'type': 'dict',
             'geoloc_list': {
                 'type': 'list',
-                'active': {
-                    'type': 'int',
-                },
                 'ntype': {
                     'type': 'str',
                 },
@@ -193,6 +246,9 @@ def get_argspec():
                     'type': 'str',
                 },
                 'hit_count': {
+                    'type': 'int',
+                },
+                'active': {
                     'type': 'int',
                 }
             },
@@ -203,51 +259,18 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
+            'hit_count': {
+                'type': 'str',
+            },
             'total_geoloc': {
                 'type': 'str',
             },
             'total_active': {
                 'type': 'str',
             },
-            'hit_count': {
-                'type': 'str',
-            },
             'name': {
                 'type': 'str',
                 'required': True,
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices':
-                ['all', 'hit-count', 'total-geoloc', 'total-active']
-            }
-        },
-        'shared': {
-            'type': 'bool',
-        },
-        'exclude_geoloc_name_list': {
-            'type': 'list',
-            'exclude_geoloc_name_val': {
-                'type': 'str',
-            }
-        },
-        'include_geoloc_name_list': {
-            'type': 'list',
-            'include_geoloc_name_val': {
-                'type': 'str',
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_migrate_vip
 description:
     - Migrate this virtual server
-short_description: Configures A10 slb.virtual.server.migrate-vip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,66 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     virtual_server_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    target_data_cpu:
+        description:
+        - "Number of CPUs on the target platform"
+        type: int
+        required: False
+    target_floating_ipv4:
+        description:
+        - "Specify IP address"
+        type: str
+        required: False
+    cancel_migration:
+        description:
+        - "Cancel migration"
+        type: bool
+        required: False
+    finish_migration:
+        description:
+        - "Complete the migration"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             state:
                 description:
                 - "Field state"
-    target_data_cpu:
-        description:
-        - "Number of CPUs on the target platform"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    finish_migration:
-        description:
-        - "Complete the migration"
-        required: False
-    target_floating_ipv6:
-        description:
-        - "Specify IPv6 address"
-        required: False
-    target_floating_ipv4:
-        description:
-        - "Specify IP address"
-        required: False
-    cancel_migration:
-        description:
-        - "Cancel migration"
-        required: False
+                type: str
 
 '''
 
@@ -103,7 +114,6 @@ AVAILABLE_PROPERTIES = [
     "oper",
     "target_data_cpu",
     "target_floating_ipv4",
-    "target_floating_ipv6",
     "uuid",
 ]
 
@@ -142,6 +152,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'target_data_cpu': {
+            'type': 'int',
+        },
+        'target_floating_ipv4': {
+            'type': 'str',
+        },
+        'cancel_migration': {
+            'type': 'bool',
+        },
+        'finish_migration': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'state': {
@@ -152,24 +177,6 @@ def get_argspec():
                     'Not in migration'
                 ]
             }
-        },
-        'target_data_cpu': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'finish_migration': {
-            'type': 'bool',
-        },
-        'target_floating_ipv6': {
-            'type': 'str',
-        },
-        'target_floating_ipv4': {
-            'type': 'str',
-        },
-        'cancel_migration': {
-            'type': 'bool',
         }
     })
     # Parent keys

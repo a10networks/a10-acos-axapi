@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_http_basic_instance
 description:
     - HTTP Basic Authentication Relay instance
-short_description: Configures A10 aam.authentication.relay.http.basic.instance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,81 +22,65 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    name:
+        description:
+        - "Specify HTTP basic authentication relay name"
+        type: str
+        required: True
     domain:
         description:
         - "Specify user domain, default is null"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            bad_req:
-                description:
-                - "Bad Request"
-            unavailable:
-                description:
-                - "Service Unavailable"
-            success:
-                description:
-                - "Success"
-            forbidden:
-                description:
-                - "Forbidden"
-            no_creds:
-                description:
-                - "No Credential"
-            server_error:
-                description:
-                - "Internal Server Error"
-            not_found:
-                description:
-                - "Not Found"
-            unauth:
-                description:
-                - "Unauthorized"
-            name:
-                description:
-                - "Specify HTTP basic authentication relay name"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     domain_format:
         description:
         - "'user-principal-name'= Append domain with User Principal Name format. (e.g.
           user@domain); 'down-level-logon-name'= Append domain with Down-Level Logon Name
           format. (e.g. domain\\user);"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -107,10 +89,49 @@ options:
           Request; 'unauth'= Unauthorized; 'forbidden'= Forbidden; 'not-found'= Not
           Found; 'server-error'= Internal Server Error; 'unavailable'= Service
           Unavailable;"
-    name:
+                type: str
+    stats:
         description:
-        - "Specify HTTP basic authentication relay name"
-        required: True
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            success:
+                description:
+                - "Success"
+                type: str
+            no_creds:
+                description:
+                - "No Credential"
+                type: str
+            bad_req:
+                description:
+                - "Bad Request"
+                type: str
+            unauth:
+                description:
+                - "Unauthorized"
+                type: str
+            forbidden:
+                description:
+                - "Forbidden"
+                type: str
+            not_found:
+                description:
+                - "Not Found"
+                type: str
+            server_error:
+                description:
+                - "Internal Server Error"
+                type: str
+            unavailable:
+                description:
+                - "Service Unavailable"
+                type: str
+            name:
+                description:
+                - "Specify HTTP basic authentication relay name"
+                type: str
 
 '''
 
@@ -168,46 +189,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'domain': {
+        'name': {
             'type': 'str',
+            'required': True,
         },
-        'stats': {
-            'type': 'dict',
-            'bad_req': {
-                'type': 'str',
-            },
-            'unavailable': {
-                'type': 'str',
-            },
-            'success': {
-                'type': 'str',
-            },
-            'forbidden': {
-                'type': 'str',
-            },
-            'no_creds': {
-                'type': 'str',
-            },
-            'server_error': {
-                'type': 'str',
-            },
-            'not_found': {
-                'type': 'str',
-            },
-            'unauth': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
-        },
-        'uuid': {
+        'domain': {
             'type': 'str',
         },
         'domain_format': {
             'type': 'str',
             'choices': ['user-principal-name', 'down-level-logon-name']
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -220,9 +214,36 @@ def get_argspec():
                 ]
             }
         },
-        'name': {
-            'type': 'str',
-            'required': True,
+        'stats': {
+            'type': 'dict',
+            'success': {
+                'type': 'str',
+            },
+            'no_creds': {
+                'type': 'str',
+            },
+            'bad_req': {
+                'type': 'str',
+            },
+            'unauth': {
+                'type': 'str',
+            },
+            'forbidden': {
+                'type': 'str',
+            },
+            'not_found': {
+                'type': 'str',
+            },
+            'server_error': {
+                'type': 'str',
+            },
+            'unavailable': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

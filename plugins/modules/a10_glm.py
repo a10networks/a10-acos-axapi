@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_glm
 description:
     - Set GLM Connection values
-short_description: Configures A10 glm
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,104 +22,130 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port to connect to GLM"
+        type: str
         required: False
     interval:
         description:
         - "GLM license request interval (in hours)"
+        type: int
         required: False
-    send:
+    use_mgmt_port:
         description:
-        - "Field send"
-        required: False
-        suboptions:
-            license_request:
-                description:
-                - "Immediately send a single GLM license request"
-    token:
-        description:
-        - "License entitlement token"
-        required: False
-    enterprise:
-        description:
-        - "Enter the ELM hostname or IP"
-        required: False
-    proxy_server:
-        description:
-        - "Field proxy_server"
-        required: False
-        suboptions:
-            username:
-                description:
-                - "Username for proxy authentication"
-            uuid:
-                description:
-                - "uuid of the object"
-            encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-            host:
-                description:
-                - "Proxy server hostname or IP address"
-            password:
-                description:
-                - "Password for proxy authentication"
-            port:
-                description:
-                - "Proxy server port"
-            secret_string:
-                description:
-                - "password value"
-    appliance_name:
-        description:
-        - "Helpful identifier for this appliance"
+        - "Use management port to connect to GLM"
+        type: bool
         required: False
     enable_requests:
         description:
         - "Turn on periodic GLM license requests (default license retrieval interval is
           every 24 hours)"
+        type: bool
         required: False
     allocate_bandwidth:
         description:
         - "Enter the requested bandwidth in Mbps for Capacity Pool"
+        type: int
+        required: False
+    token:
+        description:
+        - "License entitlement token"
+        type: str
+        required: False
+    enterprise:
+        description:
+        - "Enter the ELM hostname or IP"
+        type: str
         required: False
     port:
         description:
         - "License request port (default 443)"
+        type: int
         required: False
+    appliance_name:
+        description:
+        - "Helpful identifier for this appliance"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    send:
+        description:
+        - "Field send"
+        type: dict
+        required: False
+        suboptions:
+            license_request:
+                description:
+                - "Immediately send a single GLM license request"
+                type: bool
+    proxy_server:
+        description:
+        - "Field proxy_server"
+        type: dict
+        required: False
+        suboptions:
+            host:
+                description:
+                - "Proxy server hostname or IP address"
+                type: str
+            port:
+                description:
+                - "Proxy server port"
+                type: int
+            username:
+                description:
+                - "Username for proxy authentication"
+                type: str
+            password:
+                description:
+                - "Password for proxy authentication"
+                type: bool
+            secret_string:
+                description:
+                - "password value"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -184,53 +208,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
         'interval': {
             'type': 'int',
         },
-        'send': {
-            'type': 'dict',
-            'license_request': {
-                'type': 'bool',
-            }
-        },
-        'token': {
-            'type': 'str',
-        },
-        'enterprise': {
-            'type': 'str',
-        },
-        'proxy_server': {
-            'type': 'dict',
-            'username': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'encrypted': {
-                'type': 'str',
-            },
-            'host': {
-                'type': 'str',
-            },
-            'password': {
-                'type': 'bool',
-            },
-            'port': {
-                'type': 'int',
-            },
-            'secret_string': {
-                'type': 'str',
-            }
-        },
-        'appliance_name': {
-            'type': 'str',
+        'use_mgmt_port': {
+            'type': 'bool',
         },
         'enable_requests': {
             'type': 'bool',
@@ -238,8 +220,50 @@ def get_argspec():
         'allocate_bandwidth': {
             'type': 'int',
         },
+        'token': {
+            'type': 'str',
+        },
+        'enterprise': {
+            'type': 'str',
+        },
         'port': {
             'type': 'int',
+        },
+        'appliance_name': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'send': {
+            'type': 'dict',
+            'license_request': {
+                'type': 'bool',
+            }
+        },
+        'proxy_server': {
+            'type': 'dict',
+            'host': {
+                'type': 'str',
+            },
+            'port': {
+                'type': 'int',
+            },
+            'username': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'bool',
+            },
+            'secret_string': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_session_aging
 description:
     - Session aging
-short_description: Configures A10 fw.session-aging
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,94 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    icmp_idle_timeout:
-        description:
-        - "Idle Timeout time (default 2 seconds) (Second, default 2)"
-        required: False
-    udp:
-        description:
-        - "Field udp"
-        required: False
-        suboptions:
-            port_cfg:
-                description:
-                - "Field port_cfg"
-            udp_idle_timeout:
-                description:
-                - "Idle Timeout (sec), default is 120 (number)"
-            uuid:
-                description:
-                - "uuid of the object"
-    ip_idle_timeout:
-        description:
-        - "Idle Timeout time(sec), default is 30 (Second)"
+        type: str
         required: False
     name:
         description:
         - "session-aging Template (session-aging Template name)"
+        type: str
         required: True
+    icmp_idle_timeout:
+        description:
+        - "Idle Timeout time (default 2 seconds) (Second, default 2)"
+        type: int
+        required: False
+    ip_idle_timeout:
+        description:
+        - "Idle Timeout time(sec), default is 30 (Second)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     tcp:
         description:
         - "Field tcp"
+        type: dict
         required: False
         suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
             tcp_idle_timeout:
                 description:
                 - "Idle Timeout (sec), default is 600 (number)"
+                type: int
             half_open_idle_timeout:
                 description:
                 - "TCP Half Open Idle Timeout (sec), default is off (number)"
+                type: int
+            half_close_idle_timeout:
+                description:
+                - "TCP Half Close Idle Timeout (sec), default is off (number)"
+                type: int
             force_delete_timeout:
                 description:
                 - "The maximum time that a session can stay in the system before being deleted,
           default is off (number (second))"
-            port_cfg:
-                description:
-                - "Field port_cfg"
+                type: int
             force_delete_timeout_100ms:
                 description:
                 - "The maximum time that a session can stay in the system before being deleted,
           default is off (number in 100ms)"
-            half_close_idle_timeout:
+                type: int
+            port_cfg:
                 description:
-                - "TCP Half Close Idle Timeout (sec), default is off (number)"
-    uuid:
+                - "Field port_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    udp:
         description:
-        - "uuid of the object"
+        - "Field udp"
+        type: dict
         required: False
+        suboptions:
+            udp_idle_timeout:
+                description:
+                - "Idle Timeout (sec), default is 120 (number)"
+                type: int
+            port_cfg:
+                description:
+                - "Field port_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -170,49 +192,37 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
         'icmp_idle_timeout': {
             'type': 'int',
-        },
-        'udp': {
-            'type': 'dict',
-            'port_cfg': {
-                'type': 'list',
-                'udp_idle_timeout': {
-                    'type': 'int',
-                },
-                'udp_port': {
-                    'type': 'int',
-                }
-            },
-            'udp_idle_timeout': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            }
         },
         'ip_idle_timeout': {
             'type': 'int',
         },
-        'name': {
+        'uuid': {
             'type': 'str',
-            'required': True,
         },
         'user_tag': {
             'type': 'str',
         },
         'tcp': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
             'tcp_idle_timeout': {
                 'type': 'int',
             },
             'half_open_idle_timeout': {
                 'type': 'int',
             },
+            'half_close_idle_timeout': {
+                'type': 'int',
+            },
             'force_delete_timeout': {
+                'type': 'int',
+            },
+            'force_delete_timeout_100ms': {
                 'type': 'int',
             },
             'port_cfg': {
@@ -226,25 +236,37 @@ def get_argspec():
                 'half_open_idle_timeout': {
                     'type': 'int',
                 },
+                'half_close_idle_timeout': {
+                    'type': 'int',
+                },
                 'force_delete_timeout': {
                     'type': 'int',
                 },
                 'force_delete_timeout_100ms': {
                     'type': 'int',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'udp': {
+            'type': 'dict',
+            'udp_idle_timeout': {
+                'type': 'int',
+            },
+            'port_cfg': {
+                'type': 'list',
+                'udp_port': {
+                    'type': 'int',
                 },
-                'half_close_idle_timeout': {
+                'udp_idle_timeout': {
                     'type': 'int',
                 }
             },
-            'force_delete_timeout_100ms': {
-                'type': 'int',
-            },
-            'half_close_idle_timeout': {
-                'type': 'int',
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

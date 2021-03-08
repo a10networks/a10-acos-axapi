@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_ospf_area
 description:
     - OSPF area parameters
-short_description: Configures A10 router.ipv6.ospf.area
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,96 +22,123 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ospf_process_id:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     area_ipv4:
         description:
         - "OSPFv3 area ID in IP address format"
+        type: str
         required: True
-    virtual_link_list:
-        description:
-        - "Field virtual_link_list"
-        required: False
-        suboptions:
-            dead_interval:
-                description:
-                - "Dead router detection time (Seconds)"
-            hello_interval:
-                description:
-                - "Hello packet interval (Seconds)"
-            bfd:
-                description:
-                - "Bidirectional Forwarding Detection (BFD)"
-            transmit_delay:
-                description:
-                - "LSA transmission delay (Seconds)"
-            value:
-                description:
-                - "ID (IP addr) associated with virtual link neighbor"
-            retransmit_interval:
-                description:
-                - "LSA retransmit interval (Seconds)"
-            instance_id:
-                description:
-                - "OSPFv3 instance ID"
-    stub:
-        description:
-        - "Configure OSPFv3 area as stub"
-        required: False
     area_num:
         description:
         - "OSPFv3 area ID as a decimal value"
+        type: int
         required: True
-    range_list:
-        description:
-        - "Field range_list"
-        required: False
-        suboptions:
-            option:
-                description:
-                - "'advertise'= Advertise this range (default); 'not-advertise'= DoNotAdvertise
-          this range;"
-            value:
-                description:
-                - "Area range for IPv6 prefix"
     default_cost:
         description:
         - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default
           summary cost)"
+        type: int
+        required: False
+    range_list:
+        description:
+        - "Field range_list"
+        type: list
+        required: False
+        suboptions:
+            value:
+                description:
+                - "Area range for IPv6 prefix"
+                type: str
+            option:
+                description:
+                - "'advertise'= Advertise this range (default); 'not-advertise'= DoNotAdvertise
+          this range;"
+                type: str
+    stub:
+        description:
+        - "Configure OSPFv3 area as stub"
+        type: bool
         required: False
     no_summary:
         description:
         - "Do not inject inter-area routes into area"
+        type: bool
+        required: False
+    virtual_link_list:
+        description:
+        - "Field virtual_link_list"
+        type: list
+        required: False
+        suboptions:
+            value:
+                description:
+                - "ID (IP addr) associated with virtual link neighbor"
+                type: str
+            dead_interval:
+                description:
+                - "Dead router detection time (Seconds)"
+                type: int
+            bfd:
+                description:
+                - "Bidirectional Forwarding Detection (BFD)"
+                type: bool
+            hello_interval:
+                description:
+                - "Hello packet interval (Seconds)"
+                type: int
+            retransmit_interval:
+                description:
+                - "LSA retransmit interval (Seconds)"
+                type: int
+            transmit_delay:
+                description:
+                - "LSA transmission delay (Seconds)"
+                type: int
+            instance_id:
+                description:
+                - "OSPFv3 instance ID"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -174,59 +199,59 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'area_ipv4': {
             'type': 'str',
             'required': True,
         },
+        'area_num': {
+            'type': 'int',
+            'required': True,
+        },
+        'default_cost': {
+            'type': 'int',
+        },
+        'range_list': {
+            'type': 'list',
+            'value': {
+                'type': 'str',
+            },
+            'option': {
+                'type': 'str',
+                'choices': ['advertise', 'not-advertise']
+            }
+        },
+        'stub': {
+            'type': 'bool',
+        },
+        'no_summary': {
+            'type': 'bool',
+        },
         'virtual_link_list': {
             'type': 'list',
-            'dead_interval': {
-                'type': 'int',
+            'value': {
+                'type': 'str',
             },
-            'hello_interval': {
+            'dead_interval': {
                 'type': 'int',
             },
             'bfd': {
                 'type': 'bool',
             },
-            'transmit_delay': {
+            'hello_interval': {
                 'type': 'int',
             },
-            'value': {
-                'type': 'str',
-            },
             'retransmit_interval': {
+                'type': 'int',
+            },
+            'transmit_delay': {
                 'type': 'int',
             },
             'instance_id': {
                 'type': 'int',
             }
         },
-        'stub': {
-            'type': 'bool',
-        },
-        'area_num': {
-            'type': 'int',
-            'required': True,
-        },
-        'range_list': {
-            'type': 'list',
-            'option': {
-                'type': 'str',
-                'choices': ['advertise', 'not-advertise']
-            },
-            'value': {
-                'type': 'str',
-            }
-        },
-        'default_cost': {
-            'type': 'int',
-        },
-        'no_summary': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

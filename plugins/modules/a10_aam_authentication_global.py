@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_global
 description:
     - Global AAM authentication statistics
-short_description: Configures A10 aam.authentication.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -73,81 +84,101 @@ options:
           Total Authorization failure number; 'active-session'= Total Active Auth-
           Sessions; 'active-user'= Total Active Users; 'dns-resolve-failed'= Total AAM
           DNS resolve failed;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            open_socket_failed:
-                description:
-                - "Total AAM Open Socket Failed"
-            connect:
-                description:
-                - "Total AAM Connection"
-            aflex_authz_succ:
-                description:
-                - "Total Authorization success number in aFleX"
-            authz_success:
-                description:
-                - "Total Authorization success number"
-            aflex_authz_fail:
-                description:
-                - "Total Authorization failure number in aFleX"
-            responses:
-                description:
-                - "Total Authentication Response"
-            ocsp_stapling_requests_to_a10authd:
-                description:
-                - "Total OCSP Stapling Request"
-            dns_resolve_failed:
-                description:
-                - "Total AAM DNS resolve failed"
-            misses:
-                description:
-                - "Total Authentication Request Missed"
-            connect_failed:
-                description:
-                - "Total AAM Connect Failed"
-            opened_socket:
-                description:
-                - "Total AAM Socket Opened"
-            active_session:
-                description:
-                - "Total Active Auth-Sessions"
-            active_user:
-                description:
-                - "Total Active Users"
-            create_timer_failed:
-                description:
-                - "Total AAM Timer Creation Failed"
-            get_socket_option_failed:
-                description:
-                - "Total AAM Get Socket Option Failed"
-            authn_success:
-                description:
-                - "Total Authentication success number"
-            authz_failure:
-                description:
-                - "Total Authorization failure number"
-            ocsp_stapling_responses_from_a10authd:
-                description:
-                - "Total OCSP Stapling Response"
-            authn_failure:
-                description:
-                - "Total Authentication failure number"
-            created_timer:
-                description:
-                - "Total AAM Timer Created"
             requests:
                 description:
                 - "Total Authentication Request"
+                type: str
+            responses:
+                description:
+                - "Total Authentication Response"
+                type: str
+            misses:
+                description:
+                - "Total Authentication Request Missed"
+                type: str
+            ocsp_stapling_requests_to_a10authd:
+                description:
+                - "Total OCSP Stapling Request"
+                type: str
+            ocsp_stapling_responses_from_a10authd:
+                description:
+                - "Total OCSP Stapling Response"
+                type: str
+            opened_socket:
+                description:
+                - "Total AAM Socket Opened"
+                type: str
+            open_socket_failed:
+                description:
+                - "Total AAM Open Socket Failed"
+                type: str
+            connect:
+                description:
+                - "Total AAM Connection"
+                type: str
+            connect_failed:
+                description:
+                - "Total AAM Connect Failed"
+                type: str
+            created_timer:
+                description:
+                - "Total AAM Timer Created"
+                type: str
+            create_timer_failed:
+                description:
+                - "Total AAM Timer Creation Failed"
+                type: str
             total_request:
                 description:
                 - "Total Request Received by A10 Auth Service"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            get_socket_option_failed:
+                description:
+                - "Total AAM Get Socket Option Failed"
+                type: str
+            aflex_authz_succ:
+                description:
+                - "Total Authorization success number in aFleX"
+                type: str
+            aflex_authz_fail:
+                description:
+                - "Total Authorization failure number in aFleX"
+                type: str
+            authn_success:
+                description:
+                - "Total Authentication success number"
+                type: str
+            authn_failure:
+                description:
+                - "Total Authentication failure number"
+                type: str
+            authz_success:
+                description:
+                - "Total Authorization success number"
+                type: str
+            authz_failure:
+                description:
+                - "Total Authorization failure number"
+                type: str
+            active_session:
+                description:
+                - "Total Active Auth-Sessions"
+                type: str
+            active_user:
+                description:
+                - "Total Active Users"
+                type: str
+            dns_resolve_failed:
+                description:
+                - "Total AAM DNS resolve failed"
+                type: str
 
 '''
 
@@ -202,6 +233,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -222,37 +256,61 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
+            'requests': {
+                'type': 'str',
+            },
+            'responses': {
+                'type': 'str',
+            },
+            'misses': {
+                'type': 'str',
+            },
+            'ocsp_stapling_requests_to_a10authd': {
+                'type': 'str',
+            },
+            'ocsp_stapling_responses_from_a10authd': {
+                'type': 'str',
+            },
+            'opened_socket': {
+                'type': 'str',
+            },
             'open_socket_failed': {
                 'type': 'str',
             },
             'connect': {
                 'type': 'str',
             },
-            'aflex_authz_succ': {
+            'connect_failed': {
                 'type': 'str',
             },
-            'authz_success': {
+            'created_timer': {
+                'type': 'str',
+            },
+            'create_timer_failed': {
+                'type': 'str',
+            },
+            'total_request': {
+                'type': 'str',
+            },
+            'get_socket_option_failed': {
+                'type': 'str',
+            },
+            'aflex_authz_succ': {
                 'type': 'str',
             },
             'aflex_authz_fail': {
                 'type': 'str',
             },
-            'responses': {
+            'authn_success': {
                 'type': 'str',
             },
-            'ocsp_stapling_requests_to_a10authd': {
+            'authn_failure': {
                 'type': 'str',
             },
-            'dns_resolve_failed': {
+            'authz_success': {
                 'type': 'str',
             },
-            'misses': {
-                'type': 'str',
-            },
-            'connect_failed': {
-                'type': 'str',
-            },
-            'opened_socket': {
+            'authz_failure': {
                 'type': 'str',
             },
             'active_session': {
@@ -261,36 +319,9 @@ def get_argspec():
             'active_user': {
                 'type': 'str',
             },
-            'create_timer_failed': {
-                'type': 'str',
-            },
-            'get_socket_option_failed': {
-                'type': 'str',
-            },
-            'authn_success': {
-                'type': 'str',
-            },
-            'authz_failure': {
-                'type': 'str',
-            },
-            'ocsp_stapling_responses_from_a10authd': {
-                'type': 'str',
-            },
-            'authn_failure': {
-                'type': 'str',
-            },
-            'created_timer': {
-                'type': 'str',
-            },
-            'requests': {
-                'type': 'str',
-            },
-            'total_request': {
+            'dns_resolve_failed': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

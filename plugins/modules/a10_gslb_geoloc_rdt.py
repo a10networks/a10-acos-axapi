@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_geoloc_rdt
 description:
     - Field geoloc_rdt
-short_description: Configures A10 gslb.geoloc-rdt
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             geoloc_rdt_list:
                 description:
                 - "Field geoloc_rdt_list"
-            geo_name:
-                description:
-                - "Field geo_name"
-            site_name:
-                description:
-                - "Field site_name"
-            active_status:
-                description:
-                - "Field active_status"
+                type: list
             total_rdt:
                 description:
                 - "Field total_rdt"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            geo_name:
+                description:
+                - "Field geo_name"
+                type: str
+            site_name:
+                description:
+                - "Field site_name"
+                type: str
+            active_status:
+                description:
+                - "Field active_status"
+                type: str
 
 '''
 
@@ -127,25 +139,31 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'geoloc_rdt_list': {
                 'type': 'list',
-                'rdt': {
-                    'type': 'int',
+                'gl_name': {
+                    'type': 'str',
                 },
                 'site_name': {
                     'type': 'str',
                 },
-                'gl_name': {
+                'ntype': {
                     'type': 'str',
+                },
+                'rdt': {
+                    'type': 'int',
                 },
                 'age': {
                     'type': 'int',
-                },
-                'ntype': {
-                    'type': 'str',
                 }
+            },
+            'total_rdt': {
+                'type': 'int',
             },
             'geo_name': {
                 'type': 'str',
@@ -155,13 +173,7 @@ def get_argspec():
             },
             'active_status': {
                 'type': 'str',
-            },
-            'total_rdt': {
-                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

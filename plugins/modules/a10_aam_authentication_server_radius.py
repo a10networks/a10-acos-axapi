@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_radius
 description:
     - RADIUS Authentication Server
-short_description: Configures A10 aam.authentication.server.radius
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -69,144 +80,183 @@ options:
           Start Error; 'polling-control-error'= Total Polling Control Error; 'accounting-
           request-sent'= Accounting-Request Sent; 'accounting-success'= Accounting
           Success; 'accounting-failure'= Accounting Failure;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            authorize_failure:
-                description:
-                - "Total Authorization Failure"
-            accounting_request_sent:
-                description:
-                - "Accounting-Request Sent"
-            other_error:
-                description:
-                - "Total Other Error"
-            instance_list:
-                description:
-                - "Field instance_list"
-            authorize_success:
-                description:
-                - "Total Authorization Success"
-            request:
-                description:
-                - "Total Request"
-            accounting_success:
-                description:
-                - "Accounting Success"
-            accounting_failure:
-                description:
-                - "Accounting Failure"
-            access_challenge:
-                description:
-                - "Total Access-Challenge Message Receive"
-            response_other:
-                description:
-                - "Total Other Response"
-            request_normal:
-                description:
-                - "Total Normal Request"
-            response_failure:
-                description:
-                - "Total Failure Response"
-            authen_success:
-                description:
-                - "Total Authentication Success"
-            timeout_error:
-                description:
-                - "Total Timeout"
-            response_timeout:
-                description:
-                - "Total Timeout Response"
-            request_dropped:
-                description:
-                - "Total Dropped Request"
-            authen_failure:
-                description:
-                - "Total Authentication Failure"
-            response_success:
-                description:
-                - "Total Success Response"
-            job_start_error:
-                description:
-                - "Total Job Start Error"
-            response_error:
-                description:
-                - "Total Error Response"
-            polling_control_error:
-                description:
-                - "Total Polling Control Error"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
     instance_list:
         description:
         - "Field instance_list"
+        type: list
         required: False
         suboptions:
-            auth_type:
-                description:
-                - "'pap'= PAP authentication. Default; 'mschapv2'= MS-CHAPv2 authentication;
-          'mschapv2-pap'= Use MS-CHAPv2 first. If server doesn't support it, try PAP;"
-            health_check_string:
-                description:
-                - "Health monitor name"
-            retry:
-                description:
-                - "Specify the retry number for resend the request, default is 5 (The retry
-          number, default is 5)"
-            port_hm:
-                description:
-                - "Check port's health status"
             name:
                 description:
                 - "Specify RADIUS authentication server name"
-            port_hm_disable:
+                type: str
+            host:
                 description:
-                - "Disable configured port health check configuration"
+                - "Field host"
+                type: dict
+            secret:
+                description:
+                - "Specify the RADIUS server's secret"
+                type: bool
+            secret_string:
+                description:
+                - "The RADIUS server's secret"
+                type: str
             encrypted:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+                type: str
+            port:
+                description:
+                - "Specify the RADIUS server's authentication port, default is 1812"
+                type: int
+            port_hm:
+                description:
+                - "Check port's health status"
+                type: str
+            port_hm_disable:
+                description:
+                - "Disable configured port health check configuration"
+                type: bool
             interval:
                 description:
                 - "Specify the interval time for resend the request (second), default is 3 seconds
           (The interval time(second), default is 3 seconds)"
-            accounting_port:
+                type: int
+            retry:
                 description:
-                - "Specify the RADIUS server's accounting port, default is 1813"
-            port:
-                description:
-                - "Specify the RADIUS server's authentication port, default is 1812"
+                - "Specify the retry number for resend the request, default is 5 (The retry
+          number, default is 5)"
+                type: int
             health_check:
                 description:
                 - "Check server's health status"
-            acct_port_hm_disable:
+                type: bool
+            health_check_string:
                 description:
-                - "Disable configured accounting port health check configuration"
-            secret:
-                description:
-                - "Specify the RADIUS server's secret"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            host:
-                description:
-                - "Field host"
+                - "Health monitor name"
+                type: str
             health_check_disable:
                 description:
                 - "Disable configured health check configuration"
-            secret_string:
+                type: bool
+            accounting_port:
                 description:
-                - "The RADIUS server's secret"
+                - "Specify the RADIUS server's accounting port, default is 1813"
+                type: int
             acct_port_hm:
                 description:
                 - "Specify accounting port health check method"
+                type: str
+            acct_port_hm_disable:
+                description:
+                - "Disable configured accounting port health check configuration"
+                type: bool
+            auth_type:
+                description:
+                - "'pap'= PAP authentication. Default; 'mschapv2'= MS-CHAPv2 authentication;
+          'mschapv2-pap'= Use MS-CHAPv2 first. If server doesn't support it, try PAP;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            authen_success:
+                description:
+                - "Total Authentication Success"
+                type: str
+            authen_failure:
+                description:
+                - "Total Authentication Failure"
+                type: str
+            authorize_success:
+                description:
+                - "Total Authorization Success"
+                type: str
+            authorize_failure:
+                description:
+                - "Total Authorization Failure"
+                type: str
+            access_challenge:
+                description:
+                - "Total Access-Challenge Message Receive"
+                type: str
+            timeout_error:
+                description:
+                - "Total Timeout"
+                type: str
+            other_error:
+                description:
+                - "Total Other Error"
+                type: str
+            request:
+                description:
+                - "Total Request"
+                type: str
+            request_normal:
+                description:
+                - "Total Normal Request"
+                type: str
+            request_dropped:
+                description:
+                - "Total Dropped Request"
+                type: str
+            response_success:
+                description:
+                - "Total Success Response"
+                type: str
+            response_failure:
+                description:
+                - "Total Failure Response"
+                type: str
+            response_error:
+                description:
+                - "Total Error Response"
+                type: str
+            response_timeout:
+                description:
+                - "Total Timeout Response"
+                type: str
+            response_other:
+                description:
+                - "Total Other Response"
+                type: str
+            job_start_error:
+                description:
+                - "Total Job Start Error"
+                type: str
+            polling_control_error:
+                description:
+                - "Total Polling Control Error"
+                type: str
+            accounting_request_sent:
+                description:
+                - "Accounting-Request Sent"
+                type: str
+            accounting_success:
+                description:
+                - "Accounting Success"
+                type: str
+            accounting_failure:
+                description:
+                - "Accounting Failure"
+                type: str
+            instance_list:
+                description:
+                - "Field instance_list"
+                type: list
 
 '''
 
@@ -262,6 +312,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -279,157 +332,69 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'authorize_failure': {
-                'type': 'str',
-            },
-            'accounting_request_sent': {
-                'type': 'str',
-            },
-            'other_error': {
-                'type': 'str',
-            },
-            'instance_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'authorize_failure': {
-                        'type': 'str',
-                    },
-                    'accounting_request_sent': {
-                        'type': 'str',
-                    },
-                    'other_error': {
-                        'type': 'str',
-                    },
-                    'request': {
-                        'type': 'str',
-                    },
-                    'accounting_success': {
-                        'type': 'str',
-                    },
-                    'accounting_failure': {
-                        'type': 'str',
-                    },
-                    'authen_success': {
-                        'type': 'str',
-                    },
-                    'access_challenge': {
-                        'type': 'str',
-                    },
-                    'authen_failure': {
-                        'type': 'str',
-                    },
-                    'timeout_error': {
-                        'type': 'str',
-                    },
-                    'authorize_success': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'authorize_success': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'accounting_success': {
-                'type': 'str',
-            },
-            'accounting_failure': {
-                'type': 'str',
-            },
-            'access_challenge': {
-                'type': 'str',
-            },
-            'response_other': {
-                'type': 'str',
-            },
-            'request_normal': {
-                'type': 'str',
-            },
-            'response_failure': {
-                'type': 'str',
-            },
-            'authen_success': {
-                'type': 'str',
-            },
-            'timeout_error': {
-                'type': 'str',
-            },
-            'response_timeout': {
-                'type': 'str',
-            },
-            'request_dropped': {
-                'type': 'str',
-            },
-            'authen_failure': {
-                'type': 'str',
-            },
-            'response_success': {
-                'type': 'str',
-            },
-            'job_start_error': {
-                'type': 'str',
-            },
-            'response_error': {
-                'type': 'str',
-            },
-            'polling_control_error': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'instance_list': {
             'type': 'list',
-            'auth_type': {
+            'name': {
                 'type': 'str',
-                'choices': ['pap', 'mschapv2', 'mschapv2-pap']
+                'required': True,
             },
-            'health_check_string': {
+            'host': {
+                'type': 'dict',
+                'hostip': {
+                    'type': 'str',
+                },
+                'hostipv6': {
+                    'type': 'str',
+                }
+            },
+            'secret': {
+                'type': 'bool',
+            },
+            'secret_string': {
                 'type': 'str',
             },
-            'retry': {
+            'encrypted': {
+                'type': 'str',
+            },
+            'port': {
                 'type': 'int',
             },
             'port_hm': {
                 'type': 'str',
             },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
             'port_hm_disable': {
                 'type': 'bool',
-            },
-            'encrypted': {
-                'type': 'str',
             },
             'interval': {
                 'type': 'int',
             },
-            'accounting_port': {
-                'type': 'int',
-            },
-            'port': {
+            'retry': {
                 'type': 'int',
             },
             'health_check': {
                 'type': 'bool',
             },
+            'health_check_string': {
+                'type': 'str',
+            },
+            'health_check_disable': {
+                'type': 'bool',
+            },
+            'accounting_port': {
+                'type': 'int',
+            },
+            'acct_port_hm': {
+                'type': 'str',
+            },
             'acct_port_hm_disable': {
                 'type': 'bool',
             },
-            'secret': {
-                'type': 'bool',
+            'auth_type': {
+                'type': 'str',
+                'choices': ['pap', 'mschapv2', 'mschapv2-pap']
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -444,27 +409,112 @@ def get_argspec():
                         'accounting-success', 'accounting-failure'
                     ]
                 }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'authen_success': {
+                'type': 'str',
             },
-            'host': {
-                'type': 'dict',
-                'hostipv6': {
+            'authen_failure': {
+                'type': 'str',
+            },
+            'authorize_success': {
+                'type': 'str',
+            },
+            'authorize_failure': {
+                'type': 'str',
+            },
+            'access_challenge': {
+                'type': 'str',
+            },
+            'timeout_error': {
+                'type': 'str',
+            },
+            'other_error': {
+                'type': 'str',
+            },
+            'request': {
+                'type': 'str',
+            },
+            'request_normal': {
+                'type': 'str',
+            },
+            'request_dropped': {
+                'type': 'str',
+            },
+            'response_success': {
+                'type': 'str',
+            },
+            'response_failure': {
+                'type': 'str',
+            },
+            'response_error': {
+                'type': 'str',
+            },
+            'response_timeout': {
+                'type': 'str',
+            },
+            'response_other': {
+                'type': 'str',
+            },
+            'job_start_error': {
+                'type': 'str',
+            },
+            'polling_control_error': {
+                'type': 'str',
+            },
+            'accounting_request_sent': {
+                'type': 'str',
+            },
+            'accounting_success': {
+                'type': 'str',
+            },
+            'accounting_failure': {
+                'type': 'str',
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
                     'type': 'str',
+                    'required': True,
                 },
-                'hostip': {
-                    'type': 'str',
+                'stats': {
+                    'type': 'dict',
+                    'authen_success': {
+                        'type': 'str',
+                    },
+                    'authen_failure': {
+                        'type': 'str',
+                    },
+                    'authorize_success': {
+                        'type': 'str',
+                    },
+                    'authorize_failure': {
+                        'type': 'str',
+                    },
+                    'access_challenge': {
+                        'type': 'str',
+                    },
+                    'timeout_error': {
+                        'type': 'str',
+                    },
+                    'other_error': {
+                        'type': 'str',
+                    },
+                    'request': {
+                        'type': 'str',
+                    },
+                    'accounting_request_sent': {
+                        'type': 'str',
+                    },
+                    'accounting_success': {
+                        'type': 'str',
+                    },
+                    'accounting_failure': {
+                        'type': 'str',
+                    }
                 }
-            },
-            'health_check_disable': {
-                'type': 'bool',
-            },
-            'secret_string': {
-                'type': 'str',
-            },
-            'acct_port_hm': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
             }
         }
     })

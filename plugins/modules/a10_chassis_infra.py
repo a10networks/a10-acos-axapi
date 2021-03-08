@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_chassis_infra
 description:
     - Chassis infrastructure commands
-short_description: Configures A10 chassis-infra
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    detailed:
-        description:
-        - "Give Chassis filesystem info( USED BY TAC ONLY )"
-        required: False
-    debug_status:
-        description:
-        - "Show chassis infrastruture debugging status"
-        required: False
-    debug_disable:
-        description:
-        - "Disable chassis infrastruture debugging"
+        type: str
         required: False
     debug_enable:
         description:
         - "Enable chassis infrastruture debugging"
+        type: bool
+        required: False
+    debug_disable:
+        description:
+        - "Disable chassis infrastruture debugging"
+        type: bool
+        required: False
+    debug_status:
+        description:
+        - "Show chassis infrastruture debugging status"
+        type: bool
         required: False
     system_sync_verify:
         description:
         - "Validate chassis filesytem synchronization status (For A10 TAC Use Only)"
+        type: bool
+        required: False
+    detailed:
+        description:
+        - "Give Chassis filesystem info( USED BY TAC ONLY )"
+        type: bool
         required: False
     sys_sync:
         description:
         - "Synchronize the Master and Blade filesystems (For A10 TAC Use Only)"
+        type: bool
         required: False
 
 '''
@@ -131,19 +142,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'detailed': {
-            'type': 'bool',
-        },
-        'debug_status': {
+        'debug_enable': {
             'type': 'bool',
         },
         'debug_disable': {
             'type': 'bool',
         },
-        'debug_enable': {
+        'debug_status': {
             'type': 'bool',
         },
         'system_sync_verify': {
+            'type': 'bool',
+        },
+        'detailed': {
             'type': 'bool',
         },
         'sys_sync': {

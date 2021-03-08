@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_system
 description:
     - GSLB system options
-short_description: Configures A10 gslb.system
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,100 +22,124 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    gslb_service_ip:
+    ttl:
         description:
-        - "GSLB Service-IP"
-        required: False
-    gslb_site:
-        description:
-        - "GSLB Site"
-        required: False
-    ip_ttl:
-        description:
-        - "TTL of IP packets, default is 0 (IP TTL value, default is 0)"
-        required: False
-    gslb_group:
-        description:
-        - "GSLB Group"
-        required: False
-    slb_device:
-        description:
-        - "SLB Device"
-        required: False
-    hostname:
-        description:
-        - "System's Network Name"
+        - "Specify Auto Map TTL (TTL, default is 300)"
+        type: int
         required: False
     module:
         description:
         - "Specify Auto Map Module"
+        type: bool
+        required: False
+    slb_virtual_server:
+        description:
+        - "SLB Virtual Server"
+        type: bool
+        required: False
+    slb_device:
+        description:
+        - "SLB Device"
+        type: bool
+        required: False
+    gslb_service_ip:
+        description:
+        - "GSLB Service-IP"
+        type: bool
+        required: False
+    gslb_site:
+        description:
+        - "GSLB Site"
+        type: bool
+        required: False
+    gslb_group:
+        description:
+        - "GSLB Group"
+        type: bool
+        required: False
+    slb_server:
+        description:
+        - "SLB Server"
+        type: bool
+        required: False
+    hostname:
+        description:
+        - "System's Network Name"
+        type: bool
+        required: False
+    ip_ttl:
+        description:
+        - "TTL of IP packets, default is 0 (IP TTL value, default is 0)"
+        type: int
         required: False
     wait:
         description:
         - "Disable GSLB until timeout if system is not ready (Time, unit= sec, default is
           0)"
+        type: int
         required: False
     age_interval:
         description:
         - "Interval to age runtime statistics. 0= never age, default is 10 (Time, unit=
           sec, default is 10)"
+        type: int
         required: False
     geo_location_iana:
         description:
         - "Load built-in IANA table"
-        required: False
-    ttl:
-        description:
-        - "Specify Auto Map TTL (TTL, default is 300)"
-        required: False
-    slb_server:
-        description:
-        - "SLB Server"
-        required: False
-    slb_virtual_server:
-        description:
-        - "SLB Virtual Server"
+        type: bool
         required: False
     gslb_load_file_list:
         description:
         - "Field gslb_load_file_list"
+        type: list
         required: False
         suboptions:
             geo_location_load_filename:
                 description:
                 - "Specify file to be loaded"
+                type: str
             template_name:
                 description:
                 - "CSV template to load this file"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -185,26 +207,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ttl': {
+            'type': 'int',
+        },
+        'module': {
+            'type': 'bool',
+        },
+        'slb_virtual_server': {
+            'type': 'bool',
+        },
+        'slb_device': {
+            'type': 'bool',
+        },
         'gslb_service_ip': {
             'type': 'bool',
         },
         'gslb_site': {
             'type': 'bool',
         },
-        'ip_ttl': {
-            'type': 'int',
-        },
         'gslb_group': {
             'type': 'bool',
         },
-        'slb_device': {
+        'slb_server': {
             'type': 'bool',
         },
         'hostname': {
             'type': 'bool',
         },
-        'module': {
-            'type': 'bool',
+        'ip_ttl': {
+            'type': 'int',
         },
         'wait': {
             'type': 'int',
@@ -213,15 +244,6 @@ def get_argspec():
             'type': 'int',
         },
         'geo_location_iana': {
-            'type': 'bool',
-        },
-        'ttl': {
-            'type': 'int',
-        },
-        'slb_server': {
-            'type': 'bool',
-        },
-        'slb_virtual_server': {
             'type': 'bool',
         },
         'gslb_load_file_list': {

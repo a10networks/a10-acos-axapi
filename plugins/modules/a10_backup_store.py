@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_backup_store
 description:
     - Save backup store information
-short_description: Configures A10 backup.store
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,71 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    delete_cfg:
-        description:
-        - "Field delete_cfg"
-        required: False
-        suboptions:
-            store_name_del:
-                description:
-                - "profile name for deleting"
-            delete:
-                description:
-                - "Delete store"
     creat_cfg:
         description:
         - "Field creat_cfg"
+        type: dict
         required: False
         suboptions:
             create:
                 description:
                 - "Create store"
-            remote_file:
-                description:
-                - "profile name for remote url"
+                type: bool
             store_name:
                 description:
                 - "profile name to store remote url"
+                type: str
+            remote_file:
+                description:
+                - "profile name for remote url"
+                type: str
+    delete_cfg:
+        description:
+        - "Field delete_cfg"
+        type: dict
+        required: False
+        suboptions:
+            delete:
+                description:
+                - "Delete store"
+                type: bool
+            store_name_del:
+                description:
+                - "profile name for deleting"
+                type: str
 
 '''
 
@@ -128,24 +140,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'delete_cfg': {
-            'type': 'dict',
-            'store_name_del': {
-                'type': 'str',
-            },
-            'delete': {
-                'type': 'bool',
-            }
-        },
         'creat_cfg': {
             'type': 'dict',
             'create': {
                 'type': 'bool',
             },
-            'remote_file': {
+            'store_name': {
                 'type': 'str',
             },
-            'store_name': {
+            'remote_file': {
+                'type': 'str',
+            }
+        },
+        'delete_cfg': {
+            'type': 'dict',
+            'delete': {
+                'type': 'bool',
+            },
+            'store_name_del': {
                 'type': 'str',
             }
         }

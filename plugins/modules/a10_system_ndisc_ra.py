@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ndisc_ra
 description:
     - Neighbor discovery and RA counters
-short_description: Configures A10 system.ndisc-ra
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -64,45 +75,53 @@ options:
           ICMPv6 Code; 'bad_icmpv6_option'= R.S. Bad ICMPv6 Option; 'l2_addr_and_unspec'=
           R.S. Src Link-Layer Option and Unspecified Address; 'no_free_buffers'= No Free
           Buffers to send R.A.;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            bad_hop_limit:
-                description:
-                - "R.S. Bad Hop Limit"
-            bad_icmpv6_code:
-                description:
-                - "R.S. Unknown ICMPv6 Code"
-            no_free_buffers:
-                description:
-                - "No Free Buffers to send R.A."
-            truncated:
-                description:
-                - "R.S. Truncated"
-            rate_limit:
-                description:
-                - "R.S. Rate Limited"
-            l2_addr_and_unspec:
-                description:
-                - "R.S. Src Link-Layer Option and Unspecified Address"
-            bad_icmpv6_option:
-                description:
-                - "R.S. Bad ICMPv6 Option"
-            periodic_sent:
-                description:
-                - "Periodic Router Advertisements (R.A.) Sent"
             good_recv:
                 description:
                 - "Good Router Solicitations (R.S.) Received"
+                type: str
+            periodic_sent:
+                description:
+                - "Periodic Router Advertisements (R.A.) Sent"
+                type: str
+            rate_limit:
+                description:
+                - "R.S. Rate Limited"
+                type: str
+            bad_hop_limit:
+                description:
+                - "R.S. Bad Hop Limit"
+                type: str
+            truncated:
+                description:
+                - "R.S. Truncated"
+                type: str
             bad_icmpv6_csum:
                 description:
                 - "R.S. Bad ICMPv6 Checksum"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            bad_icmpv6_code:
+                description:
+                - "R.S. Unknown ICMPv6 Code"
+                type: str
+            bad_icmpv6_option:
+                description:
+                - "R.S. Bad ICMPv6 Option"
+                type: str
+            l2_addr_and_unspec:
+                description:
+                - "R.S. Src Link-Layer Option and Unspecified Address"
+                type: str
+            no_free_buffers:
+                description:
+                - "No Free Buffers to send R.A."
+                type: str
 
 '''
 
@@ -157,6 +176,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -172,39 +194,36 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'bad_hop_limit': {
-                'type': 'str',
-            },
-            'bad_icmpv6_code': {
-                'type': 'str',
-            },
-            'no_free_buffers': {
-                'type': 'str',
-            },
-            'truncated': {
-                'type': 'str',
-            },
-            'rate_limit': {
-                'type': 'str',
-            },
-            'l2_addr_and_unspec': {
-                'type': 'str',
-            },
-            'bad_icmpv6_option': {
+            'good_recv': {
                 'type': 'str',
             },
             'periodic_sent': {
                 'type': 'str',
             },
-            'good_recv': {
+            'rate_limit': {
+                'type': 'str',
+            },
+            'bad_hop_limit': {
+                'type': 'str',
+            },
+            'truncated': {
                 'type': 'str',
             },
             'bad_icmpv6_csum': {
                 'type': 'str',
+            },
+            'bad_icmpv6_code': {
+                'type': 'str',
+            },
+            'bad_icmpv6_option': {
+                'type': 'str',
+            },
+            'l2_addr_and_unspec': {
+                'type': 'str',
+            },
+            'no_free_buffers': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

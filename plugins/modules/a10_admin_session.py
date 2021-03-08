@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin_session
 description:
     - Admin session management
-short_description: Configures A10 admin-session
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    clear:
+        description:
+        - "clear admin session"
+        type: bool
+        required: False
+    all:
+        description:
+        - "Clear all admin sessions"
+        type: bool
+        required: False
+    sid:
+        description:
+        - "Session ID"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             session_list:
                 description:
                 - "Field session_list"
-    clear:
-        description:
-        - "clear admin session"
-        required: False
-    sid:
-        description:
-        - "Session ID"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    all:
-        description:
-        - "Clear all admin sessions"
-        required: False
+                type: list
 
 '''
 
@@ -130,43 +141,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'session_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                },
-                'start_time': {
-                    'type': 'str',
-                },
-                'Partition': {
-                    'type': 'str',
-                },
-                'cfg_mode': {
-                    'type': 'str',
-                },
-                'src_ip': {
-                    'type': 'str',
-                },
-                'Role': {
-                    'type': 'str',
-                },
-                'sid': {
-                    'type': 'str',
-                },
-                'Authen': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type': 'str',
-                },
-                'priv': {
-                    'type': 'str',
-                }
-            }
-        },
         'clear': {
+            'type': 'bool',
+        },
+        'all': {
             'type': 'bool',
         },
         'sid': {
@@ -175,8 +153,41 @@ def get_argspec():
         'uuid': {
             'type': 'str',
         },
-        'all': {
-            'type': 'bool',
+        'oper': {
+            'type': 'dict',
+            'session_list': {
+                'type': 'list',
+                'sid': {
+                    'type': 'str',
+                },
+                'name': {
+                    'type': 'str',
+                },
+                'start_time': {
+                    'type': 'str',
+                },
+                'src_ip': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type': 'str',
+                },
+                'Partition': {
+                    'type': 'str',
+                },
+                'Authen': {
+                    'type': 'str',
+                },
+                'Role': {
+                    'type': 'str',
+                },
+                'cfg_mode': {
+                    'type': 'str',
+                },
+                'priv': {
+                    'type': 'str',
+                }
+            }
         }
     })
     return rv

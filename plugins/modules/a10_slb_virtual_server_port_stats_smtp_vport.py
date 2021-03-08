@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_smtp_vport
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.smtp-vport
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
-        - Key to identify parent object    port_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - Key to identify parent object    virtual_server_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    virtual_server_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             smtp_vport:
                 description:
                 - "Field smtp_vport"
+                type: dict
 
 '''
 
@@ -120,22 +136,88 @@ def get_argspec():
             'type': 'dict',
             'smtp_vport': {
                 'type': 'dict',
-                'cmd_local': {
+                'cmd_ehlo': {
+                    'type': 'str',
+                },
+                'cmd_helo': {
+                    'type': 'str',
+                },
+                'cmd_mail': {
+                    'type': 'str',
+                },
+                'cmd_rcpt': {
+                    'type': 'str',
+                },
+                'cmd_data': {
+                    'type': 'str',
+                },
+                'cmd_rset': {
+                    'type': 'str',
+                },
+                'cmd_vrfy': {
+                    'type': 'str',
+                },
+                'cmd_expn': {
+                    'type': 'str',
+                },
+                'cmd_help': {
                     'type': 'str',
                 },
                 'cmd_noop': {
                     'type': 'str',
                 },
-                'reply_100u': {
+                'cmd_starttls': {
                     'type': 'str',
                 },
-                'reply_100m': {
+                'cmd_turn': {
                     'type': 'str',
                 },
-                'code_451': {
+                'cmd_etrn': {
+                    'type': 'str',
+                },
+                'cmd_quit': {
+                    'type': 'str',
+                },
+                'cmd_local': {
+                    'type': 'str',
+                },
+                'cmd_unknown': {
+                    'type': 'str',
+                },
+                'code_200': {
+                    'type': 'str',
+                },
+                'code_211': {
+                    'type': 'str',
+                },
+                'code_214': {
+                    'type': 'str',
+                },
+                'code_220': {
+                    'type': 'str',
+                },
+                'code_221': {
+                    'type': 'str',
+                },
+                'code_250': {
+                    'type': 'str',
+                },
+                'code_251': {
+                    'type': 'str',
+                },
+                'code_252': {
+                    'type': 'str',
+                },
+                'code_354': {
+                    'type': 'str',
+                },
+                'code_421': {
                     'type': 'str',
                 },
                 'code_450': {
+                    'type': 'str',
+                },
+                'code_451': {
                     'type': 'str',
                 },
                 'code_452': {
@@ -144,43 +226,25 @@ def get_argspec():
                 'code_455': {
                     'type': 'str',
                 },
-                'cmd_expn': {
+                'code_500': {
+                    'type': 'str',
+                },
+                'code_501': {
+                    'type': 'str',
+                },
+                'code_502': {
+                    'type': 'str',
+                },
+                'code_503': {
+                    'type': 'str',
+                },
+                'code_504': {
                     'type': 'str',
                 },
                 'code_521': {
                     'type': 'str',
                 },
-                'reply_2s': {
-                    'type': 'str',
-                },
-                'data_sz_64k': {
-                    'type': 'str',
-                },
-                'reply_2m': {
-                    'type': 'str',
-                },
-                'code_4xx': {
-                    'type': 'str',
-                },
-                'data_sz_8k': {
-                    'type': 'str',
-                },
-                'cmd_starttls': {
-                    'type': 'str',
-                },
-                'code_421': {
-                    'type': 'str',
-                },
-                'data_sz_16k': {
-                    'type': 'str',
-                },
-                'code_554': {
-                    'type': 'str',
-                },
-                'code_555': {
-                    'type': 'str',
-                },
-                'code_556': {
+                'code_530': {
                     'type': 'str',
                 },
                 'code_550': {
@@ -195,127 +259,13 @@ def get_argspec():
                 'code_553': {
                     'type': 'str',
                 },
-                'code_252': {
+                'code_554': {
                     'type': 'str',
                 },
-                'code_251': {
+                'code_555': {
                     'type': 'str',
                 },
-                'code_250': {
-                    'type': 'str',
-                },
-                'cmd_vrfy': {
-                    'type': 'str',
-                },
-                'data_sz_256k': {
-                    'type': 'str',
-                },
-                'total_conn': {
-                    'type': 'str',
-                },
-                'total_replies': {
-                    'type': 'str',
-                },
-                'reply_10m': {
-                    'type': 'str',
-                },
-                'data_sz_32k': {
-                    'type': 'str',
-                },
-                'code_5xx': {
-                    'type': 'str',
-                },
-                'reply_10u': {
-                    'type': 'str',
-                },
-                'data_sz_128k': {
-                    'type': 'str',
-                },
-                'data_sz_gt_1m': {
-                    'type': 'str',
-                },
-                'data_sz_2k': {
-                    'type': 'str',
-                },
-                'reply_200m': {
-                    'type': 'str',
-                },
-                'data_sz_512k': {
-                    'type': 'str',
-                },
-                'reply_over_5s': {
-                    'type': 'str',
-                },
-                'reply_200u': {
-                    'type': 'str',
-                },
-                'reply_500u': {
-                    'type': 'str',
-                },
-                'reply_5s': {
-                    'type': 'str',
-                },
-                'cmd_rset': {
-                    'type': 'str',
-                },
-                'reply_500m': {
-                    'type': 'str',
-                },
-                'reply_20u': {
-                    'type': 'str',
-                },
-                'cmd_rcpt': {
-                    'type': 'str',
-                },
-                'cmd_mail': {
-                    'type': 'str',
-                },
-                'cmd_turn': {
-                    'type': 'str',
-                },
-                'reply_20m': {
-                    'type': 'str',
-                },
-                'code_200': {
-                    'type': 'str',
-                },
-                'cmd_unknown': {
-                    'type': 'str',
-                },
-                'cmd_data': {
-                    'type': 'str',
-                },
-                'server_bytes': {
-                    'type': 'str',
-                },
-                'cmd_quit': {
-                    'type': 'str',
-                },
-                'peak_conn': {
-                    'type': 'str',
-                },
-                'curr_conn': {
-                    'type': 'str',
-                },
-                'cmd_etrn': {
-                    'type': 'str',
-                },
-                'reply_50m': {
-                    'type': 'str',
-                },
-                'code_214': {
-                    'type': 'str',
-                },
-                'code_211': {
-                    'type': 'str',
-                },
-                'code_354': {
-                    'type': 'str',
-                },
-                'data_sz_4k': {
-                    'type': 'str',
-                },
-                'reply_50u': {
+                'code_556': {
                     'type': 'str',
                 },
                 'code_2xx': {
@@ -324,61 +274,127 @@ def get_argspec():
                 'code_3xx': {
                     'type': 'str',
                 },
-                'code_220': {
+                'code_4xx': {
                     'type': 'str',
                 },
-                'code_221': {
-                    'type': 'str',
-                },
-                'client_bytes': {
-                    'type': 'str',
-                },
-                'code_503': {
-                    'type': 'str',
-                },
-                'code_502': {
-                    'type': 'str',
-                },
-                'code_501': {
-                    'type': 'str',
-                },
-                'code_500': {
-                    'type': 'str',
-                },
-                'code_504': {
+                'code_5xx': {
                     'type': 'str',
                 },
                 'code_unknown': {
                     'type': 'str',
                 },
-                'total_commands': {
+                'reply_10u': {
                     'type': 'str',
                 },
-                'data_sz_1m': {
+                'reply_20u': {
                     'type': 'str',
                 },
-                'data_sz_1k': {
+                'reply_50u': {
                     'type': 'str',
                 },
-                'cmd_helo': {
+                'reply_100u': {
                     'type': 'str',
                 },
-                'cmd_ehlo': {
+                'reply_200u': {
                     'type': 'str',
                 },
-                'cmd_help': {
+                'reply_500u': {
+                    'type': 'str',
+                },
+                'reply_1m': {
+                    'type': 'str',
+                },
+                'reply_2m': {
                     'type': 'str',
                 },
                 'reply_5m': {
                     'type': 'str',
                 },
+                'reply_10m': {
+                    'type': 'str',
+                },
+                'reply_20m': {
+                    'type': 'str',
+                },
+                'reply_50m': {
+                    'type': 'str',
+                },
+                'reply_100m': {
+                    'type': 'str',
+                },
+                'reply_200m': {
+                    'type': 'str',
+                },
+                'reply_500m': {
+                    'type': 'str',
+                },
                 'reply_1s': {
                     'type': 'str',
                 },
-                'code_530': {
+                'reply_2s': {
                     'type': 'str',
                 },
-                'reply_1m': {
+                'reply_5s': {
+                    'type': 'str',
+                },
+                'reply_over_5s': {
+                    'type': 'str',
+                },
+                'data_sz_1k': {
+                    'type': 'str',
+                },
+                'data_sz_2k': {
+                    'type': 'str',
+                },
+                'data_sz_4k': {
+                    'type': 'str',
+                },
+                'data_sz_8k': {
+                    'type': 'str',
+                },
+                'data_sz_16k': {
+                    'type': 'str',
+                },
+                'data_sz_32k': {
+                    'type': 'str',
+                },
+                'data_sz_64k': {
+                    'type': 'str',
+                },
+                'data_sz_128k': {
+                    'type': 'str',
+                },
+                'data_sz_256k': {
+                    'type': 'str',
+                },
+                'data_sz_512k': {
+                    'type': 'str',
+                },
+                'data_sz_1m': {
+                    'type': 'str',
+                },
+                'data_sz_gt_1m': {
+                    'type': 'str',
+                },
+                'total_commands': {
+                    'type': 'str',
+                },
+                'total_replies': {
+                    'type': 'str',
+                },
+                'curr_conn': {
+                    'type': 'str',
+                },
+                'total_conn': {
+                    'type': 'str',
+                },
+                'peak_conn': {
+                    'type': 'str',
+                },
+                'client_bytes': {
+                    'type': 'str',
+                },
+                'server_bytes': {
                     'type': 'str',
                 }
             }

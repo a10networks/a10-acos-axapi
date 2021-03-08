@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_sctp
 description:
     - Define a SCTP template
-short_description: Configures A10 template.sctp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,74 +22,92 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    checksum_check:
+    name:
         description:
-        - "'enable'= Enable Checksum check;"
-        required: False
-    log:
+        - "SCTP Template Name"
+        type: str
+        required: True
+    sctp_half_open_idle_timeout:
         description:
-        - "Field log"
+        - "Set SCTP half-open timeout (SCTP half-open timeout in seconds (default 4))"
+        type: int
         required: False
-        suboptions:
-            payload_proto_filtering:
-                description:
-                - "Log Payload Protocol IDs Filtered"
+    sctp_idle_timeout:
+        description:
+        - "SCTP idle timeout in minutes (default 5)"
+        type: int
+        required: False
     permit_payload_protocol:
         description:
         - "Field permit_payload_protocol"
+        type: dict
         required: False
         suboptions:
             permit_config_id:
                 description:
                 - "Field permit_config_id"
+                type: list
             permit_config_name:
                 description:
                 - "Field permit_config_name"
-    user_tag:
+                type: list
+    checksum_check:
         description:
-        - "Customized tag"
+        - "'enable'= Enable Checksum check;"
+        type: str
         required: False
-    name:
+    log:
         description:
-        - "SCTP Template Name"
-        required: True
-    sctp_idle_timeout:
-        description:
-        - "SCTP idle timeout in minutes (default 5)"
+        - "Field log"
+        type: dict
         required: False
-    sctp_half_open_idle_timeout:
-        description:
-        - "Set SCTP half-open timeout (SCTP half-open timeout in seconds (default 4))"
-        required: False
+        suboptions:
+            payload_proto_filtering:
+                description:
+                - "Log Payload Protocol IDs Filtered"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -152,15 +168,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'checksum_check': {
+        'name': {
             'type': 'str',
-            'choices': ['enable']
+            'required': True,
         },
-        'log': {
-            'type': 'dict',
-            'payload_proto_filtering': {
-                'type': 'bool',
-            }
+        'sctp_half_open_idle_timeout': {
+            'type': 'int',
+        },
+        'sctp_idle_timeout': {
+            'type': 'int',
         },
         'permit_payload_protocol': {
             'type': 'dict',
@@ -178,20 +194,20 @@ def get_argspec():
                 }
             }
         },
-        'user_tag': {
+        'checksum_check': {
             'type': 'str',
+            'choices': ['enable']
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'sctp_idle_timeout': {
-            'type': 'int',
-        },
-        'sctp_half_open_idle_timeout': {
-            'type': 'int',
+        'log': {
+            'type': 'dict',
+            'payload_proto_filtering': {
+                'type': 'bool',
+            }
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

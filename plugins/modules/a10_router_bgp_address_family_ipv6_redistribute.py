@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_address_family_ipv6_redistribute
 description:
     - Redistribute information from another routing protocol
-short_description: Configures A10 router.bgp.address.family.ipv6.redistribute
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,170 +22,231 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     bgp_as_number:
         description:
-        - Key to identify parent object    ip_nat_list_cfg:
-        description:
-        - "Field ip_nat_list_cfg"
-        required: False
-        suboptions:
-            ip_nat_list:
-                description:
-                - "IP NAT list"
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-    lw4o6_cfg:
-        description:
-        - "Field lw4o6_cfg"
-        required: False
-        suboptions:
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-            lw4o6:
-                description:
-                - "LW4O6 Prefix"
-    nat64_cfg:
-        description:
-        - "Field nat64_cfg"
-        required: False
-        suboptions:
-            nat64:
-                description:
-                - "NAT64 Prefix"
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     connected_cfg:
         description:
         - "Field connected_cfg"
+        type: dict
         required: False
         suboptions:
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
             connected:
                 description:
                 - "Connected"
-    ip_nat_cfg:
-        description:
-        - "Field ip_nat_cfg"
-        required: False
-        suboptions:
+                type: bool
             route_map:
                 description:
                 - "Route map reference (Pointer to route-map entries)"
-            ip_nat:
-                description:
-                - "IP NAT"
+                type: str
     floating_ip_cfg:
         description:
         - "Field floating_ip_cfg"
+        type: dict
         required: False
         suboptions:
             floating_ip:
                 description:
                 - "Floating IP"
+                type: bool
             route_map:
                 description:
                 - "Route map reference (Pointer to route-map entries)"
-    isis_cfg:
+                type: str
+    nat64_cfg:
         description:
-        - "Field isis_cfg"
+        - "Field nat64_cfg"
+        type: dict
         required: False
         suboptions:
+            nat64:
+                description:
+                - "NAT64 Prefix"
+                type: bool
             route_map:
                 description:
                 - "Route map reference (Pointer to route-map entries)"
-            isis:
-                description:
-                - "ISO IS-IS"
-    vip:
-        description:
-        - "Field vip"
-        required: False
-        suboptions:
-            only_not_flagged_cfg:
-                description:
-                - "Field only_not_flagged_cfg"
-            only_flagged_cfg:
-                description:
-                - "Field only_flagged_cfg"
-    rip_cfg:
-        description:
-        - "Field rip_cfg"
-        required: False
-        suboptions:
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-            rip:
-                description:
-                - "Routing Information Protocol (RIP)"
-    ospf_cfg:
-        description:
-        - "Field ospf_cfg"
-        required: False
-        suboptions:
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-            ospf:
-                description:
-                - "Open Shortest Path First (OSPF)"
-    static_cfg:
-        description:
-        - "Field static_cfg"
-        required: False
-        suboptions:
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-            static:
-                description:
-                - "Static routes"
+                type: str
     nat_map_cfg:
         description:
         - "Field nat_map_cfg"
+        type: dict
         required: False
         suboptions:
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
             nat_map:
                 description:
                 - "NAT MAP Prefix"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    lw4o6_cfg:
+        description:
+        - "Field lw4o6_cfg"
+        type: dict
+        required: False
+        suboptions:
+            lw4o6:
+                description:
+                - "LW4O6 Prefix"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    static_nat_cfg:
+        description:
+        - "Field static_nat_cfg"
+        type: dict
+        required: False
+        suboptions:
+            static_nat:
+                description:
+                - "Static NAT Prefix"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    ip_nat_cfg:
+        description:
+        - "Field ip_nat_cfg"
+        type: dict
+        required: False
+        suboptions:
+            ip_nat:
+                description:
+                - "IP NAT"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    ip_nat_list_cfg:
+        description:
+        - "Field ip_nat_list_cfg"
+        type: dict
+        required: False
+        suboptions:
+            ip_nat_list:
+                description:
+                - "IP NAT list"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    isis_cfg:
+        description:
+        - "Field isis_cfg"
+        type: dict
+        required: False
+        suboptions:
+            isis:
+                description:
+                - "ISO IS-IS"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    ospf_cfg:
+        description:
+        - "Field ospf_cfg"
+        type: dict
+        required: False
+        suboptions:
+            ospf:
+                description:
+                - "Open Shortest Path First (OSPF)"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    rip_cfg:
+        description:
+        - "Field rip_cfg"
+        type: dict
+        required: False
+        suboptions:
+            rip:
+                description:
+                - "Routing Information Protocol (RIP)"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    static_cfg:
+        description:
+        - "Field static_cfg"
+        type: dict
+        required: False
+        suboptions:
+            static:
+                description:
+                - "Static routes"
+                type: bool
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    vip:
+        description:
+        - "Field vip"
+        type: dict
+        required: False
+        suboptions:
+            only_flagged_cfg:
+                description:
+                - "Field only_flagged_cfg"
+                type: dict
+            only_not_flagged_cfg:
+                description:
+                - "Field only_not_flagged_cfg"
+                type: dict
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -213,6 +272,7 @@ AVAILABLE_PROPERTIES = [
     "ospf_cfg",
     "rip_cfg",
     "static_cfg",
+    "static_nat_cfg",
     "uuid",
     "vip",
 ]
@@ -252,52 +312,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ip_nat_list_cfg': {
-            'type': 'dict',
-            'ip_nat_list': {
-                'type': 'bool',
-            },
-            'route_map': {
-                'type': 'str',
-            }
-        },
-        'lw4o6_cfg': {
-            'type': 'dict',
-            'route_map': {
-                'type': 'str',
-            },
-            'lw4o6': {
-                'type': 'bool',
-            }
-        },
-        'nat64_cfg': {
-            'type': 'dict',
-            'nat64': {
-                'type': 'bool',
-            },
-            'route_map': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'connected_cfg': {
             'type': 'dict',
-            'route_map': {
-                'type': 'str',
-            },
             'connected': {
                 'type': 'bool',
-            }
-        },
-        'ip_nat_cfg': {
-            'type': 'dict',
+            },
             'route_map': {
                 'type': 'str',
-            },
-            'ip_nat': {
-                'type': 'bool',
             }
         },
         'floating_ip_cfg': {
@@ -309,71 +330,119 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'isis_cfg': {
+        'nat64_cfg': {
             'type': 'dict',
+            'nat64': {
+                'type': 'bool',
+            },
             'route_map': {
                 'type': 'str',
-            },
-            'isis': {
-                'type': 'bool',
-            }
-        },
-        'vip': {
-            'type': 'dict',
-            'only_not_flagged_cfg': {
-                'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
-                'only_not_flagged': {
-                    'type': 'bool',
-                }
-            },
-            'only_flagged_cfg': {
-                'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
-                'only_flagged': {
-                    'type': 'bool',
-                }
-            }
-        },
-        'rip_cfg': {
-            'type': 'dict',
-            'route_map': {
-                'type': 'str',
-            },
-            'rip': {
-                'type': 'bool',
-            }
-        },
-        'ospf_cfg': {
-            'type': 'dict',
-            'route_map': {
-                'type': 'str',
-            },
-            'ospf': {
-                'type': 'bool',
-            }
-        },
-        'static_cfg': {
-            'type': 'dict',
-            'route_map': {
-                'type': 'str',
-            },
-            'static': {
-                'type': 'bool',
             }
         },
         'nat_map_cfg': {
             'type': 'dict',
-            'route_map': {
-                'type': 'str',
-            },
             'nat_map': {
                 'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
             }
+        },
+        'lw4o6_cfg': {
+            'type': 'dict',
+            'lw4o6': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'static_nat_cfg': {
+            'type': 'dict',
+            'static_nat': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'ip_nat_cfg': {
+            'type': 'dict',
+            'ip_nat': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'ip_nat_list_cfg': {
+            'type': 'dict',
+            'ip_nat_list': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'isis_cfg': {
+            'type': 'dict',
+            'isis': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'ospf_cfg': {
+            'type': 'dict',
+            'ospf': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'rip_cfg': {
+            'type': 'dict',
+            'rip': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'static_cfg': {
+            'type': 'dict',
+            'static': {
+                'type': 'bool',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'vip': {
+            'type': 'dict',
+            'only_flagged_cfg': {
+                'type': 'dict',
+                'only_flagged': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'only_not_flagged_cfg': {
+                'type': 'dict',
+                'only_not_flagged': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            }
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

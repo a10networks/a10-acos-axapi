@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_waf
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.waf
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
-        - Key to identify parent object    port_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - Key to identify parent object    virtual_server_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    virtual_server_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
+        description:
+        - "WAF Template Name"
+        type: str
+        required: True
+    stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             waf:
                 description:
                 - "Field waf"
-    name:
-        description:
-        - "WAF Template Name"
-        required: True
+                type: dict
 
 '''
 
@@ -121,182 +138,48 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
         'stats': {
             'type': 'dict',
             'waf': {
                 'type': 'dict',
-                'redirect_wlist_fail': {
+                'total_req': {
                     'type': 'str',
                 },
-                'cookie_encrypt_limit_exceeded': {
-                    'type': 'str',
-                },
-                'wsdl_succ': {
-                    'type': 'str',
-                },
-                'sqlia_chk_url_succ': {
-                    'type': 'str',
-                },
-                'bot_check_succ': {
-                    'type': 'str',
-                },
-                'cookie_encrypt_skip_rcache': {
-                    'type': 'str',
-                },
-                'redirect_wlist_learn': {
-                    'type': 'str',
-                },
-                'xml_limit_elem_child': {
-                    'type': 'str',
-                },
-                'buf_ovf_parameter_value_len_fail': {
-                    'type': 'str',
-                },
-                'ccn_mask_visa': {
-                    'type': 'str',
-                },
-                'xss_chk_cookie_succ': {
-                    'type': 'str',
-                },
-                'buf_ovf_cookies_len_fail': {
+                'req_allowed': {
                     'type': 'str',
                 },
                 'req_denied': {
                     'type': 'str',
                 },
-                'json_check_failure': {
+                'bot_check_succ': {
                     'type': 'str',
                 },
-                'xss_chk_post_reject': {
-                    'type': 'str',
-                },
-                'http_check_succ': {
+                'bot_check_fail': {
                     'type': 'str',
                 },
                 'form_consistency_succ': {
                     'type': 'str',
                 },
-                'xml_limit_cdata_len': {
-                    'type': 'str',
-                },
-                'xml_check_failure': {
-                    'type': 'str',
-                },
-                'buf_ovf_hdrs_len_fail': {
-                    'type': 'str',
-                },
-                'referer_check_succ': {
-                    'type': 'str',
-                },
-                'sqlia_chk_post_succ': {
-                    'type': 'str',
-                },
-                'xss_chk_url_sanitize': {
-                    'type': 'str',
-                },
-                'cookie_encrypt_succ': {
-                    'type': 'str',
-                },
-                'buf_ovf_parameter_total_len_fail': {
-                    'type': 'str',
-                },
-                'soap_check_succ': {
-                    'type': 'str',
-                },
-                'max_cookies_fail': {
-                    'type': 'str',
-                },
-                'json_limit_array_value_count': {
-                    'type': 'str',
-                },
-                'uri_wlist_succ': {
-                    'type': 'str',
-                },
-                'brute_force_success': {
-                    'type': 'str',
-                },
-                'resp_code_hidden': {
-                    'type': 'str',
-                },
-                'xml_sqlia_chk_fail': {
-                    'type': 'str',
-                },
-                'xss_chk_post_succ': {
-                    'type': 'str',
-                },
-                'pcre_mask': {
-                    'type': 'str',
-                },
                 'form_consistency_fail': {
                     'type': 'str',
                 },
-                'http_check_fail': {
+                'form_csrf_tag_succ': {
+                    'type': 'str',
+                },
+                'form_csrf_tag_fail': {
                     'type': 'str',
                 },
                 'url_check_succ': {
                     'type': 'str',
                 },
-                'sqlia_chk_url_reject': {
+                'url_check_fail': {
                     'type': 'str',
                 },
-                'sqlia_chk_url_sanitize': {
-                    'type': 'str',
-                },
-                'xss_chk_cookie_reject': {
-                    'type': 'str',
-                },
-                'json_check_succ': {
-                    'type': 'str',
-                },
-                'max_entities_fail': {
-                    'type': 'str',
-                },
-                'http_method_check_fail': {
-                    'type': 'str',
-                },
-                'form_non_ssl_reject': {
-                    'type': 'str',
-                },
-                'xss_chk_post_sanitize': {
-                    'type': 'str',
-                },
-                'form_set_no_cache': {
-                    'type': 'str',
-                },
-                'xml_schema_succ': {
-                    'type': 'str',
-                },
-                'xml_limit_attr': {
-                    'type': 'str',
-                },
-                'xml_check_succ': {
-                    'type': 'str',
-                },
-                'sess_check_none': {
-                    'type': 'str',
-                },
-                'xml_limit_namespace': {
-                    'type': 'str',
-                },
-                'wsdl_fail': {
-                    'type': 'str',
-                },
-                'post_form_check_succ': {
-                    'type': 'str',
-                },
-                'buf_ovf_query_len_fail': {
-                    'type': 'str',
-                },
-                'sqlia_chk_post_reject': {
-                    'type': 'str',
-                },
-                'form_password_autocomplete': {
-                    'type': 'str',
-                },
-                'permitted': {
-                    'type': 'str',
-                },
-                'xml_xss_chk_fail': {
+                'url_check_learn': {
                     'type': 'str',
                 },
                 'buf_ovf_url_len_fail': {
@@ -305,154 +188,331 @@ def get_argspec():
                 'buf_ovf_cookie_len_fail': {
                     'type': 'str',
                 },
-                'form_csrf_tag_succ': {
+                'buf_ovf_hdrs_len_fail': {
                     'type': 'str',
                 },
-                'xss_chk_cookie_sanitize': {
+                'buf_ovf_post_size_fail': {
                     'type': 'str',
                 },
-                'sessions_alloc': {
-                    'type': 'str',
-                },
-                'xml_limit_entity_exp': {
-                    'type': 'str',
-                },
-                'ccn_mask_diners': {
-                    'type': 'str',
-                },
-                'sess_check_succ': {
-                    'type': 'str',
-                },
-                'json_limit_depth': {
-                    'type': 'str',
-                },
-                'buf_ovf_cookie_name_len_fail': {
-                    'type': 'str',
-                },
-                'learn_updates': {
-                    'type': 'str',
-                },
-                'redirect_wlist_succ': {
-                    'type': 'str',
-                },
-                'challenge_javascript_sent': {
-                    'type': 'str',
-                },
-                'req_allowed': {
-                    'type': 'str',
-                },
-                'json_limit_object_member_count': {
-                    'type': 'str',
-                },
-                'bot_check_fail': {
-                    'type': 'str',
-                },
-                'uri_wlist_fail': {
-                    'type': 'str',
-                },
-                'uri_blist_fail': {
-                    'type': 'str',
-                },
-                'referer_check_redirect': {
-                    'type': 'str',
-                },
-                'challenge_cookie_sent': {
-                    'type': 'str',
-                },
-                'sqlia_chk_post_sanitize': {
-                    'type': 'str',
-                },
-                'ccn_mask_amex': {
-                    'type': 'str',
-                },
-                'num_drops': {
-                    'type': 'str',
-                },
-                'referer_check_fail': {
-                    'type': 'str',
-                },
-                'post_form_check_sanitize': {
-                    'type': 'str',
-                },
-                'cookie_decrypt_succ': {
-                    'type': 'str',
-                },
-                'xss_chk_url_reject': {
-                    'type': 'str',
-                },
-                'max_parameters_fail': {
-                    'type': 'str',
-                },
-                'url_check_fail': {
-                    'type': 'str',
-                },
-                'xml_schema_fail': {
-                    'type': 'str',
-                },
-                'form_non_post_reject': {
-                    'type': 'str',
-                },
-                'num_resets': {
-                    'type': 'str',
-                },
-                'xml_limit_entity_exp_depth': {
-                    'type': 'str',
-                },
-                'form_non_masked_password': {
-                    'type': 'str',
-                },
-                'buf_ovf_line_len_fail': {
-                    'type': 'str',
-                },
-                'ccn_mask_discover': {
-                    'type': 'str',
-                },
-                'ssn_mask': {
-                    'type': 'str',
-                },
-                'json_limit_string': {
-                    'type': 'str',
-                },
-                'resp_hdrs_filtered': {
-                    'type': 'str',
-                },
-                'called': {
-                    'type': 'str',
-                },
-                'ccn_mask_mastercard': {
-                    'type': 'str',
-                },
-                'xml_sqlia_chk_succ': {
-                    'type': 'str',
-                },
-                'brute_force_fail': {
+                'max_cookies_fail': {
                     'type': 'str',
                 },
                 'max_hdrs_fail': {
                     'type': 'str',
                 },
-                'xml_limit_attr_name_len': {
+                'http_method_check_succ': {
                     'type': 'str',
                 },
-                'form_non_ssl_password': {
+                'http_method_check_fail': {
                     'type': 'str',
                 },
-                'too_many_sessions': {
+                'http_check_succ': {
                     'type': 'str',
                 },
-                'buf_ovf_hdr_value_len_fail': {
+                'http_check_fail': {
+                    'type': 'str',
+                },
+                'referer_check_succ': {
+                    'type': 'str',
+                },
+                'referer_check_fail': {
+                    'type': 'str',
+                },
+                'referer_check_redirect': {
+                    'type': 'str',
+                },
+                'uri_wlist_succ': {
+                    'type': 'str',
+                },
+                'uri_wlist_fail': {
                     'type': 'str',
                 },
                 'uri_blist_succ': {
                     'type': 'str',
                 },
+                'uri_blist_fail': {
+                    'type': 'str',
+                },
+                'post_form_check_succ': {
+                    'type': 'str',
+                },
+                'post_form_check_sanitize': {
+                    'type': 'str',
+                },
+                'post_form_check_reject': {
+                    'type': 'str',
+                },
+                'ccn_mask_amex': {
+                    'type': 'str',
+                },
+                'ccn_mask_diners': {
+                    'type': 'str',
+                },
+                'ccn_mask_visa': {
+                    'type': 'str',
+                },
+                'ccn_mask_mastercard': {
+                    'type': 'str',
+                },
+                'ccn_mask_discover': {
+                    'type': 'str',
+                },
+                'ccn_mask_jcb': {
+                    'type': 'str',
+                },
+                'ssn_mask': {
+                    'type': 'str',
+                },
+                'pcre_mask': {
+                    'type': 'str',
+                },
+                'cookie_encrypt_succ': {
+                    'type': 'str',
+                },
+                'cookie_encrypt_fail': {
+                    'type': 'str',
+                },
+                'cookie_encrypt_limit_exceeded': {
+                    'type': 'str',
+                },
+                'cookie_encrypt_skip_rcache': {
+                    'type': 'str',
+                },
+                'cookie_decrypt_succ': {
+                    'type': 'str',
+                },
+                'cookie_decrypt_fail': {
+                    'type': 'str',
+                },
+                'sqlia_chk_url_succ': {
+                    'type': 'str',
+                },
+                'sqlia_chk_url_sanitize': {
+                    'type': 'str',
+                },
+                'sqlia_chk_url_reject': {
+                    'type': 'str',
+                },
+                'sqlia_chk_post_succ': {
+                    'type': 'str',
+                },
+                'sqlia_chk_post_sanitize': {
+                    'type': 'str',
+                },
+                'sqlia_chk_post_reject': {
+                    'type': 'str',
+                },
+                'xss_chk_cookie_succ': {
+                    'type': 'str',
+                },
+                'xss_chk_cookie_sanitize': {
+                    'type': 'str',
+                },
+                'xss_chk_cookie_reject': {
+                    'type': 'str',
+                },
+                'xss_chk_url_succ': {
+                    'type': 'str',
+                },
+                'xss_chk_url_sanitize': {
+                    'type': 'str',
+                },
+                'xss_chk_url_reject': {
+                    'type': 'str',
+                },
+                'xss_chk_post_succ': {
+                    'type': 'str',
+                },
+                'xss_chk_post_sanitize': {
+                    'type': 'str',
+                },
+                'xss_chk_post_reject': {
+                    'type': 'str',
+                },
+                'resp_code_hidden': {
+                    'type': 'str',
+                },
+                'resp_hdrs_filtered': {
+                    'type': 'str',
+                },
+                'learn_updates': {
+                    'type': 'str',
+                },
+                'num_drops': {
+                    'type': 'str',
+                },
+                'num_resets': {
+                    'type': 'str',
+                },
+                'form_non_ssl_reject': {
+                    'type': 'str',
+                },
+                'form_non_post_reject': {
+                    'type': 'str',
+                },
+                'sess_check_none': {
+                    'type': 'str',
+                },
+                'sess_check_succ': {
+                    'type': 'str',
+                },
                 'sess_check_fail': {
+                    'type': 'str',
+                },
+                'soap_check_succ': {
+                    'type': 'str',
+                },
+                'soap_check_failure': {
+                    'type': 'str',
+                },
+                'wsdl_fail': {
+                    'type': 'str',
+                },
+                'wsdl_succ': {
+                    'type': 'str',
+                },
+                'xml_schema_fail': {
+                    'type': 'str',
+                },
+                'xml_schema_succ': {
+                    'type': 'str',
+                },
+                'xml_sqlia_chk_fail': {
+                    'type': 'str',
+                },
+                'xml_sqlia_chk_succ': {
+                    'type': 'str',
+                },
+                'xml_xss_chk_fail': {
+                    'type': 'str',
+                },
+                'xml_xss_chk_succ': {
+                    'type': 'str',
+                },
+                'json_check_failure': {
+                    'type': 'str',
+                },
+                'json_check_succ': {
+                    'type': 'str',
+                },
+                'xml_check_failure': {
+                    'type': 'str',
+                },
+                'xml_check_succ': {
+                    'type': 'str',
+                },
+                'buf_ovf_cookie_value_len_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_cookies_len_fail': {
                     'type': 'str',
                 },
                 'buf_ovf_hdr_name_len_fail': {
                     'type': 'str',
                 },
+                'buf_ovf_hdr_value_len_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_max_data_parse_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_line_len_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_parameter_name_len_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_parameter_value_len_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_parameter_total_len_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_query_len_fail': {
+                    'type': 'str',
+                },
+                'max_entities_fail': {
+                    'type': 'str',
+                },
+                'max_parameters_fail': {
+                    'type': 'str',
+                },
+                'buf_ovf_cookie_name_len_fail': {
+                    'type': 'str',
+                },
+                'xml_limit_attr': {
+                    'type': 'str',
+                },
+                'xml_limit_attr_name_len': {
+                    'type': 'str',
+                },
+                'xml_limit_attr_value_len': {
+                    'type': 'str',
+                },
+                'xml_limit_cdata_len': {
+                    'type': 'str',
+                },
+                'xml_limit_elem': {
+                    'type': 'str',
+                },
+                'xml_limit_elem_child': {
+                    'type': 'str',
+                },
+                'xml_limit_elem_depth': {
+                    'type': 'str',
+                },
+                'xml_limit_elem_name_len': {
+                    'type': 'str',
+                },
+                'xml_limit_entity_exp': {
+                    'type': 'str',
+                },
+                'xml_limit_entity_exp_depth': {
+                    'type': 'str',
+                },
+                'xml_limit_namespace': {
+                    'type': 'str',
+                },
+                'xml_limit_namespace_uri_len': {
+                    'type': 'str',
+                },
+                'json_limit_array_value_count': {
+                    'type': 'str',
+                },
+                'json_limit_depth': {
+                    'type': 'str',
+                },
+                'json_limit_object_member_count': {
+                    'type': 'str',
+                },
+                'json_limit_string': {
+                    'type': 'str',
+                },
+                'form_non_masked_password': {
+                    'type': 'str',
+                },
+                'form_non_ssl_password': {
+                    'type': 'str',
+                },
+                'form_password_autocomplete': {
+                    'type': 'str',
+                },
+                'redirect_wlist_succ': {
+                    'type': 'str',
+                },
+                'redirect_wlist_fail': {
+                    'type': 'str',
+                },
+                'redirect_wlist_learn': {
+                    'type': 'str',
+                },
+                'form_set_no_cache': {
+                    'type': 'str',
+                },
                 'resp_denied': {
+                    'type': 'str',
+                },
+                'sessions_alloc': {
                     'type': 'str',
                 },
                 'sessions_freed': {
@@ -461,74 +521,31 @@ def get_argspec():
                 'out_of_sessions': {
                     'type': 'str',
                 },
-                'xml_limit_elem': {
+                'too_many_sessions': {
                     'type': 'str',
                 },
-                'buf_ovf_parameter_name_len_fail': {
+                'called': {
                     'type': 'str',
                 },
-                'xml_limit_attr_value_len': {
+                'permitted': {
                     'type': 'str',
                 },
-                'xml_limit_elem_depth': {
+                'brute_force_success': {
                     'type': 'str',
                 },
-                'ccn_mask_jcb': {
+                'brute_force_fail': {
                     'type': 'str',
                 },
-                'cookie_decrypt_fail': {
+                'challenge_cookie_sent': {
                     'type': 'str',
                 },
-                'buf_ovf_cookie_value_len_fail': {
-                    'type': 'str',
-                },
-                'buf_ovf_post_size_fail': {
-                    'type': 'str',
-                },
-                'total_req': {
-                    'type': 'str',
-                },
-                'xml_limit_elem_name_len': {
-                    'type': 'str',
-                },
-                'url_check_learn': {
-                    'type': 'str',
-                },
-                'http_method_check_succ': {
-                    'type': 'str',
-                },
-                'xss_chk_url_succ': {
-                    'type': 'str',
-                },
-                'xml_limit_namespace_uri_len': {
-                    'type': 'str',
-                },
-                'post_form_check_reject': {
-                    'type': 'str',
-                },
-                'cookie_encrypt_fail': {
-                    'type': 'str',
-                },
-                'soap_check_failure': {
+                'challenge_javascript_sent': {
                     'type': 'str',
                 },
                 'challenge_captcha_sent': {
                     'type': 'str',
-                },
-                'form_csrf_tag_fail': {
-                    'type': 'str',
-                },
-                'xml_xss_chk_succ': {
-                    'type': 'str',
-                },
-                'buf_ovf_max_data_parse_fail': {
-                    'type': 'str',
                 }
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     # Parent keys

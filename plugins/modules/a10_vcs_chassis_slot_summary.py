@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_chassis_slot_summary
 description:
     - Chassis Summary Information
-short_description: Configures A10 vcs.chassis.slot-summary
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,71 +22,90 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            chassis_id:
-                description:
-                - "Field chassis_id"
-            multicast_port:
-                description:
-                - "Field multicast_port"
-            floating_ipv6_list:
-                description:
-                - "Field floating_ipv6_list"
-            multicast_addr:
-                description:
-                - "Field multicast_addr"
-            vmaster_maintenance_interval:
-                description:
-                - "Field vmaster_maintenance_interval"
-            version:
-                description:
-                - "Field version"
-            vmaster_maintenance_left:
-                description:
-                - "Field vmaster_maintenance_left"
-            member_list:
-                description:
-                - "Field member_list"
-            floating_ipv4_list:
-                description:
-                - "Field floating_ipv4_list"
             vcs_enabled:
                 description:
                 - "Field vcs_enabled"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            chassis_id:
+                description:
+                - "Field chassis_id"
+                type: int
+            multicast_addr:
+                description:
+                - "Field multicast_addr"
+                type: str
+            multicast_port:
+                description:
+                - "Field multicast_port"
+                type: int
+            version:
+                description:
+                - "Field version"
+                type: str
+            vmaster_maintenance_interval:
+                description:
+                - "Field vmaster_maintenance_interval"
+                type: int
+            vmaster_maintenance_left:
+                description:
+                - "Field vmaster_maintenance_left"
+                type: int
+            floating_ipv4_list:
+                description:
+                - "Field floating_ipv4_list"
+                type: list
+            floating_ipv6_list:
+                description:
+                - "Field floating_ipv6_list"
+                type: list
+            member_list:
+                description:
+                - "Field member_list"
+                type: list
 
 '''
 
@@ -142,13 +159,40 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'vcs_enabled': {
+                'type': 'str',
+            },
             'chassis_id': {
                 'type': 'int',
             },
+            'multicast_addr': {
+                'type': 'str',
+            },
             'multicast_port': {
                 'type': 'int',
+            },
+            'version': {
+                'type': 'str',
+            },
+            'vmaster_maintenance_interval': {
+                'type': 'int',
+            },
+            'vmaster_maintenance_left': {
+                'type': 'int',
+            },
+            'floating_ipv4_list': {
+                'type': 'list',
+                'floating_ipv4': {
+                    'type': 'str',
+                },
+                'floating_ipv4_mask': {
+                    'type': 'str',
+                }
             },
             'floating_ipv6_list': {
                 'type': 'list',
@@ -159,28 +203,16 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'multicast_addr': {
-                'type': 'str',
-            },
-            'vmaster_maintenance_interval': {
-                'type': 'int',
-            },
-            'version': {
-                'type': 'str',
-            },
-            'vmaster_maintenance_left': {
-                'type': 'int',
-            },
             'member_list': {
                 'type': 'list',
-                'port': {
-                    'type': 'int',
-                },
-                'priority': {
+                'id': {
                     'type': 'int',
                 },
                 'state': {
                     'type': 'str',
+                },
+                'priority': {
+                    'type': 'int',
                 },
                 'ip_list': {
                     'type': 'list',
@@ -188,28 +220,13 @@ def get_argspec():
                         'type': 'str',
                     }
                 },
+                'port': {
+                    'type': 'int',
+                },
                 'location': {
                     'type': 'str',
-                },
-                'id': {
-                    'type': 'int',
                 }
-            },
-            'floating_ipv4_list': {
-                'type': 'list',
-                'floating_ipv4_mask': {
-                    'type': 'str',
-                },
-                'floating_ipv4': {
-                    'type': 'str',
-                }
-            },
-            'vcs_enabled': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

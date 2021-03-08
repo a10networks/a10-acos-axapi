@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_global
 description:
     - Define the Health Monitor global default
-short_description: Configures A10 health.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,92 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    disable_auto_adjust:
-        description:
-        - "Disable the Health Check Rate Auto Adjustment"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    external_rate:
-        description:
-        - "Define the External Health Check Rate (Number of External Script Programs
-          (default 2))"
+        type: str
         required: False
     multi_process:
         description:
         - "Start Health Monitoring in Multi-Process Mode (Specify the number of multiple
           processes (default 1))"
+        type: int
         required: False
-    interval:
+    disable_auto_adjust:
         description:
-        - "Specify the Healthcheck Interval (Interval Value, in seconds (default 5))"
+        - "Disable the Health Check Rate Auto Adjustment"
+        type: bool
         required: False
     check_rate:
         description:
         - "Health Check Rate per 500ms (default 1000)"
+        type: int
+        required: False
+    external_rate:
+        description:
+        - "Define the External Health Check Rate (Number of External Script Programs
+          (default 2))"
+        type: int
         required: False
     per:
         description:
         - "Specify the Unit Time for the rate (Specify the Unit Time, multiple of 100ms)"
+        type: int
         required: False
     retry:
         description:
         - "Specify the Healthcheck Retries (Retry Count (default 3))"
+        type: int
         required: False
     up_retry:
         description:
         - "Specify the Healthcheck Retries before declaring target up (Up-retry count
           (default 1))"
+        type: int
+        required: False
+    interval:
+        description:
+        - "Specify the Healthcheck Interval (Interval Value, in seconds (default 5))"
+        type: int
         required: False
     timeout:
         description:
         - "Specify the Healthcheck Timeout (Timeout Value, in seconds (default 5), Timeout
           should be less than or equal to interval)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -155,22 +170,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'disable_auto_adjust': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'external_rate': {
-            'type': 'int',
-        },
         'multi_process': {
             'type': 'int',
         },
-        'interval': {
-            'type': 'int',
+        'disable_auto_adjust': {
+            'type': 'bool',
         },
         'check_rate': {
+            'type': 'int',
+        },
+        'external_rate': {
             'type': 'int',
         },
         'per': {
@@ -182,8 +191,14 @@ def get_argspec():
         'up_retry': {
             'type': 'int',
         },
+        'interval': {
+            'type': 'int',
+        },
         'timeout': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

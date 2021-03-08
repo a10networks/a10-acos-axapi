@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_glm_proxy_server
 description:
     - Connect to GLM through proxy server
-short_description: Configures A10 glm.proxy-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,60 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    host:
+        description:
+        - "Proxy server hostname or IP address"
+        type: str
+        required: False
+    port:
+        description:
+        - "Proxy server port"
+        type: int
         required: False
     username:
         description:
         - "Username for proxy authentication"
+        type: str
         required: False
-    uuid:
+    password:
         description:
-        - "uuid of the object"
+        - "Password for proxy authentication"
+        type: bool
+        required: False
+    secret_string:
+        description:
+        - "password value"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
-    host:
+    uuid:
         description:
-        - "Proxy server hostname or IP address"
-        required: False
-    password:
-        description:
-        - "Password for proxy authentication"
-        required: False
-    port:
-        description:
-        - "Proxy server port"
-        required: False
-    secret_string:
-        description:
-        - "password value"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -137,25 +149,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'username': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
         'host': {
+            'type': 'str',
+        },
+        'port': {
+            'type': 'int',
+        },
+        'username': {
             'type': 'str',
         },
         'password': {
             'type': 'bool',
         },
-        'port': {
-            'type': 'int',
-        },
         'secret_string': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         }
     })

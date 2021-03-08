@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_l7session
 description:
     - Configure l7session
-short_description: Configures A10 slb.l7session
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l7_cpu_list:
-                description:
-                - "Field l7_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -92,66 +92,95 @@ options:
           req fail - rport; 'hps_fwdreq_fail_route'= Fwd req fail - route;
           'hps_fwdreq_fail_persist'= Fwd req fail - persist; 'hps_fwdreq_fail_server'=
           Fwd req fail - server; 'hps_fwdreq_fail_tuple'= Fwd req fail - tuple;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l7_cpu_list:
+                description:
+                - "Field l7_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            server_fin:
-                description:
-                - "FIN from server"
-            data_cb_failed:
-                description:
-                - "Data event callback fail"
-            server_rst:
-                description:
-                - "RST from server"
-            err_event:
-                description:
-                - "Err event from TCP"
-            total_proxy:
-                description:
-                - "Total proxy conn"
             start_server_conn_succ:
                 description:
                 - "Start Server Conn Success"
-            curr_proxy:
-                description:
-                - "Curr proxy conn"
-            wbuf_event:
-                description:
-                - "Wbuf event from TCP"
-            data_event:
-                description:
-                - "Data event from TCP"
-            wbuf_cb_failed:
-                description:
-                - "Wbuf event callback failed"
-            client_rst:
-                description:
-                - "RST from client"
-            err_cb_failed:
-                description:
-                - "Err event callback failed"
-            client_fin:
-                description:
-                - "FIN from client"
-            server_select_fail:
-                description:
-                - "Server selection fail"
-            server_conn_failed:
-                description:
-                - "Server connection failed"
-            hps_fwdreq_fail:
-                description:
-                - "Fwd req fail"
+                type: str
             conn_not_exist:
                 description:
                 - "Conn does not exist"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            data_event:
+                description:
+                - "Data event from TCP"
+                type: str
+            client_fin:
+                description:
+                - "FIN from client"
+                type: str
+            server_fin:
+                description:
+                - "FIN from server"
+                type: str
+            wbuf_event:
+                description:
+                - "Wbuf event from TCP"
+                type: str
+            wbuf_cb_failed:
+                description:
+                - "Wbuf event callback failed"
+                type: str
+            err_event:
+                description:
+                - "Err event from TCP"
+                type: str
+            err_cb_failed:
+                description:
+                - "Err event callback failed"
+                type: str
+            server_conn_failed:
+                description:
+                - "Server connection failed"
+                type: str
+            client_rst:
+                description:
+                - "RST from client"
+                type: str
+            server_rst:
+                description:
+                - "RST from server"
+                type: str
+            curr_proxy:
+                description:
+                - "Curr proxy conn"
+                type: str
+            total_proxy:
+                description:
+                - "Total proxy conn"
+                type: str
+            server_select_fail:
+                description:
+                - "Server selection fail"
+                type: str
+            data_cb_failed:
+                description:
+                - "Data event callback fail"
+                type: str
+            hps_fwdreq_fail:
+                description:
+                - "Fwd req fail"
+                type: str
 
 '''
 
@@ -207,137 +236,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l7_cpu_list': {
-                'type': 'list',
-                'curr_proxy_client': {
-                    'type': 'int',
-                },
-                'proxy_v2_connection': {
-                    'type': 'int',
-                },
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'hps_fwdreq_fail_rport': {
-                    'type': 'int',
-                },
-                'hps_fwdreq_fail_persist': {
-                    'type': 'int',
-                },
-                'hps_fwdreq_fail_server': {
-                    'type': 'int',
-                },
-                'client_rst_rsp': {
-                    'type': 'int',
-                },
-                'client_rst': {
-                    'type': 'int',
-                },
-                'hps_fwdreq_fail': {
-                    'type': 'int',
-                },
-                'total_proxy_server': {
-                    'type': 'int',
-                },
-                'est_event': {
-                    'type': 'int',
-                },
-                'hps_fwdreq_fail_buff': {
-                    'type': 'int',
-                },
-                'start_server_conn_succ': {
-                    'type': 'int',
-                },
-                'wbuf_event': {
-                    'type': 'int',
-                },
-                'data_event': {
-                    'type': 'int',
-                },
-                'client_rst_req': {
-                    'type': 'int',
-                },
-                'err_cb_failed': {
-                    'type': 'int',
-                },
-                'hps_fwdreq_fail_tuple': {
-                    'type': 'int',
-                },
-                'client_fin': {
-                    'type': 'int',
-                },
-                'est_cb_failed': {
-                    'type': 'int',
-                },
-                'server_rst': {
-                    'type': 'int',
-                },
-                'total_proxy_es': {
-                    'type': 'int',
-                },
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'hps_fwdreq_fail_route': {
-                    'type': 'int',
-                },
-                'client_rst_connected': {
-                    'type': 'int',
-                },
-                'total_proxy_client': {
-                    'type': 'int',
-                },
-                'server_fin': {
-                    'type': 'int',
-                },
-                'err_event': {
-                    'type': 'int',
-                },
-                'server_rst_rsp': {
-                    'type': 'int',
-                },
-                'server_rst_req': {
-                    'type': 'int',
-                },
-                'server_rst_connecting': {
-                    'type': 'int',
-                },
-                'curr_proxy_es': {
-                    'type': 'int',
-                },
-                'wbuf_cb_failed': {
-                    'type': 'int',
-                },
-                'server_rst_connected': {
-                    'type': 'int',
-                },
-                'server_conn_failed': {
-                    'type': 'int',
-                },
-                'client_rst_connecting': {
-                    'type': 'int',
-                },
-                'server_select_fail': {
-                    'type': 'int',
-                },
-                'proxy_v1_connection': {
-                    'type': 'int',
-                },
-                'curr_proxy_server': {
-                    'type': 'int',
-                },
-                'data_cb_failed': {
-                    'type': 'int',
-                },
-                'conn_not_exist': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -364,62 +264,191 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l7_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'curr_proxy_client': {
+                    'type': 'int',
+                },
+                'curr_proxy_server': {
+                    'type': 'int',
+                },
+                'curr_proxy_es': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy_client': {
+                    'type': 'int',
+                },
+                'total_proxy_server': {
+                    'type': 'int',
+                },
+                'total_proxy_es': {
+                    'type': 'int',
+                },
+                'start_server_conn_succ': {
+                    'type': 'int',
+                },
+                'server_select_fail': {
+                    'type': 'int',
+                },
+                'server_conn_failed': {
+                    'type': 'int',
+                },
+                'conn_not_exist': {
+                    'type': 'int',
+                },
+                'est_event': {
+                    'type': 'int',
+                },
+                'est_cb_failed': {
+                    'type': 'int',
+                },
+                'data_event': {
+                    'type': 'int',
+                },
+                'data_cb_failed': {
+                    'type': 'int',
+                },
+                'wbuf_event': {
+                    'type': 'int',
+                },
+                'wbuf_cb_failed': {
+                    'type': 'int',
+                },
+                'err_event': {
+                    'type': 'int',
+                },
+                'err_cb_failed': {
+                    'type': 'int',
+                },
+                'client_fin': {
+                    'type': 'int',
+                },
+                'server_fin': {
+                    'type': 'int',
+                },
+                'client_rst': {
+                    'type': 'int',
+                },
+                'server_rst': {
+                    'type': 'int',
+                },
+                'client_rst_req': {
+                    'type': 'int',
+                },
+                'client_rst_connecting': {
+                    'type': 'int',
+                },
+                'client_rst_connected': {
+                    'type': 'int',
+                },
+                'client_rst_rsp': {
+                    'type': 'int',
+                },
+                'server_rst_req': {
+                    'type': 'int',
+                },
+                'server_rst_connecting': {
+                    'type': 'int',
+                },
+                'server_rst_connected': {
+                    'type': 'int',
+                },
+                'server_rst_rsp': {
+                    'type': 'int',
+                },
+                'hps_fwdreq_fail': {
+                    'type': 'int',
+                },
+                'hps_fwdreq_fail_buff': {
+                    'type': 'int',
+                },
+                'hps_fwdreq_fail_rport': {
+                    'type': 'int',
+                },
+                'hps_fwdreq_fail_route': {
+                    'type': 'int',
+                },
+                'hps_fwdreq_fail_persist': {
+                    'type': 'int',
+                },
+                'hps_fwdreq_fail_server': {
+                    'type': 'int',
+                },
+                'hps_fwdreq_fail_tuple': {
+                    'type': 'int',
+                },
+                'proxy_v1_connection': {
+                    'type': 'int',
+                },
+                'proxy_v2_connection': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'server_fin': {
-                'type': 'str',
-            },
-            'data_cb_failed': {
-                'type': 'str',
-            },
-            'server_rst': {
-                'type': 'str',
-            },
-            'err_event': {
-                'type': 'str',
-            },
-            'total_proxy': {
-                'type': 'str',
-            },
             'start_server_conn_succ': {
                 'type': 'str',
             },
-            'curr_proxy': {
-                'type': 'str',
-            },
-            'wbuf_event': {
+            'conn_not_exist': {
                 'type': 'str',
             },
             'data_event': {
                 'type': 'str',
             },
+            'client_fin': {
+                'type': 'str',
+            },
+            'server_fin': {
+                'type': 'str',
+            },
+            'wbuf_event': {
+                'type': 'str',
+            },
             'wbuf_cb_failed': {
                 'type': 'str',
             },
-            'client_rst': {
+            'err_event': {
                 'type': 'str',
             },
             'err_cb_failed': {
                 'type': 'str',
             },
-            'client_fin': {
+            'server_conn_failed': {
+                'type': 'str',
+            },
+            'client_rst': {
+                'type': 'str',
+            },
+            'server_rst': {
+                'type': 'str',
+            },
+            'curr_proxy': {
+                'type': 'str',
+            },
+            'total_proxy': {
                 'type': 'str',
             },
             'server_select_fail': {
                 'type': 'str',
             },
-            'server_conn_failed': {
+            'data_cb_failed': {
                 'type': 'str',
             },
             'hps_fwdreq_fail': {
                 'type': 'str',
-            },
-            'conn_not_exist': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

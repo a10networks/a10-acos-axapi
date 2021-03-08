@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_neighbor_peer_group_neighbor
 description:
     - Specify a peer-group neighbor router
-short_description: Configures A10 router.bgp.neighbor.peer-group-neighbor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,265 +22,333 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     bgp_as_number:
         description:
-        - Key to identify parent object    activate:
-        description:
-        - "Enable the Address Family for this Neighbor"
-        required: False
-    route_refresh:
-        description:
-        - "Advertise route-refresh capability to this neighbor"
-        required: False
-    ve:
-        description:
-        - "Virtual ethernet interface (Virtual ethernet interface number)"
-        required: False
-    weight:
-        description:
-        - "Set default weight for routes from this neighbor"
-        required: False
-    timers_keepalive:
-        description:
-        - "Keepalive interval"
-        required: False
-    dynamic:
-        description:
-        - "Advertise dynamic capability to this neighbor"
-        required: False
-    default_originate:
-        description:
-        - "Originate default route to this neighbor"
-        required: False
-    distribute_lists:
-        description:
-        - "Field distribute_lists"
-        required: False
-        suboptions:
-            distribute_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-            distribute_list:
-                description:
-                - "Filter updates to/from this neighbor (IP standard/extended/named access list)"
-    shutdown:
-        description:
-        - "Administratively shut down this neighbor"
-        required: False
-    enforce_multihop:
-        description:
-        - "Enforce EBGP neighbors to perform multihop"
-        required: False
-    prefix_list_direction:
-        description:
-        - "'both'= both; 'receive'= receive; 'send'= send;"
-        required: False
-    neighbor_route_map_lists:
-        description:
-        - "Field neighbor_route_map_lists"
-        required: False
-        suboptions:
-            nbr_rmap_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-            nbr_route_map:
-                description:
-                - "Apply route map to neighbor (Name of route map)"
-    advertisement_interval:
-        description:
-        - "Minimum interval between sending BGP routing updates (time in seconds)"
-        required: False
-    lif:
-        description:
-        - "Logical interface (Lif interface number)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    send_community_val:
-        description:
-        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
-          Sending Community attributes; 'standard'= Send Standard Community attributes;
-          'extended'= Send Extended Community attributes;"
-        required: False
-    loopback:
-        description:
-        - "Loopback interface (Port number)"
-        required: False
-    collide_established:
-        description:
-        - "Include Neighbor in Established State for Collision Detection"
-        required: False
-    next_hop_self:
-        description:
-        - "Disable the next hop calculation for this neighbor"
-        required: False
-    pass_encrypted:
-        description:
-        - "Field pass_encrypted"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     peer_group:
         description:
         - "Neighbor tag"
+        type: str
         required: True
-    dont_capability_negotiate:
-        description:
-        - "Do not perform capability negotiation"
-        required: False
-    unsuppress_map:
-        description:
-        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
-        required: False
-    passive:
-        description:
-        - "Don't send open messages to this neighbor"
-        required: False
-    ebgp_multihop_hop_count:
-        description:
-        - "maximum hop count"
-        required: False
-    allowas_in:
-        description:
-        - "Accept as-path with my AS present in it"
-        required: False
-    pass_value:
-        description:
-        - "Key String"
-        required: False
-    timers_holdtime:
-        description:
-        - "Holdtime"
-        required: False
-    description:
-        description:
-        - "Neighbor specific description (Up to 80 characters describing this neighbor)"
-        required: False
-    inbound:
-        description:
-        - "Allow inbound soft reconfiguration for this neighbor"
-        required: False
-    maximum_prefix_thres:
-        description:
-        - "threshold-value, 1 to 100 percent"
-        required: False
     peer_group_key:
         description:
         - "Configure peer-group"
+        type: bool
         required: False
     peer_group_remote_as:
         description:
         - "Specify AS number of BGP neighbor"
+        type: int
         required: False
-    disallow_infinite_holdtime:
+    activate:
         description:
-        - "BGP per neighbor disallow-infinite-holdtime"
+        - "Enable the Address Family for this Neighbor"
+        type: bool
         required: False
-    route_map:
+    advertisement_interval:
         description:
-        - "Route-map to specify criteria to originate default (route-map name)"
+        - "Minimum interval between sending BGP routing updates (time in seconds)"
+        type: int
         required: False
-    trunk:
+    allowas_in:
         description:
-        - "Trunk interface (Trunk interface number)"
+        - "Accept as-path with my AS present in it"
+        type: bool
         required: False
-    remove_private_as:
-        description:
-        - "Remove private AS number from outbound updates"
-        required: False
-    neighbor_filter_lists:
-        description:
-        - "Field neighbor_filter_lists"
-        required: False
-        suboptions:
-            filter_list:
-                description:
-                - "Establish BGP filters (AS path access-list name)"
-            filter_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-    update_source_ipv6:
-        description:
-        - "IPv6 address"
-        required: False
-    maximum_prefix:
-        description:
-        - "Maximum number of prefix accept from this peer (maximum no. of prefix limit
-          (various depends on model))"
-        required: False
-    neighbor_prefix_lists:
-        description:
-        - "Field neighbor_prefix_lists"
-        required: False
-        suboptions:
-            nbr_prefix_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-            nbr_prefix_list:
-                description:
-                - "Filter updates to/from this neighbor (Name of a prefix list)"
     allowas_in_count:
         description:
         - "Number of occurrences of AS number"
+        type: int
         required: False
     as_origination_interval:
         description:
         - "Minimum interval between sending AS-origination routing updates (time in
           seconds)"
+        type: int
         required: False
-    override_capability:
+    dynamic:
         description:
-        - "Override capability negotiation result"
+        - "Advertise dynamic capability to this neighbor"
+        type: bool
         required: False
-    update_source_ip:
+    prefix_list_direction:
         description:
-        - "IP address"
+        - "'both'= both; 'receive'= receive; 'send'= send;"
+        type: str
         required: False
-    tunnel:
+    route_refresh:
         description:
-        - "Tunnel interface (Tunnel interface number)"
+        - "Advertise route-refresh capability to this neighbor"
+        type: bool
         required: False
-    strict_capability_match:
+    collide_established:
         description:
-        - "Strict capability negotiation match"
+        - "Include Neighbor in Established State for Collision Detection"
+        type: bool
+        required: False
+    default_originate:
+        description:
+        - "Originate default route to this neighbor"
+        type: bool
+        required: False
+    route_map:
+        description:
+        - "Route-map to specify criteria to originate default (route-map name)"
+        type: str
+        required: False
+    description:
+        description:
+        - "Neighbor specific description (Up to 80 characters describing this neighbor)"
+        type: str
+        required: False
+    disallow_infinite_holdtime:
+        description:
+        - "BGP per neighbor disallow-infinite-holdtime"
+        type: bool
+        required: False
+    distribute_lists:
+        description:
+        - "Field distribute_lists"
+        type: list
+        required: False
+        suboptions:
+            distribute_list:
+                description:
+                - "Filter updates to/from this neighbor (IP standard/extended/named access list)"
+                type: str
+            distribute_list_direction:
+                description:
+                - "'in'= in; 'out'= out;"
+                type: str
+    dont_capability_negotiate:
+        description:
+        - "Do not perform capability negotiation"
+        type: bool
         required: False
     ebgp_multihop:
         description:
         - "Allow EBGP neighbors not on directly connected networks"
+        type: bool
         required: False
-    ethernet:
+    ebgp_multihop_hop_count:
         description:
-        - "Ethernet interface (Port number)"
+        - "maximum hop count"
+        type: int
+        required: False
+    enforce_multihop:
+        description:
+        - "Enforce EBGP neighbors to perform multihop"
+        type: bool
+        required: False
+    neighbor_filter_lists:
+        description:
+        - "Field neighbor_filter_lists"
+        type: list
+        required: False
+        suboptions:
+            filter_list:
+                description:
+                - "Establish BGP filters (AS path access-list name)"
+                type: str
+            filter_list_direction:
+                description:
+                - "'in'= in; 'out'= out;"
+                type: str
+    maximum_prefix:
+        description:
+        - "Maximum number of prefix accept from this peer (maximum no. of prefix limit
+          (various depends on model))"
+        type: int
+        required: False
+    maximum_prefix_thres:
+        description:
+        - "threshold-value, 1 to 100 percent"
+        type: int
+        required: False
+    next_hop_self:
+        description:
+        - "Disable the next hop calculation for this neighbor"
+        type: bool
+        required: False
+    override_capability:
+        description:
+        - "Override capability negotiation result"
+        type: bool
+        required: False
+    pass_value:
+        description:
+        - "Key String"
+        type: str
+        required: False
+    pass_encrypted:
+        description:
+        - "Field pass_encrypted"
+        type: str
+        required: False
+    passive:
+        description:
+        - "Don't send open messages to this neighbor"
+        type: bool
+        required: False
+    neighbor_prefix_lists:
+        description:
+        - "Field neighbor_prefix_lists"
+        type: list
+        required: False
+        suboptions:
+            nbr_prefix_list:
+                description:
+                - "Filter updates to/from this neighbor (Name of a prefix list)"
+                type: str
+            nbr_prefix_list_direction:
+                description:
+                - "'in'= in; 'out'= out;"
+                type: str
+    remove_private_as:
+        description:
+        - "Remove private AS number from outbound updates"
+        type: bool
+        required: False
+    neighbor_route_map_lists:
+        description:
+        - "Field neighbor_route_map_lists"
+        type: list
+        required: False
+        suboptions:
+            nbr_route_map:
+                description:
+                - "Apply route map to neighbor (Name of route map)"
+                type: str
+            nbr_rmap_direction:
+                description:
+                - "'in'= in; 'out'= out;"
+                type: str
+    send_community_val:
+        description:
+        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
+          Sending Community attributes; 'standard'= Send Standard Community attributes;
+          'extended'= Send Extended Community attributes;"
+        type: str
+        required: False
+    inbound:
+        description:
+        - "Allow inbound soft reconfiguration for this neighbor"
+        type: bool
+        required: False
+    shutdown:
+        description:
+        - "Administratively shut down this neighbor"
+        type: bool
+        required: False
+    strict_capability_match:
+        description:
+        - "Strict capability negotiation match"
+        type: bool
+        required: False
+    timers_keepalive:
+        description:
+        - "Keepalive interval"
+        type: int
+        required: False
+    timers_holdtime:
+        description:
+        - "Holdtime"
+        type: int
         required: False
     connect:
         description:
         - "BGP connect timer"
+        type: int
+        required: False
+    unsuppress_map:
+        description:
+        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
+        type: str
+        required: False
+    update_source_ip:
+        description:
+        - "IP address"
+        type: str
+        required: False
+    update_source_ipv6:
+        description:
+        - "IPv6 address"
+        type: str
+        required: False
+    ethernet:
+        description:
+        - "Ethernet interface (Port number)"
+        type: str
+        required: False
+    loopback:
+        description:
+        - "Loopback interface (Port number)"
+        type: str
+        required: False
+    ve:
+        description:
+        - "Virtual ethernet interface (Virtual ethernet interface number)"
+        type: str
+        required: False
+    trunk:
+        description:
+        - "Trunk interface (Trunk interface number)"
+        type: str
+        required: False
+    lif:
+        description:
+        - "Logical interface (Lif interface number)"
+        type: int
+        required: False
+    tunnel:
+        description:
+        - "Tunnel interface (Tunnel interface number)"
+        type: str
+        required: False
+    weight:
+        description:
+        - "Set default weight for routes from this neighbor"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -385,115 +451,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'activate': {
-            'type': 'bool',
-        },
-        'route_refresh': {
-            'type': 'bool',
-        },
-        've': {
-            'type': 'str',
-        },
-        'weight': {
-            'type': 'int',
-        },
-        'timers_keepalive': {
-            'type': 'int',
-        },
-        'dynamic': {
-            'type': 'bool',
-        },
-        'default_originate': {
-            'type': 'bool',
-        },
-        'distribute_lists': {
-            'type': 'list',
-            'distribute_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-            },
-            'distribute_list': {
-                'type': 'str',
-            }
-        },
-        'shutdown': {
-            'type': 'bool',
-        },
-        'enforce_multihop': {
-            'type': 'bool',
-        },
-        'prefix_list_direction': {
-            'type': 'str',
-            'choices': ['both', 'receive', 'send']
-        },
-        'neighbor_route_map_lists': {
-            'type': 'list',
-            'nbr_rmap_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-            },
-            'nbr_route_map': {
-                'type': 'str',
-            }
-        },
-        'advertisement_interval': {
-            'type': 'int',
-        },
-        'lif': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'send_community_val': {
-            'type': 'str',
-            'choices': ['both', 'none', 'standard', 'extended']
-        },
-        'loopback': {
-            'type': 'str',
-        },
-        'collide_established': {
-            'type': 'bool',
-        },
-        'next_hop_self': {
-            'type': 'bool',
-        },
-        'pass_encrypted': {
-            'type': 'str',
-        },
         'peer_group': {
             'type': 'str',
             'required': True,
-        },
-        'dont_capability_negotiate': {
-            'type': 'bool',
-        },
-        'unsuppress_map': {
-            'type': 'str',
-        },
-        'passive': {
-            'type': 'bool',
-        },
-        'ebgp_multihop_hop_count': {
-            'type': 'int',
-        },
-        'allowas_in': {
-            'type': 'bool',
-        },
-        'pass_value': {
-            'type': 'str',
-        },
-        'timers_holdtime': {
-            'type': 'int',
-        },
-        'description': {
-            'type': 'str',
-        },
-        'inbound': {
-            'type': 'bool',
-        },
-        'maximum_prefix_thres': {
-            'type': 'int',
         },
         'peer_group_key': {
             'type': 'bool',
@@ -501,16 +461,66 @@ def get_argspec():
         'peer_group_remote_as': {
             'type': 'int',
         },
-        'disallow_infinite_holdtime': {
+        'activate': {
+            'type': 'bool',
+        },
+        'advertisement_interval': {
+            'type': 'int',
+        },
+        'allowas_in': {
+            'type': 'bool',
+        },
+        'allowas_in_count': {
+            'type': 'int',
+        },
+        'as_origination_interval': {
+            'type': 'int',
+        },
+        'dynamic': {
+            'type': 'bool',
+        },
+        'prefix_list_direction': {
+            'type': 'str',
+            'choices': ['both', 'receive', 'send']
+        },
+        'route_refresh': {
+            'type': 'bool',
+        },
+        'collide_established': {
+            'type': 'bool',
+        },
+        'default_originate': {
             'type': 'bool',
         },
         'route_map': {
             'type': 'str',
         },
-        'trunk': {
+        'description': {
             'type': 'str',
         },
-        'remove_private_as': {
+        'disallow_infinite_holdtime': {
+            'type': 'bool',
+        },
+        'distribute_lists': {
+            'type': 'list',
+            'distribute_list': {
+                'type': 'str',
+            },
+            'distribute_list_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'dont_capability_negotiate': {
+            'type': 'bool',
+        },
+        'ebgp_multihop': {
+            'type': 'bool',
+        },
+        'ebgp_multihop_hop_count': {
+            'type': 'int',
+        },
+        'enforce_multihop': {
             'type': 'bool',
         },
         'neighbor_filter_lists': {
@@ -523,48 +533,104 @@ def get_argspec():
                 'choices': ['in', 'out']
             }
         },
-        'update_source_ipv6': {
-            'type': 'str',
-        },
         'maximum_prefix': {
             'type': 'int',
         },
-        'neighbor_prefix_lists': {
-            'type': 'list',
-            'nbr_prefix_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-            },
-            'nbr_prefix_list': {
-                'type': 'str',
-            }
-        },
-        'allowas_in_count': {
+        'maximum_prefix_thres': {
             'type': 'int',
         },
-        'as_origination_interval': {
-            'type': 'int',
+        'next_hop_self': {
+            'type': 'bool',
         },
         'override_capability': {
             'type': 'bool',
         },
-        'update_source_ip': {
+        'pass_value': {
             'type': 'str',
         },
-        'tunnel': {
+        'pass_encrypted': {
             'type': 'str',
+        },
+        'passive': {
+            'type': 'bool',
+        },
+        'neighbor_prefix_lists': {
+            'type': 'list',
+            'nbr_prefix_list': {
+                'type': 'str',
+            },
+            'nbr_prefix_list_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'remove_private_as': {
+            'type': 'bool',
+        },
+        'neighbor_route_map_lists': {
+            'type': 'list',
+            'nbr_route_map': {
+                'type': 'str',
+            },
+            'nbr_rmap_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'send_community_val': {
+            'type': 'str',
+            'choices': ['both', 'none', 'standard', 'extended']
+        },
+        'inbound': {
+            'type': 'bool',
+        },
+        'shutdown': {
+            'type': 'bool',
         },
         'strict_capability_match': {
             'type': 'bool',
         },
-        'ebgp_multihop': {
-            'type': 'bool',
+        'timers_keepalive': {
+            'type': 'int',
+        },
+        'timers_holdtime': {
+            'type': 'int',
+        },
+        'connect': {
+            'type': 'int',
+        },
+        'unsuppress_map': {
+            'type': 'str',
+        },
+        'update_source_ip': {
+            'type': 'str',
+        },
+        'update_source_ipv6': {
+            'type': 'str',
         },
         'ethernet': {
             'type': 'str',
         },
-        'connect': {
+        'loopback': {
+            'type': 'str',
+        },
+        've': {
+            'type': 'str',
+        },
+        'trunk': {
+            'type': 'str',
+        },
+        'lif': {
             'type': 'int',
+        },
+        'tunnel': {
+            'type': 'str',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

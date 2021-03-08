@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_smtp
 description:
     - Configure SMTP Server
-short_description: Configures A10 smtp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,70 +22,87 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    mailfrom:
-        description:
-        - "Configure email source address"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
+        type: str
         required: False
     smtp_server:
         description:
         - "Configure SMTP Server (length=1-254)"
+        type: str
+        required: False
+    smtp_server_v6:
+        description:
+        - "Configure SMTP Server IPV6 address"
+        type: str
         required: False
     port:
         description:
         - "Configure SMTP Port (Configure SMTP port, default is 25)"
+        type: int
         required: False
     needauthentication:
         description:
         - "Configure SMTP server need authtication"
+        type: bool
+        required: False
+    mailfrom:
+        description:
+        - "Configure email source address"
+        type: str
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
         required: False
     username_cfg:
         description:
         - "Field username_cfg"
+        type: dict
         required: False
         suboptions:
             username:
                 description:
                 - "Configure SMTP login username"
+                type: str
             password:
                 description:
                 - "Field password"
-    smtp_server_v6:
+                type: dict
+    uuid:
         description:
-        - "Configure SMTP Server IPV6 address"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -148,22 +163,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'mailfrom': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
         'smtp_server': {
+            'type': 'str',
+        },
+        'smtp_server_v6': {
             'type': 'str',
         },
         'port': {
             'type': 'int',
         },
         'needauthentication': {
+            'type': 'bool',
+        },
+        'mailfrom': {
+            'type': 'str',
+        },
+        'use_mgmt_port': {
             'type': 'bool',
         },
         'username_cfg': {
@@ -173,15 +188,15 @@ def get_argspec():
             },
             'password': {
                 'type': 'dict',
-                'encrypted': {
+                'smtp_password': {
                     'type': 'str',
                 },
-                'smtp_password': {
+                'encrypted': {
                     'type': 'str',
                 }
             }
         },
-        'smtp_server_v6': {
+        'uuid': {
             'type': 'str',
         }
     })

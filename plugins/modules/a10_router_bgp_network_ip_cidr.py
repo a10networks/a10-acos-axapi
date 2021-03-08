@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_network_ip_cidr
 description:
     - Specify a ip network to announce via BGP
-short_description: Configures A10 router.bgp.network.ip-cidr
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,58 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     bgp_as_number:
         description:
-        - Key to identify parent object    description:
+        - Key to identify parent object
+        type: str
+        required: True
+    network_ipv4_cidr:
         description:
-        - "Network specific description (Up to 80 characters describing this network)"
-        required: False
+        - "Specify network mask"
+        type: str
+        required: True
     route_map:
         description:
         - "Route-map to modify the attributes (Name of the route map)"
-        required: False
-    comm_value:
-        description:
-        - "community value in the format 1-4294967295|AA=NN|internet|local-AS|no-advertise
-          |no-export"
+        type: str
         required: False
     backdoor:
         description:
         - "Specify a BGP backdoor route"
+        type: bool
         required: False
-    network_ipv4_cidr:
+    description:
         description:
-        - "Specify network mask"
-        required: True
+        - "Network specific description (Up to 80 characters describing this network)"
+        type: str
+        required: False
+    comm_value:
+        description:
+        - "community value in the format 1-4294967295|AA=NN|internet|local-AS|no-
+          advertise|no-export"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -134,21 +148,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'description': {
+        'network_ipv4_cidr': {
             'type': 'str',
+            'required': True,
         },
         'route_map': {
-            'type': 'str',
-        },
-        'comm_value': {
             'type': 'str',
         },
         'backdoor': {
             'type': 'bool',
         },
-        'network_ipv4_cidr': {
+        'description': {
             'type': 'str',
-            'required': True,
+        },
+        'comm_value': {
+            'type': 'str',
         },
         'uuid': {
             'type': 'str',

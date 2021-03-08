@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_binding_table_tunnel_address_nat_address_port_range
 description:
     - Single Port or Port Range Start
-short_description: Configures A10 cgnv6.lw.4o6.binding.table.tunnel.address.nat.address.port-range
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     nat_address_ipv4_nat_addr:
         description:
-        - Key to identify parent object    tunnel_address_ipv6_tunnel_addr:
+        - Key to identify parent object
+        type: str
+        required: True
+    tunnel_address_ipv6_tunnel_addr:
         description:
-        - Key to identify parent object    binding_table_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    binding_table_name:
         description:
-        - Key to identify parent object    port_start:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_start:
         description:
         - "Single Port or Port Range Start"
+        type: int
+        required: True
+    port_end:
+        description:
+        - "Port Range End"
+        type: int
         required: True
     tunnel_endpoint_address:
         description:
         - "Configure LW-4over6 IPIP Tunnel Endpoint Address (LW-4over6 Tunnel Endpoint
           Address)"
-        required: True
-    port_end:
-        description:
-        - "Port Range End"
+        type: str
         required: True
 
 '''
@@ -127,12 +144,12 @@ def get_argspec():
             'type': 'int',
             'required': True,
         },
-        'tunnel_endpoint_address': {
-            'type': 'str',
-            'required': True,
-        },
         'port_end': {
             'type': 'int',
+            'required': True,
+        },
+        'tunnel_endpoint_address': {
+            'type': 'str',
             'required': True,
         }
     })
@@ -149,8 +166,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/lw-4o6/binding-table/{binding_table_name}/tunnel-address/{tunnel_address_ipv6_tunnel_addr}/nat-address/"\
-               "{nat_address_ipv4_nat_addr}/port-range/{port-start}+{port-end}+{tunnel-endpoint-address}"
+    url_base = "/axapi/v3/cgnv6/lw-4o6/binding-table/{binding_table_name}/tunnel-address/{tunnel_address_ipv6_tunnel_addr}/nat-address/{nat_address_ipv4_nat_addr}/port-range/{port-start}+{port-end}+{tunnel-endpoint-address}"
 
     f_dict = {}
     f_dict["port-start"] = module.params["port_start"]
@@ -215,8 +231,7 @@ def build_envelope(title, data):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/lw-4o6/binding-table/{binding_table_name}/tunnel-address/{tunnel_address_ipv6_tunnel_addr}/nat-address/"\
-               "{nat_address_ipv4_nat_addr}/port-range/{port-start}+{port-end}+{tunnel-endpoint-address}"
+    url_base = "/axapi/v3/cgnv6/lw-4o6/binding-table/{binding_table_name}/tunnel-address/{tunnel_address_ipv6_tunnel_addr}/nat-address/{nat_address_ipv4_nat_addr}/port-range/{port-start}+{port-end}+{tunnel-endpoint-address}"
 
     f_dict = {}
     f_dict["port-start"] = ""

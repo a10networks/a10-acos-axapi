@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy_auto_map
 description:
     - Auto Mapping Options
-short_description: Configures A10 gslb.policy.auto-map
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    all:
-        description:
-        - "All modules"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     ttl:
         description:
         - "Specify Auto Map TTL (TTL, default is 300)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    module_type:
-        description:
-        - "Field module_type"
+        type: int
         required: False
     module_disable:
         description:
         - "Specify Disable Auto Map Module"
+        type: bool
+        required: False
+    all:
+        description:
+        - "All modules"
+        type: bool
+        required: False
+    module_type:
+        description:
+        - "Field module_type"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -128,14 +141,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'all': {
-            'type': 'bool',
-        },
         'ttl': {
             'type': 'int',
         },
-        'uuid': {
-            'type': 'str',
+        'module_disable': {
+            'type': 'bool',
+        },
+        'all': {
+            'type': 'bool',
         },
         'module_type': {
             'type':
@@ -145,8 +158,8 @@ def get_argspec():
                 'gslb-service-ip', 'gslb-site', 'gslb-group', 'hostname'
             ]
         },
-        'module_disable': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

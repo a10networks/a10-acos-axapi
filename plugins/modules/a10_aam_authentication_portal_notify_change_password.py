@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_portal_notify_change_password
 description:
     - Change password notification page configuration
-short_description: Configures A10 aam.authentication.portal.notify-change-password
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,242 +22,306 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     portal_name:
         description:
-        - Key to identify parent object    old_pwd_cfg:
-        description:
-        - "Field old_pwd_cfg"
-        required: False
-        suboptions:
-            old_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-            old_color:
-                description:
-                - "Specify font color (Default= black)"
-            old_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
-            old_password:
-                description:
-                - "Configure old password text in default change password notification page"
-            old_color_name:
-                description:
-                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
-          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
-          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
-          'white'= white; 'yellow'= yellow;"
-            old_size:
-                description:
-                - "Specify font size (Default= 3)"
-            old_text:
-                description:
-                - "Specify old password text (Default= Old Password)"
-            old_font_custom:
-                description:
-                - "Specify custom font"
-            old_font:
-                description:
-                - "Sepcify font (Default= Arial)"
-    username_var:
-        description:
-        - "Specify username variable name in default change password notification page
-          (Default= cp_usr)"
-        required: False
-    new_pwd_cfg:
-        description:
-        - "Field new_pwd_cfg"
-        required: False
-        suboptions:
-            new_password:
-                description:
-                - "Configure new password text in default change password notification page"
-            new_size:
-                description:
-                - "Specify font size (Default= 3)"
-            new_font:
-                description:
-                - "Sepcify font (Default= Arial)"
-            new_text:
-                description:
-                - "Specify new password text (Default= New Password)"
-            new_color:
-                description:
-                - "Specify font color (Default= black)"
-            new_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
-            new_color_name:
-                description:
-                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
-          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
-          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
-          'white'= white; 'yellow'= yellow;"
-            new_font_custom:
-                description:
-                - "Specify custom font"
-            new_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    cfm_pwd_cfg:
-        description:
-        - "Field cfm_pwd_cfg"
-        required: False
-        suboptions:
-            cfm_color_name:
-                description:
-                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
-          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
-          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
-          'white'= white; 'yellow'= yellow;"
-            cfm_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-            cfm_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
-            cfm_font_custom:
-                description:
-                - "Specify custom font"
-            cfm_size:
-                description:
-                - "Specify font size (Default= 3)"
-            cfm_font:
-                description:
-                - "Sepcify font (Default= Arial)"
-            cfm_text:
-                description:
-                - "Specify confirm password text (Default= Confirm New Password)"
-            confirm_password:
-                description:
-                - "Configure confirm password text in default change password notification page"
-            cfm_color:
-                description:
-                - "Specify font color (Default= black)"
-    confirm_password_var:
-        description:
-        - "Specify confirm password variable name in default change password notification
-          page (Default= cp_cfm_pwd)"
-        required: False
-    new_password_var:
-        description:
-        - "Specify new password variable name in default change password notification page
-          (Default= cp_new_pwd)"
-        required: False
-    change_url:
-        description:
-        - "Specify change password action URL in default change password notification page
-          (Default= /notify_change.fo)"
-        required: False
-    continue_url:
-        description:
-        - "Specify continue action URL in default change password notification page
-          (Default= /continue.fo)"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     background:
         description:
         - "Field background"
+        type: dict
         required: False
         suboptions:
             bgfile:
                 description:
                 - "Specify background image filename"
+                type: str
             bgstyle:
                 description:
                 - "'tile'= Tile; 'stretch'= Stretch; 'fit'= Fit;"
-            bgcolor_value:
-                description:
-                - "Specify 6-digit HEX color value"
+                type: str
             bgcolor_name:
                 description:
                 - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
           'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
           'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
           'white'= white; 'yellow'= yellow;"
-    old_password_var:
+                type: str
+            bgcolor_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
+    continue_url:
         description:
-        - "Specify old password variable name in default change password notification page
-          (Default= cp_old_pwd)"
+        - "Specify continue action URL in default change password notification page
+          (Default= /continue.fo)"
+        type: str
         required: False
-    change_text:
+    change_url:
         description:
-        - "Specify change button text in default change password notification page
-          (Default= Change)"
-        required: False
-    continue_text:
-        description:
-        - "Specify continue button text in default change password notification page
-          (Default= Continue)"
+        - "Specify change password action URL in default change password notification page
+          (Default= /notify_change.fo)"
+        type: str
         required: False
     username_cfg:
         description:
         - "Field username_cfg"
+        type: dict
         required: False
         suboptions:
             username:
                 description:
                 - "Configure username text in default change password notification page"
-            user_font:
-                description:
-                - "Sepcify font (Default= Arial)"
+                type: bool
             user_text:
                 description:
                 - "Specify username text (Default= Username)"
-            user_size:
+                type: str
+            user_font:
                 description:
-                - "Specify font size (Default= 3)"
-            user_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
-            user_font_custom:
-                description:
-                - "Specify custom font"
-            user_color:
-                description:
-                - "Specify font color (Default= black)"
+                - "Sepcify font (Default= Arial)"
+                type: bool
             user_face:
                 description:
                 - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
           'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            user_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            user_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            user_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
             user_color_name:
                 description:
                 - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
           'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
           'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
           'white'= white; 'yellow'= yellow;"
+                type: str
+            user_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
+    username_var:
+        description:
+        - "Specify username variable name in default change password notification page
+          (Default= cp_usr)"
+        type: str
+        required: False
+    old_pwd_cfg:
+        description:
+        - "Field old_pwd_cfg"
+        type: dict
+        required: False
+        suboptions:
+            old_password:
+                description:
+                - "Configure old password text in default change password notification page"
+                type: bool
+            old_text:
+                description:
+                - "Specify old password text (Default= Old Password)"
+                type: str
+            old_font:
+                description:
+                - "Sepcify font (Default= Arial)"
+                type: bool
+            old_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            old_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            old_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            old_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
+            old_color_name:
+                description:
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
+          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
+          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
+          'white'= white; 'yellow'= yellow;"
+                type: str
+            old_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
+    old_password_var:
+        description:
+        - "Specify old password variable name in default change password notification page
+          (Default= cp_old_pwd)"
+        type: str
+        required: False
+    new_pwd_cfg:
+        description:
+        - "Field new_pwd_cfg"
+        type: dict
+        required: False
+        suboptions:
+            new_password:
+                description:
+                - "Configure new password text in default change password notification page"
+                type: bool
+            new_text:
+                description:
+                - "Specify new password text (Default= New Password)"
+                type: str
+            new_font:
+                description:
+                - "Sepcify font (Default= Arial)"
+                type: bool
+            new_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            new_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            new_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            new_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
+            new_color_name:
+                description:
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
+          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
+          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
+          'white'= white; 'yellow'= yellow;"
+                type: str
+            new_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
+    new_password_var:
+        description:
+        - "Specify new password variable name in default change password notification page
+          (Default= cp_new_pwd)"
+        type: str
+        required: False
+    cfm_pwd_cfg:
+        description:
+        - "Field cfm_pwd_cfg"
+        type: dict
+        required: False
+        suboptions:
+            confirm_password:
+                description:
+                - "Configure confirm password text in default change password notification page"
+                type: bool
+            cfm_text:
+                description:
+                - "Specify confirm password text (Default= Confirm New Password)"
+                type: str
+            cfm_font:
+                description:
+                - "Sepcify font (Default= Arial)"
+                type: bool
+            cfm_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            cfm_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            cfm_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            cfm_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
+            cfm_color_name:
+                description:
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
+          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
+          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
+          'white'= white; 'yellow'= yellow;"
+                type: str
+            cfm_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
+    confirm_password_var:
+        description:
+        - "Specify confirm password variable name in default change password notification
+          page (Default= cp_cfm_pwd)"
+        type: str
+        required: False
+    change_text:
+        description:
+        - "Specify change button text in default change password notification page
+          (Default= Change)"
+        type: str
+        required: False
+    continue_text:
+        description:
+        - "Specify continue button text in default change password notification page
+          (Default= Continue)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -325,8 +387,89 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'background': {
+            'type': 'dict',
+            'bgfile': {
+                'type': 'str',
+            },
+            'bgstyle': {
+                'type': 'str',
+                'choices': ['tile', 'stretch', 'fit']
+            },
+            'bgcolor_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'bgcolor_value': {
+                'type': 'str',
+            }
+        },
+        'continue_url': {
+            'type': 'str',
+        },
+        'change_url': {
+            'type': 'str',
+        },
+        'username_cfg': {
+            'type': 'dict',
+            'username': {
+                'type': 'bool',
+            },
+            'user_text': {
+                'type': 'str',
+            },
+            'user_font': {
+                'type': 'bool',
+            },
+            'user_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'user_font_custom': {
+                'type': 'str',
+            },
+            'user_size': {
+                'type': 'int',
+            },
+            'user_color': {
+                'type': 'bool',
+            },
+            'user_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'user_color_value': {
+                'type': 'str',
+            }
+        },
+        'username_var': {
+            'type': 'str',
+        },
         'old_pwd_cfg': {
             'type': 'dict',
+            'old_password': {
+                'type': 'bool',
+            },
+            'old_text': {
+                'type': 'str',
+            },
+            'old_font': {
+                'type': 'bool',
+            },
             'old_face': {
                 'type':
                 'str',
@@ -335,13 +478,13 @@ def get_argspec():
                     'Verdana'
                 ]
             },
-            'old_color': {
-                'type': 'bool',
-            },
-            'old_color_value': {
+            'old_font_custom': {
                 'type': 'str',
             },
-            'old_password': {
+            'old_size': {
+                'type': 'int',
+            },
+            'old_color': {
                 'type': 'bool',
             },
             'old_color_name': {
@@ -353,20 +496,11 @@ def get_argspec():
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
             },
-            'old_size': {
-                'type': 'int',
-            },
-            'old_text': {
+            'old_color_value': {
                 'type': 'str',
-            },
-            'old_font_custom': {
-                'type': 'str',
-            },
-            'old_font': {
-                'type': 'bool',
             }
         },
-        'username_var': {
+        'old_password_var': {
             'type': 'str',
         },
         'new_pwd_cfg': {
@@ -374,20 +508,28 @@ def get_argspec():
             'new_password': {
                 'type': 'bool',
             },
-            'new_size': {
-                'type': 'int',
+            'new_text': {
+                'type': 'str',
             },
             'new_font': {
                 'type': 'bool',
             },
-            'new_text': {
+            'new_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'new_font_custom': {
                 'type': 'str',
+            },
+            'new_size': {
+                'type': 'int',
             },
             'new_color': {
                 'type': 'bool',
-            },
-            'new_color_value': {
-                'type': 'str',
             },
             'new_color_name': {
                 'type':
@@ -398,31 +540,23 @@ def get_argspec():
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
             },
-            'new_font_custom': {
+            'new_color_value': {
                 'type': 'str',
-            },
-            'new_face': {
-                'type':
-                'str',
-                'choices': [
-                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
-                    'Verdana'
-                ]
             }
         },
-        'uuid': {
+        'new_password_var': {
             'type': 'str',
         },
         'cfm_pwd_cfg': {
             'type': 'dict',
-            'cfm_color_name': {
-                'type':
-                'str',
-                'choices': [
-                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
-                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
-                    'red', 'silver', 'teal', 'white', 'yellow'
-                ]
+            'confirm_password': {
+                'type': 'bool',
+            },
+            'cfm_text': {
+                'type': 'str',
+            },
+            'cfm_font': {
+                'type': 'bool',
             },
             'cfm_face': {
                 'type':
@@ -432,53 +566,16 @@ def get_argspec():
                     'Verdana'
                 ]
             },
-            'cfm_color_value': {
-                'type': 'str',
-            },
             'cfm_font_custom': {
                 'type': 'str',
             },
             'cfm_size': {
                 'type': 'int',
             },
-            'cfm_font': {
-                'type': 'bool',
-            },
-            'cfm_text': {
-                'type': 'str',
-            },
-            'confirm_password': {
-                'type': 'bool',
-            },
             'cfm_color': {
                 'type': 'bool',
-            }
-        },
-        'confirm_password_var': {
-            'type': 'str',
-        },
-        'new_password_var': {
-            'type': 'str',
-        },
-        'change_url': {
-            'type': 'str',
-        },
-        'continue_url': {
-            'type': 'str',
-        },
-        'background': {
-            'type': 'dict',
-            'bgfile': {
-                'type': 'str',
             },
-            'bgstyle': {
-                'type': 'str',
-                'choices': ['tile', 'stretch', 'fit']
-            },
-            'bgcolor_value': {
-                'type': 'str',
-            },
-            'bgcolor_name': {
+            'cfm_color_name': {
                 'type':
                 'str',
                 'choices': [
@@ -486,9 +583,12 @@ def get_argspec():
                     'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
+            },
+            'cfm_color_value': {
+                'type': 'str',
             }
         },
-        'old_password_var': {
+        'confirm_password_var': {
             'type': 'str',
         },
         'change_text': {
@@ -497,46 +597,8 @@ def get_argspec():
         'continue_text': {
             'type': 'str',
         },
-        'username_cfg': {
-            'type': 'dict',
-            'username': {
-                'type': 'bool',
-            },
-            'user_font': {
-                'type': 'bool',
-            },
-            'user_text': {
-                'type': 'str',
-            },
-            'user_size': {
-                'type': 'int',
-            },
-            'user_color_value': {
-                'type': 'str',
-            },
-            'user_font_custom': {
-                'type': 'str',
-            },
-            'user_color': {
-                'type': 'bool',
-            },
-            'user_face': {
-                'type':
-                'str',
-                'choices': [
-                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
-                    'Verdana'
-                ]
-            },
-            'user_color_name': {
-                'type':
-                'str',
-                'choices': [
-                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
-                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
-                    'red', 'silver', 'teal', 'white', 'yellow'
-                ]
-            }
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

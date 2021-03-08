@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_cpu_load_sharing
 description:
     - Redistribute packets uniformly to all CPUs during overload situations
-short_description: Configures A10 system.cpu-load-sharing
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    disable:
+        description:
+        - "Disable CPU load sharing in overload situations"
+        type: bool
         required: False
     packets_per_second:
         description:
         - "Field packets_per_second"
+        type: dict
         required: False
         suboptions:
             min:
@@ -60,26 +71,27 @@ options:
                 - "Minimum packets-per-second threshold (per CPU) before redistribution will take
           effect (Minimum packets-per-second threshold (per CPU) before redistribution
           will take effect (default= 100000))"
+                type: int
     cpu_usage:
         description:
         - "Field cpu_usage"
+        type: dict
         required: False
         suboptions:
-            high:
-                description:
-                - "CPU usage threshold (percentage) that will trigger the redistribution (default=
-          75)"
             low:
                 description:
                 - "CPU usage threshold (percentage) that will restore the normal packet
           distribution (default= 60)"
-    disable:
-        description:
-        - "Disable CPU load sharing in overload situations"
-        required: False
+                type: int
+            high:
+                description:
+                - "CPU usage threshold (percentage) that will trigger the redistribution (default=
+          75)"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -136,6 +148,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'disable': {
+            'type': 'bool',
+        },
         'packets_per_second': {
             'type': 'dict',
             'min': {
@@ -144,15 +159,12 @@ def get_argspec():
         },
         'cpu_usage': {
             'type': 'dict',
-            'high': {
-                'type': 'int',
-            },
             'low': {
                 'type': 'int',
+            },
+            'high': {
+                'type': 'int',
             }
-        },
-        'disable': {
-            'type': 'bool',
         },
         'uuid': {
             'type': 'str',

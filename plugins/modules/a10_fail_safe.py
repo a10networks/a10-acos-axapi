@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fail_safe
 description:
     - Fail Safe Global Commands
-short_description: Configures A10 fail-safe
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,158 +22,205 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            total_system_memory:
-                description:
-                - "Field total_system_memory"
-            fpga_stats_iochan:
-                description:
-                - "Field fpga_stats_iochan"
-            total_free_fpga_buff:
-                description:
-                - "Field total_free_fpga_buff"
-            total_fpga_buffers:
-                description:
-                - "Field total_fpga_buffers"
-            free_fpga_buffers:
-                description:
-                - "Field free_fpga_buffers"
-            config:
-                description:
-                - "Field config"
-            fpga_stats_num_cntrs:
-                description:
-                - "Field fpga_stats_num_cntrs"
-            free_session_memory:
-                description:
-                - "Field free_session_memory"
-            avail_fpga_buff_domain1:
-                description:
-                - "Field avail_fpga_buff_domain1"
-            avail_fpga_buff_domain2:
-                description:
-                - "Field avail_fpga_buff_domain2"
-            total_session_memory:
-                description:
-                - "Field total_session_memory"
-            fpga_buff_recovery_threshold:
-                description:
-                - "Field fpga_buff_recovery_threshold"
-            sess_mem_recovery_threshold:
-                description:
-                - "Field sess_mem_recovery_threshold"
-    session_mem_recovery_threshold:
-        description:
-        - "Session memory recovery threshold (percentage) (Percentage of available session
-          memory (default 30%))"
-        required: False
-    log:
-        description:
-        - "Log the event"
+        type: str
         required: False
     fpga_buff_recovery_threshold:
         description:
         - "FPGA buffers recovery threshold (Units of 256 buffers (default 2))"
-        required: False
-    hw_error_monitor:
-        description:
-        - "'hw-error-monitor-disable'= Disable fail-safe hardware error monitor; 'hw-
-          error-monitor-enable'= Enable fail-safe hardware error monitor;"
-        required: False
-    hw_error_recovery_timeout:
-        description:
-        - "Hardware error recovery timeout (minutes) (waiting time of recovery from
-          hardware errors (default 0))"
-        required: False
-    sw_error_monitor_enable:
-        description:
-        - "Enable fail-safe software error monitor"
+        type: int
         required: False
     fpga_monitor_enable:
         description:
         - "FPGA monitor feature enable"
+        type: bool
+        required: False
+    fpga_monitor_forced_reboot:
+        description:
+        - "FPGA monitor forced reboot in error condition"
+        type: bool
+        required: False
+    fpga_monitor_interval:
+        description:
+        - "FPGA monitor packet interval (seconds) (Numbers of seconds between sending
+          packets (default 1))"
+        type: int
         required: False
     fpga_monitor_threshold:
         description:
         - "FPGA monitor packet missed for error condition (Numbers of missed monitor
           packets before setting error condition (default 3))"
+        type: int
         required: False
-    fpga_monitor_forced_reboot:
+    hw_error_monitor:
         description:
-        - "FPGA monitor forced reboot in error condition"
+        - "'hw-error-monitor-disable'= Disable fail-safe hardware error monitor; 'hw-
+          error-monitor-enable'= Enable fail-safe hardware error monitor;"
+        type: str
+        required: False
+    hw_ssl_timeout_monitor:
+        description:
+        - "'hw-ssl-timeout-monitor-disable'= Disable fail-safe hardware SSL timeout
+          monitor; 'hw-ssl-timeout-monitor-enable'= Enable fail-safe hardware SSL timeout
+          monitor;"
+        type: str
+        required: False
+    hw_error_recovery_timeout:
+        description:
+        - "Hardware error recovery timeout (minutes) (waiting time of recovery from
+          hardware errors (default 0))"
+        type: int
+        required: False
+    session_mem_recovery_threshold:
+        description:
+        - "Session memory recovery threshold (percentage) (Percentage of available session
+          memory (default 30%))"
+        type: int
+        required: False
+    sw_error_monitor_enable:
+        description:
+        - "Enable fail-safe software error monitor"
+        type: bool
+        required: False
+    sw_error_recovery_timeout:
+        description:
+        - "Software error recovery timeout (minutes) (waiting time of recovery from
+          software errors (default 3))"
+        type: int
+        required: False
+    total_memory_size_check:
+        description:
+        - "Check total memory size of current system (Size of memory (GB))"
+        type: int
+        required: False
+    log:
+        description:
+        - "Log the event"
+        type: bool
         required: False
     kill:
         description:
         - "Stop the traffic and log the event"
+        type: bool
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    config:
+        description:
+        - "Field config"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     disable_failsafe:
         description:
         - "Field disable_failsafe"
+        type: dict
         required: False
         suboptions:
             action:
                 description:
                 - "'all'= Disable All; 'io-buffer'= Disable I/O Buffer; 'session-memory'= Disable
           Session Memory; 'system-memory'= Disable System Memory;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-    total_memory_size_check:
+                type: str
+    oper:
         description:
-        - "Check total memory size of current system (Size of memory (GB))"
-        required: False
-    fpga_monitor_interval:
-        description:
-        - "FPGA monitor packet interval (seconds) (Numbers of seconds between sending
-          packets (default 1))"
-        required: False
-    config:
-        description:
-        - "Field config"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            uuid:
+            free_session_memory:
                 description:
-                - "uuid of the object"
-    sw_error_recovery_timeout:
-        description:
-        - "Software error recovery timeout (minutes) (waiting time of recovery from
-          software errors (default 3))"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                - "Field free_session_memory"
+                type: int
+            total_session_memory:
+                description:
+                - "Field total_session_memory"
+                type: int
+            sess_mem_recovery_threshold:
+                description:
+                - "Field sess_mem_recovery_threshold"
+                type: int
+            total_fpga_buffers:
+                description:
+                - "Field total_fpga_buffers"
+                type: int
+            avail_fpga_buff_domain1:
+                description:
+                - "Field avail_fpga_buff_domain1"
+                type: int
+            avail_fpga_buff_domain2:
+                description:
+                - "Field avail_fpga_buff_domain2"
+                type: int
+            total_free_fpga_buff:
+                description:
+                - "Field total_free_fpga_buff"
+                type: int
+            free_fpga_buffers:
+                description:
+                - "Field free_fpga_buffers"
+                type: int
+            fpga_buff_recovery_threshold:
+                description:
+                - "Field fpga_buff_recovery_threshold"
+                type: int
+            total_system_memory:
+                description:
+                - "Field total_system_memory"
+                type: int
+            fpga_stats_num_cntrs:
+                description:
+                - "Field fpga_stats_num_cntrs"
+                type: int
+            fpga_stats_iochan:
+                description:
+                - "Field fpga_stats_iochan"
+                type: list
+            config:
+                description:
+                - "Field config"
+                type: dict
 
 '''
 
@@ -199,6 +244,7 @@ AVAILABLE_PROPERTIES = [
     "fpga_monitor_threshold",
     "hw_error_monitor",
     "hw_error_recovery_timeout",
+    "hw_ssl_timeout_monitor",
     "kill",
     "log",
     "oper",
@@ -244,117 +290,62 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'total_system_memory': {
-                'type': 'int',
-            },
-            'fpga_stats_iochan': {
-                'type': 'list',
-                'fpga_stats_iochan_tx': {
-                    'type': 'int',
-                },
-                'fpga_stats_iochan_rx': {
-                    'type': 'int',
-                },
-                'fpga_stats_iochan_id': {
-                    'type': 'int',
-                }
-            },
-            'total_free_fpga_buff': {
-                'type': 'int',
-            },
-            'total_fpga_buffers': {
-                'type': 'int',
-            },
-            'free_fpga_buffers': {
-                'type': 'int',
-            },
-            'config': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'fpga_mon_threshold': {
-                        'type': 'str',
-                    },
-                    'sw_error_mon': {
-                        'type': 'str',
-                    },
-                    'sw_recovery_timeout': {
-                        'type': 'str',
-                    },
-                    'hw_recovery_timeout': {
-                        'type': 'str',
-                    },
-                    'fpga_mon_interval': {
-                        'type': 'str',
-                    },
-                    'fpga_mon_forced_reboot': {
-                        'type': 'str',
-                    },
-                    'fpga_mon_enable': {
-                        'type': 'str',
-                    },
-                    'mem_mon': {
-                        'type': 'str',
-                    },
-                    'hw_error_mon': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'fpga_stats_num_cntrs': {
-                'type': 'int',
-            },
-            'free_session_memory': {
-                'type': 'int',
-            },
-            'avail_fpga_buff_domain1': {
-                'type': 'int',
-            },
-            'avail_fpga_buff_domain2': {
-                'type': 'int',
-            },
-            'total_session_memory': {
-                'type': 'int',
-            },
-            'fpga_buff_recovery_threshold': {
-                'type': 'int',
-            },
-            'sess_mem_recovery_threshold': {
-                'type': 'int',
-            }
-        },
-        'session_mem_recovery_threshold': {
+        'fpga_buff_recovery_threshold': {
             'type': 'int',
         },
-        'log': {
+        'fpga_monitor_enable': {
             'type': 'bool',
         },
-        'fpga_buff_recovery_threshold': {
+        'fpga_monitor_forced_reboot': {
+            'type': 'bool',
+        },
+        'fpga_monitor_interval': {
+            'type': 'int',
+        },
+        'fpga_monitor_threshold': {
             'type': 'int',
         },
         'hw_error_monitor': {
             'type': 'str',
             'choices': ['hw-error-monitor-disable', 'hw-error-monitor-enable']
         },
+        'hw_ssl_timeout_monitor': {
+            'type':
+            'str',
+            'choices': [
+                'hw-ssl-timeout-monitor-disable',
+                'hw-ssl-timeout-monitor-enable'
+            ]
+        },
         'hw_error_recovery_timeout': {
+            'type': 'int',
+        },
+        'session_mem_recovery_threshold': {
             'type': 'int',
         },
         'sw_error_monitor_enable': {
             'type': 'bool',
         },
-        'fpga_monitor_enable': {
-            'type': 'bool',
-        },
-        'fpga_monitor_threshold': {
+        'sw_error_recovery_timeout': {
             'type': 'int',
         },
-        'fpga_monitor_forced_reboot': {
+        'total_memory_size_check': {
+            'type': 'int',
+        },
+        'log': {
             'type': 'bool',
         },
         'kill': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'config': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
         },
         'disable_failsafe': {
             'type': 'dict',
@@ -367,23 +358,86 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'total_memory_size_check': {
-            'type': 'int',
-        },
-        'fpga_monitor_interval': {
-            'type': 'int',
-        },
-        'config': {
+        'oper': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
+            'free_session_memory': {
+                'type': 'int',
+            },
+            'total_session_memory': {
+                'type': 'int',
+            },
+            'sess_mem_recovery_threshold': {
+                'type': 'int',
+            },
+            'total_fpga_buffers': {
+                'type': 'int',
+            },
+            'avail_fpga_buff_domain1': {
+                'type': 'int',
+            },
+            'avail_fpga_buff_domain2': {
+                'type': 'int',
+            },
+            'total_free_fpga_buff': {
+                'type': 'int',
+            },
+            'free_fpga_buffers': {
+                'type': 'int',
+            },
+            'fpga_buff_recovery_threshold': {
+                'type': 'int',
+            },
+            'total_system_memory': {
+                'type': 'int',
+            },
+            'fpga_stats_num_cntrs': {
+                'type': 'int',
+            },
+            'fpga_stats_iochan': {
+                'type': 'list',
+                'fpga_stats_iochan_id': {
+                    'type': 'int',
+                },
+                'fpga_stats_iochan_tx': {
+                    'type': 'int',
+                },
+                'fpga_stats_iochan_rx': {
+                    'type': 'int',
+                }
+            },
+            'config': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'sw_error_mon': {
+                        'type': 'str',
+                    },
+                    'hw_error_mon': {
+                        'type': 'str',
+                    },
+                    'sw_recovery_timeout': {
+                        'type': 'str',
+                    },
+                    'hw_recovery_timeout': {
+                        'type': 'str',
+                    },
+                    'fpga_mon_enable': {
+                        'type': 'str',
+                    },
+                    'fpga_mon_forced_reboot': {
+                        'type': 'str',
+                    },
+                    'fpga_mon_interval': {
+                        'type': 'str',
+                    },
+                    'fpga_mon_threshold': {
+                        'type': 'str',
+                    },
+                    'mem_mon': {
+                        'type': 'str',
+                    }
+                }
             }
-        },
-        'sw_error_recovery_timeout': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

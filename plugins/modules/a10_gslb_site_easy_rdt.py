@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_easy_rdt
 description:
     - Active RDT options
-short_description: Configures A10 gslb.site.easy-rdt
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,69 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     site_name:
         description:
-        - Key to identify parent object    range_factor:
+        - Key to identify parent object
+        type: str
+        required: True
+    aging_time:
         description:
-        - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
+        - "Aging Time, Unit= min, default is 10"
+        type: int
         required: False
     smooth_factor:
         description:
         - "Factor of Smooth RDT, default is 10"
+        type: int
         required: False
-    mask:
+    range_factor:
         description:
-        - "Client IP subnet mask, default is 32"
-        required: False
-    overlap:
-        description:
-        - "Enable overlap for geo-location to do longest match"
+        - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
+        type: int
         required: False
     limit:
         description:
         - "Limit of valid RDT, default is 16383 (Limit, unit= millisecond)"
+        type: int
+        required: False
+    mask:
+        description:
+        - "Client IP subnet mask, default is 32"
+        type: str
         required: False
     ignore_count:
         description:
         - "Ignore count if RDT is out of range, default is 5"
-        required: False
-    aging_time:
-        description:
-        - "Aging Time, Unit= min, default is 10"
+        type: int
         required: False
     bind_geoloc:
         description:
         - "Bind RDT to geo-location"
+        type: bool
+        required: False
+    overlap:
+        description:
+        - "Enable overlap for geo-location to do longest match"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -148,28 +165,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'range_factor': {
+        'aging_time': {
             'type': 'int',
         },
         'smooth_factor': {
             'type': 'int',
         },
-        'mask': {
-            'type': 'str',
-        },
-        'overlap': {
-            'type': 'bool',
+        'range_factor': {
+            'type': 'int',
         },
         'limit': {
             'type': 'int',
         },
+        'mask': {
+            'type': 'str',
+        },
         'ignore_count': {
             'type': 'int',
         },
-        'aging_time': {
-            'type': 'int',
-        },
         'bind_geoloc': {
+            'type': 'bool',
+        },
+        'overlap': {
             'type': 'bool',
         },
         'uuid': {

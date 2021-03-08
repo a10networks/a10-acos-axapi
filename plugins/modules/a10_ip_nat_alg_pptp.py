@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_alg_pptp
 description:
     - PPTP ALG Settings
-short_description: Configures A10 ip.nat.alg.pptp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,39 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     pptp:
         description:
         - "'disable'= Disable PPTP NAT ALG; 'enable'= Enable PPTP NAT ALG;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -70,51 +82,61 @@ options:
           retransmitted-pac-message; 'truncated-gre-packet'= truncated-gre-packet;
           'unknown-gre-version'= unknown-gre-version; 'no-matching-gre-session'= no-
           matching-gre-session;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            retransmitted_pac_message:
-                description:
-                - "Field retransmitted_pac_message"
-            smp_session_creation_failure:
-                description:
-                - "Field smp_session_creation_failure"
-            truncated_gre_packet:
-                description:
-                - "Field truncated_gre_packet"
-            truncated_pns_message:
-                description:
-                - "Field truncated_pns_message"
-            current_gre_sessions:
-                description:
-                - "Field current_gre_sessions"
-            no_matching_gre_session:
-                description:
-                - "Field no_matching_gre_session"
-            truncated_pac_message:
-                description:
-                - "Field truncated_pac_message"
-            mismatched_pac_call_id:
-                description:
-                - "Field mismatched_pac_call_id"
-            unknown_gre_version:
-                description:
-                - "Field unknown_gre_version"
             current_smp_sessions:
                 description:
                 - "Field current_smp_sessions"
-            retransmitted_pns_message:
+                type: str
+            current_gre_sessions:
                 description:
-                - "Field retransmitted_pns_message"
+                - "Field current_gre_sessions"
+                type: str
+            smp_session_creation_failure:
+                description:
+                - "Field smp_session_creation_failure"
+                type: str
+            truncated_pns_message:
+                description:
+                - "Field truncated_pns_message"
+                type: str
+            truncated_pac_message:
+                description:
+                - "Field truncated_pac_message"
+                type: str
             mismatched_pns_call_id:
                 description:
                 - "Field mismatched_pns_call_id"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            mismatched_pac_call_id:
+                description:
+                - "Field mismatched_pac_call_id"
+                type: str
+            retransmitted_pns_message:
+                description:
+                - "Field retransmitted_pns_message"
+                type: str
+            retransmitted_pac_message:
+                description:
+                - "Field retransmitted_pac_message"
+                type: str
+            truncated_gre_packet:
+                description:
+                - "Field truncated_gre_packet"
+                type: str
+            unknown_gre_version:
+                description:
+                - "Field unknown_gre_version"
+                type: str
+            no_matching_gre_session:
+                description:
+                - "Field no_matching_gre_session"
+                type: str
 
 '''
 
@@ -174,6 +196,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['disable', 'enable']
         },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -191,45 +216,42 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'retransmitted_pac_message': {
-                'type': 'str',
-            },
-            'smp_session_creation_failure': {
-                'type': 'str',
-            },
-            'truncated_gre_packet': {
-                'type': 'str',
-            },
-            'truncated_pns_message': {
+            'current_smp_sessions': {
                 'type': 'str',
             },
             'current_gre_sessions': {
                 'type': 'str',
             },
-            'no_matching_gre_session': {
+            'smp_session_creation_failure': {
+                'type': 'str',
+            },
+            'truncated_pns_message': {
                 'type': 'str',
             },
             'truncated_pac_message': {
                 'type': 'str',
             },
+            'mismatched_pns_call_id': {
+                'type': 'str',
+            },
             'mismatched_pac_call_id': {
-                'type': 'str',
-            },
-            'unknown_gre_version': {
-                'type': 'str',
-            },
-            'current_smp_sessions': {
                 'type': 'str',
             },
             'retransmitted_pns_message': {
                 'type': 'str',
             },
-            'mismatched_pns_call_id': {
+            'retransmitted_pac_message': {
+                'type': 'str',
+            },
+            'truncated_gre_packet': {
+                'type': 'str',
+            },
+            'unknown_gre_version': {
+                'type': 'str',
+            },
+            'no_matching_gre_session': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

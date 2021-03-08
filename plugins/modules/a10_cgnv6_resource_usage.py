@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_resource_usage
 description:
     - Configure CGNV6 Resource Usage
-short_description: Configures A10 cgnv6.resource-usage
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,104 +22,132 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            fixed_nat_ip_addr_count_max:
-                description:
-                - "Field fixed_nat_ip_addr_count_max"
-            fixed_nat_ip_addr_count_default:
-                description:
-                - "Field fixed_nat_ip_addr_count_default"
-            lsn_nat_addr_count_min:
-                description:
-                - "Field lsn_nat_addr_count_min"
-            radius_table_size_max:
-                description:
-                - "Field radius_table_size_max"
-            radius_table_size_default:
-                description:
-                - "Field radius_table_size_default"
-            fixed_nat_inside_user_count_default:
-                description:
-                - "Field fixed_nat_inside_user_count_default"
-            fixed_nat_inside_user_count_min:
-                description:
-                - "Field fixed_nat_inside_user_count_min"
-            radius_table_size_min:
-                description:
-                - "Field radius_table_size_min"
-            lsn_nat_addr_count_max:
-                description:
-                - "Field lsn_nat_addr_count_max"
-            lsn_nat_addr_count_default:
-                description:
-                - "Field lsn_nat_addr_count_default"
-            fixed_nat_ip_addr_count_min:
-                description:
-                - "Field fixed_nat_ip_addr_count_min"
-            fixed_nat_inside_user_count_max:
-                description:
-                - "Field fixed_nat_inside_user_count_max"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    fixed_nat_inside_user_count:
-        description:
-        - "Total configurable CGNV6 Fixed NAT inside users"
+        type: str
         required: False
     lsn_nat_addr_count:
         description:
         - "Total configurable CGNV6 NAT Pool addresses"
+        type: int
         required: False
     fixed_nat_ip_addr_count:
         description:
         - "Total configurable CGNV6 Fixed NAT addresses"
+        type: int
+        required: False
+    fixed_nat_inside_user_count:
+        description:
+        - "Total configurable CGNV6 Fixed NAT inside users"
+        type: int
+        required: False
+    radius_table_size:
+        description:
+        - "Total configurable CGNV6 RADIUS Table entries"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     stateless_entries:
         description:
         - "Field stateless_entries"
+        type: dict
         required: False
         suboptions:
             l4_session_count:
                 description:
                 - "Helper size for CGN Stateless Technologies"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
-    radius_table_size:
+                type: str
+    oper:
         description:
-        - "Total configurable CGNV6 RADIUS Table entries"
+        - "Field oper"
+        type: dict
         required: False
+        suboptions:
+            lsn_nat_addr_count_min:
+                description:
+                - "Field lsn_nat_addr_count_min"
+                type: int
+            lsn_nat_addr_count_max:
+                description:
+                - "Field lsn_nat_addr_count_max"
+                type: int
+            lsn_nat_addr_count_default:
+                description:
+                - "Field lsn_nat_addr_count_default"
+                type: int
+            fixed_nat_ip_addr_count_min:
+                description:
+                - "Field fixed_nat_ip_addr_count_min"
+                type: int
+            fixed_nat_ip_addr_count_max:
+                description:
+                - "Field fixed_nat_ip_addr_count_max"
+                type: int
+            fixed_nat_ip_addr_count_default:
+                description:
+                - "Field fixed_nat_ip_addr_count_default"
+                type: int
+            fixed_nat_inside_user_count_min:
+                description:
+                - "Field fixed_nat_inside_user_count_min"
+                type: int
+            fixed_nat_inside_user_count_max:
+                description:
+                - "Field fixed_nat_inside_user_count_max"
+                type: int
+            fixed_nat_inside_user_count_default:
+                description:
+                - "Field fixed_nat_inside_user_count_default"
+                type: int
+            radius_table_size_min:
+                description:
+                - "Field radius_table_size_min"
+                type: int
+            radius_table_size_max:
+                description:
+                - "Field radius_table_size_max"
+                type: int
+            radius_table_size_default:
+                description:
+                - "Field radius_table_size_default"
+                type: int
 
 '''
 
@@ -180,30 +206,33 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'lsn_nat_addr_count': {
+            'type': 'int',
+        },
+        'fixed_nat_ip_addr_count': {
+            'type': 'int',
+        },
+        'fixed_nat_inside_user_count': {
+            'type': 'int',
+        },
+        'radius_table_size': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'stateless_entries': {
+            'type': 'dict',
+            'l4_session_count': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
-            'fixed_nat_ip_addr_count_max': {
-                'type': 'int',
-            },
-            'fixed_nat_ip_addr_count_default': {
-                'type': 'int',
-            },
             'lsn_nat_addr_count_min': {
-                'type': 'int',
-            },
-            'radius_table_size_max': {
-                'type': 'int',
-            },
-            'radius_table_size_default': {
-                'type': 'int',
-            },
-            'fixed_nat_inside_user_count_default': {
-                'type': 'int',
-            },
-            'fixed_nat_inside_user_count_min': {
-                'type': 'int',
-            },
-            'radius_table_size_min': {
                 'type': 'int',
             },
             'lsn_nat_addr_count_max': {
@@ -215,33 +244,30 @@ def get_argspec():
             'fixed_nat_ip_addr_count_min': {
                 'type': 'int',
             },
-            'fixed_nat_inside_user_count_max': {
-                'type': 'int',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'fixed_nat_inside_user_count': {
-            'type': 'int',
-        },
-        'lsn_nat_addr_count': {
-            'type': 'int',
-        },
-        'fixed_nat_ip_addr_count': {
-            'type': 'int',
-        },
-        'stateless_entries': {
-            'type': 'dict',
-            'l4_session_count': {
+            'fixed_nat_ip_addr_count_max': {
                 'type': 'int',
             },
-            'uuid': {
-                'type': 'str',
+            'fixed_nat_ip_addr_count_default': {
+                'type': 'int',
+            },
+            'fixed_nat_inside_user_count_min': {
+                'type': 'int',
+            },
+            'fixed_nat_inside_user_count_max': {
+                'type': 'int',
+            },
+            'fixed_nat_inside_user_count_default': {
+                'type': 'int',
+            },
+            'radius_table_size_min': {
+                'type': 'int',
+            },
+            'radius_table_size_max': {
+                'type': 'int',
+            },
+            'radius_table_size_default': {
+                'type': 'int',
             }
-        },
-        'radius_table_size': {
-            'type': 'int',
         }
     })
     return rv

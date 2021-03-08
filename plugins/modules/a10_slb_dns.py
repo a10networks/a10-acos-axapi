@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_dns
 description:
     - DNS Packet Statistics
-short_description: Configures A10 slb.dns
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -66,54 +77,65 @@ options:
           'nat_resp_no_match'= (NAT) No. of requests with no response; 'nat_no_resource'=
           (NAT) No. of resource failures; 'nat_xid_reused'= (NAT) No. of requests reusing
           a transaction id;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            slb_no_resource:
-                description:
-                - "No. of resource failures"
-            nat_resp:
-                description:
-                - "(NAT) No. of responses"
             slb_req:
                 description:
                 - "No. of requests"
-            nat_xid_reused:
-                description:
-                - "(NAT) No. of requests reusing a transaction id"
-            slb_resp_no_match:
-                description:
-                - "No. of requests with no response"
-            slb_no_resp:
-                description:
-                - "No. of resource failures"
-            nat_req:
-                description:
-                - "(NAT) No. of requests"
-            slb_req_rexmit:
-                description:
-                - "No. of request retransmits"
-            nat_no_resource:
-                description:
-                - "(NAT) No. of resource failures"
-            nat_no_resp:
-                description:
-                - "(NAT) No. of resource failures"
-            nat_req_rexmit:
-                description:
-                - "(NAT) No. of request retransmits"
-            nat_resp_no_match:
-                description:
-                - "(NAT) No. of requests with no response"
+                type: str
             slb_resp:
                 description:
                 - "No. of responses"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            slb_no_resp:
+                description:
+                - "No. of resource failures"
+                type: str
+            slb_req_rexmit:
+                description:
+                - "No. of request retransmits"
+                type: str
+            slb_resp_no_match:
+                description:
+                - "No. of requests with no response"
+                type: str
+            slb_no_resource:
+                description:
+                - "No. of resource failures"
+                type: str
+            nat_req:
+                description:
+                - "(NAT) No. of requests"
+                type: str
+            nat_resp:
+                description:
+                - "(NAT) No. of responses"
+                type: str
+            nat_no_resp:
+                description:
+                - "(NAT) No. of resource failures"
+                type: str
+            nat_req_rexmit:
+                description:
+                - "(NAT) No. of request retransmits"
+                type: str
+            nat_resp_no_match:
+                description:
+                - "(NAT) No. of requests with no response"
+                type: str
+            nat_no_resource:
+                description:
+                - "(NAT) No. of resource failures"
+                type: str
+            nat_xid_reused:
+                description:
+                - "(NAT) No. of requests reusing a transaction id"
+                type: str
 
 '''
 
@@ -168,6 +190,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -183,31 +208,28 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'slb_no_resource': {
-                'type': 'str',
-            },
-            'nat_resp': {
-                'type': 'str',
-            },
             'slb_req': {
                 'type': 'str',
             },
-            'nat_xid_reused': {
-                'type': 'str',
-            },
-            'slb_resp_no_match': {
+            'slb_resp': {
                 'type': 'str',
             },
             'slb_no_resp': {
                 'type': 'str',
             },
-            'nat_req': {
-                'type': 'str',
-            },
             'slb_req_rexmit': {
                 'type': 'str',
             },
-            'nat_no_resource': {
+            'slb_resp_no_match': {
+                'type': 'str',
+            },
+            'slb_no_resource': {
+                'type': 'str',
+            },
+            'nat_req': {
+                'type': 'str',
+            },
+            'nat_resp': {
                 'type': 'str',
             },
             'nat_no_resp': {
@@ -219,12 +241,12 @@ def get_argspec():
             'nat_resp_no_match': {
                 'type': 'str',
             },
-            'slb_resp': {
+            'nat_no_resource': {
+                'type': 'str',
+            },
+            'nat_xid_reused': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

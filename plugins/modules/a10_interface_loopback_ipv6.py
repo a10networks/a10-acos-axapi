@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_loopback_ipv6
 description:
     - Global IPv6 configuration subcommands
-short_description: Configures A10 interface.loopback.ipv6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,116 +22,150 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     loopback_ifnum:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     address_list:
         description:
         - "Field address_list"
+        type: list
         required: False
         suboptions:
-            link_local:
-                description:
-                - "Configure an IPv6 link local address"
             ipv6_addr:
                 description:
                 - "Set the IPv6 address of an interface"
+                type: str
             anycast:
                 description:
                 - "Configure an IPv6 anycast address"
-    rip:
-        description:
-        - "Field rip"
-        required: False
-        suboptions:
-            split_horizon_cfg:
+                type: bool
+            link_local:
                 description:
-                - "Field split_horizon_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
+                - "Configure an IPv6 link local address"
+                type: bool
     ipv6_enable:
         description:
         - "Enable IPv6 processing"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     router:
         description:
         - "Field router"
+        type: dict
         required: False
         suboptions:
             ripng:
                 description:
                 - "Field ripng"
+                type: dict
             ospf:
                 description:
                 - "Field ospf"
+                type: dict
             isis:
                 description:
                 - "Field isis"
-    ospf:
+                type: dict
+    rip:
         description:
-        - "Field ospf"
+        - "Field rip"
+        type: dict
         required: False
         suboptions:
+            split_horizon_cfg:
+                description:
+                - "Field split_horizon_cfg"
+                type: dict
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    ospf:
+        description:
+        - "Field ospf"
+        type: dict
+        required: False
+        suboptions:
             bfd:
                 description:
                 - "Bidirectional Forwarding Detection (BFD)"
-            cost_cfg:
-                description:
-                - "Field cost_cfg"
-            hello_interval_cfg:
-                description:
-                - "Field hello_interval_cfg"
-            priority_cfg:
-                description:
-                - "Field priority_cfg"
-            mtu_ignore_cfg:
-                description:
-                - "Field mtu_ignore_cfg"
-            retransmit_interval_cfg:
-                description:
-                - "Field retransmit_interval_cfg"
+                type: bool
             disable:
                 description:
                 - "Disable BFD"
-            transmit_delay_cfg:
+                type: bool
+            cost_cfg:
                 description:
-                - "Field transmit_delay_cfg"
+                - "Field cost_cfg"
+                type: list
             dead_interval_cfg:
                 description:
                 - "Field dead_interval_cfg"
+                type: list
+            hello_interval_cfg:
+                description:
+                - "Field hello_interval_cfg"
+                type: list
+            mtu_ignore_cfg:
+                description:
+                - "Field mtu_ignore_cfg"
+                type: list
+            priority_cfg:
+                description:
+                - "Field priority_cfg"
+                type: list
+            retransmit_interval_cfg:
+                description:
+                - "Field retransmit_interval_cfg"
+                type: list
+            transmit_delay_cfg:
+                description:
+                - "Field transmit_delay_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -191,52 +223,42 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'address_list': {
             'type': 'list',
-            'link_local': {
-                'type': 'bool',
-            },
             'ipv6_addr': {
                 'type': 'str',
             },
             'anycast': {
                 'type': 'bool',
-            }
-        },
-        'rip': {
-            'type': 'dict',
-            'split_horizon_cfg': {
-                'type': 'dict',
-                'state': {
-                    'type': 'str',
-                    'choices': ['poisoned', 'disable', 'enable']
-                }
             },
-            'uuid': {
-                'type': 'str',
+            'link_local': {
+                'type': 'bool',
             }
         },
         'ipv6_enable': {
             'type': 'bool',
         },
+        'uuid': {
+            'type': 'str',
+        },
         'router': {
             'type': 'dict',
             'ripng': {
                 'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
                 'rip': {
                     'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
                 }
             },
             'ospf': {
                 'type': 'dict',
                 'area_list': {
                     'type': 'list',
+                    'area_id_num': {
+                        'type': 'int',
+                    },
                     'area_id_addr': {
                         'type': 'str',
                     },
@@ -244,9 +266,6 @@ def get_argspec():
                         'type': 'str',
                     },
                     'instance_id': {
-                        'type': 'int',
-                    },
-                    'area_id_num': {
                         'type': 'int',
                     }
                 },
@@ -264,17 +283,39 @@ def get_argspec():
                 }
             }
         },
-        'ospf': {
+        'rip': {
             'type': 'dict',
+            'split_horizon_cfg': {
+                'type': 'dict',
+                'state': {
+                    'type': 'str',
+                    'choices': ['poisoned', 'disable', 'enable']
+                }
+            },
             'uuid': {
                 'type': 'str',
-            },
+            }
+        },
+        'ospf': {
+            'type': 'dict',
             'bfd': {
+                'type': 'bool',
+            },
+            'disable': {
                 'type': 'bool',
             },
             'cost_cfg': {
                 'type': 'list',
                 'cost': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
+            'dead_interval_cfg': {
+                'type': 'list',
+                'dead_interval': {
                     'type': 'int',
                 },
                 'instance_id': {
@@ -290,19 +331,19 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'priority_cfg': {
+            'mtu_ignore_cfg': {
                 'type': 'list',
-                'priority': {
-                    'type': 'int',
+                'mtu_ignore': {
+                    'type': 'bool',
                 },
                 'instance_id': {
                     'type': 'int',
                 }
             },
-            'mtu_ignore_cfg': {
+            'priority_cfg': {
                 'type': 'list',
-                'mtu_ignore': {
-                    'type': 'bool',
+                'priority': {
+                    'type': 'int',
                 },
                 'instance_id': {
                     'type': 'int',
@@ -317,9 +358,6 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'disable': {
-                'type': 'bool',
-            },
             'transmit_delay_cfg': {
                 'type': 'list',
                 'transmit_delay': {
@@ -329,14 +367,8 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'dead_interval_cfg': {
-                'type': 'list',
-                'dead_interval': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
+            'uuid': {
+                'type': 'str',
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authorization_policy
 description:
     - Authorization-policy configuration
-short_description: Configures A10 aam.authorization.policy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,169 +22,215 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    jwt_authorization:
-        description:
-        - "Specify JWT authorization template (Specify JWT authorization template name)"
+        type: str
         required: False
     name:
         description:
         - "Specify authorization policy name"
+        type: str
         required: True
-    user_tag:
+    attribute_rule:
         description:
-        - "Customized tag"
+        - "Define attribute rule for authorization policy"
+        type: str
         required: False
     server:
         description:
         - "Specify a LDAP or RADIUS server for authorization (Specify a LDAP or RADIUS
           server name)"
+        type: str
         required: False
-    jwt_claim_map_list:
-        description:
-        - "Field jwt_claim_map_list"
-        required: False
-        suboptions:
-            claim:
-                description:
-                - "Specify JWT claim name to map to."
-            bool_val:
-                description:
-                - "'true'= True; 'false'= False;"
-            uuid:
-                description:
-                - "uuid of the object"
-            string_type:
-                description:
-                - "Claim type is string"
-            str_val:
-                description:
-                - "Specify JWT claim value."
-            num_val:
-                description:
-                - "Specify JWT claim value."
-            attr_num:
-                description:
-                - "Spcify attribute ID for claim mapping"
-            number_type:
-                description:
-                - "Claim type is number"
-            boolean_type:
-                description:
-                - "Claim type is boolean"
-            ntype:
-                description:
-                - "Specify claim type"
     service_group:
         description:
         - "Specify an authentication service group for authorization (Specify
           authentication service group name)"
+        type: str
+        required: False
+    extended_filter:
+        description:
+        - "Extended search filter. EX= Check whether user belongs to a nested group.
+          (memberOf=1.2.840.113556.1.4.1941==$GROUP-DN)"
+        type: str
+        required: False
+    jwt_authorization:
+        description:
+        - "Specify JWT authorization template (Specify JWT authorization template name)"
+        type: str
+        required: False
+    forward_policy_authorize_only:
+        description:
+        - "This policy only provides server info for forward policy feature"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     attribute_list:
         description:
         - "Field attribute_list"
+        type: list
         required: False
         suboptions:
-            attribute_name:
-                description:
-                - "Specify attribute name"
-            integer_type:
-                description:
-                - "Attribute type is integer"
-            custom_attr_type:
-                description:
-                - "Specify attribute type"
-            uuid:
-                description:
-                - "uuid of the object"
-            string_type:
-                description:
-                - "Attribute type is string"
-            attr_str_val:
-                description:
-                - "Set attribute value"
-            attr_ipv4:
-                description:
-                - "IPv4 address"
-            attr_type:
-                description:
-                - "Specify attribute type"
             attr_num:
                 description:
                 - "Set attribute ID for authorization policy"
-            a10_dynamic_defined:
+                type: int
+            attribute_name:
                 description:
-                - "The value of this attribute will depend on AX configuration instead of user
-          configuration"
+                - "Specify attribute name"
+                type: str
+            any:
+                description:
+                - "Matched when attribute is present (with any value)."
+                type: bool
+            attr_type:
+                description:
+                - "Specify attribute type"
+                type: bool
+            string_type:
+                description:
+                - "Attribute type is string"
+                type: bool
+            integer_type:
+                description:
+                - "Attribute type is integer"
+                type: bool
+            ip_type:
+                description:
+                - "IP address is transformed into network byte order"
+                type: bool
+            attr_str:
+                description:
+                - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
+                type: str
+            attr_str_val:
+                description:
+                - "Set attribute value"
+                type: str
             attr_int:
                 description:
                 - "'equal'= Operation type is equal; 'not-equal'= Operation type is not equal;
           'less-than'= Operation type is less-than; 'more-than'= Operation type is more-
           than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-
           equal-to'= Operation type is more-thatn-equal-to;"
-            ip_type:
-                description:
-                - "IP address is transformed into network byte order"
-            attr_ip:
-                description:
-                - "'equal'= Operation type is equal; 'not-equal'= Operation type is not-equal;"
-            A10_AX_AUTH_URI:
-                description:
-                - "Custom-defined attribute"
-            attr_str:
-                description:
-                - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
-            any:
-                description:
-                - "Matched when attribute is present (with any value)."
-            custom_attr_str:
-                description:
-                - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
+                type: str
             attr_int_val:
                 description:
                 - "Set attribute value"
-    extended_filter:
+                type: int
+            attr_ip:
+                description:
+                - "'equal'= Operation type is equal; 'not-equal'= Operation type is not-equal;"
+                type: str
+            attr_ipv4:
+                description:
+                - "IPv4 address"
+                type: str
+            A10_AX_AUTH_URI:
+                description:
+                - "Custom-defined attribute"
+                type: bool
+            custom_attr_type:
+                description:
+                - "Specify attribute type"
+                type: bool
+            custom_attr_str:
+                description:
+                - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
+                type: str
+            a10_dynamic_defined:
+                description:
+                - "The value of this attribute will depend on AX configuration instead of user
+          configuration"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    jwt_claim_map_list:
         description:
-        - "Extended search filter. EX= Check whether user belongs to a nested group.
-          (memberOf=1.2.840.113556.1.4.1941==$GROUP-DN)"
+        - "Field jwt_claim_map_list"
+        type: list
         required: False
-    attribute_rule:
-        description:
-        - "Define attribute rule for authorization policy"
-        required: False
-    forward_policy_authorize_only:
-        description:
-        - "This policy only provides server info for forward policy feature"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            attr_num:
+                description:
+                - "Spcify attribute ID for claim mapping"
+                type: int
+            claim:
+                description:
+                - "Specify JWT claim name to map to."
+                type: str
+            ntype:
+                description:
+                - "Specify claim type"
+                type: bool
+            string_type:
+                description:
+                - "Claim type is string"
+                type: bool
+            number_type:
+                description:
+                - "Claim type is number"
+                type: bool
+            boolean_type:
+                description:
+                - "Claim type is boolean"
+                type: bool
+            str_val:
+                description:
+                - "Specify JWT claim value."
+                type: str
+            num_val:
+                description:
+                - "Specify JWT claim value."
+                type: int
+            bool_val:
+                description:
+                - "'true'= True; 'false'= False;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -249,89 +293,64 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'jwt_authorization': {
-            'type': 'str',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'user_tag': {
+        'attribute_rule': {
             'type': 'str',
         },
         'server': {
             'type': 'str',
         },
-        'jwt_claim_map_list': {
-            'type': 'list',
-            'claim': {
-                'type': 'str',
-            },
-            'bool_val': {
-                'type': 'str',
-                'choices': ['true', 'false']
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'string_type': {
-                'type': 'bool',
-            },
-            'str_val': {
-                'type': 'str',
-            },
-            'num_val': {
-                'type': 'int',
-            },
-            'attr_num': {
-                'type': 'int',
-                'required': True,
-            },
-            'number_type': {
-                'type': 'bool',
-            },
-            'boolean_type': {
-                'type': 'bool',
-            },
-            'ntype': {
-                'type': 'bool',
-            }
-        },
         'service_group': {
+            'type': 'str',
+        },
+        'extended_filter': {
+            'type': 'str',
+        },
+        'jwt_authorization': {
+            'type': 'str',
+        },
+        'forward_policy_authorize_only': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         },
         'attribute_list': {
             'type': 'list',
-            'attribute_name': {
-                'type': 'str',
-            },
-            'integer_type': {
-                'type': 'bool',
-            },
-            'custom_attr_type': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'string_type': {
-                'type': 'bool',
-            },
-            'attr_str_val': {
-                'type': 'str',
-            },
-            'attr_ipv4': {
-                'type': 'str',
-            },
-            'attr_type': {
-                'type': 'bool',
-            },
             'attr_num': {
                 'type': 'int',
                 'required': True,
             },
-            'a10_dynamic_defined': {
+            'attribute_name': {
+                'type': 'str',
+            },
+            'any': {
                 'type': 'bool',
+            },
+            'attr_type': {
+                'type': 'bool',
+            },
+            'string_type': {
+                'type': 'bool',
+            },
+            'integer_type': {
+                'type': 'bool',
+            },
+            'ip_type': {
+                'type': 'bool',
+            },
+            'attr_str': {
+                'type': 'str',
+                'choices': ['match', 'sub-string']
+            },
+            'attr_str_val': {
+                'type': 'str',
             },
             'attr_int': {
                 'type':
@@ -341,42 +360,67 @@ def get_argspec():
                     'less-than-equal-to', 'more-than-equal-to'
                 ]
             },
-            'ip_type': {
-                'type': 'bool',
+            'attr_int_val': {
+                'type': 'int',
             },
             'attr_ip': {
                 'type': 'str',
                 'choices': ['equal', 'not-equal']
             },
+            'attr_ipv4': {
+                'type': 'str',
+            },
             'A10_AX_AUTH_URI': {
                 'type': 'bool',
             },
-            'attr_str': {
-                'type': 'str',
-                'choices': ['match', 'sub-string']
-            },
-            'any': {
+            'custom_attr_type': {
                 'type': 'bool',
             },
             'custom_attr_str': {
                 'type': 'str',
                 'choices': ['match', 'sub-string']
             },
-            'attr_int_val': {
-                'type': 'int',
+            'a10_dynamic_defined': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
             }
         },
-        'extended_filter': {
-            'type': 'str',
-        },
-        'attribute_rule': {
-            'type': 'str',
-        },
-        'forward_policy_authorize_only': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
+        'jwt_claim_map_list': {
+            'type': 'list',
+            'attr_num': {
+                'type': 'int',
+                'required': True,
+            },
+            'claim': {
+                'type': 'str',
+            },
+            'ntype': {
+                'type': 'bool',
+            },
+            'string_type': {
+                'type': 'bool',
+            },
+            'number_type': {
+                'type': 'bool',
+            },
+            'boolean_type': {
+                'type': 'bool',
+            },
+            'str_val': {
+                'type': 'str',
+            },
+            'num_val': {
+                'type': 'int',
+            },
+            'bool_val': {
+                'type': 'str',
+                'choices': ['true', 'false']
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_persist
 description:
     - Configure persist
-short_description: Configures A10 slb.persist
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            persist_cpu_list:
-                description:
-                - "Field persist_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -100,174 +100,239 @@ options:
           'cookie_persist_ok'= Cookie persist ok; 'cookie_persist_fail'= Cookie persist
           fail; 'cookie_not_found'= Persist cookie not found; 'cookie_pass_thru'= Persist
           cookie Pass-thru; 'cookie_invalid'= Invalid persist cookie;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            persist_cpu_list:
+                description:
+                - "Field persist_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            ssl_sid_session_ok:
-                description:
-                - "Create SSL SID ok"
-            sssl_sid_not_match:
-                description:
-                - "Server SSL SID not match"
-            src_ip_enforce:
-                description:
-                - "Enforce higher priority"
-            cookie_persist_fail:
-                description:
-                - "Cookie persist fail"
-            url_hash_sec:
-                description:
-                - "URL hash persist (sec)"
-            header_hash_pri:
-                description:
-                - "Header hash persist(pri)"
-            header_hash_enqueue:
-                description:
-                - "Header hash persist(enQ)"
-            src_ip_hash_pri:
-                description:
-                - "SRC IP hash persist(pri)"
-            url_hash_pri:
-                description:
-                - "URL hash persist (pri)"
-            src_ip_new_sess_sel_fail:
-                description:
-                - "SRC IP new sess fail (s)"
-            sssl_sid_match:
-                description:
-                - "Server SSL SID match"
-            dst_ip_hash_sec:
-                description:
-                - "DST IP hash persist(sec)"
-            src_ip_hash_sec:
-                description:
-                - "SRC IP hash persist(sec)"
-            cookie_not_found:
-                description:
-                - "Persist cookie not found"
-            src_ip_enqueue:
-                description:
-                - "SRC IP persist enqueue"
-            dst_ip_new_sess_cache:
-                description:
-                - "DST IP new sess (cache)"
-            cssl_sid_match:
-                description:
-                - "Client SSL SID match"
-            hash_tbl_create_fail:
-                description:
-                - "Hash tbl create fail"
-            cookie_invalid:
-                description:
-                - "Invalid persist cookie"
-            ssl_sid_persist_fail:
-                description:
-                - "SSL SID persist fail"
-            cssl_sid_not_found:
-                description:
-                - "Client SSL SID not found"
-            cssl_sid_not_match:
-                description:
-                - "Client SSL SID not match"
-            ssl_sid_session_fail:
-                description:
-                - "Create SSL SID fail"
-            url_hash_enqueue:
-                description:
-                - "URL hash persist (enQ)"
-            hash_tbl_create_ok:
-                description:
-                - "Hash tbl create ok"
-            cookie_pass_thru:
-                description:
-                - "Persist cookie Pass-thru"
-            sssl_sid_reset:
-                description:
-                - "Server SSL SID reset"
-            src_ip_new_sess_cache_fail:
-                description:
-                - "SRC IP new sess fail (c)"
-            dst_ip_new_sess_sel_fail:
-                description:
-                - "DST IP new sess fail (s)"
-            src_ip_new_sess_cache:
-                description:
-                - "SRC IP new sess (cache)"
-            url_hash_fail:
-                description:
-                - "URL hash persist fail"
-            dst_ip_hash_fail:
-                description:
-                - "DST IP hash persist fail"
-            dst_ip_hash_pri:
-                description:
-                - "DST IP hash persist(pri)"
-            hash_tbl_rst_updown:
-                description:
-                - "Hash tbl reset (up/down)"
             hash_tbl_trylock_fail:
                 description:
                 - "Hash tbl lock fail"
-            dst_ip_hash_enqueue:
+                type: str
+            hash_tbl_create_ok:
                 description:
-                - "DST IP hash persist(enQ)"
-            header_hash_sec:
+                - "Hash tbl create ok"
+                type: str
+            hash_tbl_create_fail:
                 description:
-                - "Header hash persist(sec)"
-            sssl_sid_not_found:
-                description:
-                - "Server SSL SID not found"
-            src_ip_new_sess_sel:
-                description:
-                - "SRC IP new sess (select)"
-            header_hash_fail:
-                description:
-                - "Header hash persist fail"
-            dst_ip:
-                description:
-                - "DST IP persist ok"
-            src_ip_hash_enqueue:
-                description:
-                - "SRC IP hash persist(enQ)"
+                - "Hash tbl create fail"
+                type: str
             hash_tbl_free:
                 description:
                 - "Hash tbl free"
+                type: str
+            hash_tbl_rst_updown:
+                description:
+                - "Hash tbl reset (up/down)"
+                type: str
             hash_tbl_rst_adddel:
                 description:
                 - "Hash tbl reset (add/del)"
-            src_ip_hash_fail:
+                type: str
+            url_hash_pri:
                 description:
-                - "SRC IP hash persist fail"
-            cookie_persist_ok:
+                - "URL hash persist (pri)"
+                type: str
+            url_hash_enqueue:
                 description:
-                - "Cookie persist ok"
-            dst_ip_enqueue:
+                - "URL hash persist (enQ)"
+                type: str
+            url_hash_sec:
                 description:
-                - "DST IP persist enqueue"
-            dst_ip_new_sess_sel:
+                - "URL hash persist (sec)"
+                type: str
+            url_hash_fail:
                 description:
-                - "DST IP new sess (select)"
-            dst_ip_fail:
+                - "URL hash persist fail"
+                type: str
+            header_hash_pri:
                 description:
-                - "DST IP persist fail"
-            src_ip_fail:
+                - "Header hash persist(pri)"
+                type: str
+            header_hash_enqueue:
                 description:
-                - "SRC IP persist fail"
+                - "Header hash persist(enQ)"
+                type: str
+            header_hash_sec:
+                description:
+                - "Header hash persist(sec)"
+                type: str
+            header_hash_fail:
+                description:
+                - "Header hash persist fail"
+                type: str
             src_ip:
                 description:
                 - "SRC IP persist ok"
-            ssl_sid_persist_ok:
+                type: str
+            src_ip_enqueue:
                 description:
-                - "SSL SID persist ok"
+                - "SRC IP persist enqueue"
+                type: str
+            src_ip_fail:
+                description:
+                - "SRC IP persist fail"
+                type: str
+            src_ip_new_sess_cache:
+                description:
+                - "SRC IP new sess (cache)"
+                type: str
+            src_ip_new_sess_cache_fail:
+                description:
+                - "SRC IP new sess fail (c)"
+                type: str
+            src_ip_new_sess_sel:
+                description:
+                - "SRC IP new sess (select)"
+                type: str
+            src_ip_new_sess_sel_fail:
+                description:
+                - "SRC IP new sess fail (s)"
+                type: str
+            src_ip_hash_pri:
+                description:
+                - "SRC IP hash persist(pri)"
+                type: str
+            src_ip_hash_enqueue:
+                description:
+                - "SRC IP hash persist(enQ)"
+                type: str
+            src_ip_hash_sec:
+                description:
+                - "SRC IP hash persist(sec)"
+                type: str
+            src_ip_hash_fail:
+                description:
+                - "SRC IP hash persist fail"
+                type: str
+            src_ip_enforce:
+                description:
+                - "Enforce higher priority"
+                type: str
+            dst_ip:
+                description:
+                - "DST IP persist ok"
+                type: str
+            dst_ip_enqueue:
+                description:
+                - "DST IP persist enqueue"
+                type: str
+            dst_ip_fail:
+                description:
+                - "DST IP persist fail"
+                type: str
+            dst_ip_new_sess_cache:
+                description:
+                - "DST IP new sess (cache)"
+                type: str
             dst_ip_new_sess_cache_fail:
                 description:
                 - "DST IP new sess fail (c)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            dst_ip_new_sess_sel:
+                description:
+                - "DST IP new sess (select)"
+                type: str
+            dst_ip_new_sess_sel_fail:
+                description:
+                - "DST IP new sess fail (s)"
+                type: str
+            dst_ip_hash_pri:
+                description:
+                - "DST IP hash persist(pri)"
+                type: str
+            dst_ip_hash_enqueue:
+                description:
+                - "DST IP hash persist(enQ)"
+                type: str
+            dst_ip_hash_sec:
+                description:
+                - "DST IP hash persist(sec)"
+                type: str
+            dst_ip_hash_fail:
+                description:
+                - "DST IP hash persist fail"
+                type: str
+            cssl_sid_not_found:
+                description:
+                - "Client SSL SID not found"
+                type: str
+            cssl_sid_match:
+                description:
+                - "Client SSL SID match"
+                type: str
+            cssl_sid_not_match:
+                description:
+                - "Client SSL SID not match"
+                type: str
+            sssl_sid_not_found:
+                description:
+                - "Server SSL SID not found"
+                type: str
+            sssl_sid_reset:
+                description:
+                - "Server SSL SID reset"
+                type: str
+            sssl_sid_match:
+                description:
+                - "Server SSL SID match"
+                type: str
+            sssl_sid_not_match:
+                description:
+                - "Server SSL SID not match"
+                type: str
+            ssl_sid_persist_ok:
+                description:
+                - "SSL SID persist ok"
+                type: str
+            ssl_sid_persist_fail:
+                description:
+                - "SSL SID persist fail"
+                type: str
+            ssl_sid_session_ok:
+                description:
+                - "Create SSL SID ok"
+                type: str
+            ssl_sid_session_fail:
+                description:
+                - "Create SSL SID fail"
+                type: str
+            cookie_persist_ok:
+                description:
+                - "Cookie persist ok"
+                type: str
+            cookie_persist_fail:
+                description:
+                - "Cookie persist fail"
+                type: str
+            cookie_not_found:
+                description:
+                - "Persist cookie not found"
+                type: str
+            cookie_pass_thru:
+                description:
+                - "Persist cookie Pass-thru"
+                type: str
+            cookie_invalid:
+                description:
+                - "Invalid persist cookie"
+                type: str
 
 '''
 
@@ -323,173 +388,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'persist_cpu_list': {
-                'type': 'list',
-                'ssl_sid_session_ok': {
-                    'type': 'int',
-                },
-                'sssl_sid_not_match': {
-                    'type': 'int',
-                },
-                'src_ip_enforce': {
-                    'type': 'int',
-                },
-                'cookie_persist_fail': {
-                    'type': 'int',
-                },
-                'url_hash_sec': {
-                    'type': 'int',
-                },
-                'header_hash_pri': {
-                    'type': 'int',
-                },
-                'header_hash_enqueue': {
-                    'type': 'int',
-                },
-                'src_ip_hash_pri': {
-                    'type': 'int',
-                },
-                'url_hash_pri': {
-                    'type': 'int',
-                },
-                'src_ip_new_sess_sel_fail': {
-                    'type': 'int',
-                },
-                'sssl_sid_match': {
-                    'type': 'int',
-                },
-                'dst_ip_hash_sec': {
-                    'type': 'int',
-                },
-                'src_ip_hash_sec': {
-                    'type': 'int',
-                },
-                'cookie_not_found': {
-                    'type': 'int',
-                },
-                'src_ip_enqueue': {
-                    'type': 'int',
-                },
-                'dst_ip_new_sess_cache': {
-                    'type': 'int',
-                },
-                'cssl_sid_match': {
-                    'type': 'int',
-                },
-                'hash_tbl_create_fail': {
-                    'type': 'int',
-                },
-                'cookie_invalid': {
-                    'type': 'int',
-                },
-                'ssl_sid_persist_fail': {
-                    'type': 'int',
-                },
-                'cssl_sid_not_found': {
-                    'type': 'int',
-                },
-                'cssl_sid_not_match': {
-                    'type': 'int',
-                },
-                'ssl_sid_session_fail': {
-                    'type': 'int',
-                },
-                'url_hash_enqueue': {
-                    'type': 'int',
-                },
-                'hash_tbl_create_ok': {
-                    'type': 'int',
-                },
-                'cookie_pass_thru': {
-                    'type': 'int',
-                },
-                'sssl_sid_reset': {
-                    'type': 'int',
-                },
-                'src_ip_new_sess_cache_fail': {
-                    'type': 'int',
-                },
-                'dst_ip_new_sess_sel_fail': {
-                    'type': 'int',
-                },
-                'src_ip_new_sess_cache': {
-                    'type': 'int',
-                },
-                'url_hash_fail': {
-                    'type': 'int',
-                },
-                'dst_ip_hash_fail': {
-                    'type': 'int',
-                },
-                'dst_ip_hash_pri': {
-                    'type': 'int',
-                },
-                'hash_tbl_rst_updown': {
-                    'type': 'int',
-                },
-                'hash_tbl_trylock_fail': {
-                    'type': 'int',
-                },
-                'dst_ip_hash_enqueue': {
-                    'type': 'int',
-                },
-                'header_hash_sec': {
-                    'type': 'int',
-                },
-                'sssl_sid_not_found': {
-                    'type': 'int',
-                },
-                'src_ip_new_sess_sel': {
-                    'type': 'int',
-                },
-                'header_hash_fail': {
-                    'type': 'int',
-                },
-                'dst_ip': {
-                    'type': 'int',
-                },
-                'src_ip_hash_enqueue': {
-                    'type': 'int',
-                },
-                'hash_tbl_free': {
-                    'type': 'int',
-                },
-                'hash_tbl_rst_adddel': {
-                    'type': 'int',
-                },
-                'src_ip_hash_fail': {
-                    'type': 'int',
-                },
-                'cookie_persist_ok': {
-                    'type': 'int',
-                },
-                'dst_ip_enqueue': {
-                    'type': 'int',
-                },
-                'dst_ip_new_sess_sel': {
-                    'type': 'int',
-                },
-                'dst_ip_fail': {
-                    'type': 'int',
-                },
-                'src_ip_fail': {
-                    'type': 'int',
-                },
-                'src_ip': {
-                    'type': 'int',
-                },
-                'ssl_sid_persist_ok': {
-                    'type': 'int',
-                },
-                'dst_ip_new_sess_cache_fail': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -522,21 +422,204 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'persist_cpu_list': {
+                'type': 'list',
+                'hash_tbl_trylock_fail': {
+                    'type': 'int',
+                },
+                'hash_tbl_create_ok': {
+                    'type': 'int',
+                },
+                'hash_tbl_create_fail': {
+                    'type': 'int',
+                },
+                'hash_tbl_free': {
+                    'type': 'int',
+                },
+                'hash_tbl_rst_updown': {
+                    'type': 'int',
+                },
+                'hash_tbl_rst_adddel': {
+                    'type': 'int',
+                },
+                'url_hash_pri': {
+                    'type': 'int',
+                },
+                'url_hash_enqueue': {
+                    'type': 'int',
+                },
+                'url_hash_sec': {
+                    'type': 'int',
+                },
+                'url_hash_fail': {
+                    'type': 'int',
+                },
+                'header_hash_pri': {
+                    'type': 'int',
+                },
+                'header_hash_enqueue': {
+                    'type': 'int',
+                },
+                'header_hash_sec': {
+                    'type': 'int',
+                },
+                'header_hash_fail': {
+                    'type': 'int',
+                },
+                'src_ip': {
+                    'type': 'int',
+                },
+                'src_ip_enqueue': {
+                    'type': 'int',
+                },
+                'src_ip_fail': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_cache': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_cache_fail': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_sel': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_sel_fail': {
+                    'type': 'int',
+                },
+                'src_ip_hash_pri': {
+                    'type': 'int',
+                },
+                'src_ip_hash_enqueue': {
+                    'type': 'int',
+                },
+                'src_ip_hash_sec': {
+                    'type': 'int',
+                },
+                'src_ip_hash_fail': {
+                    'type': 'int',
+                },
+                'src_ip_enforce': {
+                    'type': 'int',
+                },
+                'dst_ip': {
+                    'type': 'int',
+                },
+                'dst_ip_enqueue': {
+                    'type': 'int',
+                },
+                'dst_ip_fail': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_cache': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_cache_fail': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_sel': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_sel_fail': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_pri': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_enqueue': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_sec': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_fail': {
+                    'type': 'int',
+                },
+                'cssl_sid_not_found': {
+                    'type': 'int',
+                },
+                'cssl_sid_match': {
+                    'type': 'int',
+                },
+                'cssl_sid_not_match': {
+                    'type': 'int',
+                },
+                'sssl_sid_not_found': {
+                    'type': 'int',
+                },
+                'sssl_sid_reset': {
+                    'type': 'int',
+                },
+                'sssl_sid_match': {
+                    'type': 'int',
+                },
+                'sssl_sid_not_match': {
+                    'type': 'int',
+                },
+                'ssl_sid_persist_ok': {
+                    'type': 'int',
+                },
+                'ssl_sid_persist_fail': {
+                    'type': 'int',
+                },
+                'ssl_sid_session_ok': {
+                    'type': 'int',
+                },
+                'ssl_sid_session_fail': {
+                    'type': 'int',
+                },
+                'cookie_persist_ok': {
+                    'type': 'int',
+                },
+                'cookie_persist_fail': {
+                    'type': 'int',
+                },
+                'cookie_not_found': {
+                    'type': 'int',
+                },
+                'cookie_pass_thru': {
+                    'type': 'int',
+                },
+                'cookie_invalid': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'ssl_sid_session_ok': {
+            'hash_tbl_trylock_fail': {
                 'type': 'str',
             },
-            'sssl_sid_not_match': {
+            'hash_tbl_create_ok': {
                 'type': 'str',
             },
-            'src_ip_enforce': {
+            'hash_tbl_create_fail': {
                 'type': 'str',
             },
-            'cookie_persist_fail': {
+            'hash_tbl_free': {
+                'type': 'str',
+            },
+            'hash_tbl_rst_updown': {
+                'type': 'str',
+            },
+            'hash_tbl_rst_adddel': {
+                'type': 'str',
+            },
+            'url_hash_pri': {
+                'type': 'str',
+            },
+            'url_hash_enqueue': {
                 'type': 'str',
             },
             'url_hash_sec': {
+                'type': 'str',
+            },
+            'url_hash_fail': {
                 'type': 'str',
             },
             'header_hash_pri': {
@@ -545,147 +628,129 @@ def get_argspec():
             'header_hash_enqueue': {
                 'type': 'str',
             },
-            'src_ip_hash_pri': {
-                'type': 'str',
-            },
-            'url_hash_pri': {
-                'type': 'str',
-            },
-            'src_ip_new_sess_sel_fail': {
-                'type': 'str',
-            },
-            'sssl_sid_match': {
-                'type': 'str',
-            },
-            'dst_ip_hash_sec': {
-                'type': 'str',
-            },
-            'src_ip_hash_sec': {
-                'type': 'str',
-            },
-            'cookie_not_found': {
-                'type': 'str',
-            },
-            'src_ip_enqueue': {
-                'type': 'str',
-            },
-            'dst_ip_new_sess_cache': {
-                'type': 'str',
-            },
-            'cssl_sid_match': {
-                'type': 'str',
-            },
-            'hash_tbl_create_fail': {
-                'type': 'str',
-            },
-            'cookie_invalid': {
-                'type': 'str',
-            },
-            'ssl_sid_persist_fail': {
-                'type': 'str',
-            },
-            'cssl_sid_not_found': {
-                'type': 'str',
-            },
-            'cssl_sid_not_match': {
-                'type': 'str',
-            },
-            'ssl_sid_session_fail': {
-                'type': 'str',
-            },
-            'url_hash_enqueue': {
-                'type': 'str',
-            },
-            'hash_tbl_create_ok': {
-                'type': 'str',
-            },
-            'cookie_pass_thru': {
-                'type': 'str',
-            },
-            'sssl_sid_reset': {
-                'type': 'str',
-            },
-            'src_ip_new_sess_cache_fail': {
-                'type': 'str',
-            },
-            'dst_ip_new_sess_sel_fail': {
-                'type': 'str',
-            },
-            'src_ip_new_sess_cache': {
-                'type': 'str',
-            },
-            'url_hash_fail': {
-                'type': 'str',
-            },
-            'dst_ip_hash_fail': {
-                'type': 'str',
-            },
-            'dst_ip_hash_pri': {
-                'type': 'str',
-            },
-            'hash_tbl_rst_updown': {
-                'type': 'str',
-            },
-            'hash_tbl_trylock_fail': {
-                'type': 'str',
-            },
-            'dst_ip_hash_enqueue': {
-                'type': 'str',
-            },
             'header_hash_sec': {
-                'type': 'str',
-            },
-            'sssl_sid_not_found': {
-                'type': 'str',
-            },
-            'src_ip_new_sess_sel': {
                 'type': 'str',
             },
             'header_hash_fail': {
                 'type': 'str',
             },
-            'dst_ip': {
+            'src_ip': {
                 'type': 'str',
             },
-            'src_ip_hash_enqueue': {
-                'type': 'str',
-            },
-            'hash_tbl_free': {
-                'type': 'str',
-            },
-            'hash_tbl_rst_adddel': {
-                'type': 'str',
-            },
-            'src_ip_hash_fail': {
-                'type': 'str',
-            },
-            'cookie_persist_ok': {
-                'type': 'str',
-            },
-            'dst_ip_enqueue': {
-                'type': 'str',
-            },
-            'dst_ip_new_sess_sel': {
-                'type': 'str',
-            },
-            'dst_ip_fail': {
+            'src_ip_enqueue': {
                 'type': 'str',
             },
             'src_ip_fail': {
                 'type': 'str',
             },
-            'src_ip': {
+            'src_ip_new_sess_cache': {
+                'type': 'str',
+            },
+            'src_ip_new_sess_cache_fail': {
+                'type': 'str',
+            },
+            'src_ip_new_sess_sel': {
+                'type': 'str',
+            },
+            'src_ip_new_sess_sel_fail': {
+                'type': 'str',
+            },
+            'src_ip_hash_pri': {
+                'type': 'str',
+            },
+            'src_ip_hash_enqueue': {
+                'type': 'str',
+            },
+            'src_ip_hash_sec': {
+                'type': 'str',
+            },
+            'src_ip_hash_fail': {
+                'type': 'str',
+            },
+            'src_ip_enforce': {
+                'type': 'str',
+            },
+            'dst_ip': {
+                'type': 'str',
+            },
+            'dst_ip_enqueue': {
+                'type': 'str',
+            },
+            'dst_ip_fail': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_cache': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_cache_fail': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_sel': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_sel_fail': {
+                'type': 'str',
+            },
+            'dst_ip_hash_pri': {
+                'type': 'str',
+            },
+            'dst_ip_hash_enqueue': {
+                'type': 'str',
+            },
+            'dst_ip_hash_sec': {
+                'type': 'str',
+            },
+            'dst_ip_hash_fail': {
+                'type': 'str',
+            },
+            'cssl_sid_not_found': {
+                'type': 'str',
+            },
+            'cssl_sid_match': {
+                'type': 'str',
+            },
+            'cssl_sid_not_match': {
+                'type': 'str',
+            },
+            'sssl_sid_not_found': {
+                'type': 'str',
+            },
+            'sssl_sid_reset': {
+                'type': 'str',
+            },
+            'sssl_sid_match': {
+                'type': 'str',
+            },
+            'sssl_sid_not_match': {
                 'type': 'str',
             },
             'ssl_sid_persist_ok': {
                 'type': 'str',
             },
-            'dst_ip_new_sess_cache_fail': {
+            'ssl_sid_persist_fail': {
+                'type': 'str',
+            },
+            'ssl_sid_session_ok': {
+                'type': 'str',
+            },
+            'ssl_sid_session_fail': {
+                'type': 'str',
+            },
+            'cookie_persist_ok': {
+                'type': 'str',
+            },
+            'cookie_persist_fail': {
+                'type': 'str',
+            },
+            'cookie_not_found': {
+                'type': 'str',
+            },
+            'cookie_pass_thru': {
+                'type': 'str',
+            },
+            'cookie_invalid': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

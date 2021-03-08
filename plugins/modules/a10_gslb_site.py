@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site
 description:
     - Specify a GSLB site
-short_description: Configures A10 gslb.site
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,274 +22,351 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    ip_server_list:
-        description:
-        - "Field ip_server_list"
-        required: False
-        suboptions:
-            ip_server_name:
-                description:
-                - "Specify the real server name"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            ip_server_list:
-                description:
-                - "Field ip_server_list"
-            state:
-                description:
-                - "Field state"
-            gslb_site:
-                description:
-                - "Field gslb_site"
-            client_ldns_list:
-                description:
-                - "Field client_ldns_list"
-            site_name:
-                description:
-                - "Specify GSLB site name"
-            type_last:
-                description:
-                - "Field type_last"
-            slb_dev_list:
-                description:
-                - "Field slb_dev_list"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            ip_server_list:
-                description:
-                - "Field ip_server_list"
-            hits:
-                description:
-                - "Number of times the site was selected"
-            slb_dev_list:
-                description:
-                - "Field slb_dev_list"
-            site_name:
-                description:
-                - "Specify GSLB site name"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    weight:
-        description:
-        - "Specify a weight for the GSLB site (Weight, default is 1)"
+        type: str
         required: False
     site_name:
         description:
         - "Specify GSLB site name"
+        type: str
         required: True
-    slb_dev_list:
-        description:
-        - "Field slb_dev_list"
-        required: False
-        suboptions:
-            health_check_action:
-                description:
-                - "'health-check'= Enable health Check; 'health-check-disable'= Disable health
-          check;"
-            client_ip:
-                description:
-                - "Specify client IP address"
-            uuid:
-                description:
-                - "uuid of the object"
-            proto_aging_time:
-                description:
-                - "Specify GSLB Protocol aging time, default is 60"
-            device_name:
-                description:
-                - "Specify SLB device name"
-            proto_compatible:
-                description:
-                - "Run GSLB Protocol in compatible mode"
-            user_tag:
-                description:
-                - "Customized tag"
-            auto_map:
-                description:
-                - "Enable DNS Auto Mapping"
-            msg_format_acos_2x:
-                description:
-                - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
-            rdt_value:
-                description:
-                - "Specify Round-delay-time"
-            gateway_ip_addr:
-                description:
-                - "IP address"
-            vip_server:
-                description:
-                - "Field vip_server"
-            ip_address:
-                description:
-                - "IP address"
-            proto_aging_fast:
-                description:
-                - "Fast GSLB Protocol aging"
-            auto_detect:
-                description:
-                - "'ip'= Service IP only; 'port'= Service Port only; 'ip-and-port'= Both service
-          IP and service port; 'disabled'= disable auto-detect;"
-            max_client:
-                description:
-                - "Specify maximum number of clients, default is 32768"
-            admin_preference:
-                description:
-                - "Specify administrative preference (Specify admin-preference value,default is
-          100)"
-    controller:
-        description:
-        - "Specify the local controller for the GSLB site (Specify the hostname of the
-          local controller)"
-        required: False
-    bw_cost:
-        description:
-        - "Specify cost of band-width"
-        required: False
     auto_map:
         description:
         - "Enable DNS Auto Mapping"
+        type: bool
         required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'hits'= Number of times the site was selected;"
     disable:
         description:
         - "Disable all servers in the GSLB site"
+        type: bool
         required: False
-    limit:
+    weight:
         description:
-        - "Specify the limit for bandwidth, default is unlimited"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    template:
-        description:
-        - "Specify template to collect site information (Specify GSLB SNMP template name)"
-        required: False
-    threshold:
-        description:
-        - "Specify the threshold for limit"
+        - "Specify a weight for the GSLB site (Weight, default is 1)"
+        type: int
         required: False
     multiple_geo_locations:
         description:
         - "Field multiple_geo_locations"
+        type: list
         required: False
         suboptions:
             geo_location:
                 description:
                 - "Specify the geographic location of the GSLB site (Specify geo-location for this
           site)"
-    easy_rdt:
+                type: str
+    template:
         description:
-        - "Field easy_rdt"
+        - "Specify template to collect site information (Specify GSLB SNMP template name)"
+        type: str
+        required: False
+    bw_cost:
+        description:
+        - "Specify cost of band-width"
+        type: bool
+        required: False
+    limit:
+        description:
+        - "Specify the limit for bandwidth, default is unlimited"
+        type: int
+        required: False
+    threshold:
+        description:
+        - "Specify the threshold for limit"
+        type: int
+        required: False
+    controller:
+        description:
+        - "Specify the local controller for the GSLB site (Specify the hostname of the
+          local controller)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
-            range_factor:
+            counters1:
                 description:
-                - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
-            smooth_factor:
+                - "'all'= all; 'hits'= Number of times the site was selected;"
+                type: str
+    ip_server_list:
+        description:
+        - "Field ip_server_list"
+        type: list
+        required: False
+        suboptions:
+            ip_server_name:
                 description:
-                - "Factor of Smooth RDT, default is 10"
-            mask:
-                description:
-                - "Client IP subnet mask, default is 32"
-            overlap:
-                description:
-                - "Enable overlap for geo-location to do longest match"
-            limit:
-                description:
-                - "Limit of valid RDT, default is 16383 (Limit, unit= millisecond)"
-            ignore_count:
-                description:
-                - "Ignore count if RDT is out of range, default is 5"
-            aging_time:
-                description:
-                - "Aging Time, Unit= min, default is 10"
-            bind_geoloc:
-                description:
-                - "Bind RDT to geo-location"
+                - "Specify the real server name"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     active_rdt:
         description:
         - "Field active_rdt"
+        type: dict
         required: False
         suboptions:
-            range_factor:
-                description:
-                - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
-            smooth_factor:
-                description:
-                - "Factor of Smooth RDT, default is 10"
-            mask:
-                description:
-                - "Client IP subnet mask, default is 32"
-            overlap:
-                description:
-                - "Enable overlap for geo-location to do longest match"
-            limit:
-                description:
-                - "Limit of valid RDT, default is 16383 (Limit, unit= millisecond)"
-            ignore_count:
-                description:
-                - "Ignore count if RDT is out of range, default is 5"
             aging_time:
                 description:
                 - "Aging Time, Unit= min, default is 10"
+                type: int
+            smooth_factor:
+                description:
+                - "Factor of Smooth RDT, default is 10"
+                type: int
+            range_factor:
+                description:
+                - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
+                type: int
+            limit:
+                description:
+                - "Limit of valid RDT, default is 16383 (Limit, unit= millisecond)"
+                type: int
+            mask:
+                description:
+                - "Client IP subnet mask, default is 32"
+                type: str
+            ignore_count:
+                description:
+                - "Ignore count if RDT is out of range, default is 5"
+                type: int
             bind_geoloc:
                 description:
                 - "Bind RDT to geo-location"
+                type: bool
+            overlap:
+                description:
+                - "Enable overlap for geo-location to do longest match"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    easy_rdt:
+        description:
+        - "Field easy_rdt"
+        type: dict
+        required: False
+        suboptions:
+            aging_time:
+                description:
+                - "Aging Time, Unit= min, default is 10"
+                type: int
+            smooth_factor:
+                description:
+                - "Factor of Smooth RDT, default is 10"
+                type: int
+            range_factor:
+                description:
+                - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
+                type: int
+            limit:
+                description:
+                - "Limit of valid RDT, default is 16383 (Limit, unit= millisecond)"
+                type: int
+            mask:
+                description:
+                - "Client IP subnet mask, default is 32"
+                type: str
+            ignore_count:
+                description:
+                - "Ignore count if RDT is out of range, default is 5"
+                type: int
+            bind_geoloc:
+                description:
+                - "Bind RDT to geo-location"
+                type: bool
+            overlap:
+                description:
+                - "Enable overlap for geo-location to do longest match"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    slb_dev_list:
+        description:
+        - "Field slb_dev_list"
+        type: list
+        required: False
+        suboptions:
+            device_name:
+                description:
+                - "Specify SLB device name"
+                type: str
+            ip_address:
+                description:
+                - "IP address"
+                type: str
+            admin_preference:
+                description:
+                - "Specify administrative preference (Specify admin-preference value,default is
+          100)"
+                type: int
+            client_ip:
+                description:
+                - "Specify client IP address"
+                type: str
+            rdt_value:
+                description:
+                - "Specify Round-delay-time"
+                type: int
+            auto_detect:
+                description:
+                - "'ip'= Service IP only; 'port'= Service Port only; 'ip-and-port'= Both service
+          IP and service port; 'disabled'= disable auto-detect;"
+                type: str
+            auto_map:
+                description:
+                - "Enable DNS Auto Mapping"
+                type: bool
+            max_client:
+                description:
+                - "Specify maximum number of clients, default is 32768"
+                type: int
+            proto_aging_time:
+                description:
+                - "Specify GSLB Protocol aging time, default is 60"
+                type: int
+            proto_aging_fast:
+                description:
+                - "Fast GSLB Protocol aging"
+                type: bool
+            health_check_action:
+                description:
+                - "'health-check'= Enable health Check; 'health-check-disable'= Disable health
+          check;"
+                type: str
+            gateway_ip_addr:
+                description:
+                - "IP address"
+                type: str
+            proto_compatible:
+                description:
+                - "Run GSLB Protocol in compatible mode"
+                type: bool
+            msg_format_acos_2x:
+                description:
+                - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            vip_server:
+                description:
+                - "Field vip_server"
+                type: dict
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            gslb_site:
+                description:
+                - "Field gslb_site"
+                type: str
+            state:
+                description:
+                - "Field state"
+                type: str
+            type_last:
+                description:
+                - "Field type_last"
+                type: list
+            client_ldns_list:
+                description:
+                - "Field client_ldns_list"
+                type: list
+            site_name:
+                description:
+                - "Specify GSLB site name"
+                type: str
+            ip_server_list:
+                description:
+                - "Field ip_server_list"
+                type: list
+            slb_dev_list:
+                description:
+                - "Field slb_dev_list"
+                type: list
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            hits:
+                description:
+                - "Number of times the site was selected"
+                type: str
+            site_name:
+                description:
+                - "Specify GSLB site name"
+                type: str
+            ip_server_list:
+                description:
+                - "Field ip_server_list"
+                type: list
+            slb_dev_list:
+                description:
+                - "Field slb_dev_list"
+                type: list
 
 '''
 
@@ -362,11 +437,61 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'site_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'auto_map': {
+            'type': 'bool',
+        },
+        'disable': {
+            'type': 'bool',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'multiple_geo_locations': {
+            'type': 'list',
+            'geo_location': {
+                'type': 'str',
+            }
+        },
+        'template': {
+            'type': 'str',
+        },
+        'bw_cost': {
+            'type': 'bool',
+        },
+        'limit': {
+            'type': 'int',
+        },
+        'threshold': {
+            'type': 'int',
+        },
+        'controller': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits']
+            }
+        },
         'ip_server_list': {
             'type': 'list',
             'ip_server_name': {
                 'type': 'str',
                 'required': True,
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -374,46 +499,192 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['all', 'hits']
                 }
+            }
+        },
+        'active_rdt': {
+            'type': 'dict',
+            'aging_time': {
+                'type': 'int',
+            },
+            'smooth_factor': {
+                'type': 'int',
+            },
+            'range_factor': {
+                'type': 'int',
+            },
+            'limit': {
+                'type': 'int',
+            },
+            'mask': {
+                'type': 'str',
+            },
+            'ignore_count': {
+                'type': 'int',
+            },
+            'bind_geoloc': {
+                'type': 'bool',
+            },
+            'overlap': {
+                'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
             }
         },
-        'oper': {
+        'easy_rdt': {
             'type': 'dict',
-            'ip_server_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'state': {
+            'aging_time': {
+                'type': 'int',
+            },
+            'smooth_factor': {
+                'type': 'int',
+            },
+            'range_factor': {
+                'type': 'int',
+            },
+            'limit': {
+                'type': 'int',
+            },
+            'mask': {
+                'type': 'str',
+            },
+            'ignore_count': {
+                'type': 'int',
+            },
+            'bind_geoloc': {
+                'type': 'bool',
+            },
+            'overlap': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'slb_dev_list': {
+            'type': 'list',
+            'device_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'ip_address': {
+                'type': 'str',
+            },
+            'admin_preference': {
+                'type': 'int',
+            },
+            'client_ip': {
+                'type': 'str',
+            },
+            'rdt_value': {
+                'type': 'int',
+            },
+            'auto_detect': {
+                'type': 'str',
+                'choices': ['ip', 'port', 'ip-and-port', 'disabled']
+            },
+            'auto_map': {
+                'type': 'bool',
+            },
+            'max_client': {
+                'type': 'int',
+            },
+            'proto_aging_time': {
+                'type': 'int',
+            },
+            'proto_aging_fast': {
+                'type': 'bool',
+            },
+            'health_check_action': {
+                'type': 'str',
+                'choices': ['health-check', 'health-check-disable']
+            },
+            'gateway_ip_addr': {
+                'type': 'str',
+            },
+            'proto_compatible': {
+                'type': 'bool',
+            },
+            'msg_format_acos_2x': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'vip_server': {
+                'type': 'dict',
+                'vip_server_v4_list': {
+                    'type': 'list',
+                    'ipv4': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'uuid': {
                         'type': 'str',
                     },
-                    'ip_server': {
-                        'type': 'str',
-                    },
-                    'ip_server_port': {
+                    'sampling_enable': {
                         'type': 'list',
-                        'vport': {
-                            'type': 'int',
-                        },
-                        'vport_state': {
+                        'counters1': {
                             'type': 'str',
+                            'choices': ['all', 'dev_vip_hits']
                         }
-                    },
-                    'ip_address': {
-                        'type': 'str',
                     }
                 },
-                'ip_server_name': {
-                    'type': 'str',
-                    'required': True,
+                'vip_server_v6_list': {
+                    'type': 'list',
+                    'ipv6': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'dev_vip_hits']
+                        }
+                    }
+                },
+                'vip_server_name_list': {
+                    'type': 'list',
+                    'vip_name': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'dev_vip_hits']
+                        }
+                    }
                 }
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'gslb_site': {
+                'type': 'str',
             },
             'state': {
                 'type': 'str',
             },
-            'gslb_site': {
-                'type': 'str',
+            'type_last': {
+                'type': 'list',
+                'ntype': {
+                    'type': 'str',
+                },
+                'last': {
+                    'type': 'str',
+                }
             },
             'client_ldns_list': {
                 'type': 'list',
@@ -422,6 +693,9 @@ def get_argspec():
                 },
                 'age': {
                     'type': 'int',
+                },
+                'ntype': {
+                    'type': 'str',
                 },
                 'rdt_sample1': {
                     'type': 'int',
@@ -446,51 +720,74 @@ def get_argspec():
                 },
                 'rdt_sample8': {
                     'type': 'int',
-                },
-                'ntype': {
-                    'type': 'str',
                 }
             },
             'site_name': {
                 'type': 'str',
                 'required': True,
             },
-            'type_last': {
+            'ip_server_list': {
                 'type': 'list',
-                'ntype': {
+                'ip_server_name': {
                     'type': 'str',
+                    'required': True,
                 },
-                'last': {
-                    'type': 'str',
+                'oper': {
+                    'type': 'dict',
+                    'ip_server': {
+                        'type': 'str',
+                    },
+                    'ip_address': {
+                        'type': 'str',
+                    },
+                    'state': {
+                        'type': 'str',
+                    },
+                    'ip_server_port': {
+                        'type': 'list',
+                        'vport': {
+                            'type': 'int',
+                        },
+                        'vport_state': {
+                            'type': 'str',
+                        }
+                    }
                 }
             },
             'slb_dev_list': {
                 'type': 'list',
+                'device_name': {
+                    'type': 'str',
+                    'required': True,
+                },
                 'oper': {
                     'type': 'dict',
-                    'dev_gw_state': {
-                        'type': 'str',
-                    },
                     'dev_name': {
-                        'type': 'str',
-                    },
-                    'dev_ip_cnt': {
-                        'type': 'int',
-                    },
-                    'dev_attr': {
                         'type': 'str',
                     },
                     'dev_ip': {
                         'type': 'str',
                     },
-                    'dev_state': {
+                    'dev_attr': {
                         'type': 'str',
+                    },
+                    'dev_admin_preference': {
+                        'type': 'int',
                     },
                     'dev_session_num': {
                         'type': 'int',
                     },
-                    'dev_admin_preference': {
+                    'dev_session_util': {
                         'type': 'int',
+                    },
+                    'dev_gw_state': {
+                        'type': 'str',
+                    },
+                    'dev_ip_cnt': {
+                        'type': 'int',
+                    },
+                    'dev_state': {
+                        'type': 'str',
                     },
                     'client_ldns_list': {
                         'type': 'list',
@@ -499,6 +796,9 @@ def get_argspec():
                         },
                         'age': {
                             'type': 'int',
+                        },
+                        'ntype': {
+                            'type': 'str',
                         },
                         'rdt_sample1': {
                             'type': 'int',
@@ -523,18 +823,8 @@ def get_argspec():
                         },
                         'rdt_sample8': {
                             'type': 'int',
-                        },
-                        'ntype': {
-                            'type': 'str',
                         }
-                    },
-                    'dev_session_util': {
-                        'type': 'int',
                     }
-                },
-                'device_name': {
-                    'type': 'str',
-                    'required': True,
                 },
                 'vip_server': {
                     'type': 'dict',
@@ -543,6 +833,10 @@ def get_argspec():
                     },
                     'vip_server_v4_list': {
                         'type': 'list',
+                        'ipv4': {
+                            'type': 'str',
+                            'required': True,
+                        },
                         'oper': {
                             'type': 'dict',
                             'dev_vip_addr': {
@@ -560,14 +854,14 @@ def get_argspec():
                                     'type': 'str',
                                 }
                             }
-                        },
-                        'ipv4': {
-                            'type': 'str',
-                            'required': True,
                         }
                     },
                     'vip_server_v6_list': {
                         'type': 'list',
+                        'ipv6': {
+                            'type': 'str',
+                            'required': True,
+                        },
                         'oper': {
                             'type': 'dict',
                             'dev_vip_addr': {
@@ -585,14 +879,14 @@ def get_argspec():
                                     'type': 'str',
                                 }
                             }
-                        },
-                        'ipv6': {
-                            'type': 'str',
-                            'required': True,
                         }
                     },
                     'vip_server_name_list': {
                         'type': 'list',
+                        'vip_name': {
+                            'type': 'str',
+                            'required': True,
+                        },
                         'oper': {
                             'type': 'dict',
                             'dev_vip_addr': {
@@ -610,10 +904,6 @@ def get_argspec():
                                     'type': 'str',
                                 }
                             }
-                        },
-                        'vip_name': {
-                            'type': 'str',
-                            'required': True,
                         }
                     }
                 }
@@ -621,6 +911,13 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
+            'hits': {
+                'type': 'str',
+            },
+            'site_name': {
+                'type': 'str',
+                'required': True,
+            },
             'ip_server_list': {
                 'type': 'list',
                 'ip_server_name': {
@@ -634,230 +931,8 @@ def get_argspec():
                     }
                 }
             },
-            'hits': {
-                'type': 'str',
-            },
             'slb_dev_list': {
                 'type': 'list',
-            },
-            'site_name': {
-                'type': 'str',
-                'required': True,
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'weight': {
-            'type': 'int',
-        },
-        'site_name': {
-            'type': 'str',
-            'required': True,
-        },
-        'slb_dev_list': {
-            'type': 'list',
-            'health_check_action': {
-                'type': 'str',
-                'choices': ['health-check', 'health-check-disable']
-            },
-            'client_ip': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'proto_aging_time': {
-                'type': 'int',
-            },
-            'device_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'proto_compatible': {
-                'type': 'bool',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'auto_map': {
-                'type': 'bool',
-            },
-            'msg_format_acos_2x': {
-                'type': 'bool',
-            },
-            'rdt_value': {
-                'type': 'int',
-            },
-            'gateway_ip_addr': {
-                'type': 'str',
-            },
-            'vip_server': {
-                'type': 'dict',
-                'vip_server_v4_list': {
-                    'type': 'list',
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'dev_vip_hits']
-                        }
-                    },
-                    'ipv4': {
-                        'type': 'str',
-                        'required': True,
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'vip_server_v6_list': {
-                    'type': 'list',
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'dev_vip_hits']
-                        }
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'ipv6': {
-                        'type': 'str',
-                        'required': True,
-                    }
-                },
-                'vip_server_name_list': {
-                    'type': 'list',
-                    'sampling_enable': {
-                        'type': 'list',
-                        'counters1': {
-                            'type': 'str',
-                            'choices': ['all', 'dev_vip_hits']
-                        }
-                    },
-                    'vip_name': {
-                        'type': 'str',
-                        'required': True,
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'ip_address': {
-                'type': 'str',
-            },
-            'proto_aging_fast': {
-                'type': 'bool',
-            },
-            'auto_detect': {
-                'type': 'str',
-                'choices': ['ip', 'port', 'ip-and-port', 'disabled']
-            },
-            'max_client': {
-                'type': 'int',
-            },
-            'admin_preference': {
-                'type': 'int',
-            }
-        },
-        'controller': {
-            'type': 'str',
-        },
-        'bw_cost': {
-            'type': 'bool',
-        },
-        'auto_map': {
-            'type': 'bool',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
-            }
-        },
-        'disable': {
-            'type': 'bool',
-        },
-        'limit': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'template': {
-            'type': 'str',
-        },
-        'threshold': {
-            'type': 'int',
-        },
-        'multiple_geo_locations': {
-            'type': 'list',
-            'geo_location': {
-                'type': 'str',
-            }
-        },
-        'easy_rdt': {
-            'type': 'dict',
-            'range_factor': {
-                'type': 'int',
-            },
-            'smooth_factor': {
-                'type': 'int',
-            },
-            'mask': {
-                'type': 'str',
-            },
-            'overlap': {
-                'type': 'bool',
-            },
-            'limit': {
-                'type': 'int',
-            },
-            'ignore_count': {
-                'type': 'int',
-            },
-            'aging_time': {
-                'type': 'int',
-            },
-            'bind_geoloc': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'active_rdt': {
-            'type': 'dict',
-            'range_factor': {
-                'type': 'int',
-            },
-            'smooth_factor': {
-                'type': 'int',
-            },
-            'mask': {
-                'type': 'str',
-            },
-            'overlap': {
-                'type': 'bool',
-            },
-            'limit': {
-                'type': 'int',
-            },
-            'ignore_count': {
-                'type': 'int',
-            },
-            'aging_time': {
-                'type': 'int',
-            },
-            'bind_geoloc': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
             }
         }
     })

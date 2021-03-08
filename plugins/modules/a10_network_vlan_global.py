@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_vlan_global
 description:
     - Configure global options for vlan
-short_description: Configures A10 network.vlan-global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,84 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    l3_vlan_fwd_disable:
-        description:
-        - "Disable L3 forwarding between VLANs"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     enable_def_vlan_l2_forwarding:
         description:
         - "Enable layer 2 forwarding on default vlan"
+        type: bool
         required: False
+    l3_vlan_fwd_disable:
+        description:
+        - "Disable L3 forwarding between VLANs"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        type: list
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'xparent_vlan_list_err'= Transparent Mode VLAN List Errors;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            vlan_trans_list:
+                description:
+                - "Field vlan_trans_list"
+                type: dict
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            xparent_vlan_list_err:
+                description:
+                - "Transparent Mode VLAN List Errors"
+                type: str
 
 '''
 
@@ -78,6 +116,9 @@ ANSIBLE_METADATA = {
 AVAILABLE_PROPERTIES = [
     "enable_def_vlan_l2_forwarding",
     "l3_vlan_fwd_disable",
+    "oper",
+    "sampling_enable",
+    "stats",
     "uuid",
 ]
 
@@ -116,14 +157,36 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'enable_def_vlan_l2_forwarding': {
+            'type': 'bool',
+        },
         'l3_vlan_fwd_disable': {
             'type': 'bool',
         },
         'uuid': {
             'type': 'str',
         },
-        'enable_def_vlan_l2_forwarding': {
-            'type': 'bool',
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'xparent_vlan_list_err']
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'vlan_trans_list': {
+                'type': 'dict',
+                'vlan': {
+                    'type': 'int',
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'xparent_vlan_list_err': {
+                'type': 'str',
+            }
         }
     })
     return rv
@@ -139,6 +202,18 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
+
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
@@ -151,6 +226,24 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k, v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(oper_url(module), params=query_params)
+    return module.client.get(oper_url(module))
+
+
+def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k, v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module), params=query_params)
+    return module.client.get(stats_url(module))
 
 
 def exists(module):
@@ -401,6 +494,10 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     module.client.session.close()
     return result
 

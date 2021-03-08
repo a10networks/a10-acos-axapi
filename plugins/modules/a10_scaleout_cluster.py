@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster
 description:
     - Configure scaleout cluster
-short_description: Configures A10 scaleout.cluster
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,125 +22,162 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    cluster_id:
+        description:
+        - "Scaleout cluster-id"
+        type: int
+        required: True
+    follow_vcs:
+        description:
+        - "Field follow_vcs"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     local_device:
         description:
         - "Field local_device"
+        type: dict
         required: False
         suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            session_sync_interface:
-                description:
-                - "Field session_sync_interface"
-            id:
-                description:
-                - "Field id"
             priority:
                 description:
                 - "Field priority"
+                type: int
+            id:
+                description:
+                - "Field id"
+                type: int
             action:
                 description:
                 - "'enable'= enable; 'disable'= disable;"
-            l2_redirect:
-                description:
-                - "Field l2_redirect"
-            tracking_template:
-                description:
-                - "Field tracking_template"
+                type: str
             start_delay:
                 description:
                 - "Field start_delay"
-    cluster_id:
-        description:
-        - "Scaleout cluster-id"
-        required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            l2_redirect:
+                description:
+                - "Field l2_redirect"
+                type: dict
+            session_sync_interface:
+                description:
+                - "Field session_sync_interface"
+                type: dict
+            tracking_template:
+                description:
+                - "Field tracking_template"
+                type: dict
     cluster_devices:
         description:
         - "Field cluster_devices"
+        type: dict
         required: False
         suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            minimum_nodes:
+                description:
+                - "Field minimum_nodes"
+                type: dict
             cluster_discovery_timeout:
                 description:
                 - "Field cluster_discovery_timeout"
+                type: dict
             device_id_list:
                 description:
                 - "Field device_id_list"
-            uuid:
-                description:
-                - "uuid of the object"
-    follow_vcs:
-        description:
-        - "Field follow_vcs"
-        required: False
+                type: list
     device_groups:
         description:
         - "Field device_groups"
+        type: dict
         required: False
         suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
             device_group_list:
                 description:
                 - "Field device_group_list"
-            uuid:
-                description:
-                - "uuid of the object"
-    service_config:
-        description:
-        - "Field service_config"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            template_list:
-                description:
-                - "Field template_list"
-    db_config:
-        description:
-        - "Field db_config"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
+                type: list
     tracking_template:
         description:
         - "Field tracking_template"
+        type: dict
         required: False
         suboptions:
             template_list:
                 description:
                 - "Field template_list"
+                type: list
+    service_config:
+        description:
+        - "Field service_config"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            template_list:
+                description:
+                - "Field template_list"
+                type: list
+    db_config:
+        description:
+        - "Field db_config"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -203,52 +238,41 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'cluster_id': {
+            'type': 'int',
+            'required': True,
+        },
+        'follow_vcs': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'local_device': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'session_sync_interface': {
-                'type': 'dict',
-                've_cfg': {
-                    'type': 'list',
-                    've': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'trunk_cfg': {
-                    'type': 'list',
-                    'trunk': {
-                        'type': 'int',
-                    }
-                },
-                'eth_cfg': {
-                    'type': 'list',
-                    'ethernet': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'id': {
+            'priority': {
                 'type': 'int',
             },
-            'priority': {
+            'id': {
                 'type': 'int',
             },
             'action': {
                 'type': 'str',
                 'choices': ['enable', 'disable']
             },
+            'start_delay': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
             'l2_redirect': {
                 'type': 'dict',
-                'ethernet_vlan': {
-                    'type': 'int',
-                },
                 'redirect_eth': {
                     'type': 'str',
+                },
+                'ethernet_vlan': {
+                    'type': 'int',
                 },
                 'redirect_trunk': {
                     'type': 'int',
@@ -260,12 +284,37 @@ def get_argspec():
                     'type': 'str',
                 }
             },
+            'session_sync_interface': {
+                'type': 'dict',
+                'eth_cfg': {
+                    'type': 'list',
+                    'ethernet': {
+                        'type': 'str',
+                    }
+                },
+                'trunk_cfg': {
+                    'type': 'list',
+                    'trunk': {
+                        'type': 'int',
+                    }
+                },
+                've_cfg': {
+                    'type': 'list',
+                    've': {
+                        'type': 'int',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
             'tracking_template': {
                 'type': 'dict',
                 'template_list': {
                     'type': 'list',
-                    'uuid': {
+                    'template': {
                         'type': 'str',
+                        'required': True,
                     },
                     'threshold_cfg': {
                         'type': 'list',
@@ -277,28 +326,29 @@ def get_argspec():
                             'choices': ['down', 'exit-cluster']
                         }
                     },
-                    'user_tag': {
+                    'uuid': {
                         'type': 'str',
                     },
-                    'template': {
+                    'user_tag': {
                         'type': 'str',
-                        'required': True,
                     }
                 }
-            },
-            'start_delay': {
-                'type': 'int',
             }
-        },
-        'cluster_id': {
-            'type': 'int',
-            'required': True,
-        },
-        'uuid': {
-            'type': 'str',
         },
         'cluster_devices': {
             'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'minimum_nodes': {
+                'type': 'dict',
+                'minimum_nodes_num': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
             'cluster_discovery_timeout': {
                 'type': 'dict',
                 'timer_val': {
@@ -310,33 +360,30 @@ def get_argspec():
             },
             'device_id_list': {
                 'type': 'list',
-                'action': {
-                    'type': 'str',
-                    'choices': ['enable', 'disable']
-                },
                 'device_id': {
                     'type': 'int',
                     'required': True,
+                },
+                'ip': {
+                    'type': 'str',
+                },
+                'action': {
+                    'type': 'str',
+                    'choices': ['enable', 'disable']
                 },
                 'uuid': {
                     'type': 'str',
                 },
                 'user_tag': {
                     'type': 'str',
-                },
-                'ip': {
-                    'type': 'str',
                 }
-            },
-            'uuid': {
-                'type': 'str',
             }
-        },
-        'follow_vcs': {
-            'type': 'bool',
         },
         'device_groups': {
             'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
             'device_group_list': {
                 'type': 'list',
                 'device_group': {
@@ -358,48 +405,15 @@ def get_argspec():
                 'user_tag': {
                     'type': 'str',
                 }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'service_config': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'template_list': {
-                'type': 'list',
-                'device_group': {
-                    'type': 'int',
-                },
-                'bucket_count': {
-                    'type': 'int',
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'db_config': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
             }
         },
         'tracking_template': {
             'type': 'dict',
             'template_list': {
                 'type': 'list',
-                'uuid': {
+                'template': {
                     'type': 'str',
+                    'required': True,
                 },
                 'threshold_cfg': {
                     'type': 'list',
@@ -411,13 +425,43 @@ def get_argspec():
                         'choices': ['down', 'exit-cluster']
                     }
                 },
-                'user_tag': {
+                'uuid': {
                     'type': 'str',
                 },
-                'template': {
+                'user_tag': {
+                    'type': 'str',
+                }
+            }
+        },
+        'service_config': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'template_list': {
+                'type': 'list',
+                'name': {
                     'type': 'str',
                     'required': True,
+                },
+                'bucket_count': {
+                    'type': 'int',
+                },
+                'device_group': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
                 }
+            }
+        },
+        'db_config': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
             }
         }
     })

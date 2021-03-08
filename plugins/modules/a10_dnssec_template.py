@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_dnssec_template
 description:
     - template Settings
-short_description: Configures A10 dnssec.template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,127 +22,160 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    uuid:
+    dnssec_temp_name:
         description:
-        - "uuid of the object"
-        required: False
+        - "DNSSEC Template Name"
+        type: str
+        required: True
     algorithm:
         description:
         - "'RSASHA1'= RSASHA1 algorithm; 'RSASHA256'= RSASHA256 algorithm; 'RSASHA512'=
           RSASHA512 algorithm;"
+        type: str
         required: False
     combinations_limit:
         description:
         - "the max number of combinations per RRset (Default value is 31)"
+        type: int
         required: False
     dnskey_ttl_k:
         description:
         - "The TTL value of DNSKEY RR"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    hsm:
-        description:
-        - "specify the HSM template"
-        required: False
-    enable_nsec3:
-        description:
-        - "enable NSEC3 support. disabled by default"
-        required: False
-    return_nsec_on_failure:
-        description:
-        - "return NSEC/NSEC3 or not on failure case. return by default"
+        type: bool
         required: False
     dnskey_ttl_v:
         description:
         - "in seconds, 14400 seconds by default"
+        type: int
+        required: False
+    enable_nsec3:
+        description:
+        - "enable NSEC3 support. disabled by default"
+        type: bool
+        required: False
+    return_nsec_on_failure:
+        description:
+        - "return NSEC/NSEC3 or not on failure case. return by default"
+        type: bool
         required: False
     signature_validity_period_k:
         description:
         - "The period that a signature is valid"
+        type: bool
         required: False
+    signature_validity_period_v:
+        description:
+        - "in days, 10 days by default"
+        type: int
+        required: False
+    hsm:
+        description:
+        - "specify the HSM template"
+        type: str
+        required: False
+    dnssec_template_zsk:
+        description:
+        - "Field dnssec_template_zsk"
+        type: dict
+        required: False
+        suboptions:
+            zsk_keysize_k:
+                description:
+                - "Specify the number of bits in the DNSSEC ZSK keys"
+                type: bool
+            zsk_keysize_v:
+                description:
+                - "Default size is 2048 and must be an exact multiple of 64"
+                type: int
+            zsk_lifetime_k:
+                description:
+                - "Set the lifetime for DNSSEC ZSK keys in days"
+                type: bool
+            zsk_lifetime_v:
+                description:
+                - "Default value is 90 days"
+                type: int
+            zsk_rollover_time_k:
+                description:
+                - "Set the rollover time in days"
+                type: bool
+            zsk_rollover_time_v:
+                description:
+                - "7 days less than the lifetime by default"
+                type: int
     dnssec_template_ksk:
         description:
         - "Field dnssec_template_ksk"
+        type: dict
         required: False
         suboptions:
             ksk_keysize_k:
                 description:
                 - "Specify the number of bits in the DNSSEC KSK keys"
-            zsk_rollover_time_v:
-                description:
-                - "7 days less than the lifetime by default"
+                type: bool
             ksk_keysize_v:
                 description:
                 - "Default size is 2048 and must be an exact multiple of 64"
-            ksk_lifetime_v:
-                description:
-                - "Default value is 365 days"
-            ksk_rollover_time_k:
-                description:
-                - "Set the rollover time in days"
+                type: int
             ksk_lifetime_k:
                 description:
                 - "Set the lifetime for DNSSEC KSK keys in days"
-    dnssec_template_zsk:
-        description:
-        - "Field dnssec_template_zsk"
-        required: False
-        suboptions:
-            zsk_keysize_v:
+                type: bool
+            ksk_lifetime_v:
                 description:
-                - "Default size is 2048 and must be an exact multiple of 64"
+                - "Default value is 365 days"
+                type: int
+            ksk_rollover_time_k:
+                description:
+                - "Set the rollover time in days"
+                type: bool
             zsk_rollover_time_v:
                 description:
                 - "7 days less than the lifetime by default"
-            zsk_lifetime_v:
-                description:
-                - "Default value is 90 days"
-            zsk_lifetime_k:
-                description:
-                - "Set the lifetime for DNSSEC ZSK keys in days"
-            zsk_keysize_k:
-                description:
-                - "Specify the number of bits in the DNSSEC ZSK keys"
-            zsk_rollover_time_k:
-                description:
-                - "Set the rollover time in days"
-    signature_validity_period_v:
+                type: int
+    uuid:
         description:
-        - "in days, 10 days by default"
+        - "uuid of the object"
+        type: str
         required: False
-    dnssec_temp_name:
+    user_tag:
         description:
-        - "DNSSEC Template Name"
-        required: True
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -210,8 +241,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
+        'dnssec_temp_name': {
             'type': 'str',
+            'required': True,
         },
         'algorithm': {
             'type': 'str',
@@ -223,11 +255,8 @@ def get_argspec():
         'dnskey_ttl_k': {
             'type': 'bool',
         },
-        'user_tag': {
-            'type': 'str',
-        },
-        'hsm': {
-            'type': 'str',
+        'dnskey_ttl_v': {
+            'type': 'int',
         },
         'enable_nsec3': {
             'type': 'bool',
@@ -235,22 +264,46 @@ def get_argspec():
         'return_nsec_on_failure': {
             'type': 'bool',
         },
-        'dnskey_ttl_v': {
-            'type': 'int',
-        },
         'signature_validity_period_k': {
             'type': 'bool',
+        },
+        'signature_validity_period_v': {
+            'type': 'int',
+        },
+        'hsm': {
+            'type': 'str',
+        },
+        'dnssec_template_zsk': {
+            'type': 'dict',
+            'zsk_keysize_k': {
+                'type': 'bool',
+            },
+            'zsk_keysize_v': {
+                'type': 'int',
+            },
+            'zsk_lifetime_k': {
+                'type': 'bool',
+            },
+            'zsk_lifetime_v': {
+                'type': 'int',
+            },
+            'zsk_rollover_time_k': {
+                'type': 'bool',
+            },
+            'zsk_rollover_time_v': {
+                'type': 'int',
+            }
         },
         'dnssec_template_ksk': {
             'type': 'dict',
             'ksk_keysize_k': {
                 'type': 'bool',
             },
-            'zsk_rollover_time_v': {
-                'type': 'int',
-            },
             'ksk_keysize_v': {
                 'type': 'int',
+            },
+            'ksk_lifetime_k': {
+                'type': 'bool',
             },
             'ksk_lifetime_v': {
                 'type': 'int',
@@ -258,37 +311,15 @@ def get_argspec():
             'ksk_rollover_time_k': {
                 'type': 'bool',
             },
-            'ksk_lifetime_k': {
-                'type': 'bool',
-            }
-        },
-        'dnssec_template_zsk': {
-            'type': 'dict',
-            'zsk_keysize_v': {
-                'type': 'int',
-            },
             'zsk_rollover_time_v': {
                 'type': 'int',
-            },
-            'zsk_lifetime_v': {
-                'type': 'int',
-            },
-            'zsk_lifetime_k': {
-                'type': 'bool',
-            },
-            'zsk_keysize_k': {
-                'type': 'bool',
-            },
-            'zsk_rollover_time_k': {
-                'type': 'bool',
             }
         },
-        'signature_validity_period_v': {
-            'type': 'int',
-        },
-        'dnssec_temp_name': {
+        'uuid': {
             'type': 'str',
-            'required': True,
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

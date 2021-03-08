@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_twamp_responder_ip
 description:
     - Configure TWAMP responder
-short_description: Configures A10 network.twamp.responder.ip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,70 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    acl_id:
+        description:
+        - "ACL id"
+        type: int
         required: False
     acl_name:
         description:
         - "Apply a named access list (Access List name)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             rx_pkts:
                 description:
                 - "Rx IP TWAMP test packets"
-            rx_acl_drop:
-                description:
-                - "Rx IP client-list drop"
-            no_route_err:
-                description:
-                - "Tx IP no route error drop"
-            rx_drop_not_enabled_v4:
-                description:
-                - "Rx IP disabled drop"
-            other_err:
-                description:
-                - "IP other error drop"
+                type: str
             tx_pkts:
                 description:
                 - "Tx IP TWAMP test packets"
+                type: str
+            rx_drop_not_enabled_v4:
+                description:
+                - "Rx IP disabled drop"
+                type: str
+            rx_acl_drop:
+                description:
+                - "Rx IP client-list drop"
+                type: str
             twamp_hdr_len_err:
                 description:
                 - "Rx TWAMP hdr length error drop"
-    acl_id:
-        description:
-        - "ACL id"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            no_route_err:
+                description:
+                - "Tx IP no route error drop"
+                type: str
+            other_err:
+                description:
+                - "IP other error drop"
+                type: str
 
 '''
 
@@ -143,7 +159,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'acl_id': {
+            'type': 'int',
+        },
         'acl_name': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         },
         'stats': {
@@ -151,30 +173,24 @@ def get_argspec():
             'rx_pkts': {
                 'type': 'str',
             },
-            'rx_acl_drop': {
-                'type': 'str',
-            },
-            'no_route_err': {
+            'tx_pkts': {
                 'type': 'str',
             },
             'rx_drop_not_enabled_v4': {
                 'type': 'str',
             },
-            'other_err': {
-                'type': 'str',
-            },
-            'tx_pkts': {
+            'rx_acl_drop': {
                 'type': 'str',
             },
             'twamp_hdr_len_err': {
                 'type': 'str',
+            },
+            'no_route_err': {
+                'type': 'str',
+            },
+            'other_err': {
+                'type': 'str',
             }
-        },
-        'acl_id': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

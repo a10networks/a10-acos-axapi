@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_session_aging_tcp
 description:
     - TCP Aging options
-short_description: Configures A10 fw.session.aging.tcp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,84 +22,107 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     session_aging_name:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     tcp_idle_timeout:
         description:
         - "Idle Timeout (sec), default is 600 (number)"
+        type: int
         required: False
     half_open_idle_timeout:
         description:
         - "TCP Half Open Idle Timeout (sec), default is off (number)"
+        type: int
+        required: False
+    half_close_idle_timeout:
+        description:
+        - "TCP Half Close Idle Timeout (sec), default is off (number)"
+        type: int
         required: False
     force_delete_timeout:
         description:
         - "The maximum time that a session can stay in the system before being deleted,
           default is off (number (second))"
+        type: int
+        required: False
+    force_delete_timeout_100ms:
+        description:
+        - "The maximum time that a session can stay in the system before being deleted,
+          default is off (number in 100ms)"
+        type: int
         required: False
     port_cfg:
         description:
         - "Field port_cfg"
+        type: list
         required: False
         suboptions:
             tcp_port:
                 description:
                 - "Field tcp_port"
+                type: int
             tcp_idle_timeout:
                 description:
                 - "Idle Timeout (sec), default is 600 (number)"
+                type: int
             half_open_idle_timeout:
                 description:
                 - "TCP Half Open Idle Timeout (sec), default is off (number)"
+                type: int
+            half_close_idle_timeout:
+                description:
+                - "TCP Half Close Idle Timeout (sec), default is off (number)"
+                type: int
             force_delete_timeout:
                 description:
                 - "The maximum time that a session can stay in the system before being deleted,
           default is off (number (second))"
+                type: int
             force_delete_timeout_100ms:
                 description:
                 - "The maximum time that a session can stay in the system before being deleted,
           default is off (number in 100ms)"
-            half_close_idle_timeout:
-                description:
-                - "TCP Half Close Idle Timeout (sec), default is off (number)"
-    force_delete_timeout_100ms:
+                type: int
+    uuid:
         description:
-        - "The maximum time that a session can stay in the system before being deleted,
-          default is off (number in 100ms)"
-        required: False
-    half_close_idle_timeout:
-        description:
-        - "TCP Half Close Idle Timeout (sec), default is off (number)"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -161,16 +182,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'tcp_idle_timeout': {
             'type': 'int',
         },
         'half_open_idle_timeout': {
             'type': 'int',
         },
+        'half_close_idle_timeout': {
+            'type': 'int',
+        },
         'force_delete_timeout': {
+            'type': 'int',
+        },
+        'force_delete_timeout_100ms': {
             'type': 'int',
         },
         'port_cfg': {
@@ -184,21 +208,18 @@ def get_argspec():
             'half_open_idle_timeout': {
                 'type': 'int',
             },
+            'half_close_idle_timeout': {
+                'type': 'int',
+            },
             'force_delete_timeout': {
                 'type': 'int',
             },
             'force_delete_timeout_100ms': {
                 'type': 'int',
-            },
-            'half_close_idle_timeout': {
-                'type': 'int',
             }
         },
-        'force_delete_timeout_100ms': {
-            'type': 'int',
-        },
-        'half_close_idle_timeout': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

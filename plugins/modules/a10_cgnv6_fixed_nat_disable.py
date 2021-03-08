@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_disable
 description:
     - Disable fixed-nat configuration (Operation)
-short_description: Configures A10 cgnv6.fixed.nat.disable
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,67 +21,83 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    inside_end_v6address:
-        description:
-        - "IPv6 Inside User End Address"
+        type: str
         required: False
     inside_start_v4address:
         description:
         - "IPv4 Inside User Start Address"
-        required: False
-    partition:
-        description:
-        - "Inside User Partition (Partition Name)"
-        required: False
-    inside_start_v6address:
-        description:
-        - "IPv6 Inside User Start Address"
-        required: False
-    v4_netmask:
-        description:
-        - "IPv4 Netmask"
-        required: False
-    ip_list:
-        description:
-        - "Name of IP List used to specify Inside Users"
-        required: False
-    v6_netmask:
-        description:
-        - "Inside User IPv6 Netmask"
-        required: False
-    clear_session:
-        description:
-        - "Clear all sessions"
+        type: str
         required: False
     inside_end_v4address:
         description:
         - "IPv4 Inside User End Address"
+        type: str
+        required: False
+    v4_netmask:
+        description:
+        - "IPv4 Netmask"
+        type: str
+        required: False
+    inside_start_v6address:
+        description:
+        - "IPv6 Inside User Start Address"
+        type: str
+        required: False
+    inside_end_v6address:
+        description:
+        - "IPv6 Inside User End Address"
+        type: str
+        required: False
+    v6_netmask:
+        description:
+        - "Inside User IPv6 Netmask"
+        type: int
+        required: False
+    ip_list:
+        description:
+        - "Name of IP List used to specify Inside Users"
+        type: str
+        required: False
+    partition:
+        description:
+        - "Inside User Partition (Partition Name)"
+        type: str
+        required: False
+    clear_session:
+        description:
+        - "Clear all sessions"
+        type: bool
         required: False
 
 '''
@@ -143,32 +157,32 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'inside_end_v6address': {
-            'type': 'str',
-        },
         'inside_start_v4address': {
             'type': 'str',
         },
-        'partition': {
-            'type': 'str',
-        },
-        'inside_start_v6address': {
+        'inside_end_v4address': {
             'type': 'str',
         },
         'v4_netmask': {
             'type': 'str',
         },
-        'ip_list': {
+        'inside_start_v6address': {
+            'type': 'str',
+        },
+        'inside_end_v6address': {
             'type': 'str',
         },
         'v6_netmask': {
             'type': 'int',
         },
+        'ip_list': {
+            'type': 'str',
+        },
+        'partition': {
+            'type': 'str',
+        },
         'clear_session': {
             'type': 'bool',
-        },
-        'inside_end_v4address': {
-            'type': 'str',
         }
     })
     return rv

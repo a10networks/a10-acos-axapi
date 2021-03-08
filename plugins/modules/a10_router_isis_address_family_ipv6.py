@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_isis_address_family_ipv6
 description:
     - Address family
-short_description: Configures A10 router.isis.address.family.ipv6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,96 +22,123 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     isis_tag:
         description:
-        - Key to identify parent object    distance:
+        - Key to identify parent object
+        type: str
+        required: True
+    default_information:
+        description:
+        - "'originate'= Distribute a default route;"
+        type: str
+        required: False
+    adjacency_check:
+        description:
+        - "Check ISIS neighbor protocol support"
+        type: bool
+        required: False
+    distance:
         description:
         - "ISIS Administrative Distance (Distance value)"
-        required: False
-    redistribute:
-        description:
-        - "Field redistribute"
-        required: False
-        suboptions:
-            vip_list:
-                description:
-                - "Field vip_list"
-            redist_list:
-                description:
-                - "Field redist_list"
-            isis:
-                description:
-                - "Field isis"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: int
         required: False
     multi_topology_cfg:
         description:
         - "Field multi_topology_cfg"
+        type: dict
         required: False
         suboptions:
             multi_topology:
                 description:
                 - "Enable multi-topology mode"
-            level_transition:
-                description:
-                - "Accept and generate both IS-IS IPv6 and Multi-topology IPV6 TLVs"
-            transition:
-                description:
-                - "Accept and generate both IS-IS IPv6 and Multi-topology IPV6 TLVs"
+                type: bool
             level:
                 description:
                 - "'level-1'= Level-1 only; 'level-1-2'= Level-1-2; 'level-2'= Level-2 only;"
-    adjacency_check:
-        description:
-        - "Check ISIS neighbor protocol support"
-        required: False
+                type: str
+            transition:
+                description:
+                - "Accept and generate both IS-IS IPv6 and Multi-topology IPV6 TLVs"
+                type: bool
+            level_transition:
+                description:
+                - "Accept and generate both IS-IS IPv6 and Multi-topology IPV6 TLVs"
+                type: bool
     summary_prefix_list:
         description:
         - "Field summary_prefix_list"
+        type: list
         required: False
         suboptions:
             prefix:
                 description:
                 - "IPv6 prefix"
+                type: str
             level:
                 description:
                 - "'level-1'= Summarize into level-1 area; 'level-1-2'= Summarize into both area
           and sub-domain; 'level-2'= Summarize into level-2 sub-domain;"
-    default_information:
+                type: str
+    uuid:
         description:
-        - "'originate'= Distribute a default route;"
+        - "uuid of the object"
+        type: str
         required: False
+    redistribute:
+        description:
+        - "Field redistribute"
+        type: dict
+        required: False
+        suboptions:
+            redist_list:
+                description:
+                - "Field redist_list"
+                type: list
+            vip_list:
+                description:
+                - "Field vip_list"
+                type: list
+            isis:
+                description:
+                - "Field isis"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -172,110 +197,31 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'default_information': {
+            'type': 'str',
+            'choices': ['originate']
+        },
+        'adjacency_check': {
+            'type': 'bool',
+        },
         'distance': {
             'type': 'int',
-        },
-        'redistribute': {
-            'type': 'dict',
-            'vip_list': {
-                'type': 'list',
-                'vip_metric': {
-                    'type': 'int',
-                },
-                'vip_level': {
-                    'type': 'str',
-                    'choices': ['level-1', 'level-1-2', 'level-2']
-                },
-                'vip_metric_type': {
-                    'type': 'str',
-                    'choices': ['external', 'internal']
-                },
-                'vip_type': {
-                    'type': 'str',
-                    'choices': ['only-flagged', 'only-not-flagged']
-                },
-                'vip_route_map': {
-                    'type': 'str',
-                }
-            },
-            'redist_list': {
-                'type': 'list',
-                'metric': {
-                    'type': 'int',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
-                        'ip-nat', 'lw4o6', 'nat-map', 'nat64', 'ospf', 'rip',
-                        'static'
-                    ]
-                },
-                'metric_type': {
-                    'type': 'str',
-                    'choices': ['external', 'internal']
-                },
-                'level': {
-                    'type': 'str',
-                    'choices': ['level-1', 'level-1-2', 'level-2']
-                }
-            },
-            'isis': {
-                'type': 'dict',
-                'level_2_from': {
-                    'type': 'dict',
-                    'into_2': {
-                        'type': 'dict',
-                        'distribute_list': {
-                            'type': 'str',
-                        },
-                        'level_1': {
-                            'type': 'bool',
-                        }
-                    }
-                },
-                'level_1_from': {
-                    'type': 'dict',
-                    'into_1': {
-                        'type': 'dict',
-                        'level_2': {
-                            'type': 'bool',
-                        },
-                        'distribute_list': {
-                            'type': 'str',
-                        }
-                    }
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
         },
         'multi_topology_cfg': {
             'type': 'dict',
             'multi_topology': {
                 'type': 'bool',
             },
-            'level_transition': {
-                'type': 'bool',
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-1-2', 'level-2']
             },
             'transition': {
                 'type': 'bool',
             },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-1-2', 'level-2']
+            'level_transition': {
+                'type': 'bool',
             }
-        },
-        'adjacency_check': {
-            'type': 'bool',
         },
         'summary_prefix_list': {
             'type': 'list',
@@ -287,9 +233,88 @@ def get_argspec():
                 'choices': ['level-1', 'level-1-2', 'level-2']
             }
         },
-        'default_information': {
+        'uuid': {
             'type': 'str',
-            'choices': ['originate']
+        },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
+                'type': 'list',
+                'ntype': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
+                        'ip-nat', 'lw4o6', 'nat-map', 'static-nat', 'nat64',
+                        'ospf', 'rip', 'static'
+                    ]
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'metric_type': {
+                    'type': 'str',
+                    'choices': ['external', 'internal']
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-1-2', 'level-2']
+                }
+            },
+            'vip_list': {
+                'type': 'list',
+                'vip_type': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                },
+                'vip_metric': {
+                    'type': 'int',
+                },
+                'vip_route_map': {
+                    'type': 'str',
+                },
+                'vip_metric_type': {
+                    'type': 'str',
+                    'choices': ['external', 'internal']
+                },
+                'vip_level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-1-2', 'level-2']
+                }
+            },
+            'isis': {
+                'type': 'dict',
+                'level_1_from': {
+                    'type': 'dict',
+                    'into_1': {
+                        'type': 'dict',
+                        'level_2': {
+                            'type': 'bool',
+                        },
+                        'distribute_list': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'level_2_from': {
+                    'type': 'dict',
+                    'into_2': {
+                        'type': 'dict',
+                        'level_1': {
+                            'type': 'bool',
+                        },
+                        'distribute_list': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     # Parent keys

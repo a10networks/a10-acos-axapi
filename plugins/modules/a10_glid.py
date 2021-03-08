@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_glid
 description:
     - Configure global limit ID
-short_description: Configures A10 glid
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,99 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    request_limit:
-        description:
-        - "Request limit"
-        required: False
-    conn_limit:
-        description:
-        - "Connection Limit for the GLID"
-        required: False
-    log:
-        description:
-        - "Log a message"
-        required: False
-    request_rate_limit_interval:
-        description:
-        - "Number of 100ms"
-        required: False
-    dns64:
-        description:
-        - "Field dns64"
-        required: False
-        suboptions:
-            prefix:
-                description:
-                - "IPv6 prefix"
-            exclusive_answer:
-                description:
-                - "Exclusive Answer in DNS Response"
-            disable:
-                description:
-                - "Disable"
-    request_rate_limit:
-        description:
-        - "Request rate limit"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    conn_rate_limit_interval:
-        description:
-        - "Field conn_rate_limit_interval"
+        type: str
         required: False
     num:
         description:
         - "Global Limit ID"
+        type: int
         required: True
+    conn_limit:
+        description:
+        - "Connection Limit for the GLID"
+        type: int
+        required: False
     conn_rate_limit:
         description:
         - "Connection rate Limit for the GLID"
+        type: int
         required: False
-    dns:
+    conn_rate_limit_interval:
         description:
-        - "Field dns"
+        - "Field conn_rate_limit_interval"
+        type: int
         required: False
-        suboptions:
-            action:
-                description:
-                - "'cache-disable'= Disable dns cache; 'cache-enable'= Enable dns cache;"
-            weight:
-                description:
-                - "Weight for cache entry"
-            ttl:
-                description:
-                - "TTL for cache entry (TTL in seconds)"
-    lockout:
+    request_limit:
         description:
-        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+        - "Request limit"
+        type: int
+        required: False
+    request_rate_limit:
+        description:
+        - "Request rate limit"
+        type: int
+        required: False
+    request_rate_limit_interval:
+        description:
+        - "Number of 100ms"
+        type: int
+        required: False
+    over_limit_action:
+        description:
+        - "Action when exceeds limit"
+        type: bool
         required: False
     action_value:
         description:
@@ -124,23 +101,74 @@ options:
           'dns-cache-disable'= Disable dns cache when it exceeds limit; 'dns-cache-
           enable'= Enable dns cache when it exceeds limit; 'forward'= Forward the traffic
           even it exceeds limit; 'reset'= Reset the connection when it exceeds limit;"
+        type: str
         required: False
-    over_limit_action:
+    lockout:
         description:
-        - "Action when exceeds limit"
+        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+        type: int
+        required: False
+    log:
+        description:
+        - "Log a message"
+        type: bool
         required: False
     log_interval:
         description:
         - "Log interval (minute, by default system will log every over limit instance)"
+        type: int
         required: False
+    dns:
+        description:
+        - "Field dns"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "'cache-disable'= Disable dns cache; 'cache-enable'= Enable dns cache;"
+                type: str
+            weight:
+                description:
+                - "Weight for cache entry"
+                type: int
+            ttl:
+                description:
+                - "TTL for cache entry (TTL in seconds)"
+                type: int
+    dns64:
+        description:
+        - "Field dns64"
+        type: dict
+        required: False
+        suboptions:
+            disable:
+                description:
+                - "Disable"
+                type: bool
+            exclusive_answer:
+                description:
+                - "Exclusive Answer in DNS Response"
+                type: bool
+            prefix:
+                description:
+                - "IPv6 prefix"
+                type: str
     use_nat_pool:
         description:
         - "Use NAT pool specified to do reverse NAT for class list members bound to the
           lid"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -210,44 +238,46 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'num': {
+            'type': 'int',
+            'required': True,
+        },
+        'conn_limit': {
+            'type': 'int',
+        },
+        'conn_rate_limit': {
+            'type': 'int',
+        },
+        'conn_rate_limit_interval': {
+            'type': 'int',
+        },
         'request_limit': {
             'type': 'int',
         },
-        'conn_limit': {
+        'request_rate_limit': {
+            'type': 'int',
+        },
+        'request_rate_limit_interval': {
+            'type': 'int',
+        },
+        'over_limit_action': {
+            'type': 'bool',
+        },
+        'action_value': {
+            'type':
+            'str',
+            'choices': [
+                'drop', 'dns-cache-disable', 'dns-cache-enable', 'forward',
+                'reset'
+            ]
+        },
+        'lockout': {
             'type': 'int',
         },
         'log': {
             'type': 'bool',
         },
-        'request_rate_limit_interval': {
-            'type': 'int',
-        },
-        'dns64': {
-            'type': 'dict',
-            'prefix': {
-                'type': 'str',
-            },
-            'exclusive_answer': {
-                'type': 'bool',
-            },
-            'disable': {
-                'type': 'bool',
-            }
-        },
-        'request_rate_limit': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'conn_rate_limit_interval': {
-            'type': 'int',
-        },
-        'num': {
-            'type': 'int',
-            'required': True,
-        },
-        'conn_rate_limit': {
+        'log_interval': {
             'type': 'int',
         },
         'dns': {
@@ -263,27 +293,25 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'lockout': {
-            'type': 'int',
-        },
-        'action_value': {
-            'type':
-            'str',
-            'choices': [
-                'drop', 'dns-cache-disable', 'dns-cache-enable', 'forward',
-                'reset'
-            ]
-        },
-        'over_limit_action': {
-            'type': 'bool',
-        },
-        'log_interval': {
-            'type': 'int',
+        'dns64': {
+            'type': 'dict',
+            'disable': {
+                'type': 'bool',
+            },
+            'exclusive_answer': {
+                'type': 'bool',
+            },
+            'prefix': {
+                'type': 'str',
+            }
         },
         'use_nat_pool': {
             'type': 'str',
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

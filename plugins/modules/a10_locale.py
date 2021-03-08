@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_locale
 description:
     - Set locale for the CLI startup
-short_description: Configures A10 locale
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,38 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    test:
-        description:
-        - "Field test"
-        required: False
-        suboptions:
-            locale:
-                description:
-                - "'zh_CN'= Chinese locale for PRC; 'zh_TW'= Chinese locale for Taiwan; 'ja_JP'=
-          Japanese locale for Japan;"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     value:
         description:
@@ -74,7 +66,24 @@ options:
           Chinese locale for Taiwan, encoding with EUC-TW; 'ja_JP.UTF-8'= Japanese locale
           for Japan, encoding with UTF-8; 'ja_JP.EUC-JP'= Japanese locale for Japan,
           encoding with EUC-JP;"
+        type: str
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    test:
+        description:
+        - "Field test"
+        type: dict
+        required: False
+        suboptions:
+            locale:
+                description:
+                - "'zh_CN'= Chinese locale for PRC; 'zh_TW'= Chinese locale for Taiwan; 'ja_JP'=
+          Japanese locale for Japan;"
+                type: str
 
 '''
 
@@ -129,16 +138,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'test': {
-            'type': 'dict',
-            'locale': {
-                'type': 'str',
-                'choices': ['zh_CN', 'zh_TW', 'ja_JP']
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'value': {
             'type':
             'str',
@@ -147,6 +146,16 @@ def get_argspec():
                 'zh_CN.GB2312', 'zh_TW.UTF-8', 'zh_TW.BIG5', 'zh_TW.EUCTW',
                 'ja_JP.UTF-8', 'ja_JP.EUC-JP'
             ]
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'test': {
+            'type': 'dict',
+            'locale': {
+                'type': 'str',
+                'choices': ['zh_CN', 'zh_TW', 'ja_JP']
+            }
         }
     })
     return rv

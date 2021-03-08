@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_force_self_standby
 description:
     - HA VRRP-A Operational Command to force the unit or a group to HA standby state
-short_description: Configures A10 vrrp.a.force-self-standby
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,44 +21,54 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    vrid:
+        description:
+        - "Specify one VRRP-A vrid to force into standby state"
+        type: int
+        required: False
+    all_partitions:
+        description:
+        - "force all partitions in standby state"
+        type: bool
         required: False
     action:
         description:
         - "'enable'= enable vrrp-a force-self-standby; 'disable'= disable vrrp-a force-
           self-standby;"
-        required: False
-    vrid:
-        description:
-        - "Specify one VRRP-A vrid to force into standby state"
-        required: False
-    all_partitions:
-        description:
-        - "force all partitions in standby state"
+        type: str
         required: False
 
 '''
@@ -114,15 +122,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
         'vrid': {
             'type': 'int',
         },
         'all_partitions': {
             'type': 'bool',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
         }
     })
     return rv

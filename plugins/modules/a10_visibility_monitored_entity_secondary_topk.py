@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitored_entity_secondary_topk
 description:
     - Display topk secondary Monitoring entities
-short_description: Configures A10 visibility.monitored.entity.secondary.topk
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,67 +22,84 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            sources:
-                description:
-                - "Field sources"
-            l4_port:
-                description:
-                - "Field l4_port"
-            l4_proto:
-                description:
-                - "Field l4_proto"
-            ipv4_addr:
-                description:
-                - "Field ipv4_addr"
-            ipv6_addr:
-                description:
-                - "Field ipv6_addr"
-            metric_topk_list:
-                description:
-                - "Field metric_topk_list"
     sources:
         description:
         - "Field sources"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-    uuid:
+                type: str
+    oper:
         description:
-        - "uuid of the object"
+        - "Field oper"
+        type: dict
         required: False
+        suboptions:
+            ipv4_addr:
+                description:
+                - "Field ipv4_addr"
+                type: str
+            ipv6_addr:
+                description:
+                - "Field ipv6_addr"
+                type: str
+            l4_proto:
+                description:
+                - "Field l4_proto"
+                type: str
+            l4_port:
+                description:
+                - "Field l4_port"
+                type: int
+            metric_topk_list:
+                description:
+                - "Field metric_topk_list"
+                type: list
+            sources:
+                description:
+                - "Field sources"
+                type: dict
 
 '''
 
@@ -139,20 +154,65 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sources': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
+            'ipv4_addr': {
+                'type': 'str',
+            },
+            'ipv6_addr': {
+                'type': 'str',
+            },
+            'l4_proto': {
+                'type': 'str',
+            },
+            'l4_port': {
+                'type': 'int',
+            },
+            'metric_topk_list': {
+                'type': 'list',
+                'metric_name': {
+                    'type': 'str',
+                },
+                'topk_list': {
+                    'type': 'list',
+                    'ip_addr': {
+                        'type': 'str',
+                    },
+                    'port': {
+                        'type': 'int',
+                    },
+                    'protocol': {
+                        'type': 'str',
+                    },
+                    'metric_value': {
+                        'type': 'str',
+                    }
+                }
+            },
             'sources': {
                 'type': 'dict',
                 'oper': {
                     'type': 'dict',
-                    'l4_proto': {
-                        'type': 'str',
-                    },
                     'ipv4_addr': {
                         'type': 'str',
                     },
                     'ipv6_addr': {
                         'type': 'str',
+                    },
+                    'l4_proto': {
+                        'type': 'str',
+                    },
+                    'l4_port': {
+                        'type': 'int',
                     },
                     'metric_topk_list': {
                         'type': 'list',
@@ -168,54 +228,9 @@ def get_argspec():
                                 'type': 'str',
                             }
                         }
-                    },
-                    'l4_port': {
-                        'type': 'int',
-                    }
-                }
-            },
-            'l4_port': {
-                'type': 'int',
-            },
-            'l4_proto': {
-                'type': 'str',
-            },
-            'ipv4_addr': {
-                'type': 'str',
-            },
-            'ipv6_addr': {
-                'type': 'str',
-            },
-            'metric_topk_list': {
-                'type': 'list',
-                'metric_name': {
-                    'type': 'str',
-                },
-                'topk_list': {
-                    'type': 'list',
-                    'protocol': {
-                        'type': 'str',
-                    },
-                    'ip_addr': {
-                        'type': 'str',
-                    },
-                    'metric_value': {
-                        'type': 'str',
-                    },
-                    'port': {
-                        'type': 'int',
                     }
                 }
             }
-        },
-        'sources': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

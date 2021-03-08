@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_inside_ipv6address
 description:
     - Configure Fixed NAT
-short_description: Configures A10 cgnv6.fixed.nat.inside.ipv6address
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,119 +22,148 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    partition:
+    inside_start_address:
         description:
-        - "Inside User Partition (Partition Name)"
+        - "IPv6 Inside User Start Address"
+        type: str
+        required: True
+    inside_end_address:
+        description:
+        - "IPv6 Inside User End Address"
+        type: str
         required: True
     inside_netmask:
         description:
         - "Inside User IPv6 Netmask"
+        type: int
         required: True
-    uuid:
+    partition:
         description:
-        - "uuid of the object"
+        - "Inside User Partition (Partition Name)"
+        type: str
+        required: True
+    nat_ip_list:
+        description:
+        - "Name of IP List used to specify NAT addresses"
+        type: str
+        required: False
+    nat_start_address:
+        description:
+        - "Start NAT Address"
+        type: str
         required: False
     nat_end_address:
         description:
         - "IPv4 End NAT Address"
+        type: str
+        required: False
+    nat_netmask:
+        description:
+        - "NAT Addresses IP Netmask"
+        type: str
         required: False
     vrid:
         description:
         - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
         required: False
-    ports_per_user:
+    dest_rule_list:
         description:
-        - "Configure Ports per Inside User (ports-per-user)"
+        - "Bind destination based Rule-List (Fixed NAT Rule-List Name)"
+        type: str
         required: False
-    session_quota:
+    dynamic_pool_size:
         description:
-        - "Configure per user quota on sessions"
+        - "Configure size of Dynamic pool (Default= 0)"
+        type: int
         required: False
     method:
         description:
         - "'use-all-nat-ips'= Use all the NAT IP addresses configured; 'use-least-nat-
           ips'= Use the least number of NAT IP addresses required (default);"
-        required: False
-    inside_start_address:
-        description:
-        - "IPv6 Inside User Start Address"
-        required: True
-    dest_rule_list:
-        description:
-        - "Bind destination based Rule-List (Fixed NAT Rule-List Name)"
-        required: False
-    nat_start_address:
-        description:
-        - "Start NAT Address"
-        required: False
-    nat_ip_list:
-        description:
-        - "Name of IP List used to specify NAT addresses"
+        type: str
         required: False
     offset:
         description:
         - "Field offset"
+        type: dict
         required: False
         suboptions:
-            numeric_offset:
-                description:
-                - "Configure a numeric offset to the first NAT IP address"
             random:
                 description:
                 - "Randomly choose the first NAT IP address"
+                type: bool
+            numeric_offset:
+                description:
+                - "Configure a numeric offset to the first NAT IP address"
+                type: int
+    ports_per_user:
+        description:
+        - "Configure Ports per Inside User (ports-per-user)"
+        type: int
+        required: False
     respond_to_user_mac:
         description:
         - "Use the user's source MAC for the next hop rather than the routing table
           (Default= off)"
+        type: bool
         required: False
-    inside_end_address:
+    session_quota:
         description:
-        - "IPv6 Inside User End Address"
-        required: True
+        - "Configure per user quota on sessions"
+        type: int
+        required: False
     usable_nat_ports:
         description:
         - "Field usable_nat_ports"
+        type: dict
         required: False
         suboptions:
             usable_start_port:
                 description:
                 - "Start Port of Usable NAT Ports"
+                type: int
             usable_end_port:
                 description:
                 - "End Port of Usable NAT Ports"
-    nat_netmask:
+                type: int
+    uuid:
         description:
-        - "NAT Addresses IP Netmask"
-        required: False
-    dynamic_pool_size:
-        description:
-        - "Configure size of Dynamic pool (Default= 0)"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -207,7 +234,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'partition': {
+        'inside_start_address': {
+            'type': 'str',
+            'required': True,
+        },
+        'inside_end_address': {
             'type': 'str',
             'required': True,
         },
@@ -215,53 +246,52 @@ def get_argspec():
             'type': 'int',
             'required': True,
         },
-        'uuid': {
+        'partition': {
+            'type': 'str',
+            'required': True,
+        },
+        'nat_ip_list': {
+            'type': 'str',
+        },
+        'nat_start_address': {
             'type': 'str',
         },
         'nat_end_address': {
             'type': 'str',
         },
+        'nat_netmask': {
+            'type': 'str',
+        },
         'vrid': {
             'type': 'int',
         },
-        'ports_per_user': {
-            'type': 'int',
+        'dest_rule_list': {
+            'type': 'str',
         },
-        'session_quota': {
+        'dynamic_pool_size': {
             'type': 'int',
         },
         'method': {
             'type': 'str',
             'choices': ['use-all-nat-ips', 'use-least-nat-ips']
         },
-        'inside_start_address': {
-            'type': 'str',
-            'required': True,
-        },
-        'dest_rule_list': {
-            'type': 'str',
-        },
-        'nat_start_address': {
-            'type': 'str',
-        },
-        'nat_ip_list': {
-            'type': 'str',
-        },
         'offset': {
             'type': 'dict',
-            'numeric_offset': {
-                'type': 'int',
-            },
             'random': {
                 'type': 'bool',
+            },
+            'numeric_offset': {
+                'type': 'int',
             }
+        },
+        'ports_per_user': {
+            'type': 'int',
         },
         'respond_to_user_mac': {
             'type': 'bool',
         },
-        'inside_end_address': {
-            'type': 'str',
-            'required': True,
+        'session_quota': {
+            'type': 'int',
         },
         'usable_nat_ports': {
             'type': 'dict',
@@ -272,11 +302,8 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'nat_netmask': {
+        'uuid': {
             'type': 'str',
-        },
-        'dynamic_pool_size': {
-            'type': 'int',
         }
     })
     return rv

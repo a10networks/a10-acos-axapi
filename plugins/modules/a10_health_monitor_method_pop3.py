@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_pop3
 description:
     - POP3 type
-short_description: Configures A10 health.monitor.method.pop3
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,62 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    pop3_password_string:
+        - Key to identify parent object
+        type: str
+        required: True
+    pop3:
         description:
-        - "Specify the user password, '' means empty password"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    pop3_password:
-        description:
-        - "Specify the user password"
+        - "POP3 type"
+        type: bool
         required: False
     pop3_username:
         description:
         - "Specify the username"
+        type: str
+        required: False
+    pop3_password:
+        description:
+        - "Specify the user password"
+        type: bool
+        required: False
+    pop3_password_string:
+        description:
+        - "Specify the user password, '' means empty password"
+        type: str
         required: False
     pop3_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
-        required: False
-    pop3:
-        description:
-        - "POP3 type"
+        type: str
         required: False
     pop3_port:
         description:
         - "Specify the POP3 port, default is 110 (Port Number (default 110))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -139,26 +154,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'pop3_password_string': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'pop3_password': {
+        'pop3': {
             'type': 'bool',
         },
         'pop3_username': {
             'type': 'str',
         },
+        'pop3_password': {
+            'type': 'bool',
+        },
+        'pop3_password_string': {
+            'type': 'str',
+        },
         'pop3_encrypted': {
             'type': 'str',
         },
-        'pop3': {
-            'type': 'bool',
-        },
         'pop3_port': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

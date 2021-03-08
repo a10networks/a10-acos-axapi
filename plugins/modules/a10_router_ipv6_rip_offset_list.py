@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_rip_offset_list
 description:
     - Modify RIP metric
-short_description: Configures A10 router.ipv6.rip.offset-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,81 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     acl_cfg:
         description:
         - "Field acl_cfg"
+        type: list
         required: False
         suboptions:
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
-            metric:
-                description:
-                - "Metric value"
-            offset_list_direction:
-                description:
-                - "'in'= Filter incoming updates; 'out'= Filter outgoing updates;"
             acl:
                 description:
                 - "Access-list name"
-            trunk:
+                type: str
+            offset_list_direction:
                 description:
-                - "Trunk interface (Trunk interface number)"
+                - "'in'= Filter incoming updates; 'out'= Filter outgoing updates;"
+                type: str
+            metric:
+                description:
+                - "Metric value"
+                type: int
             ethernet:
                 description:
                 - "Ethernet interface (Port number)"
+                type: str
+            loopback:
+                description:
+                - "Loopback interface (Port number)"
+                type: str
+            trunk:
+                description:
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+                type: str
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -138,29 +153,29 @@ def get_argspec():
     rv.update({
         'acl_cfg': {
             'type': 'list',
-            've': {
+            'acl': {
                 'type': 'str',
-            },
-            'loopback': {
-                'type': 'str',
-            },
-            'tunnel': {
-                'type': 'str',
-            },
-            'metric': {
-                'type': 'int',
             },
             'offset_list_direction': {
                 'type': 'str',
                 'choices': ['in', 'out']
             },
-            'acl': {
+            'metric': {
+                'type': 'int',
+            },
+            'ethernet': {
+                'type': 'str',
+            },
+            'loopback': {
                 'type': 'str',
             },
             'trunk': {
                 'type': 'str',
             },
-            'ethernet': {
+            'tunnel': {
+                'type': 'str',
+            },
+            've': {
                 'type': 'str',
             }
         },

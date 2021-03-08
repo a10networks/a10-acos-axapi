@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_memory
 description:
     - Configure System Parameters
-short_description: Configures A10 system.memory
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,108 +22,138 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            N2_memory:
-                description:
-                - "Field N2_memory"
-            Used:
-                description:
-                - "Field Used"
-            ssl_memory_counts:
-                description:
-                - "Field ssl_memory_counts"
-            Cached:
-                description:
-                - "Field Cached"
-            TCP_memory:
-                description:
-                - "Field TCP_memory"
-            system_memory_counts:
-                description:
-                - "Field system_memory_counts"
-            Free:
-                description:
-                - "Field Free"
-            aFleX_memory:
-                description:
-                - "Field aFleX_memory"
-            tcp_memory_counts:
-                description:
-                - "Field tcp_memory_counts"
-            System_memory:
-                description:
-                - "Field System_memory"
-            n2_memory_counts:
-                description:
-                - "Field n2_memory_counts"
-            Shared:
-                description:
-                - "Field Shared"
-            Usage:
-                description:
-                - "Field Usage"
-            SSL_memory:
-                description:
-                - "Field SSL_memory"
-            Total:
-                description:
-                - "Field Total"
-            aflex_memory_counts:
-                description:
-                - "Field aflex_memory_counts"
-            Buffers:
-                description:
-                - "Field Buffers"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'usage-percentage'= Memory Usage percentage;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            Total:
+                description:
+                - "Field Total"
+                type: int
+            System_memory:
+                description:
+                - "Field System_memory"
+                type: list
+            system_memory_counts:
+                description:
+                - "Field system_memory_counts"
+                type: int
+            aFleX_memory:
+                description:
+                - "Field aFleX_memory"
+                type: list
+            aflex_memory_counts:
+                description:
+                - "Field aflex_memory_counts"
+                type: int
+            N2_memory:
+                description:
+                - "Field N2_memory"
+                type: list
+            n2_memory_counts:
+                description:
+                - "Field n2_memory_counts"
+                type: int
+            SSL_memory:
+                description:
+                - "Field SSL_memory"
+                type: list
+            ssl_memory_counts:
+                description:
+                - "Field ssl_memory_counts"
+                type: int
+            TCP_memory:
+                description:
+                - "Field TCP_memory"
+                type: list
+            tcp_memory_counts:
+                description:
+                - "Field tcp_memory_counts"
+                type: int
+            Usage:
+                description:
+                - "Field Usage"
+                type: str
+            Used:
+                description:
+                - "Field Used"
+                type: int
+            Free:
+                description:
+                - "Field Free"
+                type: int
+            Shared:
+                description:
+                - "Field Shared"
+                type: int
+            Buffers:
+                description:
+                - "Field Buffers"
+                type: int
+            Cached:
+                description:
+                - "Field Cached"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             usage_percentage:
                 description:
                 - "Memory Usage percentage"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -181,104 +209,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'N2_memory': {
-                'type': 'list',
-                'Max': {
-                    'type': 'int',
-                },
-                'Allocated': {
-                    'type': 'int',
-                },
-                'Object_size': {
-                    'type': 'int',
-                }
-            },
-            'Used': {
-                'type': 'int',
-            },
-            'ssl_memory_counts': {
-                'type': 'int',
-            },
-            'Cached': {
-                'type': 'int',
-            },
-            'TCP_memory': {
-                'type': 'list',
-                'Max': {
-                    'type': 'int',
-                },
-                'Allocated': {
-                    'type': 'int',
-                },
-                'Object_size': {
-                    'type': 'int',
-                }
-            },
-            'system_memory_counts': {
-                'type': 'int',
-            },
-            'Free': {
-                'type': 'int',
-            },
-            'aFleX_memory': {
-                'type': 'list',
-                'Max': {
-                    'type': 'int',
-                },
-                'Allocated': {
-                    'type': 'int',
-                },
-                'Object_size': {
-                    'type': 'int',
-                }
-            },
-            'tcp_memory_counts': {
-                'type': 'int',
-            },
-            'System_memory': {
-                'type': 'list',
-                'Max': {
-                    'type': 'int',
-                },
-                'Allocated': {
-                    'type': 'int',
-                },
-                'Object_size': {
-                    'type': 'int',
-                }
-            },
-            'n2_memory_counts': {
-                'type': 'int',
-            },
-            'Shared': {
-                'type': 'int',
-            },
-            'Usage': {
-                'type': 'str',
-            },
-            'SSL_memory': {
-                'type': 'list',
-                'Max': {
-                    'type': 'int',
-                },
-                'Allocated': {
-                    'type': 'int',
-                },
-                'Object_size': {
-                    'type': 'int',
-                }
-            },
-            'Total': {
-                'type': 'int',
-            },
-            'aflex_memory_counts': {
-                'type': 'int',
-            },
-            'Buffers': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -287,14 +219,110 @@ def get_argspec():
                 'choices': ['all', 'usage-percentage']
             }
         },
+        'oper': {
+            'type': 'dict',
+            'Total': {
+                'type': 'int',
+            },
+            'System_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                },
+                'Allocated': {
+                    'type': 'int',
+                },
+                'Max': {
+                    'type': 'int',
+                }
+            },
+            'system_memory_counts': {
+                'type': 'int',
+            },
+            'aFleX_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                },
+                'Allocated': {
+                    'type': 'int',
+                },
+                'Max': {
+                    'type': 'int',
+                }
+            },
+            'aflex_memory_counts': {
+                'type': 'int',
+            },
+            'N2_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                },
+                'Allocated': {
+                    'type': 'int',
+                },
+                'Max': {
+                    'type': 'int',
+                }
+            },
+            'n2_memory_counts': {
+                'type': 'int',
+            },
+            'SSL_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                },
+                'Allocated': {
+                    'type': 'int',
+                },
+                'Max': {
+                    'type': 'int',
+                }
+            },
+            'ssl_memory_counts': {
+                'type': 'int',
+            },
+            'TCP_memory': {
+                'type': 'list',
+                'Object_size': {
+                    'type': 'int',
+                },
+                'Allocated': {
+                    'type': 'int',
+                },
+                'Max': {
+                    'type': 'int',
+                }
+            },
+            'tcp_memory_counts': {
+                'type': 'int',
+            },
+            'Usage': {
+                'type': 'str',
+            },
+            'Used': {
+                'type': 'int',
+            },
+            'Free': {
+                'type': 'int',
+            },
+            'Shared': {
+                'type': 'int',
+            },
+            'Buffers': {
+                'type': 'int',
+            },
+            'Cached': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
             'usage_percentage': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

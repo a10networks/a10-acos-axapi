@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_object_group_service
 description:
     - Configure Service Object Group
-short_description: Configures A10 object-group.service
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,133 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    svc_name:
+        description:
+        - "Service Object Group Name"
+        type: str
+        required: True
+    description:
+        description:
+        - "Description of the object-group instance"
+        type: str
         required: False
     rules:
         description:
         - "Field rules"
+        type: list
         required: False
         suboptions:
-            icmp_type:
-                description:
-                - "ICMP type number"
-            alg:
-                description:
-                - "'FTP'= Specify FTP ALG port range; 'TFTP'= Specify TFTP ALG port range; 'SIP'=
-          Specify SIP ALG port range; 'DNS'= Specify DNS ALG port range; 'PPTP'= Specify
-          PPTP ALG port range; 'RTSP'= Specify RTSP ALG port range;"
-            icmpv6_code:
-                description:
-                - "ICMPv6 code number"
-            lt_src:
-                description:
-                - "Match only packets with a lower source port number"
-            eq_dst:
-                description:
-                - "Match only packets on a given destination port (port number)"
-            range_dst:
-                description:
-                - "Match only packets in the range of destination port numbers (Starting
-          Destination Port Number)"
             seq_num:
                 description:
                 - "Sequence number"
-            any_code:
-                description:
-                - "Any ICMP code"
-            source:
-                description:
-                - "Source Port Information"
-            eq_src:
-                description:
-                - "Match only packets on a given source port (port number)"
-            v6_any_code:
-                description:
-                - "Any ICMPv6 code"
-            icmpv6_type:
-                description:
-                - "ICMPv6 type number"
-            icmp_code:
-                description:
-                - "ICMP code number"
+                type: int
             protocol_id:
                 description:
                 - "Protocol ID"
+                type: int
             tcp_udp:
                 description:
                 - "'tcp'= Protocol TCP; 'udp'= Protocol UDP;"
-            gt_dst:
-                description:
-                - "Match only packets with a greater destination port number"
+                type: str
             icmp:
                 description:
                 - "Internet Control Message Protocol"
-            port_num_end_src:
-                description:
-                - "Ending Source Port Number"
-            special_v6_type:
-                description:
-                - "'dest-unreachable'= Type 1, destination unreachable; 'echo-reply'= Type 129,
-          echo reply; 'echo-request'= Type 128, echo request; 'packet-too-big'= Type 2,
-          packet too big; 'param-prob'= Type 4, parameter problem; 'time-exceeded'= Type
-          3, time exceeded;"
-            any_type:
-                description:
-                - "Any ICMP type"
-            lt_dst:
-                description:
-                - "Match only packets with a lesser destination port number"
-            gt_src:
-                description:
-                - "Match only packets with a greater source port number"
-            special_v6_code:
-                description:
-                - "'addr-unreachable'= Code 3, address unreachable; 'admin-prohibited'= Code 1,
-          admin prohibited; 'no-route'= Code 0, no route to destination; 'not-neighbour'=
-          Code 2, not neighbor; 'port-unreachable'= Code 4, destination port unreachable;"
+                type: bool
             icmpv6:
                 description:
                 - "Internet Control Message Protocol version 6"
-            range_src:
+                type: bool
+            icmp_type:
                 description:
-                - "match only packets in the range of source port numbers (Starting Port Number)"
-            port_num_end_dst:
-                description:
-                - "Ending Destination Port Number"
-            v6_any_type:
+                - "ICMP type number"
+                type: int
+            any_type:
                 description:
                 - "Any ICMP type"
-            special_code:
-                description:
-                - "'frag-required'= Code 4, fragmentation required; 'host-unreachable'= Code 1,
-          destination host unreachable; 'network-unreachable'= Code 0, destination
-          network unreachable; 'port-unreachable'= Code 3, destination port unreachable;
-          'proto-unreachable'= Code 2, destination protocol unreachable; 'route-failed'=
-          Code 5, source route failed;"
+                type: bool
             special_type:
                 description:
                 - "'echo-reply'= Type 0, echo reply; 'echo-request'= Type 8, echo request; 'info-
@@ -161,21 +109,112 @@ options:
           'time-exceeded'= Type 11, time exceeded; 'timestamp'= Type 13, timestamp;
           'timestamp-reply'= Type 14, timestamp reply; 'dest-unreachable'= Type 3,
           destination unreachable;"
-    svc_name:
+                type: str
+            any_code:
+                description:
+                - "Any ICMP code"
+                type: bool
+            icmp_code:
+                description:
+                - "ICMP code number"
+                type: int
+            special_code:
+                description:
+                - "'frag-required'= Code 4, fragmentation required; 'host-unreachable'= Code 1,
+          destination host unreachable; 'network-unreachable'= Code 0, destination
+          network unreachable; 'port-unreachable'= Code 3, destination port unreachable;
+          'proto-unreachable'= Code 2, destination protocol unreachable; 'route-failed'=
+          Code 5, source route failed;"
+                type: str
+            icmpv6_type:
+                description:
+                - "ICMPv6 type number"
+                type: int
+            v6_any_type:
+                description:
+                - "Any ICMP type"
+                type: bool
+            special_v6_type:
+                description:
+                - "'dest-unreachable'= Type 1, destination unreachable; 'echo-reply'= Type 129,
+          echo reply; 'echo-request'= Type 128, echo request; 'packet-too-big'= Type 2,
+          packet too big; 'param-prob'= Type 4, parameter problem; 'time-exceeded'= Type
+          3, time exceeded;"
+                type: str
+            v6_any_code:
+                description:
+                - "Any ICMPv6 code"
+                type: bool
+            icmpv6_code:
+                description:
+                - "ICMPv6 code number"
+                type: int
+            special_v6_code:
+                description:
+                - "'addr-unreachable'= Code 3, address unreachable; 'admin-prohibited'= Code 1,
+          admin prohibited; 'no-route'= Code 0, no route to destination; 'not-neighbour'=
+          Code 2, not neighbor; 'port-unreachable'= Code 4, destination port unreachable;"
+                type: str
+            source:
+                description:
+                - "Source Port Information"
+                type: bool
+            eq_src:
+                description:
+                - "Match only packets on a given source port (port number)"
+                type: int
+            gt_src:
+                description:
+                - "Match only packets with a greater source port number"
+                type: int
+            lt_src:
+                description:
+                - "Match only packets with a lower source port number"
+                type: int
+            range_src:
+                description:
+                - "match only packets in the range of source port numbers (Starting Port Number)"
+                type: int
+            port_num_end_src:
+                description:
+                - "Ending Source Port Number"
+                type: int
+            eq_dst:
+                description:
+                - "Match only packets on a given destination port (port number)"
+                type: int
+            gt_dst:
+                description:
+                - "Match only packets with a greater destination port number"
+                type: int
+            lt_dst:
+                description:
+                - "Match only packets with a lesser destination port number"
+                type: int
+            range_dst:
+                description:
+                - "Match only packets in the range of destination port numbers (Starting
+          Destination Port Number)"
+                type: int
+            port_num_end_dst:
+                description:
+                - "Ending Destination Port Number"
+                type: int
+            alg:
+                description:
+                - "'FTP'= Specify FTP ALG port range; 'TFTP'= Specify TFTP ALG port range; 'SIP'=
+          Specify SIP ALG port range; 'DNS'= Specify DNS ALG port range; 'PPTP'= Specify
+          PPTP ALG port range; 'RTSP'= Specify RTSP ALG port range;"
+                type: str
+    uuid:
         description:
-        - "Service Object Group Name"
-        required: True
-    description:
-        description:
-        - "Description of the object-group instance"
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -233,46 +272,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'svc_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'description': {
+            'type': 'str',
+        },
         'rules': {
             'type': 'list',
-            'icmp_type': {
-                'type': 'int',
-            },
-            'alg': {
-                'type': 'str',
-                'choices': ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP']
-            },
-            'icmpv6_code': {
-                'type': 'int',
-            },
-            'lt_src': {
-                'type': 'int',
-            },
-            'eq_dst': {
-                'type': 'int',
-            },
-            'range_dst': {
-                'type': 'int',
-            },
             'seq_num': {
-                'type': 'int',
-            },
-            'any_code': {
-                'type': 'bool',
-            },
-            'source': {
-                'type': 'bool',
-            },
-            'eq_src': {
-                'type': 'int',
-            },
-            'v6_any_code': {
-                'type': 'bool',
-            },
-            'icmpv6_type': {
-                'type': 'int',
-            },
-            'icmp_code': {
                 'type': 'int',
             },
             'protocol_id': {
@@ -282,59 +291,17 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['tcp', 'udp']
             },
-            'gt_dst': {
-                'type': 'int',
-            },
             'icmp': {
                 'type': 'bool',
-            },
-            'port_num_end_src': {
-                'type': 'int',
-            },
-            'special_v6_type': {
-                'type':
-                'str',
-                'choices': [
-                    'dest-unreachable', 'echo-reply', 'echo-request',
-                    'packet-too-big', 'param-prob', 'time-exceeded'
-                ]
-            },
-            'any_type': {
-                'type': 'bool',
-            },
-            'lt_dst': {
-                'type': 'int',
-            },
-            'gt_src': {
-                'type': 'int',
-            },
-            'special_v6_code': {
-                'type':
-                'str',
-                'choices': [
-                    'addr-unreachable', 'admin-prohibited', 'no-route',
-                    'not-neighbour', 'port-unreachable'
-                ]
             },
             'icmpv6': {
                 'type': 'bool',
             },
-            'range_src': {
+            'icmp_type': {
                 'type': 'int',
             },
-            'port_num_end_dst': {
-                'type': 'int',
-            },
-            'v6_any_type': {
+            'any_type': {
                 'type': 'bool',
-            },
-            'special_code': {
-                'type':
-                'str',
-                'choices': [
-                    'frag-required', 'host-unreachable', 'network-unreachable',
-                    'port-unreachable', 'proto-unreachable', 'route-failed'
-                ]
             },
             'special_type': {
                 'type':
@@ -345,19 +312,91 @@ def get_argspec():
                     'redirect', 'source-quench', 'time-exceeded', 'timestamp',
                     'timestamp-reply', 'dest-unreachable'
                 ]
+            },
+            'any_code': {
+                'type': 'bool',
+            },
+            'icmp_code': {
+                'type': 'int',
+            },
+            'special_code': {
+                'type':
+                'str',
+                'choices': [
+                    'frag-required', 'host-unreachable', 'network-unreachable',
+                    'port-unreachable', 'proto-unreachable', 'route-failed'
+                ]
+            },
+            'icmpv6_type': {
+                'type': 'int',
+            },
+            'v6_any_type': {
+                'type': 'bool',
+            },
+            'special_v6_type': {
+                'type':
+                'str',
+                'choices': [
+                    'dest-unreachable', 'echo-reply', 'echo-request',
+                    'packet-too-big', 'param-prob', 'time-exceeded'
+                ]
+            },
+            'v6_any_code': {
+                'type': 'bool',
+            },
+            'icmpv6_code': {
+                'type': 'int',
+            },
+            'special_v6_code': {
+                'type':
+                'str',
+                'choices': [
+                    'addr-unreachable', 'admin-prohibited', 'no-route',
+                    'not-neighbour', 'port-unreachable'
+                ]
+            },
+            'source': {
+                'type': 'bool',
+            },
+            'eq_src': {
+                'type': 'int',
+            },
+            'gt_src': {
+                'type': 'int',
+            },
+            'lt_src': {
+                'type': 'int',
+            },
+            'range_src': {
+                'type': 'int',
+            },
+            'port_num_end_src': {
+                'type': 'int',
+            },
+            'eq_dst': {
+                'type': 'int',
+            },
+            'gt_dst': {
+                'type': 'int',
+            },
+            'lt_dst': {
+                'type': 'int',
+            },
+            'range_dst': {
+                'type': 'int',
+            },
+            'port_num_end_dst': {
+                'type': 'int',
+            },
+            'alg': {
+                'type': 'str',
+                'choices': ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP']
             }
         },
-        'svc_name': {
-            'type': 'str',
-            'required': True,
-        },
-        'description': {
+        'uuid': {
             'type': 'str',
         },
         'user_tag': {
-            'type': 'str',
-        },
-        'uuid': {
             'type': 'str',
         }
     })

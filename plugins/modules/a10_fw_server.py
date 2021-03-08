@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_server
 description:
     - Firewall logging Server
-short_description: Configures A10 fw.server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,122 +22,95 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    name:
         description:
-        - "Field oper"
+        - "Server Name"
+        type: str
+        required: True
+    server_ipv6_addr:
+        description:
+        - "IPV6 address"
+        type: str
         required: False
-        suboptions:
-            state:
-                description:
-                - "Field state"
-            port_list:
-                description:
-                - "Field port_list"
-            name:
-                description:
-                - "Server Name"
-    health_check_disable:
+    host:
         description:
-        - "Disable configured health check configuration"
-        required: False
-    port_list:
-        description:
-        - "Field port_list"
-        required: False
-        suboptions:
-            health_check_disable:
-                description:
-                - "Disable health check"
-            protocol:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            port_number:
-                description:
-                - "Port Number"
-            action:
-                description:
-                - "'enable'= enable; 'disable'= disable;"
-            health_check:
-                description:
-                - "Health Check (Monitor Name)"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            peak_conn:
-                description:
-                - "Peak connections"
-            curr_conn:
-                description:
-                - "Current connections"
-            port_list:
-                description:
-                - "Field port_list"
-            name:
-                description:
-                - "Server Name"
-            fwd_pkt:
-                description:
-                - "Forward packets"
-            rev_pkt:
-                description:
-                - "Reverse Packets"
-            total_conn:
-                description:
-                - "Total connections"
-    uuid:
-        description:
-        - "uuid of the object"
+        - "IP Address"
+        type: str
         required: False
     fqdn_name:
         description:
         - "Server hostname"
+        type: str
         required: False
     resolve_as:
         description:
         - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use
           AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as
           AAAA Query to resolve FQDN;"
+        type: str
+        required: False
+    action:
+        description:
+        - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server;"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check Monitor (Health monitor name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable configured health check configuration"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -147,30 +118,97 @@ options:
                 - "'all'= all; 'curr-conn'= Current connections; 'total-conn'= Total connections;
           'fwd-pkt'= Forward packets; 'rev-pkt'= Reverse Packets; 'peak-conn'= Peak
           connections;"
-    user_tag:
+                type: str
+    port_list:
         description:
-        - "Customized tag"
+        - "Field port_list"
+        type: list
         required: False
-    host:
+        suboptions:
+            port_number:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            action:
+                description:
+                - "'enable'= enable; 'disable'= disable;"
+                type: str
+            health_check:
+                description:
+                - "Health Check (Monitor Name)"
+                type: str
+            health_check_disable:
+                description:
+                - "Disable health check"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    oper:
         description:
-        - "IP Address"
+        - "Field oper"
+        type: dict
         required: False
-    action:
+        suboptions:
+            state:
+                description:
+                - "Field state"
+                type: str
+            name:
+                description:
+                - "Server Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
+    stats:
         description:
-        - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server;"
+        - "Field stats"
+        type: dict
         required: False
-    server_ipv6_addr:
-        description:
-        - "IPV6 address"
-        required: False
-    health_check:
-        description:
-        - "Health Check Monitor (Health monitor name)"
-        required: False
-    name:
-        description:
-        - "Server Name"
-        required: True
+        suboptions:
+            curr_conn:
+                description:
+                - "Current connections"
+                type: str
+            total_conn:
+                description:
+                - "Total connections"
+                type: str
+            fwd_pkt:
+                description:
+                - "Forward packets"
+                type: str
+            rev_pkt:
+                description:
+                - "Reverse Packets"
+                type: str
+            peak_conn:
+                description:
+                - "Peak connections"
+                type: str
+            name:
+                description:
+                - "Server Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
 
 '''
 
@@ -236,74 +274,72 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'state': {
-                'type': 'str',
-                'choices': ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
-            },
-            'port_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'vrid': {
-                        'type': 'int',
-                    },
-                    'ha_group_id': {
-                        'type': 'int',
-                    },
-                    'alloc_failed': {
-                        'type': 'int',
-                    },
-                    'ports_consumed': {
-                        'type': 'int',
-                    },
-                    'ipv6': {
-                        'type': 'str',
-                    },
-                    'state': {
-                        'type':
-                        'str',
-                        'choices':
-                        ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
-                    },
-                    'ip': {
-                        'type': 'str',
-                    },
-                    'ports_freed_total': {
-                        'type': 'int',
-                    },
-                    'ports_consumed_total': {
-                        'type': 'int',
-                    }
-                },
-                'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['tcp', 'udp']
-                },
-                'port_number': {
-                    'type': 'int',
-                    'required': True,
-                }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'server_ipv6_addr': {
+            'type': 'str',
+        },
+        'host': {
+            'type': 'str',
+        },
+        'fqdn_name': {
+            'type': 'str',
+        },
+        'resolve_as': {
+            'type':
+            'str',
+            'choices':
+            ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'health_check': {
+            'type': 'str',
         },
         'health_check_disable': {
             'type': 'bool',
         },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'curr-conn', 'total-conn', 'fwd-pkt', 'rev-pkt',
+                    'peak-conn'
+                ]
+            }
+        },
         'port_list': {
             'type': 'list',
-            'health_check_disable': {
-                'type': 'bool',
+            'port_number': {
+                'type': 'int',
+                'required': True,
             },
             'protocol': {
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'health_check': {
+                'type': 'str',
+            },
+            'health_check_disable': {
+                'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
@@ -328,117 +364,71 @@ def get_argspec():
                         'response_time', 'fastest_rsp_time', 'slowest_rsp_time'
                     ]
                 }
-            },
-            'port_number': {
-                'type': 'int',
-                'required': True,
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'health_check': {
-                'type': 'str',
             }
         },
-        'stats': {
+        'oper': {
             'type': 'dict',
-            'peak_conn': {
+            'state': {
                 'type': 'str',
+                'choices': ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
             },
-            'curr_conn': {
+            'name': {
                 'type': 'str',
+                'required': True,
             },
             'port_list': {
                 'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                },
                 'protocol': {
                     'type': 'str',
                     'required': True,
                     'choices': ['tcp', 'udp']
                 },
-                'stats': {
+                'oper': {
                     'type': 'dict',
-                    'es_resp_invalid_http': {
+                    'state': {
+                        'type':
+                        'str',
+                        'choices':
+                        ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
+                    },
+                    'ip': {
                         'type': 'str',
                     },
-                    'curr_req': {
+                    'ipv6': {
                         'type': 'str',
                     },
-                    'total_rev_pkts_inspected_good_status_code': {
-                        'type': 'str',
+                    'vrid': {
+                        'type': 'int',
                     },
-                    'es_resp_count': {
-                        'type': 'str',
+                    'ha_group_id': {
+                        'type': 'int',
                     },
-                    'total_fwd_bytes': {
-                        'type': 'str',
+                    'ports_consumed': {
+                        'type': 'int',
                     },
-                    'es_resp_other': {
-                        'type': 'str',
+                    'ports_consumed_total': {
+                        'type': 'int',
                     },
-                    'fastest_rsp_time': {
-                        'type': 'str',
+                    'ports_freed_total': {
+                        'type': 'int',
                     },
-                    'total_fwd_pkts': {
-                        'type': 'str',
-                    },
-                    'es_req_count': {
-                        'type': 'str',
-                    },
-                    'es_resp_500': {
-                        'type': 'str',
-                    },
-                    'peak_conn': {
-                        'type': 'str',
-                    },
-                    'total_req': {
-                        'type': 'str',
-                    },
-                    'es_resp_400': {
-                        'type': 'str',
-                    },
-                    'es_resp_300': {
-                        'type': 'str',
-                    },
-                    'curr_conn': {
-                        'type': 'str',
-                    },
-                    'es_resp_200': {
-                        'type': 'str',
-                    },
-                    'total_rev_bytes': {
-                        'type': 'str',
-                    },
-                    'response_time': {
-                        'type': 'str',
-                    },
-                    'total_conn': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts': {
-                        'type': 'str',
-                    },
-                    'total_req_succ': {
-                        'type': 'str',
-                    },
-                    'last_total_conn': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected': {
-                        'type': 'str',
-                    },
-                    'slowest_rsp_time': {
-                        'type': 'str',
+                    'alloc_failed': {
+                        'type': 'int',
                     }
-                },
-                'port_number': {
-                    'type': 'int',
-                    'required': True,
                 }
-            },
-            'name': {
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'curr_conn': {
                 'type': 'str',
-                'required': True,
+            },
+            'total_conn': {
+                'type': 'str',
             },
             'fwd_pkt': {
                 'type': 'str',
@@ -446,52 +436,100 @@ def get_argspec():
             'rev_pkt': {
                 'type': 'str',
             },
-            'total_conn': {
+            'peak_conn': {
                 'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port_list': {
+                'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                },
+                'stats': {
+                    'type': 'dict',
+                    'curr_conn': {
+                        'type': 'str',
+                    },
+                    'curr_req': {
+                        'type': 'str',
+                    },
+                    'total_req': {
+                        'type': 'str',
+                    },
+                    'total_req_succ': {
+                        'type': 'str',
+                    },
+                    'total_fwd_bytes': {
+                        'type': 'str',
+                    },
+                    'total_fwd_pkts': {
+                        'type': 'str',
+                    },
+                    'total_rev_bytes': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts': {
+                        'type': 'str',
+                    },
+                    'total_conn': {
+                        'type': 'str',
+                    },
+                    'last_total_conn': {
+                        'type': 'str',
+                    },
+                    'peak_conn': {
+                        'type': 'str',
+                    },
+                    'es_resp_200': {
+                        'type': 'str',
+                    },
+                    'es_resp_300': {
+                        'type': 'str',
+                    },
+                    'es_resp_400': {
+                        'type': 'str',
+                    },
+                    'es_resp_500': {
+                        'type': 'str',
+                    },
+                    'es_resp_other': {
+                        'type': 'str',
+                    },
+                    'es_req_count': {
+                        'type': 'str',
+                    },
+                    'es_resp_count': {
+                        'type': 'str',
+                    },
+                    'es_resp_invalid_http': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_good_status_code': {
+                        'type': 'str',
+                    },
+                    'response_time': {
+                        'type': 'str',
+                    },
+                    'fastest_rsp_time': {
+                        'type': 'str',
+                    },
+                    'slowest_rsp_time': {
+                        'type': 'str',
+                    }
+                }
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'fqdn_name': {
-            'type': 'str',
-        },
-        'resolve_as': {
-            'type':
-            'str',
-            'choices':
-            ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'curr-conn', 'total-conn', 'fwd-pkt', 'rev-pkt',
-                    'peak-conn'
-                ]
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'host': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'server_ipv6_addr': {
-            'type': 'str',
-        },
-        'health_check': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

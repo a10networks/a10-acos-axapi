@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_ws_federation
 description:
     - WS-Federation Authentication Relay
-short_description: Configures A10 aam.authentication.relay.ws-federation
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,77 +22,96 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Specify WS-Federation authentication relay name"
+        type: str
+        required: True
+    application_server:
+        description:
+        - "'sharepoint'= Microsoft SharePoint; 'exchange-owa'= Microsoft Exchange OWA;"
+        type: str
         required: False
     authentication_uri:
         description:
         - "Specify WS-Federation relay URI, default is /_trust/"
+        type: str
         required: False
-    stats:
+    uuid:
         description:
-        - "Field stats"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            failure:
-                description:
-                - "Failure"
-            request:
-                description:
-                - "Request"
-            name:
-                description:
-                - "Specify WS-Federation authentication relay name"
-            success:
-                description:
-                - "Success"
-    name:
-        description:
-        - "Specify WS-Federation authentication relay name"
-        required: True
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'request'= Request; 'success'= Success; 'failure'= Failure;"
-    application_server:
+                type: str
+    stats:
         description:
-        - "'sharepoint'= Microsoft SharePoint; 'exchange-owa'= Microsoft Exchange OWA;"
+        - "Field stats"
+        type: dict
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            request:
+                description:
+                - "Request"
+                type: str
+            success:
+                description:
+                - "Success"
+                type: str
+            failure:
+                description:
+                - "Failure"
+                type: str
+            name:
+                description:
+                - "Specify WS-Federation authentication relay name"
+                type: str
 
 '''
 
@@ -153,28 +170,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'authentication_uri': {
-            'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'failure': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'success': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
+        },
+        'application_server': {
+            'type': 'str',
+            'choices': ['sharepoint', 'exchange-owa']
+        },
+        'authentication_uri': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'user_tag': {
             'type': 'str',
@@ -186,12 +194,21 @@ def get_argspec():
                 'choices': ['all', 'request', 'success', 'failure']
             }
         },
-        'application_server': {
-            'type': 'str',
-            'choices': ['sharepoint', 'exchange-owa']
-        },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'request': {
+                'type': 'str',
+            },
+            'success': {
+                'type': 'str',
+            },
+            'failure': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

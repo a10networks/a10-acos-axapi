@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_template_ignore_validation
 description:
     - Ignore following layers for validation
-short_description: Configures A10 sys.ut.template.ignore-validation
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    all:
+        - Key to identify parent object
+        type: str
+        required: True
+    l1:
         description:
-        - "Skip validation"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    l4:
-        description:
-        - "Dont validate L4 header"
+        - "Dont validate TX descriptor. This includes Tx port, Len & vlan"
+        type: bool
         required: False
     l2:
         description:
         - "Dont validate L2 header"
+        type: bool
         required: False
     l3:
         description:
         - "Dont validate L3 header"
+        type: bool
         required: False
-    l1:
+    l4:
         description:
-        - "Dont validate TX descriptor. This includes Tx port, Len & vlan"
+        - "Dont validate L4 header"
+        type: bool
+        required: False
+    all:
+        description:
+        - "Skip validation"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -133,13 +147,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'all': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'l4': {
+        'l1': {
             'type': 'bool',
         },
         'l2': {
@@ -148,8 +156,14 @@ def get_argspec():
         'l3': {
             'type': 'bool',
         },
-        'l1': {
+        'l4': {
             'type': 'bool',
+        },
+        'all': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

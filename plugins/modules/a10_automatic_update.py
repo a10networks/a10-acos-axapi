@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update
 description:
     - Automatic update configuration
-short_description: Configures A10 automatic-update
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,143 +22,181 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    info:
-        description:
-        - "Field info"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    reset:
-        description:
-        - "Field reset"
-        required: False
-        suboptions:
-            feature_name:
-                description:
-                - "'app-fw'= Application Firewall;"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     use_mgmt_port:
         description:
         - "Use management port to connect"
+        type: bool
         required: False
-    checknow:
+    uuid:
         description:
-        - "Field checknow"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    revert:
-        description:
-        - "Field revert"
-        required: False
-        suboptions:
-            feature_name:
-                description:
-                - "'app-fw'= Application Firewall;"
     proxy_server:
         description:
         - "Field proxy_server"
+        type: dict
         required: False
         suboptions:
-            username:
+            proxy_host:
                 description:
-                - "Username for proxy authentication"
-            domain:
-                description:
-                - "Realm for NTLM authentication"
-            uuid:
-                description:
-                - "uuid of the object"
+                - "Proxy server hostname or IP address"
+                type: str
             https_port:
                 description:
                 - "Proxy server HTTPs port"
+                type: int
+            auth_type:
+                description:
+                - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
+                type: str
+            domain:
+                description:
+                - "Realm for NTLM authentication"
+                type: str
+            username:
+                description:
+                - "Username for proxy authentication"
+                type: str
+            password:
+                description:
+                - "Password for proxy authentication"
+                type: bool
+            secret_string:
+                description:
+                - "password value"
+                type: str
             encrypted:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
-            proxy_host:
+                type: str
+            uuid:
                 description:
-                - "Proxy server hostname or IP address"
-            auth_type:
+                - "uuid of the object"
+                type: str
+    info:
+        description:
+        - "Field info"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
                 description:
-                - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
-            password:
+                - "uuid of the object"
+                type: str
+    config_list:
+        description:
+        - "Field config_list"
+        type: list
+        required: False
+        suboptions:
+            feature_name:
                 description:
-                - "Password for proxy authentication"
-            secret_string:
+                - "'app-fw'= Application Firewall Configuration;"
+                type: str
+            schedule:
                 description:
-                - "password value"
+                - "Field schedule"
+                type: bool
+            weekly:
+                description:
+                - "Every week"
+                type: bool
+            week_day:
+                description:
+                - "'Monday'= Monday; 'Tuesday'= Tuesday; 'Wednesday'= Wednesday; 'Thursday'=
+          Thursday; 'Friday'= Friday; 'Saturday'= Saturday; 'Sunday'= Sunday;"
+                type: str
+            week_time:
+                description:
+                - "Time of day to update (hh=mm) in 24 hour local time"
+                type: str
+            daily:
+                description:
+                - "Every day"
+                type: bool
+            day_time:
+                description:
+                - "Time of day to update (hh=mm) in 24 hour local time"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     check_now:
         description:
         - "Field check_now"
+        type: dict
         required: False
         suboptions:
             feature_name:
                 description:
                 - "'app-fw'= Application Firewall;"
-    config_list:
+                type: str
+    checknow:
         description:
-        - "Field config_list"
+        - "Field checknow"
+        type: dict
         required: False
         suboptions:
-            day_time:
-                description:
-                - "Time of day to update (hh=mm) in 24 hour local time"
             uuid:
                 description:
                 - "uuid of the object"
-            schedule:
-                description:
-                - "Field schedule"
+                type: str
+    revert:
+        description:
+        - "Field revert"
+        type: dict
+        required: False
+        suboptions:
             feature_name:
                 description:
-                - "'app-fw'= Application Firewall Configuration;"
-            week_day:
+                - "'app-fw'= Application Firewall;"
+                type: str
+    reset:
+        description:
+        - "Field reset"
+        type: dict
+        required: False
+        suboptions:
+            feature_name:
                 description:
-                - "'Monday'= Monday; 'Tuesday'= Tuesday; 'Wednesday'= Wednesday; 'Thursday'=
-          Thursday; 'Friday'= Friday; 'Saturday'= Saturday; 'Sunday'= Sunday;"
-            daily:
-                description:
-                - "Every day"
-            week_time:
-                description:
-                - "Time of day to update (hh=mm) in 24 hour local time"
-            weekly:
-                description:
-                - "Every week"
+                - "'app-fw'= Application Firewall;"
+                type: str
 
 '''
 
@@ -221,24 +257,89 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'proxy_server': {
+            'type': 'dict',
+            'proxy_host': {
+                'type': 'str',
+            },
+            'https_port': {
+                'type': 'int',
+            },
+            'auth_type': {
+                'type': 'str',
+                'choices': ['ntlm', 'basic']
+            },
+            'domain': {
+                'type': 'str',
+            },
+            'username': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'bool',
+            },
+            'secret_string': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'info': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
             }
         },
-        'reset': {
+        'config_list': {
+            'type': 'list',
+            'feature_name': {
+                'type': 'str',
+                'required': True,
+                'choices': ['app-fw']
+            },
+            'schedule': {
+                'type': 'bool',
+            },
+            'weekly': {
+                'type': 'bool',
+            },
+            'week_day': {
+                'type':
+                'str',
+                'choices': [
+                    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+                    'Saturday', 'Sunday'
+                ]
+            },
+            'week_time': {
+                'type': 'str',
+            },
+            'daily': {
+                'type': 'bool',
+            },
+            'day_time': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'check_now': {
             'type': 'dict',
             'feature_name': {
                 'type': 'str',
                 'choices': ['app-fw']
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
         },
         'checknow': {
             'type': 'dict',
@@ -253,76 +354,11 @@ def get_argspec():
                 'choices': ['app-fw']
             }
         },
-        'proxy_server': {
-            'type': 'dict',
-            'username': {
-                'type': 'str',
-            },
-            'domain': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'https_port': {
-                'type': 'int',
-            },
-            'encrypted': {
-                'type': 'str',
-            },
-            'proxy_host': {
-                'type': 'str',
-            },
-            'auth_type': {
-                'type': 'str',
-                'choices': ['ntlm', 'basic']
-            },
-            'password': {
-                'type': 'bool',
-            },
-            'secret_string': {
-                'type': 'str',
-            }
-        },
-        'check_now': {
+        'reset': {
             'type': 'dict',
             'feature_name': {
                 'type': 'str',
                 'choices': ['app-fw']
-            }
-        },
-        'config_list': {
-            'type': 'list',
-            'day_time': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'schedule': {
-                'type': 'bool',
-            },
-            'feature_name': {
-                'type': 'str',
-                'required': True,
-                'choices': ['app-fw']
-            },
-            'week_day': {
-                'type':
-                'str',
-                'choices': [
-                    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
-                    'Saturday', 'Sunday'
-                ]
-            },
-            'daily': {
-                'type': 'bool',
-            },
-            'week_time': {
-                'type': 'str',
-            },
-            'weekly': {
-                'type': 'bool',
             }
         }
     })

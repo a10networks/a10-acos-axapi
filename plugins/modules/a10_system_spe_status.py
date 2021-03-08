@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_spe_status
 description:
     - Field spe_status
-short_description: Configures A10 system.spe-status
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            ipv4_allowed:
-                description:
-                - "Field ipv4_allowed"
-            spe_profile:
-                description:
-                - "Field spe_profile"
             enable:
                 description:
                 - "Field enable"
-            ipv6_allowed:
+                type: str
+            spe_profile:
                 description:
-                - "Field ipv6_allowed"
+                - "Field spe_profile"
+                type: str
             spe_setup_status:
                 description:
                 - "Field spe_setup_status"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ipv4_allowed:
+                description:
+                - "Field ipv4_allowed"
+                type: int
+            ipv6_allowed:
+                description:
+                - "Field ipv6_allowed"
+                type: int
 
 '''
 
@@ -127,26 +139,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'ipv4_allowed': {
-                'type': 'int',
+            'enable': {
+                'type': 'str',
             },
             'spe_profile': {
                 'type': 'str',
             },
-            'enable': {
+            'spe_setup_status': {
                 'type': 'str',
+            },
+            'ipv4_allowed': {
+                'type': 'int',
             },
             'ipv6_allowed': {
                 'type': 'int',
-            },
-            'spe_setup_status': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

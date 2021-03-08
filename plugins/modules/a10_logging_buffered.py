@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_buffered
 description:
     - Set buffered logging parameters
-short_description: Configures A10 logging.buffered
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,39 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     buffersize:
         description:
         - "Logging buffer size (in items), default 30000"
+        type: int
         required: False
     partition_buffersize:
         description:
         - "Logging buffer size (in items), default 3000"
+        type: int
         required: False
     levelname:
         description:
@@ -67,10 +74,12 @@ options:
           (severity=4); 'notification'= Normal but significant conditions (severity=5);
           'information'= Informational messages            (severity=6); 'debugging'=
           Debug level messages              (severity=7);"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''

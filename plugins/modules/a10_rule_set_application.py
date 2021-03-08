@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rule_set_application
 description:
     - Field application
-short_description: Configures A10 rule.set.application
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,71 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     rule_set_name:
         description:
-        - Key to identify parent object    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            app_stat:
-                description:
-                - "Field app_stat"
-            category_stat:
-                description:
-                - "Field category_stat"
-            rule:
-                description:
-                - "Field rule"
-            rule_list:
-                description:
-                - "Field rule_list"
+        - Key to identify parent object
+        type: str
+        required: True
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            category_stat:
+                description:
+                - "Field category_stat"
+                type: str
+            app_stat:
+                description:
+                - "Field app_stat"
+                type: str
+            rule:
+                description:
+                - "Field rule"
+                type: str
+            rule_list:
+                description:
+                - "Field rule_list"
+                type: list
 
 '''
 
@@ -126,12 +140,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'app_stat': {
+            'category_stat': {
                 'type': 'str',
             },
-            'category_stat': {
+            'app_stat': {
                 'type': 'str',
             },
             'rule': {
@@ -139,9 +156,18 @@ def get_argspec():
             },
             'rule_list': {
                 'type': 'list',
+                'name': {
+                    'type': 'str',
+                },
                 'stat_list': {
                     'type': 'list',
+                    'name': {
+                        'type': 'str',
+                    },
                     'category': {
+                        'type': 'str',
+                    },
+                    'ntype': {
                         'type': 'str',
                     },
                     'conns': {
@@ -149,21 +175,9 @@ def get_argspec():
                     },
                     'bytes': {
                         'type': 'int',
-                    },
-                    'name': {
-                        'type': 'str',
-                    },
-                    'ntype': {
-                        'type': 'str',
                     }
-                },
-                'name': {
-                    'type': 'str',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

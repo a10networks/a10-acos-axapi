@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_environment
 description:
     - Field environment
-short_description: Configures A10 system.environment
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,230 +22,302 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            fan4a_value:
-                description:
-                - "Field fan4a_value"
-            physical_temperature2:
-                description:
-                - "Field physical_temperature2"
-            fan3a_report:
-                description:
-                - "Field fan3a_report"
-            fan6a_value:
-                description:
-                - "Field fan6a_value"
-            fan2b_value:
-                description:
-                - "Field fan2b_value"
-            fan5a_report:
-                description:
-                - "Field fan5a_report"
-            power_unit3:
-                description:
-                - "Field power_unit3"
-            power_unit2:
-                description:
-                - "Field power_unit2"
-            fan8a_report:
-                description:
-                - "Field fan8a_report"
-            voltage_label_17:
-                description:
-                - "Field voltage_label_17"
-            voltage_label_16:
-                description:
-                - "Field voltage_label_16"
-            voltage_label_15:
-                description:
-                - "Field voltage_label_15"
-            voltage_label_14:
-                description:
-                - "Field voltage_label_14"
-            voltage_label_13:
-                description:
-                - "Field voltage_label_13"
-            voltage_label_12:
-                description:
-                - "Field voltage_label_12"
-            voltage_label_11:
-                description:
-                - "Field voltage_label_11"
-            voltage_label_10:
-                description:
-                - "Field voltage_label_10"
-            fan7b_value:
-                description:
-                - "Field fan7b_value"
-            fan6b_report:
-                description:
-                - "Field fan6b_report"
-            fan9a_report:
-                description:
-                - "Field fan9a_report"
             physical_temperature:
                 description:
                 - "Field physical_temperature"
-            fan9a_value:
+                type: str
+            physical_temperature2:
                 description:
-                - "Field fan9a_value"
-            fan10a_value:
-                description:
-                - "Field fan10a_value"
-            fan2a_value:
-                description:
-                - "Field fan2a_value"
-            fan3a_value:
-                description:
-                - "Field fan3a_value"
-            fan8b_report:
-                description:
-                - "Field fan8b_report"
-            power_unit1:
-                description:
-                - "Field power_unit1"
-            fan2a_report:
-                description:
-                - "Field fan2a_report"
-            fan6b_value:
-                description:
-                - "Field fan6b_value"
-            fan7a_value:
-                description:
-                - "Field fan7a_value"
-            fan5b_report:
-                description:
-                - "Field fan5b_report"
-            fan5a_value:
-                description:
-                - "Field fan5a_value"
-            fan10b_report:
-                description:
-                - "Field fan10b_report"
-            fan5b_value:
-                description:
-                - "Field fan5b_value"
-            fan7b_report:
-                description:
-                - "Field fan7b_report"
-            fan1b_value:
-                description:
-                - "Field fan1b_value"
-            fan4b_value:
-                description:
-                - "Field fan4b_value"
-            fan8a_value:
-                description:
-                - "Field fan8a_value"
-            fan6a_report:
-                description:
-                - "Field fan6a_report"
-            fan9b_report:
-                description:
-                - "Field fan9b_report"
-            power_unit4:
-                description:
-                - "Field power_unit4"
-            fan1b_report:
-                description:
-                - "Field fan1b_report"
-            fan3b_value:
-                description:
-                - "Field fan3b_value"
-            fan10b_value:
-                description:
-                - "Field fan10b_value"
-            fan7a_report:
-                description:
-                - "Field fan7a_report"
-            fan1a_value:
-                description:
-                - "Field fan1a_value"
-            fan10a_report:
-                description:
-                - "Field fan10a_report"
-            fan8b_value:
-                description:
-                - "Field fan8b_value"
-            fan2b_report:
-                description:
-                - "Field fan2b_report"
-            fan4b_report:
-                description:
-                - "Field fan4b_report"
-            fan9b_value:
-                description:
-                - "Field fan9b_value"
-            voltage_label_3:
-                description:
-                - "Field voltage_label_3"
-            voltage_label_2:
-                description:
-                - "Field voltage_label_2"
-            voltage_label_1:
-                description:
-                - "Field voltage_label_1"
-            voltage_label_7:
-                description:
-                - "Field voltage_label_7"
-            voltage_label_6:
-                description:
-                - "Field voltage_label_6"
-            voltage_label_5:
-                description:
-                - "Field voltage_label_5"
-            voltage_label_4:
-                description:
-                - "Field voltage_label_4"
+                - "Field physical_temperature2"
+                type: str
             fan1a_report:
                 description:
                 - "Field fan1a_report"
-            fan4a_report:
+                type: str
+            fan1a_value:
                 description:
-                - "Field fan4a_report"
-            voltage_label_9:
+                - "Field fan1a_value"
+                type: int
+            fan1b_report:
                 description:
-                - "Field voltage_label_9"
-            voltage_label_8:
+                - "Field fan1b_report"
+                type: str
+            fan1b_value:
                 description:
-                - "Field voltage_label_8"
+                - "Field fan1b_value"
+                type: int
+            fan2a_report:
+                description:
+                - "Field fan2a_report"
+                type: str
+            fan2a_value:
+                description:
+                - "Field fan2a_value"
+                type: int
+            fan2b_report:
+                description:
+                - "Field fan2b_report"
+                type: str
+            fan2b_value:
+                description:
+                - "Field fan2b_value"
+                type: int
+            fan3a_report:
+                description:
+                - "Field fan3a_report"
+                type: str
+            fan3a_value:
+                description:
+                - "Field fan3a_value"
+                type: int
             fan3b_report:
                 description:
                 - "Field fan3b_report"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            fan3b_value:
+                description:
+                - "Field fan3b_value"
+                type: int
+            fan4a_report:
+                description:
+                - "Field fan4a_report"
+                type: str
+            fan4a_value:
+                description:
+                - "Field fan4a_value"
+                type: int
+            fan4b_report:
+                description:
+                - "Field fan4b_report"
+                type: str
+            fan4b_value:
+                description:
+                - "Field fan4b_value"
+                type: int
+            fan5a_report:
+                description:
+                - "Field fan5a_report"
+                type: str
+            fan5a_value:
+                description:
+                - "Field fan5a_value"
+                type: int
+            fan5b_report:
+                description:
+                - "Field fan5b_report"
+                type: str
+            fan5b_value:
+                description:
+                - "Field fan5b_value"
+                type: int
+            fan6a_report:
+                description:
+                - "Field fan6a_report"
+                type: str
+            fan6a_value:
+                description:
+                - "Field fan6a_value"
+                type: int
+            fan6b_report:
+                description:
+                - "Field fan6b_report"
+                type: str
+            fan6b_value:
+                description:
+                - "Field fan6b_value"
+                type: int
+            fan7a_report:
+                description:
+                - "Field fan7a_report"
+                type: str
+            fan7a_value:
+                description:
+                - "Field fan7a_value"
+                type: int
+            fan7b_report:
+                description:
+                - "Field fan7b_report"
+                type: str
+            fan7b_value:
+                description:
+                - "Field fan7b_value"
+                type: int
+            fan8a_report:
+                description:
+                - "Field fan8a_report"
+                type: str
+            fan8a_value:
+                description:
+                - "Field fan8a_value"
+                type: int
+            fan8b_report:
+                description:
+                - "Field fan8b_report"
+                type: str
+            fan8b_value:
+                description:
+                - "Field fan8b_value"
+                type: int
+            fan9a_report:
+                description:
+                - "Field fan9a_report"
+                type: str
+            fan9a_value:
+                description:
+                - "Field fan9a_value"
+                type: int
+            fan9b_report:
+                description:
+                - "Field fan9b_report"
+                type: str
+            fan9b_value:
+                description:
+                - "Field fan9b_value"
+                type: int
+            fan10a_report:
+                description:
+                - "Field fan10a_report"
+                type: str
+            fan10a_value:
+                description:
+                - "Field fan10a_value"
+                type: int
+            fan10b_report:
+                description:
+                - "Field fan10b_report"
+                type: str
+            fan10b_value:
+                description:
+                - "Field fan10b_value"
+                type: int
+            voltage_label_1:
+                description:
+                - "Field voltage_label_1"
+                type: str
+            voltage_label_2:
+                description:
+                - "Field voltage_label_2"
+                type: str
+            voltage_label_3:
+                description:
+                - "Field voltage_label_3"
+                type: str
+            voltage_label_4:
+                description:
+                - "Field voltage_label_4"
+                type: str
+            voltage_label_5:
+                description:
+                - "Field voltage_label_5"
+                type: str
+            voltage_label_6:
+                description:
+                - "Field voltage_label_6"
+                type: str
+            voltage_label_7:
+                description:
+                - "Field voltage_label_7"
+                type: str
+            voltage_label_8:
+                description:
+                - "Field voltage_label_8"
+                type: str
+            voltage_label_9:
+                description:
+                - "Field voltage_label_9"
+                type: str
+            voltage_label_10:
+                description:
+                - "Field voltage_label_10"
+                type: str
+            voltage_label_11:
+                description:
+                - "Field voltage_label_11"
+                type: str
+            voltage_label_12:
+                description:
+                - "Field voltage_label_12"
+                type: str
+            voltage_label_13:
+                description:
+                - "Field voltage_label_13"
+                type: str
+            voltage_label_14:
+                description:
+                - "Field voltage_label_14"
+                type: str
+            voltage_label_15:
+                description:
+                - "Field voltage_label_15"
+                type: str
+            voltage_label_16:
+                description:
+                - "Field voltage_label_16"
+                type: str
+            voltage_label_17:
+                description:
+                - "Field voltage_label_17"
+                type: str
+            power_unit1:
+                description:
+                - "Field power_unit1"
+                type: str
+            power_unit2:
+                description:
+                - "Field power_unit2"
+                type: str
+            power_unit3:
+                description:
+                - "Field power_unit3"
+                type: str
+            power_unit4:
+                description:
+                - "Field power_unit4"
+                type: str
 
 '''
 
@@ -301,200 +371,200 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'fan4a_value': {
-                'type': 'int',
-            },
-            'physical_temperature2': {
-                'type': 'str',
-            },
-            'fan3a_report': {
-                'type': 'str',
-            },
-            'fan6a_value': {
-                'type': 'int',
-            },
-            'fan2b_value': {
-                'type': 'int',
-            },
-            'fan5a_report': {
-                'type': 'str',
-            },
-            'power_unit3': {
-                'type': 'str',
-            },
-            'power_unit2': {
-                'type': 'str',
-            },
-            'fan8a_report': {
-                'type': 'str',
-            },
-            'voltage_label_17': {
-                'type': 'str',
-            },
-            'voltage_label_16': {
-                'type': 'str',
-            },
-            'voltage_label_15': {
-                'type': 'str',
-            },
-            'voltage_label_14': {
-                'type': 'str',
-            },
-            'voltage_label_13': {
-                'type': 'str',
-            },
-            'voltage_label_12': {
-                'type': 'str',
-            },
-            'voltage_label_11': {
-                'type': 'str',
-            },
-            'voltage_label_10': {
-                'type': 'str',
-            },
-            'fan7b_value': {
-                'type': 'int',
-            },
-            'fan6b_report': {
-                'type': 'str',
-            },
-            'fan9a_report': {
-                'type': 'str',
-            },
             'physical_temperature': {
                 'type': 'str',
             },
-            'fan9a_value': {
-                'type': 'int',
-            },
-            'fan10a_value': {
-                'type': 'int',
-            },
-            'fan2a_value': {
-                'type': 'int',
-            },
-            'fan3a_value': {
-                'type': 'int',
-            },
-            'fan8b_report': {
-                'type': 'str',
-            },
-            'power_unit1': {
-                'type': 'str',
-            },
-            'fan2a_report': {
-                'type': 'str',
-            },
-            'fan6b_value': {
-                'type': 'int',
-            },
-            'fan7a_value': {
-                'type': 'int',
-            },
-            'fan5b_report': {
-                'type': 'str',
-            },
-            'fan5a_value': {
-                'type': 'int',
-            },
-            'fan10b_report': {
-                'type': 'str',
-            },
-            'fan5b_value': {
-                'type': 'int',
-            },
-            'fan7b_report': {
-                'type': 'str',
-            },
-            'fan1b_value': {
-                'type': 'int',
-            },
-            'fan4b_value': {
-                'type': 'int',
-            },
-            'fan8a_value': {
-                'type': 'int',
-            },
-            'fan6a_report': {
-                'type': 'str',
-            },
-            'fan9b_report': {
-                'type': 'str',
-            },
-            'power_unit4': {
-                'type': 'str',
-            },
-            'fan1b_report': {
-                'type': 'str',
-            },
-            'fan3b_value': {
-                'type': 'int',
-            },
-            'fan10b_value': {
-                'type': 'int',
-            },
-            'fan7a_report': {
-                'type': 'str',
-            },
-            'fan1a_value': {
-                'type': 'int',
-            },
-            'fan10a_report': {
-                'type': 'str',
-            },
-            'fan8b_value': {
-                'type': 'int',
-            },
-            'fan2b_report': {
-                'type': 'str',
-            },
-            'fan4b_report': {
-                'type': 'str',
-            },
-            'fan9b_value': {
-                'type': 'int',
-            },
-            'voltage_label_3': {
-                'type': 'str',
-            },
-            'voltage_label_2': {
-                'type': 'str',
-            },
-            'voltage_label_1': {
-                'type': 'str',
-            },
-            'voltage_label_7': {
-                'type': 'str',
-            },
-            'voltage_label_6': {
-                'type': 'str',
-            },
-            'voltage_label_5': {
-                'type': 'str',
-            },
-            'voltage_label_4': {
+            'physical_temperature2': {
                 'type': 'str',
             },
             'fan1a_report': {
                 'type': 'str',
             },
+            'fan1a_value': {
+                'type': 'int',
+            },
+            'fan1b_report': {
+                'type': 'str',
+            },
+            'fan1b_value': {
+                'type': 'int',
+            },
+            'fan2a_report': {
+                'type': 'str',
+            },
+            'fan2a_value': {
+                'type': 'int',
+            },
+            'fan2b_report': {
+                'type': 'str',
+            },
+            'fan2b_value': {
+                'type': 'int',
+            },
+            'fan3a_report': {
+                'type': 'str',
+            },
+            'fan3a_value': {
+                'type': 'int',
+            },
+            'fan3b_report': {
+                'type': 'str',
+            },
+            'fan3b_value': {
+                'type': 'int',
+            },
             'fan4a_report': {
                 'type': 'str',
             },
-            'voltage_label_9': {
+            'fan4a_value': {
+                'type': 'int',
+            },
+            'fan4b_report': {
+                'type': 'str',
+            },
+            'fan4b_value': {
+                'type': 'int',
+            },
+            'fan5a_report': {
+                'type': 'str',
+            },
+            'fan5a_value': {
+                'type': 'int',
+            },
+            'fan5b_report': {
+                'type': 'str',
+            },
+            'fan5b_value': {
+                'type': 'int',
+            },
+            'fan6a_report': {
+                'type': 'str',
+            },
+            'fan6a_value': {
+                'type': 'int',
+            },
+            'fan6b_report': {
+                'type': 'str',
+            },
+            'fan6b_value': {
+                'type': 'int',
+            },
+            'fan7a_report': {
+                'type': 'str',
+            },
+            'fan7a_value': {
+                'type': 'int',
+            },
+            'fan7b_report': {
+                'type': 'str',
+            },
+            'fan7b_value': {
+                'type': 'int',
+            },
+            'fan8a_report': {
+                'type': 'str',
+            },
+            'fan8a_value': {
+                'type': 'int',
+            },
+            'fan8b_report': {
+                'type': 'str',
+            },
+            'fan8b_value': {
+                'type': 'int',
+            },
+            'fan9a_report': {
+                'type': 'str',
+            },
+            'fan9a_value': {
+                'type': 'int',
+            },
+            'fan9b_report': {
+                'type': 'str',
+            },
+            'fan9b_value': {
+                'type': 'int',
+            },
+            'fan10a_report': {
+                'type': 'str',
+            },
+            'fan10a_value': {
+                'type': 'int',
+            },
+            'fan10b_report': {
+                'type': 'str',
+            },
+            'fan10b_value': {
+                'type': 'int',
+            },
+            'voltage_label_1': {
+                'type': 'str',
+            },
+            'voltage_label_2': {
+                'type': 'str',
+            },
+            'voltage_label_3': {
+                'type': 'str',
+            },
+            'voltage_label_4': {
+                'type': 'str',
+            },
+            'voltage_label_5': {
+                'type': 'str',
+            },
+            'voltage_label_6': {
+                'type': 'str',
+            },
+            'voltage_label_7': {
                 'type': 'str',
             },
             'voltage_label_8': {
                 'type': 'str',
             },
-            'fan3b_report': {
+            'voltage_label_9': {
+                'type': 'str',
+            },
+            'voltage_label_10': {
+                'type': 'str',
+            },
+            'voltage_label_11': {
+                'type': 'str',
+            },
+            'voltage_label_12': {
+                'type': 'str',
+            },
+            'voltage_label_13': {
+                'type': 'str',
+            },
+            'voltage_label_14': {
+                'type': 'str',
+            },
+            'voltage_label_15': {
+                'type': 'str',
+            },
+            'voltage_label_16': {
+                'type': 'str',
+            },
+            'voltage_label_17': {
+                'type': 'str',
+            },
+            'power_unit1': {
+                'type': 'str',
+            },
+            'power_unit2': {
+                'type': 'str',
+            },
+            'power_unit3': {
+                'type': 'str',
+            },
+            'power_unit4': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

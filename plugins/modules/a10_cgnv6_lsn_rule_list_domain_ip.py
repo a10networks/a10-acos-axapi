@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_rule_list_domain_ip
 description:
     - Domain IP for LSN Rule-List
-short_description: Configures A10 cgnv6.lsn.rule.list.domain-ip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     lsn_rule_list_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            ip_list:
-                description:
-                - "Field ip_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'placeholder'= placeholder;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            ip_list:
+                description:
+                - "Field ip_list"
+                type: list
     stats:
         description:
         - "Field stats"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: dict
         required: False
 
 '''
@@ -131,6 +145,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'placeholder']
+            }
+        },
         'oper': {
             'type': 'dict',
             'ip_list': {
@@ -149,18 +173,8 @@ def get_argspec():
                 }
             }
         },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'placeholder']
-            }
-        },
         'stats': {
             'type': 'dict',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

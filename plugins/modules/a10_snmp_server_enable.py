@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable
 description:
     - Enable SNMP service
-short_description: Configures A10 snmp.server.enable
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,87 +22,111 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     service:
         description:
         - "Enable SNMP service"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     traps:
         description:
         - "Field traps"
+        type: dict
         required: False
         suboptions:
-            lldp:
-                description:
-                - "Enable lldp traps"
             all:
                 description:
                 - "Enable all SNMP traps"
-            slb_change:
+                type: bool
+            lldp:
                 description:
-                - "Field slb_change"
+                - "Enable lldp traps"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
-            lsn:
-                description:
-                - "Field lsn"
-            vrrp_a:
-                description:
-                - "Field vrrp_a"
-            snmp:
-                description:
-                - "Field snmp"
-            system:
-                description:
-                - "Field system"
-            ssl:
-                description:
-                - "Field ssl"
-            vcs:
-                description:
-                - "Field vcs"
+                type: str
             routing:
                 description:
                 - "Field routing"
+                type: dict
             gslb:
                 description:
                 - "Field gslb"
+                type: dict
             slb:
                 description:
                 - "Field slb"
+                type: dict
+            snmp:
+                description:
+                - "Field snmp"
+                type: dict
+            vrrp_a:
+                description:
+                - "Field vrrp_a"
+                type: dict
+            vcs:
+                description:
+                - "Field vcs"
+                type: dict
+            system:
+                description:
+                - "Field system"
+                type: dict
+            slb_change:
+                description:
+                - "Field slb_change"
+                type: dict
+            lsn:
+                description:
+                - "Field lsn"
+                type: dict
             network:
                 description:
                 - "Field network"
+                type: dict
+            ssl:
+                description:
+                - "Field ssl"
+                type: dict
 
 '''
 
@@ -159,95 +181,254 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'service': {
             'type': 'bool',
         },
+        'uuid': {
+            'type': 'str',
+        },
         'traps': {
             'type': 'dict',
-            'lldp': {
-                'type': 'bool',
-            },
             'all': {
                 'type': 'bool',
             },
-            'slb_change': {
-                'type': 'dict',
-                'all': {
-                    'type': 'bool',
-                },
-                'resource_usage_warning': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'ssl_cert_change': {
-                    'type': 'bool',
-                },
-                'ssl_cert_expire': {
-                    'type': 'bool',
-                },
-                'system_threshold': {
-                    'type': 'bool',
-                },
-                'server': {
-                    'type': 'bool',
-                },
-                'vip': {
-                    'type': 'bool',
-                },
-                'connection_resource_event': {
-                    'type': 'bool',
-                },
-                'server_port': {
-                    'type': 'bool',
-                },
-                'vip_port': {
-                    'type': 'bool',
-                }
+            'lldp': {
+                'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
             },
-            'lsn': {
+            'routing': {
+                'type': 'dict',
+                'bgp': {
+                    'type': 'dict',
+                    'bgpEstablishedNotification': {
+                        'type': 'bool',
+                    },
+                    'bgpBackwardTransNotification': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'isis': {
+                    'type': 'dict',
+                    'isisAdjacencyChange': {
+                        'type': 'bool',
+                    },
+                    'isisAreaMismatch': {
+                        'type': 'bool',
+                    },
+                    'isisAttemptToExceedMaxSequence': {
+                        'type': 'bool',
+                    },
+                    'isisAuthenticationFailure': {
+                        'type': 'bool',
+                    },
+                    'isisAuthenticationTypeFailure': {
+                        'type': 'bool',
+                    },
+                    'isisCorruptedLSPDetected': {
+                        'type': 'bool',
+                    },
+                    'isisDatabaseOverload': {
+                        'type': 'bool',
+                    },
+                    'isisIDLenMismatch': {
+                        'type': 'bool',
+                    },
+                    'isisLSPTooLargeToPropagate': {
+                        'type': 'bool',
+                    },
+                    'isisManualAddressDrops': {
+                        'type': 'bool',
+                    },
+                    'isisMaxAreaAddressesMismatch': {
+                        'type': 'bool',
+                    },
+                    'isisOriginatingLSPBufferSizeMismatch': {
+                        'type': 'bool',
+                    },
+                    'isisOwnLSPPurge': {
+                        'type': 'bool',
+                    },
+                    'isisProtocolsSupportedMismatch': {
+                        'type': 'bool',
+                    },
+                    'isisRejectedAdjacency': {
+                        'type': 'bool',
+                    },
+                    'isisSequenceNumberSkip': {
+                        'type': 'bool',
+                    },
+                    'isisVersionSkew': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'ospf': {
+                    'type': 'dict',
+                    'ospfIfAuthFailure': {
+                        'type': 'bool',
+                    },
+                    'ospfIfConfigError': {
+                        'type': 'bool',
+                    },
+                    'ospfIfRxBadPacket': {
+                        'type': 'bool',
+                    },
+                    'ospfIfStateChange': {
+                        'type': 'bool',
+                    },
+                    'ospfLsdbApproachingOverflow': {
+                        'type': 'bool',
+                    },
+                    'ospfLsdbOverflow': {
+                        'type': 'bool',
+                    },
+                    'ospfMaxAgeLsa': {
+                        'type': 'bool',
+                    },
+                    'ospfNbrStateChange': {
+                        'type': 'bool',
+                    },
+                    'ospfOriginateLsa': {
+                        'type': 'bool',
+                    },
+                    'ospfTxRetransmit': {
+                        'type': 'bool',
+                    },
+                    'ospfVirtIfAuthFailure': {
+                        'type': 'bool',
+                    },
+                    'ospfVirtIfConfigError': {
+                        'type': 'bool',
+                    },
+                    'ospfVirtIfRxBadPacket': {
+                        'type': 'bool',
+                    },
+                    'ospfVirtIfStateChange': {
+                        'type': 'bool',
+                    },
+                    'ospfVirtIfTxRetransmit': {
+                        'type': 'bool',
+                    },
+                    'ospfVirtNbrStateChange': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'gslb': {
                 'type': 'dict',
                 'all': {
                     'type': 'bool',
                 },
-                'fixed_nat_port_mapping_file_change': {
+                'zone': {
                     'type': 'bool',
                 },
-                'per_ip_port_usage_threshold': {
+                'site': {
+                    'type': 'bool',
+                },
+                'group': {
+                    'type': 'bool',
+                },
+                'service_ip': {
                     'type': 'bool',
                 },
                 'uuid': {
                     'type': 'str',
-                },
-                'total_port_usage_threshold': {
-                    'type': 'bool',
-                },
-                'max_port_threshold': {
-                    'type': 'int',
-                },
-                'max_ipport_threshold': {
-                    'type': 'int',
-                },
-                'traffic_exceeded': {
-                    'type': 'bool',
                 }
             },
-            'vrrp_a': {
+            'slb': {
                 'type': 'dict',
-                'active': {
-                    'type': 'bool',
-                },
-                'standby': {
-                    'type': 'bool',
-                },
                 'all': {
+                    'type': 'bool',
+                },
+                'application_buffer_limit': {
+                    'type': 'bool',
+                },
+                'gateway_up': {
+                    'type': 'bool',
+                },
+                'gateway_down': {
+                    'type': 'bool',
+                },
+                'server_conn_limit': {
+                    'type': 'bool',
+                },
+                'server_conn_resume': {
+                    'type': 'bool',
+                },
+                'server_up': {
+                    'type': 'bool',
+                },
+                'server_down': {
+                    'type': 'bool',
+                },
+                'server_disabled': {
+                    'type': 'bool',
+                },
+                'server_selection_failure': {
+                    'type': 'bool',
+                },
+                'service_conn_limit': {
+                    'type': 'bool',
+                },
+                'service_conn_resume': {
+                    'type': 'bool',
+                },
+                'service_down': {
+                    'type': 'bool',
+                },
+                'service_up': {
+                    'type': 'bool',
+                },
+                'service_group_up': {
+                    'type': 'bool',
+                },
+                'service_group_down': {
+                    'type': 'bool',
+                },
+                'service_group_member_up': {
+                    'type': 'bool',
+                },
+                'service_group_member_down': {
+                    'type': 'bool',
+                },
+                'vip_connlimit': {
+                    'type': 'bool',
+                },
+                'vip_connratelimit': {
+                    'type': 'bool',
+                },
+                'vip_down': {
+                    'type': 'bool',
+                },
+                'vip_port_connlimit': {
+                    'type': 'bool',
+                },
+                'vip_port_connratelimit': {
+                    'type': 'bool',
+                },
+                'vip_port_down': {
+                    'type': 'bool',
+                },
+                'vip_port_up': {
+                    'type': 'bool',
+                },
+                'vip_up': {
+                    'type': 'bool',
+                },
+                'bw_rate_limit_exceed': {
+                    'type': 'bool',
+                },
+                'bw_rate_limit_resume': {
                     'type': 'bool',
                 },
                 'uuid': {
@@ -256,88 +437,28 @@ def get_argspec():
             },
             'snmp': {
                 'type': 'dict',
-                'linkup': {
-                    'type': 'bool',
-                },
                 'all': {
                     'type': 'bool',
                 },
                 'linkdown': {
                     'type': 'bool',
                 },
+                'linkup': {
+                    'type': 'bool',
+                },
                 'uuid': {
                     'type': 'str',
                 }
             },
-            'system': {
+            'vrrp_a': {
                 'type': 'dict',
                 'all': {
                     'type': 'bool',
                 },
-                'data_cpu_high': {
+                'active': {
                     'type': 'bool',
                 },
-                'uuid': {
-                    'type': 'str',
-                },
-                'power': {
-                    'type': 'bool',
-                },
-                'high_disk_use': {
-                    'type': 'bool',
-                },
-                'high_memory_use': {
-                    'type': 'bool',
-                },
-                'control_cpu_high': {
-                    'type': 'bool',
-                },
-                'file_sys_read_only': {
-                    'type': 'bool',
-                },
-                'low_temp': {
-                    'type': 'bool',
-                },
-                'high_temp': {
-                    'type': 'bool',
-                },
-                'sec_disk': {
-                    'type': 'bool',
-                },
-                'license_management': {
-                    'type': 'bool',
-                },
-                'start': {
-                    'type': 'bool',
-                },
-                'fan': {
-                    'type': 'bool',
-                },
-                'shutdown': {
-                    'type': 'bool',
-                },
-                'pri_disk': {
-                    'type': 'bool',
-                },
-                'syslog_severity_one': {
-                    'type': 'bool',
-                },
-                'tacacs_server_up_down': {
-                    'type': 'bool',
-                },
-                'smp_resource_event': {
-                    'type': 'bool',
-                },
-                'restart': {
-                    'type': 'bool',
-                },
-                'packet_drop': {
-                    'type': 'bool',
-                }
-            },
-            'ssl': {
-                'type': 'dict',
-                'server_certificate_error': {
+                'standby': {
                     'type': 'bool',
                 },
                 'uuid': {
@@ -353,246 +474,147 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'routing': {
-                'type': 'dict',
-                'bgp': {
-                    'type': 'dict',
-                    'bgpEstablishedNotification': {
-                        'type': 'bool',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'bgpBackwardTransNotification': {
-                        'type': 'bool',
-                    }
-                },
-                'isis': {
-                    'type': 'dict',
-                    'isisAuthenticationFailure': {
-                        'type': 'bool',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'isisProtocolsSupportedMismatch': {
-                        'type': 'bool',
-                    },
-                    'isisRejectedAdjacency': {
-                        'type': 'bool',
-                    },
-                    'isisMaxAreaAddressesMismatch': {
-                        'type': 'bool',
-                    },
-                    'isisCorruptedLSPDetected': {
-                        'type': 'bool',
-                    },
-                    'isisOriginatingLSPBufferSizeMismatch': {
-                        'type': 'bool',
-                    },
-                    'isisAreaMismatch': {
-                        'type': 'bool',
-                    },
-                    'isisLSPTooLargeToPropagate': {
-                        'type': 'bool',
-                    },
-                    'isisOwnLSPPurge': {
-                        'type': 'bool',
-                    },
-                    'isisSequenceNumberSkip': {
-                        'type': 'bool',
-                    },
-                    'isisDatabaseOverload': {
-                        'type': 'bool',
-                    },
-                    'isisAttemptToExceedMaxSequence': {
-                        'type': 'bool',
-                    },
-                    'isisIDLenMismatch': {
-                        'type': 'bool',
-                    },
-                    'isisAuthenticationTypeFailure': {
-                        'type': 'bool',
-                    },
-                    'isisVersionSkew': {
-                        'type': 'bool',
-                    },
-                    'isisManualAddressDrops': {
-                        'type': 'bool',
-                    },
-                    'isisAdjacencyChange': {
-                        'type': 'bool',
-                    }
-                },
-                'ospf': {
-                    'type': 'dict',
-                    'ospfLsdbOverflow': {
-                        'type': 'bool',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'ospfNbrStateChange': {
-                        'type': 'bool',
-                    },
-                    'ospfIfStateChange': {
-                        'type': 'bool',
-                    },
-                    'ospfVirtNbrStateChange': {
-                        'type': 'bool',
-                    },
-                    'ospfLsdbApproachingOverflow': {
-                        'type': 'bool',
-                    },
-                    'ospfIfAuthFailure': {
-                        'type': 'bool',
-                    },
-                    'ospfVirtIfAuthFailure': {
-                        'type': 'bool',
-                    },
-                    'ospfVirtIfConfigError': {
-                        'type': 'bool',
-                    },
-                    'ospfVirtIfRxBadPacket': {
-                        'type': 'bool',
-                    },
-                    'ospfTxRetransmit': {
-                        'type': 'bool',
-                    },
-                    'ospfVirtIfStateChange': {
-                        'type': 'bool',
-                    },
-                    'ospfIfConfigError': {
-                        'type': 'bool',
-                    },
-                    'ospfMaxAgeLsa': {
-                        'type': 'bool',
-                    },
-                    'ospfIfRxBadPacket': {
-                        'type': 'bool',
-                    },
-                    'ospfVirtIfTxRetransmit': {
-                        'type': 'bool',
-                    },
-                    'ospfOriginateLsa': {
-                        'type': 'bool',
-                    }
-                }
-            },
-            'gslb': {
+            'system': {
                 'type': 'dict',
                 'all': {
                     'type': 'bool',
                 },
-                'group': {
+                'control_cpu_high': {
+                    'type': 'bool',
+                },
+                'data_cpu_high': {
+                    'type': 'bool',
+                },
+                'fan': {
+                    'type': 'bool',
+                },
+                'file_sys_read_only': {
+                    'type': 'bool',
+                },
+                'high_disk_use': {
+                    'type': 'bool',
+                },
+                'high_memory_use': {
+                    'type': 'bool',
+                },
+                'high_temp': {
+                    'type': 'bool',
+                },
+                'low_temp': {
+                    'type': 'bool',
+                },
+                'license_management': {
+                    'type': 'bool',
+                },
+                'packet_drop': {
+                    'type': 'bool',
+                },
+                'power': {
+                    'type': 'bool',
+                },
+                'pri_disk': {
+                    'type': 'bool',
+                },
+                'restart': {
+                    'type': 'bool',
+                },
+                'sec_disk': {
+                    'type': 'bool',
+                },
+                'shutdown': {
+                    'type': 'bool',
+                },
+                'smp_resource_event': {
+                    'type': 'bool',
+                },
+                'syslog_severity_one': {
+                    'type': 'bool',
+                },
+                'tacacs_server_up_down': {
+                    'type': 'bool',
+                },
+                'start': {
                     'type': 'bool',
                 },
                 'uuid': {
                     'type': 'str',
-                },
-                'zone': {
-                    'type': 'bool',
-                },
-                'site': {
-                    'type': 'bool',
-                },
-                'service_ip': {
-                    'type': 'bool',
                 }
             },
-            'slb': {
+            'slb_change': {
                 'type': 'dict',
                 'all': {
                     'type': 'bool',
                 },
-                'server_down': {
+                'resource_usage_warning': {
                     'type': 'bool',
                 },
-                'vip_port_connratelimit': {
+                'connection_resource_event': {
                     'type': 'bool',
                 },
-                'server_selection_failure': {
+                'server': {
                     'type': 'bool',
                 },
-                'service_group_down': {
+                'server_port': {
                     'type': 'bool',
                 },
-                'server_conn_limit': {
+                'ssl_cert_change': {
                     'type': 'bool',
                 },
-                'service_group_member_up': {
+                'ssl_cert_expire': {
+                    'type': 'bool',
+                },
+                'vip': {
+                    'type': 'bool',
+                },
+                'vip_port': {
+                    'type': 'bool',
+                },
+                'system_threshold': {
                     'type': 'bool',
                 },
                 'uuid': {
                     'type': 'str',
-                },
-                'server_conn_resume': {
+                }
+            },
+            'lsn': {
+                'type': 'dict',
+                'all': {
                     'type': 'bool',
                 },
-                'service_up': {
+                'total_port_usage_threshold': {
                     'type': 'bool',
                 },
-                'service_conn_limit': {
+                'per_ip_port_usage_threshold': {
                     'type': 'bool',
                 },
-                'gateway_up': {
+                'max_port_threshold': {
+                    'type': 'int',
+                },
+                'max_ipport_threshold': {
+                    'type': 'int',
+                },
+                'fixed_nat_port_mapping_file_change': {
                     'type': 'bool',
                 },
-                'service_group_up': {
+                'traffic_exceeded': {
                     'type': 'bool',
                 },
-                'application_buffer_limit': {
-                    'type': 'bool',
-                },
-                'vip_connratelimit': {
-                    'type': 'bool',
-                },
-                'vip_connlimit': {
-                    'type': 'bool',
-                },
-                'service_group_member_down': {
-                    'type': 'bool',
-                },
-                'service_down': {
-                    'type': 'bool',
-                },
-                'bw_rate_limit_exceed': {
-                    'type': 'bool',
-                },
-                'server_disabled': {
-                    'type': 'bool',
-                },
-                'server_up': {
-                    'type': 'bool',
-                },
-                'vip_port_connlimit': {
-                    'type': 'bool',
-                },
-                'vip_port_down': {
-                    'type': 'bool',
-                },
-                'bw_rate_limit_resume': {
-                    'type': 'bool',
-                },
-                'gateway_down': {
-                    'type': 'bool',
-                },
-                'vip_up': {
-                    'type': 'bool',
-                },
-                'vip_port_up': {
-                    'type': 'bool',
-                },
-                'vip_down': {
-                    'type': 'bool',
-                },
-                'service_conn_resume': {
-                    'type': 'bool',
+                'uuid': {
+                    'type': 'str',
                 }
             },
             'network': {
                 'type': 'dict',
                 'trunk_port_threshold': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ssl': {
+                'type': 'dict',
+                'server_certificate_error': {
                     'type': 'bool',
                 },
                 'uuid': {

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_server_ssh
 description:
     - Server Side SSH Template
-short_description: Configures A10 slb.template.server-ssh
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,74 +22,92 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Server SSH Template Name"
+        type: str
+        required: True
+    forward_proxy_enable:
+        description:
+        - "Enable SSH forward proxy"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'successful_handshakes'= successful_handshakes;
           'failed_handshakes'= failed_handshakes; 'forwarding_errors'= forwarding_errors;"
-    forward_proxy_enable:
-        description:
-        - "Enable SSH forward proxy"
-        required: False
-    name:
-        description:
-        - "Server SSH Template Name"
-        required: True
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            forwarding_errors:
-                description:
-                - "Field forwarding_errors"
             successful_handshakes:
                 description:
                 - "Field successful_handshakes"
+                type: str
             failed_handshakes:
                 description:
                 - "Field failed_handshakes"
+                type: str
+            forwarding_errors:
+                description:
+                - "Field forwarding_errors"
+                type: str
             name:
                 description:
                 - "Server SSH Template Name"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -149,6 +165,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'forward_proxy_enable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -160,34 +189,21 @@ def get_argspec():
                 ]
             }
         },
-        'forward_proxy_enable': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
         'stats': {
             'type': 'dict',
-            'forwarding_errors': {
-                'type': 'str',
-            },
             'successful_handshakes': {
                 'type': 'str',
             },
             'failed_handshakes': {
                 'type': 'str',
             },
+            'forwarding_errors': {
+                'type': 'str',
+            },
             'name': {
                 'type': 'str',
                 'required': True,
             }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

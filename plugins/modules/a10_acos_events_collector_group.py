@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_collector_group
 description:
     - Configure log servers group
-short_description: Configures A10 acos-events.collector-group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,67 +22,92 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    protocol:
-        description:
-        - "'udp'= use udp syslog protocol to send messages to log collector; 'tcp'= use
-          tcp syslog protocol to send messages to log collector;"
+        type: str
         required: False
     name:
         description:
         - "Specify log server group name"
+        type: str
         required: True
-    use_mgmt_port:
+    protocol:
         description:
-        - "Use managament port to connect to the log servers"
+        - "'udp'= use udp syslog protocol to send messages to log collector; 'tcp'= use
+          tcp syslog protocol to send messages to log collector;"
+        type: str
         required: False
     format:
         description:
         - "'syslog'= log message format is syslog (Default); 'cef'= log message format is
           cef; 'leef'= log message format is leef;"
+        type: str
         required: False
     facility:
         description:
         - "'local0'= Local use(Default); 'local1'= Local use; 'local2'= Local use;
           'local3'= Local use; 'local4'= Local use; 'local5'= Local use; 'local6'= Local
           use; 'local7'= Local use;  (Facility parameter for syslog messages)"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check (Monitor Name)"
+        type: str
         required: False
     rate:
         description:
         - "Specify the log message rate per second(Default 500)"
+        type: int
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use managament port to connect to the log servers"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -92,45 +115,47 @@ options:
                 - "'all'= all; 'msgs_sent'= Number of log messages sent; 'msgs_rate_limited'=
           Number of rate limited log messages; 'msgs_dropped'= Number of messages dropped
           for other reasons;"
+                type: str
     log_server_list:
         description:
         - "Field log_server_list"
+        type: list
         required: False
         suboptions:
-            port:
-                description:
-                - "Port number"
-            uuid:
-                description:
-                - "uuid of the object"
             name:
                 description:
                 - "Member name"
+                type: str
+            port:
+                description:
+                - "Port number"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            msgs_rate_limited:
-                description:
-                - "Number of rate limited log messages"
-            name:
-                description:
-                - "Specify log server group name"
             msgs_sent:
                 description:
                 - "Number of log messages sent"
+                type: str
+            msgs_rate_limited:
+                description:
+                - "Number of rate limited log messages"
+                type: str
             msgs_dropped:
                 description:
                 - "Number of messages dropped for other reasons"
-    health_check:
-        description:
-        - "Health Check (Monitor Name)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            name:
+                description:
+                - "Specify log server group name"
+                type: str
 
 '''
 
@@ -194,16 +219,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'protocol': {
-            'type': 'str',
-            'choices': ['udp', 'tcp']
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'use_mgmt_port': {
-            'type': 'bool',
+        'protocol': {
+            'type': 'str',
+            'choices': ['udp', 'tcp']
         },
         'format': {
             'type': 'str',
@@ -217,8 +239,17 @@ def get_argspec():
                 'local6', 'local7'
             ]
         },
+        'health_check': {
+            'type': 'str',
+        },
         'rate': {
             'type': 'int',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'user_tag': {
             'type': 'str',
@@ -234,39 +265,33 @@ def get_argspec():
         },
         'log_server_list': {
             'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
             'port': {
                 'type': 'int',
                 'required': True,
             },
             'uuid': {
                 'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
             }
         },
         'stats': {
             'type': 'dict',
+            'msgs_sent': {
+                'type': 'str',
+            },
             'msgs_rate_limited': {
+                'type': 'str',
+            },
+            'msgs_dropped': {
                 'type': 'str',
             },
             'name': {
                 'type': 'str',
                 'required': True,
-            },
-            'msgs_sent': {
-                'type': 'str',
-            },
-            'msgs_dropped': {
-                'type': 'str',
             }
-        },
-        'health_check': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

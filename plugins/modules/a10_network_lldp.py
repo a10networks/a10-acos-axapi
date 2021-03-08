@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_lldp
 description:
     - Configure LLDP
-short_description: Configures A10 network.lldp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,105 +22,132 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    uuid:
+    system_name:
         description:
-        - "uuid of the object"
+        - "Configure lldp system name"
+        type: str
         required: False
     system_description:
         description:
         - "Configure lldp system description"
+        type: str
         required: False
-    management_address:
-        description:
-        - "Field management_address"
-        required: False
-        suboptions:
-            ipv6_addr_list:
-                description:
-                - "Field ipv6_addr_list"
-            ipv4_addr_list:
-                description:
-                - "Field ipv4_addr_list"
-            dns_list:
-                description:
-                - "Field dns_list"
-    notification_cfg:
-        description:
-        - "Field notification_cfg"
-        required: False
-        suboptions:
-            notification:
-                description:
-                - "Enable lldp notification"
-            interval:
-                description:
-                - "Configure lldp notification interval, default is 30 (The lldp notification
-          interval value, default is 30)"
-    tx_set:
-        description:
-        - "Field tx_set"
-        required: False
-        suboptions:
-            fast_interval:
-                description:
-                - "Configure lldp tx fast interval value (The lldp tx fast interval value, default
-          is 1)"
-            fast_count:
-                description:
-                - "Configure lldp tx fast count value (The lldp tx fast count value, default is 4)"
-            hold:
-                description:
-                - "Configure lldp tx hold multiplier (The lldp tx hold value, default is 4)"
-            tx_interval:
-                description:
-                - "Configure lldp tx interval (The lldp tx interval value, default is 30)"
-            reinit_delay:
-                description:
-                - "Configure lldp tx reinit delay (The lldp tx reinit_delay value, default is 2)"
     enable_cfg:
         description:
         - "Field enable_cfg"
+        type: dict
         required: False
         suboptions:
             enable:
                 description:
                 - "Enable lldp"
+                type: bool
             rx:
                 description:
                 - "Enable lldp rx"
+                type: bool
             tx:
                 description:
                 - "Enable lldp tx"
-    system_name:
+                type: bool
+    notification_cfg:
         description:
-        - "Configure lldp system name"
+        - "Field notification_cfg"
+        type: dict
         required: False
+        suboptions:
+            notification:
+                description:
+                - "Enable lldp notification"
+                type: bool
+            interval:
+                description:
+                - "Configure lldp notification interval, default is 30 (The lldp notification
+          interval value, default is 30)"
+                type: int
+    tx_set:
+        description:
+        - "Field tx_set"
+        type: dict
+        required: False
+        suboptions:
+            fast_count:
+                description:
+                - "Configure lldp tx fast count value (The lldp tx fast count value, default is 4)"
+                type: int
+            fast_interval:
+                description:
+                - "Configure lldp tx fast interval value (The lldp tx fast interval value, default
+          is 1)"
+                type: int
+            hold:
+                description:
+                - "Configure lldp tx hold multiplier (The lldp tx hold value, default is 4)"
+                type: int
+            tx_interval:
+                description:
+                - "Configure lldp tx interval (The lldp tx interval value, default is 30)"
+                type: int
+            reinit_delay:
+                description:
+                - "Configure lldp tx reinit delay (The lldp tx reinit_delay value, default is 2)"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    management_address:
+        description:
+        - "Field management_address"
+        type: dict
+        required: False
+        suboptions:
+            dns_list:
+                description:
+                - "Field dns_list"
+                type: list
+            ipv4_addr_list:
+                description:
+                - "Field ipv4_addr_list"
+                type: list
+            ipv6_addr_list:
+                description:
+                - "Field ipv6_addr_list"
+                type: list
 
 '''
 
@@ -181,107 +206,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
+        'system_name': {
             'type': 'str',
         },
         'system_description': {
             'type': 'str',
-        },
-        'management_address': {
-            'type': 'dict',
-            'ipv6_addr_list': {
-                'type': 'list',
-                'ipv6': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'interface_ipv6': {
-                    'type': 'dict',
-                    'ipv6_ve': {
-                        'type': 'int',
-                    },
-                    'ipv6_eth': {
-                        'type': 'str',
-                    },
-                    'ipv6_mgmt': {
-                        'type': 'bool',
-                    }
-                }
-            },
-            'ipv4_addr_list': {
-                'type': 'list',
-                'interface_ipv4': {
-                    'type': 'dict',
-                    'ipv4_eth': {
-                        'type': 'str',
-                    },
-                    'ipv4_mgmt': {
-                        'type': 'bool',
-                    },
-                    'ipv4_ve': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'ipv4': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'dns_list': {
-                'type': 'list',
-                'interface': {
-                    'type': 'dict',
-                    'ethernet': {
-                        'type': 'str',
-                    },
-                    'management': {
-                        'type': 'bool',
-                    },
-                    've': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'dns': {
-                    'type': 'str',
-                    'required': True,
-                }
-            }
-        },
-        'notification_cfg': {
-            'type': 'dict',
-            'notification': {
-                'type': 'bool',
-            },
-            'interval': {
-                'type': 'int',
-            }
-        },
-        'tx_set': {
-            'type': 'dict',
-            'fast_interval': {
-                'type': 'int',
-            },
-            'fast_count': {
-                'type': 'int',
-            },
-            'hold': {
-                'type': 'int',
-            },
-            'tx_interval': {
-                'type': 'int',
-            },
-            'reinit_delay': {
-                'type': 'int',
-            }
         },
         'enable_cfg': {
             'type': 'dict',
@@ -295,8 +224,104 @@ def get_argspec():
                 'type': 'bool',
             }
         },
-        'system_name': {
+        'notification_cfg': {
+            'type': 'dict',
+            'notification': {
+                'type': 'bool',
+            },
+            'interval': {
+                'type': 'int',
+            }
+        },
+        'tx_set': {
+            'type': 'dict',
+            'fast_count': {
+                'type': 'int',
+            },
+            'fast_interval': {
+                'type': 'int',
+            },
+            'hold': {
+                'type': 'int',
+            },
+            'tx_interval': {
+                'type': 'int',
+            },
+            'reinit_delay': {
+                'type': 'int',
+            }
+        },
+        'uuid': {
             'type': 'str',
+        },
+        'management_address': {
+            'type': 'dict',
+            'dns_list': {
+                'type': 'list',
+                'dns': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'interface': {
+                    'type': 'dict',
+                    'ethernet': {
+                        'type': 'str',
+                    },
+                    've': {
+                        'type': 'int',
+                    },
+                    'management': {
+                        'type': 'bool',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ipv4_addr_list': {
+                'type': 'list',
+                'ipv4': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'interface_ipv4': {
+                    'type': 'dict',
+                    'ipv4_eth': {
+                        'type': 'str',
+                    },
+                    'ipv4_ve': {
+                        'type': 'int',
+                    },
+                    'ipv4_mgmt': {
+                        'type': 'bool',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_addr_list': {
+                'type': 'list',
+                'ipv6': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'interface_ipv6': {
+                    'type': 'dict',
+                    'ipv6_eth': {
+                        'type': 'str',
+                    },
+                    'ipv6_ve': {
+                        'type': 'int',
+                    },
+                    'ipv6_mgmt': {
+                        'type': 'bool',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
         }
     })
     return rv

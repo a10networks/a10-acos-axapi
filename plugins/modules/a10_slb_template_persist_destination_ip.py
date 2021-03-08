@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_persist_destination_ip
 description:
     - Destination IP persistence
-short_description: Configures A10 slb.template.persist.destination-ip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,79 +22,98 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    netmask6:
-        description:
-        - "IPV6 subnet mask"
-        required: False
-    hash_persist:
-        description:
-        - "Use hash value of destination IP address"
+        type: str
         required: False
     name:
         description:
         - "Destination IP persistence template name"
+        type: str
         required: True
     dont_honor_conn_rules:
         description:
         - "Do not observe connection rate rules"
+        type: bool
         required: False
-    service_group:
+    hash_persist:
         description:
-        - "Persist within the same service group"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    server:
-        description:
-        - "Persist to the same server, default is port"
-        required: False
-    netmask:
-        description:
-        - "IP subnet mask"
-        required: False
-    timeout:
-        description:
-        - "Persistence timeout (in minutes)"
-        required: False
-    scan_all_members:
-        description:
-        - "Persist with SCAN of all members"
+        - "Use hash value of destination IP address"
+        type: bool
         required: False
     match_type:
         description:
         - "Persistence type"
+        type: bool
+        required: False
+    server:
+        description:
+        - "Persist to the same server, default is port"
+        type: bool
+        required: False
+    service_group:
+        description:
+        - "Persist within the same service group"
+        type: bool
+        required: False
+    scan_all_members:
+        description:
+        - "Persist with SCAN of all members"
+        type: bool
+        required: False
+    timeout:
+        description:
+        - "Persistence timeout (in minutes)"
+        type: int
+        required: False
+    netmask:
+        description:
+        - "IP subnet mask"
+        type: str
+        required: False
+    netmask6:
+        description:
+        - "IPV6 subnet mask"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -161,12 +178,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'netmask6': {
-            'type': 'int',
-        },
-        'hash_persist': {
-            'type': 'bool',
-        },
         'name': {
             'type': 'str',
             'required': True,
@@ -174,28 +185,34 @@ def get_argspec():
         'dont_honor_conn_rules': {
             'type': 'bool',
         },
-        'service_group': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'server': {
-            'type': 'bool',
-        },
-        'netmask': {
-            'type': 'str',
-        },
-        'timeout': {
-            'type': 'int',
-        },
-        'scan_all_members': {
+        'hash_persist': {
             'type': 'bool',
         },
         'match_type': {
             'type': 'bool',
         },
+        'server': {
+            'type': 'bool',
+        },
+        'service_group': {
+            'type': 'bool',
+        },
+        'scan_all_members': {
+            'type': 'bool',
+        },
+        'timeout': {
+            'type': 'int',
+        },
+        'netmask': {
+            'type': 'str',
+        },
+        'netmask6': {
+            'type': 'int',
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

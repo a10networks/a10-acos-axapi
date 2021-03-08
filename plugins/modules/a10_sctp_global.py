@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sctp_global
 description:
     - SCTP Statistics
-short_description: Configures A10 sctp.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -78,87 +89,109 @@ options:
           Size; 'bad-csum-shadow'= Bad Checksum Shadow; 'bad-payload-drop-shadow'= Bad
           Packet Payload Drop Shadow; 'bad-alignment-drop-shadow'= Bad Packet Alignment
           Drop Shadow;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            sctp_static_nat_session_deleted:
-                description:
-                - "SCTP Static NAT Session Deleted"
-            oos_pkt_drop:
-                description:
-                - "Out-of-state Packet Drop"
-            sctp_fw_session_deleted:
-                description:
-                - "SCTP Firewall Session Deleted"
             sctp_static_nat_session_created:
                 description:
                 - "SCTP Static NAT Session Created"
-            sby_session_update_fail:
+                type: str
+            sctp_static_nat_session_deleted:
                 description:
-                - "Standby Session Update Failed"
-            bad_csum:
-                description:
-                - "Bad Checksum"
-            max_multi_home_drop:
-                description:
-                - "Maximum Multi-homing IP Addresses Drop"
-            vrrp_standby_drop:
-                description:
-                - "NAT Resource VRRP-A Standby Drop"
-            sby_session_create_fail:
-                description:
-                - "Standby Session Create Failed"
-            disallowed_chunk_filtered:
-                description:
-                - "Disallowed Chunk Filtered"
-            sby_session_created:
-                description:
-                - "Standby Session Created"
-            rate_limit_drop:
-                description:
-                - "Rate-limit Drop"
-            sby_static_nat_cfg_not_found:
-                description:
-                - "Static NAT Config Not Found on Standby"
+                - "SCTP Static NAT Session Deleted"
+                type: str
             sctp_fw_session_created:
                 description:
                 - "SCTP Firewall Session Created"
-            bad_payload_drop:
+                type: str
+            sctp_fw_session_deleted:
                 description:
-                - "Bad Payload Drop"
+                - "SCTP Firewall Session Deleted"
+                type: str
             pkt_err_drop:
                 description:
                 - "Packet Error Drop"
-            invalid_frag_chunk_drop:
+                type: str
+            bad_csum:
                 description:
-                - "Invalid Fragmented Chunks Drop"
-            cfg_err_drop:
+                - "Bad Checksum"
+                type: str
+            bad_payload_drop:
                 description:
-                - "Configuration Error Drop"
+                - "Bad Payload Drop"
+                type: str
             bad_alignment_drop:
                 description:
                 - "Bad Alignment Drop"
-            static_nat_cfg_not_found:
+                type: str
+            oos_pkt_drop:
                 description:
-                - "Static NAT Config Not Found Drop"
-            multi_home_addr_not_found_drop:
+                - "Out-of-state Packet Drop"
+                type: str
+            max_multi_home_drop:
                 description:
-                - "Multi-homing IP Address Not Found Drop"
+                - "Maximum Multi-homing IP Addresses Drop"
+                type: str
             multi_home_remove_ip_skip:
                 description:
                 - "Multi-homing Remove IP Parameter Skip"
-            sby_session_updated:
+                type: str
+            multi_home_addr_not_found_drop:
                 description:
-                - "Standby Session Updated"
+                - "Multi-homing IP Address Not Found Drop"
+                type: str
+            static_nat_cfg_not_found:
+                description:
+                - "Static NAT Config Not Found Drop"
+                type: str
+            cfg_err_drop:
+                description:
+                - "Configuration Error Drop"
+                type: str
+            vrrp_standby_drop:
+                description:
+                - "NAT Resource VRRP-A Standby Drop"
+                type: str
+            invalid_frag_chunk_drop:
+                description:
+                - "Invalid Fragmented Chunks Drop"
+                type: str
+            disallowed_chunk_filtered:
+                description:
+                - "Disallowed Chunk Filtered"
+                type: str
             disallowed_pkt_drop:
                 description:
                 - "Disallowed Packet Drop"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            rate_limit_drop:
+                description:
+                - "Rate-limit Drop"
+                type: str
+            sby_session_created:
+                description:
+                - "Standby Session Created"
+                type: str
+            sby_session_create_fail:
+                description:
+                - "Standby Session Create Failed"
+                type: str
+            sby_session_updated:
+                description:
+                - "Standby Session Updated"
+                type: str
+            sby_session_update_fail:
+                description:
+                - "Standby Session Update Failed"
+                type: str
+            sby_static_nat_cfg_not_found:
+                description:
+                - "Static NAT Config Not Found on Standby"
+                type: str
 
 '''
 
@@ -213,6 +246,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -240,81 +276,78 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'sctp_static_nat_session_deleted': {
-                'type': 'str',
-            },
-            'oos_pkt_drop': {
-                'type': 'str',
-            },
-            'sctp_fw_session_deleted': {
-                'type': 'str',
-            },
             'sctp_static_nat_session_created': {
                 'type': 'str',
             },
-            'sby_session_update_fail': {
-                'type': 'str',
-            },
-            'bad_csum': {
-                'type': 'str',
-            },
-            'max_multi_home_drop': {
-                'type': 'str',
-            },
-            'vrrp_standby_drop': {
-                'type': 'str',
-            },
-            'sby_session_create_fail': {
-                'type': 'str',
-            },
-            'disallowed_chunk_filtered': {
-                'type': 'str',
-            },
-            'sby_session_created': {
-                'type': 'str',
-            },
-            'rate_limit_drop': {
-                'type': 'str',
-            },
-            'sby_static_nat_cfg_not_found': {
+            'sctp_static_nat_session_deleted': {
                 'type': 'str',
             },
             'sctp_fw_session_created': {
                 'type': 'str',
             },
-            'bad_payload_drop': {
+            'sctp_fw_session_deleted': {
                 'type': 'str',
             },
             'pkt_err_drop': {
                 'type': 'str',
             },
-            'invalid_frag_chunk_drop': {
+            'bad_csum': {
                 'type': 'str',
             },
-            'cfg_err_drop': {
+            'bad_payload_drop': {
                 'type': 'str',
             },
             'bad_alignment_drop': {
                 'type': 'str',
             },
-            'static_nat_cfg_not_found': {
+            'oos_pkt_drop': {
                 'type': 'str',
             },
-            'multi_home_addr_not_found_drop': {
+            'max_multi_home_drop': {
                 'type': 'str',
             },
             'multi_home_remove_ip_skip': {
                 'type': 'str',
             },
-            'sby_session_updated': {
+            'multi_home_addr_not_found_drop': {
+                'type': 'str',
+            },
+            'static_nat_cfg_not_found': {
+                'type': 'str',
+            },
+            'cfg_err_drop': {
+                'type': 'str',
+            },
+            'vrrp_standby_drop': {
+                'type': 'str',
+            },
+            'invalid_frag_chunk_drop': {
+                'type': 'str',
+            },
+            'disallowed_chunk_filtered': {
                 'type': 'str',
             },
             'disallowed_pkt_drop': {
                 'type': 'str',
+            },
+            'rate_limit_drop': {
+                'type': 'str',
+            },
+            'sby_session_created': {
+                'type': 'str',
+            },
+            'sby_session_create_fail': {
+                'type': 'str',
+            },
+            'sby_session_updated': {
+                'type': 'str',
+            },
+            'sby_session_update_fail': {
+                'type': 'str',
+            },
+            'sby_static_nat_cfg_not_found': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

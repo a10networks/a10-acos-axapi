@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_reporting_template_notification_template_name
 description:
     - Notification template configuration
-short_description: Configures A10 visibility.reporting.template.notification.template-name
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,148 +22,186 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            sent_successful:
-                description:
-                - "Sent successful"
-            send_fail:
-                description:
-                - "Send failures"
-            name:
-                description:
-                - "Notification template name"
-            response_fail:
-                description:
-                - "Response failures"
-    protocol:
-        description:
-        - "'http'= Use http protocol; 'https'= Use https protocol(default);  (http
-          protocol)"
+        type: str
         required: False
     name:
         description:
         - "Notification template name"
+        type: str
         required: True
+    ipv4_address:
+        description:
+        - "Configure the host IPv4 address"
+        type: str
+        required: False
+    ipv6_address:
+        description:
+        - "Configure the host IPv6 address"
+        type: str
+        required: False
+    host_name:
+        description:
+        - "Configure the host name(e.g www.a10networks.com)"
+        type: str
+        required: False
     use_mgmt_port:
         description:
         - "Use management port for notifications"
+        type: bool
+        required: False
+    protocol:
+        description:
+        - "'http'= Use http protocol; 'https'= Use https protocol(default);  (http
+          protocol)"
+        type: str
+        required: False
+    http_port:
+        description:
+        - "Configure the http port to use(default 80) (http port(default 80))"
+        type: int
         required: False
     https_port:
         description:
         - "Configure the https port to use(default 443) (http port(default 443))"
-        required: False
-    debug_mode:
-        description:
-        - "Enable debug mode"
+        type: int
         required: False
     relative_uri:
         description:
         - "Configure the relative uri(e.g /example , default /)"
+        type: str
         required: False
-    authentication:
+    action:
         description:
-        - "Field authentication"
+        - "'enable'= Enable; 'disable'= Disable;"
+        type: str
         required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-            relative_logoff_uri:
-                description:
-                - "Configure the authentication logoff uri"
-            api_key_encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-            api_key:
-                description:
-                - "Configure api-key as a mode of authentication"
-            auth_password_string:
-                description:
-                - "Configure the authentication user password (Authentication password)"
-            auth_password:
-                description:
-                - "Configure the authentication user password (Authentication password)"
-            api_key_string:
-                description:
-                - "Configure api-key as a mode of authentication"
-            relative_login_uri:
-                description:
-                - "Configure the authentication login uri"
-            auth_username:
-                description:
-                - "Configure the authentication user name"
-    host_name:
+    debug_mode:
         description:
-        - "Configure the host name(e.g www.a10networks.com)"
+        - "Enable debug mode"
+        type: bool
+        required: False
+    test_connectivity:
+        description:
+        - "Test connectivity to notification receiver"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'sent_successful'= Sent successful; 'send_fail'= Send failures;
           'response_fail'= Response failures;"
-    http_port:
+                type: str
+    authentication:
         description:
-        - "Configure the http port to use(default 80) (http port(default 80))"
+        - "Field authentication"
+        type: dict
         required: False
-    ipv6_address:
+        suboptions:
+            relative_login_uri:
+                description:
+                - "Configure the authentication login uri"
+                type: str
+            relative_logoff_uri:
+                description:
+                - "Configure the authentication logoff uri"
+                type: str
+            auth_username:
+                description:
+                - "Configure the authentication user name"
+                type: str
+            auth_password:
+                description:
+                - "Configure the authentication user password (Authentication password)"
+                type: bool
+            auth_password_string:
+                description:
+                - "Configure the authentication user password (Authentication password)"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+            api_key:
+                description:
+                - "Configure api-key as a mode of authentication"
+                type: bool
+            api_key_string:
+                description:
+                - "Configure api-key as a mode of authentication"
+                type: str
+            api_key_encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    stats:
         description:
-        - "Configure the host IPv6 address"
+        - "Field stats"
+        type: dict
         required: False
-    test_connectivity:
-        description:
-        - "Test connectivity to notification receiver"
-        required: False
-    ipv4_address:
-        description:
-        - "Configure the host IPv4 address"
-        required: False
-    action:
-        description:
-        - "'enable'= Enable; 'disable'= Disable;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            sent_successful:
+                description:
+                - "Sent successful"
+                type: str
+            send_fail:
+                description:
+                - "Send failures"
+                type: str
+            response_fail:
+                description:
+                - "Response failures"
+                type: str
+            name:
+                description:
+                - "Notification template name"
+                type: str
 
 '''
 
@@ -233,76 +269,46 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'stats': {
-            'type': 'dict',
-            'sent_successful': {
-                'type': 'str',
-            },
-            'send_fail': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'response_fail': {
-                'type': 'str',
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'ipv4_address': {
+            'type': 'str',
+        },
+        'ipv6_address': {
+            'type': 'str',
+        },
+        'host_name': {
+            'type': 'str',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
         },
         'protocol': {
             'type': 'str',
             'choices': ['http', 'https']
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
+        'http_port': {
+            'type': 'int',
         },
         'https_port': {
             'type': 'int',
         },
-        'debug_mode': {
-            'type': 'bool',
-        },
         'relative_uri': {
             'type': 'str',
         },
-        'authentication': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'encrypted': {
-                'type': 'str',
-            },
-            'relative_logoff_uri': {
-                'type': 'str',
-            },
-            'api_key_encrypted': {
-                'type': 'str',
-            },
-            'api_key': {
-                'type': 'bool',
-            },
-            'auth_password_string': {
-                'type': 'str',
-            },
-            'auth_password': {
-                'type': 'bool',
-            },
-            'api_key_string': {
-                'type': 'str',
-            },
-            'relative_login_uri': {
-                'type': 'str',
-            },
-            'auth_username': {
-                'type': 'str',
-            }
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
         },
-        'host_name': {
+        'debug_mode': {
+            'type': 'bool',
+        },
+        'test_connectivity': {
+            'type': 'bool',
+        },
+        'uuid': {
             'type': 'str',
         },
         'sampling_enable': {
@@ -313,24 +319,54 @@ def get_argspec():
                 ['all', 'sent_successful', 'send_fail', 'response_fail']
             }
         },
-        'http_port': {
-            'type': 'int',
+        'authentication': {
+            'type': 'dict',
+            'relative_login_uri': {
+                'type': 'str',
+            },
+            'relative_logoff_uri': {
+                'type': 'str',
+            },
+            'auth_username': {
+                'type': 'str',
+            },
+            'auth_password': {
+                'type': 'bool',
+            },
+            'auth_password_string': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            },
+            'api_key': {
+                'type': 'bool',
+            },
+            'api_key_string': {
+                'type': 'str',
+            },
+            'api_key_encrypted': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         },
-        'ipv6_address': {
-            'type': 'str',
-        },
-        'test_connectivity': {
-            'type': 'bool',
-        },
-        'ipv4_address': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'sent_successful': {
+                'type': 'str',
+            },
+            'send_fail': {
+                'type': 'str',
+            },
+            'response_fail': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

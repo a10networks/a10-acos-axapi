@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_translation
 description:
     - Change or Disable NAT translation values
-short_description: Configures A10 ip.nat.translation
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,81 +22,101 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    tcp_timeout:
-        description:
-        - "TCP protocol extended translations (Timeout in seconds (Interval of 60
-          seconds), default is 300 seconds (5 minutes))"
-        required: False
-    service_timeout_list:
-        description:
-        - "Field service_timeout_list"
-        required: False
-        suboptions:
-            timeout_val:
-                description:
-                - "Timeout in seconds (Interval of 60 seconds)"
-            uuid:
-                description:
-                - "uuid of the object"
-            service_type:
-                description:
-                - "'tcp'= TCP Protocol; 'udp'= UDP Protocol;"
-            timeout_type:
-                description:
-                - "'age'= Expiration time; 'fast'= Use Fast aging;"
-            port:
-                description:
-                - "Port Number"
-    ignore_tcp_msl:
-        description:
-        - "reclaim TCP resource immediately without MSL"
+        type: str
         required: False
     icmp_timeout:
         description:
         - "Field icmp_timeout"
+        type: dict
         required: False
         suboptions:
-            icmp_timeout_val:
-                description:
-                - "Timeout in seconds (Interval of 60 seconds)"
             icmp_timeout:
                 description:
                 - "'age'= Expiration time; 'fast'= Use Fast aging;"
+                type: str
+            icmp_timeout_val:
+                description:
+                - "Timeout in seconds (Interval of 60 seconds)"
+                type: int
+    tcp_timeout:
+        description:
+        - "TCP protocol extended translations (Timeout in seconds (Interval of 60
+          seconds), default is 300 seconds (5 minutes))"
+        type: int
+        required: False
     udp_timeout:
         description:
         - "UDP protocol extended translations (Timeout in seconds (Interval of 60
           seconds), default is 300 seconds (5 minutes))"
+        type: int
         required: False
+    ignore_tcp_msl:
+        description:
+        - "reclaim TCP resource immediately without MSL"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    service_timeout_list:
+        description:
+        - "Field service_timeout_list"
+        type: list
+        required: False
+        suboptions:
+            service_type:
+                description:
+                - "'tcp'= TCP Protocol; 'udp'= UDP Protocol;"
+                type: str
+            port:
+                description:
+                - "Port Number"
+                type: int
+            timeout_type:
+                description:
+                - "'age'= Expiration time; 'fast'= Use Fast aging;"
+                type: str
+            timeout_val:
+                description:
+                - "Timeout in seconds (Interval of 60 seconds)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -156,49 +174,49 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
+        'icmp_timeout': {
+            'type': 'dict',
+            'icmp_timeout': {
+                'type': 'str',
+                'choices': ['age', 'fast']
+            },
+            'icmp_timeout_val': {
+                'type': 'int',
+            }
         },
         'tcp_timeout': {
             'type': 'int',
         },
+        'udp_timeout': {
+            'type': 'int',
+        },
+        'ignore_tcp_msl': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'service_timeout_list': {
             'type': 'list',
-            'timeout_val': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
             'service_type': {
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
             },
+            'port': {
+                'type': 'int',
+                'required': True,
+            },
             'timeout_type': {
                 'type': 'str',
                 'choices': ['age', 'fast']
             },
-            'port': {
-                'type': 'int',
-                'required': True,
-            }
-        },
-        'ignore_tcp_msl': {
-            'type': 'bool',
-        },
-        'icmp_timeout': {
-            'type': 'dict',
-            'icmp_timeout_val': {
+            'timeout_val': {
                 'type': 'int',
             },
-            'icmp_timeout': {
+            'uuid': {
                 'type': 'str',
-                'choices': ['age', 'fast']
             }
-        },
-        'udp_timeout': {
-            'type': 'int',
         }
     })
     return rv

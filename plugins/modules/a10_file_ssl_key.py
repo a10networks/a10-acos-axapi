@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_ssl_key
 description:
     - ssl key file information and management commands
-short_description: Configures A10 file.ssl-key
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,78 +22,96 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            partition:
-                description:
-                - "Field partition"
-            file_list:
-                description:
-                - "Field file_list"
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    secured:
-        description:
-        - "Mark as non-exportable"
         required: False
     file:
         description:
         - "ssl key local file name"
+        type: str
+        required: False
+    size:
+        description:
+        - "ssl key file size in byte"
+        type: int
+        required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
+        type: str
+        required: False
+    secured:
+        description:
+        - "Mark as non-exportable"
+        type: bool
         required: False
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
           rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
         required: False
-    file_handle:
+    dst_file:
         description:
-        - "full path of the uploaded file"
+        - "destination file name for copy and rename action"
+        type: str
         required: False
-    size:
+    uuid:
         description:
-        - "ssl key file size in byte"
+        - "uuid of the object"
+        type: str
         required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            partition:
+                description:
+                - "Field partition"
+                type: str
+            file_list:
+                description:
+                - "Field file_list"
+                type: list
 
 '''
 
@@ -158,6 +174,32 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
+        'file': {
+            'type': 'str',
+        },
+        'size': {
+            'type': 'int',
+        },
+        'file_handle': {
+            'type': 'str',
+        },
+        'secured': {
+            'type': 'bool',
+        },
+        'action': {
+            'type':
+            'str',
+            'choices': [
+                'create', 'import', 'export', 'copy', 'rename', 'check',
+                'replace', 'delete'
+            ]
+        },
+        'dst_file': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'partition': {
@@ -169,32 +211,6 @@ def get_argspec():
                     'type': 'str',
                 }
             }
-        },
-        'dst_file': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'secured': {
-            'type': 'bool',
-        },
-        'file': {
-            'type': 'str',
-        },
-        'action': {
-            'type':
-            'str',
-            'choices': [
-                'create', 'import', 'export', 'copy', 'rename', 'check',
-                'replace', 'delete'
-            ]
-        },
-        'file_handle': {
-            'type': 'str',
-        },
-        'size': {
-            'type': 'int',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_server_port
 description:
     - Real Server Port
-short_description: Configures A10 fw.server.port
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     server_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            vrid:
-                description:
-                - "Field vrid"
-            ha_group_id:
-                description:
-                - "Field ha_group_id"
-            alloc_failed:
-                description:
-                - "Field alloc_failed"
-            ports_consumed:
-                description:
-                - "Field ports_consumed"
-            protocol:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            ipv6:
-                description:
-                - "Field ipv6"
-            state:
-                description:
-                - "Field state"
-            port_number:
-                description:
-                - "Port Number"
-            ip:
-                description:
-                - "Field ip"
-            ports_freed_total:
-                description:
-                - "Field ports_freed_total"
-            ports_consumed_total:
-                description:
-                - "Field ports_consumed_total"
-    health_check_disable:
-        description:
-        - "Disable health check"
-        required: False
+        - "Port Number"
+        type: int
+        required: True
     protocol:
         description:
         - "'tcp'= TCP Port; 'udp'= UDP Port;"
+        type: str
         required: True
+    action:
+        description:
+        - "'enable'= enable; 'disable'= disable;"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check (Monitor Name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable health check"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -127,101 +117,167 @@ options:
           Total reverse packets with good status code inspected; 'response_time'=
           Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'=
           Slowest response time;"
-    port_number:
+                type: str
+    oper:
         description:
-        - "Port Number"
-        required: True
-    action:
-        description:
-        - "'enable'= enable; 'disable'= disable;"
-        required: False
-    stats:
-        description:
-        - "Field stats"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            es_resp_invalid_http:
+            state:
                 description:
-                - "Total non-http response"
-            curr_req:
+                - "Field state"
+                type: str
+            ip:
                 description:
-                - "Current requests"
-            protocol:
+                - "Field ip"
+                type: str
+            ipv6:
                 description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            total_rev_pkts_inspected_good_status_code:
+                - "Field ipv6"
+                type: str
+            vrid:
                 description:
-                - "Total reverse packets with good status code inspected"
-            es_resp_count:
+                - "Field vrid"
+                type: int
+            ha_group_id:
                 description:
-                - "Total proxy Response"
-            total_fwd_bytes:
+                - "Field ha_group_id"
+                type: int
+            ports_consumed:
                 description:
-                - "Forward bytes"
-            es_resp_other:
+                - "Field ports_consumed"
+                type: int
+            ports_consumed_total:
                 description:
-                - "Response status other"
-            fastest_rsp_time:
+                - "Field ports_consumed_total"
+                type: int
+            ports_freed_total:
                 description:
-                - "Fastest response time"
-            total_fwd_pkts:
+                - "Field ports_freed_total"
+                type: int
+            alloc_failed:
                 description:
-                - "Forward packets"
-            es_req_count:
-                description:
-                - "Total proxy request"
-            es_resp_500:
-                description:
-                - "Response status 500"
-            peak_conn:
-                description:
-                - "Peak connections"
-            total_req:
-                description:
-                - "Total requests"
-            es_resp_400:
-                description:
-                - "Response status 400"
-            es_resp_300:
-                description:
-                - "Response status 300"
-            curr_conn:
-                description:
-                - "Current connections"
+                - "Field alloc_failed"
+                type: int
             port_number:
                 description:
                 - "Port Number"
-            es_resp_200:
+                type: int
+            protocol:
                 description:
-                - "Response status 200"
-            total_rev_bytes:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            curr_conn:
                 description:
-                - "Reverse bytes"
-            response_time:
+                - "Current connections"
+                type: str
+            curr_req:
                 description:
-                - "Response time"
-            total_conn:
+                - "Current requests"
+                type: str
+            total_req:
                 description:
-                - "Total connections"
-            total_rev_pkts:
-                description:
-                - "Reverse packets"
+                - "Total requests"
+                type: str
             total_req_succ:
                 description:
                 - "Total request success"
+                type: str
+            total_fwd_bytes:
+                description:
+                - "Forward bytes"
+                type: str
+            total_fwd_pkts:
+                description:
+                - "Forward packets"
+                type: str
+            total_rev_bytes:
+                description:
+                - "Reverse bytes"
+                type: str
+            total_rev_pkts:
+                description:
+                - "Reverse packets"
+                type: str
+            total_conn:
+                description:
+                - "Total connections"
+                type: str
             last_total_conn:
                 description:
                 - "Last total connections"
+                type: str
+            peak_conn:
+                description:
+                - "Peak connections"
+                type: str
+            es_resp_200:
+                description:
+                - "Response status 200"
+                type: str
+            es_resp_300:
+                description:
+                - "Response status 300"
+                type: str
+            es_resp_400:
+                description:
+                - "Response status 400"
+                type: str
+            es_resp_500:
+                description:
+                - "Response status 500"
+                type: str
+            es_resp_other:
+                description:
+                - "Response status other"
+                type: str
+            es_req_count:
+                description:
+                - "Total proxy request"
+                type: str
+            es_resp_count:
+                description:
+                - "Total proxy Response"
+                type: str
+            es_resp_invalid_http:
+                description:
+                - "Total non-http response"
+                type: str
             total_rev_pkts_inspected:
                 description:
                 - "Total reverse packets inspected"
+                type: str
+            total_rev_pkts_inspected_good_status_code:
+                description:
+                - "Total reverse packets with good status code inspected"
+                type: str
+            response_time:
+                description:
+                - "Response time"
+                type: str
+            fastest_rsp_time:
+                description:
+                - "Fastest response time"
+                type: str
             slowest_rsp_time:
                 description:
                 - "Slowest response time"
-    health_check:
-        description:
-        - "Health Check (Monitor Name)"
-        required: False
+                type: str
+            port_number:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
 
 '''
 
@@ -283,53 +339,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'vrid': {
-                'type': 'int',
-            },
-            'ha_group_id': {
-                'type': 'int',
-            },
-            'alloc_failed': {
-                'type': 'int',
-            },
-            'ports_consumed': {
-                'type': 'int',
-            },
-            'protocol': {
-                'type': 'str',
-                'required': True,
-                'choices': ['tcp', 'udp']
-            },
-            'ipv6': {
-                'type': 'str',
-            },
-            'state': {
-                'type': 'str',
-                'choices': ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
-            },
-            'port_number': {
-                'type': 'int',
-                'required': True,
-            },
-            'ip': {
-                'type': 'str',
-            },
-            'ports_freed_total': {
-                'type': 'int',
-            },
-            'ports_consumed_total': {
-                'type': 'int',
-            }
-        },
-        'health_check_disable': {
-            'type': 'bool',
+        'port_number': {
+            'type': 'int',
+            'required': True,
         },
         'protocol': {
             'type': 'str',
             'required': True,
             'choices': ['tcp', 'udp']
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'health_check_disable': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',
@@ -355,100 +382,129 @@ def get_argspec():
                 ]
             }
         },
-        'port_number': {
-            'type': 'int',
-            'required': True,
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'stats': {
+        'oper': {
             'type': 'dict',
-            'es_resp_invalid_http': {
+            'state': {
+                'type': 'str',
+                'choices': ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
+            },
+            'ip': {
                 'type': 'str',
             },
-            'curr_req': {
+            'ipv6': {
                 'type': 'str',
+            },
+            'vrid': {
+                'type': 'int',
+            },
+            'ha_group_id': {
+                'type': 'int',
+            },
+            'ports_consumed': {
+                'type': 'int',
+            },
+            'ports_consumed_total': {
+                'type': 'int',
+            },
+            'ports_freed_total': {
+                'type': 'int',
+            },
+            'alloc_failed': {
+                'type': 'int',
+            },
+            'port_number': {
+                'type': 'int',
+                'required': True,
             },
             'protocol': {
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
-            },
-            'total_rev_pkts_inspected_good_status_code': {
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'curr_conn': {
                 'type': 'str',
             },
-            'es_resp_count': {
-                'type': 'str',
-            },
-            'total_fwd_bytes': {
-                'type': 'str',
-            },
-            'es_resp_other': {
-                'type': 'str',
-            },
-            'fastest_rsp_time': {
-                'type': 'str',
-            },
-            'total_fwd_pkts': {
-                'type': 'str',
-            },
-            'es_req_count': {
-                'type': 'str',
-            },
-            'es_resp_500': {
-                'type': 'str',
-            },
-            'peak_conn': {
+            'curr_req': {
                 'type': 'str',
             },
             'total_req': {
                 'type': 'str',
             },
-            'es_resp_400': {
+            'total_req_succ': {
+                'type': 'str',
+            },
+            'total_fwd_bytes': {
+                'type': 'str',
+            },
+            'total_fwd_pkts': {
+                'type': 'str',
+            },
+            'total_rev_bytes': {
+                'type': 'str',
+            },
+            'total_rev_pkts': {
+                'type': 'str',
+            },
+            'total_conn': {
+                'type': 'str',
+            },
+            'last_total_conn': {
+                'type': 'str',
+            },
+            'peak_conn': {
+                'type': 'str',
+            },
+            'es_resp_200': {
                 'type': 'str',
             },
             'es_resp_300': {
                 'type': 'str',
             },
-            'curr_conn': {
+            'es_resp_400': {
+                'type': 'str',
+            },
+            'es_resp_500': {
+                'type': 'str',
+            },
+            'es_resp_other': {
+                'type': 'str',
+            },
+            'es_req_count': {
+                'type': 'str',
+            },
+            'es_resp_count': {
+                'type': 'str',
+            },
+            'es_resp_invalid_http': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected_good_status_code': {
+                'type': 'str',
+            },
+            'response_time': {
+                'type': 'str',
+            },
+            'fastest_rsp_time': {
+                'type': 'str',
+            },
+            'slowest_rsp_time': {
                 'type': 'str',
             },
             'port_number': {
                 'type': 'int',
                 'required': True,
             },
-            'es_resp_200': {
+            'protocol': {
                 'type': 'str',
-            },
-            'total_rev_bytes': {
-                'type': 'str',
-            },
-            'response_time': {
-                'type': 'str',
-            },
-            'total_conn': {
-                'type': 'str',
-            },
-            'total_rev_pkts': {
-                'type': 'str',
-            },
-            'total_req_succ': {
-                'type': 'str',
-            },
-            'last_total_conn': {
-                'type': 'str',
-            },
-            'total_rev_pkts_inspected': {
-                'type': 'str',
-            },
-            'slowest_rsp_time': {
-                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp']
             }
-        },
-        'health_check': {
-            'type': 'str',
         }
     })
     # Parent keys

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_group
 description:
     - Define a User Security Model group
-short_description: Configures A10 snmp-server.group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,60 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    read:
-        description:
-        - "specify a read view for the group (read view name)"
+        type: str
         required: False
     groupname:
         description:
         - "Name of the group"
+        type: str
         required: True
     v3:
         description:
         - "'auth'= group using the authNoPriv Security Level; 'noauth'= group using the
           noAuthNoPriv Security Level; 'priv'= group using SNMPv3 authPriv security
           level;"
+        type: str
+        required: False
+    read:
+        description:
+        - "specify a read view for the group (read view name)"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -123,9 +132,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'read': {
-            'type': 'str',
-        },
         'groupname': {
             'type': 'str',
             'required': True,
@@ -133,6 +139,9 @@ def get_argspec():
         'v3': {
             'type': 'str',
             'choices': ['auth', 'noauth', 'priv']
+        },
+        'read': {
+            'type': 'str',
         },
         'uuid': {
             'type': 'str',

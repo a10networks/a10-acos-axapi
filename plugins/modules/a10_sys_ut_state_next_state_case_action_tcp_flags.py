@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_state_next_state_case_action_tcp_flags
 description:
     - TCP flags
-short_description: Configures A10 sys.ut.state.next.state.case.action.tcp.flags
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,103 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     action_direction:
         description:
-        - Key to identify parent object    case_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    case_number:
         description:
-        - Key to identify parent object    name:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
         description:
-        - Key to identify parent object    state_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    state_name:
         description:
-        - Key to identify parent object    ece:
+        - Key to identify parent object
+        type: str
+        required: True
+    syn:
         description:
-        - "Ece"
-        required: False
-    urg:
-        description:
-        - "Urg"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        - "Syn"
+        type: bool
         required: False
     ack:
         description:
         - "Ack"
-        required: False
-    cwr:
-        description:
-        - "Cwr"
-        required: False
-    psh:
-        description:
-        - "Psh"
-        required: False
-    syn:
-        description:
-        - "Syn"
-        required: False
-    rst:
-        description:
-        - "Rst"
+        type: bool
         required: False
     fin:
         description:
         - "Fin"
+        type: bool
+        required: False
+    rst:
+        description:
+        - "Rst"
+        type: bool
+        required: False
+    psh:
+        description:
+        - "Psh"
+        type: bool
+        required: False
+    ece:
+        description:
+        - "Ece"
+        type: bool
+        required: False
+    urg:
+        description:
+        - "Urg"
+        type: bool
+        required: False
+    cwr:
+        description:
+        - "Cwr"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -154,32 +180,32 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'syn': {
+            'type': 'bool',
+        },
+        'ack': {
+            'type': 'bool',
+        },
+        'fin': {
+            'type': 'bool',
+        },
+        'rst': {
+            'type': 'bool',
+        },
+        'psh': {
+            'type': 'bool',
+        },
         'ece': {
             'type': 'bool',
         },
         'urg': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'ack': {
-            'type': 'bool',
-        },
         'cwr': {
             'type': 'bool',
         },
-        'psh': {
-            'type': 'bool',
-        },
-        'syn': {
-            'type': 'bool',
-        },
-        'rst': {
-            'type': 'bool',
-        },
-        'fin': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

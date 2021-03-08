@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service
 description:
     - Service information for the GSLB zone
-short_description: Configures A10 gslb.zone.service
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,329 +22,105 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     zone_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_port:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            cache_list:
-                description:
-                - "Field cache_list"
-            dns_ns_record_list:
-                description:
-                - "Field dns_ns_record_list"
-            total_sessions:
-                description:
-                - "Field total_sessions"
-            service_port:
-                description:
-                - "Port number of the service"
-            dns_mx_record_list:
-                description:
-                - "Field dns_mx_record_list"
-            state:
-                description:
-                - "Field state"
-            session_list:
-                description:
-                - "Field session_list"
-            service_name:
-                description:
-                - "Specify the service name for the zone, * for wildcard"
-            matched:
-                description:
-                - "Field matched"
-    dns_ptr_record_list:
+        - "Port number of the service"
+        type: int
+        required: True
+    service_name:
         description:
-        - "Field dns_ptr_record_list"
+        - "Specify the service name for the zone, * for wildcard"
+        type: str
+        required: True
+    action:
+        description:
+        - "'drop'= Drop query; 'forward'= Forward packet; 'ignore'= Send empty response;
+          'reject'= Send refuse response;"
+        type: str
         required: False
-        suboptions:
-            ptr_name:
-                description:
-                - "Specify Domain Name"
-            ttl:
-                description:
-                - "Specify TTL"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
+    forward_type:
+        description:
+        - "'both'= Forward both query and response; 'query'= Forward query; 'response'=
+          Forward response;"
+        type: str
+        required: False
+    disable:
+        description:
+        - "Disable"
+        type: bool
+        required: False
+    health_check_gateway:
+        description:
+        - "'enable'= Enable Gateway Status Check; 'disable'= Disable Gateway Status Check;"
+        type: str
+        required: False
     health_check_port:
         description:
         - "Field health_check_port"
+        type: list
         required: False
         suboptions:
             health_check_port:
                 description:
                 - "Check Related Port Status (Port Number)"
-    service_port:
+                type: int
+    policy:
         description:
-        - "Port number of the service"
-        required: True
-    dns_record_list:
-        description:
-        - "Field dns_record_list"
-        required: False
-        suboptions:
-            ntype:
-                description:
-                - "Specify DNS Type"
-            data:
-                description:
-                - "Specify DNS Data"
-            uuid:
-                description:
-                - "uuid of the object"
-    geo_location_list:
-        description:
-        - "Field geo_location_list"
-        required: False
-        suboptions:
-            action_type:
-                description:
-                - "'allow'= Allow query from this geo-location; 'drop'= Drop query from this geo-
-          location; 'forward'= Forward packet for this geo-location; 'ignore'= Send empty
-          response to this geo-location; 'reject'= Send refuse response to this geo-
-          location;"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
-            alias:
-                description:
-                - "Field alias"
-            geo_name:
-                description:
-                - "Specify the geo-location"
-            policy:
-                description:
-                - "Policy for this geo-location (Specify the policy name)"
-            forward_type:
-                description:
-                - "'both'= Forward both query and response; 'query'= Forward query from this geo-
-          location; 'response'= Forward response to this geo-location;"
-            action:
-                description:
-                - "Action for this geo-location"
-    action:
-        description:
-        - "'drop'= Drop query; 'forward'= Forward packet; 'ignore'= Send empty response;
-          'reject'= Send refuse response;"
-        required: False
-    disable:
-        description:
-        - "Disable"
-        required: False
-    service_name:
-        description:
-        - "Specify the service name for the zone, * for wildcard"
-        required: True
-    health_check_gateway:
-        description:
-        - "'enable'= Enable Gateway Status Check; 'disable'= Disable Gateway Status Check;"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            dns_a_record:
-                description:
-                - "Field dns_a_record"
-            received_query:
-                description:
-                - "Number of DNS queries received for the service"
-            dns_cname_record_list:
-                description:
-                - "Field dns_cname_record_list"
-            dns_ns_record_list:
-                description:
-                - "Field dns_ns_record_list"
-            dns_txt_record_list:
-                description:
-                - "Field dns_txt_record_list"
-            sent_response:
-                description:
-                - "Number of DNS replies sent to clients for the service"
-            dns_mx_record_list:
-                description:
-                - "Field dns_mx_record_list"
-            sticky_mode_response:
-                description:
-                - "Number of DNS replies sent to clients by the ACOS device to keep the clients on
-          the same site. (This statistic applies only if"
-            server_mode_response:
-                description:
-                - "Number of DNS replies sent to clients by the ACOS device as a DNS server for
-          the service. (This statistic applies only if the D"
-            cache_mode_response:
-                description:
-                - "Number of cached DNS replies sent to clients by the ACOS device for the
-          service. (This statistic applies only if the DNS cache"
-            service_port:
-                description:
-                - "Port number of the service"
-            dns_srv_record_list:
-                description:
-                - "Field dns_srv_record_list"
-            service_name:
-                description:
-                - "Specify the service name for the zone, * for wildcard"
-            dns_ptr_record_list:
-                description:
-                - "Field dns_ptr_record_list"
-            backup_mode_response:
-                description:
-                - "help Number of DNS replies sent to clients by the ACOS device in backup mode"
-            dns_naptr_record_list:
-                description:
-                - "Field dns_naptr_record_list"
-            proxy_mode_response:
-                description:
-                - "Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the
-          service"
-    dns_cname_record_list:
-        description:
-        - "Field dns_cname_record_list"
-        required: False
-        suboptions:
-            alias_name:
-                description:
-                - "Specify the alias name"
-            uuid:
-                description:
-                - "uuid of the object"
-            as_backup:
-                description:
-                - "As backup when fail"
-            weight:
-                description:
-                - "Specify Weight, default is 1"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            admin_preference:
-                description:
-                - "Specify Administrative Preference, default is 100"
-    dns_a_record:
-        description:
-        - "Field dns_a_record"
-        required: False
-        suboptions:
-            dns_a_record_ipv6_list:
-                description:
-                - "Field dns_a_record_ipv6_list"
-            dns_a_record_ipv4_list:
-                description:
-                - "Field dns_a_record_ipv4_list"
-            dns_a_record_srv_list:
-                description:
-                - "Field dns_a_record_srv_list"
-    forward_type:
-        description:
-        - "'both'= Forward both query and response; 'query'= Forward query; 'response'=
-          Forward response;"
+        - "Specify policy for this service (Specify policy name)"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    dns_ns_record_list:
-        description:
-        - "Field dns_ns_record_list"
-        required: False
-        suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            ns_name:
-                description:
-                - "Specify Domain Name"
-            uuid:
-                description:
-                - "uuid of the object"
-            ttl:
-                description:
-                - "Specify TTL"
-    dns_txt_record_list:
-        description:
-        - "Field dns_txt_record_list"
-        required: False
-        suboptions:
-            record_name:
-                description:
-                - "Specify the Object Name for TXT Data"
-            ttl:
-                description:
-                - "Specify TTL"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-            txt_data:
-                description:
-                - "Specify TXT Data"
-    dns_mx_record_list:
-        description:
-        - "Field dns_mx_record_list"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "Specify Priority"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-            mx_name:
-                description:
-                - "Specify Domain Name"
-            ttl:
-                description:
-                - "Specify TTL"
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -362,68 +136,407 @@ options:
           clients by the ACOS device to keep the clients on the same site. (This
           statistic applies only if; 'backup-mode-response'= help Number of DNS replies
           sent to clients by the ACOS device in backup mode;"
+                type: str
+    dns_a_record:
+        description:
+        - "Field dns_a_record"
+        type: dict
+        required: False
+        suboptions:
+            dns_a_record_srv_list:
+                description:
+                - "Field dns_a_record_srv_list"
+                type: list
+            dns_a_record_ipv4_list:
+                description:
+                - "Field dns_a_record_ipv4_list"
+                type: list
+            dns_a_record_ipv6_list:
+                description:
+                - "Field dns_a_record_ipv6_list"
+                type: list
+    dns_cname_record_list:
+        description:
+        - "Field dns_cname_record_list"
+        type: list
+        required: False
+        suboptions:
+            alias_name:
+                description:
+                - "Specify the alias name"
+                type: str
+            admin_preference:
+                description:
+                - "Specify Administrative Preference, default is 100"
+                type: int
+            weight:
+                description:
+                - "Specify Weight, default is 1"
+                type: int
+            as_backup:
+                description:
+                - "As backup when fail"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dns_mx_record_list:
+        description:
+        - "Field dns_mx_record_list"
+        type: list
+        required: False
+        suboptions:
+            mx_name:
+                description:
+                - "Specify Domain Name"
+                type: str
+            priority:
+                description:
+                - "Specify Priority"
+                type: int
+            ttl:
+                description:
+                - "Specify TTL"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dns_ns_record_list:
+        description:
+        - "Field dns_ns_record_list"
+        type: list
+        required: False
+        suboptions:
+            ns_name:
+                description:
+                - "Specify Domain Name"
+                type: str
+            ttl:
+                description:
+                - "Specify TTL"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dns_ptr_record_list:
+        description:
+        - "Field dns_ptr_record_list"
+        type: list
+        required: False
+        suboptions:
+            ptr_name:
+                description:
+                - "Specify Domain Name"
+                type: str
+            ttl:
+                description:
+                - "Specify TTL"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     dns_srv_record_list:
         description:
         - "Field dns_srv_record_list"
+        type: list
         required: False
         suboptions:
             srv_name:
                 description:
                 - "Specify Domain Name"
-            uuid:
-                description:
-                - "uuid of the object"
-            weight:
-                description:
-                - "Specify Weight, default is 10"
-            priority:
-                description:
-                - "Specify Priority"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            ttl:
-                description:
-                - "Specify TTL"
+                type: str
             port:
                 description:
                 - "Specify Port (Port Number)"
-    policy:
-        description:
-        - "Specify policy for this service (Specify policy name)"
-        required: False
-    dns_naptr_record_list:
-        description:
-        - "Field dns_naptr_record_list"
-        required: False
-        suboptions:
-            sampling_enable:
+                type: int
+            priority:
                 description:
-                - "Field sampling_enable"
-            naptr_target:
+                - "Specify Priority"
+                type: int
+            weight:
                 description:
-                - "Specify the replacement or regular expression"
-            service_proto:
-                description:
-                - "Specify Service and Protocol"
-            flag:
-                description:
-                - "Specify the flag (e.g., a, s). Default is empty flag"
-            preference:
-                description:
-                - "Specify Preference"
+                - "Specify Weight, default is 10"
+                type: int
             ttl:
                 description:
                 - "Specify TTL"
-            regexp:
-                description:
-                - "Return the regular expression"
-            order:
-                description:
-                - "Specify Order"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dns_naptr_record_list:
+        description:
+        - "Field dns_naptr_record_list"
+        type: list
+        required: False
+        suboptions:
+            naptr_target:
+                description:
+                - "Specify the replacement or regular expression"
+                type: str
+            service_proto:
+                description:
+                - "Specify Service and Protocol"
+                type: str
+            flag:
+                description:
+                - "Specify the flag (e.g., a, s). Default is empty flag"
+                type: str
+            order:
+                description:
+                - "Specify Order"
+                type: int
+            preference:
+                description:
+                - "Specify Preference"
+                type: int
+            regexp:
+                description:
+                - "Return the regular expression"
+                type: bool
+            ttl:
+                description:
+                - "Specify TTL"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dns_txt_record_list:
+        description:
+        - "Field dns_txt_record_list"
+        type: list
+        required: False
+        suboptions:
+            record_name:
+                description:
+                - "Specify the Object Name for TXT Data"
+                type: str
+            txt_data:
+                description:
+                - "Specify TXT Data"
+                type: str
+            ttl:
+                description:
+                - "Specify TTL"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dns_record_list:
+        description:
+        - "Field dns_record_list"
+        type: list
+        required: False
+        suboptions:
+            ntype:
+                description:
+                - "Specify DNS Type"
+                type: int
+            data:
+                description:
+                - "Specify DNS Data"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    geo_location_list:
+        description:
+        - "Field geo_location_list"
+        type: list
+        required: False
+        suboptions:
+            geo_name:
+                description:
+                - "Specify the geo-location"
+                type: str
+            alias:
+                description:
+                - "Field alias"
+                type: list
+            action:
+                description:
+                - "Action for this geo-location"
+                type: bool
+            action_type:
+                description:
+                - "'allow'= Allow query from this geo-location; 'drop'= Drop query from this geo-
+          location; 'forward'= Forward packet for this geo-location; 'ignore'= Send empty
+          response to this geo-location; 'reject'= Send refuse response to this geo-
+          location;"
+                type: str
+            forward_type:
+                description:
+                - "'both'= Forward both query and response; 'query'= Forward query from this geo-
+          location; 'response'= Forward response to this geo-location;"
+                type: str
+            policy:
+                description:
+                - "Policy for this geo-location (Specify the policy name)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            state:
+                description:
+                - "Field state"
+                type: str
+            cache_list:
+                description:
+                - "Field cache_list"
+                type: list
+            session_list:
+                description:
+                - "Field session_list"
+                type: list
+            matched:
+                description:
+                - "Field matched"
+                type: int
+            total_sessions:
+                description:
+                - "Field total_sessions"
+                type: int
+            service_port:
+                description:
+                - "Port number of the service"
+                type: int
+            service_name:
+                description:
+                - "Specify the service name for the zone, * for wildcard"
+                type: str
+            dns_mx_record_list:
+                description:
+                - "Field dns_mx_record_list"
+                type: list
+            dns_ns_record_list:
+                description:
+                - "Field dns_ns_record_list"
+                type: list
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            received_query:
+                description:
+                - "Number of DNS queries received for the service"
+                type: str
+            sent_response:
+                description:
+                - "Number of DNS replies sent to clients for the service"
+                type: str
+            proxy_mode_response:
+                description:
+                - "Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the
+          service"
+                type: str
+            cache_mode_response:
+                description:
+                - "Number of cached DNS replies sent to clients by the ACOS device for the
+          service. (This statistic applies only if the DNS cache"
+                type: str
+            server_mode_response:
+                description:
+                - "Number of DNS replies sent to clients by the ACOS device as a DNS server for
+          the service. (This statistic applies only if the D"
+                type: str
+            sticky_mode_response:
+                description:
+                - "Number of DNS replies sent to clients by the ACOS device to keep the clients on
+          the same site. (This statistic applies only if"
+                type: str
+            backup_mode_response:
+                description:
+                - "help Number of DNS replies sent to clients by the ACOS device in backup mode"
+                type: str
+            service_port:
+                description:
+                - "Port number of the service"
+                type: int
+            service_name:
+                description:
+                - "Specify the service name for the zone, * for wildcard"
+                type: str
+            dns_a_record:
+                description:
+                - "Field dns_a_record"
+                type: dict
+            dns_cname_record_list:
+                description:
+                - "Field dns_cname_record_list"
+                type: list
+            dns_mx_record_list:
+                description:
+                - "Field dns_mx_record_list"
+                type: list
+            dns_ns_record_list:
+                description:
+                - "Field dns_ns_record_list"
+                type: list
+            dns_ptr_record_list:
+                description:
+                - "Field dns_ptr_record_list"
+                type: list
+            dns_srv_record_list:
+                description:
+                - "Field dns_srv_record_list"
+                type: list
+            dns_naptr_record_list:
+                description:
+                - "Field dns_naptr_record_list"
+                type: list
+            dns_txt_record_list:
+                description:
+                - "Field dns_txt_record_list"
+                type: list
 
 '''
 
@@ -498,125 +611,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'cache_list': {
-                'type': 'list',
-                'cache_ttl': {
-                    'type': 'int',
-                },
-                'additional_records': {
-                    'type': 'int',
-                },
-                'answer_records': {
-                    'type': 'int',
-                },
-                'cache_dns_flag': {
-                    'type': 'str',
-                },
-                'question_records': {
-                    'type': 'int',
-                },
-                'alias': {
-                    'type': 'str',
-                },
-                'cache_length': {
-                    'type': 'int',
-                },
-                'authority_records': {
-                    'type': 'int',
-                }
-            },
-            'dns_ns_record_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'last_server': {
-                        'type': 'str',
-                    }
-                },
-                'ns_name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'total_sessions': {
-                'type': 'int',
-            },
-            'service_port': {
-                'type': 'int',
-                'required': True,
-            },
-            'dns_mx_record_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'last_server': {
-                        'type': 'str',
-                    }
-                },
-                'mx_name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'state': {
-                'type': 'str',
-            },
-            'session_list': {
-                'type': 'list',
-                'aging': {
-                    'type': 'int',
-                },
-                'hits': {
-                    'type': 'int',
-                },
-                'update': {
-                    'type': 'int',
-                },
-                'client': {
-                    'type': 'str',
-                },
-                'last_second_hits': {
-                    'type': 'int',
-                },
-                'mode': {
-                    'type': 'str',
-                },
-                'ttl': {
-                    'type': 'str',
-                },
-                'best': {
-                    'type': 'str',
-                }
-            },
-            'service_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'matched': {
-                'type': 'int',
-            }
+        'service_port': {
+            'type': 'int',
+            'required': True,
         },
-        'dns_ptr_record_list': {
-            'type': 'list',
-            'ptr_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type': 'str',
-                    'choices': ['all', 'hits']
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
+        'service_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['drop', 'forward', 'ignore', 'reject']
+        },
+        'forward_type': {
+            'type': 'str',
+            'choices': ['both', 'query', 'response']
+        },
+        'disable': {
+            'type': 'bool',
+        },
+        'health_check_gateway': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
         },
         'health_check_port': {
             'type': 'list',
@@ -624,433 +640,11 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'service_port': {
-            'type': 'int',
-            'required': True,
-        },
-        'dns_record_list': {
-            'type': 'list',
-            'ntype': {
-                'type': 'int',
-                'required': True,
-            },
-            'data': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'geo_location_list': {
-            'type': 'list',
-            'action_type': {
-                'type': 'str',
-                'choices': ['allow', 'drop', 'forward', 'ignore', 'reject']
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'alias': {
-                'type': 'list',
-                'alias': {
-                    'type': 'str',
-                }
-            },
-            'geo_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'policy': {
-                'type': 'str',
-            },
-            'forward_type': {
-                'type': 'str',
-                'choices': ['both', 'query', 'response']
-            },
-            'action': {
-                'type': 'bool',
-            }
-        },
-        'action': {
+        'policy': {
             'type': 'str',
-            'choices': ['drop', 'forward', 'ignore', 'reject']
-        },
-        'disable': {
-            'type': 'bool',
-        },
-        'service_name': {
-            'type': 'str',
-            'required': True,
-        },
-        'health_check_gateway': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'stats': {
-            'type': 'dict',
-            'dns_a_record': {
-                'type': 'dict',
-            },
-            'received_query': {
-                'type': 'str',
-            },
-            'dns_cname_record_list': {
-                'type': 'list',
-                'alias_name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'cname_hits': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'dns_ns_record_list': {
-                'type': 'list',
-                'ns_name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'hits': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'dns_txt_record_list': {
-                'type': 'list',
-                'record_name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'hits': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'sent_response': {
-                'type': 'str',
-            },
-            'dns_mx_record_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'hits': {
-                        'type': 'str',
-                    }
-                },
-                'mx_name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'sticky_mode_response': {
-                'type': 'str',
-            },
-            'server_mode_response': {
-                'type': 'str',
-            },
-            'cache_mode_response': {
-                'type': 'str',
-            },
-            'service_port': {
-                'type': 'int',
-                'required': True,
-            },
-            'dns_srv_record_list': {
-                'type': 'list',
-                'srv_name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'hits': {
-                        'type': 'str',
-                    }
-                },
-                'port': {
-                    'type': 'int',
-                    'required': True,
-                }
-            },
-            'service_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'dns_ptr_record_list': {
-                'type': 'list',
-                'ptr_name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'hits': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'backup_mode_response': {
-                'type': 'str',
-            },
-            'dns_naptr_record_list': {
-                'type': 'list',
-                'flag': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'naptr_hits': {
-                        'type': 'str',
-                    }
-                },
-                'service_proto': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'naptr_target': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'proxy_mode_response': {
-                'type': 'str',
-            }
-        },
-        'dns_cname_record_list': {
-            'type': 'list',
-            'alias_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'as_backup': {
-                'type': 'bool',
-            },
-            'weight': {
-                'type': 'int',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type': 'str',
-                    'choices': ['all', 'cname-hits']
-                }
-            },
-            'admin_preference': {
-                'type': 'int',
-            }
-        },
-        'dns_a_record': {
-            'type': 'dict',
-            'dns_a_record_ipv6_list': {
-                'type': 'list',
-                'as_replace': {
-                    'type': 'bool',
-                },
-                'dns_a_record_ipv6': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'as_backup': {
-                    'type': 'bool',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
-                },
-                'disable': {
-                    'type': 'bool',
-                },
-                'static': {
-                    'type': 'bool',
-                },
-                'ttl': {
-                    'type': 'int',
-                },
-                'no_resp': {
-                    'type': 'bool',
-                },
-                'admin_ip': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'dns_a_record_ipv4_list': {
-                'type': 'list',
-                'as_replace': {
-                    'type': 'bool',
-                },
-                'dns_a_record_ip': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'as_backup': {
-                    'type': 'bool',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
-                },
-                'disable': {
-                    'type': 'bool',
-                },
-                'static': {
-                    'type': 'bool',
-                },
-                'ttl': {
-                    'type': 'int',
-                },
-                'no_resp': {
-                    'type': 'bool',
-                },
-                'admin_ip': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'dns_a_record_srv_list': {
-                'type': 'list',
-                'as_backup': {
-                    'type': 'bool',
-                },
-                'as_replace': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'svrname': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
-                },
-                'disable': {
-                    'type': 'bool',
-                },
-                'static': {
-                    'type': 'bool',
-                },
-                'ttl': {
-                    'type': 'int',
-                },
-                'admin_ip': {
-                    'type': 'int',
-                },
-                'no_resp': {
-                    'type': 'bool',
-                }
-            }
-        },
-        'forward_type': {
-            'type': 'str',
-            'choices': ['both', 'query', 'response']
         },
         'uuid': {
             'type': 'str',
-        },
-        'dns_ns_record_list': {
-            'type': 'list',
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type': 'str',
-                    'choices': ['all', 'hits']
-                }
-            },
-            'ns_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ttl': {
-                'type': 'int',
-            }
-        },
-        'dns_txt_record_list': {
-            'type': 'list',
-            'record_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type': 'str',
-                    'choices': ['all', 'hits']
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'txt_data': {
-                'type': 'str',
-            }
-        },
-        'dns_mx_record_list': {
-            'type': 'list',
-            'priority': {
-                'type': 'int',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type': 'str',
-                    'choices': ['all', 'hits']
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'mx_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'ttl': {
-                'type': 'int',
-            }
         },
         'user_tag': {
             'type': 'str',
@@ -1068,20 +662,172 @@ def get_argspec():
                 ]
             }
         },
-        'dns_srv_record_list': {
+        'dns_a_record': {
+            'type': 'dict',
+            'dns_a_record_srv_list': {
+                'type': 'list',
+                'svrname': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'no_resp': {
+                    'type': 'bool',
+                },
+                'as_backup': {
+                    'type': 'bool',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'ttl': {
+                    'type': 'int',
+                },
+                'as_replace': {
+                    'type': 'bool',
+                },
+                'disable': {
+                    'type': 'bool',
+                },
+                'static': {
+                    'type': 'bool',
+                },
+                'admin_ip': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            },
+            'dns_a_record_ipv4_list': {
+                'type': 'list',
+                'dns_a_record_ip': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'no_resp': {
+                    'type': 'bool',
+                },
+                'as_backup': {
+                    'type': 'bool',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'ttl': {
+                    'type': 'int',
+                },
+                'as_replace': {
+                    'type': 'bool',
+                },
+                'disable': {
+                    'type': 'bool',
+                },
+                'static': {
+                    'type': 'bool',
+                },
+                'admin_ip': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            },
+            'dns_a_record_ipv6_list': {
+                'type': 'list',
+                'dns_a_record_ipv6': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'no_resp': {
+                    'type': 'bool',
+                },
+                'as_backup': {
+                    'type': 'bool',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'ttl': {
+                    'type': 'int',
+                },
+                'as_replace': {
+                    'type': 'bool',
+                },
+                'disable': {
+                    'type': 'bool',
+                },
+                'static': {
+                    'type': 'bool',
+                },
+                'admin_ip': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            }
+        },
+        'dns_cname_record_list': {
             'type': 'list',
-            'srv_name': {
+            'alias_name': {
                 'type': 'str',
                 'required': True,
             },
-            'uuid': {
-                'type': 'str',
+            'admin_preference': {
+                'type': 'int',
             },
             'weight': {
                 'type': 'int',
             },
+            'as_backup': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'cname-hits']
+                }
+            }
+        },
+        'dns_mx_record_list': {
+            'type': 'list',
+            'mx_name': {
+                'type': 'str',
+                'required': True,
+            },
             'priority': {
                 'type': 'int',
+            },
+            'ttl': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -1089,27 +835,80 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['all', 'hits']
                 }
+            }
+        },
+        'dns_ns_record_list': {
+            'type': 'list',
+            'ns_name': {
+                'type': 'str',
+                'required': True,
             },
             'ttl': {
                 'type': 'int',
             },
-            'port': {
-                'type': 'int',
-                'required': True,
-            }
-        },
-        'policy': {
-            'type': 'str',
-        },
-        'dns_naptr_record_list': {
-            'type': 'list',
+            'uuid': {
+                'type': 'str',
+            },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
                     'type': 'str',
-                    'choices': ['all', 'naptr-hits']
+                    'choices': ['all', 'hits']
                 }
+            }
+        },
+        'dns_ptr_record_list': {
+            'type': 'list',
+            'ptr_name': {
+                'type': 'str',
+                'required': True,
             },
+            'ttl': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'hits']
+                }
+            }
+        },
+        'dns_srv_record_list': {
+            'type': 'list',
+            'srv_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port': {
+                'type': 'int',
+                'required': True,
+            },
+            'priority': {
+                'type': 'int',
+            },
+            'weight': {
+                'type': 'int',
+            },
+            'ttl': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'hits']
+                }
+            }
+        },
+        'dns_naptr_record_list': {
+            'type': 'list',
             'naptr_target': {
                 'type': 'str',
                 'required': True,
@@ -1122,20 +921,334 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
             },
-            'preference': {
+            'order': {
                 'type': 'int',
             },
-            'ttl': {
+            'preference': {
                 'type': 'int',
             },
             'regexp': {
                 'type': 'bool',
             },
-            'order': {
+            'ttl': {
                 'type': 'int',
             },
             'uuid': {
                 'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'naptr-hits']
+                }
+            }
+        },
+        'dns_txt_record_list': {
+            'type': 'list',
+            'record_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'txt_data': {
+                'type': 'str',
+            },
+            'ttl': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'hits']
+                }
+            }
+        },
+        'dns_record_list': {
+            'type': 'list',
+            'ntype': {
+                'type': 'int',
+                'required': True,
+            },
+            'data': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'geo_location_list': {
+            'type': 'list',
+            'geo_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'alias': {
+                'type': 'list',
+                'alias': {
+                    'type': 'str',
+                }
+            },
+            'action': {
+                'type': 'bool',
+            },
+            'action_type': {
+                'type': 'str',
+                'choices': ['allow', 'drop', 'forward', 'ignore', 'reject']
+            },
+            'forward_type': {
+                'type': 'str',
+                'choices': ['both', 'query', 'response']
+            },
+            'policy': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+            },
+            'cache_list': {
+                'type': 'list',
+                'alias': {
+                    'type': 'str',
+                },
+                'cache_length': {
+                    'type': 'int',
+                },
+                'cache_ttl': {
+                    'type': 'int',
+                },
+                'cache_dns_flag': {
+                    'type': 'str',
+                },
+                'question_records': {
+                    'type': 'int',
+                },
+                'answer_records': {
+                    'type': 'int',
+                },
+                'authority_records': {
+                    'type': 'int',
+                },
+                'additional_records': {
+                    'type': 'int',
+                }
+            },
+            'session_list': {
+                'type': 'list',
+                'client': {
+                    'type': 'str',
+                },
+                'best': {
+                    'type': 'str',
+                },
+                'mode': {
+                    'type': 'str',
+                },
+                'hits': {
+                    'type': 'int',
+                },
+                'last_second_hits': {
+                    'type': 'int',
+                },
+                'ttl': {
+                    'type': 'str',
+                },
+                'update': {
+                    'type': 'int',
+                },
+                'aging': {
+                    'type': 'int',
+                }
+            },
+            'matched': {
+                'type': 'int',
+            },
+            'total_sessions': {
+                'type': 'int',
+            },
+            'service_port': {
+                'type': 'int',
+                'required': True,
+            },
+            'service_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'dns_mx_record_list': {
+                'type': 'list',
+                'mx_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'last_server': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'dns_ns_record_list': {
+                'type': 'list',
+                'ns_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'last_server': {
+                        'type': 'str',
+                    }
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'received_query': {
+                'type': 'str',
+            },
+            'sent_response': {
+                'type': 'str',
+            },
+            'proxy_mode_response': {
+                'type': 'str',
+            },
+            'cache_mode_response': {
+                'type': 'str',
+            },
+            'server_mode_response': {
+                'type': 'str',
+            },
+            'sticky_mode_response': {
+                'type': 'str',
+            },
+            'backup_mode_response': {
+                'type': 'str',
+            },
+            'service_port': {
+                'type': 'int',
+                'required': True,
+            },
+            'service_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'dns_a_record': {
+                'type': 'dict',
+            },
+            'dns_cname_record_list': {
+                'type': 'list',
+                'alias_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'cname_hits': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'dns_mx_record_list': {
+                'type': 'list',
+                'mx_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'hits': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'dns_ns_record_list': {
+                'type': 'list',
+                'ns_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'hits': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'dns_ptr_record_list': {
+                'type': 'list',
+                'ptr_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'hits': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'dns_srv_record_list': {
+                'type': 'list',
+                'srv_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'port': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'hits': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'dns_naptr_record_list': {
+                'type': 'list',
+                'naptr_target': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'service_proto': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'flag': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'naptr_hits': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'dns_txt_record_list': {
+                'type': 'list',
+                'record_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'hits': {
+                        'type': 'str',
+                    }
+                }
             }
         }
     })

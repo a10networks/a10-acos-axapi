@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_rip
 description:
     - Routing Information Protocol (RIP)
-short_description: Configures A10 router.rip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,194 +22,245 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    default_metric:
-        description:
-        - "Set a metric of redistribute routes (Default metric)"
-        required: False
-    route_cfg:
-        description:
-        - "Field route_cfg"
-        required: False
-        suboptions:
-            route:
-                description:
-                - "Static route advertisement (debugging purpose) (IP prefix network/length)"
     cisco_metric_behavior:
         description:
         - "'enable'= Enables updating metric consistent with Cisco; 'disable'= Disables
           updating metric consistent with Cisco;  (Enable/Disable updating metric
           consistent with Cisco)"
+        type: str
         required: False
-    uuid:
+    default_information:
         description:
-        - "uuid of the object"
+        - "'originate'= originate;  (Distribute default route)"
+        type: str
+        required: False
+    default_metric:
+        description:
+        - "Set a metric of redistribute routes (Default metric)"
+        type: int
+        required: False
+    recv_buffer_size:
+        description:
+        - "Set the RIP UDP receive buffer size (the RIP UDP receive buffer size value)"
+        type: int
+        required: False
+    version:
+        description:
+        - "Set routing protocol version (RIP version)"
+        type: int
         required: False
     rip_maximum_prefix_cfg:
         description:
         - "Field rip_maximum_prefix_cfg"
+        type: dict
         required: False
         suboptions:
             maximum_prefix:
                 description:
                 - "Set the maximum number of RIP routes"
+                type: int
             maximum_prefix_thres:
                 description:
                 - "Percentage of maximum routes to generate a warning (Default 75%)"
-    offset_list:
-        description:
-        - "Field offset_list"
-        required: False
-        suboptions:
-            acl_cfg:
-                description:
-                - "Field acl_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-    passive_interface_list:
-        description:
-        - "Field passive_interface_list"
-        required: False
-        suboptions:
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
-            ethernet:
-                description:
-                - "Ethernet interface (Port number)"
-            trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-    redistribute:
-        description:
-        - "Field redistribute"
-        required: False
-        suboptions:
-            vip_list:
-                description:
-                - "Field vip_list"
-            redist_list:
-                description:
-                - "Field redist_list"
-            uuid:
-                description:
-                - "uuid of the object"
-    neighbor:
-        description:
-        - "Field neighbor"
-        required: False
-        suboptions:
-            value:
-                description:
-                - "Neighbor address"
-    network_interface_list_cfg:
-        description:
-        - "Field network_interface_list_cfg"
-        required: False
-        suboptions:
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
-            ethernet:
-                description:
-                - "Ethernet interface (Port number)"
-            trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-    recv_buffer_size:
-        description:
-        - "Set the RIP UDP receive buffer size (the RIP UDP receive buffer size value)"
-        required: False
+                type: int
     timers:
         description:
         - "Field timers"
+        type: dict
         required: False
         suboptions:
             timers_cfg:
                 description:
                 - "Field timers_cfg"
-    version:
+                type: dict
+    passive_interface_list:
         description:
-        - "Set routing protocol version (RIP version)"
-        required: False
-    default_information:
-        description:
-        - "'originate'= originate;  (Distribute default route)"
-        required: False
-    distribute_list:
-        description:
-        - "Field distribute_list"
+        - "Field passive_interface_list"
+        type: list
         required: False
         suboptions:
-            acl_cfg:
+            ethernet:
                 description:
-                - "Field acl_cfg"
-            prefix:
+                - "Ethernet interface (Port number)"
+                type: str
+            loopback:
                 description:
-                - "Field prefix"
-            uuid:
+                - "Loopback interface (Port number)"
+                type: str
+            trunk:
                 description:
-                - "uuid of the object"
-    distance_list_cfg:
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+                type: str
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: str
+    neighbor:
         description:
-        - "Field distance_list_cfg"
+        - "Field neighbor"
+        type: list
         required: False
         suboptions:
-            distance:
+            value:
                 description:
-                - "Administrative distance (Distance value)"
-            distance_ipv4_mask:
+                - "Neighbor address"
+                type: str
+    route_cfg:
+        description:
+        - "Field route_cfg"
+        type: list
+        required: False
+        suboptions:
+            route:
                 description:
-                - "IP source prefix"
-            distance_acl:
-                description:
-                - "Access list name"
+                - "Static route advertisement (debugging purpose) (IP prefix network/length)"
+                type: str
     network_addresses:
         description:
         - "Field network_addresses"
+        type: list
         required: False
         suboptions:
             network_ipv4_mask:
                 description:
                 - "IP prefix network/length, e.g., 35.0.0.0/8"
+                type: str
+    network_interface_list_cfg:
+        description:
+        - "Field network_interface_list_cfg"
+        type: list
+        required: False
+        suboptions:
+            ethernet:
+                description:
+                - "Ethernet interface (Port number)"
+                type: str
+            loopback:
+                description:
+                - "Loopback interface (Port number)"
+                type: str
+            trunk:
+                description:
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+                type: str
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: str
+    distance_list_cfg:
+        description:
+        - "Field distance_list_cfg"
+        type: list
+        required: False
+        suboptions:
+            distance:
+                description:
+                - "Administrative distance (Distance value)"
+                type: int
+            distance_ipv4_mask:
+                description:
+                - "IP source prefix"
+                type: str
+            distance_acl:
+                description:
+                - "Access list name"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    distribute_list:
+        description:
+        - "Field distribute_list"
+        type: dict
+        required: False
+        suboptions:
+            acl_cfg:
+                description:
+                - "Field acl_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            prefix:
+                description:
+                - "Field prefix"
+                type: dict
+    offset_list:
+        description:
+        - "Field offset_list"
+        type: dict
+        required: False
+        suboptions:
+            acl_cfg:
+                description:
+                - "Field acl_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    redistribute:
+        description:
+        - "Field redistribute"
+        type: dict
+        required: False
+        suboptions:
+            redist_list:
+                description:
+                - "Field redist_list"
+                type: list
+            vip_list:
+                description:
+                - "Field vip_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -280,21 +329,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'default_metric': {
-            'type': 'int',
-        },
-        'route_cfg': {
-            'type': 'list',
-            'route': {
-                'type': 'str',
-            }
-        },
         'cisco_metric_behavior': {
             'type': 'str',
             'choices': ['enable', 'disable']
         },
-        'uuid': {
+        'default_information': {
             'type': 'str',
+            'choices': ['originate']
+        },
+        'default_metric': {
+            'type': 'int',
+        },
+        'recv_buffer_size': {
+            'type': 'int',
+        },
+        'version': {
+            'type': 'int',
         },
         'rip_maximum_prefix_cfg': {
             'type': 'dict',
@@ -305,91 +355,36 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'offset_list': {
+        'timers': {
             'type': 'dict',
-            'acl_cfg': {
-                'type': 'list',
-                've': {
-                    'type': 'str',
-                },
-                'loopback': {
-                    'type': 'str',
-                },
-                'tunnel': {
-                    'type': 'str',
-                },
-                'metric': {
+            'timers_cfg': {
+                'type': 'dict',
+                'basic': {
                     'type': 'int',
                 },
-                'offset_list_direction': {
-                    'type': 'str',
-                    'choices': ['in', 'out']
+                'val_2': {
+                    'type': 'int',
                 },
-                'acl': {
-                    'type': 'str',
-                },
-                'trunk': {
-                    'type': 'str',
-                },
-                'ethernet': {
-                    'type': 'str',
+                'val_3': {
+                    'type': 'int',
                 }
-            },
-            'uuid': {
-                'type': 'str',
             }
         },
         'passive_interface_list': {
             'type': 'list',
-            'tunnel': {
+            'ethernet': {
                 'type': 'str',
             },
-            'ethernet': {
+            'loopback': {
                 'type': 'str',
             },
             'trunk': {
                 'type': 'str',
             },
+            'tunnel': {
+                'type': 'str',
+            },
             've': {
-                'type': 'str',
-            },
-            'loopback': {
-                'type': 'str',
-            }
-        },
-        'redistribute': {
-            'type': 'dict',
-            'vip_list': {
-                'type': 'list',
-                'vip_metric': {
-                    'type': 'int',
-                },
-                'vip_route_map': {
-                    'type': 'str',
-                },
-                'vip_type': {
-                    'type': 'str',
-                    'choices': ['only-flagged', 'only-not-flagged']
-                }
-            },
-            'redist_list': {
-                'type': 'list',
-                'metric': {
-                    'type': 'int',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
-                        'ip-nat', 'isis', 'lw4o6', 'nat-map', 'ospf', 'static'
-                    ]
-                }
-            },
-            'uuid': {
                 'type': 'str',
             }
         },
@@ -399,108 +394,33 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'route_cfg': {
+            'type': 'list',
+            'route': {
+                'type': 'str',
+            }
+        },
+        'network_addresses': {
+            'type': 'list',
+            'network_ipv4_mask': {
+                'type': 'str',
+            }
+        },
         'network_interface_list_cfg': {
             'type': 'list',
-            'tunnel': {
+            'ethernet': {
                 'type': 'str',
             },
-            'ethernet': {
+            'loopback': {
                 'type': 'str',
             },
             'trunk': {
                 'type': 'str',
             },
+            'tunnel': {
+                'type': 'str',
+            },
             've': {
-                'type': 'str',
-            },
-            'loopback': {
-                'type': 'str',
-            }
-        },
-        'recv_buffer_size': {
-            'type': 'int',
-        },
-        'timers': {
-            'type': 'dict',
-            'timers_cfg': {
-                'type': 'dict',
-                'val_3': {
-                    'type': 'int',
-                },
-                'val_2': {
-                    'type': 'int',
-                },
-                'basic': {
-                    'type': 'int',
-                }
-            }
-        },
-        'version': {
-            'type': 'int',
-        },
-        'default_information': {
-            'type': 'str',
-            'choices': ['originate']
-        },
-        'distribute_list': {
-            'type': 'dict',
-            'acl_cfg': {
-                'type': 'list',
-                'acl_direction': {
-                    'type': 'str',
-                    'choices': ['in', 'out']
-                },
-                've': {
-                    'type': 'str',
-                },
-                'loopback': {
-                    'type': 'str',
-                },
-                'tunnel': {
-                    'type': 'str',
-                },
-                'acl': {
-                    'type': 'str',
-                },
-                'trunk': {
-                    'type': 'str',
-                },
-                'ethernet': {
-                    'type': 'str',
-                }
-            },
-            'prefix': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
-                'prefix_cfg': {
-                    'type': 'list',
-                    've': {
-                        'type': 'str',
-                    },
-                    'loopback': {
-                        'type': 'str',
-                    },
-                    'tunnel': {
-                        'type': 'str',
-                    },
-                    'prefix_list': {
-                        'type': 'str',
-                    },
-                    'trunk': {
-                        'type': 'str',
-                    },
-                    'prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'ethernet': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'uuid': {
                 'type': 'str',
             }
         },
@@ -516,9 +436,139 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'network_addresses': {
-            'type': 'list',
-            'network_ipv4_mask': {
+        'uuid': {
+            'type': 'str',
+        },
+        'distribute_list': {
+            'type': 'dict',
+            'acl_cfg': {
+                'type': 'list',
+                'acl': {
+                    'type': 'str',
+                },
+                'acl_direction': {
+                    'type': 'str',
+                    'choices': ['in', 'out']
+                },
+                'ethernet': {
+                    'type': 'str',
+                },
+                'loopback': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'tunnel': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'prefix': {
+                'type': 'dict',
+                'prefix_cfg': {
+                    'type': 'list',
+                    'prefix_list': {
+                        'type': 'str',
+                    },
+                    'prefix_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    },
+                    'ethernet': {
+                        'type': 'str',
+                    },
+                    'loopback': {
+                        'type': 'str',
+                    },
+                    'trunk': {
+                        'type': 'str',
+                    },
+                    'tunnel': {
+                        'type': 'str',
+                    },
+                    've': {
+                        'type': 'str',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'offset_list': {
+            'type': 'dict',
+            'acl_cfg': {
+                'type': 'list',
+                'acl': {
+                    'type': 'str',
+                },
+                'offset_list_direction': {
+                    'type': 'str',
+                    'choices': ['in', 'out']
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'ethernet': {
+                    'type': 'str',
+                },
+                'loopback': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'tunnel': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
+                'type': 'list',
+                'ntype': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
+                        'ip-nat', 'isis', 'lw4o6', 'nat-map', 'static-nat',
+                        'ospf', 'static'
+                    ]
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'vip_list': {
+                'type': 'list',
+                'vip_type': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                },
+                'vip_metric': {
+                    'type': 'int',
+                },
+                'vip_route_map': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
                 'type': 'str',
             }
         }

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_bpdu_fwd_group
 description:
     - STP BPDU forward Group Settings
-short_description: Configures A10 network.bpdu-fwd-group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     bpdu_fwd_group_number:
         description:
         - "Field bpdu_fwd_group_number"
+        type: int
         required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     ethernet_list:
         description:
         - "Field ethernet_list"
+        type: list
         required: False
         suboptions:
             ethernet_start:
                 description:
                 - "Ethernet Port (Interface number)"
+                type: str
             ethernet_end:
                 description:
                 - "Ethernet Port"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -132,12 +143,6 @@ def get_argspec():
             'type': 'int',
             'required': True,
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
         'ethernet_list': {
             'type': 'list',
             'ethernet_start': {
@@ -146,6 +151,12 @@ def get_argspec():
             'ethernet_end': {
                 'type': 'str',
             }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

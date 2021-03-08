@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_rc_cache_global
 description:
     - global ram cache stats
-short_description: Configures A10 slb.rc-cache-global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -74,105 +85,133 @@ options:
           Entry Create failures; 'mem_size'= Memory Used; 'entry_num'= Entry Cached;
           'replaced_entry'= Entry Replaced; 'aging_entry'= Entry Aged Out;
           'cleaned_entry'= Entry Cleaned;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            nm_response:
-                description:
-                - "Responses from cache 304 Not Modified"
-            rsp_type_304:
-                description:
-                - "Responses from server 304 Not Modified"
-            rsp_other:
-                description:
-                - "Responses from cache Other"
-            content_toosmall:
-                description:
-                - "Policy Content Too Small"
-            entry_create_failures:
-                description:
-                - "Entry Create failures"
-            nocache_match:
-                description:
-                - "Policy URI nocache"
-            content_toobig:
-                description:
-                - "Policy Content Too Big"
-            replaced_entry:
-                description:
-                - "Entry Replaced"
-            miss:
-                description:
-                - "Cache Misses"
-            nc_req_header:
-                description:
-                - "No-cache Request"
-            aging_entry:
-                description:
-                - "Entry Aged Out"
-            mem_size:
-                description:
-                - "Memory Used"
-            rsp_deflate:
-                description:
-                - "Responses from cache 200 OK - Deflate"
-            invalidate_match:
-                description:
-                - "Policy URI invalidate"
-            match:
-                description:
-                - "Policy URI cache"
-            cleaned_entry:
-                description:
-                - "Entry Cleaned"
-            entry_num:
-                description:
-                - "Entry Cached"
-            total_req:
-                description:
-                - "Total Requests"
-            bytes_served:
-                description:
-                - "Bytes Served"
-            rv_success:
-                description:
-                - "Revalidation Successes"
-            rv_failure:
-                description:
-                - "Revalidation Failures"
-            rsp_gzip:
-                description:
-                - "Responses from cache 200 OK - Gzip"
             hits:
                 description:
                 - "Cache Hits"
-            rsp_type_other:
+                type: str
+            miss:
                 description:
-                - "Responses from server 200 OK - Other"
-            rsp_type_CE:
+                - "Cache Misses"
+                type: str
+            bytes_served:
                 description:
-                - "Responses from server 200 OK - Chnk Enc"
-            rsp_type_CL:
+                - "Bytes Served"
+                type: str
+            total_req:
                 description:
-                - "Responses from server 200 OK - Cont Len"
-            rsp_no_compress:
-                description:
-                - "Responses from cache 200 OK - No Comp"
-            nc_res_header:
-                description:
-                - "Not cacheable"
+                - "Total Requests"
+                type: str
             caching_req:
                 description:
                 - "Cacheable Requests"
+                type: str
+            nc_req_header:
+                description:
+                - "No-cache Request"
+                type: str
+            nc_res_header:
+                description:
+                - "Not cacheable"
+                type: str
+            rv_success:
+                description:
+                - "Revalidation Successes"
+                type: str
+            rv_failure:
+                description:
+                - "Revalidation Failures"
+                type: str
             ims_request:
                 description:
                 - "IMS Requests"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            nm_response:
+                description:
+                - "Responses from cache 304 Not Modified"
+                type: str
+            rsp_type_CL:
+                description:
+                - "Responses from server 200 OK - Cont Len"
+                type: str
+            rsp_type_CE:
+                description:
+                - "Responses from server 200 OK - Chnk Enc"
+                type: str
+            rsp_type_304:
+                description:
+                - "Responses from server 304 Not Modified"
+                type: str
+            rsp_type_other:
+                description:
+                - "Responses from server 200 OK - Other"
+                type: str
+            rsp_no_compress:
+                description:
+                - "Responses from cache 200 OK - No Comp"
+                type: str
+            rsp_gzip:
+                description:
+                - "Responses from cache 200 OK - Gzip"
+                type: str
+            rsp_deflate:
+                description:
+                - "Responses from cache 200 OK - Deflate"
+                type: str
+            rsp_other:
+                description:
+                - "Responses from cache Other"
+                type: str
+            nocache_match:
+                description:
+                - "Policy URI nocache"
+                type: str
+            match:
+                description:
+                - "Policy URI cache"
+                type: str
+            invalidate_match:
+                description:
+                - "Policy URI invalidate"
+                type: str
+            content_toobig:
+                description:
+                - "Policy Content Too Big"
+                type: str
+            content_toosmall:
+                description:
+                - "Policy Content Too Small"
+                type: str
+            entry_create_failures:
+                description:
+                - "Entry Create failures"
+                type: str
+            mem_size:
+                description:
+                - "Memory Used"
+                type: str
+            entry_num:
+                description:
+                - "Entry Cached"
+                type: str
+            replaced_entry:
+                description:
+                - "Entry Replaced"
+                type: str
+            aging_entry:
+                description:
+                - "Entry Aged Out"
+                type: str
+            cleaned_entry:
+                description:
+                - "Entry Cleaned"
+                type: str
 
 '''
 
@@ -227,6 +266,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -247,61 +289,25 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'nm_response': {
-                'type': 'str',
-            },
-            'rsp_type_304': {
-                'type': 'str',
-            },
-            'rsp_other': {
-                'type': 'str',
-            },
-            'content_toosmall': {
-                'type': 'str',
-            },
-            'entry_create_failures': {
-                'type': 'str',
-            },
-            'nocache_match': {
-                'type': 'str',
-            },
-            'content_toobig': {
-                'type': 'str',
-            },
-            'replaced_entry': {
+            'hits': {
                 'type': 'str',
             },
             'miss': {
                 'type': 'str',
             },
-            'nc_req_header': {
-                'type': 'str',
-            },
-            'aging_entry': {
-                'type': 'str',
-            },
-            'mem_size': {
-                'type': 'str',
-            },
-            'rsp_deflate': {
-                'type': 'str',
-            },
-            'invalidate_match': {
-                'type': 'str',
-            },
-            'match': {
-                'type': 'str',
-            },
-            'cleaned_entry': {
-                'type': 'str',
-            },
-            'entry_num': {
+            'bytes_served': {
                 'type': 'str',
             },
             'total_req': {
                 'type': 'str',
             },
-            'bytes_served': {
+            'caching_req': {
+                'type': 'str',
+            },
+            'nc_req_header': {
+                'type': 'str',
+            },
+            'nc_res_header': {
                 'type': 'str',
             },
             'rv_success': {
@@ -310,36 +316,69 @@ def get_argspec():
             'rv_failure': {
                 'type': 'str',
             },
-            'rsp_gzip': {
+            'ims_request': {
                 'type': 'str',
             },
-            'hits': {
-                'type': 'str',
-            },
-            'rsp_type_other': {
-                'type': 'str',
-            },
-            'rsp_type_CE': {
+            'nm_response': {
                 'type': 'str',
             },
             'rsp_type_CL': {
                 'type': 'str',
             },
+            'rsp_type_CE': {
+                'type': 'str',
+            },
+            'rsp_type_304': {
+                'type': 'str',
+            },
+            'rsp_type_other': {
+                'type': 'str',
+            },
             'rsp_no_compress': {
                 'type': 'str',
             },
-            'nc_res_header': {
+            'rsp_gzip': {
                 'type': 'str',
             },
-            'caching_req': {
+            'rsp_deflate': {
                 'type': 'str',
             },
-            'ims_request': {
+            'rsp_other': {
+                'type': 'str',
+            },
+            'nocache_match': {
+                'type': 'str',
+            },
+            'match': {
+                'type': 'str',
+            },
+            'invalidate_match': {
+                'type': 'str',
+            },
+            'content_toobig': {
+                'type': 'str',
+            },
+            'content_toosmall': {
+                'type': 'str',
+            },
+            'entry_create_failures': {
+                'type': 'str',
+            },
+            'mem_size': {
+                'type': 'str',
+            },
+            'entry_num': {
+                'type': 'str',
+            },
+            'replaced_entry': {
+                'type': 'str',
+            },
+            'aging_entry': {
+                'type': 'str',
+            },
+            'cleaned_entry': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

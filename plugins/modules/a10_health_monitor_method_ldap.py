@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_ldap
 description:
     - LDAP type
-short_description: Configures A10 health.monitor.method.ldap
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,87 +22,110 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    AcceptResRef:
+        - Key to identify parent object
+        type: str
+        required: True
+    ldap:
         description:
-        - "Mark server up on receiving a search result reference response"
+        - "LDAP type"
+        type: bool
         required: False
     ldap_port:
         description:
         - "Specify the LDAP port (Speciry port number, default is 389, or 636 if LDAP over
           SSL)"
+        type: int
         required: False
-    uuid:
+    ldap_security:
         description:
-        - "uuid of the object"
+        - "'overssl'= Set LDAP over SSL; 'StartTLS'= LDAP switch to TLS;"
+        type: str
+        required: False
+    ldap_binddn:
+        description:
+        - "Specify the distinguished name for bindRequest (LDAP DN distinguished name)"
+        type: str
+        required: False
+    ldap_password:
+        description:
+        - "Specify the user password"
+        type: bool
         required: False
     ldap_password_string:
         description:
         - "Configure password, '' means empty password"
+        type: str
         required: False
     ldap_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
-        required: False
-    BaseDN:
-        description:
-        - "Specify LDAP DN distinguished name"
-        required: False
-    ldap_password:
-        description:
-        - "Specify the user password"
-        required: False
-    ldap_binddn:
-        description:
-        - "Specify the distinguished name for bindRequest (LDAP DN distinguished name)"
-        required: False
-    ldap_query:
-        description:
-        - "LDAP query to be excuted"
-        required: False
-    ldap_security:
-        description:
-        - "'overssl'= Set LDAP over SSL; 'StartTLS'= LDAP switch to TLS;"
-        required: False
-    ldap:
-        description:
-        - "LDAP type"
+        type: str
         required: False
     ldap_run_search:
         description:
         - "Specify a query to be executed"
+        type: bool
+        required: False
+    BaseDN:
+        description:
+        - "Specify LDAP DN distinguished name"
+        type: str
+        required: False
+    ldap_query:
+        description:
+        - "LDAP query to be excuted"
+        type: str
+        required: False
+    AcceptResRef:
+        description:
+        - "Mark server up on receiving a search result reference response"
+        type: bool
         required: False
     AcceptNotFound:
         description:
         - "Mark server up on receiving a not-found response"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -170,14 +191,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'AcceptResRef': {
+        'ldap': {
             'type': 'bool',
         },
         'ldap_port': {
             'type': 'int',
         },
-        'uuid': {
+        'ldap_security': {
             'type': 'str',
+            'choices': ['overssl', 'StartTLS']
+        },
+        'ldap_binddn': {
+            'type': 'str',
+        },
+        'ldap_password': {
+            'type': 'bool',
         },
         'ldap_password_string': {
             'type': 'str',
@@ -185,30 +213,23 @@ def get_argspec():
         'ldap_encrypted': {
             'type': 'str',
         },
-        'BaseDN': {
-            'type': 'str',
-        },
-        'ldap_password': {
+        'ldap_run_search': {
             'type': 'bool',
         },
-        'ldap_binddn': {
+        'BaseDN': {
             'type': 'str',
         },
         'ldap_query': {
             'type': 'str',
         },
-        'ldap_security': {
-            'type': 'str',
-            'choices': ['overssl', 'StartTLS']
-        },
-        'ldap': {
-            'type': 'bool',
-        },
-        'ldap_run_search': {
+        'AcceptResRef': {
             'type': 'bool',
         },
         'AcceptNotFound': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

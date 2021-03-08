@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_smpp
 description:
     - Configure SMPP
-short_description: Configures A10 slb.smpp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            smpp_cpu_fields:
-                description:
-                - "Field smpp_cpu_fields"
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            filter_type:
-                description:
-                - "Field filter_type"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -137,96 +134,139 @@ options:
           'server_conn_get_from_list'= server_conn_get_from_list;
           'server_conn_fail_bind'= server_conn_fail_bind; 'single_msg'= single_msg;
           'fail_bind_msg'= fail_bind_msg;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            smpp_cpu_fields:
+                description:
+                - "Field smpp_cpu_fields"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
+            filter_type:
+                description:
+                - "Field filter_type"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            select_client_conn:
-                description:
-                - "Client conn selection"
-            select_client_fail:
-                description:
-                - "Select failed"
-            msg_proxy_server_send_success:
-                description:
-                - "Sent to client"
-            select_client_by_conn:
-                description:
-                - "Select by conn"
-            AX_response_directly:
-                description:
-                - "Number of packet which AX responds directly"
-            select_client_by_req:
-                description:
-                - "Select by request"
-            select_server_by_req:
-                description:
-                - "Select by request"
-            select_server_by_conn:
-                description:
-                - "Select server conn by client conn"
-            msg_proxy_client_send_success:
-                description:
-                - "Sent to server"
-            msg_proxy_client_drop:
-                description:
-                - "AX responds directly"
-            msg_proxy_total:
-                description:
-                - "Total SMPP Proxy"
-            select_server_from_list:
-                description:
-                - "Select by roundbin"
             msg_proxy_current:
                 description:
                 - "Curr SMPP Proxy"
-            msg_proxy_client_fail:
+                type: str
+            msg_proxy_total:
                 description:
-                - "Number of SMPP messages received from client but failed to forward to server"
-            msg_proxy_create_server_conn:
-                description:
-                - "Server conn created"
-            msg_proxy_server_incomplete:
-                description:
-                - "Incomplete"
-            msg_proxy_server_fail:
-                description:
-                - "Number of SMPP messages received from server but failed to forward to client"
-            select_client_from_list:
-                description:
-                - "Select by roundbin"
-            msg_proxy_client_incomplete:
-                description:
-                - "Incomplete"
-            msg_proxy_server_drop:
-                description:
-                - "Number of the packet AX drop"
-            select_server_fail:
-                description:
-                - "Fail to select server conn"
-            msg_proxy_start_server_conn:
-                description:
-                - "Number of server connection created successfully"
-            msg_proxy_fail_start_server_conn:
-                description:
-                - "Number of server connection created failed"
-            select_server_conn:
-                description:
-                - "Server conn selection"
-            msg_proxy_server_recv:
-                description:
-                - "Server message rcvd"
-            msg_proxy_client_connection:
-                description:
-                - "Connecting server"
+                - "Total SMPP Proxy"
+                type: str
             msg_proxy_client_recv:
                 description:
                 - "Client message rcvd"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            msg_proxy_client_send_success:
+                description:
+                - "Sent to server"
+                type: str
+            msg_proxy_client_incomplete:
+                description:
+                - "Incomplete"
+                type: str
+            msg_proxy_client_drop:
+                description:
+                - "AX responds directly"
+                type: str
+            msg_proxy_client_connection:
+                description:
+                - "Connecting server"
+                type: str
+            msg_proxy_client_fail:
+                description:
+                - "Number of SMPP messages received from client but failed to forward to server"
+                type: str
+            msg_proxy_server_recv:
+                description:
+                - "Server message rcvd"
+                type: str
+            msg_proxy_server_send_success:
+                description:
+                - "Sent to client"
+                type: str
+            msg_proxy_server_incomplete:
+                description:
+                - "Incomplete"
+                type: str
+            msg_proxy_server_drop:
+                description:
+                - "Number of the packet AX drop"
+                type: str
+            msg_proxy_server_fail:
+                description:
+                - "Number of SMPP messages received from server but failed to forward to client"
+                type: str
+            msg_proxy_create_server_conn:
+                description:
+                - "Server conn created"
+                type: str
+            msg_proxy_start_server_conn:
+                description:
+                - "Number of server connection created successfully"
+                type: str
+            msg_proxy_fail_start_server_conn:
+                description:
+                - "Number of server connection created failed"
+                type: str
+            AX_response_directly:
+                description:
+                - "Number of packet which AX responds directly"
+                type: str
+            select_client_conn:
+                description:
+                - "Client conn selection"
+                type: str
+            select_client_by_req:
+                description:
+                - "Select by request"
+                type: str
+            select_client_from_list:
+                description:
+                - "Select by roundbin"
+                type: str
+            select_client_by_conn:
+                description:
+                - "Select by conn"
+                type: str
+            select_client_fail:
+                description:
+                - "Select failed"
+                type: str
+            select_server_conn:
+                description:
+                - "Server conn selection"
+                type: str
+            select_server_by_req:
+                description:
+                - "Select by request"
+                type: str
+            select_server_from_list:
+                description:
+                - "Select by roundbin"
+                type: str
+            select_server_by_conn:
+                description:
+                - "Select server conn by client conn"
+                type: str
+            select_server_fail:
+                description:
+                - "Fail to select server conn"
+                type: str
 
 '''
 
@@ -282,273 +322,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'smpp_cpu_fields': {
-                'type': 'list',
-                'payload_freed': {
-                    'type': 'int',
-                },
-                'payload_allocd': {
-                    'type': 'int',
-                },
-                'msg_proxy_parse_msg_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_parse': {
-                    'type': 'int',
-                },
-                'fail_bind_msg': {
-                    'type': 'int',
-                },
-                'select_client_fail': {
-                    'type': 'int',
-                },
-                'enquire_link_recv': {
-                    'type': 'int',
-                },
-                'server_conn_put_in_list': {
-                    'type': 'int',
-                },
-                'bind_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_send_success': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_selec_connt': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_select_server': {
-                    'type': 'int',
-                },
-                'msg_proxy_process_msg_fail': {
-                    'type': 'int',
-                },
-                'AX_response_directly': {
-                    'type': 'int',
-                },
-                'select_server_by_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_send_pkt': {
-                    'type': 'int',
-                },
-                'msg_proxy_l7_cpu_failed': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_construct_server_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_start_server_Conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_mem_cached': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_send_success': {
-                    'type': 'int',
-                },
-                'msg_proxy_deprecated_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_to_l4_send_pkt': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_reset': {
-                    'type': 'int',
-                },
-                'client_conn_put_in_list': {
-                    'type': 'int',
-                },
-                'select_client_by_req': {
-                    'type': 'int',
-                },
-                'enquire_link_resp_recv': {
-                    'type': 'int',
-                },
-                'msg_proxy_l4_from_l7': {
-                    'type': 'int',
-                },
-                'msg_proxy_mag_back': {
-                    'type': 'int',
-                },
-                'msg_proxy_l4_to_l7': {
-                    'type': 'int',
-                },
-                'msg_proxy_mem_freed': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_incomplete': {
-                    'type': 'int',
-                },
-                'pkt_too_small': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_conn_fail_snat': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_snat': {
-                    'type': 'int',
-                },
-                'msg_proxy_no_vport': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_drop': {
-                    'type': 'int',
-                },
-                'msg_proxy_total': {
-                    'type': 'int',
-                },
-                'select_server_by_req': {
-                    'type': 'int',
-                },
-                'select_server_from_list': {
-                    'type': 'int',
-                },
-                'server_conn_get_from_list': {
-                    'type': 'int',
-                },
-                'msg_proxy_current': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_l4_from_l4_send': {
-                    'type': 'int',
-                },
-                'enquire_link_resp_send': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_exceed_tmp_buff': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_dcmsg': {
-                    'type': 'int',
-                },
-                'msg_proxy_create_server_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_parse': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_insert_server_conn': {
-                    'type': 'int',
-                },
-                'server_conn_fail_bind': {
-                    'type': 'int',
-                },
-                'unbind_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_conn_already_exists': {
-                    'type': 'int',
-                },
-                'single_msg': {
-                    'type': 'int',
-                },
-                'invalid_seq': {
-                    'type': 'int',
-                },
-                'select_server_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_process': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_reserve_pconn': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_reset': {
-                    'type': 'int',
-                },
-                'msg_proxy_start_server_conn_failed': {
-                    'type': 'int',
-                },
-                'select_client_from_list': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_incomplete': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_drop': {
-                    'type': 'int',
-                },
-                'msg_proxy_l7_to_L4': {
-                    'type': 'int',
-                },
-                'msg_proxy_split_pkt': {
-                    'type': 'int',
-                },
-                'msg_proxy_mem_allocd': {
-                    'type': 'int',
-                },
-                'msg_proxy_start_server_conn': {
-                    'type': 'int',
-                },
-                'select_client_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_alloc_mem': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_send_pkt': {
-                    'type': 'int',
-                },
-                'client_conn_get_from_list': {
-                    'type': 'int',
-                },
-                'select_client_by_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_start_server_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_process': {
-                    'type': 'int',
-                },
-                'enquire_link_send': {
-                    'type': 'int',
-                },
-                'msg_proxy_unexpected_err': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_snat': {
-                    'type': 'int',
-                },
-                'msg_proxy_pipline_msg': {
-                    'type': 'int',
-                },
-                'select_server_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_recv': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_connection': {
-                    'type': 'int',
-                },
-                'msg_proxy_hold_msg': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_recv': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_exceed_tmp_buff': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            },
-            'filter_type': {
-                'type': 'str',
-                'choices': ['detail', 'debug']
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -611,69 +386,316 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'smpp_cpu_fields': {
+                'type': 'list',
+                'msg_proxy_current': {
+                    'type': 'int',
+                },
+                'msg_proxy_total': {
+                    'type': 'int',
+                },
+                'msg_proxy_mem_allocd': {
+                    'type': 'int',
+                },
+                'msg_proxy_mem_cached': {
+                    'type': 'int',
+                },
+                'msg_proxy_mem_freed': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_recv': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_send_success': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_incomplete': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_drop': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_connection': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_parse': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_process': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_snat': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_exceed_tmp_buff': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_send_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_start_server_Conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_recv': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_send_success': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_incomplete': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_drop': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_parse': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_process': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_selec_connt': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_snat': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_exceed_tmp_buff': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_send_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_create_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_start_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_start_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_conn_fail_snat': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_construct_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_reserve_pconn': {
+                    'type': 'int',
+                },
+                'msg_proxy_start_server_conn_failed': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_conn_already_exists': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_insert_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_parse_msg_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_process_msg_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_no_vport': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_select_server': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_alloc_mem': {
+                    'type': 'int',
+                },
+                'msg_proxy_unexpected_err': {
+                    'type': 'int',
+                },
+                'msg_proxy_l7_cpu_failed': {
+                    'type': 'int',
+                },
+                'msg_proxy_l4_to_l7': {
+                    'type': 'int',
+                },
+                'msg_proxy_l4_from_l7': {
+                    'type': 'int',
+                },
+                'msg_proxy_to_l4_send_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_l4_from_l4_send': {
+                    'type': 'int',
+                },
+                'msg_proxy_l7_to_L4': {
+                    'type': 'int',
+                },
+                'msg_proxy_mag_back': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_dcmsg': {
+                    'type': 'int',
+                },
+                'msg_proxy_deprecated_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_hold_msg': {
+                    'type': 'int',
+                },
+                'msg_proxy_split_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_pipline_msg': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_reset': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_reset': {
+                    'type': 'int',
+                },
+                'payload_allocd': {
+                    'type': 'int',
+                },
+                'payload_freed': {
+                    'type': 'int',
+                },
+                'pkt_too_small': {
+                    'type': 'int',
+                },
+                'invalid_seq': {
+                    'type': 'int',
+                },
+                'AX_response_directly': {
+                    'type': 'int',
+                },
+                'select_client_conn': {
+                    'type': 'int',
+                },
+                'select_client_by_req': {
+                    'type': 'int',
+                },
+                'select_client_from_list': {
+                    'type': 'int',
+                },
+                'select_client_by_conn': {
+                    'type': 'int',
+                },
+                'select_client_fail': {
+                    'type': 'int',
+                },
+                'select_server_conn': {
+                    'type': 'int',
+                },
+                'select_server_by_req': {
+                    'type': 'int',
+                },
+                'select_server_from_list': {
+                    'type': 'int',
+                },
+                'select_server_by_conn': {
+                    'type': 'int',
+                },
+                'select_server_fail': {
+                    'type': 'int',
+                },
+                'bind_conn': {
+                    'type': 'int',
+                },
+                'unbind_conn': {
+                    'type': 'int',
+                },
+                'enquire_link_recv': {
+                    'type': 'int',
+                },
+                'enquire_link_resp_recv': {
+                    'type': 'int',
+                },
+                'enquire_link_send': {
+                    'type': 'int',
+                },
+                'enquire_link_resp_send': {
+                    'type': 'int',
+                },
+                'client_conn_put_in_list': {
+                    'type': 'int',
+                },
+                'client_conn_get_from_list': {
+                    'type': 'int',
+                },
+                'server_conn_put_in_list': {
+                    'type': 'int',
+                },
+                'server_conn_get_from_list': {
+                    'type': 'int',
+                },
+                'server_conn_fail_bind': {
+                    'type': 'int',
+                },
+                'single_msg': {
+                    'type': 'int',
+                },
+                'fail_bind_msg': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            },
+            'filter_type': {
+                'type': 'str',
+                'choices': ['detail', 'debug']
+            }
+        },
         'stats': {
             'type': 'dict',
-            'select_client_conn': {
-                'type': 'str',
-            },
-            'select_client_fail': {
-                'type': 'str',
-            },
-            'msg_proxy_server_send_success': {
-                'type': 'str',
-            },
-            'select_client_by_conn': {
-                'type': 'str',
-            },
-            'AX_response_directly': {
-                'type': 'str',
-            },
-            'select_client_by_req': {
-                'type': 'str',
-            },
-            'select_server_by_req': {
-                'type': 'str',
-            },
-            'select_server_by_conn': {
-                'type': 'str',
-            },
-            'msg_proxy_client_send_success': {
-                'type': 'str',
-            },
-            'msg_proxy_client_drop': {
+            'msg_proxy_current': {
                 'type': 'str',
             },
             'msg_proxy_total': {
                 'type': 'str',
             },
-            'select_server_from_list': {
+            'msg_proxy_client_recv': {
                 'type': 'str',
             },
-            'msg_proxy_current': {
-                'type': 'str',
-            },
-            'msg_proxy_client_fail': {
-                'type': 'str',
-            },
-            'msg_proxy_create_server_conn': {
-                'type': 'str',
-            },
-            'msg_proxy_server_incomplete': {
-                'type': 'str',
-            },
-            'msg_proxy_server_fail': {
-                'type': 'str',
-            },
-            'select_client_from_list': {
+            'msg_proxy_client_send_success': {
                 'type': 'str',
             },
             'msg_proxy_client_incomplete': {
                 'type': 'str',
             },
+            'msg_proxy_client_drop': {
+                'type': 'str',
+            },
+            'msg_proxy_client_connection': {
+                'type': 'str',
+            },
+            'msg_proxy_client_fail': {
+                'type': 'str',
+            },
+            'msg_proxy_server_recv': {
+                'type': 'str',
+            },
+            'msg_proxy_server_send_success': {
+                'type': 'str',
+            },
+            'msg_proxy_server_incomplete': {
+                'type': 'str',
+            },
             'msg_proxy_server_drop': {
                 'type': 'str',
             },
-            'select_server_fail': {
+            'msg_proxy_server_fail': {
+                'type': 'str',
+            },
+            'msg_proxy_create_server_conn': {
                 'type': 'str',
             },
             'msg_proxy_start_server_conn': {
@@ -682,21 +704,39 @@ def get_argspec():
             'msg_proxy_fail_start_server_conn': {
                 'type': 'str',
             },
+            'AX_response_directly': {
+                'type': 'str',
+            },
+            'select_client_conn': {
+                'type': 'str',
+            },
+            'select_client_by_req': {
+                'type': 'str',
+            },
+            'select_client_from_list': {
+                'type': 'str',
+            },
+            'select_client_by_conn': {
+                'type': 'str',
+            },
+            'select_client_fail': {
+                'type': 'str',
+            },
             'select_server_conn': {
                 'type': 'str',
             },
-            'msg_proxy_server_recv': {
+            'select_server_by_req': {
                 'type': 'str',
             },
-            'msg_proxy_client_connection': {
+            'select_server_from_list': {
                 'type': 'str',
             },
-            'msg_proxy_client_recv': {
+            'select_server_by_conn': {
+                'type': 'str',
+            },
+            'select_server_fail': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

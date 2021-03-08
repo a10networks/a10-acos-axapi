@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_h323
 description:
     - Change LSN H323 ALG Settings
-short_description: Configures A10 cgnv6.lsn.alg.h323
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,39 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     h323_value:
         description:
         - "'enable'= Enable H323 ALG for LSN;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -69,30 +81,33 @@ options:
           Rewrite Failure; 'rewrite-failure'= H323 Message Rewrite Failure; 'tcp-out-of-
           order-drop'= TCP Out-of-Order Drop; 'h245-dynamic-addr-exceed'= H323 H245
           Dynamic Address Exceed;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             h225ras_message:
                 description:
                 - "H323 H225 RAS Message"
-            h245_tunneled:
-                description:
-                - "H323 H245 Tunnelled Message"
-            fast_start:
-                description:
-                - "H323 FastStart"
+                type: str
             h225cs_message:
                 description:
                 - "H323 H225 Call Signaling Message"
+                type: str
             h245ctl_message:
                 description:
                 - "H323 H245 Media Control Message"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            h245_tunneled:
+                description:
+                - "H323 H245 Tunnelled Message"
+                type: str
+            fast_start:
+                description:
+                - "H323 FastStart"
+                type: str
 
 '''
 
@@ -152,6 +167,9 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable']
         },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -171,21 +189,18 @@ def get_argspec():
             'h225ras_message': {
                 'type': 'str',
             },
-            'h245_tunneled': {
-                'type': 'str',
-            },
-            'fast_start': {
-                'type': 'str',
-            },
             'h225cs_message': {
                 'type': 'str',
             },
             'h245ctl_message': {
                 'type': 'str',
+            },
+            'h245_tunneled': {
+                'type': 'str',
+            },
+            'fast_start': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

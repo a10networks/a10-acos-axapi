@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_http_alg
 description:
     - HTTP-ALG Template
-short_description: Configures A10 cgnv6.template.http-alg
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,96 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "HTTP-ALG template name"
+        type: str
+        required: True
+    request_insert_client_ip:
+        description:
+        - "Insert Client IP into HTTP request"
+        type: bool
         required: False
     header_name_client_ip:
         description:
         - "Header name (default= X-Forwarded-For)"
+        type: str
+        required: False
+    include_tunnel_ip:
+        description:
+        - "Include the tunnel IP (applies to DS-Lite and 6RD-NAT64 sessions)"
+        type: bool
+        required: False
+    method:
+        description:
+        - "'append'= Append if there is already a header (default); 'replace'= Replace if
+          there is already a header;"
+        type: str
+        required: False
+    request_insert_msisdn:
+        description:
+        - "Insert MSISDN into HTTP request"
+        type: bool
+        required: False
+    header_name_msisdn:
+        description:
+        - "Header name (default= X-MSISDN)"
+        type: str
+        required: False
+    radius_sg:
+        description:
+        - "RADIUS service group (RADIUS service group name)"
+        type: str
+        required: False
+    secret_string:
+        description:
+        - "The RADIUS secret"
+        type: str
+        required: False
+    encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+        type: str
         required: False
     retry:
         description:
         - "Specify the maximum retries allowed for sending an request to a RADIUS server
           (default 2) (The maximum retries allowed for sending an request to the radius
           server (default 2))"
+        type: int
         required: False
     retry_svr_num:
         description:
         - "Specify the maximum RADIUS servers allowed to try (default 0)"
-        required: False
-    name:
-        description:
-        - "HTTP-ALG template name"
-        required: True
-    request_insert_msisdn:
-        description:
-        - "Insert MSISDN into HTTP request"
-        required: False
-    radius_sg:
-        description:
-        - "RADIUS service group (RADIUS service group name)"
-        required: False
-    encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    request_insert_client_ip:
-        description:
-        - "Insert Client IP into HTTP request"
-        required: False
-    header_name_msisdn:
-        description:
-        - "Header name (default= X-MSISDN)"
+        type: int
         required: False
     timeout:
         description:
         - "The maximum time allowed for waiting for a response from a radius server
           (default 2)"
-        required: False
-    include_tunnel_ip:
-        description:
-        - "Include the tunnel IP (applies to DS-Lite and 6RD-NAT64 sessions)"
-        required: False
-    secret_string:
-        description:
-        - "The RADIUS secret"
-        required: False
-    method:
-        description:
-        - "'append'= Append if there is already a header (default); 'replace'= Replace if
-          there is already a header;"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -181,7 +201,36 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'request_insert_client_ip': {
+            'type': 'bool',
+        },
         'header_name_client_ip': {
+            'type': 'str',
+        },
+        'include_tunnel_ip': {
+            'type': 'bool',
+        },
+        'method': {
+            'type': 'str',
+            'choices': ['append', 'replace']
+        },
+        'request_insert_msisdn': {
+            'type': 'bool',
+        },
+        'header_name_msisdn': {
+            'type': 'str',
+        },
+        'radius_sg': {
+            'type': 'str',
+        },
+        'secret_string': {
+            'type': 'str',
+        },
+        'encrypted': {
             'type': 'str',
         },
         'retry': {
@@ -190,42 +239,13 @@ def get_argspec():
         'retry_svr_num': {
             'type': 'int',
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'request_insert_msisdn': {
-            'type': 'bool',
-        },
-        'radius_sg': {
-            'type': 'str',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'request_insert_client_ip': {
-            'type': 'bool',
-        },
-        'header_name_msisdn': {
-            'type': 'str',
-        },
         'timeout': {
             'type': 'int',
         },
-        'include_tunnel_ip': {
-            'type': 'bool',
-        },
-        'secret_string': {
-            'type': 'str',
-        },
-        'method': {
-            'type': 'str',
-            'choices': ['append', 'replace']
-        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

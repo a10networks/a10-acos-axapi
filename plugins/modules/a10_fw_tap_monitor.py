@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_tap_monitor
 description:
     - Configure tap monitor port
-short_description: Configures A10 fw.tap-monitor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,51 +22,63 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     status:
         description:
         - "'enable'= Enable tap monitor mode; 'disable'= Disable tap monitor mode
           (Default=Disable);"
+        type: str
         required: False
     tap_port_cfg:
         description:
         - "Field tap_port_cfg"
+        type: list
         required: False
         suboptions:
             tap_eth:
                 description:
                 - "Ethernet interface number"
+                type: str
             tap_vlan:
                 description:
                 - "Vlan number"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''

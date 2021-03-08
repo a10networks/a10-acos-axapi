@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_policy_class_list
 description:
     - Configure classification list
-short_description: Configures A10 cgnv6.template.policy.class-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,106 +22,137 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    header_name:
-        description:
-        - "Specify L7 header name"
-        required: False
-    lid_list:
-        description:
-        - "Field lid_list"
-        required: False
-        suboptions:
-            request_limit:
-                description:
-                - "Request limit (Specify request limit)"
-            conn_limit:
-                description:
-                - "Connection limit"
-            lidnum:
-                description:
-                - "Specify a limit ID"
-            log:
-                description:
-                - "Log a message"
-            dns64:
-                description:
-                - "Field dns64"
-            interval:
-                description:
-                - "Specify log interval in minutes, by default system will log every over limit
-          instance"
-            request_rate_limit:
-                description:
-                - "Request rate limit (Specify request rate limit)"
-            user_tag:
-                description:
-                - "Customized tag"
-            conn_per:
-                description:
-                - "Per (Specify interval in number of 100ms)"
-            request_per:
-                description:
-                - "Per (Specify interval in number of 100ms)"
-            conn_rate_limit:
-                description:
-                - "Specify connection rate limit"
-            lockout:
-                description:
-                - "Don't accept any new connection for certain time (Lockout duration in minutes)"
-            action_value:
-                description:
-                - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the
-          connection when it exceeds limit;"
-            over_limit_action:
-                description:
-                - "Set action when exceeds limit"
-            uuid:
-                description:
-                - "uuid of the object"
+        - Key to identify parent object
+        type: str
+        required: True
     name:
         description:
         - "Class list name"
+        type: str
         required: True
     client_ip_l3_dest:
         description:
         - "Use destination IP as client IP address"
+        type: bool
         required: False
     client_ip_l7_header:
         description:
         - "Use extract client IP address from L7 header"
+        type: bool
+        required: False
+    header_name:
+        description:
+        - "Specify L7 header name"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    lid_list:
+        description:
+        - "Field lid_list"
+        type: list
+        required: False
+        suboptions:
+            lidnum:
+                description:
+                - "Specify a limit ID"
+                type: int
+            conn_limit:
+                description:
+                - "Connection limit"
+                type: int
+            conn_rate_limit:
+                description:
+                - "Specify connection rate limit"
+                type: int
+            conn_per:
+                description:
+                - "Per (Specify interval in number of 100ms)"
+                type: int
+            request_limit:
+                description:
+                - "Request limit (Specify request limit)"
+                type: int
+            request_rate_limit:
+                description:
+                - "Request rate limit (Specify request rate limit)"
+                type: int
+            request_per:
+                description:
+                - "Per (Specify interval in number of 100ms)"
+                type: int
+            over_limit_action:
+                description:
+                - "Set action when exceeds limit"
+                type: bool
+            action_value:
+                description:
+                - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the
+          connection when it exceeds limit;"
+                type: str
+            lockout:
+                description:
+                - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+                type: int
+            log:
+                description:
+                - "Log a message"
+                type: bool
+            interval:
+                description:
+                - "Specify log interval in minutes, by default system will log every over limit
+          instance"
+                type: int
+            dns64:
+                description:
+                - "Field dns64"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -181,68 +210,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'header_name': {
-            'type': 'str',
-        },
-        'lid_list': {
-            'type': 'list',
-            'request_limit': {
-                'type': 'int',
-            },
-            'conn_limit': {
-                'type': 'int',
-            },
-            'lidnum': {
-                'type': 'int',
-                'required': True,
-            },
-            'log': {
-                'type': 'bool',
-            },
-            'dns64': {
-                'type': 'dict',
-                'prefix': {
-                    'type': 'str',
-                },
-                'exclusive_answer': {
-                    'type': 'bool',
-                },
-                'disable': {
-                    'type': 'bool',
-                }
-            },
-            'interval': {
-                'type': 'int',
-            },
-            'request_rate_limit': {
-                'type': 'int',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'conn_per': {
-                'type': 'int',
-            },
-            'request_per': {
-                'type': 'int',
-            },
-            'conn_rate_limit': {
-                'type': 'int',
-            },
-            'lockout': {
-                'type': 'int',
-            },
-            'action_value': {
-                'type': 'str',
-                'choices': ['forward', 'reset']
-            },
-            'over_limit_action': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
@@ -253,8 +220,70 @@ def get_argspec():
         'client_ip_l7_header': {
             'type': 'bool',
         },
+        'header_name': {
+            'type': 'str',
+        },
         'uuid': {
             'type': 'str',
+        },
+        'lid_list': {
+            'type': 'list',
+            'lidnum': {
+                'type': 'int',
+                'required': True,
+            },
+            'conn_limit': {
+                'type': 'int',
+            },
+            'conn_rate_limit': {
+                'type': 'int',
+            },
+            'conn_per': {
+                'type': 'int',
+            },
+            'request_limit': {
+                'type': 'int',
+            },
+            'request_rate_limit': {
+                'type': 'int',
+            },
+            'request_per': {
+                'type': 'int',
+            },
+            'over_limit_action': {
+                'type': 'bool',
+            },
+            'action_value': {
+                'type': 'str',
+                'choices': ['forward', 'reset']
+            },
+            'lockout': {
+                'type': 'int',
+            },
+            'log': {
+                'type': 'bool',
+            },
+            'interval': {
+                'type': 'int',
+            },
+            'dns64': {
+                'type': 'dict',
+                'disable': {
+                    'type': 'bool',
+                },
+                'exclusive_answer': {
+                    'type': 'bool',
+                },
+                'prefix': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
         }
     })
     # Parent keys

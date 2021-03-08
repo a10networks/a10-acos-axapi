@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_interface_trunk
 description:
     - VRRP-A interface trunk
-short_description: Configures A10 vrrp-a.interface.trunk
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    both:
-        description:
-        - "both a router and server interface"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    vlan:
-        description:
-        - "VLAN ID"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    router_interface:
-        description:
-        - "interface to upstream router"
-        required: False
-    no_heartbeat:
-        description:
-        - "do not send out heartbeat packet from this interface"
-        required: False
-    server_interface:
-        description:
-        - "interface to real server"
+        type: str
         required: False
     trunk_val:
         description:
         - "Ethernet Interface"
+        type: int
         required: True
+    router_interface:
+        description:
+        - "interface to upstream router"
+        type: bool
+        required: False
+    server_interface:
+        description:
+        - "interface to real server"
+        type: bool
+        required: False
+    both:
+        description:
+        - "both a router and server interface"
+        type: bool
+        required: False
+    vlan:
+        description:
+        - "VLAN ID"
+        type: int
+        required: False
+    no_heartbeat:
+        description:
+        - "do not send out heartbeat packet from this interface"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -141,30 +154,30 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'both': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'vlan': {
+        'trunk_val': {
             'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
+            'required': True,
         },
         'router_interface': {
-            'type': 'bool',
-        },
-        'no_heartbeat': {
             'type': 'bool',
         },
         'server_interface': {
             'type': 'bool',
         },
-        'trunk_val': {
+        'both': {
+            'type': 'bool',
+        },
+        'vlan': {
             'type': 'int',
-            'required': True,
+        },
+        'no_heartbeat': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

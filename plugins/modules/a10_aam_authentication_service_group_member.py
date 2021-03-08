@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_service_group_member
 description:
     - Authentication service group member
-short_description: Configures A10 aam.authentication.service.group.member
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     service_group_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
         description:
-        - "Field oper"
+        - "Member name"
+        type: str
+        required: True
+    port:
+        description:
+        - "Port number"
+        type: int
+        required: True
+    member_state:
+        description:
+        - "'enable'= Enable member service port; 'disable'= Disable member service port;"
+        type: str
         required: False
-        suboptions:
-            alt_list:
-                description:
-                - "Field alt_list"
-            name:
-                description:
-                - "Member name"
-            hm_index:
-                description:
-                - "Field hm_index"
-            hm_key:
-                description:
-                - "Field hm_key"
-            drs_list:
-                description:
-                - "Field drs_list"
-            state:
-                description:
-                - "Field state"
-            port:
-                description:
-                - "Port number"
     member_priority:
         description:
         - "Priority of Port in the Group"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -110,86 +111,131 @@ options:
           Fastest response time; 'slowest_rsp_time'= Slowest response time;
           'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL
           connections; 'curr_conn_overflow'= Current connection counter overflow count;"
-    member_state:
+                type: str
+    oper:
         description:
-        - "'enable'= Enable member service port; 'disable'= Disable member service port;"
-        required: False
-    stats:
-        description:
-        - "Field stats"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            curr_req:
+            state:
                 description:
-                - "Current requests"
-            total_rev_bytes:
+                - "Field state"
+                type: str
+            hm_key:
                 description:
-                - "Bytes processed in reverse direction"
+                - "Field hm_key"
+                type: int
+            hm_index:
+                description:
+                - "Field hm_index"
+                type: int
+            drs_list:
+                description:
+                - "Field drs_list"
+                type: list
+            alt_list:
+                description:
+                - "Field alt_list"
+                type: list
             name:
                 description:
                 - "Member name"
-            peak_conn:
-                description:
-                - "Field peak_conn"
-            total_ssl_conn:
-                description:
-                - "Total SSL connections"
-            total_conn:
-                description:
-                - "Total established connections"
-            fastest_rsp_time:
-                description:
-                - "Fastest response time"
-            total_fwd_pkts:
-                description:
-                - "Packets processed in forward direction"
-            total_req:
-                description:
-                - "Total requests"
-            total_rev_pkts:
-                description:
-                - "Packets processed in reverse direction"
+                type: str
             port:
                 description:
                 - "Port number"
-            curr_ssl_conn:
-                description:
-                - "Current SSL connections"
-            total_req_succ:
-                description:
-                - "Total requests successful"
+                type: int
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
             curr_conn:
                 description:
                 - "Current established connections"
-            total_rev_pkts_inspected_status_code_non_5xx:
-                description:
-                - "Total reverse packets inspected status code non 5xx"
-            total_rev_pkts_inspected_status_code_2xx:
-                description:
-                - "Total reverse packets inspected status code 2xx"
-            curr_conn_overflow:
-                description:
-                - "Current connection counter overflow count"
+                type: str
             total_fwd_bytes:
                 description:
                 - "Bytes processed in forward direction"
-            slowest_rsp_time:
+                type: str
+            total_fwd_pkts:
                 description:
-                - "Slowest response time"
-            response_time:
+                - "Packets processed in forward direction"
+                type: str
+            total_rev_bytes:
                 description:
-                - "Response time"
+                - "Bytes processed in reverse direction"
+                type: str
+            total_rev_pkts:
+                description:
+                - "Packets processed in reverse direction"
+                type: str
+            total_conn:
+                description:
+                - "Total established connections"
+                type: str
             total_rev_pkts_inspected:
                 description:
                 - "Total reverse packets inspected"
-    port:
-        description:
-        - "Port number"
-        required: True
-    name:
-        description:
-        - "Member name"
-        required: True
+                type: str
+            total_rev_pkts_inspected_status_code_2xx:
+                description:
+                - "Total reverse packets inspected status code 2xx"
+                type: str
+            total_rev_pkts_inspected_status_code_non_5xx:
+                description:
+                - "Total reverse packets inspected status code non 5xx"
+                type: str
+            curr_req:
+                description:
+                - "Current requests"
+                type: str
+            total_req:
+                description:
+                - "Total requests"
+                type: str
+            total_req_succ:
+                description:
+                - "Total requests successful"
+                type: str
+            peak_conn:
+                description:
+                - "Field peak_conn"
+                type: str
+            response_time:
+                description:
+                - "Response time"
+                type: str
+            fastest_rsp_time:
+                description:
+                - "Fastest response time"
+                type: str
+            slowest_rsp_time:
+                description:
+                - "Slowest response time"
+                type: str
+            curr_ssl_conn:
+                description:
+                - "Current SSL connections"
+                type: str
+            total_ssl_conn:
+                description:
+                - "Total SSL connections"
+                type: str
+            curr_conn_overflow:
+                description:
+                - "Current connection counter overflow count"
+                type: str
+            name:
+                description:
+                - "Member name"
+                type: str
+            port:
+                description:
+                - "Port number"
+                type: int
 
 '''
 
@@ -250,120 +296,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'alt_list': {
-                'type': 'list',
-                'alt_state': {
-                    'type': 'str',
-                },
-                'alt_rev_pkts': {
-                    'type': 'int',
-                },
-                'alt_port': {
-                    'type': 'int',
-                },
-                'alt_peak_conn': {
-                    'type': 'int',
-                },
-                'alt_curr_conn': {
-                    'type': 'int',
-                },
-                'alt_fwd_pkts': {
-                    'type': 'int',
-                },
-                'alt_total_conn': {
-                    'type': 'int',
-                },
-                'alt_name': {
-                    'type': 'str',
-                }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'hm_index': {
-                'type': 'int',
-            },
-            'hm_key': {
-                'type': 'int',
-            },
-            'drs_list': {
-                'type': 'list',
-                'drs_fwd_bts': {
-                    'type': 'int',
-                },
-                'drs_fwd_pkts': {
-                    'type': 'int',
-                },
-                'drs_rev_bts': {
-                    'type': 'int',
-                },
-                'drs_port': {
-                    'type': 'int',
-                },
-                'drs_curr_req': {
-                    'type': 'int',
-                },
-                'drs_name': {
-                    'type': 'str',
-                },
-                'drs_pers_conn': {
-                    'type': 'int',
-                },
-                'drs_priority': {
-                    'type': 'int',
-                },
-                'drs_total_req_succ': {
-                    'type': 'int',
-                },
-                'drs_hm_key': {
-                    'type': 'int',
-                },
-                'drs_hm_index': {
-                    'type': 'int',
-                },
-                'drs_rev_pkts': {
-                    'type': 'int',
-                },
-                'drs_total_conn': {
-                    'type': 'int',
-                },
-                'drs_state': {
-                    'type': 'str',
-                },
-                'drs_frsp_time': {
-                    'type': 'int',
-                },
-                'drs_peak_conn': {
-                    'type': 'int',
-                },
-                'drs_curr_conn': {
-                    'type': 'int',
-                },
-                'drs_rsp_time': {
-                    'type': 'int',
-                },
-                'drs_total_req': {
-                    'type': 'int',
-                },
-                'drs_srsp_time': {
-                    'type': 'int',
-                }
-            },
-            'state': {
-                'type':
-                'str',
-                'choices': [
-                    'UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN',
-                    'DIS-MAINTENANCE'
-                ]
-            },
-            'port': {
-                'type': 'int',
-                'required': True,
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'port': {
+            'type': 'int',
+            'required': True,
+        },
+        'member_state': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
         },
         'member_priority': {
             'type': 'int',
@@ -391,85 +334,188 @@ def get_argspec():
                 ]
             }
         },
-        'member_state': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type':
+                'str',
+                'choices': [
+                    'UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN',
+                    'DIS-MAINTENANCE'
+                ]
+            },
+            'hm_key': {
+                'type': 'int',
+            },
+            'hm_index': {
+                'type': 'int',
+            },
+            'drs_list': {
+                'type': 'list',
+                'drs_name': {
+                    'type': 'str',
+                },
+                'drs_state': {
+                    'type': 'str',
+                },
+                'drs_hm_key': {
+                    'type': 'int',
+                },
+                'drs_hm_index': {
+                    'type': 'int',
+                },
+                'drs_port': {
+                    'type': 'int',
+                },
+                'drs_priority': {
+                    'type': 'int',
+                },
+                'drs_curr_conn': {
+                    'type': 'int',
+                },
+                'drs_pers_conn': {
+                    'type': 'int',
+                },
+                'drs_total_conn': {
+                    'type': 'int',
+                },
+                'drs_curr_req': {
+                    'type': 'int',
+                },
+                'drs_total_req': {
+                    'type': 'int',
+                },
+                'drs_total_req_succ': {
+                    'type': 'int',
+                },
+                'drs_rev_pkts': {
+                    'type': 'int',
+                },
+                'drs_fwd_pkts': {
+                    'type': 'int',
+                },
+                'drs_rev_bts': {
+                    'type': 'int',
+                },
+                'drs_fwd_bts': {
+                    'type': 'int',
+                },
+                'drs_peak_conn': {
+                    'type': 'int',
+                },
+                'drs_rsp_time': {
+                    'type': 'int',
+                },
+                'drs_frsp_time': {
+                    'type': 'int',
+                },
+                'drs_srsp_time': {
+                    'type': 'int',
+                }
+            },
+            'alt_list': {
+                'type': 'list',
+                'alt_name': {
+                    'type': 'str',
+                },
+                'alt_port': {
+                    'type': 'int',
+                },
+                'alt_state': {
+                    'type': 'str',
+                },
+                'alt_curr_conn': {
+                    'type': 'int',
+                },
+                'alt_total_conn': {
+                    'type': 'int',
+                },
+                'alt_rev_pkts': {
+                    'type': 'int',
+                },
+                'alt_fwd_pkts': {
+                    'type': 'int',
+                },
+                'alt_peak_conn': {
+                    'type': 'int',
+                }
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port': {
+                'type': 'int',
+                'required': True,
+            }
         },
         'stats': {
             'type': 'dict',
-            'curr_req': {
+            'curr_conn': {
+                'type': 'str',
+            },
+            'total_fwd_bytes': {
+                'type': 'str',
+            },
+            'total_fwd_pkts': {
                 'type': 'str',
             },
             'total_rev_bytes': {
+                'type': 'str',
+            },
+            'total_rev_pkts': {
+                'type': 'str',
+            },
+            'total_conn': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected_status_code_2xx': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected_status_code_non_5xx': {
+                'type': 'str',
+            },
+            'curr_req': {
+                'type': 'str',
+            },
+            'total_req': {
+                'type': 'str',
+            },
+            'total_req_succ': {
+                'type': 'str',
+            },
+            'peak_conn': {
+                'type': 'str',
+            },
+            'response_time': {
+                'type': 'str',
+            },
+            'fastest_rsp_time': {
+                'type': 'str',
+            },
+            'slowest_rsp_time': {
+                'type': 'str',
+            },
+            'curr_ssl_conn': {
+                'type': 'str',
+            },
+            'total_ssl_conn': {
+                'type': 'str',
+            },
+            'curr_conn_overflow': {
                 'type': 'str',
             },
             'name': {
                 'type': 'str',
                 'required': True,
             },
-            'peak_conn': {
-                'type': 'str',
-            },
-            'total_ssl_conn': {
-                'type': 'str',
-            },
-            'total_conn': {
-                'type': 'str',
-            },
-            'fastest_rsp_time': {
-                'type': 'str',
-            },
-            'total_fwd_pkts': {
-                'type': 'str',
-            },
-            'total_req': {
-                'type': 'str',
-            },
-            'total_rev_pkts': {
-                'type': 'str',
-            },
             'port': {
                 'type': 'int',
                 'required': True,
-            },
-            'curr_ssl_conn': {
-                'type': 'str',
-            },
-            'total_req_succ': {
-                'type': 'str',
-            },
-            'curr_conn': {
-                'type': 'str',
-            },
-            'total_rev_pkts_inspected_status_code_non_5xx': {
-                'type': 'str',
-            },
-            'total_rev_pkts_inspected_status_code_2xx': {
-                'type': 'str',
-            },
-            'curr_conn_overflow': {
-                'type': 'str',
-            },
-            'total_fwd_bytes': {
-                'type': 'str',
-            },
-            'slowest_rsp_time': {
-                'type': 'str',
-            },
-            'response_time': {
-                'type': 'str',
-            },
-            'total_rev_pkts_inspected': {
-                'type': 'str',
             }
-        },
-        'port': {
-            'type': 'int',
-            'required': True,
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     # Parent keys

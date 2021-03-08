@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_user
 description:
     - Deprecated SNMPv3 user command
-short_description: Configures A10 snmp-server.user
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,76 +22,93 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     username:
         description:
         - "Name of the user"
+        type: str
         required: True
-    auth_val:
-        description:
-        - "'md5'= Use HMAC MD5 algorithm for authentication; 'sha'= Use HMAC SHA algorithm
-          for authentication;"
-        required: False
     group:
         description:
         - "Group to which the user belongs"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    encpasswd:
-        description:
-        - "Passphrase for encryption"
-        required: False
-    passwd:
-        description:
-        - "Password of this user"
-        required: False
-    priv_pw_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED passphrase string)"
+        type: str
         required: False
     v3:
         description:
         - "'auth'= Using the authNoPriv Security Level; 'noauth'= Using the noAuthNoPriv
           Security Level;"
+        type: str
+        required: False
+    auth_val:
+        description:
+        - "'md5'= Use HMAC MD5 algorithm for authentication; 'sha'= Use HMAC SHA algorithm
+          for authentication;"
+        type: str
+        required: False
+    passwd:
+        description:
+        - "Password of this user"
+        type: str
         required: False
     pw_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED passphrase string)"
+        type: str
         required: False
     priv:
         description:
         - "'des'= DES encryption alogrithm; 'aes'= AES encryption alogrithm;  (Encryption
           type)"
+        type: str
+        required: False
+    encpasswd:
+        description:
+        - "Passphrase for encryption"
+        type: str
+        required: False
+    priv_pw_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED passphrase string)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -160,28 +175,19 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'auth_val': {
-            'type': 'str',
-            'choices': ['md5', 'sha']
-        },
         'group': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'encpasswd': {
-            'type': 'str',
-        },
-        'passwd': {
-            'type': 'str',
-        },
-        'priv_pw_encrypted': {
             'type': 'str',
         },
         'v3': {
             'type': 'str',
             'choices': ['auth', 'noauth']
+        },
+        'auth_val': {
+            'type': 'str',
+            'choices': ['md5', 'sha']
+        },
+        'passwd': {
+            'type': 'str',
         },
         'pw_encrypted': {
             'type': 'str',
@@ -189,6 +195,15 @@ def get_argspec():
         'priv': {
             'type': 'str',
             'choices': ['des', 'aes']
+        },
+        'encpasswd': {
+            'type': 'str',
+        },
+        'priv_pw_encrypted': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

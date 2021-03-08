@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_global
 description:
     - Stateless NAT46 Statistics
-short_description: Configures A10 cgnv6.nat46.stateless.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -71,72 +82,89 @@ options:
           errors; 'icmp_to_icmpv6'= ICMP to ICMPv6; 'icmp_to_icmpv6_error'= ICMP to
           ICMPv6 errors; 'ha_standby'= HA is standby; 'other_error'= Other errors;
           'conn_count'= conn count;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            inbound_ipv4_unreachable:
-                description:
-                - "Inbound IPv4 destination unreachable"
-            outbound_ipv6_unreachable:
-                description:
-                - "Outbound IPv6 destination unreachable"
             outbound_ipv4_received:
                 description:
                 - "Outbound IPv4 packets received"
-            outbound_ipv6_fragmented:
-                description:
-                - "Outbound IPv6 packets fragmented"
-            ha_standby:
-                description:
-                - "HA is standby"
-            packet_too_big:
-                description:
-                - "Packet too big"
-            inbound_ipv6_received:
-                description:
-                - "Inbound IPv6 packets received"
-            icmp_to_icmpv6:
-                description:
-                - "ICMP to ICMPv6"
-            inbound_ipv6_drop:
-                description:
-                - "Inbound IPv6 packets dropped"
-            fragment_error:
-                description:
-                - "Fragment processing errors"
-            inbound_ipv6_fragment_received:
-                description:
-                - "Inbound IPv6 fragment packets received"
-            icmpv6_to_icmp_error:
-                description:
-                - "ICMPv6 to ICMP errors"
-            inbound_ipv4_fragmented:
-                description:
-                - "Inbound IPv4 packets fragmented"
-            outbound_ipv4_fragment_received:
-                description:
-                - "Outbound IPv4 fragment packets received"
+                type: str
             outbound_ipv4_drop:
                 description:
                 - "Outbound IPv4 packets dropped"
-            conn_count:
+                type: str
+            outbound_ipv4_fragment_received:
                 description:
-                - "conn count"
+                - "Outbound IPv4 fragment packets received"
+                type: str
+            outbound_ipv6_unreachable:
+                description:
+                - "Outbound IPv6 destination unreachable"
+                type: str
+            outbound_ipv6_fragmented:
+                description:
+                - "Outbound IPv6 packets fragmented"
+                type: str
+            inbound_ipv6_received:
+                description:
+                - "Inbound IPv6 packets received"
+                type: str
+            inbound_ipv6_drop:
+                description:
+                - "Inbound IPv6 packets dropped"
+                type: str
+            inbound_ipv6_fragment_received:
+                description:
+                - "Inbound IPv6 fragment packets received"
+                type: str
+            inbound_ipv4_unreachable:
+                description:
+                - "Inbound IPv4 destination unreachable"
+                type: str
+            inbound_ipv4_fragmented:
+                description:
+                - "Inbound IPv4 packets fragmented"
+                type: str
+            packet_too_big:
+                description:
+                - "Packet too big"
+                type: str
+            fragment_error:
+                description:
+                - "Fragment processing errors"
+                type: str
             icmpv6_to_icmp:
                 description:
                 - "ICMPv6 to ICMP"
-            other_error:
+                type: str
+            icmpv6_to_icmp_error:
                 description:
-                - "Other errors"
+                - "ICMPv6 to ICMP errors"
+                type: str
+            icmp_to_icmpv6:
+                description:
+                - "ICMP to ICMPv6"
+                type: str
             icmp_to_icmpv6_error:
                 description:
                 - "ICMP to ICMPv6 errors"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ha_standby:
+                description:
+                - "HA is standby"
+                type: str
+            other_error:
+                description:
+                - "Other errors"
+                type: str
+            conn_count:
+                description:
+                - "conn count"
+                type: str
 
 '''
 
@@ -191,6 +219,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -212,66 +243,63 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'inbound_ipv4_unreachable': {
-                'type': 'str',
-            },
-            'outbound_ipv6_unreachable': {
-                'type': 'str',
-            },
             'outbound_ipv4_received': {
-                'type': 'str',
-            },
-            'outbound_ipv6_fragmented': {
-                'type': 'str',
-            },
-            'ha_standby': {
-                'type': 'str',
-            },
-            'packet_too_big': {
-                'type': 'str',
-            },
-            'inbound_ipv6_received': {
-                'type': 'str',
-            },
-            'icmp_to_icmpv6': {
-                'type': 'str',
-            },
-            'inbound_ipv6_drop': {
-                'type': 'str',
-            },
-            'fragment_error': {
-                'type': 'str',
-            },
-            'inbound_ipv6_fragment_received': {
-                'type': 'str',
-            },
-            'icmpv6_to_icmp_error': {
-                'type': 'str',
-            },
-            'inbound_ipv4_fragmented': {
-                'type': 'str',
-            },
-            'outbound_ipv4_fragment_received': {
                 'type': 'str',
             },
             'outbound_ipv4_drop': {
                 'type': 'str',
             },
-            'conn_count': {
+            'outbound_ipv4_fragment_received': {
+                'type': 'str',
+            },
+            'outbound_ipv6_unreachable': {
+                'type': 'str',
+            },
+            'outbound_ipv6_fragmented': {
+                'type': 'str',
+            },
+            'inbound_ipv6_received': {
+                'type': 'str',
+            },
+            'inbound_ipv6_drop': {
+                'type': 'str',
+            },
+            'inbound_ipv6_fragment_received': {
+                'type': 'str',
+            },
+            'inbound_ipv4_unreachable': {
+                'type': 'str',
+            },
+            'inbound_ipv4_fragmented': {
+                'type': 'str',
+            },
+            'packet_too_big': {
+                'type': 'str',
+            },
+            'fragment_error': {
                 'type': 'str',
             },
             'icmpv6_to_icmp': {
                 'type': 'str',
             },
-            'other_error': {
+            'icmpv6_to_icmp_error': {
+                'type': 'str',
+            },
+            'icmp_to_icmpv6': {
                 'type': 'str',
             },
             'icmp_to_icmpv6_error': {
                 'type': 'str',
+            },
+            'ha_standby': {
+                'type': 'str',
+            },
+            'other_error': {
+                'type': 'str',
+            },
+            'conn_count': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

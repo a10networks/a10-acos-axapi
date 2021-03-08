@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_slb_change
 description:
     - Enable SLB change traps
-short_description: Configures A10 snmp.server.enable.traps.slb-change
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,93 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Enable all system group traps"
+        type: bool
         required: False
     resource_usage_warning:
         description:
         - "Enable partition resource usage warning trap"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ssl_cert_change:
-        description:
-        - "Enable SSL certificate change trap"
-        required: False
-    ssl_cert_expire:
-        description:
-        - "Enable SSL certificate expiring trap"
-        required: False
-    system_threshold:
-        description:
-        - "Enable slb system threshold trap"
-        required: False
-    server:
-        description:
-        - "Enable slb server create/delete trap"
-        required: False
-    vip:
-        description:
-        - "Enable slb vip create/delete trap"
+        type: bool
         required: False
     connection_resource_event:
         description:
         - "Enable system connection resource event trap"
+        type: bool
+        required: False
+    server:
+        description:
+        - "Enable slb server create/delete trap"
+        type: bool
         required: False
     server_port:
         description:
         - "Enable slb server port create/delete trap"
+        type: bool
+        required: False
+    ssl_cert_change:
+        description:
+        - "Enable SSL certificate change trap"
+        type: bool
+        required: False
+    ssl_cert_expire:
+        description:
+        - "Enable SSL certificate expiring trap"
+        type: bool
+        required: False
+    vip:
+        description:
+        - "Enable slb vip create/delete trap"
+        type: bool
         required: False
     vip_port:
         description:
         - "Enable slb vip-port create/delete trap"
+        type: bool
+        required: False
+    system_threshold:
+        description:
+        - "Enable slb system threshold trap"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -162,8 +178,14 @@ def get_argspec():
         'resource_usage_warning': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
+        'connection_resource_event': {
+            'type': 'bool',
+        },
+        'server': {
+            'type': 'bool',
+        },
+        'server_port': {
+            'type': 'bool',
         },
         'ssl_cert_change': {
             'type': 'bool',
@@ -171,23 +193,17 @@ def get_argspec():
         'ssl_cert_expire': {
             'type': 'bool',
         },
-        'system_threshold': {
-            'type': 'bool',
-        },
-        'server': {
-            'type': 'bool',
-        },
         'vip': {
-            'type': 'bool',
-        },
-        'connection_resource_event': {
-            'type': 'bool',
-        },
-        'server_port': {
             'type': 'bool',
         },
         'vip_port': {
             'type': 'bool',
+        },
+        'system_threshold': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

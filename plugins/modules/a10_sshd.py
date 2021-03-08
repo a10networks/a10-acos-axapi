@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sshd
 description:
     - SSHD service operation
-short_description: Configures A10 sshd
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,63 +21,78 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    load:
-        description:
-        - "Load SSH key"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
-    regenerate:
-        description:
-        - "Wipe and generate SSH key"
-        required: False
-    wipe:
-        description:
-        - "Wipe SSH key"
+        type: str
         required: False
     restart:
         description:
         - "Restart SSH service"
+        type: bool
+        required: False
+    wipe:
+        description:
+        - "Wipe SSH key"
+        type: bool
+        required: False
+    regenerate:
+        description:
+        - "Wipe and generate SSH key"
+        type: bool
         required: False
     generate:
         description:
         - "Generate SSH key"
-        required: False
-    file_url:
-        description:
-        - "File URL"
+        type: bool
         required: False
     size:
         description:
         - "'2048'= Key size 2048bit; '4096'= Key size 4096bit;"
+        type: str
+        required: False
+    load:
+        description:
+        - "Load SSH key"
+        type: bool
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
+        required: False
+    file_url:
+        description:
+        - "File URL"
+        type: str
         required: False
 
 '''
@@ -138,30 +151,30 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'restart': {
+            'type': 'bool',
+        },
+        'wipe': {
+            'type': 'bool',
+        },
+        'regenerate': {
+            'type': 'bool',
+        },
+        'generate': {
+            'type': 'bool',
+        },
+        'size': {
+            'type': 'str',
+            'choices': ['2048', '4096']
+        },
         'load': {
             'type': 'bool',
         },
         'use_mgmt_port': {
             'type': 'bool',
         },
-        'regenerate': {
-            'type': 'bool',
-        },
-        'wipe': {
-            'type': 'bool',
-        },
-        'restart': {
-            'type': 'bool',
-        },
-        'generate': {
-            'type': 'bool',
-        },
         'file_url': {
             'type': 'str',
-        },
-        'size': {
-            'type': 'str',
-            'choices': ['2048', '4096']
         }
     })
     return rv

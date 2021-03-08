@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_plat_cpu_drop
 description:
     - Miscellenious Information Used for CLI rendering
-short_description: Configures A10 plat-cpu-drop
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,66 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            drop_seg:
-                description:
-                - "Field drop_seg"
             fpga_seg:
                 description:
                 - "Field fpga_seg"
+                type: list
+            drop_seg:
+                description:
+                - "Field drop_seg"
+                type: list
             rate_limit:
                 description:
                 - "Field rate_limit"
+                type: int
             rate_limit_drp:
                 description:
                 - "Field rate_limit_drp"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -124,8 +135,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'fpga_seg': {
+                'type': 'list',
+                'fpga_seg_name': {
+                    'type': 'str',
+                }
+            },
             'drop_seg': {
                 'type': 'list',
                 'drop_name': {
@@ -138,12 +158,6 @@ def get_argspec():
                     }
                 }
             },
-            'fpga_seg': {
-                'type': 'list',
-                'fpga_seg_name': {
-                    'type': 'str',
-                }
-            },
             'rate_limit': {
                 'type': 'int',
             },
@@ -153,9 +167,6 @@ def get_argspec():
                     'type': 'str',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

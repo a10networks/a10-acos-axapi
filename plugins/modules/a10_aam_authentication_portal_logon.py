@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_portal_logon
 description:
     - Logon page configuration
-short_description: Configures A10 aam.authentication.portal.logon
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,231 +22,294 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     portal_name:
         description:
-        - Key to identify parent object    action_url:
-        description:
-        - "Specify form action URL in default logon page (Default= /logon.fo)"
-        required: False
-    submit_text:
-        description:
-        - "Specify submit button text in default logon page (Default= Log In)"
-        required: False
-    passcode_cfg:
-        description:
-        - "Field passcode_cfg"
-        required: False
-        suboptions:
-            passcode_font_custom:
-                description:
-                - "Specify custom font"
-            passcode_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-            passcode_color:
-                description:
-                - "Specify font color (Default= black)"
-            passcode_text:
-                description:
-                - "Specify passcode text (Default= Passcode)"
-            passcode_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
-            passcode_color_name:
-                description:
-                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
-          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
-          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
-          'white'= white; 'yellow'= yellow;"
-            passcode_font:
-                description:
-                - "Sepcify font (Default= Arial)"
-            passcode:
-                description:
-                - "Configure passcode text in default logon page"
-            passcode_size:
-                description:
-                - "Specify font size (Default= 3)"
-    username_cfg:
-        description:
-        - "Field username_cfg"
-        required: False
-        suboptions:
-            username:
-                description:
-                - "Configure username text in default logon page"
-            user_font:
-                description:
-                - "Sepcify font (Default= Arial)"
-            user_text:
-                description:
-                - "Specify username text (Default= User Name)"
-            user_size:
-                description:
-                - "Specify font size (Default= 3)"
-            user_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
-            user_font_custom:
-                description:
-                - "Specify custom font"
-            user_color:
-                description:
-                - "Specify font color (Default= black)"
-            user_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-            user_color_name:
-                description:
-                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
-          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
-          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
-          'white'= white; 'yellow'= yellow;"
-    username_var:
-        description:
-        - "Specify username variable name in default logon page (Default= user)"
-        required: False
-    password_var:
-        description:
-        - "Specify password variable name in default logon page (Default= pwd)"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     background:
         description:
         - "Field background"
+        type: dict
         required: False
         suboptions:
             bgfile:
                 description:
                 - "Specify background image filename"
+                type: str
             bgstyle:
                 description:
                 - "'tile'= Tile; 'stretch'= Stretch; 'fit'= Fit;"
-            bgcolor_value:
-                description:
-                - "Specify 6-digit HEX color value"
+                type: str
             bgcolor_name:
                 description:
                 - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
           'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
           'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
           'white'= white; 'yellow'= yellow;"
-    passcode_var:
-        description:
-        - "Specify passcode variable name in default logon page (Default= passcode)"
-        required: False
+                type: str
+            bgcolor_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
     fail_msg_cfg:
         description:
         - "Field fail_msg_cfg"
+        type: dict
         required: False
         suboptions:
-            fail_font_custom:
-                description:
-                - "Specify custom font"
-            fail_color:
-                description:
-                - "Specify font color (Default= red)"
-            fail_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-            fail_size:
-                description:
-                - "Specify font size (Default= 5)"
             fail_msg:
                 description:
                 - "Configure login failure message in default logon page"
+                type: bool
             fail_text:
                 description:
                 - "Specify login failure message (Default= Invalid username or password. Please
           try again.)"
-            fail_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
+                type: str
             fail_font:
                 description:
                 - "Sepcify font (Default= Arial)"
+                type: bool
+            fail_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            fail_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            fail_size:
+                description:
+                - "Specify font size (Default= 5)"
+                type: int
+            fail_color:
+                description:
+                - "Specify font color (Default= red)"
+                type: bool
             fail_color_name:
                 description:
                 - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
           'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
           'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
           'white'= white; 'yellow'= yellow;"
+                type: str
+            fail_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
             authz_fail_msg:
                 description:
                 - "Configure authorization failure message in default logon page, its text
           attributes follow fail-msg's (Specify authorization failure message (Default=
           Authorization failed. Please contact your system administrator.))"
+                type: str
+    action_url:
+        description:
+        - "Specify form action URL in default logon page (Default= /logon.fo)"
+        type: str
+        required: False
+    username_cfg:
+        description:
+        - "Field username_cfg"
+        type: dict
+        required: False
+        suboptions:
+            username:
+                description:
+                - "Configure username text in default logon page"
+                type: bool
+            user_text:
+                description:
+                - "Specify username text (Default= User Name)"
+                type: str
+            user_font:
+                description:
+                - "Sepcify font (Default= Arial)"
+                type: bool
+            user_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            user_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            user_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            user_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
+            user_color_name:
+                description:
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
+          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
+          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
+          'white'= white; 'yellow'= yellow;"
+                type: str
+            user_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
+    username_var:
+        description:
+        - "Specify username variable name in default logon page (Default= user)"
+        type: str
+        required: False
     password_cfg:
         description:
         - "Field password_cfg"
+        type: dict
         required: False
         suboptions:
-            pass_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
             password:
                 description:
                 - "Configure password text in default logon page"
+                type: bool
+            pass_text:
+                description:
+                - "Specify password text (Default= Password)"
+                type: str
+            pass_font:
+                description:
+                - "Sepcify font (Default= Arial)"
+                type: bool
+            pass_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            pass_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            pass_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            pass_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
             pass_color_name:
                 description:
                 - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
           'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
           'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
           'white'= white; 'yellow'= yellow;"
-            pass_face:
+                type: str
+            pass_color_value:
                 description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-            pass_font_custom:
-                description:
-                - "Specify custom font"
-            pass_size:
-                description:
-                - "Specify font size (Default= 3)"
-            pass_text:
-                description:
-                - "Specify password text (Default= Password)"
-            pass_font:
-                description:
-                - "Sepcify font (Default= Arial)"
-            pass_color:
-                description:
-                - "Specify font color (Default= black)"
+                - "Specify 6-digit HEX color value"
+                type: str
+    password_var:
+        description:
+        - "Specify password variable name in default logon page (Default= pwd)"
+        type: str
+        required: False
     enable_passcode:
         description:
         - "Enable passcode field in default logon page"
+        type: bool
+        required: False
+    passcode_cfg:
+        description:
+        - "Field passcode_cfg"
+        type: dict
+        required: False
+        suboptions:
+            passcode:
+                description:
+                - "Configure passcode text in default logon page"
+                type: bool
+            passcode_text:
+                description:
+                - "Specify passcode text (Default= Passcode)"
+                type: str
+            passcode_font:
+                description:
+                - "Sepcify font (Default= Arial)"
+                type: bool
+            passcode_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            passcode_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            passcode_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            passcode_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
+            passcode_color_name:
+                description:
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
+          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
+          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
+          'white'= white; 'yellow'= yellow;"
+                type: str
+            passcode_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
+    passcode_var:
+        description:
+        - "Specify passcode variable name in default logon page (Default= passcode)"
+        type: str
+        required: False
+    submit_text:
+        description:
+        - "Specify submit button text in default logon page (Default= Log In)"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -313,100 +374,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'action_url': {
-            'type': 'str',
-        },
-        'submit_text': {
-            'type': 'str',
-        },
-        'passcode_cfg': {
-            'type': 'dict',
-            'passcode_font_custom': {
-                'type': 'str',
-            },
-            'passcode_face': {
-                'type':
-                'str',
-                'choices': [
-                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
-                    'Verdana'
-                ]
-            },
-            'passcode_color': {
-                'type': 'bool',
-            },
-            'passcode_text': {
-                'type': 'str',
-            },
-            'passcode_color_value': {
-                'type': 'str',
-            },
-            'passcode_color_name': {
-                'type':
-                'str',
-                'choices': [
-                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
-                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
-                    'red', 'silver', 'teal', 'white', 'yellow'
-                ]
-            },
-            'passcode_font': {
-                'type': 'bool',
-            },
-            'passcode': {
-                'type': 'bool',
-            },
-            'passcode_size': {
-                'type': 'int',
-            }
-        },
-        'username_cfg': {
-            'type': 'dict',
-            'username': {
-                'type': 'bool',
-            },
-            'user_font': {
-                'type': 'bool',
-            },
-            'user_text': {
-                'type': 'str',
-            },
-            'user_size': {
-                'type': 'int',
-            },
-            'user_color_value': {
-                'type': 'str',
-            },
-            'user_font_custom': {
-                'type': 'str',
-            },
-            'user_color': {
-                'type': 'bool',
-            },
-            'user_face': {
-                'type':
-                'str',
-                'choices': [
-                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
-                    'Verdana'
-                ]
-            },
-            'user_color_name': {
-                'type':
-                'str',
-                'choices': [
-                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
-                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
-                    'red', 'silver', 'teal', 'white', 'yellow'
-                ]
-            }
-        },
-        'username_var': {
-            'type': 'str',
-        },
-        'password_var': {
-            'type': 'str',
-        },
         'background': {
             'type': 'dict',
             'bgfile': {
@@ -416,9 +383,6 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['tile', 'stretch', 'fit']
             },
-            'bgcolor_value': {
-                'type': 'str',
-            },
             'bgcolor_name': {
                 'type':
                 'str',
@@ -427,17 +391,20 @@ def get_argspec():
                     'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
+            },
+            'bgcolor_value': {
+                'type': 'str',
             }
-        },
-        'passcode_var': {
-            'type': 'str',
         },
         'fail_msg_cfg': {
             'type': 'dict',
-            'fail_font_custom': {
+            'fail_msg': {
+                'type': 'bool',
+            },
+            'fail_text': {
                 'type': 'str',
             },
-            'fail_color': {
+            'fail_font': {
                 'type': 'bool',
             },
             'fail_face': {
@@ -448,19 +415,13 @@ def get_argspec():
                     'Verdana'
                 ]
             },
+            'fail_font_custom': {
+                'type': 'str',
+            },
             'fail_size': {
                 'type': 'int',
             },
-            'fail_msg': {
-                'type': 'bool',
-            },
-            'fail_text': {
-                'type': 'str',
-            },
-            'fail_color_value': {
-                'type': 'str',
-            },
-            'fail_font': {
+            'fail_color': {
                 'type': 'bool',
             },
             'fail_color_name': {
@@ -472,19 +433,45 @@ def get_argspec():
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
             },
+            'fail_color_value': {
+                'type': 'str',
+            },
             'authz_fail_msg': {
                 'type': 'str',
             }
         },
-        'password_cfg': {
+        'action_url': {
+            'type': 'str',
+        },
+        'username_cfg': {
             'type': 'dict',
-            'pass_color_value': {
-                'type': 'str',
-            },
-            'password': {
+            'username': {
                 'type': 'bool',
             },
-            'pass_color_name': {
+            'user_text': {
+                'type': 'str',
+            },
+            'user_font': {
+                'type': 'bool',
+            },
+            'user_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'user_font_custom': {
+                'type': 'str',
+            },
+            'user_size': {
+                'type': 'int',
+            },
+            'user_color': {
+                'type': 'bool',
+            },
+            'user_color_name': {
                 'type':
                 'str',
                 'choices': [
@@ -492,6 +479,24 @@ def get_argspec():
                     'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
+            },
+            'user_color_value': {
+                'type': 'str',
+            }
+        },
+        'username_var': {
+            'type': 'str',
+        },
+        'password_cfg': {
+            'type': 'dict',
+            'password': {
+                'type': 'bool',
+            },
+            'pass_text': {
+                'type': 'str',
+            },
+            'pass_font': {
+                'type': 'bool',
             },
             'pass_face': {
                 'type':
@@ -507,18 +512,74 @@ def get_argspec():
             'pass_size': {
                 'type': 'int',
             },
-            'pass_text': {
-                'type': 'str',
-            },
-            'pass_font': {
-                'type': 'bool',
-            },
             'pass_color': {
                 'type': 'bool',
+            },
+            'pass_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'pass_color_value': {
+                'type': 'str',
             }
+        },
+        'password_var': {
+            'type': 'str',
         },
         'enable_passcode': {
             'type': 'bool',
+        },
+        'passcode_cfg': {
+            'type': 'dict',
+            'passcode': {
+                'type': 'bool',
+            },
+            'passcode_text': {
+                'type': 'str',
+            },
+            'passcode_font': {
+                'type': 'bool',
+            },
+            'passcode_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'passcode_font_custom': {
+                'type': 'str',
+            },
+            'passcode_size': {
+                'type': 'int',
+            },
+            'passcode_color': {
+                'type': 'bool',
+            },
+            'passcode_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'passcode_color_value': {
+                'type': 'str',
+            }
+        },
+        'passcode_var': {
+            'type': 'str',
+        },
+        'submit_text': {
+            'type': 'str',
         },
         'uuid': {
             'type': 'str',

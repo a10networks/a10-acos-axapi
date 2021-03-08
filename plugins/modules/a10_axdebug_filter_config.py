@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_axdebug_filter_config
 description:
     - Global debug filter
-short_description: Configures A10 axdebug.filter-config
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,188 +22,274 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    arp:
-        description:
-        - "ARP"
-        required: False
-    ip:
-        description:
-        - "IP"
-        required: False
-    offset:
-        description:
-        - "byte offset"
+        type: str
         required: False
     number:
         description:
         - "Specify filter id"
+        type: int
         required: True
-    tcp:
-        description:
-        - "Field tcp"
-        required: False
     l3_proto:
         description:
-        - "Layer 3 protocol"
-        required: False
-    ipv4_address:
-        description:
-        - "ip address"
-        required: False
-    port:
-        description:
-        - "port number"
-        required: False
-    port_num_min:
-        description:
-        - "min port number"
-        required: False
-    oper_range:
-        description:
-        - "'gt'= greater than; 'gte'= greater than or equal to; 'se'= smaller than or
-          equal to; 'st'= smaller than; 'eq'= equal to;"
-        required: False
-    ipv6_adddress:
-        description:
-        - "ipv6 address"
-        required: False
-    WORD:
-        description:
-        - "WORD to compare"
-        required: False
-    comp_hex:
-        description:
-        - "value to compare"
-        required: False
-    proto:
-        description:
-        - "ip protocol number"
+        - "'arp'= arp; 'neighbor'= neighbor;"
+        type: str
         required: False
     dst:
         description:
         - "Destination"
-        required: False
-    hex:
-        description:
-        - "Define hex value"
-        required: False
-    integer_comp:
-        description:
-        - "value to compare"
-        required: False
-    port_num_max:
-        description:
-        - "max port number"
-        required: False
-    exit:
-        description:
-        - "Exit from axdebug mode"
-        required: False
-    ipv6:
-        description:
-        - "IPV6"
-        required: False
-    length:
-        description:
-        - "byte length"
-        required: False
-    udp:
-        description:
-        - "Field udp"
-        required: False
-    neighbor:
-        description:
-        - "IPv6 Neighbor/Router"
-        required: False
-    port_num:
-        description:
-        - "Port number"
-        required: False
-    max_hex:
-        description:
-        - "max value"
-        required: False
-    mac:
-        description:
-        - "mac address"
-        required: False
-    min_hex:
-        description:
-        - "min value"
-        required: False
-    WORD1:
-        description:
-        - "WORD min value"
-        required: False
-    WORD2:
-        description:
-        - "WORD max value"
-        required: False
-    integer_max:
-        description:
-        - "max value"
-        required: False
-    integer:
-        description:
-        - "Define decimal value"
-        required: False
-    icmp:
-        description:
-        - "Field icmp"
+        type: bool
         required: False
     src:
         description:
-        - "Source"
+        - "Src"
+        type: bool
         required: False
-    mac_addr:
+    ip:
         description:
-        - "mac address"
+        - "IP"
+        type: bool
+        required: False
+    ipv4_address:
+        description:
+        - "ip address"
+        type: str
         required: False
     ipv4_netmask:
         description:
         - "IP subnet mask"
+        type: str
         required: False
-    icmpv6:
+    ipv6:
         description:
-        - "Field icmpv6"
+        - "IPV6"
+        type: bool
         required: False
-    range:
+    ipv6_address:
         description:
-        - "select a range"
+        - "ipv6 address"
+        type: str
         required: False
-    integer_min:
+    mac:
         description:
-        - "min value"
+        - "mac address"
+        type: bool
+        required: False
+    mac_addr:
+        description:
+        - "mac address"
+        type: str
+        required: False
+    port:
+        description:
+        - "port configurations"
+        type: bool
+        required: False
+    dst_ip:
+        description:
+        - "dest IP"
+        type: bool
+        required: False
+    dst_ipv4_address:
+        description:
+        - "dest ip address"
+        type: str
+        required: False
+    src_ip:
+        description:
+        - "src IP"
+        type: bool
+        required: False
+    src_ipv4_address:
+        description:
+        - "src ip address"
+        type: str
+        required: False
+    dst_mac:
+        description:
+        - "dest mac address"
+        type: bool
+        required: False
+    dst_mac_addr:
+        description:
+        - "dest mac address"
+        type: str
+        required: False
+    src_mac:
+        description:
+        - "src mac address"
+        type: bool
+        required: False
+    src_mac_addr:
+        description:
+        - "src mac address"
+        type: str
+        required: False
+    dst_port:
+        description:
+        - "dest port number"
+        type: bool
+        required: False
+    dst_port_num:
+        description:
+        - "dest Port number"
+        type: int
+        required: False
+    src_port:
+        description:
+        - "src port number"
+        type: bool
+        required: False
+    src_port_num:
+        description:
+        - "src Port number"
+        type: int
+        required: False
+    port_num_min:
+        description:
+        - "min port number"
+        type: int
+        required: False
+    port_num_max:
+        description:
+        - "max port number"
+        type: int
+        required: False
+    proto:
+        description:
+        - "ip protocol number"
+        type: bool
+        required: False
+    proto_val:
+        description:
+        - "'icmp'= icmp; 'icmpv6'= icmpv6; 'tcp'= tcp; 'udp'= udp;"
+        type: str
         required: False
     prot_num:
         description:
         - "protocol number"
+        type: int
+        required: False
+    offset:
+        description:
+        - "byte offset"
+        type: int
+        required: False
+    length:
+        description:
+        - "byte length"
+        type: int
+        required: False
+    oper_range:
+        description:
+        - "'gt'= greater than; 'gte'= greater than or equal to; 'se'= smaller than or
+          equal to; 'st'= smaller than; 'eq'= equal to; 'range'= select a range;"
+        type: str
+        required: False
+    hex:
+        description:
+        - "Define hex value"
+        type: bool
+        required: False
+    min_hex:
+        description:
+        - " min value"
+        type: str
+        required: False
+    max_hex:
+        description:
+        - " max value"
+        type: str
+        required: False
+    comp_hex:
+        description:
+        - "value to compare"
+        type: str
+        required: False
+    integer:
+        description:
+        - "Define decimal value"
+        type: bool
+        required: False
+    integer_min:
+        description:
+        - "min value"
+        type: int
+        required: False
+    integer_max:
+        description:
+        - "max value"
+        type: int
+        required: False
+    integer_comp:
+        description:
+        - "value to compare"
+        type: int
+        required: False
+    word:
+        description:
+        - "Define hex value"
+        type: bool
+        required: False
+    WORD0:
+        description:
+        - "WORD0 to compare"
+        type: str
+        required: False
+    WORD1:
+        description:
+        - "WORD min value"
+        type: str
+        required: False
+    WORD2:
+        description:
+        - "WORD max value"
+        type: str
+        required: False
+    exit:
+        description:
+        - "Exit from axdebug mode"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -221,13 +305,16 @@ ANSIBLE_METADATA = {
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
-    "arp",
     "comp_hex",
     "dst",
+    "dst_ip",
+    "dst_ipv4_address",
+    "dst_mac",
+    "dst_mac_addr",
+    "dst_port",
+    "dst_port_num",
     "exit",
     "hex",
-    "icmp",
-    "icmpv6",
     "integer",
     "integer_comp",
     "integer_max",
@@ -236,28 +323,33 @@ AVAILABLE_PROPERTIES = [
     "ipv4_address",
     "ipv4_netmask",
     "ipv6",
-    "ipv6_adddress",
+    "ipv6_address",
     "l3_proto",
     "length",
     "mac",
     "mac_addr",
     "max_hex",
     "min_hex",
-    "neighbor",
     "number",
     "offset",
     "oper_range",
     "port",
-    "port_num",
     "port_num_max",
     "port_num_min",
     "prot_num",
     "proto",
-    "range",
+    "proto_val",
     "src",
-    "tcp",
-    "udp",
-    "WORD",
+    "src_ip",
+    "src_ipv4_address",
+    "src_mac",
+    "src_mac_addr",
+    "src_port",
+    "src_port_num",
+    "user_tag",
+    "uuid",
+    "word",
+    "WORD0",
     "WORD1",
     "WORD2",
 ]
@@ -297,87 +389,134 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'arp': {
+        'number': {
+            'type': 'int',
+            'required': True,
+        },
+        'l3_proto': {
+            'type': 'str',
+            'choices': ['arp', 'neighbor']
+        },
+        'dst': {
+            'type': 'bool',
+        },
+        'src': {
             'type': 'bool',
         },
         'ip': {
             'type': 'bool',
         },
-        'offset': {
-            'type': 'int',
-        },
-        'number': {
-            'type': 'int',
-            'required': True,
-        },
-        'tcp': {
-            'type': 'bool',
-        },
-        'l3_proto': {
-            'type': 'bool',
-        },
         'ipv4_address': {
             'type': 'str',
         },
-        'port': {
-            'type': 'bool',
-        },
-        'port_num_min': {
-            'type': 'int',
-        },
-        'oper_range': {
+        'ipv4_netmask': {
             'type': 'str',
-            'choices': ['gt', 'gte', 'se', 'st', 'eq']
-        },
-        'ipv6_adddress': {
-            'type': 'str',
-        },
-        'WORD': {
-            'type': 'str',
-        },
-        'comp_hex': {
-            'type': 'str',
-        },
-        'proto': {
-            'type': 'bool',
-        },
-        'dst': {
-            'type': 'bool',
-        },
-        'hex': {
-            'type': 'bool',
-        },
-        'integer_comp': {
-            'type': 'int',
-        },
-        'port_num_max': {
-            'type': 'int',
-        },
-        'exit': {
-            'type': 'bool',
         },
         'ipv6': {
             'type': 'bool',
         },
-        'length': {
-            'type': 'int',
-        },
-        'udp': {
-            'type': 'bool',
-        },
-        'neighbor': {
-            'type': 'bool',
-        },
-        'port_num': {
-            'type': 'int',
-        },
-        'max_hex': {
+        'ipv6_address': {
             'type': 'str',
         },
         'mac': {
             'type': 'bool',
         },
+        'mac_addr': {
+            'type': 'str',
+        },
+        'port': {
+            'type': 'bool',
+        },
+        'dst_ip': {
+            'type': 'bool',
+        },
+        'dst_ipv4_address': {
+            'type': 'str',
+        },
+        'src_ip': {
+            'type': 'bool',
+        },
+        'src_ipv4_address': {
+            'type': 'str',
+        },
+        'dst_mac': {
+            'type': 'bool',
+        },
+        'dst_mac_addr': {
+            'type': 'str',
+        },
+        'src_mac': {
+            'type': 'bool',
+        },
+        'src_mac_addr': {
+            'type': 'str',
+        },
+        'dst_port': {
+            'type': 'bool',
+        },
+        'dst_port_num': {
+            'type': 'int',
+        },
+        'src_port': {
+            'type': 'bool',
+        },
+        'src_port_num': {
+            'type': 'int',
+        },
+        'port_num_min': {
+            'type': 'int',
+        },
+        'port_num_max': {
+            'type': 'int',
+        },
+        'proto': {
+            'type': 'bool',
+        },
+        'proto_val': {
+            'type': 'str',
+            'choices': ['icmp', 'icmpv6', 'tcp', 'udp']
+        },
+        'prot_num': {
+            'type': 'int',
+        },
+        'offset': {
+            'type': 'int',
+        },
+        'length': {
+            'type': 'int',
+        },
+        'oper_range': {
+            'type': 'str',
+            'choices': ['gt', 'gte', 'se', 'st', 'eq', 'range']
+        },
+        'hex': {
+            'type': 'bool',
+        },
         'min_hex': {
+            'type': 'str',
+        },
+        'max_hex': {
+            'type': 'str',
+        },
+        'comp_hex': {
+            'type': 'str',
+        },
+        'integer': {
+            'type': 'bool',
+        },
+        'integer_min': {
+            'type': 'int',
+        },
+        'integer_max': {
+            'type': 'int',
+        },
+        'integer_comp': {
+            'type': 'int',
+        },
+        'word': {
+            'type': 'bool',
+        },
+        'WORD0': {
             'type': 'str',
         },
         'WORD1': {
@@ -386,35 +525,14 @@ def get_argspec():
         'WORD2': {
             'type': 'str',
         },
-        'integer_max': {
-            'type': 'int',
-        },
-        'integer': {
+        'exit': {
             'type': 'bool',
         },
-        'icmp': {
-            'type': 'bool',
-        },
-        'src': {
-            'type': 'bool',
-        },
-        'mac_addr': {
+        'uuid': {
             'type': 'str',
         },
-        'ipv4_netmask': {
+        'user_tag': {
             'type': 'str',
-        },
-        'icmpv6': {
-            'type': 'bool',
-        },
-        'range': {
-            'type': 'bool',
-        },
-        'integer_min': {
-            'type': 'int',
-        },
-        'prot_num': {
-            'type': 'int',
         }
     })
     return rv
@@ -423,9 +541,10 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/axdebug/filter-config"
+    url_base = "/axapi/v3/axdebug/filter-config/{number}"
 
     f_dict = {}
+    f_dict["number"] = module.params["number"]
 
     return url_base.format(**f_dict)
 
@@ -479,9 +598,10 @@ def build_envelope(title, data):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/axdebug/filter-config"
+    url_base = "/axapi/v3/axdebug/filter-config/{number}"
 
     f_dict = {}
+    f_dict["number"] = ""
 
     return url_base.format(**f_dict)
 
@@ -622,6 +742,22 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
+
+def replace(module, result, existing_config, payload):
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 
 def run_command(module):

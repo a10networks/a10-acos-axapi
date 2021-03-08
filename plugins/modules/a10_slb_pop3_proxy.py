@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_pop3_proxy
 description:
     - Configure POP3 Proxy global
-short_description: Configures A10 slb.pop3-proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -79,84 +79,119 @@ options:
           Client EST state erro; 'ser_connecting_err'= Serv CTNG state error;
           'server_response_err'= Serv RESP state error; 'cl_request_err'= Client RQ state
           error; 'request'= Total POP3 Request; 'control_to_ssl'= Control chn ssl;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            ser_connecting_err:
-                description:
-                - "Serv CTNG state error"
-            smp_v4_fail:
-                description:
-                - "Serv Sel SMPv4 fail"
-            curr:
-                description:
-                - "Current proxy conns"
-            server_response_err:
-                description:
-                - "Serv RESP state error"
             num:
                 description:
                 - "Num"
-            no_route:
+                type: str
+            curr:
                 description:
-                - "no route failure"
+                - "Current proxy conns"
+                type: str
             total:
                 description:
                 - "Total proxy conns"
-            line_mem_freed:
-                description:
-                - "request line freed"
-            control_to_ssl:
-                description:
-                - "Control chn ssl"
-            request_dont_care:
-                description:
-                - "other cmd"
-            cl_est_err:
-                description:
-                - "Client EST state erro"
-            insert_tuple_fail:
-                description:
-                - "Serv Sel insert tuple fail"
-            rsv_persist_conn_fail:
-                description:
-                - "Serv Sel Persist fail"
-            invalid_start_line:
-                description:
-                - "invalid start line"
+                type: str
             svrsel_fail:
                 description:
                 - "Server selection failure"
-            cl_request_err:
+                type: str
+            no_route:
                 description:
-                - "Client RQ state error"
-            smp_v6_fail:
-                description:
-                - "Serv Sel SMPv6 fail"
+                - "no route failure"
+                type: str
             snat_fail:
                 description:
                 - "source nat failure"
+                type: str
             line_too_long:
                 description:
                 - "line too long"
-            request:
+                type: str
+            line_mem_freed:
                 description:
-                - "Total POP3 Request"
-            bad_sequence:
+                - "request line freed"
+                type: str
+            invalid_start_line:
                 description:
-                - "Bad Sequence"
-            unsupported_command:
-                description:
-                - "Unsupported cmd"
+                - "invalid start line"
+                type: str
             stls:
                 description:
                 - "stls cmd"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            request_dont_care:
+                description:
+                - "other cmd"
+                type: str
+            unsupported_command:
+                description:
+                - "Unsupported cmd"
+                type: str
+            bad_sequence:
+                description:
+                - "Bad Sequence"
+                type: str
+            rsv_persist_conn_fail:
+                description:
+                - "Serv Sel Persist fail"
+                type: str
+            smp_v6_fail:
+                description:
+                - "Serv Sel SMPv6 fail"
+                type: str
+            smp_v4_fail:
+                description:
+                - "Serv Sel SMPv4 fail"
+                type: str
+            insert_tuple_fail:
+                description:
+                - "Serv Sel insert tuple fail"
+                type: str
+            cl_est_err:
+                description:
+                - "Client EST state erro"
+                type: str
+            ser_connecting_err:
+                description:
+                - "Serv CTNG state error"
+                type: str
+            server_response_err:
+                description:
+                - "Serv RESP state error"
+                type: str
+            cl_request_err:
+                description:
+                - "Client RQ state error"
+                type: str
+            request:
+                description:
+                - "Total POP3 Request"
+                type: str
+            control_to_ssl:
+                description:
+                - "Control chn ssl"
+                type: str
 
 '''
 
@@ -212,77 +247,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'no_route_failure': {
-                    'type': 'int',
-                },
-                'serv_sel_ins_tpl_fail': {
-                    'type': 'int',
-                },
-                'client_est_state_err': {
-                    'type': 'int',
-                },
-                'serv_sel_persist_fail': {
-                    'type': 'int',
-                },
-                'inv_start_line': {
-                    'type': 'int',
-                },
-                'server_selection_failure': {
-                    'type': 'int',
-                },
-                'source_nat_failure': {
-                    'type': 'int',
-                },
-                'request_line_freed': {
-                    'type': 'int',
-                },
-                'serv_resp_state_err': {
-                    'type': 'int',
-                },
-                'serv_ctng_state_err': {
-                    'type': 'int',
-                },
-                'total_proxy_conns': {
-                    'type': 'int',
-                },
-                'control_chn_ssl': {
-                    'type': 'int',
-                },
-                'client_rq_state_err': {
-                    'type': 'int',
-                },
-                'serv_sel_smpv4_fail': {
-                    'type': 'int',
-                },
-                'current_proxy_conns': {
-                    'type': 'int',
-                },
-                'bad_seq': {
-                    'type': 'int',
-                },
-                'stls_packet': {
-                    'type': 'int',
-                },
-                'serv_sel_smpv6_fail': {
-                    'type': 'int',
-                },
-                'total_pop3_request': {
-                    'type': 'int',
-                },
-                'other_cmd': {
-                    'type': 'int',
-                },
-                'pop3_line_too_long': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -301,57 +267,93 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'current_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_proxy_conns': {
+                    'type': 'int',
+                },
+                'server_selection_failure': {
+                    'type': 'int',
+                },
+                'no_route_failure': {
+                    'type': 'int',
+                },
+                'source_nat_failure': {
+                    'type': 'int',
+                },
+                'stls_packet': {
+                    'type': 'int',
+                },
+                'request_line_freed': {
+                    'type': 'int',
+                },
+                'inv_start_line': {
+                    'type': 'int',
+                },
+                'other_cmd': {
+                    'type': 'int',
+                },
+                'pop3_line_too_long': {
+                    'type': 'int',
+                },
+                'control_chn_ssl': {
+                    'type': 'int',
+                },
+                'bad_seq': {
+                    'type': 'int',
+                },
+                'serv_sel_persist_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_smpv6_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_smpv4_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_ins_tpl_fail': {
+                    'type': 'int',
+                },
+                'client_est_state_err': {
+                    'type': 'int',
+                },
+                'serv_ctng_state_err': {
+                    'type': 'int',
+                },
+                'serv_resp_state_err': {
+                    'type': 'int',
+                },
+                'client_rq_state_err': {
+                    'type': 'int',
+                },
+                'total_pop3_request': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'ser_connecting_err': {
-                'type': 'str',
-            },
-            'smp_v4_fail': {
+            'num': {
                 'type': 'str',
             },
             'curr': {
                 'type': 'str',
             },
-            'server_response_err': {
-                'type': 'str',
-            },
-            'num': {
-                'type': 'str',
-            },
-            'no_route': {
-                'type': 'str',
-            },
             'total': {
-                'type': 'str',
-            },
-            'line_mem_freed': {
-                'type': 'str',
-            },
-            'control_to_ssl': {
-                'type': 'str',
-            },
-            'request_dont_care': {
-                'type': 'str',
-            },
-            'cl_est_err': {
-                'type': 'str',
-            },
-            'insert_tuple_fail': {
-                'type': 'str',
-            },
-            'rsv_persist_conn_fail': {
-                'type': 'str',
-            },
-            'invalid_start_line': {
                 'type': 'str',
             },
             'svrsel_fail': {
                 'type': 'str',
             },
-            'cl_request_err': {
-                'type': 'str',
-            },
-            'smp_v6_fail': {
+            'no_route': {
                 'type': 'str',
             },
             'snat_fail': {
@@ -360,21 +362,54 @@ def get_argspec():
             'line_too_long': {
                 'type': 'str',
             },
-            'request': {
+            'line_mem_freed': {
                 'type': 'str',
             },
-            'bad_sequence': {
+            'invalid_start_line': {
+                'type': 'str',
+            },
+            'stls': {
+                'type': 'str',
+            },
+            'request_dont_care': {
                 'type': 'str',
             },
             'unsupported_command': {
                 'type': 'str',
             },
-            'stls': {
+            'bad_sequence': {
+                'type': 'str',
+            },
+            'rsv_persist_conn_fail': {
+                'type': 'str',
+            },
+            'smp_v6_fail': {
+                'type': 'str',
+            },
+            'smp_v4_fail': {
+                'type': 'str',
+            },
+            'insert_tuple_fail': {
+                'type': 'str',
+            },
+            'cl_est_err': {
+                'type': 'str',
+            },
+            'ser_connecting_err': {
+                'type': 'str',
+            },
+            'server_response_err': {
+                'type': 'str',
+            },
+            'cl_request_err': {
+                'type': 'str',
+            },
+            'request': {
+                'type': 'str',
+            },
+            'control_to_ssl': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

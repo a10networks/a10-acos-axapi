@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_session
 description:
     - Session Entries
-short_description: Configures A10 system.session
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -127,186 +138,241 @@ options:
           'ssl_forward_proxy_ad_grpup_bypass_total'= Total SSL Forward Proxy AD-Group
           Bypass Count; 'diameter_concurrent_user_sessions_counter'= Diameter Concurrent
           User-Sessions;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            total_curr_conn:
-                description:
-                - "Total Curr Conn"
-            reverse_nat_tcp_counter:
-                description:
-                - "Reverse NAT TCP"
-            client_template_unknown_err:
-                description:
-                - "client template unknown error"
-            tcp_est_counter:
-                description:
-                - "TCP Established"
-            server_template_int_err:
-                description:
-                - "server template int error"
-            total_l4_packet_count:
-                description:
-                - "Total L4 Packet Count"
-            client_ssl_reuse_total:
-                description:
-                - "Total SSL Client Reuse"
-            server_ssl_count_total:
-                description:
-                - "Total SSL Server Count"
-            total_ip_nat_conn:
-                description:
-                - "Total IP Nat Conn"
-            ip_counter:
-                description:
-                - "IP Count"
-            total_l2l3_conn:
-                description:
-                - "Totl L2/L3 Connections"
-            tcp_syn_half_open_counter:
-                description:
-                - "TCP SYN Half Open"
-            other_counter:
-                description:
-                - "Non TCP/UDP IP sessions"
-            conn_type_3_available:
-                description:
-                - "Conn Type 3 Available"
-            client_template_int_err:
-                description:
-                - "client template internal error"
-            client_ssl_fatal_alert:
-                description:
-                - "client ssl fatal alert"
-            conn_type_4_available:
-                description:
-                - "Conn Type 4 Available"
-            conn_app_smp_alloc_counter:
-                description:
-                - "Conn APP SMP Alloc"
-            conn_type_2_available:
-                description:
-                - "Conn Type 2 Available"
-            total_l7_packet_count:
-                description:
-                - "Total L7 Packet Count"
-            total_tcp_conn:
-                description:
-                - "Total TCP Conn"
-            tcp_half_open_counter:
-                description:
-                - "TCP Half Open"
-            server_ssl_fatal_alert:
-                description:
-                - "server ssl fatal alert"
-            conn_type_1_available:
-                description:
-                - "Conn Type 1 Available"
-            client_ssl_fin_rst:
-                description:
-                - "client ssl fin rst"
-            ssl_count_total:
-                description:
-                - "Total SSL Count"
-            conn_freed_counter:
-                description:
-                - "Conn Freed"
-            total_local_conn:
-                description:
-                - "Total Local Conn"
-            conn_smp_free_counter:
-                description:
-                - "Conn SMP Free"
-            server_ssl_reuse_total:
-                description:
-                - "Total SSL Server Reuse"
-            total_fw_conn:
-                description:
-                - "Total Firewall Conn"
-            curr_free_conn:
-                description:
-                - "Curr Free Conn"
-            udp_counter:
-                description:
-                - "UDP Count"
-            conn_smp_type_2_available:
-                description:
-                - "Conn SMP Type 2 Available"
-            diameter_concurrent_user_sessions_counter:
-                description:
-                - "Diameter Concurrent User-Sessions"
-            conn_smp_aged_counter:
-                description:
-                - "Conn SMP Aged"
-            conn_smp_type_1_available:
-                description:
-                - "Conn SMP Type 1 Available"
-            sctp_half_open_counter:
-                description:
-                - "SCTP Half Open"
-            conn_type_0_available:
-                description:
-                - "Conn Type 0 Available"
-            server_template_unknown_err:
-                description:
-                - "server template unknown error"
-            diameter_conn_freed_counter:
-                description:
-                - "Diameter Conn Freed"
-            total_l4_conn_proxy:
-                description:
-                - "Total L4 Conn Proxy Count"
-            conn_smp_type_3_available:
-                description:
-                - "Conn SMP Type 3 Available"
-            conn_smp_alloc_counter:
-                description:
-                - "Conn SMP Alloc"
-            conn_counter:
-                description:
-                - "Conn Count"
-            server_ssl_fin_rst:
-                description:
-                - "server ssl fin rst"
-            total_l7_conn:
-                description:
-                - "Total L7 Conn"
-            server_ssl_count_curr:
-                description:
-                - "Current SSL Server Count"
-            fp_session_fin_rst:
-                description:
-                - "FP Session FIN/RST"
-            conn_smp_type_0_available:
-                description:
-                - "Conn SMP Type 0 Available"
-            conn_smp_type_4_available:
-                description:
-                - "Conn SMP Type 4 Available"
-            diameter_conn_counter:
-                description:
-                - "Diameter Conn Count"
-            tcp_half_close_counter:
-                description:
-                - "TCP Half Closed"
-            ssl_count_curr:
-                description:
-                - "Curr SSL Count"
-            reverse_nat_udp_counter:
-                description:
-                - "Reverse NAT UDP"
-            sctp_est_counter:
-                description:
-                - "SCTP Established"
             total_l4_conn:
                 description:
                 - "Total L4 Count"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            conn_counter:
+                description:
+                - "Conn Count"
+                type: str
+            conn_freed_counter:
+                description:
+                - "Conn Freed"
+                type: str
+            total_l4_packet_count:
+                description:
+                - "Total L4 Packet Count"
+                type: str
+            total_l7_packet_count:
+                description:
+                - "Total L7 Packet Count"
+                type: str
+            total_l4_conn_proxy:
+                description:
+                - "Total L4 Conn Proxy Count"
+                type: str
+            total_l7_conn:
+                description:
+                - "Total L7 Conn"
+                type: str
+            total_tcp_conn:
+                description:
+                - "Total TCP Conn"
+                type: str
+            curr_free_conn:
+                description:
+                - "Curr Free Conn"
+                type: str
+            tcp_est_counter:
+                description:
+                - "TCP Established"
+                type: str
+            tcp_half_open_counter:
+                description:
+                - "TCP Half Open"
+                type: str
+            tcp_half_close_counter:
+                description:
+                - "TCP Half Closed"
+                type: str
+            udp_counter:
+                description:
+                - "UDP Count"
+                type: str
+            ip_counter:
+                description:
+                - "IP Count"
+                type: str
+            other_counter:
+                description:
+                - "Non TCP/UDP IP sessions"
+                type: str
+            reverse_nat_tcp_counter:
+                description:
+                - "Reverse NAT TCP"
+                type: str
+            reverse_nat_udp_counter:
+                description:
+                - "Reverse NAT UDP"
+                type: str
+            tcp_syn_half_open_counter:
+                description:
+                - "TCP SYN Half Open"
+                type: str
+            conn_smp_alloc_counter:
+                description:
+                - "Conn SMP Alloc"
+                type: str
+            conn_smp_free_counter:
+                description:
+                - "Conn SMP Free"
+                type: str
+            conn_smp_aged_counter:
+                description:
+                - "Conn SMP Aged"
+                type: str
+            ssl_count_curr:
+                description:
+                - "Curr SSL Count"
+                type: str
+            ssl_count_total:
+                description:
+                - "Total SSL Count"
+                type: str
+            server_ssl_count_curr:
+                description:
+                - "Current SSL Server Count"
+                type: str
+            server_ssl_count_total:
+                description:
+                - "Total SSL Server Count"
+                type: str
+            client_ssl_reuse_total:
+                description:
+                - "Total SSL Client Reuse"
+                type: str
+            server_ssl_reuse_total:
+                description:
+                - "Total SSL Server Reuse"
+                type: str
+            total_ip_nat_conn:
+                description:
+                - "Total IP Nat Conn"
+                type: str
+            total_l2l3_conn:
+                description:
+                - "Totl L2/L3 Connections"
+                type: str
+            conn_type_0_available:
+                description:
+                - "Conn Type 0 Available"
+                type: str
+            conn_type_1_available:
+                description:
+                - "Conn Type 1 Available"
+                type: str
+            conn_type_2_available:
+                description:
+                - "Conn Type 2 Available"
+                type: str
+            conn_type_3_available:
+                description:
+                - "Conn Type 3 Available"
+                type: str
+            conn_type_4_available:
+                description:
+                - "Conn Type 4 Available"
+                type: str
+            conn_smp_type_0_available:
+                description:
+                - "Conn SMP Type 0 Available"
+                type: str
+            conn_smp_type_1_available:
+                description:
+                - "Conn SMP Type 1 Available"
+                type: str
+            conn_smp_type_2_available:
+                description:
+                - "Conn SMP Type 2 Available"
+                type: str
+            conn_smp_type_3_available:
+                description:
+                - "Conn SMP Type 3 Available"
+                type: str
+            conn_smp_type_4_available:
+                description:
+                - "Conn SMP Type 4 Available"
+                type: str
+            sctp_half_open_counter:
+                description:
+                - "SCTP Half Open"
+                type: str
+            sctp_est_counter:
+                description:
+                - "SCTP Established"
+                type: str
+            conn_app_smp_alloc_counter:
+                description:
+                - "Conn APP SMP Alloc"
+                type: str
+            diameter_conn_counter:
+                description:
+                - "Diameter Conn Count"
+                type: str
+            diameter_conn_freed_counter:
+                description:
+                - "Diameter Conn Freed"
+                type: str
+            total_fw_conn:
+                description:
+                - "Total Firewall Conn"
+                type: str
+            total_local_conn:
+                description:
+                - "Total Local Conn"
+                type: str
+            total_curr_conn:
+                description:
+                - "Total Curr Conn"
+                type: str
+            client_ssl_fatal_alert:
+                description:
+                - "client ssl fatal alert"
+                type: str
+            client_ssl_fin_rst:
+                description:
+                - "client ssl fin rst"
+                type: str
+            fp_session_fin_rst:
+                description:
+                - "FP Session FIN/RST"
+                type: str
+            server_ssl_fatal_alert:
+                description:
+                - "server ssl fatal alert"
+                type: str
+            server_ssl_fin_rst:
+                description:
+                - "server ssl fin rst"
+                type: str
+            client_template_int_err:
+                description:
+                - "client template internal error"
+                type: str
+            client_template_unknown_err:
+                description:
+                - "client template unknown error"
+                type: str
+            server_template_int_err:
+                description:
+                - "server template int error"
+                type: str
+            server_template_unknown_err:
+                description:
+                - "server template unknown error"
+                type: str
+            diameter_concurrent_user_sessions_counter:
+                description:
+                - "Diameter Concurrent User-Sessions"
+                type: str
 
 '''
 
@@ -361,6 +427,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -422,180 +491,177 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'total_curr_conn': {
-                'type': 'str',
-            },
-            'reverse_nat_tcp_counter': {
-                'type': 'str',
-            },
-            'client_template_unknown_err': {
-                'type': 'str',
-            },
-            'tcp_est_counter': {
-                'type': 'str',
-            },
-            'server_template_int_err': {
-                'type': 'str',
-            },
-            'total_l4_packet_count': {
-                'type': 'str',
-            },
-            'client_ssl_reuse_total': {
-                'type': 'str',
-            },
-            'server_ssl_count_total': {
-                'type': 'str',
-            },
-            'total_ip_nat_conn': {
-                'type': 'str',
-            },
-            'ip_counter': {
-                'type': 'str',
-            },
-            'total_l2l3_conn': {
-                'type': 'str',
-            },
-            'tcp_syn_half_open_counter': {
-                'type': 'str',
-            },
-            'other_counter': {
-                'type': 'str',
-            },
-            'conn_type_3_available': {
-                'type': 'str',
-            },
-            'client_template_int_err': {
-                'type': 'str',
-            },
-            'client_ssl_fatal_alert': {
-                'type': 'str',
-            },
-            'conn_type_4_available': {
-                'type': 'str',
-            },
-            'conn_app_smp_alloc_counter': {
-                'type': 'str',
-            },
-            'conn_type_2_available': {
-                'type': 'str',
-            },
-            'total_l7_packet_count': {
-                'type': 'str',
-            },
-            'total_tcp_conn': {
-                'type': 'str',
-            },
-            'tcp_half_open_counter': {
-                'type': 'str',
-            },
-            'server_ssl_fatal_alert': {
-                'type': 'str',
-            },
-            'conn_type_1_available': {
-                'type': 'str',
-            },
-            'client_ssl_fin_rst': {
-                'type': 'str',
-            },
-            'ssl_count_total': {
-                'type': 'str',
-            },
-            'conn_freed_counter': {
-                'type': 'str',
-            },
-            'total_local_conn': {
-                'type': 'str',
-            },
-            'conn_smp_free_counter': {
-                'type': 'str',
-            },
-            'server_ssl_reuse_total': {
-                'type': 'str',
-            },
-            'total_fw_conn': {
-                'type': 'str',
-            },
-            'curr_free_conn': {
-                'type': 'str',
-            },
-            'udp_counter': {
-                'type': 'str',
-            },
-            'conn_smp_type_2_available': {
-                'type': 'str',
-            },
-            'diameter_concurrent_user_sessions_counter': {
-                'type': 'str',
-            },
-            'conn_smp_aged_counter': {
-                'type': 'str',
-            },
-            'conn_smp_type_1_available': {
-                'type': 'str',
-            },
-            'sctp_half_open_counter': {
-                'type': 'str',
-            },
-            'conn_type_0_available': {
-                'type': 'str',
-            },
-            'server_template_unknown_err': {
-                'type': 'str',
-            },
-            'diameter_conn_freed_counter': {
-                'type': 'str',
-            },
-            'total_l4_conn_proxy': {
-                'type': 'str',
-            },
-            'conn_smp_type_3_available': {
-                'type': 'str',
-            },
-            'conn_smp_alloc_counter': {
+            'total_l4_conn': {
                 'type': 'str',
             },
             'conn_counter': {
                 'type': 'str',
             },
-            'server_ssl_fin_rst': {
+            'conn_freed_counter': {
+                'type': 'str',
+            },
+            'total_l4_packet_count': {
+                'type': 'str',
+            },
+            'total_l7_packet_count': {
+                'type': 'str',
+            },
+            'total_l4_conn_proxy': {
                 'type': 'str',
             },
             'total_l7_conn': {
                 'type': 'str',
             },
-            'server_ssl_count_curr': {
+            'total_tcp_conn': {
                 'type': 'str',
             },
-            'fp_session_fin_rst': {
+            'curr_free_conn': {
                 'type': 'str',
             },
-            'conn_smp_type_0_available': {
+            'tcp_est_counter': {
                 'type': 'str',
             },
-            'conn_smp_type_4_available': {
-                'type': 'str',
-            },
-            'diameter_conn_counter': {
+            'tcp_half_open_counter': {
                 'type': 'str',
             },
             'tcp_half_close_counter': {
                 'type': 'str',
             },
-            'ssl_count_curr': {
+            'udp_counter': {
+                'type': 'str',
+            },
+            'ip_counter': {
+                'type': 'str',
+            },
+            'other_counter': {
+                'type': 'str',
+            },
+            'reverse_nat_tcp_counter': {
                 'type': 'str',
             },
             'reverse_nat_udp_counter': {
                 'type': 'str',
             },
+            'tcp_syn_half_open_counter': {
+                'type': 'str',
+            },
+            'conn_smp_alloc_counter': {
+                'type': 'str',
+            },
+            'conn_smp_free_counter': {
+                'type': 'str',
+            },
+            'conn_smp_aged_counter': {
+                'type': 'str',
+            },
+            'ssl_count_curr': {
+                'type': 'str',
+            },
+            'ssl_count_total': {
+                'type': 'str',
+            },
+            'server_ssl_count_curr': {
+                'type': 'str',
+            },
+            'server_ssl_count_total': {
+                'type': 'str',
+            },
+            'client_ssl_reuse_total': {
+                'type': 'str',
+            },
+            'server_ssl_reuse_total': {
+                'type': 'str',
+            },
+            'total_ip_nat_conn': {
+                'type': 'str',
+            },
+            'total_l2l3_conn': {
+                'type': 'str',
+            },
+            'conn_type_0_available': {
+                'type': 'str',
+            },
+            'conn_type_1_available': {
+                'type': 'str',
+            },
+            'conn_type_2_available': {
+                'type': 'str',
+            },
+            'conn_type_3_available': {
+                'type': 'str',
+            },
+            'conn_type_4_available': {
+                'type': 'str',
+            },
+            'conn_smp_type_0_available': {
+                'type': 'str',
+            },
+            'conn_smp_type_1_available': {
+                'type': 'str',
+            },
+            'conn_smp_type_2_available': {
+                'type': 'str',
+            },
+            'conn_smp_type_3_available': {
+                'type': 'str',
+            },
+            'conn_smp_type_4_available': {
+                'type': 'str',
+            },
+            'sctp_half_open_counter': {
+                'type': 'str',
+            },
             'sctp_est_counter': {
                 'type': 'str',
             },
-            'total_l4_conn': {
+            'conn_app_smp_alloc_counter': {
+                'type': 'str',
+            },
+            'diameter_conn_counter': {
+                'type': 'str',
+            },
+            'diameter_conn_freed_counter': {
+                'type': 'str',
+            },
+            'total_fw_conn': {
+                'type': 'str',
+            },
+            'total_local_conn': {
+                'type': 'str',
+            },
+            'total_curr_conn': {
+                'type': 'str',
+            },
+            'client_ssl_fatal_alert': {
+                'type': 'str',
+            },
+            'client_ssl_fin_rst': {
+                'type': 'str',
+            },
+            'fp_session_fin_rst': {
+                'type': 'str',
+            },
+            'server_ssl_fatal_alert': {
+                'type': 'str',
+            },
+            'server_ssl_fin_rst': {
+                'type': 'str',
+            },
+            'client_template_int_err': {
+                'type': 'str',
+            },
+            'client_template_unknown_err': {
+                'type': 'str',
+            },
+            'server_template_int_err': {
+                'type': 'str',
+            },
+            'server_template_unknown_err': {
+                'type': 'str',
+            },
+            'diameter_concurrent_user_sessions_counter': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

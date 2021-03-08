@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_hardware
 description:
     - Field hardware
-short_description: Configures A10 system.hardware
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,137 +22,182 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            psu2_np15:
-                description:
-                - "Field psu2_np15"
-            disk_percentage:
-                description:
-                - "Field disk_percentage"
-            serial:
-                description:
-                - "Field serial"
-            compression_cards:
-                description:
-                - "Field compression_cards"
-            cpu_stepping:
-                description:
-                - "Field cpu_stepping"
-            disk2_status:
-                description:
-                - "Field disk2_status"
-            storage:
-                description:
-                - "Field storage"
-            bypass_pr:
-                description:
-                - "Field bypass_pr"
-            psu1_np15:
-                description:
-                - "Field psu1_np15"
-            plat_flag:
-                description:
-                - "Field plat_flag"
-            memory:
-                description:
-                - "Field memory"
-            spe_present:
-                description:
-                - "Field spe_present"
-            num_disks:
-                description:
-                - "Field num_disks"
-            disk_used:
-                description:
-                - "Field disk_used"
-            ipmi:
-                description:
-                - "Field ipmi"
-            raid_present:
-                description:
-                - "Field raid_present"
-            cpu_cores:
-                description:
-                - "Field cpu_cores"
-            disk_free:
-                description:
-                - "Field disk_free"
             platform_description:
                 description:
                 - "Field platform_description"
-            ssl_cards:
+                type: str
+            serial:
                 description:
-                - "Field ssl_cards"
-            raid_list:
-                description:
-                - "Field raid_list"
-            bios_version:
-                description:
-                - "Field bios_version"
-            disk_total:
-                description:
-                - "Field disk_total"
-            l23_asic:
-                description:
-                - "Field l23_asic"
-            bios_release_date:
-                description:
-                - "Field bios_release_date"
-            fpga_summary:
-                description:
-                - "Field fpga_summary"
-            bypass_list:
-                description:
-                - "Field bypass_list"
+                - "Field serial"
+                type: str
             cpu:
                 description:
                 - "Field cpu"
-            disk1_status:
+                type: str
+            cpu_cores:
                 description:
-                - "Field disk1_status"
-            fpga_date:
+                - "Field cpu_cores"
+                type: int
+            cpu_stepping:
                 description:
-                - "Field fpga_date"
-            ports:
+                - "Field cpu_stepping"
+                type: int
+            storage:
                 description:
-                - "Field ports"
+                - "Field storage"
+                type: str
+            memory:
+                description:
+                - "Field memory"
+                type: str
+            ssl_cards:
+                description:
+                - "Field ssl_cards"
+                type: dict
             octeon:
                 description:
                 - "Field octeon"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            compression_cards:
+                description:
+                - "Field compression_cards"
+                type: dict
+            l23_asic:
+                description:
+                - "Field l23_asic"
+                type: str
+            ipmi:
+                description:
+                - "Field ipmi"
+                type: str
+            ports:
+                description:
+                - "Field ports"
+                type: str
+            plat_flag:
+                description:
+                - "Field plat_flag"
+                type: str
+            bios_version:
+                description:
+                - "Field bios_version"
+                type: str
+            bios_release_date:
+                description:
+                - "Field bios_release_date"
+                type: str
+            nvm_firmware_version:
+                description:
+                - "Field nvm_firmware_version"
+                type: str
+            fpga_summary:
+                description:
+                - "Field fpga_summary"
+                type: str
+            fpga_date:
+                description:
+                - "Field fpga_date"
+                type: str
+            disk_total:
+                description:
+                - "Field disk_total"
+                type: int
+            disk_used:
+                description:
+                - "Field disk_used"
+                type: int
+            disk_free:
+                description:
+                - "Field disk_free"
+                type: int
+            disk_percentage:
+                description:
+                - "Field disk_percentage"
+                type: int
+            disk1_status:
+                description:
+                - "Field disk1_status"
+                type: str
+            disk2_status:
+                description:
+                - "Field disk2_status"
+                type: str
+            num_disks:
+                description:
+                - "Field num_disks"
+                type: int
+            raid_present:
+                description:
+                - "Field raid_present"
+                type: int
+            raid_list:
+                description:
+                - "Field raid_list"
+                type: list
+            psu1_np15:
+                description:
+                - "Field psu1_np15"
+                type: str
+            psu2_np15:
+                description:
+                - "Field psu2_np15"
+                type: str
+            spe_present:
+                description:
+                - "Field spe_present"
+                type: str
+            bypass_pr:
+                description:
+                - "Field bypass_pr"
+                type: int
+            bypass_list:
+                description:
+                - "Field bypass_list"
+                type: list
 
 '''
 
@@ -208,98 +251,50 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'psu2_np15': {
+            'platform_description': {
                 'type': 'str',
-            },
-            'disk_percentage': {
-                'type': 'int',
             },
             'serial': {
                 'type': 'str',
             },
-            'compression_cards': {
-                'type': 'dict',
-                'aha363': {
-                    'type': 'int',
-                },
-                'unknown_compression': {
-                    'type': 'int',
-                },
-                'gzip_devices': {
-                    'type': 'int',
-                }
+            'cpu': {
+                'type': 'str',
+            },
+            'cpu_cores': {
+                'type': 'int',
             },
             'cpu_stepping': {
                 'type': 'int',
             },
-            'disk2_status': {
-                'type': 'str',
-            },
             'storage': {
-                'type': 'str',
-            },
-            'bypass_pr': {
-                'type': 'int',
-            },
-            'psu1_np15': {
-                'type': 'str',
-            },
-            'plat_flag': {
                 'type': 'str',
             },
             'memory': {
                 'type': 'str',
             },
-            'spe_present': {
-                'type': 'str',
-            },
-            'num_disks': {
-                'type': 'int',
-            },
-            'disk_used': {
-                'type': 'int',
-            },
-            'ipmi': {
-                'type': 'str',
-            },
-            'raid_present': {
-                'type': 'int',
-            },
-            'cpu_cores': {
-                'type': 'int',
-            },
-            'disk_free': {
-                'type': 'int',
-            },
-            'platform_description': {
-                'type': 'str',
-            },
             'ssl_cards': {
                 'type': 'dict',
-                'unknown_ssl_cards': {
-                    'type': 'int',
-                },
-                'nitrox5_cores': {
-                    'type': 'int',
-                },
-                'nitrox3_cores': {
-                    'type': 'int',
-                },
                 'ssl_devices': {
                     'type': 'int',
                 },
                 'nitroxpx': {
                     'type': 'int',
                 },
+                'nitrox3': {
+                    'type': 'int',
+                },
+                'nitrox3_cores': {
+                    'type': 'int',
+                },
                 'nitrox5': {
                     'type': 'int',
                 },
-                'hsm': {
-                    'type': 'int',
-                },
-                'nitrox3': {
+                'nitrox5_cores': {
                     'type': 'int',
                 },
                 'nitrox2': {
@@ -307,7 +302,79 @@ def get_argspec():
                 },
                 'nitrox1': {
                     'type': 'int',
+                },
+                'hsm': {
+                    'type': 'int',
+                },
+                'unknown_ssl_cards': {
+                    'type': 'int',
                 }
+            },
+            'octeon': {
+                'type': 'int',
+            },
+            'compression_cards': {
+                'type': 'dict',
+                'gzip_devices': {
+                    'type': 'int',
+                },
+                'aha363': {
+                    'type': 'int',
+                },
+                'unknown_compression': {
+                    'type': 'int',
+                }
+            },
+            'l23_asic': {
+                'type': 'str',
+            },
+            'ipmi': {
+                'type': 'str',
+            },
+            'ports': {
+                'type': 'str',
+            },
+            'plat_flag': {
+                'type': 'str',
+            },
+            'bios_version': {
+                'type': 'str',
+            },
+            'bios_release_date': {
+                'type': 'str',
+            },
+            'nvm_firmware_version': {
+                'type': 'str',
+            },
+            'fpga_summary': {
+                'type': 'str',
+            },
+            'fpga_date': {
+                'type': 'str',
+            },
+            'disk_total': {
+                'type': 'int',
+            },
+            'disk_used': {
+                'type': 'int',
+            },
+            'disk_free': {
+                'type': 'int',
+            },
+            'disk_percentage': {
+                'type': 'int',
+            },
+            'disk1_status': {
+                'type': 'str',
+            },
+            'disk2_status': {
+                'type': 'str',
+            },
+            'num_disks': {
+                'type': 'int',
+            },
+            'raid_present': {
+                'type': 'int',
             },
             'raid_list': {
                 'type': 'list',
@@ -321,48 +388,27 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'bios_version': {
+            'psu1_np15': {
                 'type': 'str',
             },
-            'disk_total': {
+            'psu2_np15': {
+                'type': 'str',
+            },
+            'spe_present': {
+                'type': 'str',
+            },
+            'bypass_pr': {
                 'type': 'int',
-            },
-            'l23_asic': {
-                'type': 'str',
-            },
-            'bios_release_date': {
-                'type': 'str',
-            },
-            'fpga_summary': {
-                'type': 'str',
             },
             'bypass_list': {
                 'type': 'list',
-                'bypass_info': {
-                    'type': 'str',
-                },
                 'bypass_name': {
                     'type': 'str',
+                },
+                'bypass_info': {
+                    'type': 'str',
                 }
-            },
-            'cpu': {
-                'type': 'str',
-            },
-            'disk1_status': {
-                'type': 'str',
-            },
-            'fpga_date': {
-                'type': 'str',
-            },
-            'ports': {
-                'type': 'str',
-            },
-            'octeon': {
-                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

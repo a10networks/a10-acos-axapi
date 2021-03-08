@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitor_agent
 description:
     - Configure xflow agent
-short_description: Configures A10 visibility.monitor.agent
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,158 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    stats:
+    agent_name:
         description:
-        - "Field stats"
-        required: False
-        suboptions:
-            netflow_v10_packets_received:
-                description:
-                - "Netflow v10 Packets Received"
-            netflow_v9_sample_records_bad_len:
-                description:
-                - "Netflow v9 Sample Records Bad Length"
-            sflow_disabled:
-                description:
-                - "sFlow Packet Samples Processing Disabled"
-            sflow_sample_record_bad_len:
-                description:
-                - "sFlow Sample Records Bad Length"
-            netflow_v5_sample_records_bad_len:
-                description:
-                - "Netflow v5 Sample Records Bad Length"
-            netflow_tcp_sample_received:
-                description:
-                - "Netflow TCP Samples Received"
-            agent_name:
-                description:
-                - "Specify name for the agent"
-            netflow_v10_samples_received:
-                description:
-                - "Netflow v10 Samples Received"
-            netflow_record_rse_invalid:
-                description:
-                - "Netflow Data Record Reduced Size Invalid"
-            sflow_samples_skipped:
-                description:
-                - "sFlow Samples Skipped"
-            netflow_disabled:
-                description:
-                - "Netflow Flow Samples Processing Disabled"
-            netflow_v9_samples_received:
-                description:
-                - "Netflow v9 Samples Received"
-            sflow_samples_received:
-                description:
-                - "sFlow Samples Received"
-            sflow_sample_record_invalid_layer2:
-                description:
-                - "sFlow Sample Records Unknown Layer-2"
-            netflow_v10_sample_records_bad_len:
-                description:
-                - "Netflow v10 Sample Records Bad Length"
-            netflow_icmp_sample_received:
-                description:
-                - "Netflow ICMP Samples Received"
-            netflow_udp_sample_received:
-                description:
-                - "Netflow UDP Samples received"
-            netflow_v9_packets_received:
-                description:
-                - "Netflow v9 Packets Received"
-            netflow_v10_samples_sent_for_detection:
-                description:
-                - "Netflow v10 Samples Procssed For Detection"
-            sflow_packets_received:
-                description:
-                - "sFlow Packets Received"
-            sflow_samples_sent_for_detection:
-                description:
-                - "sFlow Samples Processed For Detection"
-            netflow_v9_max_records_exceed:
-                description:
-                - "Netflow v9 Sample Max Records Error"
-            netflow_v5_samples_received:
-                description:
-                - "Netflow v5 Samples Received"
-            netflow_sample_flow_dur_error:
-                description:
-                - "Netflow Sample Flow Duration Error"
-            sflow_samples_non_std:
-                description:
-                - "sFlow Samples Non-standard"
-            netflow_other_sample_received:
-                description:
-                - "Netflow OTHER Samples Received"
-            netflow_v5_packets_received:
-                description:
-                - "Netflow v5 Packets Received"
-            netflow_v5_max_records_exceed:
-                description:
-                - "Netflow v5 Sample Max Records Error"
-            sflow_sample_ipv6_hdr_parse_fail:
-                description:
-                - "sFlow Sample IPv6 Record Header Parse Failures"
-            netflow_v10_max_records_exceed:
-                description:
-                - "Netflow v10 Sample Max records Error"
-            netflow_v5_samples_sent_for_detection:
-                description:
-                - "Netflow v5 Samples Processed For Detection"
-            sflow_samples_bad_len:
-                description:
-                - "sFlow Samples Bad Length"
-            netflow_record_copy_oom_error:
-                description:
-                - "Netflow Data Record Copy Fail OOM"
-            netflow_v9_samples_sent_for_detection:
-                description:
-                - "Netflow v9 Samples Processed For Detection"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - "Specify name for the agent"
+        type: str
+        required: True
     agent_v4_addr:
         description:
         - "Configure agent's IPv4 address"
+        type: str
         required: False
     agent_v6_addr:
         description:
         - "Configure agent's IPv6 address"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -189,17 +97,18 @@ options:
           Unknown Layer-2; 'sflow-sample-ipv6-hdr-parse-fail'= sFlow Sample IPv6 Record
           Header Parse Failures; 'sflow-disabled'= sFlow Packet Samples Processing
           Disabled; 'netflow-disabled'= Netflow Flow Samples Processing Disabled;
-          'netflow-v5-packets-received'= Netflow v5 Packets Received; 'netflow-v5
-          -samples-received'= Netflow v5 Samples Received; 'netflow-v5-samples-sent-for-
-          detection'= Netflow v5 Samples Processed For Detection; 'netflow-v5-sample-
-          records-bad-len'= Netflow v5 Sample Records Bad Length; 'netflow-v5-max-
-          records-exceed'= Netflow v5 Sample Max Records Error; 'netflow-v9-packets-
-          received'= Netflow v9 Packets Received; 'netflow-v9-samples-received'= Netflow
-          v9 Samples Received; 'netflow-v9-samples-sent-for-detection'= Netflow v9
-          Samples Processed For Detection; 'netflow-v9-sample-records-bad-len'= Netflow
-          v9 Sample Records Bad Length; 'netflow-v9-max-records-exceed'= Netflow v9
-          Sample Max Records Error; 'netflow-v10-packets-received'= Netflow v10 Packets
-          Received; 'netflow-v10-samples-received'= Netflow v10 Samples Received;
+          'netflow-v5-packets-received'= Netflow v5 Packets Received;
+          'netflow-v5-samples-received'= Netflow v5 Samples Received;
+          'netflow-v5-samples-sent-for-detection'= Netflow v5 Samples Processed For
+          Detection; 'netflow-v5-sample-records-bad-len'= Netflow v5 Sample Records Bad
+          Length; 'netflow-v5-max-records-exceed'= Netflow v5 Sample Max Records Error;
+          'netflow-v9-packets-received'= Netflow v9 Packets Received;
+          'netflow-v9-samples-received'= Netflow v9 Samples Received;
+          'netflow-v9-samples-sent-for-detection'= Netflow v9 Samples Processed For
+          Detection; 'netflow-v9-sample-records-bad-len'= Netflow v9 Sample Records Bad
+          Length; 'netflow-v9-max-records-exceed'= Netflow v9 Sample Max Records Error;
+          'netflow-v10-packets-received'= Netflow v10 Packets Received;
+          'netflow-v10-samples-received'= Netflow v10 Samples Received;
           'netflow-v10-samples-sent-for-detection'= Netflow v10 Samples Procssed For
           Detection; 'netflow-v10-sample-records-bad-len'= Netflow v10 Sample Records Bad
           Length; 'netflow-v10-max-records-exceed'= Netflow v10 Sample Max records Error;
@@ -209,10 +118,149 @@ options:
           Samples Received; 'netflow-record-copy-oom-error'= Netflow Data Record Copy
           Fail OOM; 'netflow-record-rse-invalid'= Netflow Data Record Reduced Size
           Invalid; 'netflow-sample-flow-dur-error'= Netflow Sample Flow Duration Error;"
-    agent_name:
+                type: str
+    stats:
         description:
-        - "Specify name for the agent"
-        required: True
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            sflow_packets_received:
+                description:
+                - "sFlow Packets Received"
+                type: str
+            sflow_samples_received:
+                description:
+                - "sFlow Samples Received"
+                type: str
+            sflow_samples_bad_len:
+                description:
+                - "sFlow Samples Bad Length"
+                type: str
+            sflow_samples_non_std:
+                description:
+                - "sFlow Samples Non-standard"
+                type: str
+            sflow_samples_skipped:
+                description:
+                - "sFlow Samples Skipped"
+                type: str
+            sflow_sample_record_bad_len:
+                description:
+                - "sFlow Sample Records Bad Length"
+                type: str
+            sflow_samples_sent_for_detection:
+                description:
+                - "sFlow Samples Processed For Detection"
+                type: str
+            sflow_sample_record_invalid_layer2:
+                description:
+                - "sFlow Sample Records Unknown Layer-2"
+                type: str
+            sflow_sample_ipv6_hdr_parse_fail:
+                description:
+                - "sFlow Sample IPv6 Record Header Parse Failures"
+                type: str
+            sflow_disabled:
+                description:
+                - "sFlow Packet Samples Processing Disabled"
+                type: str
+            netflow_disabled:
+                description:
+                - "Netflow Flow Samples Processing Disabled"
+                type: str
+            netflow_v5_packets_received:
+                description:
+                - "Netflow v5 Packets Received"
+                type: str
+            netflow_v5_samples_received:
+                description:
+                - "Netflow v5 Samples Received"
+                type: str
+            netflow_v5_samples_sent_for_detection:
+                description:
+                - "Netflow v5 Samples Processed For Detection"
+                type: str
+            netflow_v5_sample_records_bad_len:
+                description:
+                - "Netflow v5 Sample Records Bad Length"
+                type: str
+            netflow_v5_max_records_exceed:
+                description:
+                - "Netflow v5 Sample Max Records Error"
+                type: str
+            netflow_v9_packets_received:
+                description:
+                - "Netflow v9 Packets Received"
+                type: str
+            netflow_v9_samples_received:
+                description:
+                - "Netflow v9 Samples Received"
+                type: str
+            netflow_v9_samples_sent_for_detection:
+                description:
+                - "Netflow v9 Samples Processed For Detection"
+                type: str
+            netflow_v9_sample_records_bad_len:
+                description:
+                - "Netflow v9 Sample Records Bad Length"
+                type: str
+            netflow_v9_max_records_exceed:
+                description:
+                - "Netflow v9 Sample Max Records Error"
+                type: str
+            netflow_v10_packets_received:
+                description:
+                - "Netflow v10 Packets Received"
+                type: str
+            netflow_v10_samples_received:
+                description:
+                - "Netflow v10 Samples Received"
+                type: str
+            netflow_v10_samples_sent_for_detection:
+                description:
+                - "Netflow v10 Samples Procssed For Detection"
+                type: str
+            netflow_v10_sample_records_bad_len:
+                description:
+                - "Netflow v10 Sample Records Bad Length"
+                type: str
+            netflow_v10_max_records_exceed:
+                description:
+                - "Netflow v10 Sample Max records Error"
+                type: str
+            netflow_tcp_sample_received:
+                description:
+                - "Netflow TCP Samples Received"
+                type: str
+            netflow_udp_sample_received:
+                description:
+                - "Netflow UDP Samples received"
+                type: str
+            netflow_icmp_sample_received:
+                description:
+                - "Netflow ICMP Samples Received"
+                type: str
+            netflow_other_sample_received:
+                description:
+                - "Netflow OTHER Samples Received"
+                type: str
+            netflow_record_copy_oom_error:
+                description:
+                - "Netflow Data Record Copy Fail OOM"
+                type: str
+            netflow_record_rse_invalid:
+                description:
+                - "Netflow Data Record Reduced Size Invalid"
+                type: str
+            netflow_sample_flow_dur_error:
+                description:
+                - "Netflow Sample Flow Duration Error"
+                type: str
+            agent_name:
+                description:
+                - "Specify name for the agent"
+                type: str
 
 '''
 
@@ -271,119 +319,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'stats': {
-            'type': 'dict',
-            'netflow_v10_packets_received': {
-                'type': 'str',
-            },
-            'netflow_v9_sample_records_bad_len': {
-                'type': 'str',
-            },
-            'sflow_disabled': {
-                'type': 'str',
-            },
-            'sflow_sample_record_bad_len': {
-                'type': 'str',
-            },
-            'netflow_v5_sample_records_bad_len': {
-                'type': 'str',
-            },
-            'netflow_tcp_sample_received': {
-                'type': 'str',
-            },
-            'agent_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'netflow_v10_samples_received': {
-                'type': 'str',
-            },
-            'netflow_record_rse_invalid': {
-                'type': 'str',
-            },
-            'sflow_samples_skipped': {
-                'type': 'str',
-            },
-            'netflow_disabled': {
-                'type': 'str',
-            },
-            'netflow_v9_samples_received': {
-                'type': 'str',
-            },
-            'sflow_samples_received': {
-                'type': 'str',
-            },
-            'sflow_sample_record_invalid_layer2': {
-                'type': 'str',
-            },
-            'netflow_v10_sample_records_bad_len': {
-                'type': 'str',
-            },
-            'netflow_icmp_sample_received': {
-                'type': 'str',
-            },
-            'netflow_udp_sample_received': {
-                'type': 'str',
-            },
-            'netflow_v9_packets_received': {
-                'type': 'str',
-            },
-            'netflow_v10_samples_sent_for_detection': {
-                'type': 'str',
-            },
-            'sflow_packets_received': {
-                'type': 'str',
-            },
-            'sflow_samples_sent_for_detection': {
-                'type': 'str',
-            },
-            'netflow_v9_max_records_exceed': {
-                'type': 'str',
-            },
-            'netflow_v5_samples_received': {
-                'type': 'str',
-            },
-            'netflow_sample_flow_dur_error': {
-                'type': 'str',
-            },
-            'sflow_samples_non_std': {
-                'type': 'str',
-            },
-            'netflow_other_sample_received': {
-                'type': 'str',
-            },
-            'netflow_v5_packets_received': {
-                'type': 'str',
-            },
-            'netflow_v5_max_records_exceed': {
-                'type': 'str',
-            },
-            'sflow_sample_ipv6_hdr_parse_fail': {
-                'type': 'str',
-            },
-            'netflow_v10_max_records_exceed': {
-                'type': 'str',
-            },
-            'netflow_v5_samples_sent_for_detection': {
-                'type': 'str',
-            },
-            'sflow_samples_bad_len': {
-                'type': 'str',
-            },
-            'netflow_record_copy_oom_error': {
-                'type': 'str',
-            },
-            'netflow_v9_samples_sent_for_detection': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
+        'agent_name': {
             'type': 'str',
+            'required': True,
         },
         'agent_v4_addr': {
             'type': 'str',
         },
         'agent_v6_addr': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         },
         'user_tag': {
@@ -426,9 +372,111 @@ def get_argspec():
                 ]
             }
         },
-        'agent_name': {
-            'type': 'str',
-            'required': True,
+        'stats': {
+            'type': 'dict',
+            'sflow_packets_received': {
+                'type': 'str',
+            },
+            'sflow_samples_received': {
+                'type': 'str',
+            },
+            'sflow_samples_bad_len': {
+                'type': 'str',
+            },
+            'sflow_samples_non_std': {
+                'type': 'str',
+            },
+            'sflow_samples_skipped': {
+                'type': 'str',
+            },
+            'sflow_sample_record_bad_len': {
+                'type': 'str',
+            },
+            'sflow_samples_sent_for_detection': {
+                'type': 'str',
+            },
+            'sflow_sample_record_invalid_layer2': {
+                'type': 'str',
+            },
+            'sflow_sample_ipv6_hdr_parse_fail': {
+                'type': 'str',
+            },
+            'sflow_disabled': {
+                'type': 'str',
+            },
+            'netflow_disabled': {
+                'type': 'str',
+            },
+            'netflow_v5_packets_received': {
+                'type': 'str',
+            },
+            'netflow_v5_samples_received': {
+                'type': 'str',
+            },
+            'netflow_v5_samples_sent_for_detection': {
+                'type': 'str',
+            },
+            'netflow_v5_sample_records_bad_len': {
+                'type': 'str',
+            },
+            'netflow_v5_max_records_exceed': {
+                'type': 'str',
+            },
+            'netflow_v9_packets_received': {
+                'type': 'str',
+            },
+            'netflow_v9_samples_received': {
+                'type': 'str',
+            },
+            'netflow_v9_samples_sent_for_detection': {
+                'type': 'str',
+            },
+            'netflow_v9_sample_records_bad_len': {
+                'type': 'str',
+            },
+            'netflow_v9_max_records_exceed': {
+                'type': 'str',
+            },
+            'netflow_v10_packets_received': {
+                'type': 'str',
+            },
+            'netflow_v10_samples_received': {
+                'type': 'str',
+            },
+            'netflow_v10_samples_sent_for_detection': {
+                'type': 'str',
+            },
+            'netflow_v10_sample_records_bad_len': {
+                'type': 'str',
+            },
+            'netflow_v10_max_records_exceed': {
+                'type': 'str',
+            },
+            'netflow_tcp_sample_received': {
+                'type': 'str',
+            },
+            'netflow_udp_sample_received': {
+                'type': 'str',
+            },
+            'netflow_icmp_sample_received': {
+                'type': 'str',
+            },
+            'netflow_other_sample_received': {
+                'type': 'str',
+            },
+            'netflow_record_copy_oom_error': {
+                'type': 'str',
+            },
+            'netflow_record_rse_invalid': {
+                'type': 'str',
+            },
+            'netflow_sample_flow_dur_error': {
+                'type': 'str',
+            },
+            'agent_name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

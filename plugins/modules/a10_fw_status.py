@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_status
 description:
     - Firewall status
-short_description: Configures A10 fw.status
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            previous_successful_compilation_duration:
-                description:
-                - "Field previous_successful_compilation_duration"
-            previous_successful_compilation_attempt:
-                description:
-                - "Field previous_successful_compilation_attempt"
-            most_recent_compilation_attempt:
-                description:
-                - "Field most_recent_compilation_attempt"
             current_active_rule_set:
                 description:
                 - "Field current_active_rule_set"
+                type: str
+            previous_successful_compilation_attempt:
+                description:
+                - "Field previous_successful_compilation_attempt"
+                type: str
+            previous_successful_compilation_duration:
+                description:
+                - "Field previous_successful_compilation_duration"
+                type: str
+            most_recent_compilation_attempt:
+                description:
+                - "Field most_recent_compilation_attempt"
+                type: str
             most_recent_compilation_status:
                 description:
                 - "Field most_recent_compilation_status"
+                type: str
             internal:
                 description:
                 - "Field internal"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: bool
 
 '''
 
@@ -130,18 +143,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'previous_successful_compilation_duration': {
+            'current_active_rule_set': {
                 'type': 'str',
             },
             'previous_successful_compilation_attempt': {
                 'type': 'str',
             },
-            'most_recent_compilation_attempt': {
+            'previous_successful_compilation_duration': {
                 'type': 'str',
             },
-            'current_active_rule_set': {
+            'most_recent_compilation_attempt': {
                 'type': 'str',
             },
             'most_recent_compilation_status': {
@@ -150,9 +166,6 @@ def get_argspec():
             'internal': {
                 'type': 'bool',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

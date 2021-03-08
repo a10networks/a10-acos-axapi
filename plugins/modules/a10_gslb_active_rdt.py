@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_active_rdt
 description:
     - Active RDT Options
-short_description: Configures A10 gslb.active-rdt
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,67 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     domain:
         description:
         - "Specify Query Domain (Specify Domain Name)"
-        required: False
-    retry:
-        description:
-        - "Specify Retry Count, default is 3"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    track:
-        description:
-        - "Specify Tracking Time, unit= second, default is 60"
+        type: str
         required: False
     interval:
         description:
         - "Specify Query Interval, unit= second, default is 1"
-        required: False
-    sleep:
-        description:
-        - "Specify Sleep Time when query fail, unit= second, default is 3"
-        required: False
-    timeout:
-        description:
-        - "Specify Query Timeout, unit= msec, default is 3000"
-        required: False
-    icmp:
-        description:
-        - "Using ICMP"
+        type: int
         required: False
     port:
         description:
         - "Specify local port to send probe packet, default is 0 (no port)"
+        type: int
+        required: False
+    sleep:
+        description:
+        - "Specify Sleep Time when query fail, unit= second, default is 3"
+        type: int
+        required: False
+    timeout:
+        description:
+        - "Specify Query Timeout, unit= msec, default is 3000"
+        type: int
+        required: False
+    track:
+        description:
+        - "Specify Tracking Time, unit= second, default is 60"
+        type: int
+        required: False
+    retry:
+        description:
+        - "Specify Retry Count, default is 3"
+        type: int
+        required: False
+    icmp:
+        description:
+        - "Using ICMP"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -149,16 +163,10 @@ def get_argspec():
         'domain': {
             'type': 'str',
         },
-        'retry': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'track': {
-            'type': 'int',
-        },
         'interval': {
+            'type': 'int',
+        },
+        'port': {
             'type': 'int',
         },
         'sleep': {
@@ -167,11 +175,17 @@ def get_argspec():
         'timeout': {
             'type': 'int',
         },
+        'track': {
+            'type': 'int',
+        },
+        'retry': {
+            'type': 'int',
+        },
         'icmp': {
             'type': 'bool',
         },
-        'port': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_icmp_rate_limit
 description:
     - Limit the rate of ICMP packet
-short_description: Configures A10 network.icmp-rate-limit
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,60 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     icmp_normal_rate_limit:
         description:
         - "Normal rate limit. If exceeds this limit, drop the ICMP packet that goes over
           the limit"
+        type: int
         required: False
     icmp_lockup:
         description:
         - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate
           limit. If exceeds this limit, drop all ICMP packet for a time period)"
+        type: int
         required: False
     icmp_lockup_period:
         description:
         - "Lockup period (second)"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''

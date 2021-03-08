@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_service
 description:
     - Configure Web Services
-short_description: Configures A10 web-service
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,102 +22,127 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    login_message:
+    auto_redirt_disable:
         description:
-        - "Set GUI login message"
-        required: False
-    gui_session_limit:
-        description:
-        - "Set the max allowed GUI sessions (Session limit (default 30))"
-        required: False
-    axapi_session_limit:
-        description:
-        - "Set the max allowed aXAPI sessions (Session limit (default 30))"
-        required: False
-    gui_idle:
-        description:
-        - "Idle timeout of a connection in minutes (Connection idle timeout value in
-          minutes, default 10, 0 means never timeout)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        - "Diable"
+        type: bool
         required: False
     axapi_idle:
         description:
         - "Idle timeout of a xml service connection in minutes (Connection idle timeout
           value in minutes, default 10, 0 means never timeout)"
+        type: int
         required: False
-    server_disable:
+    axapi_session_limit:
         description:
-        - "Disable"
+        - "Set the max allowed aXAPI sessions (Session limit (default 30))"
+        type: int
+        required: False
+    gui_idle:
+        description:
+        - "Idle timeout of a connection in minutes (Connection idle timeout value in
+          minutes, default 10, 0 means never timeout)"
+        type: int
+        required: False
+    gui_session_limit:
+        description:
+        - "Set the max allowed GUI sessions (Session limit (default 30))"
+        type: int
+        required: False
+    port:
+        description:
+        - "Set Web Server Port (Port number(default 80))"
+        type: int
         required: False
     secure_port:
         description:
         - "Set web secure server port number for listening (Secure Port Number(default
           443))"
+        type: int
         required: False
-    auto_redirt_disable:
+    login_message:
         description:
-        - "Diable"
+        - "Set GUI login message"
+        type: str
         required: False
     secure_server_disable:
         description:
         - "Disable"
+        type: bool
         required: False
-    port:
+    server_disable:
         description:
-        - "Set Web Server Port (Port number(default 80))"
+        - "Disable"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     secure:
         description:
         - "Field secure"
+        type: dict
         required: False
         suboptions:
-            certificate:
-                description:
-                - "Field certificate"
-            regenerate:
-                description:
-                - "Field regenerate"
-            wipe:
-                description:
-                - "Wipe WEB private-key and certificate"
-            private_key:
-                description:
-                - "Field private_key"
-            generate:
-                description:
-                - "Field generate"
             restart:
                 description:
                 - "Restart WEB service"
+                type: bool
+            wipe:
+                description:
+                - "Wipe WEB private-key and certificate"
+                type: bool
+            generate:
+                description:
+                - "Field generate"
+                type: dict
+            regenerate:
+                description:
+                - "Field regenerate"
+                type: dict
+            certificate:
+                description:
+                - "Field certificate"
+                type: dict
+            private_key:
+                description:
+                - "Field private_key"
+                type: dict
 
 '''
 
@@ -183,10 +206,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'login_message': {
-            'type': 'str',
+        'auto_redirt_disable': {
+            'type': 'bool',
         },
-        'gui_session_limit': {
+        'axapi_idle': {
             'type': 'int',
         },
         'axapi_session_limit': {
@@ -195,29 +218,59 @@ def get_argspec():
         'gui_idle': {
             'type': 'int',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'axapi_idle': {
+        'gui_session_limit': {
             'type': 'int',
-        },
-        'server_disable': {
-            'type': 'bool',
-        },
-        'secure_port': {
-            'type': 'int',
-        },
-        'auto_redirt_disable': {
-            'type': 'bool',
-        },
-        'secure_server_disable': {
-            'type': 'bool',
         },
         'port': {
             'type': 'int',
         },
+        'secure_port': {
+            'type': 'int',
+        },
+        'login_message': {
+            'type': 'str',
+        },
+        'secure_server_disable': {
+            'type': 'bool',
+        },
+        'server_disable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'secure': {
             'type': 'dict',
+            'restart': {
+                'type': 'bool',
+            },
+            'wipe': {
+                'type': 'bool',
+            },
+            'generate': {
+                'type': 'dict',
+                'domain_name': {
+                    'type': 'str',
+                },
+                'country': {
+                    'type': 'str',
+                },
+                'state': {
+                    'type': 'str',
+                }
+            },
+            'regenerate': {
+                'type': 'dict',
+                'domain_name': {
+                    'type': 'str',
+                },
+                'country': {
+                    'type': 'str',
+                },
+                'state': {
+                    'type': 'str',
+                }
+            },
             'certificate': {
                 'type': 'dict',
                 'load': {
@@ -230,21 +283,6 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'regenerate': {
-                'type': 'dict',
-                'country': {
-                    'type': 'str',
-                },
-                'state': {
-                    'type': 'str',
-                },
-                'domain_name': {
-                    'type': 'str',
-                }
-            },
-            'wipe': {
-                'type': 'bool',
-            },
             'private_key': {
                 'type': 'dict',
                 'load': {
@@ -256,21 +294,6 @@ def get_argspec():
                 'file_url': {
                     'type': 'str',
                 }
-            },
-            'generate': {
-                'type': 'dict',
-                'country': {
-                    'type': 'str',
-                },
-                'state': {
-                    'type': 'str',
-                },
-                'domain_name': {
-                    'type': 'str',
-                }
-            },
-            'restart': {
-                'type': 'bool',
             }
         }
     })

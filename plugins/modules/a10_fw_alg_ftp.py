@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg_ftp
 description:
     - Change Firewall FTP ALG Settings
-short_description: Configures A10 fw.alg.ftp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     default_port_disable:
         description:
         - "'default-port-disable'= Disable FTP ALG default port 21;"
+        type: str
         required: False
-    stats:
+    uuid:
         description:
-        - "Field stats"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            client_eprt_request:
-                description:
-                - "EPRT Requests From Client"
-            server_epsv_reply:
-                description:
-                - "EPSV Replies From Server"
-            client_port_request:
-                description:
-                - "PORT Requests From Client"
-            server_pasv_reply:
-                description:
-                - "PASV Replies From Server"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -92,10 +87,29 @@ options:
           Freed Used; 'port-helper-freed-unused'= PORT Helper Freed Unused; 'pasv-helper-
           freed-used'= PASV Helper Freed Used; 'pasv-helper-freed-unused'= PASV Helper
           Freed Unused;"
-    uuid:
+                type: str
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            client_port_request:
+                description:
+                - "PORT Requests From Client"
+                type: str
+            client_eprt_request:
+                description:
+                - "EPRT Requests From Client"
+                type: str
+            server_pasv_reply:
+                description:
+                - "PASV Replies From Server"
+                type: str
+            server_epsv_reply:
+                description:
+                - "EPSV Replies From Server"
+                type: str
 
 '''
 
@@ -155,20 +169,8 @@ def get_argspec():
             'type': 'str',
             'choices': ['default-port-disable']
         },
-        'stats': {
-            'type': 'dict',
-            'client_eprt_request': {
-                'type': 'str',
-            },
-            'server_epsv_reply': {
-                'type': 'str',
-            },
-            'client_port_request': {
-                'type': 'str',
-            },
-            'server_pasv_reply': {
-                'type': 'str',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -190,8 +192,20 @@ def get_argspec():
                 ]
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'client_port_request': {
+                'type': 'str',
+            },
+            'client_eprt_request': {
+                'type': 'str',
+            },
+            'server_pasv_reply': {
+                'type': 'str',
+            },
+            'server_epsv_reply': {
+                'type': 'str',
+            }
         }
     })
     return rv

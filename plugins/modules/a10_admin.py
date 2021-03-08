@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin
 description:
     - System admin user configuration
-short_description: Configures A10 admin
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,159 +22,200 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    ssh_pubkey:
+    user:
         description:
-        - "Field ssh_pubkey"
+        - "System admin user name"
+        type: str
+        required: True
+    password_key:
+        description:
+        - "Config admin user password"
+        type: bool
         required: False
-        suboptions:
-            nimport:
-                description:
-                - "Import an authorized public key"
-            list:
-                description:
-                - "List all authorized public keys"
-            use_mgmt_port:
-                description:
-                - "Use management port as source port"
-            file_url:
-                description:
-                - "File URL"
-            delete:
-                description:
-                - "Delete an authorized public key (SSH key index)"
-    uuid:
+    passwd_string:
         description:
-        - "uuid of the object"
+        - "Config admin user password"
+        type: str
+        required: False
+    action:
+        description:
+        - "'enable'= Enable user; 'disable'= Disable user;"
+        type: str
+        required: False
+    unlock:
+        description:
+        - "Unlock admin user"
+        type: bool
+        required: False
+    trusted_host:
+        description:
+        - "Set trusted network administrator can login in"
+        type: bool
+        required: False
+    trusted_host_cidr:
+        description:
+        - "Trusted IP Address with network mask"
+        type: str
+        required: False
+    access_list:
+        description:
+        - "Specify an ACL to classify a trusted host"
+        type: bool
+        required: False
+    trusted_host_acl_id:
+        description:
+        - "ACL ID"
+        type: int
         required: False
     privilege_global:
         description:
         - "'read'= Set read privilege; 'write'= Set write privilege; 'hm'= Set external
           health monitor script content operations privilege;"
+        type: str
         required: False
-    trusted_host:
-        description:
-        - "Set trusted network administrator can login in"
-        required: False
-    user:
-        description:
-        - "System admin user name"
-        required: True
     privilege_list:
         description:
         - "Field privilege_list"
+        type: list
         required: False
         suboptions:
-            partition_name:
-                description:
-                - "Partition Name"
             privilege_partition:
                 description:
                 - "'partition-enable-disable'= Set per-partition enable/disable privilege;
           'partition-read'= Set per-partition read privilege; 'partition-write'= Set per-
           partition write privilege;"
+                type: str
+            partition_name:
+                description:
+                - "Partition Name"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     aws_accesskey:
         description:
         - "Field aws_accesskey"
+        type: dict
         required: False
         suboptions:
             nimport:
                 description:
                 - "Import an aws-accesskey"
-            delete:
-                description:
-                - "Delete an authorized aws accesskey"
+                type: bool
             use_mgmt_port:
                 description:
                 - "Use management port as source port"
+                type: bool
             file_url:
                 description:
                 - "File URL"
+                type: str
+            delete:
+                description:
+                - "Delete an authorized aws accesskey"
+                type: bool
             show:
                 description:
                 - "Show authorized aws accesskey"
+                type: bool
+    ssh_pubkey:
+        description:
+        - "Field ssh_pubkey"
+        type: dict
+        required: False
+        suboptions:
+            nimport:
+                description:
+                - "Import an authorized public key"
+                type: bool
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+                type: bool
+            file_url:
+                description:
+                - "File URL"
+                type: str
+            delete:
+                description:
+                - "Delete an authorized public key (SSH key index)"
+                type: int
+            list:
+                description:
+                - "List all authorized public keys"
+                type: bool
     access:
         description:
         - "Field access"
+        type: dict
         required: False
         suboptions:
             access_type:
                 description:
                 - "Field access_type"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-    access_list:
-        description:
-        - "Specify an ACL to classify a trusted host"
-        required: False
-    unlock:
-        description:
-        - "Unlock admin user"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    action:
-        description:
-        - "'enable'= Enable user; 'disable'= Disable user;"
-        required: False
-    trusted_host_acl_id:
-        description:
-        - "ACL ID"
-        required: False
+                type: str
     password:
         description:
         - "Field password"
+        type: dict
         required: False
         suboptions:
             password_in_module:
                 description:
                 - "Config admin user password"
-            uuid:
-                description:
-                - "uuid of the object"
+                type: str
             encrypted_in_module:
                 description:
                 - "Specify an ENCRYPTED password string (System admin user password)"
-    passwd_string:
-        description:
-        - "Config admin user password"
-        required: False
-    trusted_host_cidr:
-        description:
-        - "Trusted IP Address with network mask"
-        required: False
-    password_key:
-        description:
-        - "Config admin user password"
-        required: False
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -245,12 +284,80 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ssh_pubkey': {
+        'user': {
+            'type': 'str',
+            'required': True,
+        },
+        'password_key': {
+            'type': 'bool',
+        },
+        'passwd_string': {
+            'type': 'str',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'unlock': {
+            'type': 'bool',
+        },
+        'trusted_host': {
+            'type': 'bool',
+        },
+        'trusted_host_cidr': {
+            'type': 'str',
+        },
+        'access_list': {
+            'type': 'bool',
+        },
+        'trusted_host_acl_id': {
+            'type': 'int',
+        },
+        'privilege_global': {
+            'type': 'str',
+            'choices': ['read', 'write', 'hm']
+        },
+        'privilege_list': {
+            'type': 'list',
+            'privilege_partition': {
+                'type':
+                'str',
+                'choices': [
+                    'partition-enable-disable', 'partition-read',
+                    'partition-write'
+                ]
+            },
+            'partition_name': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'aws_accesskey': {
             'type': 'dict',
             'nimport': {
                 'type': 'bool',
             },
-            'list': {
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'file_url': {
+                'type': 'str',
+            },
+            'delete': {
+                'type': 'bool',
+            },
+            'show': {
+                'type': 'bool',
+            }
+        },
+        'ssh_pubkey': {
+            'type': 'dict',
+            'nimport': {
                 'type': 'bool',
             },
             'use_mgmt_port': {
@@ -261,51 +368,8 @@ def get_argspec():
             },
             'delete': {
                 'type': 'int',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'privilege_global': {
-            'type': 'str',
-            'choices': ['read', 'write', 'hm']
-        },
-        'trusted_host': {
-            'type': 'bool',
-        },
-        'user': {
-            'type': 'str',
-            'required': True,
-        },
-        'privilege_list': {
-            'type': 'list',
-            'partition_name': {
-                'type': 'str',
             },
-            'privilege_partition': {
-                'type':
-                'str',
-                'choices': [
-                    'partition-enable-disable', 'partition-read',
-                    'partition-write'
-                ]
-            }
-        },
-        'aws_accesskey': {
-            'type': 'dict',
-            'nimport': {
-                'type': 'bool',
-            },
-            'delete': {
-                'type': 'bool',
-            },
-            'use_mgmt_port': {
-                'type': 'bool',
-            },
-            'file_url': {
-                'type': 'str',
-            },
-            'show': {
+            'list': {
                 'type': 'bool',
             }
         },
@@ -319,42 +383,17 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'access_list': {
-            'type': 'bool',
-        },
-        'unlock': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'trusted_host_acl_id': {
-            'type': 'int',
-        },
         'password': {
             'type': 'dict',
             'password_in_module': {
                 'type': 'str',
             },
-            'uuid': {
-                'type': 'str',
-            },
             'encrypted_in_module': {
                 'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'passwd_string': {
-            'type': 'str',
-        },
-        'trusted_host_cidr': {
-            'type': 'str',
-        },
-        'password_key': {
-            'type': 'bool',
         }
     })
     return rv

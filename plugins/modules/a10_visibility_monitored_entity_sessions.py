@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitored_entity_sessions
 description:
     - Display Monitoring entity sessions
-short_description: Configures A10 visibility.monitored.entity.sessions
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             mon_entity_list:
                 description:
                 - "Field mon_entity_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -115,13 +123,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'mon_entity_list': {
                 'type': 'list',
-                'l4_port': {
-                    'type': 'int',
-                },
                 'entity_key': {
                     'type': 'str',
                 },
@@ -131,9 +139,15 @@ def get_argspec():
                 'ipv6_addr': {
                     'type': 'str',
                 },
+                'l4_proto': {
+                    'type': 'str',
+                },
+                'l4_port': {
+                    'type': 'int',
+                },
                 'session_list': {
                     'type': 'list',
-                    'rev_src_ip': {
+                    'proto': {
                         'type': 'str',
                     },
                     'fwd_src_ip': {
@@ -142,33 +156,27 @@ def get_argspec():
                     'fwd_src_port': {
                         'type': 'int',
                     },
-                    'proto': {
+                    'fwd_dst_ip': {
+                        'type': 'str',
+                    },
+                    'fwd_dst_port': {
+                        'type': 'int',
+                    },
+                    'rev_src_ip': {
                         'type': 'str',
                     },
                     'rev_src_port': {
                         'type': 'int',
                     },
-                    'fwd_dst_port': {
-                        'type': 'int',
-                    },
-                    'rev_dst_port': {
-                        'type': 'int',
-                    },
                     'rev_dst_ip': {
                         'type': 'str',
                     },
-                    'fwd_dst_ip': {
-                        'type': 'str',
+                    'rev_dst_port': {
+                        'type': 'int',
                     }
-                },
-                'l4_proto': {
-                    'type': 'str',
                 },
                 'sec_entity_list': {
                     'type': 'list',
-                    'l4_port': {
-                        'type': 'int',
-                    },
                     'entity_key': {
                         'type': 'str',
                     },
@@ -178,9 +186,15 @@ def get_argspec():
                     'ipv6_addr': {
                         'type': 'str',
                     },
+                    'l4_proto': {
+                        'type': 'str',
+                    },
+                    'l4_port': {
+                        'type': 'int',
+                    },
                     'session_list': {
                         'type': 'list',
-                        'rev_src_ip': {
+                        'proto': {
                             'type': 'str',
                         },
                         'fwd_src_ip': {
@@ -189,33 +203,27 @@ def get_argspec():
                         'fwd_src_port': {
                             'type': 'int',
                         },
-                        'proto': {
+                        'fwd_dst_ip': {
+                            'type': 'str',
+                        },
+                        'fwd_dst_port': {
+                            'type': 'int',
+                        },
+                        'rev_src_ip': {
                             'type': 'str',
                         },
                         'rev_src_port': {
                             'type': 'int',
                         },
-                        'fwd_dst_port': {
-                            'type': 'int',
-                        },
-                        'rev_dst_port': {
-                            'type': 'int',
-                        },
                         'rev_dst_ip': {
                             'type': 'str',
                         },
-                        'fwd_dst_ip': {
-                            'type': 'str',
+                        'rev_dst_port': {
+                            'type': 'int',
                         }
-                    },
-                    'l4_proto': {
-                        'type': 'str',
                     }
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

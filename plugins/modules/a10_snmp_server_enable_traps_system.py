@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_system
 description:
     - Enable system group traps
-short_description: Configures A10 snmp.server.enable.traps.system
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,115 +22,143 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Enable all system group traps"
-        required: False
-    data_cpu_high:
-        description:
-        - "Enable data CPU usage high trap"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    power:
-        description:
-        - "Enable system power supply trap"
-        required: False
-    high_disk_use:
-        description:
-        - "Enable system high disk usage trap"
-        required: False
-    high_memory_use:
-        description:
-        - "Enable system high memory usage trap"
+        type: bool
         required: False
     control_cpu_high:
         description:
         - "Enable control CPU usage high trap"
+        type: bool
         required: False
-    file_sys_read_only:
+    data_cpu_high:
         description:
-        - "Enable file system read-only trap"
-        required: False
-    low_temp:
-        description:
-        - "Enable system low temperature trap"
-        required: False
-    high_temp:
-        description:
-        - "Enable system high temperature trap"
-        required: False
-    sec_disk:
-        description:
-        - "Enable system secondary hard disk trap"
-        required: False
-    license_management:
-        description:
-        - "Enable system license management traps"
-        required: False
-    start:
-        description:
-        - "Enable system start trap"
+        - "Enable data CPU usage high trap"
+        type: bool
         required: False
     fan:
         description:
         - "Enable system fan trap"
+        type: bool
         required: False
-    shutdown:
+    file_sys_read_only:
         description:
-        - "Enable system shutdown trap"
+        - "Enable file system read-only trap"
+        type: bool
         required: False
-    pri_disk:
+    high_disk_use:
         description:
-        - "Enable system primary hard disk trap"
+        - "Enable system high disk usage trap"
+        type: bool
         required: False
-    syslog_severity_one:
+    high_memory_use:
         description:
-        - "Enable system syslog severity one messages trap"
+        - "Enable system high memory usage trap"
+        type: bool
         required: False
-    tacacs_server_up_down:
+    high_temp:
         description:
-        - "Enable system TACACS monitor server up/down trap"
+        - "Enable system high temperature trap"
+        type: bool
         required: False
-    smp_resource_event:
+    low_temp:
         description:
-        - "Enable system smp resource event trap"
+        - "Enable system low temperature trap"
+        type: bool
         required: False
-    restart:
+    license_management:
         description:
-        - "Enable system restart trap"
+        - "Enable system license management traps"
+        type: bool
         required: False
     packet_drop:
         description:
         - "Enable system packet dropped trap"
+        type: bool
+        required: False
+    power:
+        description:
+        - "Enable system power supply trap"
+        type: bool
+        required: False
+    pri_disk:
+        description:
+        - "Enable system primary hard disk trap"
+        type: bool
+        required: False
+    restart:
+        description:
+        - "Enable system restart trap"
+        type: bool
+        required: False
+    sec_disk:
+        description:
+        - "Enable system secondary hard disk trap"
+        type: bool
+        required: False
+    shutdown:
+        description:
+        - "Enable system shutdown trap"
+        type: bool
+        required: False
+    smp_resource_event:
+        description:
+        - "Enable system smp resource event trap"
+        type: bool
+        required: False
+    syslog_severity_one:
+        description:
+        - "Enable system syslog severity one messages trap"
+        type: bool
+        required: False
+    tacacs_server_up_down:
+        description:
+        - "Enable system TACACS monitor server up/down trap"
+        type: bool
+        required: False
+    start:
+        description:
+        - "Enable system start trap"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -209,13 +235,16 @@ def get_argspec():
         'all': {
             'type': 'bool',
         },
+        'control_cpu_high': {
+            'type': 'bool',
+        },
         'data_cpu_high': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
+        'fan': {
+            'type': 'bool',
         },
-        'power': {
+        'file_sys_read_only': {
             'type': 'bool',
         },
         'high_disk_use': {
@@ -224,34 +253,34 @@ def get_argspec():
         'high_memory_use': {
             'type': 'bool',
         },
-        'control_cpu_high': {
-            'type': 'bool',
-        },
-        'file_sys_read_only': {
+        'high_temp': {
             'type': 'bool',
         },
         'low_temp': {
             'type': 'bool',
         },
-        'high_temp': {
+        'license_management': {
+            'type': 'bool',
+        },
+        'packet_drop': {
+            'type': 'bool',
+        },
+        'power': {
+            'type': 'bool',
+        },
+        'pri_disk': {
+            'type': 'bool',
+        },
+        'restart': {
             'type': 'bool',
         },
         'sec_disk': {
             'type': 'bool',
         },
-        'license_management': {
-            'type': 'bool',
-        },
-        'start': {
-            'type': 'bool',
-        },
-        'fan': {
-            'type': 'bool',
-        },
         'shutdown': {
             'type': 'bool',
         },
-        'pri_disk': {
+        'smp_resource_event': {
             'type': 'bool',
         },
         'syslog_severity_one': {
@@ -260,14 +289,11 @@ def get_argspec():
         'tacacs_server_up_down': {
             'type': 'bool',
         },
-        'smp_resource_event': {
+        'start': {
             'type': 'bool',
         },
-        'restart': {
-            'type': 'bool',
-        },
-        'packet_drop': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

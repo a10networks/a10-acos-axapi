@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_external_service
 description:
     - External service template
-short_description: Configures A10 slb.template.external-service
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,107 +22,133 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
         - "External Service Template Name"
+        type: str
         required: True
-    shared_partition_persist_source_ip_template:
-        description:
-        - "Reference a persist source ip template from shared partition"
-        required: False
-    ntype:
-        description:
-        - "'skyfire-icap'= Skyfire ICAP service; 'url-filter'= URL filtering service;"
-        required: False
-    source_ip:
-        description:
-        - "Source IP persistence template (Source IP persistence template name)"
-        required: False
-    request_header_forward_list:
-        description:
-        - "Field request_header_forward_list"
-        required: False
-        suboptions:
-            request_header_forward:
-                description:
-                - "Request header to be forwarded to external service (Header Name)"
-    template_tcp_proxy_shared:
-        description:
-        - "TCP Proxy Template name"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    shared_partition_tcp_proxy_template:
-        description:
-        - "Reference a TCP Proxy template from shared partition"
-        required: False
-    action:
-        description:
-        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset;"
-        required: False
-    service_group:
-        description:
-        - "Bind a Service Group to the template (Service Group Name)"
-        required: False
-    failure_action:
-        description:
-        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset;"
-        required: False
-    timeout:
-        description:
-        - "Timeout value 1 - 200 in units of 200ms, default is 5 (default is 1000ms) (1 -
-          200 in units of 200ms, default is 5 (1000ms))"
-        required: False
-    tcp_proxy:
-        description:
-        - "TCP Proxy Template Name"
-        required: False
-    template_persist_source_ip_shared:
-        description:
-        - "Source IP Persistence Template Name"
-        required: False
     bypass_ip_cfg:
         description:
         - "Field bypass_ip_cfg"
+        type: list
         required: False
         suboptions:
             bypass_ip:
                 description:
                 - "ip address to bypass external service"
+                type: str
             mask:
                 description:
                 - "IP prefix mask"
+                type: str
+    request_header_forward_list:
+        description:
+        - "Field request_header_forward_list"
+        type: list
+        required: False
+        suboptions:
+            request_header_forward:
+                description:
+                - "Request header to be forwarded to external service (Header Name)"
+                type: str
+    failure_action:
+        description:
+        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset;"
+        type: str
+        required: False
+    timeout:
+        description:
+        - "Timeout value 1 - 200 in units of 200ms, default is 5 (default is 1000ms) (1 -
+          200 in units of 200ms, default is 5 (1000ms))"
+        type: int
+        required: False
+    action:
+        description:
+        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset;"
+        type: str
+        required: False
+    service_group:
+        description:
+        - "Bind a Service Group to the template (Service Group Name)"
+        type: str
+        required: False
+    ntype:
+        description:
+        - "'skyfire-icap'= Skyfire ICAP service; 'url-filter'= URL filtering service;"
+        type: str
+        required: False
+    tcp_proxy:
+        description:
+        - "TCP Proxy Template Name"
+        type: str
+        required: False
+    shared_partition_tcp_proxy_template:
+        description:
+        - "Reference a TCP Proxy template from shared partition"
+        type: bool
+        required: False
+    template_tcp_proxy_shared:
+        description:
+        - "TCP Proxy Template name"
+        type: str
+        required: False
+    source_ip:
+        description:
+        - "Source IP persistence template (Source IP persistence template name)"
+        type: str
+        required: False
+    shared_partition_persist_source_ip_template:
+        description:
+        - "Reference a persist source ip template from shared partition"
+        type: bool
+        required: False
+    template_persist_source_ip_shared:
+        description:
+        - "Source IP Persistence Template Name"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -197,51 +221,6 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'shared_partition_persist_source_ip_template': {
-            'type': 'bool',
-        },
-        'ntype': {
-            'type': 'str',
-            'choices': ['skyfire-icap', 'url-filter']
-        },
-        'source_ip': {
-            'type': 'str',
-        },
-        'request_header_forward_list': {
-            'type': 'list',
-            'request_header_forward': {
-                'type': 'str',
-            }
-        },
-        'template_tcp_proxy_shared': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'shared_partition_tcp_proxy_template': {
-            'type': 'bool',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['continue', 'drop', 'reset']
-        },
-        'service_group': {
-            'type': 'str',
-        },
-        'failure_action': {
-            'type': 'str',
-            'choices': ['continue', 'drop', 'reset']
-        },
-        'timeout': {
-            'type': 'int',
-        },
-        'tcp_proxy': {
-            'type': 'str',
-        },
-        'template_persist_source_ip_shared': {
-            'type': 'str',
-        },
         'bypass_ip_cfg': {
             'type': 'list',
             'bypass_ip': {
@@ -251,7 +230,52 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'request_header_forward_list': {
+            'type': 'list',
+            'request_header_forward': {
+                'type': 'str',
+            }
+        },
+        'failure_action': {
+            'type': 'str',
+            'choices': ['continue', 'drop', 'reset']
+        },
+        'timeout': {
+            'type': 'int',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['continue', 'drop', 'reset']
+        },
+        'service_group': {
+            'type': 'str',
+        },
+        'ntype': {
+            'type': 'str',
+            'choices': ['skyfire-icap', 'url-filter']
+        },
+        'tcp_proxy': {
+            'type': 'str',
+        },
+        'shared_partition_tcp_proxy_template': {
+            'type': 'bool',
+        },
+        'template_tcp_proxy_shared': {
+            'type': 'str',
+        },
+        'source_ip': {
+            'type': 'str',
+        },
+        'shared_partition_persist_source_ip_template': {
+            'type': 'bool',
+        },
+        'template_persist_source_ip_shared': {
+            'type': 'str',
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

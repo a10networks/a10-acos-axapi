@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_logging
 description:
     - Bind a logging template to firewall
-short_description: Configures A10 fw.logging
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Logging Template Name"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -71,117 +87,138 @@ options:
           format'= HTTP Logging Invalid Format Error; 'dcmsg_permit'= Dcmsg Permit;
           'alg_override_permit'= Alg Override Permit; 'template_error'= Template Error;
           'ipv4-frag-applied'= IPv4 Fragmentation Applied; 'ipv4-frag-failed'= IPv4
-          Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied; 'ipv6
-          -frag-failed'= IPv6 Fragmentation Failed; 'out-of-buffers'= Out of Buffers;
-          'add-msg-failed'= Add Message to Buffer Failed; 'tcp-logging-conn-established'=
-          TCP Logging Conn Established; 'tcp-logging-conn-create-failed'= TCP Logging
-          Conn Create Failed; 'tcp-logging-conn-dropped'= TCP Logging Conn Dropped; 'log-
-          message-too-long'= Log message too long; 'http-out-of-order-dropped'= HTTP out-
-          of-order dropped; 'http-alloc-failed'= HTTP Request Info Allocation Failed;
-          'sctp-session-created'= SCTP Session Created; 'sctp-session-deleted'= SCTP
-          Session Deleted; 'log_type_sctp_inner_proto_filter'= Log Event Type SCTP Inner
-          Proto Filter; 'log_type_gtp_message_filtering'= Log Event Type GTP Message
-          Filtering; 'log_type_gtp_apn_filtering'= Log Event Type GTP Apn Filtering;
-          'tcp-logging-port-allocated'= TCP Logging Port Allocated; 'tcp-logging-port-
-          freed'= TCP Logging Port Freed; 'tcp-logging-port-allocation-failed'= TCP
-          Logging Port Allocation Failed; 'log_type_gtp_invalid_teid'= Log Event Type GTP
-          Invalid TEID; 'log_gtp_type_reserved_ie_present'= Log Event Type GTP Reserved
-          Information Element Present; 'log_type_gtp_mandatory_ie_missing'= Log Event
-          Type GTP Mandatory Information Element Missing;"
+          Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied;
+          'ipv6-frag-failed'= IPv6 Fragmentation Failed; 'out-of-buffers'= Out of
+          Buffers; 'add-msg-failed'= Add Message to Buffer Failed; 'tcp-logging-conn-
+          established'= TCP Logging Conn Established; 'tcp-logging-conn-create-failed'=
+          TCP Logging Conn Create Failed; 'tcp-logging-conn-dropped'= TCP Logging Conn
+          Dropped; 'log-message-too-long'= Log message too long; 'http-out-of-order-
+          dropped'= HTTP out-of-order dropped; 'http-alloc-failed'= HTTP Request Info
+          Allocation Failed; 'sctp-session-created'= SCTP Session Created; 'sctp-session-
+          deleted'= SCTP Session Deleted; 'log_type_sctp_inner_proto_filter'= Log Event
+          Type SCTP Inner Proto Filter; 'log_type_gtp_message_filtering'= Log Event Type
+          GTP Message Filtering; 'log_type_gtp_apn_filtering'= Log Event Type GTP Apn
+          Filtering; 'tcp-logging-port-allocated'= TCP Logging Port Allocated; 'tcp-
+          logging-port-freed'= TCP Logging Port Freed; 'tcp-logging-port-allocation-
+          failed'= TCP Logging Port Allocation Failed; 'log_type_gtp_invalid_teid'= Log
+          Event Type GTP Invalid TEID; 'log_gtp_type_reserved_ie_present'= Log Event Type
+          GTP Reserved Information Element Present; 'log_type_gtp_mandatory_ie_missing'=
+          Log Event Type GTP Mandatory Information Element Missing;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            tcp_session_deleted:
-                description:
-                - "TCP Session Deleted"
-            log_type_gtp_mandatory_ie_missing:
-                description:
-                - "Log Event Type GTP Mandatory Information Element Missing"
-            icmpv6_session_created:
-                description:
-                - "ICMPV6 Session Created"
-            log_type_gtp_apn_filtering:
-                description:
-                - "Log Event Type GTP Apn Filtering"
-            tcp_session_created:
-                description:
-                - "TCP Session Created"
-            sctp_session_created:
-                description:
-                - "SCTP Session Created"
-            udp_session_created:
-                description:
-                - "UDP Session Created"
-            http_request_logged:
-                description:
-                - "HTTP Request Logged"
-            other_session_created:
-                description:
-                - "Other Session Created"
-            log_type_gtp_invalid_teid:
-                description:
-                - "Log Event Type GTP Invalid TEID"
-            rule_not_logged:
-                description:
-                - "Firewall Rule Not Logged"
-            other_session_deleted:
-                description:
-                - "Other Session Deleted"
-            http_logging_invalid_format:
-                description:
-                - "HTTP Logging Invalid Format Error"
-            log_gtp_type_reserved_ie_present:
-                description:
-                - "Log Event Type GTP Reserved Information Element Present"
-            sctp_session_deleted:
-                description:
-                - "SCTP Session Deleted"
-            icmpv6_session_deleted:
-                description:
-                - "ICMPV6 Session Deleted"
-            log_type_deny:
-                description:
-                - "Log Event Type Deny"
-            log_type_gtp_message_filtering:
-                description:
-                - "Log Event Type GTP Message Filtering"
-            log_type_reset:
-                description:
-                - "Log Event Type Reset"
-            log_type_session_opened:
-                description:
-                - "Log Event Type Session Open"
-            log_type_session_closed:
-                description:
-                - "Log Event Type Session Close"
-            log_type_sctp_inner_proto_filter:
-                description:
-                - "Log Event Type SCTP Inner Proto Filter"
-            icmp_session_deleted:
-                description:
-                - "ICMP Session Deleted"
-            icmp_session_created:
-                description:
-                - "ICMP Session Created"
             log_message_sent:
                 description:
                 - "Log Packet Sent"
+                type: str
+            log_type_reset:
+                description:
+                - "Log Event Type Reset"
+                type: str
+            log_type_deny:
+                description:
+                - "Log Event Type Deny"
+                type: str
+            log_type_session_closed:
+                description:
+                - "Log Event Type Session Close"
+                type: str
+            log_type_session_opened:
+                description:
+                - "Log Event Type Session Open"
+                type: str
+            rule_not_logged:
+                description:
+                - "Firewall Rule Not Logged"
+                type: str
             log_dropped:
                 description:
                 - "Log Packets Dropped"
+                type: str
+            tcp_session_created:
+                description:
+                - "TCP Session Created"
+                type: str
+            tcp_session_deleted:
+                description:
+                - "TCP Session Deleted"
+                type: str
+            udp_session_created:
+                description:
+                - "UDP Session Created"
+                type: str
             udp_session_deleted:
                 description:
                 - "UDP Session Deleted"
-    name:
-        description:
-        - "Logging Template Name"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            icmp_session_deleted:
+                description:
+                - "ICMP Session Deleted"
+                type: str
+            icmp_session_created:
+                description:
+                - "ICMP Session Created"
+                type: str
+            icmpv6_session_deleted:
+                description:
+                - "ICMPV6 Session Deleted"
+                type: str
+            icmpv6_session_created:
+                description:
+                - "ICMPV6 Session Created"
+                type: str
+            other_session_deleted:
+                description:
+                - "Other Session Deleted"
+                type: str
+            other_session_created:
+                description:
+                - "Other Session Created"
+                type: str
+            http_request_logged:
+                description:
+                - "HTTP Request Logged"
+                type: str
+            http_logging_invalid_format:
+                description:
+                - "HTTP Logging Invalid Format Error"
+                type: str
+            sctp_session_created:
+                description:
+                - "SCTP Session Created"
+                type: str
+            sctp_session_deleted:
+                description:
+                - "SCTP Session Deleted"
+                type: str
+            log_type_sctp_inner_proto_filter:
+                description:
+                - "Log Event Type SCTP Inner Proto Filter"
+                type: str
+            log_type_gtp_message_filtering:
+                description:
+                - "Log Event Type GTP Message Filtering"
+                type: str
+            log_type_gtp_apn_filtering:
+                description:
+                - "Log Event Type GTP Apn Filtering"
+                type: str
+            log_type_gtp_invalid_teid:
+                description:
+                - "Log Event Type GTP Invalid TEID"
+                type: str
+            log_gtp_type_reserved_ie_present:
+                description:
+                - "Log Event Type GTP Reserved Information Element Present"
+                type: str
+            log_type_gtp_mandatory_ie_missing:
+                description:
+                - "Log Event Type GTP Mandatory Information Element Missing"
+                type: str
 
 '''
 
@@ -237,6 +274,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -274,70 +317,37 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'tcp_session_deleted': {
-                'type': 'str',
-            },
-            'log_type_gtp_mandatory_ie_missing': {
-                'type': 'str',
-            },
-            'icmpv6_session_created': {
-                'type': 'str',
-            },
-            'log_type_gtp_apn_filtering': {
-                'type': 'str',
-            },
-            'tcp_session_created': {
-                'type': 'str',
-            },
-            'sctp_session_created': {
-                'type': 'str',
-            },
-            'udp_session_created': {
-                'type': 'str',
-            },
-            'http_request_logged': {
-                'type': 'str',
-            },
-            'other_session_created': {
-                'type': 'str',
-            },
-            'log_type_gtp_invalid_teid': {
-                'type': 'str',
-            },
-            'rule_not_logged': {
-                'type': 'str',
-            },
-            'other_session_deleted': {
-                'type': 'str',
-            },
-            'http_logging_invalid_format': {
-                'type': 'str',
-            },
-            'log_gtp_type_reserved_ie_present': {
-                'type': 'str',
-            },
-            'sctp_session_deleted': {
-                'type': 'str',
-            },
-            'icmpv6_session_deleted': {
-                'type': 'str',
-            },
-            'log_type_deny': {
-                'type': 'str',
-            },
-            'log_type_gtp_message_filtering': {
+            'log_message_sent': {
                 'type': 'str',
             },
             'log_type_reset': {
                 'type': 'str',
             },
-            'log_type_session_opened': {
+            'log_type_deny': {
                 'type': 'str',
             },
             'log_type_session_closed': {
                 'type': 'str',
             },
-            'log_type_sctp_inner_proto_filter': {
+            'log_type_session_opened': {
+                'type': 'str',
+            },
+            'rule_not_logged': {
+                'type': 'str',
+            },
+            'log_dropped': {
+                'type': 'str',
+            },
+            'tcp_session_created': {
+                'type': 'str',
+            },
+            'tcp_session_deleted': {
+                'type': 'str',
+            },
+            'udp_session_created': {
+                'type': 'str',
+            },
+            'udp_session_deleted': {
                 'type': 'str',
             },
             'icmp_session_deleted': {
@@ -346,21 +356,48 @@ def get_argspec():
             'icmp_session_created': {
                 'type': 'str',
             },
-            'log_message_sent': {
+            'icmpv6_session_deleted': {
                 'type': 'str',
             },
-            'log_dropped': {
+            'icmpv6_session_created': {
                 'type': 'str',
             },
-            'udp_session_deleted': {
+            'other_session_deleted': {
+                'type': 'str',
+            },
+            'other_session_created': {
+                'type': 'str',
+            },
+            'http_request_logged': {
+                'type': 'str',
+            },
+            'http_logging_invalid_format': {
+                'type': 'str',
+            },
+            'sctp_session_created': {
+                'type': 'str',
+            },
+            'sctp_session_deleted': {
+                'type': 'str',
+            },
+            'log_type_sctp_inner_proto_filter': {
+                'type': 'str',
+            },
+            'log_type_gtp_message_filtering': {
+                'type': 'str',
+            },
+            'log_type_gtp_apn_filtering': {
+                'type': 'str',
+            },
+            'log_type_gtp_invalid_teid': {
+                'type': 'str',
+            },
+            'log_gtp_type_reserved_ie_present': {
+                'type': 'str',
+            },
+            'log_type_gtp_mandatory_ie_missing': {
                 'type': 'str',
             }
-        },
-        'name': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

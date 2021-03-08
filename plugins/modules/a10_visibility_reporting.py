@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_reporting
 description:
     - Configure reporting framework
-short_description: Configures A10 visibility.reporting
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -61,55 +72,65 @@ options:
           failure'= Total reporting buffer allocation failures; 'notif-jobs-in-queue'=
           Total notification jobs in queue; 'enqueue-fail'= Total enqueue jobs failed;
           'enqueue-pass'= Total enqueue jobs passed; 'dequeued'= Total jobs dequeued;"
-    stats:
+                type: str
+    telemetry_export_interval:
         description:
-        - "Field stats"
+        - "Field telemetry_export_interval"
+        type: dict
         required: False
         suboptions:
-            buffer_alloc_failure:
+            value:
                 description:
-                - "Total reporting buffer allocation failures"
-            dequeued:
+                - "Monitored entity telemetry data export interval in mins (Default 5 mins)"
+                type: int
+            uuid:
                 description:
-                - "Total jobs dequeued"
-            enqueue_pass:
-                description:
-                - "Total enqueue jobs passed"
-            template:
-                description:
-                - "Field template"
-            notif_jobs_in_queue:
-                description:
-                - "Total notification jobs in queue"
-            enqueue_fail:
-                description:
-                - "Total enqueue jobs failed"
-            log_transmit_failure:
-                description:
-                - "Total log transmit failures"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                - "uuid of the object"
+                type: str
     template:
         description:
         - "Field template"
+        type: dict
         required: False
         suboptions:
             notification:
                 description:
                 - "Field notification"
-    telemetry_export_interval:
+                type: dict
+    stats:
         description:
-        - "Field telemetry_export_interval"
+        - "Field stats"
+        type: dict
         required: False
         suboptions:
-            uuid:
+            log_transmit_failure:
                 description:
-                - "uuid of the object"
-            value:
+                - "Total log transmit failures"
+                type: str
+            buffer_alloc_failure:
                 description:
-                - "Monitored entity telemetry data export interval in mins (Default 5 mins)"
+                - "Total reporting buffer allocation failures"
+                type: str
+            notif_jobs_in_queue:
+                description:
+                - "Total notification jobs in queue"
+                type: str
+            enqueue_fail:
+                description:
+                - "Total enqueue jobs failed"
+                type: str
+            enqueue_pass:
+                description:
+                - "Total enqueue jobs passed"
+                type: str
+            dequeued:
+                description:
+                - "Total jobs dequeued"
+                type: str
+            template:
+                description:
+                - "Field template"
+                type: dict
 
 '''
 
@@ -166,6 +187,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -178,99 +202,61 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
+        'telemetry_export_interval': {
             'type': 'dict',
-            'buffer_alloc_failure': {
-                'type': 'str',
+            'value': {
+                'type': 'int',
             },
-            'dequeued': {
-                'type': 'str',
-            },
-            'enqueue_pass': {
-                'type': 'str',
-            },
-            'template': {
-                'type': 'dict',
-            },
-            'notif_jobs_in_queue': {
-                'type': 'str',
-            },
-            'enqueue_fail': {
-                'type': 'str',
-            },
-            'log_transmit_failure': {
+            'uuid': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         },
         'template': {
             'type': 'dict',
             'notification': {
                 'type': 'dict',
-                'debug': {
-                    'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
                 'template_name_list': {
                     'type': 'list',
-                    'protocol': {
-                        'type': 'str',
-                        'choices': ['http', 'https']
-                    },
                     'name': {
                         'type': 'str',
                         'required': True,
                     },
+                    'ipv4_address': {
+                        'type': 'str',
+                    },
+                    'ipv6_address': {
+                        'type': 'str',
+                    },
+                    'host_name': {
+                        'type': 'str',
+                    },
                     'use_mgmt_port': {
                         'type': 'bool',
+                    },
+                    'protocol': {
+                        'type': 'str',
+                        'choices': ['http', 'https']
+                    },
+                    'http_port': {
+                        'type': 'int',
                     },
                     'https_port': {
                         'type': 'int',
                     },
-                    'debug_mode': {
-                        'type': 'bool',
-                    },
                     'relative_uri': {
                         'type': 'str',
                     },
-                    'authentication': {
-                        'type': 'dict',
-                        'uuid': {
-                            'type': 'str',
-                        },
-                        'encrypted': {
-                            'type': 'str',
-                        },
-                        'relative_logoff_uri': {
-                            'type': 'str',
-                        },
-                        'api_key_encrypted': {
-                            'type': 'str',
-                        },
-                        'api_key': {
-                            'type': 'bool',
-                        },
-                        'auth_password_string': {
-                            'type': 'str',
-                        },
-                        'auth_password': {
-                            'type': 'bool',
-                        },
-                        'api_key_string': {
-                            'type': 'str',
-                        },
-                        'relative_login_uri': {
-                            'type': 'str',
-                        },
-                        'auth_username': {
-                            'type': 'str',
-                        }
+                    'action': {
+                        'type': 'str',
+                        'choices': ['enable', 'disable']
                     },
-                    'host_name': {
+                    'debug_mode': {
+                        'type': 'bool',
+                    },
+                    'test_connectivity': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
                         'type': 'str',
                     },
                     'sampling_enable': {
@@ -284,35 +270,70 @@ def get_argspec():
                             ]
                         }
                     },
-                    'http_port': {
-                        'type': 'int',
-                    },
-                    'ipv6_address': {
-                        'type': 'str',
-                    },
-                    'test_connectivity': {
-                        'type': 'bool',
-                    },
-                    'ipv4_address': {
-                        'type': 'str',
-                    },
-                    'action': {
-                        'type': 'str',
-                        'choices': ['enable', 'disable']
-                    },
+                    'authentication': {
+                        'type': 'dict',
+                        'relative_login_uri': {
+                            'type': 'str',
+                        },
+                        'relative_logoff_uri': {
+                            'type': 'str',
+                        },
+                        'auth_username': {
+                            'type': 'str',
+                        },
+                        'auth_password': {
+                            'type': 'bool',
+                        },
+                        'auth_password_string': {
+                            'type': 'str',
+                        },
+                        'encrypted': {
+                            'type': 'str',
+                        },
+                        'api_key': {
+                            'type': 'bool',
+                        },
+                        'api_key_string': {
+                            'type': 'str',
+                        },
+                        'api_key_encrypted': {
+                            'type': 'str',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'debug': {
+                    'type': 'dict',
                     'uuid': {
                         'type': 'str',
                     }
                 }
             }
         },
-        'telemetry_export_interval': {
+        'stats': {
             'type': 'dict',
-            'uuid': {
+            'log_transmit_failure': {
                 'type': 'str',
             },
-            'value': {
-                'type': 'int',
+            'buffer_alloc_failure': {
+                'type': 'str',
+            },
+            'notif_jobs_in_queue': {
+                'type': 'str',
+            },
+            'enqueue_fail': {
+                'type': 'str',
+            },
+            'enqueue_pass': {
+                'type': 'str',
+            },
+            'dequeued': {
+                'type': 'str',
+            },
+            'template': {
+                'type': 'dict',
             }
         }
     })

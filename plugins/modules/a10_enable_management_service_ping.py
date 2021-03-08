@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_enable_management_service_ping
 description:
     - Ping service
-short_description: Configures A10 enable.management.service.ping
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,94 +21,120 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    acl_v6_list:
-        description:
-        - "Field acl_v6_list"
-        required: False
-        suboptions:
-            tunnel_cfg:
-                description:
-                - "Field tunnel_cfg"
-            management:
-                description:
-                - "Management Interface"
-            uuid:
-                description:
-                - "uuid of the object"
-            acl_name:
-                description:
-                - "ACL name"
-            user_tag:
-                description:
-                - "Customized tag"
-            ve_cfg:
-                description:
-                - "Field ve_cfg"
-            all_data_intf:
-                description:
-                - "All Data Interfaces"
-            eth_cfg:
-                description:
-                - "Field eth_cfg"
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     acl_v4_list:
         description:
         - "Field acl_v4_list"
+        type: list
         required: False
         suboptions:
-            tunnel_cfg:
-                description:
-                - "Field tunnel_cfg"
-            management:
-                description:
-                - "Management Interface"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
-            ve_cfg:
-                description:
-                - "Field ve_cfg"
-            all_data_intf:
-                description:
-                - "All Data Interfaces"
             acl_id:
                 description:
                 - "ACL id"
+                type: int
             eth_cfg:
                 description:
                 - "Field eth_cfg"
+                type: list
+            ve_cfg:
+                description:
+                - "Field ve_cfg"
+                type: list
+            tunnel_cfg:
+                description:
+                - "Field tunnel_cfg"
+                type: list
+            management:
+                description:
+                - "Management Interface"
+                type: bool
+            all_data_intf:
+                description:
+                - "All Data Interfaces"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    acl_v6_list:
+        description:
+        - "Field acl_v6_list"
+        type: list
+        required: False
+        suboptions:
+            acl_name:
+                description:
+                - "ACL name"
+                type: str
+            eth_cfg:
+                description:
+                - "Field eth_cfg"
+                type: list
+            ve_cfg:
+                description:
+                - "Field ve_cfg"
+                type: list
+            tunnel_cfg:
+                description:
+                - "Field tunnel_cfg"
+                type: list
+            management:
+                description:
+                - "Management Interface"
+                type: bool
+            all_data_intf:
+                description:
+                - "All Data Interfaces"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -163,87 +187,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'acl_v6_list': {
-            'type': 'list',
-            'tunnel_cfg': {
-                'type': 'list',
-                'tunnel_start': {
-                    'type': 'int',
-                },
-                'tunnel_end': {
-                    'type': 'int',
-                }
-            },
-            'management': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'acl_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            've_cfg': {
-                'type': 'list',
-                've_end': {
-                    'type': 'int',
-                },
-                've_start': {
-                    'type': 'int',
-                }
-            },
-            'all_data_intf': {
-                'type': 'bool',
-            },
-            'eth_cfg': {
-                'type': 'list',
-                'ethernet_start': {
-                    'type': 'str',
-                },
-                'ethernet_end': {
-                    'type': 'str',
-                }
-            }
-        },
         'uuid': {
             'type': 'str',
         },
         'acl_v4_list': {
             'type': 'list',
-            'tunnel_cfg': {
-                'type': 'list',
-                'tunnel_start': {
-                    'type': 'int',
-                },
-                'tunnel_end': {
-                    'type': 'int',
-                }
-            },
-            'management': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            've_cfg': {
-                'type': 'list',
-                've_end': {
-                    'type': 'int',
-                },
-                've_start': {
-                    'type': 'int',
-                }
-            },
-            'all_data_intf': {
-                'type': 'bool',
-            },
             'acl_id': {
                 'type': 'int',
                 'required': True,
@@ -256,6 +204,82 @@ def get_argspec():
                 'ethernet_end': {
                     'type': 'str',
                 }
+            },
+            've_cfg': {
+                'type': 'list',
+                've_start': {
+                    'type': 'int',
+                },
+                've_end': {
+                    'type': 'int',
+                }
+            },
+            'tunnel_cfg': {
+                'type': 'list',
+                'tunnel_start': {
+                    'type': 'int',
+                },
+                'tunnel_end': {
+                    'type': 'int',
+                }
+            },
+            'management': {
+                'type': 'bool',
+            },
+            'all_data_intf': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'acl_v6_list': {
+            'type': 'list',
+            'acl_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'eth_cfg': {
+                'type': 'list',
+                'ethernet_start': {
+                    'type': 'str',
+                },
+                'ethernet_end': {
+                    'type': 'str',
+                }
+            },
+            've_cfg': {
+                'type': 'list',
+                've_start': {
+                    'type': 'int',
+                },
+                've_end': {
+                    'type': 'int',
+                }
+            },
+            'tunnel_cfg': {
+                'type': 'list',
+                'tunnel_start': {
+                    'type': 'int',
+                },
+                'tunnel_end': {
+                    'type': 'int',
+                }
+            },
+            'management': {
+                'type': 'bool',
+            },
+            'all_data_intf': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             }
         }
     })

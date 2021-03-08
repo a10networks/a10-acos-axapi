@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_udp
 description:
     - L4 UDP switch config
-short_description: Configures A10 slb.template.udp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,77 +22,105 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    short:
-        description:
-        - "Short lived session"
-        required: False
-    qos:
-        description:
-        - "QOS level (number)"
+        type: str
         required: False
     name:
         description:
         - "Fast UDP Template Name"
+        type: str
         required: True
-    age:
+    idle_timeout:
         description:
-        - "short age (in sec), default is 31"
+        - "Idle Timeout value (Interval of 60 seconds), default 120 seconds (idle timeout
+          in second, default 120)"
+        type: int
+        required: False
+    qos:
+        description:
+        - "QOS level (number)"
+        type: int
         required: False
     stateless_conn_timeout:
         description:
         - "Stateless Current Connection Timeout value (5 - 120 seconds) (idle timeout in
           second, default 120)"
-        required: False
-    idle_timeout:
-        description:
-        - "Idle Timeout value (Interval of 60 seconds), default 120 seconds (idle timeout
-          in second, default 120)"
-        required: False
-    re_select_if_server_down:
-        description:
-        - "re-select another server if service port is down"
+        type: int
         required: False
     immediate:
         description:
         - "Immediate Removal after Transaction"
+        type: bool
         required: False
-    user_tag:
+    short:
         description:
-        - "Customized tag"
+        - "Short lived session"
+        type: bool
+        required: False
+    age:
+        description:
+        - "short age (in sec), default is 31"
+        type: int
+        required: False
+    re_select_if_server_down:
+        description:
+        - "re-select another server if service port is down"
+        type: bool
         required: False
     disable_clear_session:
         description:
         - "Disable immediate clearing of session"
+        type: bool
+        required: False
+    radius_lb_method_hash_type:
+        description:
+        - "'ip'= IP-Hash;"
+        type: str
+        required: False
+    avp:
+        description:
+        - "'4'= NAS-IP-address; '8'= Framed-IP-Address;"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -111,11 +137,13 @@ ANSIBLE_METADATA = {
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "age",
+    "avp",
     "disable_clear_session",
     "idle_timeout",
     "immediate",
     "name",
     "qos",
+    "radius_lb_method_hash_type",
     "re_select_if_server_down",
     "short",
     "stateless_conn_timeout",
@@ -158,38 +186,46 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'short': {
-            'type': 'bool',
-        },
-        'qos': {
-            'type': 'int',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'age': {
+        'idle_timeout': {
+            'type': 'int',
+        },
+        'qos': {
             'type': 'int',
         },
         'stateless_conn_timeout': {
             'type': 'int',
         },
-        'idle_timeout': {
+        'immediate': {
+            'type': 'bool',
+        },
+        'short': {
+            'type': 'bool',
+        },
+        'age': {
             'type': 'int',
         },
         're_select_if_server_down': {
             'type': 'bool',
         },
-        'immediate': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
         'disable_clear_session': {
             'type': 'bool',
         },
+        'radius_lb_method_hash_type': {
+            'type': 'str',
+            'choices': ['ip']
+        },
+        'avp': {
+            'type': 'str',
+            'choices': ['4', '8']
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

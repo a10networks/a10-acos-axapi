@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_gtp
 description:
     - Configure GTP
-short_description: Configures A10 fw.gtp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    gtp_value:
+        description:
+        - "'enable'= Enable GTP Inspection;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -98,175 +114,221 @@ options:
           v0 Message Length Exceeded; 'mandatory-information-element-drop-v0'= GTP v0
           Mandatory Information Element Field Drop; 'filter-list-drop-v0'= GTP v0 APN
           IMSI Information Filtering Drop; 'gtp-in-gtp-drop'= GTP in GTP Filtering Drop;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            invalid_apn_len_drop:
-                description:
-                - "Invalid APN Length Drop"
-            reserved_field_set_drop:
-                description:
-                - "Reserved field set drop"
-            message_length_drop:
-                description:
-                - "Message Length Exceeded"
-            out_of_session_memory:
-                description:
-                - "Out of Session Memory"
-            reserved_information_element_drop:
-                description:
-                - "Resevered Information Element Field Drop"
-            path_management_message_v0:
-                description:
-                - "GTP v0 Path Management Message"
-            out_of_state_drop:
-                description:
-                - "Out Of State Drop"
-            delete_session_response:
-                description:
-                - "Delete Session Response"
-            invalid_flow_label_drop_v0:
-                description:
-                - "GTP v0 Invalid flow label drop"
-            invalid_imsi_len_drop:
-                description:
-                - "Invalid IMSI Length Drop"
-            filter_list_drop:
-                description:
-                - "APN IMSI Information Filtering Drop"
-            response_cause_not_accepted:
-                description:
-                - "Response Cause indicates Request not Accepted"
-            mandatory_information_element_drop:
-                description:
-                - "Mandatory Information Element Field Drop"
-            unsupported_message_type_v0:
-                description:
-                - "GTP v0 message type is not supported"
-            unsupported_message_type_v1:
-                description:
-                - "GTP v1 message type is not supported"
-            unsupported_message_type_v2:
-                description:
-                - "GTP v2 message type is not supported"
-            invalid_teid_drop:
-                description:
-                - "Invalid TEID Drop"
-            message_filtering_drop:
-                description:
-                - "Message Filtering Drop"
-            no_fwd_route:
-                description:
-                - "No Forward Route"
-            create_pdp_context_request_v1:
-                description:
-                - "GTP v1 Create PDP Context Request"
-            fast_conn_setup:
-                description:
-                - "Fast Conn Setup Attempt"
-            path_management_message_v1:
-                description:
-                - "GTP v1 Path Management Message"
-            create_session_request_retransmit:
-                description:
-                - "Retransmitted Create Session Request"
             create_session_request:
                 description:
                 - "Create Session Request"
-            no_rev_route:
-                description:
-                - "NO Reverse Route"
-            gtp_in_gtp_drop:
-                description:
-                - "GTP in GTP Filtering Drop"
-            mandatory_information_element_drop_v1:
-                description:
-                - "GTP v1 Mandatory Information Element Field Drop"
-            mandatory_information_element_drop_v0:
-                description:
-                - "GTP v0 Mandatory Information Element Field Drop"
-            message_filtering_drop_v0:
-                description:
-                - "GTP v0 Message Filtering Drop"
-            message_filtering_drop_v1:
-                description:
-                - "GTP v1 Message Filtering Drop"
-            reserved_information_element_drop_v1:
-                description:
-                - "GTP v1 Reserved Information Element Field Drop"
-            version_not_supported:
-                description:
-                - "GTP version is not supported"
-            invalid_teid_drop_v1:
-                description:
-                - "GTP v1 Invalid TEID Drop"
-            filter_list_drop_v0:
-                description:
-                - "GTP v0 APN IMSI Information Filtering Drop"
-            reserved_field_set_drop_v1:
-                description:
-                - "GTP v1 Reserved field set drop"
-            tunnel_id_flag_drop:
-                description:
-                - "Tunnel ID Flag Incorrect"
-            filter_list_drop_v1:
-                description:
-                - "GTP v1 APN IMSI Information Filtering Drop"
-            create_pdp_context_request_v0:
-                description:
-                - "GTP v0 Create PDP Context Request"
-            message_length_drop_v1:
-                description:
-                - "GTP v1 Message Length Exceeded"
-            message_length_drop_v0:
-                description:
-                - "GTP v0 Message Length Exceeded"
-            delete_pdp_context_request_v0:
-                description:
-                - "GTP v0 Delete Context PDP Request"
-            delete_pdp_context_request_v1:
-                description:
-                - "GTP v1 Delete Context PDP Request"
-            delete_session_request_retransmit:
-                description:
-                - "Retransmitted Delete Session Request"
+                type: str
             create_session_response:
                 description:
                 - "Create Session Response"
-            invalid_key:
-                description:
-                - "Invalid TEID Field"
+                type: str
             path_management_message:
                 description:
                 - "Path Management Message"
-            delete_pdp_context_response_v1:
-                description:
-                - "GTP v1 Delete Context PDP Response"
-            delete_pdp_context_response_v0:
-                description:
-                - "GTP v0 Delete Context PDP Response"
+                type: str
             delete_session_request:
                 description:
                 - "Delete Session Request"
-            invalid_tid_drop_v0:
+                type: str
+            delete_session_response:
                 description:
-                - "GTP v0 Invalid tid drop"
-            create_pdp_context_response_v0:
+                - "Delete Session Response"
+                type: str
+            reserved_field_set_drop:
                 description:
-                - "GTP v0 Create PDP Context Response"
+                - "Reserved field set drop"
+                type: str
+            tunnel_id_flag_drop:
+                description:
+                - "Tunnel ID Flag Incorrect"
+                type: str
+            message_filtering_drop:
+                description:
+                - "Message Filtering Drop"
+                type: str
+            reserved_information_element_drop:
+                description:
+                - "Resevered Information Element Field Drop"
+                type: str
+            mandatory_information_element_drop:
+                description:
+                - "Mandatory Information Element Field Drop"
+                type: str
+            filter_list_drop:
+                description:
+                - "APN IMSI Information Filtering Drop"
+                type: str
+            invalid_teid_drop:
+                description:
+                - "Invalid TEID Drop"
+                type: str
+            out_of_state_drop:
+                description:
+                - "Out Of State Drop"
+                type: str
+            message_length_drop:
+                description:
+                - "Message Length Exceeded"
+                type: str
+            unsupported_message_type_v2:
+                description:
+                - "GTP v2 message type is not supported"
+                type: str
+            fast_conn_setup:
+                description:
+                - "Fast Conn Setup Attempt"
+                type: str
+            out_of_session_memory:
+                description:
+                - "Out of Session Memory"
+                type: str
+            no_fwd_route:
+                description:
+                - "No Forward Route"
+                type: str
+            no_rev_route:
+                description:
+                - "NO Reverse Route"
+                type: str
+            invalid_key:
+                description:
+                - "Invalid TEID Field"
+                type: str
+            create_session_request_retransmit:
+                description:
+                - "Retransmitted Create Session Request"
+                type: str
+            delete_session_request_retransmit:
+                description:
+                - "Retransmitted Delete Session Request"
+                type: str
+            response_cause_not_accepted:
+                description:
+                - "Response Cause indicates Request not Accepted"
+                type: str
+            invalid_imsi_len_drop:
+                description:
+                - "Invalid IMSI Length Drop"
+                type: str
+            invalid_apn_len_drop:
+                description:
+                - "Invalid APN Length Drop"
+                type: str
+            create_pdp_context_request_v1:
+                description:
+                - "GTP v1 Create PDP Context Request"
+                type: str
             create_pdp_context_response_v1:
                 description:
                 - "GTP v1 Create PDP Context Response"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    gtp_value:
-        description:
-        - "'enable'= Enable GTP Inspection;"
-        required: False
+                type: str
+            path_management_message_v1:
+                description:
+                - "GTP v1 Path Management Message"
+                type: str
+            reserved_field_set_drop_v1:
+                description:
+                - "GTP v1 Reserved field set drop"
+                type: str
+            message_filtering_drop_v1:
+                description:
+                - "GTP v1 Message Filtering Drop"
+                type: str
+            reserved_information_element_drop_v1:
+                description:
+                - "GTP v1 Reserved Information Element Field Drop"
+                type: str
+            mandatory_information_element_drop_v1:
+                description:
+                - "GTP v1 Mandatory Information Element Field Drop"
+                type: str
+            filter_list_drop_v1:
+                description:
+                - "GTP v1 APN IMSI Information Filtering Drop"
+                type: str
+            invalid_teid_drop_v1:
+                description:
+                - "GTP v1 Invalid TEID Drop"
+                type: str
+            message_length_drop_v1:
+                description:
+                - "GTP v1 Message Length Exceeded"
+                type: str
+            version_not_supported:
+                description:
+                - "GTP version is not supported"
+                type: str
+            unsupported_message_type_v1:
+                description:
+                - "GTP v1 message type is not supported"
+                type: str
+            delete_pdp_context_request_v1:
+                description:
+                - "GTP v1 Delete Context PDP Request"
+                type: str
+            delete_pdp_context_response_v1:
+                description:
+                - "GTP v1 Delete Context PDP Response"
+                type: str
+            create_pdp_context_request_v0:
+                description:
+                - "GTP v0 Create PDP Context Request"
+                type: str
+            create_pdp_context_response_v0:
+                description:
+                - "GTP v0 Create PDP Context Response"
+                type: str
+            delete_pdp_context_request_v0:
+                description:
+                - "GTP v0 Delete Context PDP Request"
+                type: str
+            delete_pdp_context_response_v0:
+                description:
+                - "GTP v0 Delete Context PDP Response"
+                type: str
+            path_management_message_v0:
+                description:
+                - "GTP v0 Path Management Message"
+                type: str
+            message_filtering_drop_v0:
+                description:
+                - "GTP v0 Message Filtering Drop"
+                type: str
+            unsupported_message_type_v0:
+                description:
+                - "GTP v0 message type is not supported"
+                type: str
+            invalid_flow_label_drop_v0:
+                description:
+                - "GTP v0 Invalid flow label drop"
+                type: str
+            invalid_tid_drop_v0:
+                description:
+                - "GTP v0 Invalid tid drop"
+                type: str
+            message_length_drop_v0:
+                description:
+                - "GTP v0 Message Length Exceeded"
+                type: str
+            mandatory_information_element_drop_v0:
+                description:
+                - "GTP v0 Mandatory Information Element Field Drop"
+                type: str
+            filter_list_drop_v0:
+                description:
+                - "GTP v0 APN IMSI Information Filtering Drop"
+                type: str
+            gtp_in_gtp_drop:
+                description:
+                - "GTP in GTP Filtering Drop"
+                type: str
 
 '''
 
@@ -322,6 +384,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'gtp_value': {
+            'type': 'str',
+            'choices': ['enable']
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -367,91 +436,91 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'invalid_apn_len_drop': {
+            'create_session_request': {
                 'type': 'str',
             },
-            'reserved_field_set_drop': {
+            'create_session_response': {
                 'type': 'str',
             },
-            'message_length_drop': {
+            'path_management_message': {
                 'type': 'str',
             },
-            'out_of_session_memory': {
-                'type': 'str',
-            },
-            'reserved_information_element_drop': {
-                'type': 'str',
-            },
-            'path_management_message_v0': {
-                'type': 'str',
-            },
-            'out_of_state_drop': {
+            'delete_session_request': {
                 'type': 'str',
             },
             'delete_session_response': {
                 'type': 'str',
             },
-            'invalid_flow_label_drop_v0': {
+            'reserved_field_set_drop': {
                 'type': 'str',
             },
-            'invalid_imsi_len_drop': {
-                'type': 'str',
-            },
-            'filter_list_drop': {
-                'type': 'str',
-            },
-            'response_cause_not_accepted': {
-                'type': 'str',
-            },
-            'mandatory_information_element_drop': {
-                'type': 'str',
-            },
-            'unsupported_message_type_v0': {
-                'type': 'str',
-            },
-            'unsupported_message_type_v1': {
-                'type': 'str',
-            },
-            'unsupported_message_type_v2': {
-                'type': 'str',
-            },
-            'invalid_teid_drop': {
+            'tunnel_id_flag_drop': {
                 'type': 'str',
             },
             'message_filtering_drop': {
                 'type': 'str',
             },
-            'no_fwd_route': {
+            'reserved_information_element_drop': {
                 'type': 'str',
             },
-            'create_pdp_context_request_v1': {
+            'mandatory_information_element_drop': {
+                'type': 'str',
+            },
+            'filter_list_drop': {
+                'type': 'str',
+            },
+            'invalid_teid_drop': {
+                'type': 'str',
+            },
+            'out_of_state_drop': {
+                'type': 'str',
+            },
+            'message_length_drop': {
+                'type': 'str',
+            },
+            'unsupported_message_type_v2': {
                 'type': 'str',
             },
             'fast_conn_setup': {
                 'type': 'str',
             },
-            'path_management_message_v1': {
+            'out_of_session_memory': {
                 'type': 'str',
             },
-            'create_session_request_retransmit': {
-                'type': 'str',
-            },
-            'create_session_request': {
+            'no_fwd_route': {
                 'type': 'str',
             },
             'no_rev_route': {
                 'type': 'str',
             },
-            'gtp_in_gtp_drop': {
+            'invalid_key': {
                 'type': 'str',
             },
-            'mandatory_information_element_drop_v1': {
+            'create_session_request_retransmit': {
                 'type': 'str',
             },
-            'mandatory_information_element_drop_v0': {
+            'delete_session_request_retransmit': {
                 'type': 'str',
             },
-            'message_filtering_drop_v0': {
+            'response_cause_not_accepted': {
+                'type': 'str',
+            },
+            'invalid_imsi_len_drop': {
+                'type': 'str',
+            },
+            'invalid_apn_len_drop': {
+                'type': 'str',
+            },
+            'create_pdp_context_request_v1': {
+                'type': 'str',
+            },
+            'create_pdp_context_response_v1': {
+                'type': 'str',
+            },
+            'path_management_message_v1': {
+                'type': 'str',
+            },
+            'reserved_field_set_drop_v1': {
                 'type': 'str',
             },
             'message_filtering_drop_v1': {
@@ -460,76 +529,69 @@ def get_argspec():
             'reserved_information_element_drop_v1': {
                 'type': 'str',
             },
-            'version_not_supported': {
-                'type': 'str',
-            },
-            'invalid_teid_drop_v1': {
-                'type': 'str',
-            },
-            'filter_list_drop_v0': {
-                'type': 'str',
-            },
-            'reserved_field_set_drop_v1': {
-                'type': 'str',
-            },
-            'tunnel_id_flag_drop': {
+            'mandatory_information_element_drop_v1': {
                 'type': 'str',
             },
             'filter_list_drop_v1': {
                 'type': 'str',
             },
-            'create_pdp_context_request_v0': {
+            'invalid_teid_drop_v1': {
                 'type': 'str',
             },
             'message_length_drop_v1': {
                 'type': 'str',
             },
-            'message_length_drop_v0': {
+            'version_not_supported': {
                 'type': 'str',
             },
-            'delete_pdp_context_request_v0': {
+            'unsupported_message_type_v1': {
                 'type': 'str',
             },
             'delete_pdp_context_request_v1': {
                 'type': 'str',
             },
-            'delete_session_request_retransmit': {
-                'type': 'str',
-            },
-            'create_session_response': {
-                'type': 'str',
-            },
-            'invalid_key': {
-                'type': 'str',
-            },
-            'path_management_message': {
-                'type': 'str',
-            },
             'delete_pdp_context_response_v1': {
                 'type': 'str',
             },
-            'delete_pdp_context_response_v0': {
-                'type': 'str',
-            },
-            'delete_session_request': {
-                'type': 'str',
-            },
-            'invalid_tid_drop_v0': {
+            'create_pdp_context_request_v0': {
                 'type': 'str',
             },
             'create_pdp_context_response_v0': {
                 'type': 'str',
             },
-            'create_pdp_context_response_v1': {
+            'delete_pdp_context_request_v0': {
+                'type': 'str',
+            },
+            'delete_pdp_context_response_v0': {
+                'type': 'str',
+            },
+            'path_management_message_v0': {
+                'type': 'str',
+            },
+            'message_filtering_drop_v0': {
+                'type': 'str',
+            },
+            'unsupported_message_type_v0': {
+                'type': 'str',
+            },
+            'invalid_flow_label_drop_v0': {
+                'type': 'str',
+            },
+            'invalid_tid_drop_v0': {
+                'type': 'str',
+            },
+            'message_length_drop_v0': {
+                'type': 'str',
+            },
+            'mandatory_information_element_drop_v0': {
+                'type': 'str',
+            },
+            'filter_list_drop_v0': {
+                'type': 'str',
+            },
+            'gtp_in_gtp_drop': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'gtp_value': {
-            'type': 'str',
-            'choices': ['enable']
         }
     })
     return rv

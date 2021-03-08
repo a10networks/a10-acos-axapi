@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep
 description:
     - Virtual Tunnel end point Configuration
-short_description: Configures A10 overlay-tunnel.vtep
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,159 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    stats:
+    id:
         description:
-        - "Field stats"
+        - "VTEP Identifier"
+        type: int
+        required: True
+    encap:
+        description:
+        - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type
+          is VXLAN;"
+        type: str
         required: False
-        suboptions:
-            total_bytes_rx:
-                description:
-                - "Total packet bytes in"
-            dropped_pkt_rx:
-                description:
-                - "Dropped received packets"
-            pkts_out:
-                description:
-                - "Packets out"
-            unhandled_pkt_rx:
-                description:
-                - "Unhandled packets in"
-            unknown_encap_tx_pkt:
-                description:
-                - "Encap miss tx pkts"
-            reassembled_pkts_rx:
-                description:
-                - "Reassembled packets in"
-            id:
-                description:
-                - "VTEP Identifier"
-            frag_pkts_tx:
-                description:
-                - "Frag packets out"
-            dropped_pkts_tx:
-                description:
-                - "Dropped packets out"
-            mcast_pkt_tx:
-                description:
-                - "Multicast packets out"
-            large_pkts_rx:
-                description:
-                - "Too large packets in"
-            invalid_lif_tx:
-                description:
-                - "Invalid Lif pkts out"
-            total_bytes_tx:
-                description:
-                - "Packet bytes out"
-            invalid_lif_rx:
-                description:
-                - "Invalid Lif pkts in"
-            unicast_pkt_rx:
-                description:
-                - "Total unicast packets in"
-            dot1q_pkts_rx:
-                description:
-                - "Dot1q packets in"
-            vtep_host_learned:
-                description:
-                - "Hosts learned"
-            unhandled_pkt_tx:
-                description:
-                - "Unhandled packets out"
-            unknown_vtep_rx:
-                description:
-                - "Vtep Unkown rx"
-            encap_miss_pkts_rx:
-                description:
-                - "Encap missed in received packets"
-            unknown_encap_rx_pkt:
-                description:
-                - "Encap miss rx pkts"
-            bad_chksum_pks_rx:
-                description:
-                - "Bad checksum in received packets"
-            encap_unresolved_count:
-                description:
-                - "Encap unresolved failures"
-            bad_inner_ipv6_len_rx:
-                description:
-                - "Bad inner ipv6 packet len"
-            cfg_err_count:
-                description:
-                - "Config errors"
-            unknown_vtep_tx:
-                description:
-                - "Vtep unknown tx"
-            flooded_pkt_count:
-                description:
-                - "Flooded packet count"
-            total_pkts_rx:
-                description:
-                - "Total packets out"
-            vtep_host_learn_error:
-                description:
-                - "Host learn error"
-            requeue_pkts_in:
-                description:
-                - "Requeued packets in"
-            lif_un_init_rx:
-                description:
-                - "Lif uninitialized packets in"
-            mcast_pkt_rx:
-                description:
-                - "Total multicast packets in"
-            bcast_pkt_tx:
-                description:
-                - "Broadcast packets out"
-            bcast_pkt_rx:
-                description:
-                - "Total broadcast packets in"
-            unicast_pkt_tx:
-                description:
-                - "Unicast packets out"
-            bad_inner_ipv4_len_rx:
-                description:
-                - "bad inner ipv4 packet len"
-            arp_req_sent:
-                description:
-                - "Arp request sent"
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -201,70 +104,232 @@ options:
           packets out; 'reassembled_pkts_rx'= Reassembled packets in;
           'bad_inner_ipv4_len_rx'= bad inner ipv4 packet len; 'bad_inner_ipv6_len_rx'=
           Bad inner ipv6 packet len; 'lif_un_init_rx'= Lif uninitialized packets in;"
+                type: str
     source_ip_address:
         description:
         - "Field source_ip_address"
+        type: dict
         required: False
         suboptions:
             ip_address:
                 description:
                 - "Source Tunnel End Point IPv4 address"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
             vni_list:
                 description:
                 - "Field vni_list"
-    encap:
-        description:
-        - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type
-          is VXLAN;"
-        required: False
-    host_list:
-        description:
-        - "Field host_list"
-        required: False
-        suboptions:
-            destination_vtep:
-                description:
-                - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
-            ip_addr:
-                description:
-                - "IPv4 address of the overlay host"
-            overlay_mac_addr:
-                description:
-                - "MAC Address of the overlay host"
-            vni:
-                description:
-                - " Configure the segment id ( VNI of the remote host)"
-            uuid:
-                description:
-                - "uuid of the object"
-    id:
-        description:
-        - "VTEP Identifier"
-        required: True
+                type: list
     destination_ip_address_list:
         description:
         - "Field destination_ip_address_list"
+        type: list
         required: False
         suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
             ip_address:
                 description:
                 - "IP Address of the remote VTEP"
-            vni_list:
-                description:
-                - "Field vni_list"
-            user_tag:
-                description:
-                - "Customized tag"
+                type: str
             encap:
                 description:
                 - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type
           is VXLAN;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            vni_list:
+                description:
+                - "Field vni_list"
+                type: list
+    host_list:
+        description:
+        - "Field host_list"
+        type: list
+        required: False
+        suboptions:
+            ip_addr:
+                description:
+                - "IPv4 address of the overlay host"
+                type: str
+            overlay_mac_addr:
+                description:
+                - "MAC Address of the overlay host"
+                type: str
+            vni:
+                description:
+                - " Configure the segment id ( VNI of the remote host)"
+                type: int
+            destination_vtep:
+                description:
+                - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            cfg_err_count:
+                description:
+                - "Config errors"
+                type: str
+            flooded_pkt_count:
+                description:
+                - "Flooded packet count"
+                type: str
+            encap_unresolved_count:
+                description:
+                - "Encap unresolved failures"
+                type: str
+            unknown_encap_rx_pkt:
+                description:
+                - "Encap miss rx pkts"
+                type: str
+            unknown_encap_tx_pkt:
+                description:
+                - "Encap miss tx pkts"
+                type: str
+            arp_req_sent:
+                description:
+                - "Arp request sent"
+                type: str
+            vtep_host_learned:
+                description:
+                - "Hosts learned"
+                type: str
+            vtep_host_learn_error:
+                description:
+                - "Host learn error"
+                type: str
+            invalid_lif_rx:
+                description:
+                - "Invalid Lif pkts in"
+                type: str
+            invalid_lif_tx:
+                description:
+                - "Invalid Lif pkts out"
+                type: str
+            unknown_vtep_tx:
+                description:
+                - "Vtep unknown tx"
+                type: str
+            unknown_vtep_rx:
+                description:
+                - "Vtep Unkown rx"
+                type: str
+            unhandled_pkt_rx:
+                description:
+                - "Unhandled packets in"
+                type: str
+            unhandled_pkt_tx:
+                description:
+                - "Unhandled packets out"
+                type: str
+            total_pkts_rx:
+                description:
+                - "Total packets out"
+                type: str
+            total_bytes_rx:
+                description:
+                - "Total packet bytes in"
+                type: str
+            unicast_pkt_rx:
+                description:
+                - "Total unicast packets in"
+                type: str
+            bcast_pkt_rx:
+                description:
+                - "Total broadcast packets in"
+                type: str
+            mcast_pkt_rx:
+                description:
+                - "Total multicast packets in"
+                type: str
+            dropped_pkt_rx:
+                description:
+                - "Dropped received packets"
+                type: str
+            encap_miss_pkts_rx:
+                description:
+                - "Encap missed in received packets"
+                type: str
+            bad_chksum_pks_rx:
+                description:
+                - "Bad checksum in received packets"
+                type: str
+            requeue_pkts_in:
+                description:
+                - "Requeued packets in"
+                type: str
+            pkts_out:
+                description:
+                - "Packets out"
+                type: str
+            total_bytes_tx:
+                description:
+                - "Packet bytes out"
+                type: str
+            unicast_pkt_tx:
+                description:
+                - "Unicast packets out"
+                type: str
+            bcast_pkt_tx:
+                description:
+                - "Broadcast packets out"
+                type: str
+            mcast_pkt_tx:
+                description:
+                - "Multicast packets out"
+                type: str
+            dropped_pkts_tx:
+                description:
+                - "Dropped packets out"
+                type: str
+            large_pkts_rx:
+                description:
+                - "Too large packets in"
+                type: str
+            dot1q_pkts_rx:
+                description:
+                - "Dot1q packets in"
+                type: str
+            frag_pkts_tx:
+                description:
+                - "Frag packets out"
+                type: str
+            reassembled_pkts_rx:
+                description:
+                - "Reassembled packets in"
+                type: str
+            bad_inner_ipv4_len_rx:
+                description:
+                - "bad inner ipv4 packet len"
+                type: str
+            bad_inner_ipv6_len_rx:
+                description:
+                - "Bad inner ipv6 packet len"
+                type: str
+            lif_un_init_rx:
+                description:
+                - "Lif uninitialized packets in"
+                type: str
+            id:
+                description:
+                - "VTEP Identifier"
+                type: int
 
 '''
 
@@ -325,120 +390,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'stats': {
-            'type': 'dict',
-            'total_bytes_rx': {
-                'type': 'str',
-            },
-            'dropped_pkt_rx': {
-                'type': 'str',
-            },
-            'pkts_out': {
-                'type': 'str',
-            },
-            'unhandled_pkt_rx': {
-                'type': 'str',
-            },
-            'unknown_encap_tx_pkt': {
-                'type': 'str',
-            },
-            'reassembled_pkts_rx': {
-                'type': 'str',
-            },
-            'id': {
-                'type': 'int',
-                'required': True,
-            },
-            'frag_pkts_tx': {
-                'type': 'str',
-            },
-            'dropped_pkts_tx': {
-                'type': 'str',
-            },
-            'mcast_pkt_tx': {
-                'type': 'str',
-            },
-            'large_pkts_rx': {
-                'type': 'str',
-            },
-            'invalid_lif_tx': {
-                'type': 'str',
-            },
-            'total_bytes_tx': {
-                'type': 'str',
-            },
-            'invalid_lif_rx': {
-                'type': 'str',
-            },
-            'unicast_pkt_rx': {
-                'type': 'str',
-            },
-            'dot1q_pkts_rx': {
-                'type': 'str',
-            },
-            'vtep_host_learned': {
-                'type': 'str',
-            },
-            'unhandled_pkt_tx': {
-                'type': 'str',
-            },
-            'unknown_vtep_rx': {
-                'type': 'str',
-            },
-            'encap_miss_pkts_rx': {
-                'type': 'str',
-            },
-            'unknown_encap_rx_pkt': {
-                'type': 'str',
-            },
-            'bad_chksum_pks_rx': {
-                'type': 'str',
-            },
-            'encap_unresolved_count': {
-                'type': 'str',
-            },
-            'bad_inner_ipv6_len_rx': {
-                'type': 'str',
-            },
-            'cfg_err_count': {
-                'type': 'str',
-            },
-            'unknown_vtep_tx': {
-                'type': 'str',
-            },
-            'flooded_pkt_count': {
-                'type': 'str',
-            },
-            'total_pkts_rx': {
-                'type': 'str',
-            },
-            'vtep_host_learn_error': {
-                'type': 'str',
-            },
-            'requeue_pkts_in': {
-                'type': 'str',
-            },
-            'lif_un_init_rx': {
-                'type': 'str',
-            },
-            'mcast_pkt_rx': {
-                'type': 'str',
-            },
-            'bcast_pkt_tx': {
-                'type': 'str',
-            },
-            'bcast_pkt_rx': {
-                'type': 'str',
-            },
-            'unicast_pkt_tx': {
-                'type': 'str',
-            },
-            'bad_inner_ipv4_len_rx': {
-                'type': 'str',
-            },
-            'arp_req_sent': {
-                'type': 'str',
-            }
+        'id': {
+            'type': 'int',
+            'required': True,
+        },
+        'encap': {
+            'type': 'str',
+            'choices': ['nvgre', 'vxlan']
         },
         'uuid': {
             'type': 'str',
@@ -480,34 +438,53 @@ def get_argspec():
             },
             'vni_list': {
                 'type': 'list',
-                'lif': {
-                    'type': 'int',
-                },
-                'partition': {
-                    'type': 'str',
-                },
                 'segment': {
                     'type': 'int',
                     'required': True,
                 },
+                'partition': {
+                    'type': 'str',
+                },
                 'gateway': {
                     'type': 'bool',
+                },
+                'lif': {
+                    'type': 'int',
                 },
                 'uuid': {
                     'type': 'str',
                 }
             }
         },
-        'encap': {
-            'type': 'str',
-            'choices': ['nvgre', 'vxlan']
-        },
-        'host_list': {
+        'destination_ip_address_list': {
             'type': 'list',
-            'destination_vtep': {
+            'ip_address': {
                 'type': 'str',
                 'required': True,
             },
+            'encap': {
+                'type': 'str',
+                'choices': ['nvgre', 'vxlan']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'vni_list': {
+                'type': 'list',
+                'segment': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'host_list': {
+            'type': 'list',
             'ip_addr': {
                 'type': 'str',
                 'required': True,
@@ -520,39 +497,127 @@ def get_argspec():
                 'type': 'int',
                 'required': True,
             },
+            'destination_vtep': {
+                'type': 'str',
+                'required': True,
+            },
             'uuid': {
                 'type': 'str',
             }
         },
-        'id': {
-            'type': 'int',
-            'required': True,
-        },
-        'destination_ip_address_list': {
-            'type': 'list',
-            'uuid': {
+        'stats': {
+            'type': 'dict',
+            'cfg_err_count': {
                 'type': 'str',
             },
-            'ip_address': {
+            'flooded_pkt_count': {
                 'type': 'str',
+            },
+            'encap_unresolved_count': {
+                'type': 'str',
+            },
+            'unknown_encap_rx_pkt': {
+                'type': 'str',
+            },
+            'unknown_encap_tx_pkt': {
+                'type': 'str',
+            },
+            'arp_req_sent': {
+                'type': 'str',
+            },
+            'vtep_host_learned': {
+                'type': 'str',
+            },
+            'vtep_host_learn_error': {
+                'type': 'str',
+            },
+            'invalid_lif_rx': {
+                'type': 'str',
+            },
+            'invalid_lif_tx': {
+                'type': 'str',
+            },
+            'unknown_vtep_tx': {
+                'type': 'str',
+            },
+            'unknown_vtep_rx': {
+                'type': 'str',
+            },
+            'unhandled_pkt_rx': {
+                'type': 'str',
+            },
+            'unhandled_pkt_tx': {
+                'type': 'str',
+            },
+            'total_pkts_rx': {
+                'type': 'str',
+            },
+            'total_bytes_rx': {
+                'type': 'str',
+            },
+            'unicast_pkt_rx': {
+                'type': 'str',
+            },
+            'bcast_pkt_rx': {
+                'type': 'str',
+            },
+            'mcast_pkt_rx': {
+                'type': 'str',
+            },
+            'dropped_pkt_rx': {
+                'type': 'str',
+            },
+            'encap_miss_pkts_rx': {
+                'type': 'str',
+            },
+            'bad_chksum_pks_rx': {
+                'type': 'str',
+            },
+            'requeue_pkts_in': {
+                'type': 'str',
+            },
+            'pkts_out': {
+                'type': 'str',
+            },
+            'total_bytes_tx': {
+                'type': 'str',
+            },
+            'unicast_pkt_tx': {
+                'type': 'str',
+            },
+            'bcast_pkt_tx': {
+                'type': 'str',
+            },
+            'mcast_pkt_tx': {
+                'type': 'str',
+            },
+            'dropped_pkts_tx': {
+                'type': 'str',
+            },
+            'large_pkts_rx': {
+                'type': 'str',
+            },
+            'dot1q_pkts_rx': {
+                'type': 'str',
+            },
+            'frag_pkts_tx': {
+                'type': 'str',
+            },
+            'reassembled_pkts_rx': {
+                'type': 'str',
+            },
+            'bad_inner_ipv4_len_rx': {
+                'type': 'str',
+            },
+            'bad_inner_ipv6_len_rx': {
+                'type': 'str',
+            },
+            'lif_un_init_rx': {
+                'type': 'str',
+            },
+            'id': {
+                'type': 'int',
                 'required': True,
-            },
-            'vni_list': {
-                'type': 'list',
-                'segment': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'encap': {
-                'type': 'str',
-                'choices': ['nvgre', 'vxlan']
             }
         }
     })

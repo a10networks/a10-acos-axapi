@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_rip
 description:
     - Routing Information Protocol (RIPng)
-short_description: Configures A10 router.ipv6.rip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,156 +22,196 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    default_metric:
-        description:
-        - "Set a metric of redistribute routes (Default metric)"
-        required: False
-    recv_buffer_size:
-        description:
-        - "Set the RIPNG UDP receive buffer size (the RIPNG UDP receive buffer size value)"
+        type: str
         required: False
     cisco_metric_behavior:
         description:
         - "'enable'= Enables updating metric consistent with Cisco; 'disable'= Disables
           updating metric consistent with Cisco;  (Enable/Disable updating metric
           consistent with Cisco)"
+        type: str
         required: False
-    uuid:
+    default_information:
         description:
-        - "uuid of the object"
+        - "'originate'= originate;  (Distribute default route)"
+        type: str
         required: False
-    offset_list:
+    default_metric:
         description:
-        - "Field offset_list"
+        - "Set a metric of redistribute routes (Default metric)"
+        type: int
         required: False
-        suboptions:
-            acl_cfg:
-                description:
-                - "Field acl_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-    route_map:
+    recv_buffer_size:
         description:
-        - "Field route_map"
+        - "Set the RIPNG UDP receive buffer size (the RIPNG UDP receive buffer size value)"
+        type: int
         required: False
-        suboptions:
-            map_cfg:
-                description:
-                - "Field map_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-    passive_interface_list:
-        description:
-        - "Field passive_interface_list"
-        required: False
-        suboptions:
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
-            ethernet:
-                description:
-                - "Ethernet interface (Port number)"
-            trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-    redistribute:
-        description:
-        - "Field redistribute"
-        required: False
-        suboptions:
-            vip_list:
-                description:
-                - "Field vip_list"
-            redist_list:
-                description:
-                - "Field redist_list"
-            uuid:
-                description:
-                - "uuid of the object"
-    route_cfg:
-        description:
-        - "Field route_cfg"
-        required: False
-        suboptions:
-            route:
-                description:
-                - "Static route advertisement (debugging purpose) (IP prefix)"
     timers:
         description:
         - "Field timers"
+        type: dict
         required: False
         suboptions:
             timers_cfg:
                 description:
                 - "Field timers_cfg"
+                type: dict
     aggregate_address_cfg:
         description:
         - "Field aggregate_address_cfg"
+        type: list
         required: False
         suboptions:
             aggregate_address:
                 description:
                 - "Set aggregate RIP route announcement (Aggregate network)"
-    default_information:
+                type: str
+    route_cfg:
         description:
-        - "'originate'= originate;  (Distribute default route)"
+        - "Field route_cfg"
+        type: list
         required: False
+        suboptions:
+            route:
+                description:
+                - "Static route advertisement (debugging purpose) (IP prefix)"
+                type: str
     ripng_neighbor:
         description:
         - "Field ripng_neighbor"
+        type: dict
         required: False
         suboptions:
             ripng_neighbor_cfg:
                 description:
                 - "Field ripng_neighbor_cfg"
+                type: list
+    passive_interface_list:
+        description:
+        - "Field passive_interface_list"
+        type: list
+        required: False
+        suboptions:
+            ethernet:
+                description:
+                - "Ethernet interface (Port number)"
+                type: str
+            loopback:
+                description:
+                - "Loopback interface (Port number)"
+                type: str
+            trunk:
+                description:
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+                type: str
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     distribute_list:
         description:
         - "Field distribute_list"
+        type: dict
         required: False
         suboptions:
             acl_cfg:
                 description:
                 - "Field acl_cfg"
-            prefix:
-                description:
-                - "Field prefix"
+                type: list
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            prefix:
+                description:
+                - "Field prefix"
+                type: dict
+    offset_list:
+        description:
+        - "Field offset_list"
+        type: dict
+        required: False
+        suboptions:
+            acl_cfg:
+                description:
+                - "Field acl_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    redistribute:
+        description:
+        - "Field redistribute"
+        type: dict
+        required: False
+        suboptions:
+            redist_list:
+                description:
+                - "Field redist_list"
+                type: list
+            vip_list:
+                description:
+                - "Field vip_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    route_map:
+        description:
+        - "Field route_map"
+        type: dict
+        required: False
+        suboptions:
+            map_cfg:
+                description:
+                - "Field map_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -239,46 +277,218 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'cisco_metric_behavior': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'default_information': {
+            'type': 'str',
+            'choices': ['originate']
+        },
         'default_metric': {
             'type': 'int',
         },
         'recv_buffer_size': {
             'type': 'int',
         },
-        'cisco_metric_behavior': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'offset_list': {
+        'timers': {
             'type': 'dict',
-            'acl_cfg': {
+            'timers_cfg': {
+                'type': 'dict',
+                'basic': {
+                    'type': 'int',
+                },
+                'val_2': {
+                    'type': 'int',
+                },
+                'val_3': {
+                    'type': 'int',
+                }
+            }
+        },
+        'aggregate_address_cfg': {
+            'type': 'list',
+            'aggregate_address': {
+                'type': 'str',
+            }
+        },
+        'route_cfg': {
+            'type': 'list',
+            'route': {
+                'type': 'str',
+            }
+        },
+        'ripng_neighbor': {
+            'type': 'dict',
+            'ripng_neighbor_cfg': {
                 'type': 'list',
-                've': {
+                'neighbor_link_local_addr': {
+                    'type': 'str',
+                },
+                'ethernet': {
                     'type': 'str',
                 },
                 'loopback': {
                     'type': 'str',
                 },
+                'trunk': {
+                    'type': 'str',
+                },
                 'tunnel': {
                     'type': 'str',
                 },
-                'metric': {
-                    'type': 'int',
+                've': {
+                    'type': 'str',
+                }
+            }
+        },
+        'passive_interface_list': {
+            'type': 'list',
+            'ethernet': {
+                'type': 'str',
+            },
+            'loopback': {
+                'type': 'str',
+            },
+            'trunk': {
+                'type': 'str',
+            },
+            'tunnel': {
+                'type': 'str',
+            },
+            've': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'distribute_list': {
+            'type': 'dict',
+            'acl_cfg': {
+                'type': 'list',
+                'acl': {
+                    'type': 'str',
                 },
-                'offset_list_direction': {
+                'acl_direction': {
                     'type': 'str',
                     'choices': ['in', 'out']
                 },
-                'acl': {
+                'ethernet': {
+                    'type': 'str',
+                },
+                'loopback': {
                     'type': 'str',
                 },
                 'trunk': {
                     'type': 'str',
                 },
+                'tunnel': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'prefix': {
+                'type': 'dict',
+                'prefix_cfg': {
+                    'type': 'list',
+                    'prefix_list': {
+                        'type': 'str',
+                    },
+                    'prefix_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    },
+                    'ethernet': {
+                        'type': 'str',
+                    },
+                    'loopback': {
+                        'type': 'str',
+                    },
+                    'trunk': {
+                        'type': 'str',
+                    },
+                    'tunnel': {
+                        'type': 'str',
+                    },
+                    've': {
+                        'type': 'str',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'offset_list': {
+            'type': 'dict',
+            'acl_cfg': {
+                'type': 'list',
+                'acl': {
+                    'type': 'str',
+                },
+                'offset_list_direction': {
+                    'type': 'str',
+                    'choices': ['in', 'out']
+                },
+                'metric': {
+                    'type': 'int',
+                },
                 'ethernet': {
+                    'type': 'str',
+                },
+                'loopback': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'tunnel': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
+                'type': 'list',
+                'ntype': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
+                        'ip-nat', 'isis', 'lw4o6', 'nat-map', 'nat64',
+                        'static-nat', 'ospf', 'static'
+                    ]
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'vip_list': {
+                'type': 'list',
+                'vip_type': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                },
+                'vip_metric': {
+                    'type': 'int',
+                },
+                'vip_route_map': {
                     'type': 'str',
                 }
             },
@@ -293,127 +503,11 @@ def get_argspec():
                 'map': {
                     'type': 'str',
                 },
-                've': {
-                    'type': 'str',
-                },
-                'loopback': {
-                    'type': 'str',
-                },
-                'tunnel': {
-                    'type': 'str',
-                },
                 'route_map_direction': {
                     'type': 'str',
                     'choices': ['in', 'out']
                 },
-                'trunk': {
-                    'type': 'str',
-                },
                 'ethernet': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'passive_interface_list': {
-            'type': 'list',
-            'tunnel': {
-                'type': 'str',
-            },
-            'ethernet': {
-                'type': 'str',
-            },
-            'trunk': {
-                'type': 'str',
-            },
-            've': {
-                'type': 'str',
-            },
-            'loopback': {
-                'type': 'str',
-            }
-        },
-        'redistribute': {
-            'type': 'dict',
-            'vip_list': {
-                'type': 'list',
-                'vip_metric': {
-                    'type': 'int',
-                },
-                'vip_route_map': {
-                    'type': 'str',
-                },
-                'vip_type': {
-                    'type': 'str',
-                    'choices': ['only-flagged', 'only-not-flagged']
-                }
-            },
-            'redist_list': {
-                'type': 'list',
-                'metric': {
-                    'type': 'int',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
-                        'ip-nat', 'isis', 'lw4o6', 'nat-map', 'nat64', 'ospf',
-                        'static'
-                    ]
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'route_cfg': {
-            'type': 'list',
-            'route': {
-                'type': 'str',
-            }
-        },
-        'timers': {
-            'type': 'dict',
-            'timers_cfg': {
-                'type': 'dict',
-                'val_3': {
-                    'type': 'int',
-                },
-                'val_2': {
-                    'type': 'int',
-                },
-                'basic': {
-                    'type': 'int',
-                }
-            }
-        },
-        'aggregate_address_cfg': {
-            'type': 'list',
-            'aggregate_address': {
-                'type': 'str',
-            }
-        },
-        'default_information': {
-            'type': 'str',
-            'choices': ['originate']
-        },
-        'ripng_neighbor': {
-            'type': 'dict',
-            'ripng_neighbor_cfg': {
-                'type': 'list',
-                've': {
-                    'type': 'str',
-                },
-                'neighbor_link_local_addr': {
-                    'type': 'str',
-                },
-                'tunnel': {
                     'type': 'str',
                 },
                 'loopback': {
@@ -422,67 +516,11 @@ def get_argspec():
                 'trunk': {
                     'type': 'str',
                 },
-                'ethernet': {
-                    'type': 'str',
-                }
-            }
-        },
-        'distribute_list': {
-            'type': 'dict',
-            'acl_cfg': {
-                'type': 'list',
-                'acl_direction': {
-                    'type': 'str',
-                    'choices': ['in', 'out']
-                },
-                've': {
-                    'type': 'str',
-                },
-                'loopback': {
-                    'type': 'str',
-                },
                 'tunnel': {
                     'type': 'str',
                 },
-                'acl': {
+                've': {
                     'type': 'str',
-                },
-                'trunk': {
-                    'type': 'str',
-                },
-                'ethernet': {
-                    'type': 'str',
-                }
-            },
-            'prefix': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
-                'prefix_cfg': {
-                    'type': 'list',
-                    've': {
-                        'type': 'str',
-                    },
-                    'loopback': {
-                        'type': 'str',
-                    },
-                    'tunnel': {
-                        'type': 'str',
-                    },
-                    'prefix_list': {
-                        'type': 'str',
-                    },
-                    'trunk': {
-                        'type': 'str',
-                    },
-                    'prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'ethernet': {
-                        'type': 'str',
-                    }
                 }
             },
             'uuid': {

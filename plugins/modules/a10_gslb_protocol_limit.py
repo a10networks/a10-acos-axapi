@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_protocol_limit
 description:
     - Specify limit for GSLB Message Protocol
-short_description: Configures A10 gslb.protocol.limit
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    ardt_response:
-        description:
-        - "Response Messages of Active RDT, default is 1000 (Number)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    conn_response:
-        description:
-        - "Response Messages of Connection Load, default is no limit (Number)"
-        required: False
-    ardt_session:
-        description:
-        - "Sessions of Active RDT, default is 32768 (Number)"
+        type: str
         required: False
     ardt_query:
         description:
         - "Query Messages of Active RDT, default is 200 (Number)"
+        type: int
         required: False
-    message:
+    ardt_response:
         description:
-        - "Amount of Messages, default is 10000 (Number)"
+        - "Response Messages of Active RDT, default is 1000 (Number)"
+        type: int
+        required: False
+    ardt_session:
+        description:
+        - "Sessions of Active RDT, default is 32768 (Number)"
+        type: int
+        required: False
+    conn_response:
+        description:
+        - "Response Messages of Connection Load, default is no limit (Number)"
+        type: int
         required: False
     response:
         description:
         - "Amount of Response Messages, default is 3600 (Number)"
+        type: int
+        required: False
+    message:
+        description:
+        - "Amount of Messages, default is 10000 (Number)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -136,26 +148,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ardt_response': {
+        'ardt_query': {
             'type': 'int',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'conn_response': {
+        'ardt_response': {
             'type': 'int',
         },
         'ardt_session': {
             'type': 'int',
         },
-        'ardt_query': {
+        'conn_response': {
+            'type': 'int',
+        },
+        'response': {
             'type': 'int',
         },
         'message': {
             'type': 'int',
         },
-        'response': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

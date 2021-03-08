@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_sip
 description:
     - Debug SIP
-short_description: Configures A10 debug.sip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,95 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    INFO:
-        description:
-        - "SIP Method INFO"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    REFER:
-        description:
-        - "SIP Method REFER"
-        required: False
-    ACK:
-        description:
-        - "Method ACK"
-        required: False
-    REGISTER:
-        description:
-        - "SIP Method REGISTER"
-        required: False
-    PRACK:
-        description:
-        - "SIP Method PRACK"
-        required: False
-    UPDATE:
-        description:
-        - "SIP Method UPDATE"
-        required: False
-    PUBLISH:
-        description:
-        - "SIP Method PUBLISH"
+        type: str
         required: False
     method:
         description:
         - "Set filter with SIP method types"
+        type: bool
         required: False
-    SUBSCRIBE:
+    REGISTER:
         description:
-        - "SIP Method SUBSCRIBE"
-        required: False
-    NOTIFY:
-        description:
-        - "SIP Method NOTIFY"
-        required: False
-    CANCEL:
-        description:
-        - "SIP Method CANCEL"
-        required: False
-    MESSAGE:
-        description:
-        - "SIP Method MESSAGE"
-        required: False
-    BYE:
-        description:
-        - "SIP Method BYE"
-        required: False
-    OPTIONS:
-        description:
-        - "SIP Method OPTIONS"
+        - "SIP Method REGISTER"
+        type: bool
         required: False
     INVITE:
         description:
         - "Method INVITE"
+        type: bool
+        required: False
+    ACK:
+        description:
+        - "Method ACK"
+        type: bool
+        required: False
+    CANCEL:
+        description:
+        - "SIP Method CANCEL"
+        type: bool
+        required: False
+    BYE:
+        description:
+        - "SIP Method BYE"
+        type: bool
+        required: False
+    OPTIONS:
+        description:
+        - "SIP Method OPTIONS"
+        type: bool
+        required: False
+    PRACK:
+        description:
+        - "SIP Method PRACK"
+        type: bool
+        required: False
+    SUBSCRIBE:
+        description:
+        - "SIP Method SUBSCRIBE"
+        type: bool
+        required: False
+    NOTIFY:
+        description:
+        - "SIP Method NOTIFY"
+        type: bool
+        required: False
+    PUBLISH:
+        description:
+        - "SIP Method PUBLISH"
+        type: bool
+        required: False
+    INFO:
+        description:
+        - "SIP Method INFO"
+        type: bool
+        required: False
+    REFER:
+        description:
+        - "SIP Method REFER"
+        type: bool
+        required: False
+    MESSAGE:
+        description:
+        - "SIP Method MESSAGE"
+        type: bool
+        required: False
+    UPDATE:
+        description:
+        - "SIP Method UPDATE"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -181,43 +202,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'INFO': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'REFER': {
-            'type': 'bool',
-        },
-        'ACK': {
+        'method': {
             'type': 'bool',
         },
         'REGISTER': {
             'type': 'bool',
         },
-        'PRACK': {
+        'INVITE': {
             'type': 'bool',
         },
-        'UPDATE': {
-            'type': 'bool',
-        },
-        'PUBLISH': {
-            'type': 'bool',
-        },
-        'method': {
-            'type': 'bool',
-        },
-        'SUBSCRIBE': {
-            'type': 'bool',
-        },
-        'NOTIFY': {
+        'ACK': {
             'type': 'bool',
         },
         'CANCEL': {
-            'type': 'bool',
-        },
-        'MESSAGE': {
             'type': 'bool',
         },
         'BYE': {
@@ -226,8 +223,32 @@ def get_argspec():
         'OPTIONS': {
             'type': 'bool',
         },
-        'INVITE': {
+        'PRACK': {
             'type': 'bool',
+        },
+        'SUBSCRIBE': {
+            'type': 'bool',
+        },
+        'NOTIFY': {
+            'type': 'bool',
+        },
+        'PUBLISH': {
+            'type': 'bool',
+        },
+        'INFO': {
+            'type': 'bool',
+        },
+        'REFER': {
+            'type': 'bool',
+        },
+        'MESSAGE': {
+            'type': 'bool',
+        },
+        'UPDATE': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

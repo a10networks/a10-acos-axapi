@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_sixrd_domain
 description:
     - sixrd Domain
-short_description: Configures A10 cgnv6.sixrd.domain
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,130 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "6rd Domain name"
+        type: str
+        required: True
+    br_ipv4_address:
+        description:
+        - "6rd BR IPv4 address"
+        type: str
         required: False
     ipv6_prefix:
         description:
         - "IPv6 prefix"
+        type: str
         required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            inbound_icmp_packets_received:
-                description:
-                - "Inbound ICMP packets received"
-            outbound_udp_packets_received:
-                description:
-                - "Outbound UDP packets received"
-            vport_matched:
-                description:
-                - "Traffic match SLB virtual port"
-            inbound_ipv4_dest_unreachable:
-                description:
-                - "Inbound IPv4 destination unreachable"
-            outbound_packets_drop:
-                description:
-                - "Outbound packets dropped"
-            outbound_fragment_ipv6:
-                description:
-                - "Outbound Fragmented IPv6"
-            not_local_ip:
-                description:
-                - "Not local IP"
-            inbound_tcp_packets_received:
-                description:
-                - "Inbound TCP packets received"
-            fragment_error:
-                description:
-                - "Fragment processing errors"
-            other_error:
-                description:
-                - "Other errors"
-            unknown_delegated_prefix:
-                description:
-                - "Unknown 6rd delegated prefix"
-            outbound_tcp_packets_received:
-                description:
-                - "Outbound TCP packets received"
-            outbound_icmp_packets_received:
-                description:
-                - "Outbound ICMP packets received"
-            name:
-                description:
-                - "6rd Domain name"
-            packet_too_big:
-                description:
-                - "Packet too big"
-            inbound_fragment_ipv4:
-                description:
-                - "Inbound Fragmented IPv4"
-            inbound_tunnel_fragment_ipv6:
-                description:
-                - "Inbound Fragmented IPv6 in tunnel"
-            outbound_ipv6_dest_unreachable:
-                description:
-                - "Outbound IPv6 destination unreachable"
-            inbound_packets_drop:
-                description:
-                - "Inbound packets dropped"
-            inbound_other_packets_received:
-                description:
-                - "Inbound other packets received"
-            inbound_udp_packets_received:
-                description:
-                - "Inbound UDP packets received"
-            outbound_other_packets_received:
-                description:
-                - "Outbound other packets received"
-    name:
-        description:
-        - "6rd Domain name"
-        required: True
     ce_ipv4_network:
         description:
         - "Customer Edge IPv4 network"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    mtu:
-        description:
-        - "Tunnel MTU"
+        type: str
         required: False
     ce_ipv4_netmask:
         description:
         - "Mask length"
+        type: str
+        required: False
+    mtu:
+        description:
+        - "Tunnel MTU"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -168,14 +119,101 @@ options:
           port; 'unknown-delegated-prefix'= Unknown 6rd delegated prefix; 'packet-too-
           big'= Packet too big; 'not-local-ip'= Not local IP; 'fragment-error'= Fragment
           processing errors; 'other-error'= Other errors;"
-    br_ipv4_address:
+                type: str
+    stats:
         description:
-        - "6rd BR IPv4 address"
+        - "Field stats"
+        type: dict
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            outbound_tcp_packets_received:
+                description:
+                - "Outbound TCP packets received"
+                type: str
+            outbound_udp_packets_received:
+                description:
+                - "Outbound UDP packets received"
+                type: str
+            outbound_icmp_packets_received:
+                description:
+                - "Outbound ICMP packets received"
+                type: str
+            outbound_other_packets_received:
+                description:
+                - "Outbound other packets received"
+                type: str
+            outbound_packets_drop:
+                description:
+                - "Outbound packets dropped"
+                type: str
+            outbound_ipv6_dest_unreachable:
+                description:
+                - "Outbound IPv6 destination unreachable"
+                type: str
+            outbound_fragment_ipv6:
+                description:
+                - "Outbound Fragmented IPv6"
+                type: str
+            inbound_tcp_packets_received:
+                description:
+                - "Inbound TCP packets received"
+                type: str
+            inbound_udp_packets_received:
+                description:
+                - "Inbound UDP packets received"
+                type: str
+            inbound_icmp_packets_received:
+                description:
+                - "Inbound ICMP packets received"
+                type: str
+            inbound_other_packets_received:
+                description:
+                - "Inbound other packets received"
+                type: str
+            inbound_packets_drop:
+                description:
+                - "Inbound packets dropped"
+                type: str
+            inbound_ipv4_dest_unreachable:
+                description:
+                - "Inbound IPv4 destination unreachable"
+                type: str
+            inbound_fragment_ipv4:
+                description:
+                - "Inbound Fragmented IPv4"
+                type: str
+            inbound_tunnel_fragment_ipv6:
+                description:
+                - "Inbound Fragmented IPv6 in tunnel"
+                type: str
+            vport_matched:
+                description:
+                - "Traffic match SLB virtual port"
+                type: str
+            unknown_delegated_prefix:
+                description:
+                - "Unknown 6rd delegated prefix"
+                type: str
+            packet_too_big:
+                description:
+                - "Packet too big"
+                type: str
+            not_local_ip:
+                description:
+                - "Not local IP"
+                type: str
+            fragment_error:
+                description:
+                - "Fragment processing errors"
+                type: str
+            other_error:
+                description:
+                - "Other errors"
+                type: str
+            name:
+                description:
+                - "6rd Domain name"
+                type: str
 
 '''
 
@@ -237,93 +275,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ipv6_prefix': {
-            'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'inbound_icmp_packets_received': {
-                'type': 'str',
-            },
-            'outbound_udp_packets_received': {
-                'type': 'str',
-            },
-            'vport_matched': {
-                'type': 'str',
-            },
-            'inbound_ipv4_dest_unreachable': {
-                'type': 'str',
-            },
-            'outbound_packets_drop': {
-                'type': 'str',
-            },
-            'outbound_fragment_ipv6': {
-                'type': 'str',
-            },
-            'not_local_ip': {
-                'type': 'str',
-            },
-            'inbound_tcp_packets_received': {
-                'type': 'str',
-            },
-            'fragment_error': {
-                'type': 'str',
-            },
-            'other_error': {
-                'type': 'str',
-            },
-            'unknown_delegated_prefix': {
-                'type': 'str',
-            },
-            'outbound_tcp_packets_received': {
-                'type': 'str',
-            },
-            'outbound_icmp_packets_received': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'packet_too_big': {
-                'type': 'str',
-            },
-            'inbound_fragment_ipv4': {
-                'type': 'str',
-            },
-            'inbound_tunnel_fragment_ipv6': {
-                'type': 'str',
-            },
-            'outbound_ipv6_dest_unreachable': {
-                'type': 'str',
-            },
-            'inbound_packets_drop': {
-                'type': 'str',
-            },
-            'inbound_other_packets_received': {
-                'type': 'str',
-            },
-            'inbound_udp_packets_received': {
-                'type': 'str',
-            },
-            'outbound_other_packets_received': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
+        'br_ipv4_address': {
+            'type': 'str',
+        },
+        'ipv6_prefix': {
+            'type': 'str',
+        },
         'ce_ipv4_network': {
             'type': 'str',
         },
-        'user_tag': {
+        'ce_ipv4_netmask': {
             'type': 'str',
         },
         'mtu': {
             'type': 'int',
         },
-        'ce_ipv4_netmask': {
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         },
         'sampling_enable': {
@@ -348,11 +322,75 @@ def get_argspec():
                 ]
             }
         },
-        'br_ipv4_address': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'outbound_tcp_packets_received': {
+                'type': 'str',
+            },
+            'outbound_udp_packets_received': {
+                'type': 'str',
+            },
+            'outbound_icmp_packets_received': {
+                'type': 'str',
+            },
+            'outbound_other_packets_received': {
+                'type': 'str',
+            },
+            'outbound_packets_drop': {
+                'type': 'str',
+            },
+            'outbound_ipv6_dest_unreachable': {
+                'type': 'str',
+            },
+            'outbound_fragment_ipv6': {
+                'type': 'str',
+            },
+            'inbound_tcp_packets_received': {
+                'type': 'str',
+            },
+            'inbound_udp_packets_received': {
+                'type': 'str',
+            },
+            'inbound_icmp_packets_received': {
+                'type': 'str',
+            },
+            'inbound_other_packets_received': {
+                'type': 'str',
+            },
+            'inbound_packets_drop': {
+                'type': 'str',
+            },
+            'inbound_ipv4_dest_unreachable': {
+                'type': 'str',
+            },
+            'inbound_fragment_ipv4': {
+                'type': 'str',
+            },
+            'inbound_tunnel_fragment_ipv6': {
+                'type': 'str',
+            },
+            'vport_matched': {
+                'type': 'str',
+            },
+            'unknown_delegated_prefix': {
+                'type': 'str',
+            },
+            'packet_too_big': {
+                'type': 'str',
+            },
+            'not_local_ip': {
+                'type': 'str',
+            },
+            'fragment_error': {
+                'type': 'str',
+            },
+            'other_error': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

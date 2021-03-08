@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_pool
 description:
     - Configure IP pool name
-short_description: Configures A10 ip.nat.pool
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,108 +22,140 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    pool_name:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            nat_pool_addr_list:
-                description:
-                - "Field nat_pool_addr_list"
-            pool_name:
-                description:
-                - "Specify pool name or pool group"
-    use_if_ip:
-        description:
-        - "Use Interface IP"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            Failed:
-                description:
-                - "Field Failed"
-            Total_Used:
-                description:
-                - "Field Total_Used"
-            Total_Freed:
-                description:
-                - "Field Total_Freed"
-            Port_Usage:
-                description:
-                - "Field Port_Usage"
-            pool_name:
-                description:
-                - "Specify pool name or pool group"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - "Specify pool name or pool group"
+        type: str
+        required: True
     start_address:
         description:
         - "Configure start IP address of NAT pool"
-        required: False
-    vrid:
-        description:
-        - "Configure VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    netmask:
-        description:
-        - "Configure mask for pool"
+        type: str
         required: False
     end_address:
         description:
         - "Configure end IP address of NAT pool"
+        type: str
         required: False
-    ip_rr:
+    netmask:
         description:
-        - "Use IP address round-robin behavior"
+        - "Configure mask for pool"
+        type: str
         required: False
-    ethernet:
+    gateway:
         description:
-        - "Ethernet interface"
+        - "Configure gateway IP"
+        type: str
+        required: False
+    vrid:
+        description:
+        - "Configure VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
         required: False
     scaleout_device_id:
         description:
         - "Configure Scaleout device id to which this NAT pool is to be bound (Specify
           Scaleout device id)"
+        type: int
         required: False
-    gateway:
+    ip_rr:
         description:
-        - "Configure gateway IP"
+        - "Use IP address round-robin behavior"
+        type: bool
         required: False
-    pool_name:
+    port_overload:
         description:
-        - "Specify pool name or pool group"
-        required: True
+        - "Nat Pool Port overload"
+        type: bool
+        required: False
+    use_if_ip:
+        description:
+        - "Use Interface IP"
+        type: bool
+        required: False
+    ethernet:
+        description:
+        - "Ethernet interface"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            nat_pool_addr_list:
+                description:
+                - "Field nat_pool_addr_list"
+                type: list
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            Port_Usage:
+                description:
+                - "Field Port_Usage"
+                type: str
+            Total_Used:
+                description:
+                - "Field Total_Used"
+                type: str
+            Total_Freed:
+                description:
+                - "Field Total_Freed"
+                type: str
+            Failed:
+                description:
+                - "Field Failed"
+                type: str
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
+                type: str
 
 '''
 
@@ -147,6 +177,7 @@ AVAILABLE_PROPERTIES = [
     "netmask",
     "oper",
     "pool_name",
+    "port_overload",
     "scaleout_device_id",
     "start_address",
     "stats",
@@ -190,11 +221,51 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'pool_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'start_address': {
+            'type': 'str',
+        },
+        'end_address': {
+            'type': 'str',
+        },
+        'netmask': {
+            'type': 'str',
+        },
+        'gateway': {
+            'type': 'str',
+        },
+        'vrid': {
+            'type': 'int',
+        },
+        'scaleout_device_id': {
+            'type': 'int',
+        },
+        'ip_rr': {
+            'type': 'bool',
+        },
+        'port_overload': {
+            'type': 'bool',
+        },
+        'use_if_ip': {
+            'type': 'bool',
+        },
+        'ethernet': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'nat_pool_addr_list': {
                 'type': 'list',
-                'Failed': {
+                'Address': {
+                    'type': 'str',
+                },
+                'Port_Usage': {
                     'type': 'int',
                 },
                 'Total_Used': {
@@ -203,11 +274,8 @@ def get_argspec():
                 'Total_Freed': {
                     'type': 'int',
                 },
-                'Port_Usage': {
+                'Failed': {
                     'type': 'int',
-                },
-                'Address': {
-                    'type': 'str',
                 }
             },
             'pool_name': {
@@ -215,12 +283,9 @@ def get_argspec():
                 'required': True,
             }
         },
-        'use_if_ip': {
-            'type': 'bool',
-        },
         'stats': {
             'type': 'dict',
-            'Failed': {
+            'Port_Usage': {
                 'type': 'str',
             },
             'Total_Used': {
@@ -229,44 +294,13 @@ def get_argspec():
             'Total_Freed': {
                 'type': 'str',
             },
-            'Port_Usage': {
+            'Failed': {
                 'type': 'str',
             },
             'pool_name': {
                 'type': 'str',
                 'required': True,
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'start_address': {
-            'type': 'str',
-        },
-        'vrid': {
-            'type': 'int',
-        },
-        'netmask': {
-            'type': 'str',
-        },
-        'end_address': {
-            'type': 'str',
-        },
-        'ip_rr': {
-            'type': 'bool',
-        },
-        'ethernet': {
-            'type': 'str',
-        },
-        'scaleout_device_id': {
-            'type': 'int',
-        },
-        'gateway': {
-            'type': 'str',
-        },
-        'pool_name': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

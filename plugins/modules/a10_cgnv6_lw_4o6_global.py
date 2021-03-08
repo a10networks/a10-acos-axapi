@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_global
 description:
     - Configure LW-4over6 parameters
-short_description: Configures A10 cgnv6.lw.4o6.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,61 +22,96 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    no_forward_match:
-        description:
-        - "Field no_forward_match"
-        required: False
-        suboptions:
-            send_icmpv6:
-                description:
-                - "Send ICMPv6 Type 1 Code 5"
-    nat_prefix_list:
-        description:
-        - "Configure LW-4over6 NAT Prefix List (LW-4over6 NAT Prefix Class-list)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     hairpinning:
         description:
         - "'filter-all'= Disable all Hairpinning; 'filter-none'= Allow all Hairpinning
           (default); 'filter-self-ip'= Block Hairpinning to same IP; 'filter-self-ip-
           port'= Block hairpinning to same IP and Port combination;"
+        type: str
+        required: False
+    icmp_inbound:
+        description:
+        - "'drop'= Drop Inbound ICMP packets; 'handle'= Handle Inbound ICMP
+          packets(default);"
+        type: str
+        required: False
+    nat_prefix_list:
+        description:
+        - "Configure LW-4over6 NAT Prefix List (LW-4over6 NAT Prefix Class-list)"
+        type: str
+        required: False
+    no_forward_match:
+        description:
+        - "Field no_forward_match"
+        type: dict
+        required: False
+        suboptions:
+            send_icmpv6:
+                description:
+                - "Send ICMPv6 Type 1 Code 5"
+                type: bool
+    no_reverse_match:
+        description:
+        - "Field no_reverse_match"
+        type: dict
+        required: False
+        suboptions:
+            send_icmp:
+                description:
+                - "Send ICMP Type 3 Code 1"
+                type: bool
+    use_binding_table:
+        description:
+        - "Bind LW-4over6 binding table for use (LW-4over6 Binding Table Name)"
+        type: str
         required: False
     inside_src_access_list:
         description:
         - "Access List for inside IPv4 addresses (ACL ID)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -93,61 +126,57 @@ options:
           Entry Match Drops; 'no_binding_table_matches_rev'= No Reverse Binding Table
           Entry Match Drops; 'session_count'= LW-4over6 Session Count;
           'system_address_drop'= LW-4over6 System Address Drops;"
-    icmp_inbound:
-        description:
-        - "'drop'= Drop Inbound ICMP packets; 'handle'= Handle Inbound ICMP
-          packets(default);"
-        required: False
-    use_binding_table:
-        description:
-        - "Bind LW-4over6 binding table for use (LW-4over6 Binding Table Name)"
-        required: False
-    no_reverse_match:
-        description:
-        - "Field no_reverse_match"
-        required: False
-        suboptions:
-            send_icmp:
-                description:
-                - "Send ICMP Type 3 Code 1"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            interface_not_configured:
-                description:
-                - "LW-4over6 Interfaces not Configured Drops"
-            no_match_icmp_sent:
-                description:
-                - "No-Reverse-Match ICMP Sent"
-            no_binding_table_matches_rev:
-                description:
-                - "No Reverse Binding Table Entry Match Drops"
-            rev_lookup_failed:
-                description:
-                - "Reverse Route Lookup Failed"
-            self_hairpinning_drop:
-                description:
-                - "Self-Hairpinning Drops"
             entry_count:
                 description:
                 - "Total Entries Configured"
+                type: str
+            self_hairpinning_drop:
+                description:
+                - "Self-Hairpinning Drops"
+                type: str
             all_hairpinning_drop:
                 description:
                 - "All Hairpinning Drops"
-            icmp_inbound_drop:
-                description:
-                - "Inbound ICMP Drops"
-            fwd_lookup_failed:
-                description:
-                - "Forward Route Lookup Failed"
-            no_binding_table_matches_fwd:
-                description:
-                - "No Forward Binding Table Entry Match Drops"
+                type: str
             no_match_icmpv6_sent:
                 description:
                 - "No-Forward-Match ICMPv6 Sent"
+                type: str
+            no_match_icmp_sent:
+                description:
+                - "No-Reverse-Match ICMP Sent"
+                type: str
+            icmp_inbound_drop:
+                description:
+                - "Inbound ICMP Drops"
+                type: str
+            fwd_lookup_failed:
+                description:
+                - "Forward Route Lookup Failed"
+                type: str
+            rev_lookup_failed:
+                description:
+                - "Reverse Route Lookup Failed"
+                type: str
+            interface_not_configured:
+                description:
+                - "LW-4over6 Interfaces not Configured Drops"
+                type: str
+            no_binding_table_matches_fwd:
+                description:
+                - "No Forward Binding Table Entry Match Drops"
+                type: str
+            no_binding_table_matches_rev:
+                description:
+                - "No Reverse Binding Table Entry Match Drops"
+                type: str
 
 '''
 
@@ -209,18 +238,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'no_forward_match': {
-            'type': 'dict',
-            'send_icmpv6': {
-                'type': 'bool',
-            }
-        },
-        'nat_prefix_list': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'hairpinning': {
             'type':
             'str',
@@ -229,8 +246,33 @@ def get_argspec():
                 'filter-self-ip-port'
             ]
         },
+        'icmp_inbound': {
+            'type': 'str',
+            'choices': ['drop', 'handle']
+        },
+        'nat_prefix_list': {
+            'type': 'str',
+        },
+        'no_forward_match': {
+            'type': 'dict',
+            'send_icmpv6': {
+                'type': 'bool',
+            }
+        },
+        'no_reverse_match': {
+            'type': 'dict',
+            'send_icmp': {
+                'type': 'bool',
+            }
+        },
+        'use_binding_table': {
+            'type': 'str',
+        },
         'inside_src_access_list': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -248,40 +290,21 @@ def get_argspec():
                 ]
             }
         },
-        'icmp_inbound': {
-            'type': 'str',
-            'choices': ['drop', 'handle']
-        },
-        'use_binding_table': {
-            'type': 'str',
-        },
-        'no_reverse_match': {
-            'type': 'dict',
-            'send_icmp': {
-                'type': 'bool',
-            }
-        },
         'stats': {
             'type': 'dict',
-            'interface_not_configured': {
-                'type': 'str',
-            },
-            'no_match_icmp_sent': {
-                'type': 'str',
-            },
-            'no_binding_table_matches_rev': {
-                'type': 'str',
-            },
-            'rev_lookup_failed': {
+            'entry_count': {
                 'type': 'str',
             },
             'self_hairpinning_drop': {
                 'type': 'str',
             },
-            'entry_count': {
+            'all_hairpinning_drop': {
                 'type': 'str',
             },
-            'all_hairpinning_drop': {
+            'no_match_icmpv6_sent': {
+                'type': 'str',
+            },
+            'no_match_icmp_sent': {
                 'type': 'str',
             },
             'icmp_inbound_drop': {
@@ -290,10 +313,16 @@ def get_argspec():
             'fwd_lookup_failed': {
                 'type': 'str',
             },
+            'rev_lookup_failed': {
+                'type': 'str',
+            },
+            'interface_not_configured': {
+                'type': 'str',
+            },
             'no_binding_table_matches_fwd': {
                 'type': 'str',
             },
-            'no_match_icmpv6_sent': {
+            'no_binding_table_matches_rev': {
                 'type': 'str',
             }
         }

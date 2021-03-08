@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_thales_kmdata
 description:
     - import Thales Kmdata files
-short_description: Configures A10 import-periodic.thales-kmdata
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
+        type: str
         required: False
     thales_kmdata:
         description:
         - "import Thales Kmdata files - in .tgz format that has all files needed by AX"
+        type: str
         required: True
-    period:
+    overwrite:
         description:
-        - "Specify the period in second"
+        - "Overwrite existing file"
+        type: bool
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
         required: False
     remote_file:
         description:
         - "profile name for remote url"
+        type: str
         required: False
-    overwrite:
+    period:
         description:
-        - "Overwrite existing file"
+        - "Specify the period in second"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -131,24 +142,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
         'thales_kmdata': {
             'type': 'str',
             'required': True,
         },
-        'period': {
-            'type': 'int',
+        'overwrite': {
+            'type': 'bool',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
         },
         'remote_file': {
             'type': 'str',
         },
-        'overwrite': {
-            'type': 'bool',
+        'period': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

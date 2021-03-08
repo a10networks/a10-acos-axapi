@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_common_conn_rate_limit_src_ip
 description:
     - Set connection limit based on source IP address
-short_description: Configures A10 slb.common.conn.rate-limit.src-ip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,63 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
         - "'tcp'= Set TCP connection rate limit; 'udp'= Set UDP packet rate limit;"
+        type: str
         required: True
-    log:
+    limit:
         description:
-        - "Send log if threshold exceeded"
-        required: False
-    lock_out:
-        description:
-        - "Set lockout period in seconds if threshold exceeded"
+        - "Set max connections per period"
+        type: int
         required: False
     limit_period:
         description:
         - "'100'= 100 ms; '1000'= 1000 ms;"
-        required: False
-    limit:
-        description:
-        - "Set max connections per period"
-        required: False
-    exceed_action:
-        description:
-        - "Set action if threshold exceeded"
+        type: str
         required: False
     shared:
         description:
         - "Set threshold shared amongst all virtual ports"
+        type: bool
+        required: False
+    exceed_action:
+        description:
+        - "Set action if threshold exceeded"
+        type: bool
+        required: False
+    log:
+        description:
+        - "Send log if threshold exceeded"
+        type: bool
+        required: False
+    lock_out:
+        description:
+        - "Set lockout period in seconds if threshold exceeded"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -146,24 +159,24 @@ def get_argspec():
             'required': True,
             'choices': ['tcp', 'udp']
         },
-        'log': {
-            'type': 'bool',
-        },
-        'lock_out': {
+        'limit': {
             'type': 'int',
         },
         'limit_period': {
             'type': 'str',
             'choices': ['100', '1000']
         },
-        'limit': {
-            'type': 'int',
+        'shared': {
+            'type': 'bool',
         },
         'exceed_action': {
             'type': 'bool',
         },
-        'shared': {
+        'log': {
             'type': 'bool',
+        },
+        'lock_out': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

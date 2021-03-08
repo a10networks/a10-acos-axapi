@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rba
 description:
     - Role Based Access configuration
-short_description: Configures A10 rba
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,100 +22,127 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     action:
         description:
         - "'enable'= Enable RBA; 'disable'= Disable RBA;"
+        type: str
         required: False
-    group_list:
-        description:
-        - "Field group_list"
-        required: False
-        suboptions:
-            partition_list:
-                description:
-                - "Field partition_list"
-            user_list:
-                description:
-                - "Field user_list"
-            name:
-                description:
-                - "Name of a RBA group"
-            user_tag:
-                description:
-                - "Customized tag"
-            uuid:
-                description:
-                - "uuid of the object"
-    user_list:
-        description:
-        - "Field user_list"
-        required: False
-        suboptions:
-            partition_list:
-                description:
-                - "Field partition_list"
-            name:
-                description:
-                - "Name of a user account"
-            user_tag:
-                description:
-                - "Customized tag"
-            uuid:
-                description:
-                - "uuid of the object"
-    role_list:
-        description:
-        - "Field role_list"
-        required: False
-        suboptions:
-            default_privilege:
-                description:
-                - "'no-access'= no-access; 'read'= read; 'write'= write;"
-            name:
-                description:
-                - "Name for the RBA role"
-            user_tag:
-                description:
-                - "Customized tag"
-            rule_list:
-                description:
-                - "Field rule_list"
-            partition_only:
-                description:
-                - "Partition RBA Role"
-            uuid:
-                description:
-                - "uuid of the object"
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    role_list:
+        description:
+        - "Field role_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Name for the RBA role"
+                type: str
+            default_privilege:
+                description:
+                - "'no-access'= no-access; 'read'= read; 'write'= write;"
+                type: str
+            partition_only:
+                description:
+                - "Partition RBA Role"
+                type: bool
+            rule_list:
+                description:
+                - "Field rule_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    user_list:
+        description:
+        - "Field user_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Name of a user account"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            partition_list:
+                description:
+                - "Field partition_list"
+                type: list
+    group_list:
+        description:
+        - "Field group_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Name of a RBA group"
+                type: str
+            user_list:
+                description:
+                - "Field user_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            partition_list:
+                description:
+                - "Field partition_list"
+                type: list
 
 '''
 
@@ -178,8 +203,51 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable', 'disable']
         },
-        'group_list': {
+        'uuid': {
+            'type': 'str',
+        },
+        'role_list': {
             'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'default_privilege': {
+                'type': 'str',
+                'choices': ['no-access', 'read', 'write']
+            },
+            'partition_only': {
+                'type': 'bool',
+            },
+            'rule_list': {
+                'type': 'list',
+                'object': {
+                    'type': 'str',
+                },
+                'operation': {
+                    'type': 'str',
+                    'choices': ['no-access', 'read', 'oper', 'write']
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'user_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
             'partition_list': {
                 'type': 'list',
                 'partition_name': {
@@ -192,22 +260,29 @@ def get_argspec():
                         'type': 'str',
                     }
                 },
+                'rule_list': {
+                    'type': 'list',
+                    'object': {
+                        'type': 'str',
+                    },
+                    'operation': {
+                        'type': 'str',
+                        'choices': ['no-access', 'read', 'oper', 'write']
+                    }
+                },
                 'uuid': {
                     'type': 'str',
                 },
                 'user_tag': {
                     'type': 'str',
-                },
-                'rule_list': {
-                    'type': 'list',
-                    'operation': {
-                        'type': 'str',
-                        'choices': ['no-access', 'read', 'oper', 'write']
-                    },
-                    'object': {
-                        'type': 'str',
-                    }
                 }
+            }
+        },
+        'group_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
             },
             'user_list': {
                 'type': 'list',
@@ -215,19 +290,12 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'name': {
+            'uuid': {
                 'type': 'str',
-                'required': True,
             },
             'user_tag': {
                 'type': 'str',
             },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'user_list': {
-            'type': 'list',
             'partition_list': {
                 'type': 'list',
                 'partition_name': {
@@ -240,66 +308,23 @@ def get_argspec():
                         'type': 'str',
                     }
                 },
+                'rule_list': {
+                    'type': 'list',
+                    'object': {
+                        'type': 'str',
+                    },
+                    'operation': {
+                        'type': 'str',
+                        'choices': ['no-access', 'read', 'oper', 'write']
+                    }
+                },
                 'uuid': {
                     'type': 'str',
                 },
                 'user_tag': {
                     'type': 'str',
-                },
-                'rule_list': {
-                    'type': 'list',
-                    'operation': {
-                        'type': 'str',
-                        'choices': ['no-access', 'read', 'oper', 'write']
-                    },
-                    'object': {
-                        'type': 'str',
-                    }
                 }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
             }
-        },
-        'role_list': {
-            'type': 'list',
-            'default_privilege': {
-                'type': 'str',
-                'choices': ['no-access', 'read', 'write']
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'rule_list': {
-                'type': 'list',
-                'operation': {
-                    'type': 'str',
-                    'choices': ['no-access', 'read', 'oper', 'write']
-                },
-                'object': {
-                    'type': 'str',
-                }
-            },
-            'partition_only': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

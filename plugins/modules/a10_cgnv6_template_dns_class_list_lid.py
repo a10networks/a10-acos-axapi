@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_dns_class_list_lid
 description:
     - Limit ID
-short_description: Configures A10 cgnv6.template.dns.class-list.lid
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,89 +22,113 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     dns_name:
         description:
-        - Key to identify parent object    action_value:
-        description:
-        - "'dns-cache-disable'= Disable DNS cache when it exceeds limit; 'dns-cache-
-          enable'= Enable DNS cache when it exceeds limit; 'forward'= Forward the traffic
-          even it exceeds limit;"
-        required: False
-    log:
-        description:
-        - "Log a message"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     lidnum:
         description:
         - "Specify a limit ID"
+        type: int
         required: True
-    over_limit_action:
+    conn_rate_limit:
         description:
-        - "Action when exceeds limit"
+        - "Connection rate limit"
+        type: int
         required: False
     per:
         description:
         - "Per (Number of 100ms)"
+        type: int
+        required: False
+    over_limit_action:
+        description:
+        - "Action when exceeds limit"
+        type: bool
+        required: False
+    action_value:
+        description:
+        - "'dns-cache-disable'= Disable DNS cache when it exceeds limit; 'dns-cache-
+          enable'= Enable DNS cache when it exceeds limit; 'forward'= Forward the traffic
+          even it exceeds limit;"
+        type: str
         required: False
     lockout:
         description:
         - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+        type: int
         required: False
-    user_tag:
+    log:
         description:
-        - "Customized tag"
+        - "Log a message"
+        type: bool
+        required: False
+    log_interval:
+        description:
+        - "Log interval (minute, by default system will log every over limit instance)"
+        type: int
         required: False
     dns:
         description:
         - "Field dns"
+        type: dict
         required: False
         suboptions:
             cache_action:
                 description:
                 - "'cache-disable'= Disable dns cache; 'cache-enable'= Enable dns cache;"
-            weight:
-                description:
-                - "Weight for cache entry"
+                type: str
             ttl:
                 description:
                 - "TTL for cache entry (TTL in seconds)"
-    conn_rate_limit:
-        description:
-        - "Connection rate limit"
-        required: False
-    log_interval:
-        description:
-        - "Log interval (minute, by default system will log every over limit instance)"
-        required: False
+                type: int
+            weight:
+                description:
+                - "Weight for cache entry"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -170,28 +192,31 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'action_value': {
-            'type': 'str',
-            'choices': ['dns-cache-disable', 'dns-cache-enable', 'forward']
-        },
-        'log': {
-            'type': 'bool',
-        },
         'lidnum': {
             'type': 'int',
             'required': True,
         },
-        'over_limit_action': {
-            'type': 'bool',
+        'conn_rate_limit': {
+            'type': 'int',
         },
         'per': {
             'type': 'int',
         },
+        'over_limit_action': {
+            'type': 'bool',
+        },
+        'action_value': {
+            'type': 'str',
+            'choices': ['dns-cache-disable', 'dns-cache-enable', 'forward']
+        },
         'lockout': {
             'type': 'int',
         },
-        'user_tag': {
-            'type': 'str',
+        'log': {
+            'type': 'bool',
+        },
+        'log_interval': {
+            'type': 'int',
         },
         'dns': {
             'type': 'dict',
@@ -199,20 +224,17 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['cache-disable', 'cache-enable']
             },
-            'weight': {
+            'ttl': {
                 'type': 'int',
             },
-            'ttl': {
+            'weight': {
                 'type': 'int',
             }
         },
-        'conn_rate_limit': {
-            'type': 'int',
-        },
-        'log_interval': {
-            'type': 'int',
-        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

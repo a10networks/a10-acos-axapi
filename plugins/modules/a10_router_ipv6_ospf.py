@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_ospf
 description:
     - Open Shortest Path First (OSPFv3)
-short_description: Configures A10 router.ipv6.ospf
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,221 +22,292 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    timers:
+    process_id:
         description:
-        - "Field timers"
-        required: False
-        suboptions:
-            spf:
-                description:
-                - "Field spf"
-    redistribute:
-        description:
-        - "Field redistribute"
-        required: False
-        suboptions:
-            redist_list:
-                description:
-                - "Field redist_list"
-            ospf_list:
-                description:
-                - "Field ospf_list"
-            uuid:
-                description:
-                - "uuid of the object"
-            ip_nat_floating_list:
-                description:
-                - "Field ip_nat_floating_list"
-            vip_list:
-                description:
-                - "Field vip_list"
-            ip_nat:
-                description:
-                - "IP-NAT"
-            metric_ip_nat:
-                description:
-                - "OSPFV3 default metric (OSPFV3 metric)"
-            route_map_ip_nat:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-            vip_floating_list:
-                description:
-                - "Field vip_floating_list"
-            metric_type_ip_nat:
-                description:
-                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
-          metrics;"
+        - "OSPFv3 process tag"
+        type: str
+        required: True
     abr_type_option:
         description:
         - "'cisco'= Alternative ABR, Cisco implementation (RFC3509); 'ibm'= Alternative
           ABR, IBM implementation (RFC3509); 'standard'= Standard behavior (RFC2328);"
+        type: str
         required: False
     auto_cost_reference_bandwidth:
         description:
         - "Use reference bandwidth method to assign OSPF cost (The reference bandwidth in
           terms of Mbits per second)"
+        type: int
         required: False
-    router_id:
+    bfd_all_interfaces:
         description:
-        - "router-id for the OSPF process (OSPFv3 router-id in IPv4 address format)"
+        - "Enable BFD on all interfaces"
+        type: bool
+        required: False
+    default_metric:
+        description:
+        - "Set metric of redistributed routes (Default metric)"
+        type: int
         required: False
     distribute_internal_list:
         description:
         - "Field distribute_internal_list"
+        type: list
         required: False
         suboptions:
+            ntype:
+                description:
+                - "'lw4o6'= LW4O6 Prefix; 'nat64'= NAT64 Prefix; 'static-nat'= Static NAT;
+          'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list;
+          'vip'= Only not flagged Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual
+          IP (VIP);"
+                type: str
             area_ipv4:
                 description:
                 - "OSPF area ID in IP address format"
-            cost:
-                description:
-                - "Cost"
+                type: str
             area_num:
                 description:
                 - "OSPF area ID as a decimal value"
-            ntype:
+                type: int
+            cost:
                 description:
-                - "'lw4o6'= LW4O6 Prefix; 'nat64'= NAT64 Prefix; 'floating-ip'= Floating IP; 'ip-
-          nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'vip'= Only not flagged Virtual IP
-          (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP);"
-    default_metric:
+                - "Cost"
+                type: int
+    distribute_list:
         description:
-        - "Set metric of redistributed routes (Default metric)"
+        - "Field distribute_list"
+        type: dict
         required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    max_concurrent_dd:
-        description:
-        - "Maximum number allowed to process DD concurrently (Number of DD process)"
-        required: False
-    process_id:
-        description:
-        - "OSPFv3 process tag"
-        required: True
+        suboptions:
+            prefix_list:
+                description:
+                - "Field prefix_list"
+                type: dict
     log_adjacency_changes:
         description:
         - "'detail'= Log changes in adjacency state; 'disable'= Disable logging;"
+        type: str
+        required: False
+    ha_standby_extra_cost:
+        description:
+        - "Field ha_standby_extra_cost"
+        type: list
+        required: False
+        suboptions:
+            extra_cost:
+                description:
+                - "The extra cost value"
+                type: int
+            group:
+                description:
+                - "Group (Group ID)"
+                type: int
+    max_concurrent_dd:
+        description:
+        - "Maximum number allowed to process DD concurrently (Number of DD process)"
+        type: int
         required: False
     passive_interface:
         description:
         - "Field passive_interface"
+        type: dict
         required: False
         suboptions:
-            tunnel_cfg:
-                description:
-                - "Field tunnel_cfg"
-            ve_cfg:
-                description:
-                - "Field ve_cfg"
             loopback_cfg:
                 description:
                 - "Field loopback_cfg"
+                type: list
             trunk_cfg:
                 description:
                 - "Field trunk_cfg"
+                type: list
+            ve_cfg:
+                description:
+                - "Field ve_cfg"
+                type: list
+            tunnel_cfg:
+                description:
+                - "Field tunnel_cfg"
+                type: list
             eth_cfg:
                 description:
                 - "Field eth_cfg"
+                type: list
+    router_id:
+        description:
+        - "router-id for the OSPF process (OSPFv3 router-id in IPv4 address format)"
+        type: str
+        required: False
+    timers:
+        description:
+        - "Field timers"
+        type: dict
+        required: False
+        suboptions:
+            spf:
+                description:
+                - "Field spf"
+                type: dict
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     default_information:
         description:
         - "Field default_information"
+        type: dict
         required: False
         suboptions:
             originate:
                 description:
                 - "Distribute a default route"
-            uuid:
-                description:
-                - "uuid of the object"
+                type: bool
             always:
                 description:
                 - "Always advertise default route"
+                type: bool
             metric:
                 description:
                 - "OSPF default metric (OSPF metric)"
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
+                type: int
             metric_type:
                 description:
                 - "OSPF metric type for default routes"
-    ha_standby_extra_cost:
-        description:
-        - "Field ha_standby_extra_cost"
-        required: False
-        suboptions:
-            group:
+                type: int
+            route_map:
                 description:
-                - "Group (Group ID)"
-            extra_cost:
-                description:
-                - "The extra cost value"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    bfd_all_interfaces:
-        description:
-        - "Enable BFD on all interfaces"
-        required: False
-    area_list:
-        description:
-        - "Field area_list"
-        required: False
-        suboptions:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    area_list:
+        description:
+        - "Field area_list"
+        type: list
+        required: False
+        suboptions:
             area_ipv4:
                 description:
                 - "OSPFv3 area ID in IP address format"
-            virtual_link_list:
-                description:
-                - "Field virtual_link_list"
-            stub:
-                description:
-                - "Configure OSPFv3 area as stub"
+                type: str
             area_num:
                 description:
                 - "OSPFv3 area ID as a decimal value"
-            range_list:
-                description:
-                - "Field range_list"
+                type: int
             default_cost:
                 description:
                 - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default
           summary cost)"
+                type: int
+            range_list:
+                description:
+                - "Field range_list"
+                type: list
+            stub:
+                description:
+                - "Configure OSPFv3 area as stub"
+                type: bool
             no_summary:
                 description:
                 - "Do not inject inter-area routes into area"
+                type: bool
+            virtual_link_list:
+                description:
+                - "Field virtual_link_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    redistribute:
+        description:
+        - "Field redistribute"
+        type: dict
+        required: False
+        suboptions:
+            redist_list:
+                description:
+                - "Field redist_list"
+                type: list
+            ospf_list:
+                description:
+                - "Field ospf_list"
+                type: list
+            ip_nat:
+                description:
+                - "IP-NAT"
+                type: bool
+            metric_ip_nat:
+                description:
+                - "OSPFV3 default metric (OSPFV3 metric)"
+                type: int
+            metric_type_ip_nat:
+                description:
+                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
+          metrics;"
+                type: str
+            route_map_ip_nat:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+            ip_nat_floating_list:
+                description:
+                - "Field ip_nat_floating_list"
+                type: list
+            vip_list:
+                description:
+                - "Field vip_list"
+                type: list
+            vip_floating_list:
+                description:
+                - "Field vip_floating_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -260,6 +329,7 @@ AVAILABLE_PROPERTIES = [
     "default_information",
     "default_metric",
     "distribute_internal_list",
+    "distribute_list",
     "ha_standby_extra_cost",
     "log_adjacency_changes",
     "max_concurrent_dd",
@@ -307,114 +377,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'timers': {
-            'type': 'dict',
-            'spf': {
-                'type': 'dict',
-                'exp': {
-                    'type': 'dict',
-                    'max_delay': {
-                        'type': 'int',
-                    },
-                    'min_delay': {
-                        'type': 'int',
-                    }
-                }
-            }
-        },
-        'redistribute': {
-            'type': 'dict',
-            'redist_list': {
-                'type': 'list',
-                'metric': {
-                    'type': 'int',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
-                        'nat-map', 'nat64', 'lw4o6', 'isis', 'rip', 'static'
-                    ]
-                },
-                'metric_type': {
-                    'type': 'str',
-                    'choices': ['1', '2']
-                }
-            },
-            'ospf_list': {
-                'type': 'list',
-                'route_map_ospf': {
-                    'type': 'str',
-                },
-                'metric_ospf': {
-                    'type': 'int',
-                },
-                'metric_type_ospf': {
-                    'type': 'str',
-                    'choices': ['1', '2']
-                },
-                'ospf': {
-                    'type': 'bool',
-                },
-                'process_id': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ip_nat_floating_list': {
-                'type': 'list',
-                'ip_nat_floating_IP_forward': {
-                    'type': 'str',
-                },
-                'ip_nat_prefix': {
-                    'type': 'str',
-                }
-            },
-            'vip_list': {
-                'type': 'list',
-                'metric_vip': {
-                    'type': 'int',
-                },
-                'metric_type_vip': {
-                    'type': 'str',
-                    'choices': ['1', '2']
-                },
-                'type_vip': {
-                    'type': 'str',
-                    'choices': ['only-flagged', 'only-not-flagged']
-                },
-                'route_map_vip': {
-                    'type': 'str',
-                }
-            },
-            'ip_nat': {
-                'type': 'bool',
-            },
-            'metric_ip_nat': {
-                'type': 'int',
-            },
-            'route_map_ip_nat': {
-                'type': 'str',
-            },
-            'vip_floating_list': {
-                'type': 'list',
-                'vip_address': {
-                    'type': 'str',
-                },
-                'vip_floating_IP_forward': {
-                    'type': 'str',
-                }
-            },
-            'metric_type_ip_nat': {
-                'type': 'str',
-                'choices': ['1', '2']
-            }
+        'process_id': {
+            'type': 'str',
+            'required': True,
         },
         'abr_type_option': {
             'type': 'str',
@@ -423,60 +388,63 @@ def get_argspec():
         'auto_cost_reference_bandwidth': {
             'type': 'int',
         },
-        'router_id': {
-            'type': 'str',
-        },
-        'distribute_internal_list': {
-            'type': 'list',
-            'area_ipv4': {
-                'type': 'str',
-            },
-            'cost': {
-                'type': 'int',
-            },
-            'area_num': {
-                'type': 'int',
-            },
-            'ntype': {
-                'type':
-                'str',
-                'choices': [
-                    'lw4o6', 'nat64', 'floating-ip', 'ip-nat', 'ip-nat-list',
-                    'vip', 'vip-only-flagged'
-                ]
-            }
+        'bfd_all_interfaces': {
+            'type': 'bool',
         },
         'default_metric': {
             'type': 'int',
         },
-        'user_tag': {
-            'type': 'str',
+        'distribute_internal_list': {
+            'type': 'list',
+            'ntype': {
+                'type':
+                'str',
+                'choices': [
+                    'lw4o6', 'nat64', 'static-nat', 'floating-ip', 'ip-nat',
+                    'ip-nat-list', 'vip', 'vip-only-flagged'
+                ]
+            },
+            'area_ipv4': {
+                'type': 'str',
+            },
+            'area_num': {
+                'type': 'int',
+            },
+            'cost': {
+                'type': 'int',
+            }
         },
-        'max_concurrent_dd': {
-            'type': 'int',
-        },
-        'process_id': {
-            'type': 'str',
-            'required': True,
+        'distribute_list': {
+            'type': 'dict',
+            'prefix_list': {
+                'type': 'dict',
+                'value': {
+                    'type': 'str',
+                },
+                'direction': {
+                    'type': 'str',
+                    'choices': ['in']
+                }
+            }
         },
         'log_adjacency_changes': {
             'type': 'str',
             'choices': ['detail', 'disable']
         },
+        'ha_standby_extra_cost': {
+            'type': 'list',
+            'extra_cost': {
+                'type': 'int',
+            },
+            'group': {
+                'type': 'int',
+            }
+        },
+        'max_concurrent_dd': {
+            'type': 'int',
+        },
         'passive_interface': {
             'type': 'dict',
-            'tunnel_cfg': {
-                'type': 'list',
-                'tunnel': {
-                    'type': 'str',
-                }
-            },
-            've_cfg': {
-                'type': 'list',
-                've': {
-                    'type': 'str',
-                }
-            },
             'loopback_cfg': {
                 'type': 'list',
                 'loopback': {
@@ -489,6 +457,18 @@ def get_argspec():
                     'type': 'str',
                 }
             },
+            've_cfg': {
+                'type': 'list',
+                've': {
+                    'type': 'str',
+                }
+            },
+            'tunnel_cfg': {
+                'type': 'list',
+                'tunnel': {
+                    'type': 'str',
+                }
+            },
             'eth_cfg': {
                 'type': 'list',
                 'ethernet': {
@@ -496,13 +476,34 @@ def get_argspec():
                 }
             }
         },
+        'router_id': {
+            'type': 'str',
+        },
+        'timers': {
+            'type': 'dict',
+            'spf': {
+                'type': 'dict',
+                'exp': {
+                    'type': 'dict',
+                    'min_delay': {
+                        'type': 'int',
+                    },
+                    'max_delay': {
+                        'type': 'int',
+                    }
+                }
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'default_information': {
             'type': 'dict',
             'originate': {
                 'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
             },
             'always': {
                 'type': 'bool',
@@ -510,83 +511,166 @@ def get_argspec():
             'metric': {
                 'type': 'int',
             },
+            'metric_type': {
+                'type': 'int',
+            },
             'route_map': {
                 'type': 'str',
             },
-            'metric_type': {
-                'type': 'int',
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'ha_standby_extra_cost': {
-            'type': 'list',
-            'group': {
-                'type': 'int',
-            },
-            'extra_cost': {
-                'type': 'int',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'bfd_all_interfaces': {
-            'type': 'bool',
         },
         'area_list': {
             'type': 'list',
-            'uuid': {
-                'type': 'str',
-            },
             'area_ipv4': {
                 'type': 'str',
                 'required': True,
             },
+            'area_num': {
+                'type': 'int',
+                'required': True,
+            },
+            'default_cost': {
+                'type': 'int',
+            },
+            'range_list': {
+                'type': 'list',
+                'value': {
+                    'type': 'str',
+                },
+                'option': {
+                    'type': 'str',
+                    'choices': ['advertise', 'not-advertise']
+                }
+            },
+            'stub': {
+                'type': 'bool',
+            },
+            'no_summary': {
+                'type': 'bool',
+            },
             'virtual_link_list': {
                 'type': 'list',
-                'dead_interval': {
-                    'type': 'int',
+                'value': {
+                    'type': 'str',
                 },
-                'hello_interval': {
+                'dead_interval': {
                     'type': 'int',
                 },
                 'bfd': {
                     'type': 'bool',
                 },
-                'transmit_delay': {
+                'hello_interval': {
                     'type': 'int',
                 },
-                'value': {
-                    'type': 'str',
-                },
                 'retransmit_interval': {
+                    'type': 'int',
+                },
+                'transmit_delay': {
                     'type': 'int',
                 },
                 'instance_id': {
                     'type': 'int',
                 }
             },
-            'stub': {
-                'type': 'bool',
-            },
-            'area_num': {
-                'type': 'int',
-                'required': True,
-            },
-            'range_list': {
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
                 'type': 'list',
-                'option': {
-                    'type': 'str',
-                    'choices': ['advertise', 'not-advertise']
+                'ntype': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
+                        'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis',
+                        'rip', 'static'
+                    ]
                 },
-                'value': {
+                'metric': {
+                    'type': 'int',
+                },
+                'metric_type': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                },
+                'route_map': {
                     'type': 'str',
                 }
             },
-            'default_cost': {
+            'ospf_list': {
+                'type': 'list',
+                'ospf': {
+                    'type': 'bool',
+                },
+                'process_id': {
+                    'type': 'str',
+                },
+                'metric_ospf': {
+                    'type': 'int',
+                },
+                'metric_type_ospf': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                },
+                'route_map_ospf': {
+                    'type': 'str',
+                }
+            },
+            'ip_nat': {
+                'type': 'bool',
+            },
+            'metric_ip_nat': {
                 'type': 'int',
             },
-            'no_summary': {
-                'type': 'bool',
+            'metric_type_ip_nat': {
+                'type': 'str',
+                'choices': ['1', '2']
+            },
+            'route_map_ip_nat': {
+                'type': 'str',
+            },
+            'ip_nat_floating_list': {
+                'type': 'list',
+                'ip_nat_prefix': {
+                    'type': 'str',
+                },
+                'ip_nat_floating_IP_forward': {
+                    'type': 'str',
+                }
+            },
+            'vip_list': {
+                'type': 'list',
+                'type_vip': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                },
+                'metric_vip': {
+                    'type': 'int',
+                },
+                'metric_type_vip': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                },
+                'route_map_vip': {
+                    'type': 'str',
+                }
+            },
+            'vip_floating_list': {
+                'type': 'list',
+                'vip_address': {
+                    'type': 'str',
+                },
+                'vip_floating_IP_forward': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
             }
         }
     })

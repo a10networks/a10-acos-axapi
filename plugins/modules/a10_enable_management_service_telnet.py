@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_enable_management_service_telnet
 description:
     - Telnet service
-short_description: Configures A10 enable.management.service.telnet
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,136 +21,172 @@ options:
         choices:
           - noop
           - present
-          - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    tunnel_cfg:
-        description:
-        - "Field tunnel_cfg"
-        required: False
-        suboptions:
-            tunnel_start:
-                description:
-                - "tunnel port (tunnel Interface number)"
-            tunnel_end:
-                description:
-                - "tunnel port"
     management:
         description:
         - "Management Interface"
+        type: bool
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    acl_v6_list:
-        description:
-        - "Field acl_v6_list"
-        required: False
-        suboptions:
-            tunnel_cfg:
-                description:
-                - "Field tunnel_cfg"
-            management:
-                description:
-                - "Management Interface"
-            uuid:
-                description:
-                - "uuid of the object"
-            acl_name:
-                description:
-                - "ACL name"
-            user_tag:
-                description:
-                - "Customized tag"
-            ve_cfg:
-                description:
-                - "Field ve_cfg"
-            all_data_intf:
-                description:
-                - "All Data Interfaces"
-            eth_cfg:
-                description:
-                - "Field eth_cfg"
-    ve_cfg:
-        description:
-        - "Field ve_cfg"
-        required: False
-        suboptions:
-            ve_end:
-                description:
-                - "VE port"
-            ve_start:
-                description:
-                - "VE port (VE Interface number)"
-    all_data_intf:
-        description:
-        - "All Data Interfaces"
-        required: False
-    acl_v4_list:
-        description:
-        - "Field acl_v4_list"
-        required: False
-        suboptions:
-            tunnel_cfg:
-                description:
-                - "Field tunnel_cfg"
-            management:
-                description:
-                - "Management Interface"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
-            ve_cfg:
-                description:
-                - "Field ve_cfg"
-            all_data_intf:
-                description:
-                - "All Data Interfaces"
-            acl_id:
-                description:
-                - "ACL id"
-            eth_cfg:
-                description:
-                - "Field eth_cfg"
     eth_cfg:
         description:
         - "Field eth_cfg"
+        type: list
         required: False
         suboptions:
             ethernet_start:
                 description:
                 - "Ethernet port (Ethernet Interface number)"
+                type: str
             ethernet_end:
                 description:
                 - "Ethernet port"
+                type: str
+    ve_cfg:
+        description:
+        - "Field ve_cfg"
+        type: list
+        required: False
+        suboptions:
+            ve_start:
+                description:
+                - "VE port (VE Interface number)"
+                type: int
+            ve_end:
+                description:
+                - "VE port"
+                type: int
+    tunnel_cfg:
+        description:
+        - "Field tunnel_cfg"
+        type: list
+        required: False
+        suboptions:
+            tunnel_start:
+                description:
+                - "tunnel port (tunnel Interface number)"
+                type: int
+            tunnel_end:
+                description:
+                - "tunnel port"
+                type: int
+    all_data_intf:
+        description:
+        - "All Data Interfaces"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    acl_v4_list:
+        description:
+        - "Field acl_v4_list"
+        type: list
+        required: False
+        suboptions:
+            acl_id:
+                description:
+                - "ACL id"
+                type: int
+            eth_cfg:
+                description:
+                - "Field eth_cfg"
+                type: list
+            ve_cfg:
+                description:
+                - "Field ve_cfg"
+                type: list
+            tunnel_cfg:
+                description:
+                - "Field tunnel_cfg"
+                type: list
+            management:
+                description:
+                - "Management Interface"
+                type: bool
+            all_data_intf:
+                description:
+                - "All Data Interfaces"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    acl_v6_list:
+        description:
+        - "Field acl_v6_list"
+        type: list
+        required: False
+        suboptions:
+            acl_name:
+                description:
+                - "ACL name"
+                type: str
+            eth_cfg:
+                description:
+                - "Field eth_cfg"
+                type: list
+            ve_cfg:
+                description:
+                - "Field ve_cfg"
+                type: list
+            tunnel_cfg:
+                description:
+                - "Field tunnel_cfg"
+                type: list
+            management:
+                description:
+                - "Management Interface"
+                type: bool
+            all_data_intf:
+                description:
+                - "All Data Interfaces"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -190,9 +224,7 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
         a10_partition=dict(
             type='dict',
@@ -212,6 +244,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'management': {
+            'type': 'bool',
+        },
+        'eth_cfg': {
+            'type': 'list',
+            'ethernet_start': {
+                'type': 'str',
+            },
+            'ethernet_end': {
+                'type': 'str',
+            }
+        },
+        've_cfg': {
+            'type': 'list',
+            've_start': {
+                'type': 'int',
+            },
+            've_end': {
+                'type': 'int',
+            }
+        },
         'tunnel_cfg': {
             'type': 'list',
             'tunnel_start': {
@@ -221,102 +274,14 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'management': {
+        'all_data_intf': {
             'type': 'bool',
         },
         'uuid': {
             'type': 'str',
         },
-        'acl_v6_list': {
-            'type': 'list',
-            'tunnel_cfg': {
-                'type': 'list',
-                'tunnel_start': {
-                    'type': 'int',
-                },
-                'tunnel_end': {
-                    'type': 'int',
-                }
-            },
-            'management': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'acl_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            've_cfg': {
-                'type': 'list',
-                've_end': {
-                    'type': 'int',
-                },
-                've_start': {
-                    'type': 'int',
-                }
-            },
-            'all_data_intf': {
-                'type': 'bool',
-            },
-            'eth_cfg': {
-                'type': 'list',
-                'ethernet_start': {
-                    'type': 'str',
-                },
-                'ethernet_end': {
-                    'type': 'str',
-                }
-            }
-        },
-        've_cfg': {
-            'type': 'list',
-            've_end': {
-                'type': 'int',
-            },
-            've_start': {
-                'type': 'int',
-            }
-        },
-        'all_data_intf': {
-            'type': 'bool',
-        },
         'acl_v4_list': {
             'type': 'list',
-            'tunnel_cfg': {
-                'type': 'list',
-                'tunnel_start': {
-                    'type': 'int',
-                },
-                'tunnel_end': {
-                    'type': 'int',
-                }
-            },
-            'management': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            've_cfg': {
-                'type': 'list',
-                've_end': {
-                    'type': 'int',
-                },
-                've_start': {
-                    'type': 'int',
-                }
-            },
-            'all_data_intf': {
-                'type': 'bool',
-            },
             'acl_id': {
                 'type': 'int',
                 'required': True,
@@ -329,14 +294,81 @@ def get_argspec():
                 'ethernet_end': {
                     'type': 'str',
                 }
-            }
-        },
-        'eth_cfg': {
-            'type': 'list',
-            'ethernet_start': {
+            },
+            've_cfg': {
+                'type': 'list',
+                've_start': {
+                    'type': 'int',
+                },
+                've_end': {
+                    'type': 'int',
+                }
+            },
+            'tunnel_cfg': {
+                'type': 'list',
+                'tunnel_start': {
+                    'type': 'int',
+                },
+                'tunnel_end': {
+                    'type': 'int',
+                }
+            },
+            'management': {
+                'type': 'bool',
+            },
+            'all_data_intf': {
+                'type': 'bool',
+            },
+            'uuid': {
                 'type': 'str',
             },
-            'ethernet_end': {
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'acl_v6_list': {
+            'type': 'list',
+            'acl_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'eth_cfg': {
+                'type': 'list',
+                'ethernet_start': {
+                    'type': 'str',
+                },
+                'ethernet_end': {
+                    'type': 'str',
+                }
+            },
+            've_cfg': {
+                'type': 'list',
+                've_start': {
+                    'type': 'int',
+                },
+                've_end': {
+                    'type': 'int',
+                }
+            },
+            'tunnel_cfg': {
+                'type': 'list',
+                'tunnel_start': {
+                    'type': 'int',
+                },
+                'tunnel_end': {
+                    'type': 'int',
+                }
+            },
+            'management': {
+                'type': 'bool',
+            },
+            'all_data_intf': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
                 'type': 'str',
             }
         }
@@ -523,31 +555,6 @@ def present(module, result, existing_config):
         return result
 
 
-def delete(module, result):
-    try:
-        module.client.delete(existing_url(module))
-        result["changed"] = True
-    except a10_ex.NotFound:
-        result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
-
-def absent(module, result, existing_config):
-    if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
-
-
 def replace(module, result, existing_config, payload):
     try:
         post_result = module.client.put(existing_url(module), payload)
@@ -607,9 +614,6 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-
-    if state == 'absent':
-        result = absent(module, result, existing_config)
 
     if state == 'noop':
         if module.params.get("get_type") == "single":

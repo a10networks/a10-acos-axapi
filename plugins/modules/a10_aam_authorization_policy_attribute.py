@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authorization_policy_attribute
 description:
     - Authorization-policy attribute configuration
-short_description: Configures A10 aam.authorization.policy.attribute
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,74 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    attribute_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    attr_num:
+        description:
+        - "Set attribute ID for authorization policy"
+        type: int
+        required: True
+    attribute_name:
         description:
         - "Specify attribute name"
+        type: str
         required: False
-    integer_type:
+    any:
         description:
-        - "Attribute type is integer"
-        required: False
-    custom_attr_type:
-        description:
-        - "Specify attribute type"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    string_type:
-        description:
-        - "Attribute type is string"
-        required: False
-    attr_str_val:
-        description:
-        - "Set attribute value"
-        required: False
-    attr_ipv4:
-        description:
-        - "IPv4 address"
+        - "Matched when attribute is present (with any value)."
+        type: bool
         required: False
     attr_type:
         description:
         - "Specify attribute type"
+        type: bool
         required: False
-    attr_num:
+    string_type:
         description:
-        - "Set attribute ID for authorization policy"
-        required: True
-    a10_dynamic_defined:
+        - "Attribute type is string"
+        type: bool
+        required: False
+    integer_type:
         description:
-        - "The value of this attribute will depend on AX configuration instead of user
-          configuration"
+        - "Attribute type is integer"
+        type: bool
+        required: False
+    ip_type:
+        description:
+        - "IP address is transformed into network byte order"
+        type: bool
+        required: False
+    attr_str:
+        description:
+        - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
+        type: str
+        required: False
+    attr_str_val:
+        description:
+        - "Set attribute value"
+        type: str
         required: False
     attr_int:
         description:
@@ -99,34 +111,48 @@ options:
           'less-than'= Operation type is less-than; 'more-than'= Operation type is more-
           than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-
           equal-to'= Operation type is more-thatn-equal-to;"
-        required: False
-    ip_type:
-        description:
-        - "IP address is transformed into network byte order"
-        required: False
-    attr_ip:
-        description:
-        - "'equal'= Operation type is equal; 'not-equal'= Operation type is not-equal;"
-        required: False
-    A10_AX_AUTH_URI:
-        description:
-        - "Custom-defined attribute"
-        required: False
-    attr_str:
-        description:
-        - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
-        required: False
-    any:
-        description:
-        - "Matched when attribute is present (with any value)."
-        required: False
-    custom_attr_str:
-        description:
-        - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
+        type: str
         required: False
     attr_int_val:
         description:
         - "Set attribute value"
+        type: int
+        required: False
+    attr_ip:
+        description:
+        - "'equal'= Operation type is equal; 'not-equal'= Operation type is not-equal;"
+        type: str
+        required: False
+    attr_ipv4:
+        description:
+        - "IPv4 address"
+        type: str
+        required: False
+    A10_AX_AUTH_URI:
+        description:
+        - "Custom-defined attribute"
+        type: bool
+        required: False
+    custom_attr_type:
+        description:
+        - "Specify attribute type"
+        type: bool
+        required: False
+    custom_attr_str:
+        description:
+        - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string;"
+        type: str
+        required: False
+    a10_dynamic_defined:
+        description:
+        - "The value of this attribute will depend on AX configuration instead of user
+          configuration"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -197,36 +223,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'attribute_name': {
-            'type': 'str',
-        },
-        'integer_type': {
-            'type': 'bool',
-        },
-        'custom_attr_type': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'string_type': {
-            'type': 'bool',
-        },
-        'attr_str_val': {
-            'type': 'str',
-        },
-        'attr_ipv4': {
-            'type': 'str',
-        },
-        'attr_type': {
-            'type': 'bool',
-        },
         'attr_num': {
             'type': 'int',
             'required': True,
         },
-        'a10_dynamic_defined': {
+        'attribute_name': {
+            'type': 'str',
+        },
+        'any': {
             'type': 'bool',
+        },
+        'attr_type': {
+            'type': 'bool',
+        },
+        'string_type': {
+            'type': 'bool',
+        },
+        'integer_type': {
+            'type': 'bool',
+        },
+        'ip_type': {
+            'type': 'bool',
+        },
+        'attr_str': {
+            'type': 'str',
+            'choices': ['match', 'sub-string']
+        },
+        'attr_str_val': {
+            'type': 'str',
         },
         'attr_int': {
             'type':
@@ -236,29 +260,31 @@ def get_argspec():
                 'less-than-equal-to', 'more-than-equal-to'
             ]
         },
-        'ip_type': {
-            'type': 'bool',
+        'attr_int_val': {
+            'type': 'int',
         },
         'attr_ip': {
             'type': 'str',
             'choices': ['equal', 'not-equal']
         },
+        'attr_ipv4': {
+            'type': 'str',
+        },
         'A10_AX_AUTH_URI': {
             'type': 'bool',
         },
-        'attr_str': {
-            'type': 'str',
-            'choices': ['match', 'sub-string']
-        },
-        'any': {
+        'custom_attr_type': {
             'type': 'bool',
         },
         'custom_attr_str': {
             'type': 'str',
             'choices': ['match', 'sub-string']
         },
-        'attr_int_val': {
-            'type': 'int',
+        'a10_dynamic_defined': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

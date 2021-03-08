@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_state
 description:
     - HA VRRP-A Global Commands
-short_description: Configures A10 vrrp.a.state
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -153,334 +164,478 @@ options:
           'sync_rx_invalid_sync_packet_counter'= Conn Sync receive invalid packet;
           'sync_rx_bad_protocol_counter'= Conn Sync receive packet with bad protocol;
           'sync_rx_no_vgrp_counter'= Conn Sync receive packet with non-existing group;
-          'sync_rx_by_inactive_peer_counter'= Conn Sync receive packet by inactive peer;"
+          'sync_rx_by_inactive_peer_counter'= Conn Sync receive packet by inactive peer;
+          'sync_rx_smp_create_counter'= Sync Create SMP Session Pkts Received counter;
+          'sync_rx_smp_delete_counter'= Sync Delete SMP Session Pkts Received counter;
+          'sync_rx_smp_update_counter'= Sync Update SMP Session Pkts Received counter;
+          'sync_tx_smp_create_counter'= Sync Create SMP Session Pkts Sent counter;
+          'sync_tx_smp_delete_counter'= Sync Delete SMP Session Pkts Sent counter;
+          'sync_tx_smp_update_counter'= Sync Update SMP Session Pkts Sent counter;
+          'sync_rx_smp_clear_counter'= Sync Clear SMP Session Pkts Received counter;
+          'sync_tx_smp_clear_counter'= Sync Clear SMP Session Pkts Sent counter;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            sync_rx_nat_create_sby:
-                description:
-                - "Conn Sync NAT Create Standby"
-            sync_rx_type_invalid:
-                description:
-                - "Conn Sync Type Invalid"
-            sync_rx_ext_lsn_acl:
-                description:
-                - "Conn Sync LSN ACL Failure"
-            sync_rx_ddos_drop_counter:
-                description:
-                - "Conn Sync receive ddos protect packet"
-            sync_rx_conn_exists:
-                description:
-                - "Conn Sync Create Conn Exists"
-            sync_get_buff_failed_port:
-                description:
-                - "Conn Sync Get Buff Failure Wrong Port"
-            sync_tx_smp_radius_table_counter:
-                description:
-                - "Conn Sync Update LSN RADIUS Sent counter"
-            sync_tx_total_info_counter:
-                description:
-                - "Conn Sync Total Info Pkts Sent counter"
-            sync_rx_nat_alloc_sby:
-                description:
-                - "Conn Sync NAT Alloc Standby"
-            query_tx_min_packed:
-                description:
-                - "Min Query Msg Per Packet"
-            sync_rx_ext_bit_process_error:
-                description:
-                - "Conn Sync Proc Ext Bit Failure"
-            sync_rx_ext_nat_mac:
-                description:
-                - "Conn Sync NAT MAC Failure"
-            sync_rx_lsn_fullcone:
-                description:
-                - "Conn Sync Update LSN Fullcone Received counter"
-            query_pkt_tx_counter:
-                description:
-                - "Conn Query sent counter"
-            sync_rx_ext_nat_alg_tcp_info:
-                description:
-                - "Conn Sync NAT ALG TCP Information"
-            sync_rx_estab_counter:
-                description:
-                - "Conn Sync rcv established state"
-            sync_rx_dcmsg_counter:
-                description:
-                - "Conn Sync forward CPU"
-            sync_rx_unk_counter:
-                description:
-                - "Conn Sync Unknown Type"
-            sync_tx_create_counter:
-                description:
-                - "Conn Sync Create Session Sent counter"
-            sync_rx_zone_failure_counter:
-                description:
-                - "Conn Sync Zone Failure"
-            sync_persist_rx_len_invalid:
-                description:
-                - "Persist Conn Sync Length Invalid"
-            sync_rx_mon_entity:
-                description:
-                - "Acos monitoring Entities Sync Messages Received"
-            sync_rx_create_counter:
-                description:
-                - "Conn Sync Create Session Received counter"
-            sync_pkt_rcv_counter:
-                description:
-                - "Conn Sync Received counter"
-            sync_rx_len_invalid:
-                description:
-                - "Conn Sync Length Invalid"
-            sync_tx_update_seqnos_counter:
-                description:
-                - "Conn Sync Update Seq Num Sent counter"
-            sync_rx_persist_create_counter:
-                description:
-                - "Conn Sync Create Persist Session Pkts Received counter"
-            sync_persist_rx_no_such_sg_group:
-                description:
-                - "Persist Conn Sync No Service Group Found"
-            sync_rx_ext_rtsp:
-                description:
-                - "Conn Sync Ext RTSP"
-            sync_rx_update_seqnos_counter:
-                description:
-                - "Conn Sync Update Seq Num Received counter"
-            sync_rx_ext_fw_gtp_log_info:
-                description:
-                - "FW GTP Log Info Received"
-            sync_rx_conn_get_failed:
-                description:
-                - "Conn Sync Get Conn Failure"
-            sync_tx_persist_del_counter:
-                description:
-                - "Conn Sync Delete Persist Session Pkts Sent counter"
-            sync_query_dcmsg_counter:
-                description:
-                - "Conn Sync query forward CPU"
-            sync_rx_ext_fw_gtp_info:
-                description:
-                - "FW GTP Info Received"
-            sync_pkt_invalid_idx_counter:
-                description:
-                - "Conn Sync Invalid Interface"
-            sync_tx_persist_update_age_counter:
-                description:
-                - "Conn Sync Update Persist Age Pkts Sent counter"
-            sync_persist_rx_vporttype_not_supported:
-                description:
-                - "Persist Conn Sync Virt Port Type Invalid"
-            sync_tx_update_sctp_conn_addr:
-                description:
-                - "Update SCTP Addresses Sent"
-            sync_rx_ext_fw_http_logging:
-                description:
-                - "FW HTTP Logging Sync Failures"
-            sync_rx_not_expect_sync_pkt:
-                description:
-                - "unexpected session sync packets"
-            sync_rx_del_no_such_session:
-                description:
-                - "Conn Sync Del Conn not Found"
-            sync_rx_ftp_control:
-                description:
-                - "Conn Sync FTP Control Failure"
-            sync_tx_persist_create_counter:
-                description:
-                - "Conn Sync Create Persist Session Pkts Sent counter"
-            sync_rx_smp_radius_table_counter:
-                description:
-                - "Conn Sync Update LSN RADIUS Received counter"
-            sync_rx_no_such_sg_node:
-                description:
-                - "Conn Sync no SG node found"
-            sync_rx_proto_not_supported:
-                description:
-                - "Conn Sync Protocol Invalid"
-            sync_tx_get_buff_failed:
-                description:
-                - "Conn Sync Get Buff Failure"
-            sync_tx_estab_counter:
-                description:
-                - "Conn Sync send established state"
-            sync_rx_create_ext_bit_counter:
-                description:
-                - "Conn Sync Create with Ext Received counter"
-            sync_tx_update_age_counter:
-                description:
-                - "Conn Sync Update Age Sent counter"
-            sync_rx_lsn_create_sby:
-                description:
-                - "Conn Sync LSN Create Standby"
-            sync_get_buff_failed_rt:
-                description:
-                - "Conn Sync Get Buff Failure No Route"
-            sync_tx_create_ext_bit_counter:
-                description:
-                - "Conn Sync Create with Ext Sent counter"
-            sync_tx_max_packed:
-                description:
-                - "Min Sync Msg Per Packet"
-            sync_rx_persist_update_age_counter:
-                description:
-                - "Conn Sync Update Persist Age Pkts Received counter"
-            sync_rx_sfw:
-                description:
-                - "Conn Sync SFW"
-            sync_rx_bad_protocol_counter:
-                description:
-                - "Conn Sync receive packet with bad protocol"
-            sync_rx_seq_deltas:
-                description:
-                - "Conn Sync Seq Deltas Failure"
-            sync_rx_ext_dcfw_rule_id:
-                description:
-                - "Conn Sync FIREWALL session rule ID information Failure"
-            sync_rx_total_info_counter:
-                description:
-                - "Conn Sync Total Info Pkts Received counter"
-            query_pkt_invalid_idx_counter:
-                description:
-                - "Conn Query Invalid Interface"
-            sync_rx_create_static_sby:
-                description:
-                - "Conn Sync Create Static Standby"
-            sync_rx_persist_del_counter:
-                description:
-                - "Conn Sync Delete Persist Session Pkts Received counter"
-            sync_rx_update_age_counter:
-                description:
-                - "Conn Sync Update Age Received counter"
-            query_tx_max_packed:
-                description:
-                - "Max Query Msg Per Packet"
-            sync_persist_rx_ext_bit_process_error:
-                description:
-                - "Persist Conn Sync Proc Ext Bit Failure"
-            query_pkt_rcv_counter:
-                description:
-                - "Conn Query Received counter"
-            sync_rx_zero_info_counter:
-                description:
-                - "Conn Sync Packet Empty"
             sync_pkt_tx_counter:
                 description:
                 - "Conn Sync Sent counter"
-            sync_rx_ext_sip_alg:
+                type: str
+            sync_pkt_rcv_counter:
                 description:
-                - "Conn Sync SIP TCP ALG Failure"
-            sync_rx_no_vgrp_counter:
+                - "Conn Sync Received counter"
+                type: str
+            sync_rx_create_counter:
                 description:
-                - "Conn Sync receive packet with non-existing group"
-            sync_rx_reserve_ha:
-                description:
-                - "Conn Sync Reserve HA Conn"
-            sync_rx_ext_pptp:
-                description:
-                - "Conn Sync Ext PPTP"
-            sync_persist_rx_type_invalid:
-                description:
-                - "Persist Conn Sync Type Invalid"
-            sync_rx_insert_tuple:
-                description:
-                - "Conn Sync Insert Tuple"
-            sync_rx_no_such_nat_pool:
-                description:
-                - "Conn Sync NAT Pool Error"
-            sync_tx_del_counter:
-                description:
-                - "Conn Sync Del Session Sent counter"
-            sync_tx_lsn_fullcone:
-                description:
-                - "Conn Sync Update LSN Fullcone Sent counter"
-            sync_rx_apptype_not_supported:
-                description:
-                - "Conn Sync App Type Invalid"
-            query_rx_zero_info_counter:
-                description:
-                - "Conn Query Packet Empty"
-            sync_persist_rx_no_such_rport:
-                description:
-                - "Persist Conn Sync Real Port Not Found"
-            sync_rx_by_inactive_peer_counter:
-                description:
-                - "Conn Sync receive packet by inactive peer"
-            sync_persist_rx_no_such_vport:
-                description:
-                - "Persist Conn Sync Virt Port Not Found"
-            query_tx_get_buff_failed:
-                description:
-                - "Conn Query Get Buff Failure"
-            sync_rx_ext_h323_alg:
-                description:
-                - "Conn Sync H323 TCP ALG Failure"
-            sync_rx_ext_fw_apps:
-                description:
-                - "Conn Sync FIREWALL application information Failure"
-            sync_persist_rx_cannot_process_mandatory:
-                description:
-                - "Persist Conn Sync Process Mandatory Invalid"
-            sync_rx_ext_dcfw_log:
-                description:
-                - "Conn Sync FIREWALL session logging information Failure"
-            sync_rx_invalid_sync_packet_counter:
-                description:
-                - "Conn Sync receive invalid packet"
-            sync_persist_rx_proto_not_supported:
-                description:
-                - "Persist Conn Sync Protocol Invalid"
-            sync_persist_rx_conn_get_failed:
-                description:
-                - "Persist Conn Sync Get Conn Failure"
-            sync_rx_ext_lsn_ac_idle_timeout:
-                description:
-                - "Conn Sync LSN ACL Idle Timeout Failure"
-            sync_err_lsn_fullcone:
-                description:
-                - "Conn Sync LSN Fullcone Failure"
-            sync_tx_min_packed:
-                description:
-                - "Max Sync Msg Per Packet"
-            query_rx_unk_counter:
-                description:
-                - "Conn Query Unknown Type"
-            sync_rx_update_sctp_conn_addr:
-                description:
-                - "Update SCTP Addresses Received"
-            sync_tx_mon_entity:
-                description:
-                - "Acos Monitoring Entities Sync Messages Sent"
-            sync_persist_rx_no_sg_group_info:
-                description:
-                - "Persist Conn Sync No Service Group Info Found"
-            sync_rx_no_such_vport:
-                description:
-                - "Conn Sync Virt Port Not Found"
-            sync_rx_no_such_rport:
-                description:
-                - "Conn Sync Real Port Not Found"
-            sync_rx_ext_dcfw_rule_idle_timeout:
-                description:
-                - "Conn Sync FIREWALL session rule idle timeout information Failure"
+                - "Conn Sync Create Session Received counter"
+                type: str
             sync_rx_del_counter:
                 description:
                 - "Conn Sync Del Session Received counter"
+                type: str
+            sync_rx_update_age_counter:
+                description:
+                - "Conn Sync Update Age Received counter"
+                type: str
+            sync_tx_create_counter:
+                description:
+                - "Conn Sync Create Session Sent counter"
+                type: str
+            sync_tx_del_counter:
+                description:
+                - "Conn Sync Del Session Sent counter"
+                type: str
+            sync_tx_update_age_counter:
+                description:
+                - "Conn Sync Update Age Sent counter"
+                type: str
+            sync_rx_persist_create_counter:
+                description:
+                - "Conn Sync Create Persist Session Pkts Received counter"
+                type: str
+            sync_rx_persist_del_counter:
+                description:
+                - "Conn Sync Delete Persist Session Pkts Received counter"
+                type: str
+            sync_rx_persist_update_age_counter:
+                description:
+                - "Conn Sync Update Persist Age Pkts Received counter"
+                type: str
+            sync_tx_persist_create_counter:
+                description:
+                - "Conn Sync Create Persist Session Pkts Sent counter"
+                type: str
+            sync_tx_persist_del_counter:
+                description:
+                - "Conn Sync Delete Persist Session Pkts Sent counter"
+                type: str
+            sync_tx_persist_update_age_counter:
+                description:
+                - "Conn Sync Update Persist Age Pkts Sent counter"
+                type: str
+            query_pkt_tx_counter:
+                description:
+                - "Conn Query sent counter"
+                type: str
+            query_pkt_rcv_counter:
+                description:
+                - "Conn Query Received counter"
+                type: str
+            sync_tx_smp_radius_table_counter:
+                description:
+                - "Conn Sync Update LSN RADIUS Sent counter"
+                type: str
+            sync_rx_smp_radius_table_counter:
+                description:
+                - "Conn Sync Update LSN RADIUS Received counter"
+                type: str
+            query_tx_max_packed:
+                description:
+                - "Max Query Msg Per Packet"
+                type: str
+            query_tx_min_packed:
+                description:
+                - "Min Query Msg Per Packet"
+                type: str
+            query_pkt_invalid_idx_counter:
+                description:
+                - "Conn Query Invalid Interface"
+                type: str
+            query_tx_get_buff_failed:
+                description:
+                - "Conn Query Get Buff Failure"
+                type: str
+            query_rx_zero_info_counter:
+                description:
+                - "Conn Query Packet Empty"
+                type: str
             query_rx_full_info_counter:
                 description:
                 - "Conn Query Packet Full"
+                type: str
+            query_rx_unk_counter:
+                description:
+                - "Conn Query Unknown Type"
+                type: str
+            sync_pkt_invalid_idx_counter:
+                description:
+                - "Conn Sync Invalid Interface"
+                type: str
+            sync_tx_get_buff_failed:
+                description:
+                - "Conn Sync Get Buff Failure"
+                type: str
+            sync_tx_total_info_counter:
+                description:
+                - "Conn Sync Total Info Pkts Sent counter"
+                type: str
+            sync_tx_create_ext_bit_counter:
+                description:
+                - "Conn Sync Create with Ext Sent counter"
+                type: str
+            sync_tx_update_seqnos_counter:
+                description:
+                - "Conn Sync Update Seq Num Sent counter"
+                type: str
+            sync_tx_min_packed:
+                description:
+                - "Max Sync Msg Per Packet"
+                type: str
+            sync_tx_max_packed:
+                description:
+                - "Min Sync Msg Per Packet"
+                type: str
+            sync_rx_len_invalid:
+                description:
+                - "Conn Sync Length Invalid"
+                type: str
+            sync_persist_rx_len_invalid:
+                description:
+                - "Persist Conn Sync Length Invalid"
+                type: str
+            sync_persist_rx_proto_not_supported:
+                description:
+                - "Persist Conn Sync Protocol Invalid"
+                type: str
+            sync_persist_rx_type_invalid:
+                description:
+                - "Persist Conn Sync Type Invalid"
+                type: str
+            sync_persist_rx_cannot_process_mandatory:
+                description:
+                - "Persist Conn Sync Process Mandatory Invalid"
+                type: str
+            sync_persist_rx_ext_bit_process_error:
+                description:
+                - "Persist Conn Sync Proc Ext Bit Failure"
+                type: str
+            sync_persist_rx_no_such_vport:
+                description:
+                - "Persist Conn Sync Virt Port Not Found"
+                type: str
+            sync_persist_rx_vporttype_not_supported:
+                description:
+                - "Persist Conn Sync Virt Port Type Invalid"
+                type: str
+            sync_persist_rx_no_such_rport:
+                description:
+                - "Persist Conn Sync Real Port Not Found"
+                type: str
+            sync_persist_rx_no_such_sg_group:
+                description:
+                - "Persist Conn Sync No Service Group Found"
+                type: str
+            sync_persist_rx_no_sg_group_info:
+                description:
+                - "Persist Conn Sync No Service Group Info Found"
+                type: str
+            sync_persist_rx_conn_get_failed:
+                description:
+                - "Persist Conn Sync Get Conn Failure"
+                type: str
+            sync_rx_no_such_vport:
+                description:
+                - "Conn Sync Virt Port Not Found"
+                type: str
+            sync_rx_no_such_rport:
+                description:
+                - "Conn Sync Real Port Not Found"
+                type: str
             sync_rx_cannot_process_mandatory:
                 description:
                 - "Conn Sync Process Mandatory Invalid"
+                type: str
+            sync_rx_ext_bit_process_error:
+                description:
+                - "Conn Sync Proc Ext Bit Failure"
+                type: str
+            sync_rx_create_ext_bit_counter:
+                description:
+                - "Conn Sync Create with Ext Received counter"
+                type: str
+            sync_rx_conn_exists:
+                description:
+                - "Conn Sync Create Conn Exists"
+                type: str
+            sync_rx_conn_get_failed:
+                description:
+                - "Conn Sync Get Conn Failure"
+                type: str
+            sync_rx_proto_not_supported:
+                description:
+                - "Conn Sync Protocol Invalid"
+                type: str
             sync_rx_no_dst_for_vport_inline:
                 description:
                 - "Conn Sync 'dst' not found for vport inline"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            sync_rx_no_such_nat_pool:
+                description:
+                - "Conn Sync NAT Pool Error"
+                type: str
+            sync_rx_no_such_sg_node:
+                description:
+                - "Conn Sync no SG node found"
+                type: str
+            sync_rx_del_no_such_session:
+                description:
+                - "Conn Sync Del Conn not Found"
+                type: str
+            sync_rx_type_invalid:
+                description:
+                - "Conn Sync Type Invalid"
+                type: str
+            sync_rx_zero_info_counter:
+                description:
+                - "Conn Sync Packet Empty"
+                type: str
+            sync_rx_dcmsg_counter:
+                description:
+                - "Conn Sync forward CPU"
+                type: str
+            sync_rx_total_info_counter:
+                description:
+                - "Conn Sync Total Info Pkts Received counter"
+                type: str
+            sync_rx_update_seqnos_counter:
+                description:
+                - "Conn Sync Update Seq Num Received counter"
+                type: str
+            sync_rx_unk_counter:
+                description:
+                - "Conn Sync Unknown Type"
+                type: str
+            sync_rx_apptype_not_supported:
+                description:
+                - "Conn Sync App Type Invalid"
+                type: str
+            sync_query_dcmsg_counter:
+                description:
+                - "Conn Sync query forward CPU"
+                type: str
+            sync_get_buff_failed_rt:
+                description:
+                - "Conn Sync Get Buff Failure No Route"
+                type: str
+            sync_get_buff_failed_port:
+                description:
+                - "Conn Sync Get Buff Failure Wrong Port"
+                type: str
+            sync_rx_lsn_create_sby:
+                description:
+                - "Conn Sync LSN Create Standby"
+                type: str
+            sync_rx_nat_create_sby:
+                description:
+                - "Conn Sync NAT Create Standby"
+                type: str
+            sync_rx_nat_alloc_sby:
+                description:
+                - "Conn Sync NAT Alloc Standby"
+                type: str
+            sync_rx_insert_tuple:
+                description:
+                - "Conn Sync Insert Tuple"
+                type: str
+            sync_rx_sfw:
+                description:
+                - "Conn Sync SFW"
+                type: str
+            sync_rx_create_static_sby:
+                description:
+                - "Conn Sync Create Static Standby"
+                type: str
+            sync_rx_ext_pptp:
+                description:
+                - "Conn Sync Ext PPTP"
+                type: str
+            sync_rx_ext_rtsp:
+                description:
+                - "Conn Sync Ext RTSP"
+                type: str
+            sync_rx_reserve_ha:
+                description:
+                - "Conn Sync Reserve HA Conn"
+                type: str
+            sync_rx_seq_deltas:
+                description:
+                - "Conn Sync Seq Deltas Failure"
+                type: str
+            sync_rx_ftp_control:
+                description:
+                - "Conn Sync FTP Control Failure"
+                type: str
+            sync_rx_ext_lsn_acl:
+                description:
+                - "Conn Sync LSN ACL Failure"
+                type: str
+            sync_rx_ext_lsn_ac_idle_timeout:
+                description:
+                - "Conn Sync LSN ACL Idle Timeout Failure"
+                type: str
+            sync_rx_ext_sip_alg:
+                description:
+                - "Conn Sync SIP TCP ALG Failure"
+                type: str
+            sync_rx_ext_h323_alg:
+                description:
+                - "Conn Sync H323 TCP ALG Failure"
+                type: str
+            sync_rx_ext_nat_mac:
+                description:
+                - "Conn Sync NAT MAC Failure"
+                type: str
+            sync_tx_lsn_fullcone:
+                description:
+                - "Conn Sync Update LSN Fullcone Sent counter"
+                type: str
+            sync_rx_lsn_fullcone:
+                description:
+                - "Conn Sync Update LSN Fullcone Received counter"
+                type: str
+            sync_err_lsn_fullcone:
+                description:
+                - "Conn Sync LSN Fullcone Failure"
+                type: str
+            sync_tx_update_sctp_conn_addr:
+                description:
+                - "Update SCTP Addresses Sent"
+                type: str
+            sync_rx_update_sctp_conn_addr:
+                description:
+                - "Update SCTP Addresses Received"
+                type: str
+            sync_rx_ext_nat_alg_tcp_info:
+                description:
+                - "Conn Sync NAT ALG TCP Information"
+                type: str
+            sync_rx_ext_dcfw_rule_id:
+                description:
+                - "Conn Sync FIREWALL session rule ID information Failure"
+                type: str
+            sync_rx_ext_dcfw_log:
+                description:
+                - "Conn Sync FIREWALL session logging information Failure"
+                type: str
+            sync_rx_estab_counter:
+                description:
+                - "Conn Sync rcv established state"
+                type: str
+            sync_tx_estab_counter:
+                description:
+                - "Conn Sync send established state"
+                type: str
+            sync_rx_zone_failure_counter:
+                description:
+                - "Conn Sync Zone Failure"
+                type: str
+            sync_rx_ext_fw_http_logging:
+                description:
+                - "FW HTTP Logging Sync Failures"
+                type: str
+            sync_rx_ext_dcfw_rule_idle_timeout:
+                description:
+                - "Conn Sync FIREWALL session rule idle timeout information Failure"
+                type: str
+            sync_rx_ext_fw_gtp_info:
+                description:
+                - "FW GTP Info Received"
+                type: str
+            sync_rx_not_expect_sync_pkt:
+                description:
+                - "unexpected session sync packets"
+                type: str
+            sync_rx_ext_fw_apps:
+                description:
+                - "Conn Sync FIREWALL application information Failure"
+                type: str
+            sync_tx_mon_entity:
+                description:
+                - "Acos Monitoring Entities Sync Messages Sent"
+                type: str
+            sync_rx_mon_entity:
+                description:
+                - "Acos monitoring Entities Sync Messages Received"
+                type: str
+            sync_rx_ext_fw_gtp_log_info:
+                description:
+                - "FW GTP Log Info Received"
+                type: str
+            sync_rx_ddos_drop_counter:
+                description:
+                - "Conn Sync receive ddos protect packet"
+                type: str
+            sync_rx_invalid_sync_packet_counter:
+                description:
+                - "Conn Sync receive invalid packet"
+                type: str
+            sync_rx_bad_protocol_counter:
+                description:
+                - "Conn Sync receive packet with bad protocol"
+                type: str
+            sync_rx_no_vgrp_counter:
+                description:
+                - "Conn Sync receive packet with non-existing group"
+                type: str
+            sync_rx_by_inactive_peer_counter:
+                description:
+                - "Conn Sync receive packet by inactive peer"
+                type: str
+            sync_rx_smp_create_counter:
+                description:
+                - "Sync Create SMP Session Pkts Received counter"
+                type: str
+            sync_rx_smp_delete_counter:
+                description:
+                - "Sync Delete SMP Session Pkts Received counter"
+                type: str
+            sync_rx_smp_update_counter:
+                description:
+                - "Sync Update SMP Session Pkts Received counter"
+                type: str
+            sync_tx_smp_create_counter:
+                description:
+                - "Sync Create SMP Session Pkts Sent counter"
+                type: str
+            sync_tx_smp_delete_counter:
+                description:
+                - "Sync Delete SMP Session Pkts Sent counter"
+                type: str
+            sync_tx_smp_update_counter:
+                description:
+                - "Sync Update SMP Session Pkts Sent counter"
+                type: str
+            sync_rx_smp_clear_counter:
+                description:
+                - "Sync Clear SMP Session Pkts Received counter"
+                type: str
+            sync_tx_smp_clear_counter:
+                description:
+                - "Sync Clear SMP Session Pkts Sent counter"
+                type: str
 
 '''
 
@@ -535,6 +690,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -609,307 +767,146 @@ def get_argspec():
                     'sync_rx_ddos_drop_counter',
                     'sync_rx_invalid_sync_packet_counter',
                     'sync_rx_bad_protocol_counter', 'sync_rx_no_vgrp_counter',
-                    'sync_rx_by_inactive_peer_counter'
+                    'sync_rx_by_inactive_peer_counter',
+                    'sync_rx_smp_create_counter', 'sync_rx_smp_delete_counter',
+                    'sync_rx_smp_update_counter', 'sync_tx_smp_create_counter',
+                    'sync_tx_smp_delete_counter', 'sync_tx_smp_update_counter',
+                    'sync_rx_smp_clear_counter', 'sync_tx_smp_clear_counter'
                 ]
             }
         },
         'stats': {
             'type': 'dict',
-            'sync_rx_nat_create_sby': {
-                'type': 'str',
-            },
-            'sync_rx_type_invalid': {
-                'type': 'str',
-            },
-            'sync_rx_ext_lsn_acl': {
-                'type': 'str',
-            },
-            'sync_rx_ddos_drop_counter': {
-                'type': 'str',
-            },
-            'sync_rx_conn_exists': {
-                'type': 'str',
-            },
-            'sync_get_buff_failed_port': {
-                'type': 'str',
-            },
-            'sync_tx_smp_radius_table_counter': {
-                'type': 'str',
-            },
-            'sync_tx_total_info_counter': {
-                'type': 'str',
-            },
-            'sync_rx_nat_alloc_sby': {
-                'type': 'str',
-            },
-            'query_tx_min_packed': {
-                'type': 'str',
-            },
-            'sync_rx_ext_bit_process_error': {
-                'type': 'str',
-            },
-            'sync_rx_ext_nat_mac': {
-                'type': 'str',
-            },
-            'sync_rx_lsn_fullcone': {
-                'type': 'str',
-            },
-            'query_pkt_tx_counter': {
-                'type': 'str',
-            },
-            'sync_rx_ext_nat_alg_tcp_info': {
-                'type': 'str',
-            },
-            'sync_rx_estab_counter': {
-                'type': 'str',
-            },
-            'sync_rx_dcmsg_counter': {
-                'type': 'str',
-            },
-            'sync_rx_unk_counter': {
-                'type': 'str',
-            },
-            'sync_tx_create_counter': {
-                'type': 'str',
-            },
-            'sync_rx_zone_failure_counter': {
-                'type': 'str',
-            },
-            'sync_persist_rx_len_invalid': {
-                'type': 'str',
-            },
-            'sync_rx_mon_entity': {
-                'type': 'str',
-            },
-            'sync_rx_create_counter': {
+            'sync_pkt_tx_counter': {
                 'type': 'str',
             },
             'sync_pkt_rcv_counter': {
                 'type': 'str',
             },
-            'sync_rx_len_invalid': {
+            'sync_rx_create_counter': {
                 'type': 'str',
             },
-            'sync_tx_update_seqnos_counter': {
-                'type': 'str',
-            },
-            'sync_rx_persist_create_counter': {
-                'type': 'str',
-            },
-            'sync_persist_rx_no_such_sg_group': {
-                'type': 'str',
-            },
-            'sync_rx_ext_rtsp': {
-                'type': 'str',
-            },
-            'sync_rx_update_seqnos_counter': {
-                'type': 'str',
-            },
-            'sync_rx_ext_fw_gtp_log_info': {
-                'type': 'str',
-            },
-            'sync_rx_conn_get_failed': {
-                'type': 'str',
-            },
-            'sync_tx_persist_del_counter': {
-                'type': 'str',
-            },
-            'sync_query_dcmsg_counter': {
-                'type': 'str',
-            },
-            'sync_rx_ext_fw_gtp_info': {
-                'type': 'str',
-            },
-            'sync_pkt_invalid_idx_counter': {
-                'type': 'str',
-            },
-            'sync_tx_persist_update_age_counter': {
-                'type': 'str',
-            },
-            'sync_persist_rx_vporttype_not_supported': {
-                'type': 'str',
-            },
-            'sync_tx_update_sctp_conn_addr': {
-                'type': 'str',
-            },
-            'sync_rx_ext_fw_http_logging': {
-                'type': 'str',
-            },
-            'sync_rx_not_expect_sync_pkt': {
-                'type': 'str',
-            },
-            'sync_rx_del_no_such_session': {
-                'type': 'str',
-            },
-            'sync_rx_ftp_control': {
-                'type': 'str',
-            },
-            'sync_tx_persist_create_counter': {
-                'type': 'str',
-            },
-            'sync_rx_smp_radius_table_counter': {
-                'type': 'str',
-            },
-            'sync_rx_no_such_sg_node': {
-                'type': 'str',
-            },
-            'sync_rx_proto_not_supported': {
-                'type': 'str',
-            },
-            'sync_tx_get_buff_failed': {
-                'type': 'str',
-            },
-            'sync_tx_estab_counter': {
-                'type': 'str',
-            },
-            'sync_rx_create_ext_bit_counter': {
-                'type': 'str',
-            },
-            'sync_tx_update_age_counter': {
-                'type': 'str',
-            },
-            'sync_rx_lsn_create_sby': {
-                'type': 'str',
-            },
-            'sync_get_buff_failed_rt': {
-                'type': 'str',
-            },
-            'sync_tx_create_ext_bit_counter': {
-                'type': 'str',
-            },
-            'sync_tx_max_packed': {
-                'type': 'str',
-            },
-            'sync_rx_persist_update_age_counter': {
-                'type': 'str',
-            },
-            'sync_rx_sfw': {
-                'type': 'str',
-            },
-            'sync_rx_bad_protocol_counter': {
-                'type': 'str',
-            },
-            'sync_rx_seq_deltas': {
-                'type': 'str',
-            },
-            'sync_rx_ext_dcfw_rule_id': {
-                'type': 'str',
-            },
-            'sync_rx_total_info_counter': {
-                'type': 'str',
-            },
-            'query_pkt_invalid_idx_counter': {
-                'type': 'str',
-            },
-            'sync_rx_create_static_sby': {
-                'type': 'str',
-            },
-            'sync_rx_persist_del_counter': {
+            'sync_rx_del_counter': {
                 'type': 'str',
             },
             'sync_rx_update_age_counter': {
                 'type': 'str',
             },
-            'query_tx_max_packed': {
-                'type': 'str',
-            },
-            'sync_persist_rx_ext_bit_process_error': {
-                'type': 'str',
-            },
-            'query_pkt_rcv_counter': {
-                'type': 'str',
-            },
-            'sync_rx_zero_info_counter': {
-                'type': 'str',
-            },
-            'sync_pkt_tx_counter': {
-                'type': 'str',
-            },
-            'sync_rx_ext_sip_alg': {
-                'type': 'str',
-            },
-            'sync_rx_no_vgrp_counter': {
-                'type': 'str',
-            },
-            'sync_rx_reserve_ha': {
-                'type': 'str',
-            },
-            'sync_rx_ext_pptp': {
-                'type': 'str',
-            },
-            'sync_persist_rx_type_invalid': {
-                'type': 'str',
-            },
-            'sync_rx_insert_tuple': {
-                'type': 'str',
-            },
-            'sync_rx_no_such_nat_pool': {
+            'sync_tx_create_counter': {
                 'type': 'str',
             },
             'sync_tx_del_counter': {
                 'type': 'str',
             },
-            'sync_tx_lsn_fullcone': {
+            'sync_tx_update_age_counter': {
                 'type': 'str',
             },
-            'sync_rx_apptype_not_supported': {
+            'sync_rx_persist_create_counter': {
                 'type': 'str',
             },
-            'query_rx_zero_info_counter': {
+            'sync_rx_persist_del_counter': {
                 'type': 'str',
             },
-            'sync_persist_rx_no_such_rport': {
+            'sync_rx_persist_update_age_counter': {
                 'type': 'str',
             },
-            'sync_rx_by_inactive_peer_counter': {
+            'sync_tx_persist_create_counter': {
                 'type': 'str',
             },
-            'sync_persist_rx_no_such_vport': {
+            'sync_tx_persist_del_counter': {
+                'type': 'str',
+            },
+            'sync_tx_persist_update_age_counter': {
+                'type': 'str',
+            },
+            'query_pkt_tx_counter': {
+                'type': 'str',
+            },
+            'query_pkt_rcv_counter': {
+                'type': 'str',
+            },
+            'sync_tx_smp_radius_table_counter': {
+                'type': 'str',
+            },
+            'sync_rx_smp_radius_table_counter': {
+                'type': 'str',
+            },
+            'query_tx_max_packed': {
+                'type': 'str',
+            },
+            'query_tx_min_packed': {
+                'type': 'str',
+            },
+            'query_pkt_invalid_idx_counter': {
                 'type': 'str',
             },
             'query_tx_get_buff_failed': {
                 'type': 'str',
             },
-            'sync_rx_ext_h323_alg': {
+            'query_rx_zero_info_counter': {
                 'type': 'str',
             },
-            'sync_rx_ext_fw_apps': {
-                'type': 'str',
-            },
-            'sync_persist_rx_cannot_process_mandatory': {
-                'type': 'str',
-            },
-            'sync_rx_ext_dcfw_log': {
-                'type': 'str',
-            },
-            'sync_rx_invalid_sync_packet_counter': {
-                'type': 'str',
-            },
-            'sync_persist_rx_proto_not_supported': {
-                'type': 'str',
-            },
-            'sync_persist_rx_conn_get_failed': {
-                'type': 'str',
-            },
-            'sync_rx_ext_lsn_ac_idle_timeout': {
-                'type': 'str',
-            },
-            'sync_err_lsn_fullcone': {
-                'type': 'str',
-            },
-            'sync_tx_min_packed': {
+            'query_rx_full_info_counter': {
                 'type': 'str',
             },
             'query_rx_unk_counter': {
                 'type': 'str',
             },
-            'sync_rx_update_sctp_conn_addr': {
+            'sync_pkt_invalid_idx_counter': {
                 'type': 'str',
             },
-            'sync_tx_mon_entity': {
+            'sync_tx_get_buff_failed': {
+                'type': 'str',
+            },
+            'sync_tx_total_info_counter': {
+                'type': 'str',
+            },
+            'sync_tx_create_ext_bit_counter': {
+                'type': 'str',
+            },
+            'sync_tx_update_seqnos_counter': {
+                'type': 'str',
+            },
+            'sync_tx_min_packed': {
+                'type': 'str',
+            },
+            'sync_tx_max_packed': {
+                'type': 'str',
+            },
+            'sync_rx_len_invalid': {
+                'type': 'str',
+            },
+            'sync_persist_rx_len_invalid': {
+                'type': 'str',
+            },
+            'sync_persist_rx_proto_not_supported': {
+                'type': 'str',
+            },
+            'sync_persist_rx_type_invalid': {
+                'type': 'str',
+            },
+            'sync_persist_rx_cannot_process_mandatory': {
+                'type': 'str',
+            },
+            'sync_persist_rx_ext_bit_process_error': {
+                'type': 'str',
+            },
+            'sync_persist_rx_no_such_vport': {
+                'type': 'str',
+            },
+            'sync_persist_rx_vporttype_not_supported': {
+                'type': 'str',
+            },
+            'sync_persist_rx_no_such_rport': {
+                'type': 'str',
+            },
+            'sync_persist_rx_no_such_sg_group': {
                 'type': 'str',
             },
             'sync_persist_rx_no_sg_group_info': {
+                'type': 'str',
+            },
+            'sync_persist_rx_conn_get_failed': {
                 'type': 'str',
             },
             'sync_rx_no_such_vport': {
@@ -918,24 +915,210 @@ def get_argspec():
             'sync_rx_no_such_rport': {
                 'type': 'str',
             },
-            'sync_rx_ext_dcfw_rule_idle_timeout': {
-                'type': 'str',
-            },
-            'sync_rx_del_counter': {
-                'type': 'str',
-            },
-            'query_rx_full_info_counter': {
-                'type': 'str',
-            },
             'sync_rx_cannot_process_mandatory': {
+                'type': 'str',
+            },
+            'sync_rx_ext_bit_process_error': {
+                'type': 'str',
+            },
+            'sync_rx_create_ext_bit_counter': {
+                'type': 'str',
+            },
+            'sync_rx_conn_exists': {
+                'type': 'str',
+            },
+            'sync_rx_conn_get_failed': {
+                'type': 'str',
+            },
+            'sync_rx_proto_not_supported': {
                 'type': 'str',
             },
             'sync_rx_no_dst_for_vport_inline': {
                 'type': 'str',
+            },
+            'sync_rx_no_such_nat_pool': {
+                'type': 'str',
+            },
+            'sync_rx_no_such_sg_node': {
+                'type': 'str',
+            },
+            'sync_rx_del_no_such_session': {
+                'type': 'str',
+            },
+            'sync_rx_type_invalid': {
+                'type': 'str',
+            },
+            'sync_rx_zero_info_counter': {
+                'type': 'str',
+            },
+            'sync_rx_dcmsg_counter': {
+                'type': 'str',
+            },
+            'sync_rx_total_info_counter': {
+                'type': 'str',
+            },
+            'sync_rx_update_seqnos_counter': {
+                'type': 'str',
+            },
+            'sync_rx_unk_counter': {
+                'type': 'str',
+            },
+            'sync_rx_apptype_not_supported': {
+                'type': 'str',
+            },
+            'sync_query_dcmsg_counter': {
+                'type': 'str',
+            },
+            'sync_get_buff_failed_rt': {
+                'type': 'str',
+            },
+            'sync_get_buff_failed_port': {
+                'type': 'str',
+            },
+            'sync_rx_lsn_create_sby': {
+                'type': 'str',
+            },
+            'sync_rx_nat_create_sby': {
+                'type': 'str',
+            },
+            'sync_rx_nat_alloc_sby': {
+                'type': 'str',
+            },
+            'sync_rx_insert_tuple': {
+                'type': 'str',
+            },
+            'sync_rx_sfw': {
+                'type': 'str',
+            },
+            'sync_rx_create_static_sby': {
+                'type': 'str',
+            },
+            'sync_rx_ext_pptp': {
+                'type': 'str',
+            },
+            'sync_rx_ext_rtsp': {
+                'type': 'str',
+            },
+            'sync_rx_reserve_ha': {
+                'type': 'str',
+            },
+            'sync_rx_seq_deltas': {
+                'type': 'str',
+            },
+            'sync_rx_ftp_control': {
+                'type': 'str',
+            },
+            'sync_rx_ext_lsn_acl': {
+                'type': 'str',
+            },
+            'sync_rx_ext_lsn_ac_idle_timeout': {
+                'type': 'str',
+            },
+            'sync_rx_ext_sip_alg': {
+                'type': 'str',
+            },
+            'sync_rx_ext_h323_alg': {
+                'type': 'str',
+            },
+            'sync_rx_ext_nat_mac': {
+                'type': 'str',
+            },
+            'sync_tx_lsn_fullcone': {
+                'type': 'str',
+            },
+            'sync_rx_lsn_fullcone': {
+                'type': 'str',
+            },
+            'sync_err_lsn_fullcone': {
+                'type': 'str',
+            },
+            'sync_tx_update_sctp_conn_addr': {
+                'type': 'str',
+            },
+            'sync_rx_update_sctp_conn_addr': {
+                'type': 'str',
+            },
+            'sync_rx_ext_nat_alg_tcp_info': {
+                'type': 'str',
+            },
+            'sync_rx_ext_dcfw_rule_id': {
+                'type': 'str',
+            },
+            'sync_rx_ext_dcfw_log': {
+                'type': 'str',
+            },
+            'sync_rx_estab_counter': {
+                'type': 'str',
+            },
+            'sync_tx_estab_counter': {
+                'type': 'str',
+            },
+            'sync_rx_zone_failure_counter': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_http_logging': {
+                'type': 'str',
+            },
+            'sync_rx_ext_dcfw_rule_idle_timeout': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_gtp_info': {
+                'type': 'str',
+            },
+            'sync_rx_not_expect_sync_pkt': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_apps': {
+                'type': 'str',
+            },
+            'sync_tx_mon_entity': {
+                'type': 'str',
+            },
+            'sync_rx_mon_entity': {
+                'type': 'str',
+            },
+            'sync_rx_ext_fw_gtp_log_info': {
+                'type': 'str',
+            },
+            'sync_rx_ddos_drop_counter': {
+                'type': 'str',
+            },
+            'sync_rx_invalid_sync_packet_counter': {
+                'type': 'str',
+            },
+            'sync_rx_bad_protocol_counter': {
+                'type': 'str',
+            },
+            'sync_rx_no_vgrp_counter': {
+                'type': 'str',
+            },
+            'sync_rx_by_inactive_peer_counter': {
+                'type': 'str',
+            },
+            'sync_rx_smp_create_counter': {
+                'type': 'str',
+            },
+            'sync_rx_smp_delete_counter': {
+                'type': 'str',
+            },
+            'sync_rx_smp_update_counter': {
+                'type': 'str',
+            },
+            'sync_tx_smp_create_counter': {
+                'type': 'str',
+            },
+            'sync_tx_smp_delete_counter': {
+                'type': 'str',
+            },
+            'sync_tx_smp_update_counter': {
+                'type': 'str',
+            },
+            'sync_rx_smp_clear_counter': {
+                'type': 'str',
+            },
+            'sync_tx_smp_clear_counter': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_template_csv
 description:
     - Specify csv template
-short_description: Configures A10 gslb.template.csv
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,69 +22,85 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     csv_name:
         description:
         - "Specify name of csv template"
+        type: str
         required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    ipv6_enable:
-        description:
-        - "Support IPv6 IP ranges"
-        required: False
     delim_num:
         description:
         - "enter a delimiter number, default 44 (',')"
+        type: int
         required: False
     delim_char:
         description:
         - "enter a delimiter character, default ','"
+        type: str
+        required: False
+    ipv6_enable:
+        description:
+        - "Support IPv6 IP ranges"
+        type: bool
         required: False
     multiple_fields:
         description:
         - "Field multiple_fields"
+        type: list
         required: False
         suboptions:
             field:
                 description:
                 - "Field index number (Index of Field)"
+                type: int
             csv_type:
                 description:
                 - "'ip-from'= Beginning address of IP range or subnet; 'ip-to-mask'= Ending
           address of IP range or Mask; 'continent'= Continent; 'country'= Country;
           'state'= State or province; 'city'= City;"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -145,24 +159,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'csv_name': {
             'type': 'str',
             'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'ipv6_enable': {
-            'type': 'bool',
         },
         'delim_num': {
             'type': 'int',
         },
         'delim_char': {
             'type': 'str',
+        },
+        'ipv6_enable': {
+            'type': 'bool',
         },
         'multiple_fields': {
             'type': 'list',
@@ -177,6 +185,12 @@ def get_argspec():
                     'city'
                 ]
             }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

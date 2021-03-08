@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_version
 description:
     - Version Information
-short_description: Configures A10 version
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,134 +22,174 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            sys_poll_mode:
-                description:
-                - "Field sys_poll_mode"
-            hw_code:
-                description:
-                - "Field hw_code"
-            hd_pri:
-                description:
-                - "Field hd_pri"
-            axapi_version:
-                description:
-                - "Field axapi_version"
-            serial_number:
-                description:
-                - "Field serial_number"
-            up_time:
-                description:
-                - "Field up_time"
-            firmware_version:
-                description:
-                - "Field firmware_version"
-            hd_sec:
-                description:
-                - "Field hd_sec"
-            pri_gui_version:
-                description:
-                - "Field pri_gui_version"
-            copyright:
-                description:
-                - "Field copyright"
-            io_buff_enabled:
-                description:
-                - "Field io_buff_enabled"
-            series_name:
-                description:
-                - "Field series_name"
-            hostname:
-                description:
-                - "Field hostname"
-            cots_sys_ver:
-                description:
-                - "Field cots_sys_ver"
             hw_platform:
                 description:
                 - "Field hw_platform"
-            last_config_saved_time:
+                type: str
+            copyright:
                 description:
-                - "Field last_config_saved_time"
+                - "Field copyright"
+                type: str
             sw_version:
                 description:
                 - "Field sw_version"
-            cf_pri:
-                description:
-                - "Field cf_pri"
-            build_type:
-                description:
-                - "Field build_type"
-            cf_sec:
-                description:
-                - "Field cf_sec"
-            current_time:
-                description:
-                - "Field current_time"
-            nun_ctrl_cpus:
-                description:
-                - "Field nun_ctrl_cpus"
-            sec_gui_version:
-                description:
-                - "Field sec_gui_version"
-            cylance_version:
-                description:
-                - "Field cylance_version"
-            buff_size:
-                description:
-                - "Field buff_size"
-            virtualization_type:
-                description:
-                - "Field virtualization_type"
-            boot_from:
-                description:
-                - "Field boot_from"
+                type: str
             plat_features:
                 description:
                 - "Field plat_features"
+                type: str
+            boot_from:
+                description:
+                - "Field boot_from"
+                type: str
+            serial_number:
+                description:
+                - "Field serial_number"
+                type: str
             aflex_version:
                 description:
                 - "Field aflex_version"
-            cots_sys_name:
+                type: str
+            axapi_version:
                 description:
-                - "Field cots_sys_name"
+                - "Field axapi_version"
+                type: str
+            pri_gui_version:
+                description:
+                - "Field pri_gui_version"
+                type: str
+            sec_gui_version:
+                description:
+                - "Field sec_gui_version"
+                type: str
+            cylance_version:
+                description:
+                - "Field cylance_version"
+                type: str
+            firmware_version:
+                description:
+                - "Field firmware_version"
+                type: str
+            hd_pri:
+                description:
+                - "Field hd_pri"
+                type: str
+            hd_sec:
+                description:
+                - "Field hd_sec"
+                type: str
+            cf_pri:
+                description:
+                - "Field cf_pri"
+                type: str
+            cf_sec:
+                description:
+                - "Field cf_sec"
+                type: str
+            last_config_saved_time:
+                description:
+                - "Field last_config_saved_time"
+                type: str
+            virtualization_type:
+                description:
+                - "Field virtualization_type"
+                type: str
+            sys_poll_mode:
+                description:
+                - "Field sys_poll_mode"
+                type: str
+            hw_code:
+                description:
+                - "Field hw_code"
+                type: str
+            current_time:
+                description:
+                - "Field current_time"
+                type: str
+            up_time:
+                description:
+                - "Field up_time"
+                type: str
+            nun_ctrl_cpus:
+                description:
+                - "Field nun_ctrl_cpus"
+                type: int
+            buff_size:
+                description:
+                - "Field buff_size"
+                type: int
+            io_buff_enabled:
+                description:
+                - "Field io_buff_enabled"
+                type: str
+            build_type:
+                description:
+                - "Field build_type"
+                type: str
             cots_sys_mfg:
                 description:
                 - "Field cots_sys_mfg"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            cots_sys_name:
+                description:
+                - "Field cots_sys_name"
+                type: str
+            cots_sys_ver:
+                description:
+                - "Field cots_sys_ver"
+                type: str
+            series_name:
+                description:
+                - "Field series_name"
+                type: str
+            hostname:
+                description:
+                - "Field hostname"
+                type: str
 
 '''
 
@@ -205,73 +243,37 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'sys_poll_mode': {
-                'type': 'str',
-            },
-            'hw_code': {
-                'type': 'str',
-            },
-            'hd_pri': {
-                'type': 'str',
-            },
-            'axapi_version': {
-                'type': 'str',
-            },
-            'serial_number': {
-                'type': 'str',
-            },
-            'up_time': {
-                'type': 'str',
-            },
-            'firmware_version': {
-                'type': 'str',
-            },
-            'hd_sec': {
-                'type': 'str',
-            },
-            'pri_gui_version': {
+            'hw_platform': {
                 'type': 'str',
             },
             'copyright': {
                 'type': 'str',
             },
-            'io_buff_enabled': {
-                'type': 'str',
-            },
-            'series_name': {
-                'type': 'str',
-            },
-            'hostname': {
-                'type': 'str',
-            },
-            'cots_sys_ver': {
-                'type': 'str',
-            },
-            'hw_platform': {
-                'type': 'str',
-            },
-            'last_config_saved_time': {
-                'type': 'str',
-            },
             'sw_version': {
                 'type': 'str',
             },
-            'cf_pri': {
+            'plat_features': {
                 'type': 'str',
             },
-            'build_type': {
+            'boot_from': {
                 'type': 'str',
             },
-            'cf_sec': {
+            'serial_number': {
                 'type': 'str',
             },
-            'current_time': {
+            'aflex_version': {
                 'type': 'str',
             },
-            'nun_ctrl_cpus': {
-                'type': 'int',
+            'axapi_version': {
+                'type': 'str',
+            },
+            'pri_gui_version': {
+                'type': 'str',
             },
             'sec_gui_version': {
                 'type': 'str',
@@ -279,30 +281,66 @@ def get_argspec():
             'cylance_version': {
                 'type': 'str',
             },
-            'buff_size': {
-                'type': 'int',
+            'firmware_version': {
+                'type': 'str',
+            },
+            'hd_pri': {
+                'type': 'str',
+            },
+            'hd_sec': {
+                'type': 'str',
+            },
+            'cf_pri': {
+                'type': 'str',
+            },
+            'cf_sec': {
+                'type': 'str',
+            },
+            'last_config_saved_time': {
+                'type': 'str',
             },
             'virtualization_type': {
                 'type': 'str',
             },
-            'boot_from': {
+            'sys_poll_mode': {
                 'type': 'str',
             },
-            'plat_features': {
+            'hw_code': {
                 'type': 'str',
             },
-            'aflex_version': {
+            'current_time': {
+                'type': 'str',
+            },
+            'up_time': {
+                'type': 'str',
+            },
+            'nun_ctrl_cpus': {
+                'type': 'int',
+            },
+            'buff_size': {
+                'type': 'int',
+            },
+            'io_buff_enabled': {
+                'type': 'str',
+            },
+            'build_type': {
+                'type': 'str',
+            },
+            'cots_sys_mfg': {
                 'type': 'str',
             },
             'cots_sys_name': {
                 'type': 'str',
             },
-            'cots_sys_mfg': {
+            'cots_sys_ver': {
+                'type': 'str',
+            },
+            'series_name': {
+                'type': 'str',
+            },
+            'hostname': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

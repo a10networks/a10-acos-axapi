@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_template_snmp
 description:
     - Specify SNMP template
-short_description: Configures A10 gslb.template.snmp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,109 +22,135 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    username:
+    snmp_name:
         description:
-        - "Specify username (User name)"
+        - "Specify name of snmp template"
+        type: str
+        required: True
+    version:
+        description:
+        - "'v1'= Version 1; 'v2c'= Version 2c; 'v3'= Version 3;"
+        type: str
         required: False
-    oid:
+    community:
         description:
-        - "Specify OID"
-        required: False
-    priv_proto:
-        description:
-        - "'aes'= AES; 'des'= DES;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    context_name:
-        description:
-        - "Specify context name"
-        required: False
-    auth_key:
-        description:
-        - "Specify authentication key (Specify key)"
-        required: False
-    interval:
-        description:
-        - "Specify interval, default is 3 (Interval, unit= second, default is 3)"
-        required: False
-    context_engine_id:
-        description:
-        - "Specify context engine ID"
+        - "Specify community for version 2c (Community name)"
+        type: str
         required: False
     security_level:
         description:
         - "'no-auth'= No authentication; 'auth-no-priv'= Authentication, but no privacy;
           'auth-priv'= Authentication and privacy;"
+        type: str
         required: False
-    community:
+    oid:
         description:
-        - "Specify community for version 2c (Community name)"
-        required: False
-    auth_proto:
-        description:
-        - "'sha'= SHA; 'md5'= MD5;"
-        required: False
-    host:
-        description:
-        - "Specify host (Host name or ip address)"
-        required: False
-    version:
-        description:
-        - "'v1'= Version 1; 'v2c'= Version 2c; 'v3'= Version 3;"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        - "Specify OID"
+        type: str
         required: False
     interface:
         description:
         - "Specify Interface ID"
+        type: int
+        required: False
+    username:
+        description:
+        - "Specify username (User name)"
+        type: str
+        required: False
+    auth_key:
+        description:
+        - "Specify authentication key (Specify key)"
+        type: str
         required: False
     priv_key:
         description:
         - "Specify privacy key (Specify key)"
+        type: str
         required: False
-    security_engine_id:
+    host:
         description:
-        - "Specify security engine ID"
+        - "Specify host (Host name or ip address)"
+        type: str
         required: False
     port:
         description:
         - "Specify port, default is 161 (Port Number, default is 161)"
+        type: int
         required: False
-    snmp_name:
+    interval:
         description:
-        - "Specify name of snmp template"
-        required: True
+        - "Specify interval, default is 3 (Interval, unit= second, default is 3)"
+        type: int
+        required: False
+    auth_proto:
+        description:
+        - "'sha'= SHA; 'md5'= MD5;"
+        type: str
+        required: False
+    priv_proto:
+        description:
+        - "'aes'= AES; 'des'= DES;"
+        type: str
+        required: False
+    context_name:
+        description:
+        - "Specify context name"
+        type: str
+        required: False
+    context_engine_id:
+        description:
+        - "Specify context engine ID"
+        type: str
+        required: False
+    security_engine_id:
+        description:
+        - "Specify security engine ID"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -197,67 +221,67 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'username': {
+        'snmp_name': {
             'type': 'str',
+            'required': True,
         },
-        'oid': {
+        'version': {
             'type': 'str',
+            'choices': ['v1', 'v2c', 'v3']
         },
-        'priv_proto': {
-            'type': 'str',
-            'choices': ['aes', 'des']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'context_name': {
-            'type': 'str',
-        },
-        'auth_key': {
-            'type': 'str',
-        },
-        'interval': {
-            'type': 'int',
-        },
-        'context_engine_id': {
+        'community': {
             'type': 'str',
         },
         'security_level': {
             'type': 'str',
             'choices': ['no-auth', 'auth-no-priv', 'auth-priv']
         },
-        'community': {
-            'type': 'str',
-        },
-        'auth_proto': {
-            'type': 'str',
-            'choices': ['sha', 'md5']
-        },
-        'host': {
-            'type': 'str',
-        },
-        'version': {
-            'type': 'str',
-            'choices': ['v1', 'v2c', 'v3']
-        },
-        'user_tag': {
+        'oid': {
             'type': 'str',
         },
         'interface': {
             'type': 'int',
         },
+        'username': {
+            'type': 'str',
+        },
+        'auth_key': {
+            'type': 'str',
+        },
         'priv_key': {
             'type': 'str',
         },
-        'security_engine_id': {
+        'host': {
             'type': 'str',
         },
         'port': {
             'type': 'int',
         },
-        'snmp_name': {
+        'interval': {
+            'type': 'int',
+        },
+        'auth_proto': {
             'type': 'str',
-            'required': True,
+            'choices': ['sha', 'md5']
+        },
+        'priv_proto': {
+            'type': 'str',
+            'choices': ['aes', 'des']
+        },
+        'context_name': {
+            'type': 'str',
+        },
+        'context_engine_id': {
+            'type': 'str',
+        },
+        'security_engine_id': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_radius_server
 description:
     - Configure RADIUS server information
-short_description: Configures A10 radius-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,54 +22,67 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     default_privilege_read_write:
         description:
         - "Specify the RADIUS default privilege"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     host:
         description:
         - "Field host"
+        type: dict
         required: False
         suboptions:
             ipv4_list:
                 description:
                 - "Field ipv4_list"
-            name_list:
-                description:
-                - "Field name_list"
+                type: list
             ipv6_list:
                 description:
                 - "Field ipv6_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
+            name_list:
+                description:
+                - "Field name_list"
+                type: list
 
 '''
 
@@ -129,6 +140,9 @@ def get_argspec():
         'default_privilege_read_write': {
             'type': 'bool',
         },
+        'uuid': {
+            'type': 'str',
+        },
         'host': {
             'type': 'dict',
             'ipv4_list': {
@@ -139,8 +153,17 @@ def get_argspec():
                 },
                 'secret': {
                     'type': 'dict',
+                    'secret_value': {
+                        'type': 'str',
+                    },
+                    'encrypted': {
+                        'type': 'str',
+                    },
                     'port_cfg': {
                         'type': 'dict',
+                        'auth_port': {
+                            'type': 'int',
+                        },
                         'acct_port': {
                             'type': 'int',
                         },
@@ -149,16 +172,41 @@ def get_argspec():
                         },
                         'timeout': {
                             'type': 'int',
-                        },
-                        'auth_port': {
-                            'type': 'int',
                         }
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_list': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'secret': {
+                    'type': 'dict',
+                    'secret_value': {
+                        'type': 'str',
                     },
                     'encrypted': {
                         'type': 'str',
                     },
-                    'secret_value': {
-                        'type': 'str',
+                    'port_cfg': {
+                        'type': 'dict',
+                        'auth_port': {
+                            'type': 'int',
+                        },
+                        'acct_port': {
+                            'type': 'int',
+                        },
+                        'retransmit': {
+                            'type': 'int',
+                        },
+                        'timeout': {
+                            'type': 'int',
+                        }
                     }
                 },
                 'uuid': {
@@ -167,44 +215,23 @@ def get_argspec():
             },
             'name_list': {
                 'type': 'list',
-                'secret': {
-                    'type': 'dict',
-                    'port_cfg': {
-                        'type': 'dict',
-                        'acct_port': {
-                            'type': 'int',
-                        },
-                        'retransmit': {
-                            'type': 'int',
-                        },
-                        'timeout': {
-                            'type': 'int',
-                        },
-                        'auth_port': {
-                            'type': 'int',
-                        }
-                    },
-                    'encrypted': {
-                        'type': 'str',
-                    },
-                    'secret_value': {
-                        'type': 'str',
-                    }
-                },
                 'hostname': {
                     'type': 'str',
                     'required': True,
                 },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'ipv6_list': {
-                'type': 'list',
                 'secret': {
                     'type': 'dict',
+                    'secret_value': {
+                        'type': 'str',
+                    },
+                    'encrypted': {
+                        'type': 'str',
+                    },
                     'port_cfg': {
                         'type': 'dict',
+                        'auth_port': {
+                            'type': 'int',
+                        },
                         'acct_port': {
                             'type': 'int',
                         },
@@ -213,29 +240,13 @@ def get_argspec():
                         },
                         'timeout': {
                             'type': 'int',
-                        },
-                        'auth_port': {
-                            'type': 'int',
                         }
-                    },
-                    'encrypted': {
-                        'type': 'str',
-                    },
-                    'secret_value': {
-                        'type': 'str',
                     }
-                },
-                'ipv6_addr': {
-                    'type': 'str',
-                    'required': True,
                 },
                 'uuid': {
                     'type': 'str',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

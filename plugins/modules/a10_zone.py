@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_zone
 description:
     - Security zone
-short_description: Configures A10 zone
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,89 +22,112 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
         - "name of zone object"
+        type: str
         required: True
-    vlan:
+    uuid:
         description:
-        - "Field vlan"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            vlan_list:
-                description:
-                - "Field vlan_list"
-            uuid:
-                description:
-                - "uuid of the object"
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
-    interface:
-        description:
-        - "Field interface"
-        required: False
-        suboptions:
-            tunnel_list:
-                description:
-                - "Field tunnel_list"
-            trunk_list:
-                description:
-                - "Field trunk_list"
-            ve_list:
-                description:
-                - "Field ve_list"
-            ethernet_list:
-                description:
-                - "Field ethernet_list"
-            lif_list:
-                description:
-                - "Field lif_list"
-            uuid:
-                description:
-                - "uuid of the object"
     local_zone_cfg:
         description:
         - "Field local_zone_cfg"
+        type: dict
         required: False
         suboptions:
             local_type:
                 description:
                 - "Set to local zone"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
-    uuid:
+                type: str
+    vlan:
         description:
-        - "uuid of the object"
+        - "Field vlan"
+        type: dict
         required: False
+        suboptions:
+            vlan_list:
+                description:
+                - "Field vlan_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    interface:
+        description:
+        - "Field interface"
+        type: dict
+        required: False
+        suboptions:
+            ethernet_list:
+                description:
+                - "Field ethernet_list"
+                type: list
+            trunk_list:
+                description:
+                - "Field trunk_list"
+                type: list
+            ve_list:
+                description:
+                - "Field ve_list"
+                type: list
+            lif_list:
+                description:
+                - "Field lif_list"
+                type: list
+            tunnel_list:
+                description:
+                - "Field tunnel_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -168,6 +189,21 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'local_zone_cfg': {
+            'type': 'dict',
+            'local_type': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'vlan': {
             'type': 'dict',
             'vlan_list': {
@@ -183,18 +219,15 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'user_tag': {
-            'type': 'str',
-        },
         'interface': {
             'type': 'dict',
-            'tunnel_list': {
+            'ethernet_list': {
                 'type': 'list',
-                'interface_tunnel_end': {
-                    'type': 'int',
+                'interface_ethernet_start': {
+                    'type': 'str',
                 },
-                'interface_tunnel_start': {
-                    'type': 'int',
+                'interface_ethernet_end': {
+                    'type': 'str',
                 }
             },
             'trunk_list': {
@@ -215,39 +248,27 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'ethernet_list': {
-                'type': 'list',
-                'interface_ethernet_end': {
-                    'type': 'str',
-                },
-                'interface_ethernet_start': {
-                    'type': 'str',
-                }
-            },
             'lif_list': {
                 'type': 'list',
-                'interface_lif_end': {
+                'interface_lif_start': {
                     'type': 'int',
                 },
-                'interface_lif_start': {
+                'interface_lif_end': {
+                    'type': 'int',
+                }
+            },
+            'tunnel_list': {
+                'type': 'list',
+                'interface_tunnel_start': {
+                    'type': 'int',
+                },
+                'interface_tunnel_end': {
                     'type': 'int',
                 }
             },
             'uuid': {
                 'type': 'str',
             }
-        },
-        'local_zone_cfg': {
-            'type': 'dict',
-            'local_type': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

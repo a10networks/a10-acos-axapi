@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_inspection_data_file
 description:
     - File Inspection black white list file information and management commands
-short_description: Configures A10 file.inspection.data-file
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,74 +22,91 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
+        required: False
+    ntype:
+        description:
+        - "data file type"
+        type: str
+        required: False
+    name:
+        description:
+        - "data file name"
+        type: str
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
+        required: False
+    source_ip_address:
+        description:
+        - "Source IP address"
+        type: str
+        required: False
+    file_url:
+        description:
+        - "File URL"
+        type: str
+        required: False
+    action:
+        description:
+        - "data file action"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             file_list:
                 description:
                 - "Field file_list"
-    name:
-        description:
-        - "data file name"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
-    source_ip_address:
-        description:
-        - "Source IP address"
-        required: False
-    action:
-        description:
-        - "data file action"
-        required: False
-    ntype:
-        description:
-        - "data file type"
-        required: False
-    file_url:
-        description:
-        - "File URL"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -154,26 +169,8 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
-        'oper': {
-            'type': 'dict',
-            'file_list': {
-                'type': 'list',
-                'status': {
-                    'type': 'str',
-                },
-                'timestamp': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type': 'str',
-                },
-                'name': {
-                    'type': 'str',
-                },
-                'size': {
-                    'type': 'str',
-                }
-            }
+        'ntype': {
+            'type': 'str',
         },
         'name': {
             'type': 'str',
@@ -184,17 +181,35 @@ def get_argspec():
         'source_ip_address': {
             'type': 'str',
         },
-        'action': {
-            'type': 'str',
-        },
-        'ntype': {
-            'type': 'str',
-        },
         'file_url': {
+            'type': 'str',
+        },
+        'action': {
             'type': 'str',
         },
         'uuid': {
             'type': 'str',
+        },
+        'oper': {
+            'type': 'dict',
+            'file_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                },
+                'status': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type': 'str',
+                },
+                'timestamp': {
+                    'type': 'str',
+                },
+                'size': {
+                    'type': 'str',
+                }
+            }
         }
     })
     return rv

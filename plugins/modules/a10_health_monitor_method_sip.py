@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_sip
 description:
     - SIP type
-short_description: Configures A10 health.monitor.method.sip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,58 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    sip:
+        - Key to identify parent object
+        type: str
+        required: True
+    sip:
         description:
         - "SIP type"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     register:
         description:
         - "Send SIP REGISTER message, default is to send OPTION message"
+        type: bool
+        required: False
+    sip_port:
+        description:
+        - "Specify the SIP port, default is 5060 (Port Number)"
+        type: int
         required: False
     expect_response_code:
         description:
         - "Specify accepted response codes (e.g. 200, 400-430, any) (Format is xxx,xxx-
           xxx,any (xxx between [100,899]))"
-        required: False
-    sip_port:
-        description:
-        - "Specify the SIP port, default is 5060 (Port Number)"
+        type: str
         required: False
     sip_tcp:
         description:
         - "Use TCP for transmission, default is UDP"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -137,20 +151,20 @@ def get_argspec():
         'sip': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
         'register': {
             'type': 'bool',
-        },
-        'expect_response_code': {
-            'type': 'str',
         },
         'sip_port': {
             'type': 'int',
         },
+        'expect_response_code': {
+            'type': 'str',
+        },
         'sip_tcp': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

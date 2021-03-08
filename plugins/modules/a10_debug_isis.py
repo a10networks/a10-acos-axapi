@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_isis
 description:
     - Intermediate System - Intermediate System (IS-IS)
-short_description: Configures A10 debug.isis
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,71 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Enable all debugging"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     bfd:
         description:
         - "Bidirectional Forwarding Detection (BFD)"
-        required: False
-    pdu:
-        description:
-        - "IS-IS Protocol Data Unit"
-        required: False
-    nfsm:
-        description:
-        - "IS-IS Neighbor Finite State Machine"
-        required: False
-    nsm:
-        description:
-        - "IS-IS NSM information"
-        required: False
-    lsp:
-        description:
-        - "IS-IS Link State PDU"
+        type: bool
         required: False
     events:
         description:
         - "IS-IS Events"
-        required: False
-    spf:
-        description:
-        - "IS-IS SPF Calculation"
+        type: bool
         required: False
     ifsm:
         description:
         - "IS-IS Interface Finite State Machine"
+        type: bool
+        required: False
+    lsp:
+        description:
+        - "IS-IS Link State PDU"
+        type: bool
+        required: False
+    nfsm:
+        description:
+        - "IS-IS Neighbor Finite State Machine"
+        type: bool
+        required: False
+    nsm:
+        description:
+        - "IS-IS NSM information"
+        type: bool
+        required: False
+    pdu:
+        description:
+        - "IS-IS Protocol Data Unit"
+        type: bool
+        required: False
+    spf:
+        description:
+        - "IS-IS SPF Calculation"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -154,13 +169,16 @@ def get_argspec():
         'all': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
         'bfd': {
             'type': 'bool',
         },
-        'pdu': {
+        'events': {
+            'type': 'bool',
+        },
+        'ifsm': {
+            'type': 'bool',
+        },
+        'lsp': {
             'type': 'bool',
         },
         'nfsm': {
@@ -169,17 +187,14 @@ def get_argspec():
         'nsm': {
             'type': 'bool',
         },
-        'lsp': {
-            'type': 'bool',
-        },
-        'events': {
+        'pdu': {
             'type': 'bool',
         },
         'spf': {
             'type': 'bool',
         },
-        'ifsm': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

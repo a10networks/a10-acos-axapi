@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_persist_source_ip
 description:
     - Source IP persistence
-short_description: Configures A10 slb.template.persist.source-ip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,95 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    netmask6:
-        description:
-        - "IPV6 subnet mask"
-        required: False
-    incl_dst_ip:
-        description:
-        - "Include destination IP on the persist"
-        required: False
-    hash_persist:
-        description:
-        - "Use hash value of source IP address"
+        type: str
         required: False
     name:
         description:
         - "Source IP persistence template name"
+        type: str
         required: True
-    enforce_higher_priority:
-        description:
-        - "Enforce to use high priority node if available"
-        required: False
     dont_honor_conn_rules:
         description:
         - "Do not observe connection rate rules"
+        type: bool
         required: False
-    primary_port:
+    enforce_higher_priority:
         description:
-        - "Primary port to create the persist session"
+        - "Enforce to use high priority node if available"
+        type: bool
         required: False
-    user_tag:
+    hash_persist:
         description:
-        - "Customized tag"
+        - "Use hash value of source IP address"
+        type: bool
         required: False
-    server:
+    incl_dst_ip:
         description:
-        - "Persist to the same server, default is port"
-        required: False
-    service_group:
-        description:
-        - "Persist within the same service group"
-        required: False
-    timeout:
-        description:
-        - "Persistence timeout (in minutes)"
-        required: False
-    scan_all_members:
-        description:
-        - "Persist with SCAN of all members"
-        required: False
-    netmask:
-        description:
-        - "IP subnet mask"
+        - "Include destination IP on the persist"
+        type: bool
         required: False
     incl_sport:
         description:
         - "Include source port on the persist"
+        type: bool
+        required: False
+    timeout:
+        description:
+        - "Persistence timeout (in minutes)"
+        type: int
+        required: False
+    netmask:
+        description:
+        - "IP subnet mask"
+        type: str
+        required: False
+    netmask6:
+        description:
+        - "IPV6 subnet mask"
+        type: int
         required: False
     match_type:
         description:
         - "Persistence type"
+        type: bool
+        required: False
+    server:
+        description:
+        - "Persist to the same server, default is port"
+        type: bool
+        required: False
+    primary_port:
+        description:
+        - "Primary port to create the persist session"
+        type: int
+        required: False
+    service_group:
+        description:
+        - "Persist within the same service group"
+        type: bool
+        required: False
+    scan_all_members:
+        description:
+        - "Persist with SCAN of all members"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -181,53 +202,53 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'netmask6': {
-            'type': 'int',
+        'name': {
+            'type': 'str',
+            'required': True,
         },
-        'incl_dst_ip': {
+        'dont_honor_conn_rules': {
+            'type': 'bool',
+        },
+        'enforce_higher_priority': {
             'type': 'bool',
         },
         'hash_persist': {
             'type': 'bool',
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'enforce_higher_priority': {
+        'incl_dst_ip': {
             'type': 'bool',
         },
-        'dont_honor_conn_rules': {
-            'type': 'bool',
-        },
-        'primary_port': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'server': {
-            'type': 'bool',
-        },
-        'service_group': {
+        'incl_sport': {
             'type': 'bool',
         },
         'timeout': {
             'type': 'int',
         },
-        'scan_all_members': {
-            'type': 'bool',
-        },
         'netmask': {
             'type': 'str',
         },
-        'incl_sport': {
-            'type': 'bool',
+        'netmask6': {
+            'type': 'int',
         },
         'match_type': {
             'type': 'bool',
         },
+        'server': {
+            'type': 'bool',
+        },
+        'primary_port': {
+            'type': 'int',
+        },
+        'service_group': {
+            'type': 'bool',
+        },
+        'scan_all_members': {
+            'type': 'bool',
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_external
 description:
     - EXTERNAL type
-short_description: Configures A10 health.monitor.method.external
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,65 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     external:
         description:
         - "EXTERNAL type"
-        required: False
-    ext_preference:
-        description:
-        - "Get server's perference"
-        required: False
-    ext_arguments:
-        description:
-        - "Specify external application's arguments (Application arguments)"
-        required: False
-    shared_partition_program:
-        description:
-        - "external application from shared partition"
-        required: False
-    ext_port:
-        description:
-        - "Specify the server port (Port Number)"
-        required: False
-    ext_program_shared:
-        description:
-        - "Specify external application (Program name)"
+        type: bool
         required: False
     ext_program:
         description:
         - "Specify external application (Program name)"
+        type: str
+        required: False
+    shared_partition_program:
+        description:
+        - "external application from shared partition"
+        type: bool
+        required: False
+    ext_program_shared:
+        description:
+        - "Specify external application (Program name)"
+        type: str
+        required: False
+    ext_port:
+        description:
+        - "Specify the server port (Port Number)"
+        type: int
+        required: False
+    ext_arguments:
+        description:
+        - "Specify external application's arguments (Application arguments)"
+        type: str
+        required: False
+    ext_preference:
+        description:
+        - "Get server's perference"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -143,28 +159,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'external': {
             'type': 'bool',
         },
-        'ext_preference': {
-            'type': 'bool',
-        },
-        'ext_arguments': {
+        'ext_program': {
             'type': 'str',
         },
         'shared_partition_program': {
             'type': 'bool',
         },
-        'ext_port': {
-            'type': 'int',
-        },
         'ext_program_shared': {
             'type': 'str',
         },
-        'ext_program': {
+        'ext_port': {
+            'type': 'int',
+        },
+        'ext_arguments': {
+            'type': 'str',
+        },
+        'ext_preference': {
+            'type': 'bool',
+        },
+        'uuid': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_encapsulation_domain
 description:
     - MAP Encapsulation domain
-short_description: Configures A10 cgnv6.map.encapsulation.domain
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,105 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            interface_not_configured:
-                description:
-                - "Interfaces not Configured Dropped"
-            inbound_packet_received:
-                description:
-                - "Inbound IPv4 Packets Received"
-            name:
-                description:
-                - "MAP-E domain name"
-            outbound_dest_unreachable:
-                description:
-                - "Outbound IPv4 Destination Address Unreachable"
-            outbound_packet_received:
-                description:
-                - "Outbound IPv6 Packets Received"
-            inbound_dest_unreachable:
-                description:
-                - "Inbound IPv6 Destination Address Unreachable"
-            inbound_rev_lookup_failed:
-                description:
-                - "Inbound IPv4 Reverse Route Lookup Failed"
-            bmr_prefixrules_configured:
-                description:
-                - "BMR prefix rules configured"
-            outbound_frag_packet_received:
-                description:
-                - "Outbound IPv6 Fragment Packets Received"
-            outbound_addr_validation_failed:
-                description:
-                - "Outbound IPv6 Source Address Validation Failed"
-            packet_mtu_exceeded:
-                description:
-                - "Packet Exceeded MTU"
-            inbound_addr_port_validation_failed:
-                description:
-                - "Inbound IPv4 Destination Address Port Validation Failed"
-            frag_icmp_sent:
-                description:
-                - "ICMP Packet Too Big Sent"
-            inbound_frag_packet_received:
-                description:
-                - "Inbound IPv4 Fragment Packets Received"
-            outbound_rev_lookup_failed:
-                description:
-                - "Outbound IPv6 Reverse Route Lookup Failed"
-    description:
-        description:
-        - "MAP-E domain description"
-        required: False
-    format:
-        description:
-        - "'draft-03'= Construct IPv6 Interface Identifier according to draft-03;"
-        required: False
-    tunnel_endpoint_address:
-        description:
-        - "Tunnel Endpoint Address for MAP-E domain"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        type: str
         required: False
     name:
         description:
         - "MAP-E domain name"
+        type: str
         required: True
+    description:
+        description:
+        - "MAP-E domain description"
+        type: str
+        required: False
+    format:
+        description:
+        - "'draft-03'= Construct IPv6 Interface Identifier according to draft-03;"
+        type: str
+        required: False
+    tunnel_endpoint_address:
+        description:
+        - "Tunnel Endpoint Address for MAP-E domain"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -141,28 +107,35 @@ options:
           Packet Too Big Sent; 'interface_not_configured'= Interfaces not Configured
           Dropped; 'bmr_prefixrules_configured'= BMR prefix rules configured;
           'helper_count'= Helper Count; 'active_dhcpv6_leases'= Active DHCPv6 leases;"
+                type: str
     health_check_gateway:
         description:
         - "Field health_check_gateway"
+        type: dict
         required: False
         suboptions:
-            ipv6_address_list:
-                description:
-                - "Field ipv6_address_list"
             address_list:
                 description:
                 - "Field address_list"
+                type: list
+            ipv6_address_list:
+                description:
+                - "Field ipv6_address_list"
+                type: list
             withdraw_route:
                 description:
                 - "'all-link-failure'= Withdraw routes on health-check failure of all IPv4
           gateways or all IPv6 gateways; 'any-link-failure'= Withdraw routes on health-
           check failure of any gateway (default);"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
     basic_mapping_rule:
         description:
         - "Field basic_mapping_rule"
+        type: dict
         required: False
         suboptions:
             rule_ipv4_address_port_settings:
@@ -170,25 +143,93 @@ options:
                 - "'prefix-addr'= Each CE is assigned an IPv4 prefix; 'single-addr'= Each CE is
           assigned an IPv4 address; 'shared-addr'= Each CE is assigned a shared IPv4
           address;"
-            port_start:
-                description:
-                - "Starting Port, Must be Power of 2 value"
-            uuid:
-                description:
-                - "uuid of the object"
-            share_ratio:
-                description:
-                - "Port sharing ratio for each NAT IP. Must be Power of 2 value"
-            prefix_rule_list:
-                description:
-                - "Field prefix_rule_list"
+                type: str
             ea_length:
                 description:
                 - "Length of Embedded Address (EA) bits"
-    uuid:
+                type: int
+            share_ratio:
+                description:
+                - "Port sharing ratio for each NAT IP. Must be Power of 2 value"
+                type: int
+            port_start:
+                description:
+                - "Starting Port, Must be Power of 2 value"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            prefix_rule_list:
+                description:
+                - "Field prefix_rule_list"
+                type: list
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            inbound_packet_received:
+                description:
+                - "Inbound IPv4 Packets Received"
+                type: str
+            inbound_frag_packet_received:
+                description:
+                - "Inbound IPv4 Fragment Packets Received"
+                type: str
+            inbound_addr_port_validation_failed:
+                description:
+                - "Inbound IPv4 Destination Address Port Validation Failed"
+                type: str
+            inbound_rev_lookup_failed:
+                description:
+                - "Inbound IPv4 Reverse Route Lookup Failed"
+                type: str
+            inbound_dest_unreachable:
+                description:
+                - "Inbound IPv6 Destination Address Unreachable"
+                type: str
+            outbound_packet_received:
+                description:
+                - "Outbound IPv6 Packets Received"
+                type: str
+            outbound_frag_packet_received:
+                description:
+                - "Outbound IPv6 Fragment Packets Received"
+                type: str
+            outbound_addr_validation_failed:
+                description:
+                - "Outbound IPv6 Source Address Validation Failed"
+                type: str
+            outbound_rev_lookup_failed:
+                description:
+                - "Outbound IPv6 Reverse Route Lookup Failed"
+                type: str
+            outbound_dest_unreachable:
+                description:
+                - "Outbound IPv4 Destination Address Unreachable"
+                type: str
+            packet_mtu_exceeded:
+                description:
+                - "Packet Exceeded MTU"
+                type: str
+            frag_icmp_sent:
+                description:
+                - "ICMP Packet Too Big Sent"
+                type: str
+            interface_not_configured:
+                description:
+                - "Interfaces not Configured Dropped"
+                type: str
+            bmr_prefixrules_configured:
+                description:
+                - "BMR prefix rules configured"
+                type: str
+            name:
+                description:
+                - "MAP-E domain name"
+                type: str
 
 '''
 
@@ -250,54 +291,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'stats': {
-            'type': 'dict',
-            'interface_not_configured': {
-                'type': 'str',
-            },
-            'inbound_packet_received': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'outbound_dest_unreachable': {
-                'type': 'str',
-            },
-            'outbound_packet_received': {
-                'type': 'str',
-            },
-            'inbound_dest_unreachable': {
-                'type': 'str',
-            },
-            'inbound_rev_lookup_failed': {
-                'type': 'str',
-            },
-            'bmr_prefixrules_configured': {
-                'type': 'str',
-            },
-            'outbound_frag_packet_received': {
-                'type': 'str',
-            },
-            'outbound_addr_validation_failed': {
-                'type': 'str',
-            },
-            'packet_mtu_exceeded': {
-                'type': 'str',
-            },
-            'inbound_addr_port_validation_failed': {
-                'type': 'str',
-            },
-            'frag_icmp_sent': {
-                'type': 'str',
-            },
-            'inbound_frag_packet_received': {
-                'type': 'str',
-            },
-            'outbound_rev_lookup_failed': {
-                'type': 'str',
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
         },
         'description': {
             'type': 'str',
@@ -309,12 +305,11 @@ def get_argspec():
         'tunnel_endpoint_address': {
             'type': 'str',
         },
-        'user_tag': {
+        'uuid': {
             'type': 'str',
         },
-        'name': {
+        'user_tag': {
             'type': 'str',
-            'required': True,
         },
         'sampling_enable': {
             'type': 'list',
@@ -338,15 +333,15 @@ def get_argspec():
         },
         'health_check_gateway': {
             'type': 'dict',
-            'ipv6_address_list': {
-                'type': 'list',
-                'ipv6_gateway': {
-                    'type': 'str',
-                }
-            },
             'address_list': {
                 'type': 'list',
                 'ipv4_gateway': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_address_list': {
+                'type': 'list',
+                'ipv6_gateway': {
                     'type': 'str',
                 }
             },
@@ -364,56 +359,102 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['prefix-addr', 'single-addr', 'shared-addr']
             },
+            'ea_length': {
+                'type': 'int',
+            },
+            'share_ratio': {
+                'type': 'int',
+            },
             'port_start': {
                 'type': 'int',
             },
             'uuid': {
                 'type': 'str',
             },
-            'share_ratio': {
-                'type': 'int',
-            },
             'prefix_rule_list': {
                 'type': 'list',
-                'port_start': {
-                    'type': 'int',
-                },
                 'name': {
                     'type': 'str',
                     'required': True,
                 },
-                'ipv4_address_port_settings': {
-                    'type': 'str',
-                    'choices': ['prefix-addr', 'single-addr', 'shared-addr']
-                },
-                'ipv4_netmask': {
+                'rule_ipv6_prefix': {
                     'type': 'str',
                 },
                 'rule_ipv4_prefix': {
                     'type': 'str',
                 },
-                'user_tag': {
+                'ipv4_netmask': {
                     'type': 'str',
                 },
-                'share_ratio': {
-                    'type': 'int',
-                },
-                'rule_ipv6_prefix': {
+                'ipv4_address_port_settings': {
                     'type': 'str',
+                    'choices': ['prefix-addr', 'single-addr', 'shared-addr']
                 },
                 'ea_length': {
                     'type': 'int',
                 },
+                'share_ratio': {
+                    'type': 'int',
+                },
+                'port_start': {
+                    'type': 'int',
+                },
                 'uuid': {
                     'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
                 }
-            },
-            'ea_length': {
-                'type': 'int',
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'inbound_packet_received': {
+                'type': 'str',
+            },
+            'inbound_frag_packet_received': {
+                'type': 'str',
+            },
+            'inbound_addr_port_validation_failed': {
+                'type': 'str',
+            },
+            'inbound_rev_lookup_failed': {
+                'type': 'str',
+            },
+            'inbound_dest_unreachable': {
+                'type': 'str',
+            },
+            'outbound_packet_received': {
+                'type': 'str',
+            },
+            'outbound_frag_packet_received': {
+                'type': 'str',
+            },
+            'outbound_addr_validation_failed': {
+                'type': 'str',
+            },
+            'outbound_rev_lookup_failed': {
+                'type': 'str',
+            },
+            'outbound_dest_unreachable': {
+                'type': 'str',
+            },
+            'packet_mtu_exceeded': {
+                'type': 'str',
+            },
+            'frag_icmp_sent': {
+                'type': 'str',
+            },
+            'interface_not_configured': {
+                'type': 'str',
+            },
+            'bmr_prefixrules_configured': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

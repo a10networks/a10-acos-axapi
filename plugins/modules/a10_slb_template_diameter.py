@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_diameter
 description:
     - diameter template
-short_description: Configures A10 slb.template.diameter
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,150 +22,187 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    avp_string:
-        description:
-        - "pattern to be matched in the avp string name, max length 127 bytes"
-        required: False
-    terminate_on_cca_t:
-        description:
-        - "remove diameter session when receiving CCA-T message"
-        required: False
-    message_code_list:
-        description:
-        - "Field message_code_list"
-        required: False
-        suboptions:
-            message_code:
-                description:
-                - "Field message_code"
-    avp_list:
-        description:
-        - "Field avp_list"
-        required: False
-        suboptions:
-            int32:
-                description:
-                - "32 bits integer"
-            avp:
-                description:
-                - "customize avps for cer to the server (avp number)"
-            mandatory:
-                description:
-                - "mandatory avp"
-            string:
-                description:
-                - "String (string name, max length 127 bytes)"
-            int64:
-                description:
-                - "64 bits integer"
-    service_group_name:
-        description:
-        - "service group name, this is the service group that the message needs to be
-          copied to"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    idle_timeout:
-        description:
-        - "user sesison idle timeout (in minutes, default is 5)"
-        required: False
-    customize_cea:
-        description:
-        - "customizing cea response"
-        required: False
-    product_name:
-        description:
-        - "product name avp"
-        required: False
-    dwr_up_retry:
-        description:
-        - "number of successful dwr health-check before declaring target up"
-        required: False
-    forward_unknown_session_id:
-        description:
-        - "Forward server message even it has unknown session id"
-        required: False
-    avp_code:
-        description:
-        - "avp code"
-        required: False
-    vendor_id:
-        description:
-        - "vendor-id avp (Vendor Id)"
-        required: False
-    session_age:
-        description:
-        - "user session age allowed (default 10), this is not idle-time (in minutes)"
-        required: False
-    load_balance_on_session_id:
-        description:
-        - "Load balance based on the session id"
+        type: str
         required: False
     name:
         description:
         - "diameter template Name"
+        type: str
         required: True
+    customize_cea:
+        description:
+        - "customizing cea response"
+        type: bool
+        required: False
+    avp_code:
+        description:
+        - "avp code"
+        type: int
+        required: False
+    avp_string:
+        description:
+        - "pattern to be matched in the avp string name, max length 127 bytes"
+        type: str
+        required: False
+    service_group_name:
+        description:
+        - "service group name, this is the service group that the message needs to be
+          copied to"
+        type: str
+        required: False
     dwr_time:
         description:
         - "dwr health-check timer interval (in 100 milli second unit, default is 100, 0
           means unset this option)"
+        type: int
         required: False
-    user_tag:
+    idle_timeout:
         description:
-        - "Customized tag"
+        - "user sesison idle timeout (in minutes, default is 5)"
+        type: int
+        required: False
+    multiple_origin_host:
+        description:
+        - "allowing multiple origin-host to a single server"
+        type: bool
         required: False
     origin_realm:
         description:
         - "origin-realm name avp"
+        type: str
         required: False
-    origin_host:
+    product_name:
         description:
-        - "Field origin_host"
+        - "product name avp"
+        type: str
         required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            origin_host_name:
-                description:
-                - "origin-host name avp"
-    multiple_origin_host:
+    vendor_id:
         description:
-        - "allowing multiple origin-host to a single server"
+        - "vendor-id avp (Vendor Id)"
+        type: int
+        required: False
+    session_age:
+        description:
+        - "user session age allowed (default 10), this is not idle-time (in minutes)"
+        type: int
+        required: False
+    dwr_up_retry:
+        description:
+        - "number of successful dwr health-check before declaring target up"
+        type: int
+        required: False
+    terminate_on_cca_t:
+        description:
+        - "remove diameter session when receiving CCA-T message"
+        type: bool
+        required: False
+    forward_unknown_session_id:
+        description:
+        - "Forward server message even it has unknown session id"
+        type: bool
         required: False
     forward_to_latest_server:
         description:
         - "Forward client message to the latest server that sends message with the same
           session id"
+        type: bool
         required: False
+    load_balance_on_session_id:
+        description:
+        - "Load balance based on the session id"
+        type: bool
+        required: False
+    message_code_list:
+        description:
+        - "Field message_code_list"
+        type: list
+        required: False
+        suboptions:
+            message_code:
+                description:
+                - "Field message_code"
+                type: int
+    avp_list:
+        description:
+        - "Field avp_list"
+        type: list
+        required: False
+        suboptions:
+            avp:
+                description:
+                - "customize avps for cer to the server (avp number)"
+                type: int
+            int32:
+                description:
+                - "32 bits integer"
+                type: int
+            int64:
+                description:
+                - "64 bits integer"
+                type: int
+            string:
+                description:
+                - "String (string name, max length 127 bytes)"
+                type: str
+            mandatory:
+                description:
+                - "mandatory avp"
+                type: bool
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    origin_host:
+        description:
+        - "Field origin_host"
+        type: dict
+        required: False
+        suboptions:
+            origin_host_name:
+                description:
+                - "origin-host name avp"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -241,10 +276,56 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'customize_cea': {
+            'type': 'bool',
+        },
+        'avp_code': {
+            'type': 'int',
+        },
         'avp_string': {
             'type': 'str',
         },
+        'service_group_name': {
+            'type': 'str',
+        },
+        'dwr_time': {
+            'type': 'int',
+        },
+        'idle_timeout': {
+            'type': 'int',
+        },
+        'multiple_origin_host': {
+            'type': 'bool',
+        },
+        'origin_realm': {
+            'type': 'str',
+        },
+        'product_name': {
+            'type': 'str',
+        },
+        'vendor_id': {
+            'type': 'int',
+        },
+        'session_age': {
+            'type': 'int',
+        },
+        'dwr_up_retry': {
+            'type': 'int',
+        },
         'terminate_on_cca_t': {
+            'type': 'bool',
+        },
+        'forward_unknown_session_id': {
+            'type': 'bool',
+        },
+        'forward_to_latest_server': {
+            'type': 'bool',
+        },
+        'load_balance_on_session_id': {
             'type': 'bool',
         },
         'message_code_list': {
@@ -255,82 +336,36 @@ def get_argspec():
         },
         'avp_list': {
             'type': 'list',
-            'int32': {
-                'type': 'int',
-            },
             'avp': {
                 'type': 'int',
             },
-            'mandatory': {
-                'type': 'bool',
+            'int32': {
+                'type': 'int',
+            },
+            'int64': {
+                'type': 'int',
             },
             'string': {
                 'type': 'str',
             },
-            'int64': {
-                'type': 'int',
+            'mandatory': {
+                'type': 'bool',
             }
-        },
-        'service_group_name': {
-            'type': 'str',
         },
         'uuid': {
             'type': 'str',
         },
-        'idle_timeout': {
-            'type': 'int',
-        },
-        'customize_cea': {
-            'type': 'bool',
-        },
-        'product_name': {
-            'type': 'str',
-        },
-        'dwr_up_retry': {
-            'type': 'int',
-        },
-        'forward_unknown_session_id': {
-            'type': 'bool',
-        },
-        'avp_code': {
-            'type': 'int',
-        },
-        'vendor_id': {
-            'type': 'int',
-        },
-        'session_age': {
-            'type': 'int',
-        },
-        'load_balance_on_session_id': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'dwr_time': {
-            'type': 'int',
-        },
         'user_tag': {
-            'type': 'str',
-        },
-        'origin_realm': {
             'type': 'str',
         },
         'origin_host': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
             'origin_host_name': {
                 'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'multiple_origin_host': {
-            'type': 'bool',
-        },
-        'forward_to_latest_server': {
-            'type': 'bool',
         }
     })
     return rv

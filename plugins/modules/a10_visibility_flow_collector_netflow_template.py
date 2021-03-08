@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_flow_collector_netflow_template
 description:
     - NetFlow/IPFIX collector templates
-short_description: Configures A10 visibility.flow.collector.netflow.template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            nf_template_list:
-                description:
-                - "Field nf_template_list"
-            detail:
-                description:
-                - "Field detail"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -71,29 +71,45 @@ options:
                 - "'all'= all; 'templates-added-to-delq'= Netflow templates added to the delete
           queue; 'templates-removed-from-delq'= Netflow templates removed from the delete
           queue;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            templates_removed_from_delq:
-                description:
-                - "Netflow templates removed from the delete queue"
-            templates_added_to_delq:
-                description:
-                - "Netflow templates added to the delete queue"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
     detail:
         description:
         - "Field detail"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            nf_template_list:
+                description:
+                - "Field nf_template_list"
+                type: list
+            detail:
+                description:
+                - "Field detail"
+                type: dict
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            templates_added_to_delq:
+                description:
+                - "Netflow templates added to the delete queue"
+                type: str
+            templates_removed_from_delq:
+                description:
+                - "Netflow templates removed from the delete queue"
+                type: str
 
 '''
 
@@ -150,77 +166,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'nf_template_list': {
-                'type': 'list',
-                'nflow_version': {
-                    'type': 'int',
-                },
-                'template_id': {
-                    'type': 'int',
-                },
-                'exporter_address': {
-                    'type': 'str',
-                },
-                'partition_id': {
-                    'type': 'int',
-                },
-                'observation_domain_id': {
-                    'type': 'int',
-                },
-                'seconds_to_expire': {
-                    'type': 'int',
-                },
-                'field_count': {
-                    'type': 'int',
-                }
-            },
-            'detail': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'nf_template_list': {
-                        'type': 'list',
-                        'nflow_version': {
-                            'type': 'int',
-                        },
-                        'template_id': {
-                            'type': 'int',
-                        },
-                        'exporter_address': {
-                            'type': 'str',
-                        },
-                        'template_field_list': {
-                            'type': 'list',
-                            'length': {
-                                'type': 'int',
-                            },
-                            'id': {
-                                'type': 'int',
-                            },
-                            'enterprise_field': {
-                                'type': 'str',
-                            },
-                            'variable_length': {
-                                'type': 'str',
-                            }
-                        },
-                        'partition_id': {
-                            'type': 'int',
-                        },
-                        'observation_domain_id': {
-                            'type': 'int',
-                        },
-                        'seconds_to_expire': {
-                            'type': 'int',
-                        },
-                        'field_count': {
-                            'type': 'int',
-                        }
-                    }
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -233,21 +180,90 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'templates_removed_from_delq': {
-                'type': 'str',
-            },
-            'templates_added_to_delq': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'detail': {
             'type': 'dict',
             'uuid': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'nf_template_list': {
+                'type': 'list',
+                'exporter_address': {
+                    'type': 'str',
+                },
+                'observation_domain_id': {
+                    'type': 'int',
+                },
+                'template_id': {
+                    'type': 'int',
+                },
+                'nflow_version': {
+                    'type': 'int',
+                },
+                'field_count': {
+                    'type': 'int',
+                },
+                'seconds_to_expire': {
+                    'type': 'int',
+                },
+                'partition_id': {
+                    'type': 'int',
+                }
+            },
+            'detail': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'nf_template_list': {
+                        'type': 'list',
+                        'exporter_address': {
+                            'type': 'str',
+                        },
+                        'observation_domain_id': {
+                            'type': 'int',
+                        },
+                        'template_id': {
+                            'type': 'int',
+                        },
+                        'nflow_version': {
+                            'type': 'int',
+                        },
+                        'field_count': {
+                            'type': 'int',
+                        },
+                        'seconds_to_expire': {
+                            'type': 'int',
+                        },
+                        'partition_id': {
+                            'type': 'int',
+                        },
+                        'template_field_list': {
+                            'type': 'list',
+                            'id': {
+                                'type': 'int',
+                            },
+                            'length': {
+                                'type': 'int',
+                            },
+                            'enterprise_field': {
+                                'type': 'str',
+                            },
+                            'variable_length': {
+                                'type': 'str',
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'templates_added_to_delq': {
+                'type': 'str',
+            },
+            'templates_removed_from_delq': {
                 'type': 'str',
             }
         }

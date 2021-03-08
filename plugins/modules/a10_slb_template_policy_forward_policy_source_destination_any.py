@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_source_destination_any
 description:
     - Default destination match rule
-short_description: Configures A10 slb.template.policy.forward.policy.source.destination.any
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,60 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
-        - Key to identify parent object    policy_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    policy_name:
         description:
-        - Key to identify parent object    action:
+        - Key to identify parent object
+        type: str
+        required: True
+    action:
         description:
         - "Action to be performed"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Number of requests matching this destination rule;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             hits:
                 description:
                 - "Number of requests matching this destination rule"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -136,6 +153,9 @@ def get_argspec():
         'action': {
             'type': 'str',
         },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -148,9 +168,6 @@ def get_argspec():
             'hits': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

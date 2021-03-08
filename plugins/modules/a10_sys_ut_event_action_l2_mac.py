@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_event_action_l2_mac
 description:
     - Mac Address
-short_description: Configures A10 sys-ut.event.action.l2.mac
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,71 +22,93 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     action_direction:
         description:
-        - Key to identify parent object    event_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    event_number:
         description:
-        - Key to identify parent object    ethernet:
-        description:
-        - "Ethernet interface"
-        required: False
-    ve:
-        description:
-        - "Virtual Ethernet interface"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     src_dst:
         description:
         - "'dest'= dest; 'src'= src;"
+        type: str
         required: True
     address_type:
         description:
         - "'broadcast'= broadcast; 'multicast'= multicast;"
-        required: False
-    nat_pool:
-        description:
-        - "Nat pool"
-        required: False
-    value:
-        description:
-        - "Mac Address"
-        required: False
-    trunk:
-        description:
-        - "Trunk number"
+        type: str
         required: False
     virtual_server:
         description:
         - "vip"
+        type: str
+        required: False
+    nat_pool:
+        description:
+        - "Nat pool"
+        type: str
+        required: False
+    ethernet:
+        description:
+        - "Ethernet interface"
+        type: str
+        required: False
+    ve:
+        description:
+        - "Virtual Ethernet interface"
+        type: str
+        required: False
+    trunk:
+        description:
+        - "Trunk number"
+        type: str
+        required: False
+    value:
+        description:
+        - "Mac Address"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -150,12 +170,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ethernet': {
-            'type': 'str',
-        },
-        've': {
-            'type': 'str',
-        },
         'src_dst': {
             'type': 'str',
             'required': True,
@@ -165,16 +179,22 @@ def get_argspec():
             'type': 'str',
             'choices': ['broadcast', 'multicast']
         },
+        'virtual_server': {
+            'type': 'str',
+        },
         'nat_pool': {
             'type': 'str',
         },
-        'value': {
+        'ethernet': {
+            'type': 'str',
+        },
+        've': {
             'type': 'str',
         },
         'trunk': {
             'type': 'str',
         },
-        'virtual_server': {
+        'value': {
             'type': 'str',
         },
         'uuid': {

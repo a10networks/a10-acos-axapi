@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_loopback_isis
 description:
     - ISIS
-short_description: Configures A10 interface.loopback.isis
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,187 +22,236 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     loopback_ifnum:
         description:
-        - Key to identify parent object    priority_list:
-        description:
-        - "Field priority_list"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "Set priority for Designated Router election (Priority value)"
-            level:
-                description:
-                - "'level-1'= Specify priority for level-1 routing; 'level-2'= Specify priority
-          for level-2 routing;"
-    padding:
-        description:
-        - "Add padding to IS-IS hello packets"
-        required: False
-    hello_interval_minimal_list:
-        description:
-        - "Field hello_interval_minimal_list"
-        required: False
-        suboptions:
-            hello_interval_minimal:
-                description:
-                - "Set Hello holdtime 1 second, interval depends on multiplier"
-            level:
-                description:
-                - "'level-1'= Specify hello-interval for level-1 IIHs; 'level-2'= Specify hello-
-          interval for level-2 IIHs;"
-    mesh_group:
-        description:
-        - "Field mesh_group"
-        required: False
-        suboptions:
-            value:
-                description:
-                - "Mesh group number"
-            blocked:
-                description:
-                - "Block LSPs on this interface"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     authentication:
         description:
         - "Field authentication"
+        type: dict
         required: False
         suboptions:
             send_only_list:
                 description:
                 - "Field send_only_list"
+                type: list
             mode_list:
                 description:
                 - "Field mode_list"
+                type: list
             key_chain_list:
                 description:
                 - "Field key_chain_list"
+                type: list
+    bfd_cfg:
+        description:
+        - "Field bfd_cfg"
+        type: dict
+        required: False
+        suboptions:
+            bfd:
+                description:
+                - "Bidirectional Forwarding Detection (BFD)"
+                type: bool
+            disable:
+                description:
+                - "Disable BFD"
+                type: bool
+    circuit_type:
+        description:
+        - "'level-1'= Level-1 only adjacencies are formed; 'level-1-2'= Level-1-2
+          adjacencies are formed; 'level-2-only'= Level-2 only adjacencies are formed;"
+        type: str
+        required: False
     csnp_interval_list:
         description:
         - "Field csnp_interval_list"
+        type: list
         required: False
         suboptions:
             csnp_interval:
                 description:
                 - "Set CSNP interval in seconds (CSNP interval value)"
+                type: int
             level:
                 description:
                 - "'level-1'= Speficy interval for level-1 CSNPs; 'level-2'= Specify interval for
           level-2 CSNPs;"
-    retransmit_interval:
+                type: str
+    padding:
         description:
-        - "Set per-LSP retransmission interval (Interval between retransmissions of the
-          same LSP (seconds))"
+        - "Add padding to IS-IS hello packets"
+        type: bool
         required: False
-    password_list:
-        description:
-        - "Field password_list"
-        required: False
-        suboptions:
-            password:
-                description:
-                - "Configure the authentication password for interface"
-            level:
-                description:
-                - "'level-1'= Specify password for level-1 PDUs; 'level-2'= Specify password for
-          level-2 PDUs;"
-    bfd_cfg:
-        description:
-        - "Field bfd_cfg"
-        required: False
-        suboptions:
-            disable:
-                description:
-                - "Disable BFD"
-            bfd:
-                description:
-                - "Bidirectional Forwarding Detection (BFD)"
-    wide_metric_list:
-        description:
-        - "Field wide_metric_list"
-        required: False
-        suboptions:
-            wide_metric:
-                description:
-                - "Configure the wide metric for interface"
-            level:
-                description:
-                - "'level-1'= Apply metric to level-1 links; 'level-2'= Apply metric to level-2
-          links;"
     hello_interval_list:
         description:
         - "Field hello_interval_list"
+        type: list
         required: False
         suboptions:
             hello_interval:
                 description:
                 - "Set Hello interval in seconds (Hello interval value)"
+                type: int
             level:
                 description:
                 - "'level-1'= Specify hello-interval for level-1 IIHs; 'level-2'= Specify hello-
           interval for level-2 IIHs;"
-    circuit_type:
+                type: str
+    hello_interval_minimal_list:
         description:
-        - "'level-1'= Level-1 only adjacencies are formed; 'level-1-2'= Level-1-2
-          adjacencies are formed; 'level-2-only'= Level-2 only adjacencies are formed;"
+        - "Field hello_interval_minimal_list"
+        type: list
         required: False
+        suboptions:
+            hello_interval_minimal:
+                description:
+                - "Set Hello holdtime 1 second, interval depends on multiplier"
+                type: bool
+            level:
+                description:
+                - "'level-1'= Specify hello-interval for level-1 IIHs; 'level-2'= Specify hello-
+          interval for level-2 IIHs;"
+                type: str
     hello_multiplier_list:
         description:
         - "Field hello_multiplier_list"
+        type: list
         required: False
         suboptions:
             hello_multiplier:
                 description:
                 - "Set multiplier for Hello holding time (Hello multiplier value)"
+                type: int
             level:
                 description:
                 - "'level-1'= Specify hello multiplier for level-1 IIHs; 'level-2'= Specify hello
           multiplier for level-2 IIHs;"
+                type: str
+    lsp_interval:
+        description:
+        - "Set LSP transmission interval (LSP transmission interval (milliseconds))"
+        type: int
+        required: False
+    mesh_group:
+        description:
+        - "Field mesh_group"
+        type: dict
+        required: False
+        suboptions:
+            value:
+                description:
+                - "Mesh group number"
+                type: int
+            blocked:
+                description:
+                - "Block LSPs on this interface"
+                type: bool
     metric_list:
         description:
         - "Field metric_list"
+        type: list
         required: False
         suboptions:
             metric:
                 description:
                 - "Configure the metric for interface (Default metric)"
+                type: int
             level:
                 description:
                 - "'level-1'= Apply metric to level-1 links; 'level-2'= Apply metric to level-2
           links;"
-    lsp_interval:
+                type: str
+    password_list:
         description:
-        - "Set LSP transmission interval (LSP transmission interval (milliseconds))"
+        - "Field password_list"
+        type: list
+        required: False
+        suboptions:
+            password:
+                description:
+                - "Configure the authentication password for interface"
+                type: str
+            level:
+                description:
+                - "'level-1'= Specify password for level-1 PDUs; 'level-2'= Specify password for
+          level-2 PDUs;"
+                type: str
+    priority_list:
+        description:
+        - "Field priority_list"
+        type: list
+        required: False
+        suboptions:
+            priority:
+                description:
+                - "Set priority for Designated Router election (Priority value)"
+                type: int
+            level:
+                description:
+                - "'level-1'= Specify priority for level-1 routing; 'level-2'= Specify priority
+          for level-2 routing;"
+                type: str
+    retransmit_interval:
+        description:
+        - "Set per-LSP retransmission interval (Interval between retransmissions of the
+          same LSP (seconds))"
+        type: int
+        required: False
+    wide_metric_list:
+        description:
+        - "Field wide_metric_list"
+        type: list
+        required: False
+        suboptions:
+            wide_metric:
+                description:
+                - "Configure the wide metric for interface"
+                type: int
+            level:
+                description:
+                - "'level-1'= Apply metric to level-1 links; 'level-2'= Apply metric to level-2
+          links;"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -273,41 +320,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'priority_list': {
-            'type': 'list',
-            'priority': {
-                'type': 'int',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-2']
-            }
-        },
-        'padding': {
-            'type': 'bool',
-        },
-        'hello_interval_minimal_list': {
-            'type': 'list',
-            'hello_interval_minimal': {
-                'type': 'bool',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-2']
-            }
-        },
-        'mesh_group': {
-            'type': 'dict',
-            'value': {
-                'type': 'int',
-            },
-            'blocked': {
-                'type': 'bool',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'authentication': {
             'type': 'dict',
             'send_only_list': {
@@ -342,6 +354,19 @@ def get_argspec():
                 }
             }
         },
+        'bfd_cfg': {
+            'type': 'dict',
+            'bfd': {
+                'type': 'bool',
+            },
+            'disable': {
+                'type': 'bool',
+            }
+        },
+        'circuit_type': {
+            'type': 'str',
+            'choices': ['level-1', 'level-1-2', 'level-2-only']
+        },
         'csnp_interval_list': {
             'type': 'list',
             'csnp_interval': {
@@ -352,37 +377,8 @@ def get_argspec():
                 'choices': ['level-1', 'level-2']
             }
         },
-        'retransmit_interval': {
-            'type': 'int',
-        },
-        'password_list': {
-            'type': 'list',
-            'password': {
-                'type': 'str',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-2']
-            }
-        },
-        'bfd_cfg': {
-            'type': 'dict',
-            'disable': {
-                'type': 'bool',
-            },
-            'bfd': {
-                'type': 'bool',
-            }
-        },
-        'wide_metric_list': {
-            'type': 'list',
-            'wide_metric': {
-                'type': 'int',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-2']
-            }
+        'padding': {
+            'type': 'bool',
         },
         'hello_interval_list': {
             'type': 'list',
@@ -394,9 +390,15 @@ def get_argspec():
                 'choices': ['level-1', 'level-2']
             }
         },
-        'circuit_type': {
-            'type': 'str',
-            'choices': ['level-1', 'level-1-2', 'level-2-only']
+        'hello_interval_minimal_list': {
+            'type': 'list',
+            'hello_interval_minimal': {
+                'type': 'bool',
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-2']
+            }
         },
         'hello_multiplier_list': {
             'type': 'list',
@@ -406,6 +408,18 @@ def get_argspec():
             'level': {
                 'type': 'str',
                 'choices': ['level-1', 'level-2']
+            }
+        },
+        'lsp_interval': {
+            'type': 'int',
+        },
+        'mesh_group': {
+            'type': 'dict',
+            'value': {
+                'type': 'int',
+            },
+            'blocked': {
+                'type': 'bool',
             }
         },
         'metric_list': {
@@ -418,8 +432,41 @@ def get_argspec():
                 'choices': ['level-1', 'level-2']
             }
         },
-        'lsp_interval': {
+        'password_list': {
+            'type': 'list',
+            'password': {
+                'type': 'str',
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-2']
+            }
+        },
+        'priority_list': {
+            'type': 'list',
+            'priority': {
+                'type': 'int',
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-2']
+            }
+        },
+        'retransmit_interval': {
             'type': 'int',
+        },
+        'wide_metric_list': {
+            'type': 'list',
+            'wide_metric': {
+                'type': 'int',
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-2']
+            }
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

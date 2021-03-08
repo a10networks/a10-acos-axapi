@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_template_message_selector
 description:
     - Specify the message selector
-short_description: Configures A10 acos-events.template.message-selector
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,60 +22,77 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    collector_group_list:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
+        description:
+        - "Specify the message selector name"
+        type: str
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    collector_group_list:
         description:
         - "Field collector_group_list"
+        type: list
         required: False
         suboptions:
             name:
                 description:
                 - "Specify the log server group for receiving log messages"
-            user_tag:
-                description:
-                - "Customized tag"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-    name:
-        description:
-        - "Specify the message selector name"
-        required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -133,28 +148,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'collector_group_list': {
             'type': 'list',
             'name': {
                 'type': 'str',
                 'required': True,
             },
-            'user_tag': {
-                'type': 'str',
-            },
             'uuid': {
                 'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

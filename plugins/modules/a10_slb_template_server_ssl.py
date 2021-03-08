@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_server_ssl
 description:
     - Server Side SSL Template
-short_description: Configures A10 slb.template.server-ssl
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,135 +22,94 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    session_cache_timeout:
+    name:
         description:
-        - "Session Cache Timeout (Timeout value, in seconds. Default no timeout.)"
-        required: False
-    cipher_template:
+        - "Server SSL Template Name"
+        type: str
+        required: True
+    ca_certs:
         description:
-        - "Cipher Template Name"
+        - "Field ca_certs"
+        type: list
         required: False
-    sslilogging:
-        description:
-        - "'disable'= Disable all logging; 'all'= enable all logging(error, info);"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    passphrase:
-        description:
-        - "Password Phrase"
-        required: False
-    ocsp_stapling:
-        description:
-        - "Enable ocsp-stapling support"
-        required: False
+        suboptions:
+            ca_cert:
+                description:
+                - "Specify CA certificate"
+                type: str
+            ca_cert_partition_shared:
+                description:
+                - "CA Certificate Partition Shared"
+                type: bool
+            server_ocsp_srvr:
+                description:
+                - "Specify authentication server"
+                type: str
+            server_ocsp_sg:
+                description:
+                - "Specify service-group (Service group name)"
+                type: str
     crl_certs:
         description:
         - "Field crl_certs"
+        type: list
         required: False
         suboptions:
             crl:
                 description:
                 - "Certificate Revocation Lists (Certificate Revocation Lists file name)"
-    uuid:
+                type: str
+            crl_partition_shared:
+                description:
+                - "Certificate Revocation Lists Partition Shared"
+                type: bool
+    cert:
         description:
-        - "uuid of the object"
-        required: False
-    key_shared_str:
-        description:
-        - "Key Name"
-        required: False
-    template_cipher_shared:
-        description:
-        - "Cipher Template Name"
-        required: False
-    dgversion:
-        description:
-        - "Lower TLS/SSL version can be downgraded"
+        - "Certificate Name"
+        type: str
         required: False
     cert_shared_str:
         description:
         - "Certificate Name"
-        required: False
-    version:
-        description:
-        - "TLS/SSL version, default is the highest number supported (TLS/SSL version=
-          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
-        required: False
-    ec_list:
-        description:
-        - "Field ec_list"
-        required: False
-        suboptions:
-            ec:
-                description:
-                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1;"
-    encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
-    ssli_logging:
-        description:
-        - "SSLi logging level, default is error logging only"
-        required: False
-    session_cache_size:
-        description:
-        - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse
-          disabled))"
-        required: False
-    dh_type:
-        description:
-        - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048;"
-        required: False
-    use_client_sni:
-        description:
-        - "use client SNI"
-        required: False
-    forward_proxy_enable:
-        description:
-        - "Enable SSL forward proxy"
-        required: False
-    key:
-        description:
-        - "Key Name"
-        required: False
-    key_shared_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
+        type: str
         required: False
     cipher_without_prio_list:
         description:
         - "Field cipher_without_prio_list"
+        type: list
         required: False
         suboptions:
             cipher_wo_prio:
@@ -187,58 +144,67 @@ options:
           'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256'=
           TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256;
           'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256;"
-    ca_certs:
+                type: str
+    dh_type:
         description:
-        - "Field ca_certs"
+        - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048;"
+        type: str
+        required: False
+    ec_list:
+        description:
+        - "Field ec_list"
+        type: list
         required: False
         suboptions:
-            ca_cert:
+            ec:
                 description:
-                - "Specify CA certificate"
-            ca_cert_partition_shared:
-                description:
-                - "CA Certificate Partition Shared"
-            server_ocsp_sg:
-                description:
-                - "Specify service-group (Service group name)"
-            server_ocsp_srvr:
-                description:
-                - "Specify authentication server"
-    name:
-        description:
-        - "Server SSL Template Name"
-        required: True
-    shared_partition_cipher_template:
-        description:
-        - "Reference a cipher template from shared partition"
-        required: False
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1;"
+                type: str
     enable_tls_alert_logging:
         description:
         - "Enable TLS alert logging"
-        required: False
-    session_ticket_enable:
-        description:
-        - "Enable server side session ticket support"
+        type: bool
         required: False
     alert_type:
         description:
         - "'fatal'= Log fatal alerts;"
-        required: False
-    cert:
-        description:
-        - "Certificate Name"
+        type: str
         required: False
     handshake_logging_enable:
         description:
         - "Enable SSL handshake logging"
+        type: bool
         required: False
-    renegotiation_disable:
+    close_notify:
         description:
-        - "Disable SSL renegotiation"
+        - "Send close notification when terminate connection"
+        type: bool
+        required: False
+    forward_proxy_enable:
+        description:
+        - "Enable SSL forward proxy"
+        type: bool
+        required: False
+    session_ticket_enable:
+        description:
+        - "Enable server side session ticket support"
+        type: bool
+        required: False
+    version:
+        description:
+        - "TLS/SSL version, default is the highest number supported (TLS/SSL version=
+          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
+        type: int
+        required: False
+    dgversion:
+        description:
+        - "Lower TLS/SSL version can be downgraded"
+        type: int
         required: False
     server_certificate_error:
         description:
         - "Field server_certificate_error"
+        type: list
         required: False
         suboptions:
             error_type:
@@ -246,13 +212,109 @@ options:
                 - "'email'= Notify the error via email; 'ignore'= Ignore the error, which mean the
           connection can continue; 'logging'= Log the error; 'trap'= Notify the error by
           SNMP trap;"
-    close_notify:
+                type: str
+    ssli_logging:
         description:
-        - "Send close notification when terminate connection"
+        - "SSLi logging level, default is error logging only"
+        type: bool
+        required: False
+    sslilogging:
+        description:
+        - "'disable'= Disable all logging; 'all'= enable all logging(error, info);"
+        type: str
+        required: False
+    dh_short_key_action:
+        description:
+        - "'none'= no change; 'prepend'= prepend dh key; 'regenerate'= regenerate dh key;"
+        type: str
+        required: False
+    key:
+        description:
+        - "Key Name"
+        type: str
+        required: False
+    passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
+    encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    key_shared_str:
+        description:
+        - "Key Name"
+        type: str
         required: False
     key_shared_passphrase:
         description:
         - "Password Phrase"
+        type: str
+        required: False
+    key_shared_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    ocsp_stapling:
+        description:
+        - "Enable ocsp-stapling support"
+        type: bool
+        required: False
+    use_client_sni:
+        description:
+        - "use client SNI"
+        type: bool
+        required: False
+    renegotiation_disable:
+        description:
+        - "Disable SSL renegotiation"
+        type: bool
+        required: False
+    session_cache_size:
+        description:
+        - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse
+          disabled))"
+        type: int
+        required: False
+    session_cache_timeout:
+        description:
+        - "Session Cache Timeout (Timeout value, in seconds. Default no timeout.)"
+        type: int
+        required: False
+    cipher_template:
+        description:
+        - "Cipher Template Name"
+        type: str
+        required: False
+    shared_partition_cipher_template:
+        description:
+        - "Reference a cipher template from shared partition"
+        type: bool
+        required: False
+    template_cipher_shared:
+        description:
+        - "Cipher Template Name"
+        type: str
+        required: False
+    enable_ssli_ftp_alg:
+        description:
+        - "Enable SSLi FTP over TLS support at which port"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -277,8 +339,10 @@ AVAILABLE_PROPERTIES = [
     "close_notify",
     "crl_certs",
     "dgversion",
+    "dh_short_key_action",
     "dh_type",
     "ec_list",
+    "enable_ssli_ftp_alg",
     "enable_tls_alert_logging",
     "encrypted",
     "forward_proxy_enable",
@@ -340,79 +404,38 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'session_cache_timeout': {
-            'type': 'int',
-        },
-        'cipher_template': {
+        'name': {
             'type': 'str',
+            'required': True,
         },
-        'sslilogging': {
-            'type': 'str',
-            'choices': ['disable', 'all']
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'passphrase': {
-            'type': 'str',
-        },
-        'ocsp_stapling': {
-            'type': 'bool',
+        'ca_certs': {
+            'type': 'list',
+            'ca_cert': {
+                'type': 'str',
+            },
+            'ca_cert_partition_shared': {
+                'type': 'bool',
+            },
+            'server_ocsp_srvr': {
+                'type': 'str',
+            },
+            'server_ocsp_sg': {
+                'type': 'str',
+            }
         },
         'crl_certs': {
             'type': 'list',
             'crl': {
                 'type': 'str',
+            },
+            'crl_partition_shared': {
+                'type': 'bool',
             }
         },
-        'uuid': {
+        'cert': {
             'type': 'str',
-        },
-        'key_shared_str': {
-            'type': 'str',
-        },
-        'template_cipher_shared': {
-            'type': 'str',
-        },
-        'dgversion': {
-            'type': 'int',
         },
         'cert_shared_str': {
-            'type': 'str',
-        },
-        'version': {
-            'type': 'int',
-        },
-        'ec_list': {
-            'type': 'list',
-            'ec': {
-                'type': 'str',
-                'choices': ['secp256r1', 'secp384r1']
-            }
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'ssli_logging': {
-            'type': 'bool',
-        },
-        'session_cache_size': {
-            'type': 'int',
-        },
-        'dh_type': {
-            'type': 'str',
-            'choices': ['1024', '1024-dsa', '2048']
-        },
-        'use_client_sni': {
-            'type': 'bool',
-        },
-        'forward_proxy_enable': {
-            'type': 'bool',
-        },
-        'key': {
-            'type': 'str',
-        },
-        'key_shared_encrypted': {
             'type': 'str',
         },
         'cipher_without_prio_list': {
@@ -449,46 +472,41 @@ def get_argspec():
                 ]
             }
         },
-        'ca_certs': {
+        'dh_type': {
+            'type': 'str',
+            'choices': ['1024', '1024-dsa', '2048']
+        },
+        'ec_list': {
             'type': 'list',
-            'ca_cert': {
+            'ec': {
                 'type': 'str',
-            },
-            'ca_cert_partition_shared': {
-                'type': 'bool',
-            },
-            'server_ocsp_sg': {
-                'type': 'str',
-            },
-            'server_ocsp_srvr': {
-                'type': 'str',
+                'choices': ['secp256r1', 'secp384r1']
             }
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'shared_partition_cipher_template': {
-            'type': 'bool',
-        },
         'enable_tls_alert_logging': {
-            'type': 'bool',
-        },
-        'session_ticket_enable': {
             'type': 'bool',
         },
         'alert_type': {
             'type': 'str',
             'choices': ['fatal']
         },
-        'cert': {
-            'type': 'str',
-        },
         'handshake_logging_enable': {
             'type': 'bool',
         },
-        'renegotiation_disable': {
+        'close_notify': {
             'type': 'bool',
+        },
+        'forward_proxy_enable': {
+            'type': 'bool',
+        },
+        'session_ticket_enable': {
+            'type': 'bool',
+        },
+        'version': {
+            'type': 'int',
+        },
+        'dgversion': {
+            'type': 'int',
         },
         'server_certificate_error': {
             'type': 'list',
@@ -497,10 +515,66 @@ def get_argspec():
                 'choices': ['email', 'ignore', 'logging', 'trap']
             }
         },
-        'close_notify': {
+        'ssli_logging': {
             'type': 'bool',
         },
+        'sslilogging': {
+            'type': 'str',
+            'choices': ['disable', 'all']
+        },
+        'dh_short_key_action': {
+            'type': 'str',
+            'choices': ['none', 'prepend', 'regenerate']
+        },
+        'key': {
+            'type': 'str',
+        },
+        'passphrase': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'key_shared_str': {
+            'type': 'str',
+        },
         'key_shared_passphrase': {
+            'type': 'str',
+        },
+        'key_shared_encrypted': {
+            'type': 'str',
+        },
+        'ocsp_stapling': {
+            'type': 'bool',
+        },
+        'use_client_sni': {
+            'type': 'bool',
+        },
+        'renegotiation_disable': {
+            'type': 'bool',
+        },
+        'session_cache_size': {
+            'type': 'int',
+        },
+        'session_cache_timeout': {
+            'type': 'int',
+        },
+        'cipher_template': {
+            'type': 'str',
+        },
+        'shared_partition_cipher_template': {
+            'type': 'bool',
+        },
+        'template_cipher_shared': {
+            'type': 'str',
+        },
+        'enable_ssli_ftp_alg': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

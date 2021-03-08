@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_global
 description:
     - Stateful Firewall Configuration (default=disabled)
-short_description: Configures A10 cgnv6.stateful.firewall.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,130 +22,59 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    stateful_firewall_value:
+        description:
+        - "'enable'= Enable stateful firewall;"
+        type: str
         required: False
     respond_to_user_mac:
         description:
         - "Use the user's source MAC for the next hop rather than the routing table
           (default= off)"
+        type: bool
         required: False
-    stateful_firewall_value:
+    uuid:
         description:
-        - "'enable'= Enable stateful firewall;"
+        - "uuid of the object"
+        type: str
         required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            session_creation_failure:
-                description:
-                - "Session Creation Failure"
-            tcp_packet_process:
-                description:
-                - "TCP Packet Process"
-            udp_fullcone_freed:
-                description:
-                - "UDP Full-cone Freed"
-            outbound_session_created:
-                description:
-                - "Outbound Session Created"
-            tcp_fullcone_created:
-                description:
-                - "TCP Full-cone Created"
-            fullcone_creation_failure:
-                description:
-                - "Full-Cone Creation Failure"
-            one_arm_drop:
-                description:
-                - "One-Arm Drop"
-            packet_inbound_deny:
-                description:
-                - "Inbound Packet Denied"
-            inbound_session_created:
-                description:
-                - "Inbound Session Created"
-            udp_fullcone_created:
-                description:
-                - "UDP Full-cone Created"
-            other_session_created:
-                description:
-                - "Other Session Created"
-            udp_session_created:
-                description:
-                - "UDP Session Created"
-            udp_packet_process:
-                description:
-                - "UDP Packet Process"
-            no_fwd_route:
-                description:
-                - "No Forward Route"
-            tcp_session_created:
-                description:
-                - "TCP Session Created"
-            other_session_freed:
-                description:
-                - "Other Session Freed"
-            eif_process:
-                description:
-                - "Endpnt-Independent Filter Matched"
-            inbound_session_freed:
-                description:
-                - "Inbound Session Freed"
-            udp_session_freed:
-                description:
-                - "UDP Session Freed"
-            no_rev_route:
-                description:
-                - "No Reverse Route"
-            packet_process_failure:
-                description:
-                - "Packet Error Drop"
-            tcp_session_freed:
-                description:
-                - "TCP Session Freed"
-            other_packet_process:
-                description:
-                - "Other Packet Process"
-            tcp_fullcone_freed:
-                description:
-                - "TCP Full-cone Freed"
-            outbound_session_freed:
-                description:
-                - "Outbound Session Freed"
-            no_class_list_match:
-                description:
-                - "No Class-List Match Drop"
-            packet_standby_drop:
-                description:
-                - "Standby Drop"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -194,10 +121,121 @@ options:
           'ha_standby_session_created'= HA Standby Session Created;
           'ha_standby_session_eim'= HA Standby Session EIM; 'ha_standby_session_eif'= HA
           Standby Session EIF;"
-    uuid:
+                type: str
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            tcp_packet_process:
+                description:
+                - "TCP Packet Process"
+                type: str
+            udp_packet_process:
+                description:
+                - "UDP Packet Process"
+                type: str
+            other_packet_process:
+                description:
+                - "Other Packet Process"
+                type: str
+            packet_inbound_deny:
+                description:
+                - "Inbound Packet Denied"
+                type: str
+            packet_process_failure:
+                description:
+                - "Packet Error Drop"
+                type: str
+            outbound_session_created:
+                description:
+                - "Outbound Session Created"
+                type: str
+            outbound_session_freed:
+                description:
+                - "Outbound Session Freed"
+                type: str
+            inbound_session_created:
+                description:
+                - "Inbound Session Created"
+                type: str
+            inbound_session_freed:
+                description:
+                - "Inbound Session Freed"
+                type: str
+            tcp_session_created:
+                description:
+                - "TCP Session Created"
+                type: str
+            tcp_session_freed:
+                description:
+                - "TCP Session Freed"
+                type: str
+            udp_session_created:
+                description:
+                - "UDP Session Created"
+                type: str
+            udp_session_freed:
+                description:
+                - "UDP Session Freed"
+                type: str
+            other_session_created:
+                description:
+                - "Other Session Created"
+                type: str
+            other_session_freed:
+                description:
+                - "Other Session Freed"
+                type: str
+            session_creation_failure:
+                description:
+                - "Session Creation Failure"
+                type: str
+            no_fwd_route:
+                description:
+                - "No Forward Route"
+                type: str
+            no_rev_route:
+                description:
+                - "No Reverse Route"
+                type: str
+            packet_standby_drop:
+                description:
+                - "Standby Drop"
+                type: str
+            tcp_fullcone_created:
+                description:
+                - "TCP Full-cone Created"
+                type: str
+            tcp_fullcone_freed:
+                description:
+                - "TCP Full-cone Freed"
+                type: str
+            udp_fullcone_created:
+                description:
+                - "UDP Full-cone Created"
+                type: str
+            udp_fullcone_freed:
+                description:
+                - "UDP Full-cone Freed"
+                type: str
+            fullcone_creation_failure:
+                description:
+                - "Full-Cone Creation Failure"
+                type: str
+            eif_process:
+                description:
+                - "Endpnt-Independent Filter Matched"
+                type: str
+            one_arm_drop:
+                description:
+                - "One-Arm Drop"
+                type: str
+            no_class_list_match:
+                description:
+                - "No Class-List Match Drop"
+                type: str
 
 '''
 
@@ -254,96 +292,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'respond_to_user_mac': {
-            'type': 'bool',
-        },
         'stateful_firewall_value': {
             'type': 'str',
             'choices': ['enable']
         },
-        'stats': {
-            'type': 'dict',
-            'session_creation_failure': {
-                'type': 'str',
-            },
-            'tcp_packet_process': {
-                'type': 'str',
-            },
-            'udp_fullcone_freed': {
-                'type': 'str',
-            },
-            'outbound_session_created': {
-                'type': 'str',
-            },
-            'tcp_fullcone_created': {
-                'type': 'str',
-            },
-            'fullcone_creation_failure': {
-                'type': 'str',
-            },
-            'one_arm_drop': {
-                'type': 'str',
-            },
-            'packet_inbound_deny': {
-                'type': 'str',
-            },
-            'inbound_session_created': {
-                'type': 'str',
-            },
-            'udp_fullcone_created': {
-                'type': 'str',
-            },
-            'other_session_created': {
-                'type': 'str',
-            },
-            'udp_session_created': {
-                'type': 'str',
-            },
-            'udp_packet_process': {
-                'type': 'str',
-            },
-            'no_fwd_route': {
-                'type': 'str',
-            },
-            'tcp_session_created': {
-                'type': 'str',
-            },
-            'other_session_freed': {
-                'type': 'str',
-            },
-            'eif_process': {
-                'type': 'str',
-            },
-            'inbound_session_freed': {
-                'type': 'str',
-            },
-            'udp_session_freed': {
-                'type': 'str',
-            },
-            'no_rev_route': {
-                'type': 'str',
-            },
-            'packet_process_failure': {
-                'type': 'str',
-            },
-            'tcp_session_freed': {
-                'type': 'str',
-            },
-            'other_packet_process': {
-                'type': 'str',
-            },
-            'tcp_fullcone_freed': {
-                'type': 'str',
-            },
-            'outbound_session_freed': {
-                'type': 'str',
-            },
-            'no_class_list_match': {
-                'type': 'str',
-            },
-            'packet_standby_drop': {
-                'type': 'str',
-            }
+        'respond_to_user_mac': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -385,8 +342,89 @@ def get_argspec():
                 ]
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'tcp_packet_process': {
+                'type': 'str',
+            },
+            'udp_packet_process': {
+                'type': 'str',
+            },
+            'other_packet_process': {
+                'type': 'str',
+            },
+            'packet_inbound_deny': {
+                'type': 'str',
+            },
+            'packet_process_failure': {
+                'type': 'str',
+            },
+            'outbound_session_created': {
+                'type': 'str',
+            },
+            'outbound_session_freed': {
+                'type': 'str',
+            },
+            'inbound_session_created': {
+                'type': 'str',
+            },
+            'inbound_session_freed': {
+                'type': 'str',
+            },
+            'tcp_session_created': {
+                'type': 'str',
+            },
+            'tcp_session_freed': {
+                'type': 'str',
+            },
+            'udp_session_created': {
+                'type': 'str',
+            },
+            'udp_session_freed': {
+                'type': 'str',
+            },
+            'other_session_created': {
+                'type': 'str',
+            },
+            'other_session_freed': {
+                'type': 'str',
+            },
+            'session_creation_failure': {
+                'type': 'str',
+            },
+            'no_fwd_route': {
+                'type': 'str',
+            },
+            'no_rev_route': {
+                'type': 'str',
+            },
+            'packet_standby_drop': {
+                'type': 'str',
+            },
+            'tcp_fullcone_created': {
+                'type': 'str',
+            },
+            'tcp_fullcone_freed': {
+                'type': 'str',
+            },
+            'udp_fullcone_created': {
+                'type': 'str',
+            },
+            'udp_fullcone_freed': {
+                'type': 'str',
+            },
+            'fullcone_creation_failure': {
+                'type': 'str',
+            },
+            'eif_process': {
+                'type': 'str',
+            },
+            'one_arm_drop': {
+                'type': 'str',
+            },
+            'no_class_list_match': {
+                'type': 'str',
+            }
         }
     })
     return rv

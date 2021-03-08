@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_bfd
 description:
     - BFD Statistics
-short_description: Configures A10 system.bfd
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -72,81 +83,101 @@ options:
           'local_state_admin_down'= Local admin down session state; 'dest_unreachable'=
           Destination unreachable; 'no_ipv6_enable'= No IPv6 enable; 'other_error'= Other
           errors;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            no_ipv6_enable:
-                description:
-                - "No IPv6 enable"
-            auth_length_invalid:
-                description:
-                - "Invalid authentication length"
-            auth_key_mismatch:
-                description:
-                - "Authentication key mismatch"
-            version_mismatch:
-                description:
-                - "BFD version mismatch"
-            auth_mismatch:
-                description:
-                - "Authentication mismatch"
-            invalid_ttl:
-                description:
-                - "Invalid TTL"
-            auth_key_id_mismatch:
-                description:
-                - "Authentication key-id mismatch"
-            dest_unreachable:
-                description:
-                - "Destination unreachable"
-            udp_checksum_error:
-                description:
-                - "UDP packet checksum errors"
-            other_error:
-                description:
-                - "Other errors"
-            invalid_my_disc:
-                description:
-                - "Invalid my descriptor"
-            auth_failed:
-                description:
-                - "Authentication failures"
-            invalid_detect_mult:
-                description:
-                - "Invalid detect multiplier"
-            invalid_multipoint:
-                description:
-                - "Invalid multipoint setting"
-            session_not_found:
-                description:
-                - "Session not found"
-            local_state_admin_down:
-                description:
-                - "Local admin down session state"
             ip_checksum_error:
                 description:
                 - "IP packet checksum errors"
-            length_too_small:
+                type: str
+            udp_checksum_error:
                 description:
-                - "Packets too small"
+                - "UDP packet checksum errors"
+                type: str
+            session_not_found:
+                description:
+                - "Session not found"
+                type: str
             multihop_mismatch:
                 description:
                 - "Multihop session or packet mismatch"
-            auth_type_mismatch:
+                type: str
+            version_mismatch:
                 description:
-                - "Authentication type mismatch"
+                - "BFD version mismatch"
+                type: str
+            length_too_small:
+                description:
+                - "Packets too small"
+                type: str
             data_is_short:
                 description:
                 - "Packet data length too short"
+                type: str
+            invalid_detect_mult:
+                description:
+                - "Invalid detect multiplier"
+                type: str
+            invalid_multipoint:
+                description:
+                - "Invalid multipoint setting"
+                type: str
+            invalid_my_disc:
+                description:
+                - "Invalid my descriptor"
+                type: str
+            invalid_ttl:
+                description:
+                - "Invalid TTL"
+                type: str
+            auth_length_invalid:
+                description:
+                - "Invalid authentication length"
+                type: str
+            auth_mismatch:
+                description:
+                - "Authentication mismatch"
+                type: str
+            auth_type_mismatch:
+                description:
+                - "Authentication type mismatch"
+                type: str
+            auth_key_id_mismatch:
+                description:
+                - "Authentication key-id mismatch"
+                type: str
+            auth_key_mismatch:
+                description:
+                - "Authentication key mismatch"
+                type: str
             auth_seqnum_invalid:
                 description:
                 - "Invalid authentication sequence number"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            auth_failed:
+                description:
+                - "Authentication failures"
+                type: str
+            local_state_admin_down:
+                description:
+                - "Local admin down session state"
+                type: str
+            dest_unreachable:
+                description:
+                - "Destination unreachable"
+                type: str
+            no_ipv6_enable:
+                description:
+                - "No IPv6 enable"
+                type: str
+            other_error:
+                description:
+                - "Other errors"
+                type: str
 
 '''
 
@@ -201,6 +232,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -222,40 +256,25 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'no_ipv6_enable': {
-                'type': 'str',
-            },
-            'auth_length_invalid': {
-                'type': 'str',
-            },
-            'auth_key_mismatch': {
-                'type': 'str',
-            },
-            'version_mismatch': {
-                'type': 'str',
-            },
-            'auth_mismatch': {
-                'type': 'str',
-            },
-            'invalid_ttl': {
-                'type': 'str',
-            },
-            'auth_key_id_mismatch': {
-                'type': 'str',
-            },
-            'dest_unreachable': {
+            'ip_checksum_error': {
                 'type': 'str',
             },
             'udp_checksum_error': {
                 'type': 'str',
             },
-            'other_error': {
+            'session_not_found': {
                 'type': 'str',
             },
-            'invalid_my_disc': {
+            'multihop_mismatch': {
                 'type': 'str',
             },
-            'auth_failed': {
+            'version_mismatch': {
+                'type': 'str',
+            },
+            'length_too_small': {
+                'type': 'str',
+            },
+            'data_is_short': {
                 'type': 'str',
             },
             'invalid_detect_mult': {
@@ -264,33 +283,45 @@ def get_argspec():
             'invalid_multipoint': {
                 'type': 'str',
             },
-            'session_not_found': {
+            'invalid_my_disc': {
                 'type': 'str',
             },
-            'local_state_admin_down': {
+            'invalid_ttl': {
                 'type': 'str',
             },
-            'ip_checksum_error': {
+            'auth_length_invalid': {
                 'type': 'str',
             },
-            'length_too_small': {
-                'type': 'str',
-            },
-            'multihop_mismatch': {
+            'auth_mismatch': {
                 'type': 'str',
             },
             'auth_type_mismatch': {
                 'type': 'str',
             },
-            'data_is_short': {
+            'auth_key_id_mismatch': {
+                'type': 'str',
+            },
+            'auth_key_mismatch': {
                 'type': 'str',
             },
             'auth_seqnum_invalid': {
                 'type': 'str',
+            },
+            'auth_failed': {
+                'type': 'str',
+            },
+            'local_state_admin_down': {
+                'type': 'str',
+            },
+            'dest_unreachable': {
+                'type': 'str',
+            },
+            'no_ipv6_enable': {
+                'type': 'str',
+            },
+            'other_error': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

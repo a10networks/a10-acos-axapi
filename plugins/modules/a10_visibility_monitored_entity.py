@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitored_entity
 description:
     - Display Monitoring entities
-short_description: Configures A10 visibility.monitored-entity
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,100 +22,126 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            topk:
-                description:
-                - "Field topk"
-            sessions:
-                description:
-                - "Field sessions"
-            all_keys:
-                description:
-                - "Field all_keys"
-            secondary:
-                description:
-                - "Field secondary"
-            mon_entity_list:
-                description:
-                - "Field mon_entity_list"
-            detail:
-                description:
-                - "Field detail"
-            primary_keys:
-                description:
-                - "Field primary_keys"
-    topk:
-        description:
-        - "Field topk"
-        required: False
-        suboptions:
-            sources:
-                description:
-                - "Field sources"
-            uuid:
-                description:
-                - "uuid of the object"
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    sessions:
-        description:
-        - "Field sessions"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
     detail:
         description:
         - "Field detail"
+        type: dict
         required: False
         suboptions:
-            debug:
-                description:
-                - "Field debug"
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            debug:
+                description:
+                - "Field debug"
+                type: dict
+    sessions:
+        description:
+        - "Field sessions"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    topk:
+        description:
+        - "Field topk"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sources:
+                description:
+                - "Field sources"
+                type: dict
     secondary:
         description:
         - "Field secondary"
+        type: dict
         required: False
         suboptions:
             topk:
                 description:
                 - "Field topk"
+                type: dict
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            primary_keys:
+                description:
+                - "Field primary_keys"
+                type: bool
+            all_keys:
+                description:
+                - "Field all_keys"
+                type: bool
+            mon_entity_list:
+                description:
+                - "Field mon_entity_list"
+                type: list
+            detail:
+                description:
+                - "Field detail"
+                type: dict
+            sessions:
+                description:
+                - "Field sessions"
+                type: dict
+            topk:
+                description:
+                - "Field topk"
+                type: dict
+            secondary:
+                description:
+                - "Field secondary"
+                type: dict
 
 '''
 
@@ -175,8 +199,452 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'detail': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'debug': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'sessions': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'topk': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sources': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'secondary': {
+            'type': 'dict',
+            'topk': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                },
+                'sources': {
+                    'type': 'dict',
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            }
+        },
         'oper': {
             'type': 'dict',
+            'primary_keys': {
+                'type': 'bool',
+            },
+            'all_keys': {
+                'type': 'bool',
+            },
+            'mon_entity_list': {
+                'type': 'list',
+                'entity_key': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'flat_oid': {
+                    'type': 'int',
+                },
+                'ipv4_addr': {
+                    'type': 'str',
+                },
+                'ipv6_addr': {
+                    'type': 'str',
+                },
+                'l4_proto': {
+                    'type': 'str',
+                },
+                'l4_port': {
+                    'type': 'int',
+                },
+                'mode': {
+                    'type': 'str',
+                },
+                'ha_state': {
+                    'type': 'str',
+                },
+                'sec_entity_list': {
+                    'type': 'list',
+                    'entity_key': {
+                        'type': 'str',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'flat_oid': {
+                        'type': 'int',
+                    },
+                    'ipv4_addr': {
+                        'type': 'str',
+                    },
+                    'ipv6_addr': {
+                        'type': 'str',
+                    },
+                    'l4_proto': {
+                        'type': 'str',
+                    },
+                    'l4_port': {
+                        'type': 'int',
+                    },
+                    'mode': {
+                        'type': 'str',
+                    },
+                    'ha_state': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'detail': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'primary_keys': {
+                        'type': 'bool',
+                    },
+                    'all_keys': {
+                        'type': 'bool',
+                    },
+                    'mon_entity_list': {
+                        'type': 'list',
+                        'entity_key': {
+                            'type': 'str',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        },
+                        'flat_oid': {
+                            'type': 'int',
+                        },
+                        'ipv4_addr': {
+                            'type': 'str',
+                        },
+                        'ipv6_addr': {
+                            'type': 'str',
+                        },
+                        'l4_proto': {
+                            'type': 'str',
+                        },
+                        'l4_port': {
+                            'type': 'int',
+                        },
+                        'mode': {
+                            'type': 'str',
+                        },
+                        'ha_state': {
+                            'type': 'str',
+                        },
+                        'entity_metric_list': {
+                            'type': 'list',
+                            'metric_name': {
+                                'type': 'str',
+                            },
+                            'current': {
+                                'type': 'str',
+                            },
+                            'threshold': {
+                                'type': 'str',
+                            },
+                            'anomaly': {
+                                'type': 'str',
+                            }
+                        },
+                        'sec_entity_list': {
+                            'type': 'list',
+                            'entity_key': {
+                                'type': 'str',
+                            },
+                            'uuid': {
+                                'type': 'str',
+                            },
+                            'flat_oid': {
+                                'type': 'int',
+                            },
+                            'ipv4_addr': {
+                                'type': 'str',
+                            },
+                            'ipv6_addr': {
+                                'type': 'str',
+                            },
+                            'l4_proto': {
+                                'type': 'str',
+                            },
+                            'l4_port': {
+                                'type': 'int',
+                            },
+                            'mode': {
+                                'type': 'str',
+                            },
+                            'ha_state': {
+                                'type': 'str',
+                            },
+                            'entity_metric_list': {
+                                'type': 'list',
+                                'metric_name': {
+                                    'type': 'str',
+                                },
+                                'current': {
+                                    'type': 'str',
+                                },
+                                'threshold': {
+                                    'type': 'str',
+                                },
+                                'anomaly': {
+                                    'type': 'str',
+                                }
+                            }
+                        }
+                    }
+                },
+                'debug': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                        'primary_keys': {
+                            'type': 'bool',
+                        },
+                        'all_keys': {
+                            'type': 'bool',
+                        },
+                        'mon_entity_list': {
+                            'type': 'list',
+                            'entity_key': {
+                                'type': 'str',
+                            },
+                            'uuid': {
+                                'type': 'str',
+                            },
+                            'flat_oid': {
+                                'type': 'int',
+                            },
+                            'ipv4_addr': {
+                                'type': 'str',
+                            },
+                            'ipv6_addr': {
+                                'type': 'str',
+                            },
+                            'l4_proto': {
+                                'type': 'str',
+                            },
+                            'l4_port': {
+                                'type': 'int',
+                            },
+                            'mode': {
+                                'type': 'str',
+                            },
+                            'ha_state': {
+                                'type': 'str',
+                            },
+                            'entity_metric_list': {
+                                'type': 'list',
+                                'metric_name': {
+                                    'type': 'str',
+                                },
+                                'current': {
+                                    'type': 'str',
+                                },
+                                'min': {
+                                    'type': 'str',
+                                },
+                                'max': {
+                                    'type': 'str',
+                                },
+                                'mean': {
+                                    'type': 'str',
+                                },
+                                'threshold': {
+                                    'type': 'str',
+                                },
+                                'std_dev': {
+                                    'type': 'str',
+                                },
+                                'anomaly': {
+                                    'type': 'str',
+                                }
+                            },
+                            'sec_entity_list': {
+                                'type': 'list',
+                                'entity_key': {
+                                    'type': 'str',
+                                },
+                                'uuid': {
+                                    'type': 'str',
+                                },
+                                'flat_oid': {
+                                    'type': 'int',
+                                },
+                                'ipv4_addr': {
+                                    'type': 'str',
+                                },
+                                'ipv6_addr': {
+                                    'type': 'str',
+                                },
+                                'l4_proto': {
+                                    'type': 'str',
+                                },
+                                'l4_port': {
+                                    'type': 'int',
+                                },
+                                'mode': {
+                                    'type': 'str',
+                                },
+                                'ha_state': {
+                                    'type': 'str',
+                                },
+                                'entity_metric_list': {
+                                    'type': 'list',
+                                    'metric_name': {
+                                        'type': 'str',
+                                    },
+                                    'current': {
+                                        'type': 'str',
+                                    },
+                                    'min': {
+                                        'type': 'str',
+                                    },
+                                    'max': {
+                                        'type': 'str',
+                                    },
+                                    'mean': {
+                                        'type': 'str',
+                                    },
+                                    'threshold': {
+                                        'type': 'str',
+                                    },
+                                    'std_dev': {
+                                        'type': 'str',
+                                    },
+                                    'anomaly': {
+                                        'type': 'str',
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            'sessions': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'mon_entity_list': {
+                        'type': 'list',
+                        'entity_key': {
+                            'type': 'str',
+                        },
+                        'ipv4_addr': {
+                            'type': 'str',
+                        },
+                        'ipv6_addr': {
+                            'type': 'str',
+                        },
+                        'l4_proto': {
+                            'type': 'str',
+                        },
+                        'l4_port': {
+                            'type': 'int',
+                        },
+                        'session_list': {
+                            'type': 'list',
+                            'proto': {
+                                'type': 'str',
+                            },
+                            'fwd_src_ip': {
+                                'type': 'str',
+                            },
+                            'fwd_src_port': {
+                                'type': 'int',
+                            },
+                            'fwd_dst_ip': {
+                                'type': 'str',
+                            },
+                            'fwd_dst_port': {
+                                'type': 'int',
+                            },
+                            'rev_src_ip': {
+                                'type': 'str',
+                            },
+                            'rev_src_port': {
+                                'type': 'int',
+                            },
+                            'rev_dst_ip': {
+                                'type': 'str',
+                            },
+                            'rev_dst_port': {
+                                'type': 'int',
+                            }
+                        },
+                        'sec_entity_list': {
+                            'type': 'list',
+                            'entity_key': {
+                                'type': 'str',
+                            },
+                            'ipv4_addr': {
+                                'type': 'str',
+                            },
+                            'ipv6_addr': {
+                                'type': 'str',
+                            },
+                            'l4_proto': {
+                                'type': 'str',
+                            },
+                            'l4_port': {
+                                'type': 'int',
+                            },
+                            'session_list': {
+                                'type': 'list',
+                                'proto': {
+                                    'type': 'str',
+                                },
+                                'fwd_src_ip': {
+                                    'type': 'str',
+                                },
+                                'fwd_src_port': {
+                                    'type': 'int',
+                                },
+                                'fwd_dst_ip': {
+                                    'type': 'str',
+                                },
+                                'fwd_dst_port': {
+                                    'type': 'int',
+                                },
+                                'rev_src_ip': {
+                                    'type': 'str',
+                                },
+                                'rev_src_port': {
+                                    'type': 'int',
+                                },
+                                'rev_dst_ip': {
+                                    'type': 'str',
+                                },
+                                'rev_dst_port': {
+                                    'type': 'int',
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             'topk': {
                 'type': 'dict',
                 'oper': {
@@ -188,17 +656,17 @@ def get_argspec():
                         },
                         'topk_list': {
                             'type': 'list',
-                            'protocol': {
-                                'type': 'str',
-                            },
                             'ip_addr': {
-                                'type': 'str',
-                            },
-                            'metric_value': {
                                 'type': 'str',
                             },
                             'port': {
                                 'type': 'int',
+                            },
+                            'protocol': {
+                                'type': 'str',
+                            },
+                            'metric_value': {
+                                'type': 'str',
                             }
                         }
                     }
@@ -207,14 +675,17 @@ def get_argspec():
                     'type': 'dict',
                     'oper': {
                         'type': 'dict',
-                        'l4_proto': {
-                            'type': 'str',
-                        },
                         'ipv4_addr': {
                             'type': 'str',
                         },
                         'ipv6_addr': {
                             'type': 'str',
+                        },
+                        'l4_proto': {
+                            'type': 'str',
+                        },
+                        'l4_port': {
+                            'type': 'int',
                         },
                         'metric_topk_list': {
                             'type': 'list',
@@ -230,117 +701,9 @@ def get_argspec():
                                     'type': 'str',
                                 }
                             }
-                        },
-                        'l4_port': {
-                            'type': 'int',
                         }
                     }
                 }
-            },
-            'sessions': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'mon_entity_list': {
-                        'type': 'list',
-                        'l4_port': {
-                            'type': 'int',
-                        },
-                        'entity_key': {
-                            'type': 'str',
-                        },
-                        'ipv4_addr': {
-                            'type': 'str',
-                        },
-                        'ipv6_addr': {
-                            'type': 'str',
-                        },
-                        'session_list': {
-                            'type': 'list',
-                            'rev_src_ip': {
-                                'type': 'str',
-                            },
-                            'fwd_src_ip': {
-                                'type': 'str',
-                            },
-                            'fwd_src_port': {
-                                'type': 'int',
-                            },
-                            'proto': {
-                                'type': 'str',
-                            },
-                            'rev_src_port': {
-                                'type': 'int',
-                            },
-                            'fwd_dst_port': {
-                                'type': 'int',
-                            },
-                            'rev_dst_port': {
-                                'type': 'int',
-                            },
-                            'rev_dst_ip': {
-                                'type': 'str',
-                            },
-                            'fwd_dst_ip': {
-                                'type': 'str',
-                            }
-                        },
-                        'l4_proto': {
-                            'type': 'str',
-                        },
-                        'sec_entity_list': {
-                            'type': 'list',
-                            'l4_port': {
-                                'type': 'int',
-                            },
-                            'entity_key': {
-                                'type': 'str',
-                            },
-                            'ipv4_addr': {
-                                'type': 'str',
-                            },
-                            'ipv6_addr': {
-                                'type': 'str',
-                            },
-                            'session_list': {
-                                'type': 'list',
-                                'rev_src_ip': {
-                                    'type': 'str',
-                                },
-                                'fwd_src_ip': {
-                                    'type': 'str',
-                                },
-                                'fwd_src_port': {
-                                    'type': 'int',
-                                },
-                                'proto': {
-                                    'type': 'str',
-                                },
-                                'rev_src_port': {
-                                    'type': 'int',
-                                },
-                                'fwd_dst_port': {
-                                    'type': 'int',
-                                },
-                                'rev_dst_port': {
-                                    'type': 'int',
-                                },
-                                'rev_dst_ip': {
-                                    'type': 'str',
-                                },
-                                'fwd_dst_ip': {
-                                    'type': 'str',
-                                }
-                            },
-                            'l4_proto': {
-                                'type': 'str',
-                            }
-                        }
-                    }
-                }
-            },
-            'all_keys': {
-                'type': 'bool',
             },
             'secondary': {
                 'type': 'dict',
@@ -351,14 +714,17 @@ def get_argspec():
                     'type': 'dict',
                     'oper': {
                         'type': 'dict',
-                        'l4_proto': {
-                            'type': 'str',
-                        },
                         'ipv4_addr': {
                             'type': 'str',
                         },
                         'ipv6_addr': {
                             'type': 'str',
+                        },
+                        'l4_proto': {
+                            'type': 'str',
+                        },
+                        'l4_port': {
+                            'type': 'int',
                         },
                         'metric_topk_list': {
                             'type': 'list',
@@ -367,36 +733,36 @@ def get_argspec():
                             },
                             'topk_list': {
                                 'type': 'list',
-                                'protocol': {
-                                    'type': 'str',
-                                },
                                 'ip_addr': {
-                                    'type': 'str',
-                                },
-                                'metric_value': {
                                     'type': 'str',
                                 },
                                 'port': {
                                     'type': 'int',
+                                },
+                                'protocol': {
+                                    'type': 'str',
+                                },
+                                'metric_value': {
+                                    'type': 'str',
                                 }
                             }
-                        },
-                        'l4_port': {
-                            'type': 'int',
                         }
                     },
                     'sources': {
                         'type': 'dict',
                         'oper': {
                             'type': 'dict',
-                            'l4_proto': {
-                                'type': 'str',
-                            },
                             'ipv4_addr': {
                                 'type': 'str',
                             },
                             'ipv6_addr': {
                                 'type': 'str',
+                            },
+                            'l4_proto': {
+                                'type': 'str',
+                            },
+                            'l4_port': {
+                                'type': 'int',
                             },
                             'metric_topk_list': {
                                 'type': 'list',
@@ -412,351 +778,9 @@ def get_argspec():
                                         'type': 'str',
                                     }
                                 }
-                            },
-                            'l4_port': {
-                                'type': 'int',
                             }
                         }
                     }
-                }
-            },
-            'mon_entity_list': {
-                'type': 'list',
-                'uuid': {
-                    'type': 'str',
-                },
-                'l4_port': {
-                    'type': 'int',
-                },
-                'entity_key': {
-                    'type': 'str',
-                },
-                'ipv4_addr': {
-                    'type': 'str',
-                },
-                'ipv6_addr': {
-                    'type': 'str',
-                },
-                'mode': {
-                    'type': 'str',
-                },
-                'l4_proto': {
-                    'type': 'str',
-                },
-                'flat_oid': {
-                    'type': 'int',
-                },
-                'sec_entity_list': {
-                    'type': 'list',
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'l4_port': {
-                        'type': 'int',
-                    },
-                    'entity_key': {
-                        'type': 'str',
-                    },
-                    'ipv4_addr': {
-                        'type': 'str',
-                    },
-                    'ipv6_addr': {
-                        'type': 'str',
-                    },
-                    'mode': {
-                        'type': 'str',
-                    },
-                    'l4_proto': {
-                        'type': 'str',
-                    },
-                    'flat_oid': {
-                        'type': 'int',
-                    },
-                    'ha_state': {
-                        'type': 'str',
-                    }
-                },
-                'ha_state': {
-                    'type': 'str',
-                }
-            },
-            'detail': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'all_keys': {
-                        'type': 'bool',
-                    },
-                    'mon_entity_list': {
-                        'type': 'list',
-                        'uuid': {
-                            'type': 'str',
-                        },
-                        'l4_port': {
-                            'type': 'int',
-                        },
-                        'entity_key': {
-                            'type': 'str',
-                        },
-                        'ipv4_addr': {
-                            'type': 'str',
-                        },
-                        'ipv6_addr': {
-                            'type': 'str',
-                        },
-                        'entity_metric_list': {
-                            'type': 'list',
-                            'current': {
-                                'type': 'str',
-                            },
-                            'threshold': {
-                                'type': 'str',
-                            },
-                            'metric_name': {
-                                'type': 'str',
-                            },
-                            'anomaly': {
-                                'type': 'str',
-                            }
-                        },
-                        'mode': {
-                            'type': 'str',
-                        },
-                        'l4_proto': {
-                            'type': 'str',
-                        },
-                        'flat_oid': {
-                            'type': 'int',
-                        },
-                        'sec_entity_list': {
-                            'type': 'list',
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'l4_port': {
-                                'type': 'int',
-                            },
-                            'entity_key': {
-                                'type': 'str',
-                            },
-                            'ipv4_addr': {
-                                'type': 'str',
-                            },
-                            'ipv6_addr': {
-                                'type': 'str',
-                            },
-                            'entity_metric_list': {
-                                'type': 'list',
-                                'current': {
-                                    'type': 'str',
-                                },
-                                'threshold': {
-                                    'type': 'str',
-                                },
-                                'metric_name': {
-                                    'type': 'str',
-                                },
-                                'anomaly': {
-                                    'type': 'str',
-                                }
-                            },
-                            'mode': {
-                                'type': 'str',
-                            },
-                            'l4_proto': {
-                                'type': 'str',
-                            },
-                            'flat_oid': {
-                                'type': 'int',
-                            },
-                            'ha_state': {
-                                'type': 'str',
-                            }
-                        },
-                        'ha_state': {
-                            'type': 'str',
-                        }
-                    },
-                    'primary_keys': {
-                        'type': 'bool',
-                    }
-                },
-                'debug': {
-                    'type': 'dict',
-                    'oper': {
-                        'type': 'dict',
-                        'all_keys': {
-                            'type': 'bool',
-                        },
-                        'mon_entity_list': {
-                            'type': 'list',
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'l4_port': {
-                                'type': 'int',
-                            },
-                            'entity_key': {
-                                'type': 'str',
-                            },
-                            'ipv4_addr': {
-                                'type': 'str',
-                            },
-                            'ipv6_addr': {
-                                'type': 'str',
-                            },
-                            'entity_metric_list': {
-                                'type': 'list',
-                                'std_dev': {
-                                    'type': 'str',
-                                },
-                                'min': {
-                                    'type': 'str',
-                                },
-                                'max': {
-                                    'type': 'str',
-                                },
-                                'metric_name': {
-                                    'type': 'str',
-                                },
-                                'current': {
-                                    'type': 'str',
-                                },
-                                'threshold': {
-                                    'type': 'str',
-                                },
-                                'anomaly': {
-                                    'type': 'str',
-                                },
-                                'mean': {
-                                    'type': 'str',
-                                }
-                            },
-                            'mode': {
-                                'type': 'str',
-                            },
-                            'l4_proto': {
-                                'type': 'str',
-                            },
-                            'flat_oid': {
-                                'type': 'int',
-                            },
-                            'sec_entity_list': {
-                                'type': 'list',
-                                'uuid': {
-                                    'type': 'str',
-                                },
-                                'l4_port': {
-                                    'type': 'int',
-                                },
-                                'entity_key': {
-                                    'type': 'str',
-                                },
-                                'ipv4_addr': {
-                                    'type': 'str',
-                                },
-                                'ipv6_addr': {
-                                    'type': 'str',
-                                },
-                                'entity_metric_list': {
-                                    'type': 'list',
-                                    'std_dev': {
-                                        'type': 'str',
-                                    },
-                                    'min': {
-                                        'type': 'str',
-                                    },
-                                    'max': {
-                                        'type': 'str',
-                                    },
-                                    'metric_name': {
-                                        'type': 'str',
-                                    },
-                                    'current': {
-                                        'type': 'str',
-                                    },
-                                    'threshold': {
-                                        'type': 'str',
-                                    },
-                                    'anomaly': {
-                                        'type': 'str',
-                                    },
-                                    'mean': {
-                                        'type': 'str',
-                                    }
-                                },
-                                'mode': {
-                                    'type': 'str',
-                                },
-                                'l4_proto': {
-                                    'type': 'str',
-                                },
-                                'flat_oid': {
-                                    'type': 'int',
-                                },
-                                'ha_state': {
-                                    'type': 'str',
-                                }
-                            },
-                            'ha_state': {
-                                'type': 'str',
-                            }
-                        },
-                        'primary_keys': {
-                            'type': 'bool',
-                        }
-                    }
-                }
-            },
-            'primary_keys': {
-                'type': 'bool',
-            }
-        },
-        'topk': {
-            'type': 'dict',
-            'sources': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'sessions': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'detail': {
-            'type': 'dict',
-            'debug': {
-                'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'secondary': {
-            'type': 'dict',
-            'topk': {
-                'type': 'dict',
-                'sources': {
-                    'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
                 }
             }
         }

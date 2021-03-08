@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_enable_management_service_telnet_acl_v6
 description:
     - IPv6 ACL for Telnet service
-short_description: Configures A10 enable-management.service.telnet.acl-v6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,85 +22,106 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    tunnel_cfg:
-        description:
-        - "Field tunnel_cfg"
-        required: False
-        suboptions:
-            tunnel_start:
-                description:
-                - "tunnel port (tunnel Interface number)"
-            tunnel_end:
-                description:
-                - "tunnel port"
-    management:
-        description:
-        - "Management Interface"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     acl_name:
         description:
         - "ACL name"
+        type: str
         required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    ve_cfg:
-        description:
-        - "Field ve_cfg"
-        required: False
-        suboptions:
-            ve_end:
-                description:
-                - "VE port"
-            ve_start:
-                description:
-                - "VE port (VE Interface number)"
-    all_data_intf:
-        description:
-        - "All Data Interfaces"
-        required: False
     eth_cfg:
         description:
         - "Field eth_cfg"
+        type: list
         required: False
         suboptions:
             ethernet_start:
                 description:
                 - "Ethernet port (Ethernet Interface number)"
+                type: str
             ethernet_end:
                 description:
                 - "Ethernet port"
+                type: str
+    ve_cfg:
+        description:
+        - "Field ve_cfg"
+        type: list
+        required: False
+        suboptions:
+            ve_start:
+                description:
+                - "VE port (VE Interface number)"
+                type: int
+            ve_end:
+                description:
+                - "VE port"
+                type: int
+    tunnel_cfg:
+        description:
+        - "Field tunnel_cfg"
+        type: list
+        required: False
+        suboptions:
+            tunnel_start:
+                description:
+                - "tunnel port (tunnel Interface number)"
+                type: int
+            tunnel_end:
+                description:
+                - "tunnel port"
+                type: int
+    management:
+        description:
+        - "Management Interface"
+        type: bool
+        required: False
+    all_data_intf:
+        description:
+        - "All Data Interfaces"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -162,6 +181,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'acl_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'eth_cfg': {
+            'type': 'list',
+            'ethernet_start': {
+                'type': 'str',
+            },
+            'ethernet_end': {
+                'type': 'str',
+            }
+        },
+        've_cfg': {
+            'type': 'list',
+            've_start': {
+                'type': 'int',
+            },
+            've_end': {
+                'type': 'int',
+            }
+        },
         'tunnel_cfg': {
             'type': 'list',
             'tunnel_start': {
@@ -174,36 +215,14 @@ def get_argspec():
         'management': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'acl_name': {
-            'type': 'str',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        've_cfg': {
-            'type': 'list',
-            've_end': {
-                'type': 'int',
-            },
-            've_start': {
-                'type': 'int',
-            }
-        },
         'all_data_intf': {
             'type': 'bool',
         },
-        'eth_cfg': {
-            'type': 'list',
-            'ethernet_start': {
-                'type': 'str',
-            },
-            'ethernet_end': {
-                'type': 'str',
-            }
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

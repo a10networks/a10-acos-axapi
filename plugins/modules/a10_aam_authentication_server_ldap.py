@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_ldap
 description:
     - LDAP Authentication Server
-short_description: Configures A10 aam.authentication.server.ldap
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,43 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            ldaps_server_list:
-                description:
-                - "Field ldaps_server_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -81,191 +84,254 @@ options:
           Idle Connection Number; 'ldaps-inuse-conn-num'= LDAPS In-use Connection Number;
           'pw-expiry'= Total Password expiry; 'pw-change-success'= Total password change
           success; 'pw-change-failure'= Total password change failure;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            pw_change_success:
-                description:
-                - "Total password change success"
-            admin_bind_success:
-                description:
-                - "Total Admin Bind Success"
-            response_failure:
-                description:
-                - "Total Failure Response"
-            request_dropped:
-                description:
-                - "Total Dropped Request"
-            other_error:
-                description:
-                - "Total Other Error"
-            response_timeout:
-                description:
-                - "Total Timeout Response"
-            job_start_error:
-                description:
-                - "Total Job Start Error"
-            search_failure:
-                description:
-                - "Total Search Failure"
-            bind_failure:
-                description:
-                - "Total User Bind Failure"
-            request_normal:
-                description:
-                - "Total Normal Request"
-            instance_list:
-                description:
-                - "Field instance_list"
-            response_other:
-                description:
-                - "Total Other Response"
-            pw_change_failure:
-                description:
-                - "Total password change failure"
-            timeout_error:
-                description:
-                - "Total Timeout"
-            ldaps_idle_conn_num:
-                description:
-                - "LDAPS Idle Connection Number"
-            ssl_session_failure:
-                description:
-                - "TLS/SSL Session Failure"
-            authorize_failure:
-                description:
-                - "Total Authorization Failure"
-            ldaps_inuse_conn_num:
-                description:
-                - "LDAPS In-use Connection Number"
-            search_success:
-                description:
-                - "Total Search Success"
-            ssl_session_created:
-                description:
-                - "TLS/SSL Session Created"
-            bind_success:
-                description:
-                - "Total User Bind Success"
-            admin_bind_failure:
-                description:
-                - "Total Admin Bind Failure"
-            authorize_success:
-                description:
-                - "Total Authorization Success"
-            request:
-                description:
-                - "Total Request"
-            polling_control_error:
-                description:
-                - "Total Polling Control Error"
-            pw_expiry:
-                description:
-                - "Total Password expiry"
-            response_success:
-                description:
-                - "Total Success Response"
-            response_error:
-                description:
-                - "Total Error Response"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
     instance_list:
         description:
         - "Field instance_list"
+        type: list
         required: False
         suboptions:
-            health_check_disable:
+            name:
                 description:
-                - "Disable configured health check configuration"
-            protocol:
+                - "Specify LDAP authentication server name"
+                type: str
+            host:
                 description:
-                - "'ldap'= Use LDAP (default); 'ldaps'= Use LDAP over SSL; 'starttls'= Use LDAP
-          StartTLS;"
-            encrypted:
+                - "Field host"
+                type: dict
+            base:
                 description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
+                - "Specify the LDAP server's search base"
+                type: str
             port:
                 description:
                 - "Specify the LDAP server's authentication port, default is 389"
-            ldaps_conn_reuse_idle_timeout:
-                description:
-                - "Specify LDAPS connection reuse idle timeout value (in seconds) (Specify idle
-          timeout value (in seconds), default is 0 (not reuse LDAPS connection))"
+                type: int
             port_hm:
                 description:
                 - "Check port's health status"
-            uuid:
+                type: str
+            port_hm_disable:
                 description:
-                - "uuid of the object"
-            admin_dn:
-                description:
-                - "The LDAP server's admin DN"
-            default_domain:
-                description:
-                - "Specify default domain for LDAP"
-            auth_type:
-                description:
-                - "'ad'= Active Directory. Default; 'open-ldap'= OpenLDAP;"
-            admin_secret:
-                description:
-                - "Specify the LDAP server's admin secret password"
+                - "Disable configured port health check configuration"
+                type: bool
             pwdmaxage:
                 description:
                 - "Specify the LDAP server's default password expiration time (in seconds) (The
           LDAP server's default password expiration time (in seconds), default is 0 (no
           expiration))"
-            health_check_string:
+                type: int
+            admin_dn:
                 description:
-                - "Health monitor name"
+                - "The LDAP server's admin DN"
+                type: str
+            admin_secret:
+                description:
+                - "Specify the LDAP server's admin secret password"
+                type: bool
+            secret_string:
+                description:
+                - "secret password"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+            timeout:
+                description:
+                - "Specify timout for LDAP, default is 10 seconds (The timeout, default is 10
+          seconds)"
+                type: int
+            dn_attribute:
+                description:
+                - "Specify Distinguished Name attribute, default is CN"
+                type: str
+            default_domain:
+                description:
+                - "Specify default domain for LDAP"
+                type: str
+            bind_with_dn:
+                description:
+                - "Enforce using DN for LDAP binding(All user input name will be used to create
+          DN)"
+                type: bool
             derive_bind_dn:
                 description:
                 - "Field derive_bind_dn"
+                type: dict
+            health_check:
+                description:
+                - "Check server's health status"
+                type: bool
+            health_check_string:
+                description:
+                - "Health monitor name"
+                type: str
+            health_check_disable:
+                description:
+                - "Disable configured health check configuration"
+                type: bool
+            protocol:
+                description:
+                - "'ldap'= Use LDAP (default); 'ldaps'= Use LDAP over SSL; 'starttls'= Use LDAP
+          StartTLS;"
+                type: str
+            ca_cert:
+                description:
+                - "Specify the LDAPS CA cert filename (Trusted LDAPS CA cert filename)"
+                type: str
+            ldaps_conn_reuse_idle_timeout:
+                description:
+                - "Specify LDAPS connection reuse idle timeout value (in seconds) (Specify idle
+          timeout value (in seconds), default is 0 (not reuse LDAPS connection))"
+                type: int
+            auth_type:
+                description:
+                - "'ad'= Active Directory. Default; 'open-ldap'= OpenLDAP;"
+                type: str
             prompt_pw_change_before_exp:
                 description:
                 - "Prompt user to change password before expiration in N days. This option only
           takes effect when server type is AD (Prompt user to change password before
           expiration in N days, default is not to prompt the user)"
-            base:
+                type: int
+            uuid:
                 description:
-                - "Specify the LDAP server's search base"
-            secret_string:
-                description:
-                - "secret password"
-            name:
-                description:
-                - "Specify LDAP authentication server name"
-            port_hm_disable:
-                description:
-                - "Disable configured port health check configuration"
-            host:
-                description:
-                - "Field host"
-            ca_cert:
-                description:
-                - "Specify the LDAPS CA cert filename (Trusted LDAPS CA cert filename)"
-            bind_with_dn:
-                description:
-                - "Enforce using DN for LDAP binding(All user input name will be used to create
-          DN)"
+                - "uuid of the object"
+                type: str
             sampling_enable:
                 description:
                 - "Field sampling_enable"
-            dn_attribute:
+                type: list
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            ldaps_server_list:
                 description:
-                - "Specify Distinguished Name attribute, default is CN"
-            timeout:
+                - "Field ldaps_server_list"
+                type: list
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            admin_bind_success:
                 description:
-                - "Specify timout for LDAP, default is 10 seconds (The timeout, default is 10
-          seconds)"
-            health_check:
+                - "Total Admin Bind Success"
+                type: str
+            admin_bind_failure:
                 description:
-                - "Check server's health status"
+                - "Total Admin Bind Failure"
+                type: str
+            bind_success:
+                description:
+                - "Total User Bind Success"
+                type: str
+            bind_failure:
+                description:
+                - "Total User Bind Failure"
+                type: str
+            search_success:
+                description:
+                - "Total Search Success"
+                type: str
+            search_failure:
+                description:
+                - "Total Search Failure"
+                type: str
+            authorize_success:
+                description:
+                - "Total Authorization Success"
+                type: str
+            authorize_failure:
+                description:
+                - "Total Authorization Failure"
+                type: str
+            timeout_error:
+                description:
+                - "Total Timeout"
+                type: str
+            other_error:
+                description:
+                - "Total Other Error"
+                type: str
+            request:
+                description:
+                - "Total Request"
+                type: str
+            request_normal:
+                description:
+                - "Total Normal Request"
+                type: str
+            request_dropped:
+                description:
+                - "Total Dropped Request"
+                type: str
+            response_success:
+                description:
+                - "Total Success Response"
+                type: str
+            response_failure:
+                description:
+                - "Total Failure Response"
+                type: str
+            response_error:
+                description:
+                - "Total Error Response"
+                type: str
+            response_timeout:
+                description:
+                - "Total Timeout Response"
+                type: str
+            response_other:
+                description:
+                - "Total Other Response"
+                type: str
+            job_start_error:
+                description:
+                - "Total Job Start Error"
+                type: str
+            polling_control_error:
+                description:
+                - "Total Polling Control Error"
+                type: str
+            ssl_session_created:
+                description:
+                - "TLS/SSL Session Created"
+                type: str
+            ssl_session_failure:
+                description:
+                - "TLS/SSL Session Failure"
+                type: str
+            ldaps_idle_conn_num:
+                description:
+                - "LDAPS Idle Connection Number"
+                type: str
+            ldaps_inuse_conn_num:
+                description:
+                - "LDAPS In-use Connection Number"
+                type: str
+            pw_expiry:
+                description:
+                - "Total Password expiry"
+                type: str
+            pw_change_success:
+                description:
+                - "Total password change success"
+                type: str
+            pw_change_failure:
+                description:
+                - "Total password change failure"
+                type: str
+            instance_list:
+                description:
+                - "Field instance_list"
+                type: list
 
 '''
 
@@ -322,26 +388,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'ldaps_server_list': {
-                'type': 'list',
-                'ldaps_idle_conn_num': {
-                    'type': 'int',
-                },
-                'ldaps_inuse_conn_num': {
-                    'type': 'int',
-                },
-                'ldaps_inuse_conn_fd_list': {
-                    'type': 'str',
-                },
-                'ldaps_idle_conn_fd_list': {
-                    'type': 'str',
-                },
-                'ldap_uri': {
-                    'type': 'str',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -363,193 +411,59 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'pw_change_success': {
-                'type': 'str',
-            },
-            'admin_bind_success': {
-                'type': 'str',
-            },
-            'response_failure': {
-                'type': 'str',
-            },
-            'request_dropped': {
-                'type': 'str',
-            },
-            'other_error': {
-                'type': 'str',
-            },
-            'response_timeout': {
-                'type': 'str',
-            },
-            'job_start_error': {
-                'type': 'str',
-            },
-            'search_failure': {
-                'type': 'str',
-            },
-            'bind_failure': {
-                'type': 'str',
-            },
-            'request_normal': {
-                'type': 'str',
-            },
-            'instance_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'bind_failure': {
-                        'type': 'str',
-                    },
-                    'authorize_failure': {
-                        'type': 'str',
-                    },
-                    'admin_bind_failure': {
-                        'type': 'str',
-                    },
-                    'search_failure': {
-                        'type': 'str',
-                    },
-                    'authorize_success': {
-                        'type': 'str',
-                    },
-                    'pw_change_success': {
-                        'type': 'str',
-                    },
-                    'timeout_error': {
-                        'type': 'str',
-                    },
-                    'request': {
-                        'type': 'str',
-                    },
-                    'pw_expiry': {
-                        'type': 'str',
-                    },
-                    'admin_bind_success': {
-                        'type': 'str',
-                    },
-                    'search_success': {
-                        'type': 'str',
-                    },
-                    'other_error': {
-                        'type': 'str',
-                    },
-                    'ssl_session_created': {
-                        'type': 'str',
-                    },
-                    'pw_change_failure': {
-                        'type': 'str',
-                    },
-                    'ssl_session_failure': {
-                        'type': 'str',
-                    },
-                    'bind_success': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'response_other': {
-                'type': 'str',
-            },
-            'pw_change_failure': {
-                'type': 'str',
-            },
-            'timeout_error': {
-                'type': 'str',
-            },
-            'ldaps_idle_conn_num': {
-                'type': 'str',
-            },
-            'ssl_session_failure': {
-                'type': 'str',
-            },
-            'authorize_failure': {
-                'type': 'str',
-            },
-            'ldaps_inuse_conn_num': {
-                'type': 'str',
-            },
-            'search_success': {
-                'type': 'str',
-            },
-            'ssl_session_created': {
-                'type': 'str',
-            },
-            'bind_success': {
-                'type': 'str',
-            },
-            'admin_bind_failure': {
-                'type': 'str',
-            },
-            'authorize_success': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'polling_control_error': {
-                'type': 'str',
-            },
-            'pw_expiry': {
-                'type': 'str',
-            },
-            'response_success': {
-                'type': 'str',
-            },
-            'response_error': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'instance_list': {
             'type': 'list',
-            'health_check_disable': {
-                'type': 'bool',
-            },
-            'protocol': {
+            'name': {
                 'type': 'str',
-                'choices': ['ldap', 'ldaps', 'starttls']
+                'required': True,
             },
-            'encrypted': {
+            'host': {
+                'type': 'dict',
+                'hostip': {
+                    'type': 'str',
+                },
+                'hostipv6': {
+                    'type': 'str',
+                }
+            },
+            'base': {
                 'type': 'str',
             },
             'port': {
                 'type': 'int',
             },
-            'ldaps_conn_reuse_idle_timeout': {
-                'type': 'int',
-            },
             'port_hm': {
                 'type': 'str',
             },
-            'uuid': {
-                'type': 'str',
-            },
-            'admin_dn': {
-                'type': 'str',
-            },
-            'default_domain': {
-                'type': 'str',
-            },
-            'auth_type': {
-                'type': 'str',
-                'choices': ['ad', 'open-ldap']
-            },
-            'admin_secret': {
+            'port_hm_disable': {
                 'type': 'bool',
             },
             'pwdmaxage': {
                 'type': 'int',
             },
-            'health_check_string': {
+            'admin_dn': {
                 'type': 'str',
+            },
+            'admin_secret': {
+                'type': 'bool',
+            },
+            'secret_string': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            },
+            'timeout': {
+                'type': 'int',
+            },
+            'dn_attribute': {
+                'type': 'str',
+            },
+            'default_domain': {
+                'type': 'str',
+            },
+            'bind_with_dn': {
+                'type': 'bool',
             },
             'derive_bind_dn': {
                 'type': 'dict',
@@ -557,36 +471,34 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'prompt_pw_change_before_exp': {
-                'type': 'int',
-            },
-            'base': {
-                'type': 'str',
-            },
-            'secret_string': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'port_hm_disable': {
+            'health_check': {
                 'type': 'bool',
             },
-            'host': {
-                'type': 'dict',
-                'hostipv6': {
-                    'type': 'str',
-                },
-                'hostip': {
-                    'type': 'str',
-                }
+            'health_check_string': {
+                'type': 'str',
+            },
+            'health_check_disable': {
+                'type': 'bool',
+            },
+            'protocol': {
+                'type': 'str',
+                'choices': ['ldap', 'ldaps', 'starttls']
             },
             'ca_cert': {
                 'type': 'str',
             },
-            'bind_with_dn': {
-                'type': 'bool',
+            'ldaps_conn_reuse_idle_timeout': {
+                'type': 'int',
+            },
+            'auth_type': {
+                'type': 'str',
+                'choices': ['ad', 'open-ldap']
+            },
+            'prompt_pw_change_before_exp': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -603,15 +515,169 @@ def get_argspec():
                         'pw_change_success', 'pw_change_failure'
                     ]
                 }
-            },
-            'dn_attribute': {
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'ldaps_server_list': {
+                'type': 'list',
+                'ldap_uri': {
+                    'type': 'str',
+                },
+                'ldaps_idle_conn_num': {
+                    'type': 'int',
+                },
+                'ldaps_idle_conn_fd_list': {
+                    'type': 'str',
+                },
+                'ldaps_inuse_conn_num': {
+                    'type': 'int',
+                },
+                'ldaps_inuse_conn_fd_list': {
+                    'type': 'str',
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'admin_bind_success': {
                 'type': 'str',
             },
-            'timeout': {
-                'type': 'int',
+            'admin_bind_failure': {
+                'type': 'str',
             },
-            'health_check': {
-                'type': 'bool',
+            'bind_success': {
+                'type': 'str',
+            },
+            'bind_failure': {
+                'type': 'str',
+            },
+            'search_success': {
+                'type': 'str',
+            },
+            'search_failure': {
+                'type': 'str',
+            },
+            'authorize_success': {
+                'type': 'str',
+            },
+            'authorize_failure': {
+                'type': 'str',
+            },
+            'timeout_error': {
+                'type': 'str',
+            },
+            'other_error': {
+                'type': 'str',
+            },
+            'request': {
+                'type': 'str',
+            },
+            'request_normal': {
+                'type': 'str',
+            },
+            'request_dropped': {
+                'type': 'str',
+            },
+            'response_success': {
+                'type': 'str',
+            },
+            'response_failure': {
+                'type': 'str',
+            },
+            'response_error': {
+                'type': 'str',
+            },
+            'response_timeout': {
+                'type': 'str',
+            },
+            'response_other': {
+                'type': 'str',
+            },
+            'job_start_error': {
+                'type': 'str',
+            },
+            'polling_control_error': {
+                'type': 'str',
+            },
+            'ssl_session_created': {
+                'type': 'str',
+            },
+            'ssl_session_failure': {
+                'type': 'str',
+            },
+            'ldaps_idle_conn_num': {
+                'type': 'str',
+            },
+            'ldaps_inuse_conn_num': {
+                'type': 'str',
+            },
+            'pw_expiry': {
+                'type': 'str',
+            },
+            'pw_change_success': {
+                'type': 'str',
+            },
+            'pw_change_failure': {
+                'type': 'str',
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'admin_bind_success': {
+                        'type': 'str',
+                    },
+                    'admin_bind_failure': {
+                        'type': 'str',
+                    },
+                    'bind_success': {
+                        'type': 'str',
+                    },
+                    'bind_failure': {
+                        'type': 'str',
+                    },
+                    'search_success': {
+                        'type': 'str',
+                    },
+                    'search_failure': {
+                        'type': 'str',
+                    },
+                    'authorize_success': {
+                        'type': 'str',
+                    },
+                    'authorize_failure': {
+                        'type': 'str',
+                    },
+                    'timeout_error': {
+                        'type': 'str',
+                    },
+                    'other_error': {
+                        'type': 'str',
+                    },
+                    'request': {
+                        'type': 'str',
+                    },
+                    'ssl_session_created': {
+                        'type': 'str',
+                    },
+                    'ssl_session_failure': {
+                        'type': 'str',
+                    },
+                    'pw_expiry': {
+                        'type': 'str',
+                    },
+                    'pw_change_success': {
+                        'type': 'str',
+                    },
+                    'pw_change_failure': {
+                        'type': 'str',
+                    }
+                }
             }
         }
     })

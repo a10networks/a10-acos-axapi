@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device_session_sync_interface
 description:
     - Interface for scaleout session sync
-short_description: Configures A10 scaleout.cluster.local.device.session-sync-interface
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,62 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     cluster_id:
         description:
-        - Key to identify parent object    ve_cfg:
-        description:
-        - "Field ve_cfg"
-        required: False
-        suboptions:
-            ve:
-                description:
-                - "Virtual ethernet Interface (Virtual ethernet interface number)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    trunk_cfg:
-        description:
-        - "Field trunk_cfg"
-        required: False
-        suboptions:
-            trunk:
-                description:
-                - "Trunk Interface (Trunk interface number)"
+        - Key to identify parent object
+        type: str
+        required: True
     eth_cfg:
         description:
         - "Field eth_cfg"
+        type: list
         required: False
         suboptions:
             ethernet:
                 description:
                 - "Ethernet Interface (Ethernet interface number)"
+                type: str
+    trunk_cfg:
+        description:
+        - "Field trunk_cfg"
+        type: list
+        required: False
+        suboptions:
+            trunk:
+                description:
+                - "Trunk Interface (Trunk interface number)"
+                type: int
+    ve_cfg:
+        description:
+        - "Field ve_cfg"
+        type: list
+        required: False
+        suboptions:
+            ve:
+                description:
+                - "Virtual ethernet Interface (Virtual ethernet interface number)"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -135,6 +150,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'eth_cfg': {
+            'type': 'list',
+            'ethernet': {
+                'type': 'str',
+            }
+        },
+        'trunk_cfg': {
+            'type': 'list',
+            'trunk': {
+                'type': 'int',
+            }
+        },
         've_cfg': {
             'type': 'list',
             've': {
@@ -143,18 +170,6 @@ def get_argspec():
         },
         'uuid': {
             'type': 'str',
-        },
-        'trunk_cfg': {
-            'type': 'list',
-            'trunk': {
-                'type': 'int',
-            }
-        },
-        'eth_cfg': {
-            'type': 'list',
-            'ethernet': {
-                'type': 'str',
-            }
         }
     })
     # Parent keys

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authorization_policy_jwt_claim_map
 description:
     - Map attributes to JWT claims
-short_description: Configures A10 aam.authorization.policy.jwt-claim-map
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,73 +22,93 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    claim:
-        description:
-        - "Specify JWT claim name to map to."
-        required: False
-    bool_val:
-        description:
-        - "'true'= True; 'false'= False;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    string_type:
-        description:
-        - "Claim type is string"
-        required: False
-    str_val:
-        description:
-        - "Specify JWT claim value."
-        required: False
-    num_val:
-        description:
-        - "Specify JWT claim value."
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     attr_num:
         description:
         - "Spcify attribute ID for claim mapping"
+        type: int
         required: True
-    number_type:
+    claim:
         description:
-        - "Claim type is number"
-        required: False
-    boolean_type:
-        description:
-        - "Claim type is boolean"
+        - "Specify JWT claim name to map to."
+        type: str
         required: False
     ntype:
         description:
         - "Specify claim type"
+        type: bool
+        required: False
+    string_type:
+        description:
+        - "Claim type is string"
+        type: bool
+        required: False
+    number_type:
+        description:
+        - "Claim type is number"
+        type: bool
+        required: False
+    boolean_type:
+        description:
+        - "Claim type is boolean"
+        type: bool
+        required: False
+    str_val:
+        description:
+        - "Specify JWT claim value."
+        type: str
+        required: False
+    num_val:
+        description:
+        - "Specify JWT claim value."
+        type: int
+        required: False
+    bool_val:
+        description:
+        - "'true'= True; 'false'= False;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -153,17 +171,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'attr_num': {
+            'type': 'int',
+            'required': True,
+        },
         'claim': {
             'type': 'str',
         },
-        'bool_val': {
-            'type': 'str',
-            'choices': ['true', 'false']
-        },
-        'uuid': {
-            'type': 'str',
+        'ntype': {
+            'type': 'bool',
         },
         'string_type': {
+            'type': 'bool',
+        },
+        'number_type': {
+            'type': 'bool',
+        },
+        'boolean_type': {
             'type': 'bool',
         },
         'str_val': {
@@ -172,18 +196,12 @@ def get_argspec():
         'num_val': {
             'type': 'int',
         },
-        'attr_num': {
-            'type': 'int',
-            'required': True,
+        'bool_val': {
+            'type': 'str',
+            'choices': ['true', 'false']
         },
-        'number_type': {
-            'type': 'bool',
-        },
-        'boolean_type': {
-            'type': 'bool',
-        },
-        'ntype': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_windows
 description:
     - 'Windows Server, using Kerberos or NTLM for authentication'
-short_description: Configures A10 aam.authentication.server.windows
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -85,161 +96,207 @@ options:
           Total Kerberos password expiry; 'kerberos-pw-change-success'= Total Kerberos
           password change success; 'kerberos-pw-change-failure'= Total Kerberos password
           change failure;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            kerberos_pw_change_success:
-                description:
-                - "Total Kerberos password change success"
-            ntlm_response_error:
-                description:
-                - "Total NTLM Error Response"
-            ntlm_session_setup_failed:
-                description:
-                - "Total NTLM Session Setup Failure"
-            ntlm_polling_control_error:
-                description:
-                - "Total NTLM Polling Control Error"
-            kerberos_other_error:
-                description:
-                - "Total Kerberos Other Error"
-            kerberos_timeout_error:
-                description:
-                - "Total Kerberos Timeout"
-            kerberos_job_start_error:
-                description:
-                - "Total Kerberos Job Start Error"
-            ntlm_proto_negotiation_success:
-                description:
-                - "Total NTLM Protocol Negotiation Success"
-            ntlm_other_error:
-                description:
-                - "Total NTLM Other Error"
-            ntlm_job_start_error:
-                description:
-                - "Total NTLM Job Start Error"
-            kerberos_response_failure:
-                description:
-                - "Total Kerberos Failure Response"
-            ntlm_prepare_req_success:
-                description:
-                - "Total NTLM Prepare Request Success"
-            ntlm_response_failure:
-                description:
-                - "Total NTLM Failure Response"
-            kerberos_polling_control_error:
-                description:
-                - "Total Kerberos Polling Control Error"
-            ntlm_prepare_req_failed:
-                description:
-                - "Total NTLM Prepare Request Failed"
-            kerberos_response_success:
-                description:
-                - "Total Kerberos Success Response"
-            kerberos_pw_expiry:
-                description:
-                - "Total Kerberos password expiry"
-            ntlm_authentication_success:
-                description:
-                - "Total NTLM Authentication Success"
-            ntlm_response_timeout:
-                description:
-                - "Total NTLM Timeout Response"
-            ntlm_authentication_failure:
-                description:
-                - "Total NTLM Authentication Failure"
-            kerberos_request_send:
-                description:
-                - "Total Kerberos Request"
-            kerberos_pw_change_failure:
-                description:
-                - "Total Kerberos password change failure"
-            kerberos_request_normal:
-                description:
-                - "Total Kerberos Normal Request"
-            ntlm_response_other:
-                description:
-                - "Total NTLM Other Response"
-            kerberos_request_dropped:
-                description:
-                - "Total Kerberos Dropped Request"
-            kerberos_response_other:
-                description:
-                - "Total Kerberos Other Response"
-            ntlm_session_setup_success:
-                description:
-                - "Total NTLM Session Setup Success"
-            kerberos_response_error:
-                description:
-                - "Total Kerberos Error Response"
-            ntlm_request_normal:
-                description:
-                - "Total NTLM Normal Request"
-            ntlm_request_dropped:
-                description:
-                - "Total NTLM Dropped Request"
-            instance_list:
-                description:
-                - "Field instance_list"
-            kerberos_response_timeout:
-                description:
-                - "Total Kerberos Timeout Response"
-            kerberos_response_get:
-                description:
-                - "Total Kerberos Response"
-            ntlm_timeout_error:
-                description:
-                - "Total NTLM Timeout"
-            ntlm_proto_negotiation_failure:
-                description:
-                - "Total NTLM Protocol Negotiation Failure"
-            ntlm_response_success:
-                description:
-                - "Total NTLM Success Response"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
     instance_list:
         description:
         - "Field instance_list"
+        type: list
         required: False
         suboptions:
-            health_check_string:
-                description:
-                - "Health monitor name"
-            realm:
-                description:
-                - "Specify realm of Windows server"
             name:
                 description:
                 - "Specify Windows authentication server name"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
+                type: str
             host:
                 description:
                 - "Field host"
+                type: dict
             timeout:
                 description:
                 - "Specify connection timeout to server, default is 10 seconds"
+                type: int
             auth_protocol:
                 description:
                 - "Field auth_protocol"
-            health_check_disable:
+                type: dict
+            realm:
                 description:
-                - "Disable configured health check configuration"
+                - "Specify realm of Windows server"
+                type: str
             support_apacheds_kdc:
                 description:
                 - "Enable weak cipher (DES CRC/MD5/MD4) and merge AS-REQ in single packet"
+                type: bool
             health_check:
                 description:
                 - "Check server's health status"
+                type: bool
+            health_check_string:
+                description:
+                - "Health monitor name"
+                type: str
+            health_check_disable:
+                description:
+                - "Disable configured health check configuration"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            kerberos_request_send:
+                description:
+                - "Total Kerberos Request"
+                type: str
+            kerberos_response_get:
+                description:
+                - "Total Kerberos Response"
+                type: str
+            kerberos_timeout_error:
+                description:
+                - "Total Kerberos Timeout"
+                type: str
+            kerberos_other_error:
+                description:
+                - "Total Kerberos Other Error"
+                type: str
+            ntlm_authentication_success:
+                description:
+                - "Total NTLM Authentication Success"
+                type: str
+            ntlm_authentication_failure:
+                description:
+                - "Total NTLM Authentication Failure"
+                type: str
+            ntlm_proto_negotiation_success:
+                description:
+                - "Total NTLM Protocol Negotiation Success"
+                type: str
+            ntlm_proto_negotiation_failure:
+                description:
+                - "Total NTLM Protocol Negotiation Failure"
+                type: str
+            ntlm_session_setup_success:
+                description:
+                - "Total NTLM Session Setup Success"
+                type: str
+            ntlm_session_setup_failed:
+                description:
+                - "Total NTLM Session Setup Failure"
+                type: str
+            kerberos_request_normal:
+                description:
+                - "Total Kerberos Normal Request"
+                type: str
+            kerberos_request_dropped:
+                description:
+                - "Total Kerberos Dropped Request"
+                type: str
+            kerberos_response_success:
+                description:
+                - "Total Kerberos Success Response"
+                type: str
+            kerberos_response_failure:
+                description:
+                - "Total Kerberos Failure Response"
+                type: str
+            kerberos_response_error:
+                description:
+                - "Total Kerberos Error Response"
+                type: str
+            kerberos_response_timeout:
+                description:
+                - "Total Kerberos Timeout Response"
+                type: str
+            kerberos_response_other:
+                description:
+                - "Total Kerberos Other Response"
+                type: str
+            kerberos_job_start_error:
+                description:
+                - "Total Kerberos Job Start Error"
+                type: str
+            kerberos_polling_control_error:
+                description:
+                - "Total Kerberos Polling Control Error"
+                type: str
+            ntlm_prepare_req_success:
+                description:
+                - "Total NTLM Prepare Request Success"
+                type: str
+            ntlm_prepare_req_failed:
+                description:
+                - "Total NTLM Prepare Request Failed"
+                type: str
+            ntlm_timeout_error:
+                description:
+                - "Total NTLM Timeout"
+                type: str
+            ntlm_other_error:
+                description:
+                - "Total NTLM Other Error"
+                type: str
+            ntlm_request_normal:
+                description:
+                - "Total NTLM Normal Request"
+                type: str
+            ntlm_request_dropped:
+                description:
+                - "Total NTLM Dropped Request"
+                type: str
+            ntlm_response_success:
+                description:
+                - "Total NTLM Success Response"
+                type: str
+            ntlm_response_failure:
+                description:
+                - "Total NTLM Failure Response"
+                type: str
+            ntlm_response_error:
+                description:
+                - "Total NTLM Error Response"
+                type: str
+            ntlm_response_timeout:
+                description:
+                - "Total NTLM Timeout Response"
+                type: str
+            ntlm_response_other:
+                description:
+                - "Total NTLM Other Response"
+                type: str
+            ntlm_job_start_error:
+                description:
+                - "Total NTLM Job Start Error"
+                type: str
+            ntlm_polling_control_error:
+                description:
+                - "Total NTLM Polling Control Error"
+                type: str
+            kerberos_pw_expiry:
+                description:
+                - "Total Kerberos password expiry"
+                type: str
+            kerberos_pw_change_success:
+                description:
+                - "Total Kerberos password change success"
+                type: str
+            kerberos_pw_change_failure:
+                description:
+                - "Total Kerberos password change failure"
+                type: str
+            instance_list:
+                description:
+                - "Field instance_list"
+                type: list
 
 '''
 
@@ -295,6 +352,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -324,189 +384,71 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'kerberos_pw_change_success': {
-                'type': 'str',
-            },
-            'ntlm_response_error': {
-                'type': 'str',
-            },
-            'ntlm_session_setup_failed': {
-                'type': 'str',
-            },
-            'ntlm_polling_control_error': {
-                'type': 'str',
-            },
-            'kerberos_other_error': {
-                'type': 'str',
-            },
-            'kerberos_timeout_error': {
-                'type': 'str',
-            },
-            'kerberos_job_start_error': {
-                'type': 'str',
-            },
-            'ntlm_proto_negotiation_success': {
-                'type': 'str',
-            },
-            'ntlm_other_error': {
-                'type': 'str',
-            },
-            'ntlm_job_start_error': {
-                'type': 'str',
-            },
-            'kerberos_response_failure': {
-                'type': 'str',
-            },
-            'ntlm_prepare_req_success': {
-                'type': 'str',
-            },
-            'ntlm_response_failure': {
-                'type': 'str',
-            },
-            'kerberos_polling_control_error': {
-                'type': 'str',
-            },
-            'ntlm_prepare_req_failed': {
-                'type': 'str',
-            },
-            'kerberos_response_success': {
-                'type': 'str',
-            },
-            'kerberos_pw_expiry': {
-                'type': 'str',
-            },
-            'ntlm_authentication_success': {
-                'type': 'str',
-            },
-            'ntlm_response_timeout': {
-                'type': 'str',
-            },
-            'ntlm_authentication_failure': {
-                'type': 'str',
-            },
-            'kerberos_request_send': {
-                'type': 'str',
-            },
-            'kerberos_pw_change_failure': {
-                'type': 'str',
-            },
-            'kerberos_request_normal': {
-                'type': 'str',
-            },
-            'ntlm_response_other': {
-                'type': 'str',
-            },
-            'kerberos_request_dropped': {
-                'type': 'str',
-            },
-            'kerberos_response_other': {
-                'type': 'str',
-            },
-            'ntlm_session_setup_success': {
-                'type': 'str',
-            },
-            'kerberos_response_error': {
-                'type': 'str',
-            },
-            'ntlm_request_normal': {
-                'type': 'str',
-            },
-            'ntlm_request_dropped': {
-                'type': 'str',
-            },
-            'instance_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'krb_send_req_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_auth_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_prepare_req_error': {
-                        'type': 'str',
-                    },
-                    'ntlm_proto_nego_failure': {
-                        'type': 'str',
-                    },
-                    'ntlm_other_error': {
-                        'type': 'str',
-                    },
-                    'ntlm_auth_failure': {
-                        'type': 'str',
-                    },
-                    'krb_timeout_error': {
-                        'type': 'str',
-                    },
-                    'ntlm_session_setup_success': {
-                        'type': 'str',
-                    },
-                    'krb_other_error': {
-                        'type': 'str',
-                    },
-                    'ntlm_timeout_error': {
-                        'type': 'str',
-                    },
-                    'krb_pw_expiry': {
-                        'type': 'str',
-                    },
-                    'ntlm_session_setup_failure': {
-                        'type': 'str',
-                    },
-                    'krb_pw_change_failure': {
-                        'type': 'str',
-                    },
-                    'krb_get_resp_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_proto_nego_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_prepare_req_success': {
-                        'type': 'str',
-                    },
-                    'krb_pw_change_success': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'kerberos_response_timeout': {
-                'type': 'str',
-            },
-            'kerberos_response_get': {
-                'type': 'str',
-            },
-            'ntlm_timeout_error': {
-                'type': 'str',
-            },
-            'ntlm_proto_negotiation_failure': {
-                'type': 'str',
-            },
-            'ntlm_response_success': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'instance_list': {
             'type': 'list',
-            'health_check_string': {
+            'name': {
                 'type': 'str',
+                'required': True,
+            },
+            'host': {
+                'type': 'dict',
+                'hostip': {
+                    'type': 'str',
+                },
+                'hostipv6': {
+                    'type': 'str',
+                }
+            },
+            'timeout': {
+                'type': 'int',
+            },
+            'auth_protocol': {
+                'type': 'dict',
+                'ntlm_disable': {
+                    'type': 'bool',
+                },
+                'ntlm_version': {
+                    'type': 'int',
+                },
+                'ntlm_health_check': {
+                    'type': 'str',
+                },
+                'ntlm_health_check_disable': {
+                    'type': 'bool',
+                },
+                'kerberos_disable': {
+                    'type': 'bool',
+                },
+                'kerberos_port': {
+                    'type': 'int',
+                },
+                'kport_hm': {
+                    'type': 'str',
+                },
+                'kport_hm_disable': {
+                    'type': 'bool',
+                },
+                'kerberos_password_change_port': {
+                    'type': 'int',
+                }
             },
             'realm': {
                 'type': 'str',
             },
-            'name': {
+            'support_apacheds_kdc': {
+                'type': 'bool',
+            },
+            'health_check': {
+                'type': 'bool',
+            },
+            'health_check_string': {
                 'type': 'str',
-                'required': True,
+            },
+            'health_check_disable': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -526,60 +468,175 @@ def get_argspec():
                         'ntlm_timeout_error', 'ntlm_other_error'
                     ]
                 }
-            },
-            'host': {
-                'type': 'dict',
-                'hostipv6': {
-                    'type': 'str',
-                },
-                'hostip': {
-                    'type': 'str',
-                }
-            },
-            'timeout': {
-                'type': 'int',
-            },
-            'auth_protocol': {
-                'type': 'dict',
-                'ntlm_health_check': {
-                    'type': 'str',
-                },
-                'kport_hm_disable': {
-                    'type': 'bool',
-                },
-                'ntlm_health_check_disable': {
-                    'type': 'bool',
-                },
-                'kerberos_port': {
-                    'type': 'int',
-                },
-                'ntlm_version': {
-                    'type': 'int',
-                },
-                'kerberos_disable': {
-                    'type': 'bool',
-                },
-                'ntlm_disable': {
-                    'type': 'bool',
-                },
-                'kport_hm': {
-                    'type': 'str',
-                },
-                'kerberos_password_change_port': {
-                    'type': 'int',
-                }
-            },
-            'health_check_disable': {
-                'type': 'bool',
-            },
-            'support_apacheds_kdc': {
-                'type': 'bool',
-            },
-            'health_check': {
-                'type': 'bool',
-            },
-            'uuid': {
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'kerberos_request_send': {
                 'type': 'str',
+            },
+            'kerberos_response_get': {
+                'type': 'str',
+            },
+            'kerberos_timeout_error': {
+                'type': 'str',
+            },
+            'kerberos_other_error': {
+                'type': 'str',
+            },
+            'ntlm_authentication_success': {
+                'type': 'str',
+            },
+            'ntlm_authentication_failure': {
+                'type': 'str',
+            },
+            'ntlm_proto_negotiation_success': {
+                'type': 'str',
+            },
+            'ntlm_proto_negotiation_failure': {
+                'type': 'str',
+            },
+            'ntlm_session_setup_success': {
+                'type': 'str',
+            },
+            'ntlm_session_setup_failed': {
+                'type': 'str',
+            },
+            'kerberos_request_normal': {
+                'type': 'str',
+            },
+            'kerberos_request_dropped': {
+                'type': 'str',
+            },
+            'kerberos_response_success': {
+                'type': 'str',
+            },
+            'kerberos_response_failure': {
+                'type': 'str',
+            },
+            'kerberos_response_error': {
+                'type': 'str',
+            },
+            'kerberos_response_timeout': {
+                'type': 'str',
+            },
+            'kerberos_response_other': {
+                'type': 'str',
+            },
+            'kerberos_job_start_error': {
+                'type': 'str',
+            },
+            'kerberos_polling_control_error': {
+                'type': 'str',
+            },
+            'ntlm_prepare_req_success': {
+                'type': 'str',
+            },
+            'ntlm_prepare_req_failed': {
+                'type': 'str',
+            },
+            'ntlm_timeout_error': {
+                'type': 'str',
+            },
+            'ntlm_other_error': {
+                'type': 'str',
+            },
+            'ntlm_request_normal': {
+                'type': 'str',
+            },
+            'ntlm_request_dropped': {
+                'type': 'str',
+            },
+            'ntlm_response_success': {
+                'type': 'str',
+            },
+            'ntlm_response_failure': {
+                'type': 'str',
+            },
+            'ntlm_response_error': {
+                'type': 'str',
+            },
+            'ntlm_response_timeout': {
+                'type': 'str',
+            },
+            'ntlm_response_other': {
+                'type': 'str',
+            },
+            'ntlm_job_start_error': {
+                'type': 'str',
+            },
+            'ntlm_polling_control_error': {
+                'type': 'str',
+            },
+            'kerberos_pw_expiry': {
+                'type': 'str',
+            },
+            'kerberos_pw_change_success': {
+                'type': 'str',
+            },
+            'kerberos_pw_change_failure': {
+                'type': 'str',
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'krb_send_req_success': {
+                        'type': 'str',
+                    },
+                    'krb_get_resp_success': {
+                        'type': 'str',
+                    },
+                    'krb_timeout_error': {
+                        'type': 'str',
+                    },
+                    'krb_other_error': {
+                        'type': 'str',
+                    },
+                    'krb_pw_expiry': {
+                        'type': 'str',
+                    },
+                    'krb_pw_change_success': {
+                        'type': 'str',
+                    },
+                    'krb_pw_change_failure': {
+                        'type': 'str',
+                    },
+                    'ntlm_proto_nego_success': {
+                        'type': 'str',
+                    },
+                    'ntlm_proto_nego_failure': {
+                        'type': 'str',
+                    },
+                    'ntlm_session_setup_success': {
+                        'type': 'str',
+                    },
+                    'ntlm_session_setup_failure': {
+                        'type': 'str',
+                    },
+                    'ntlm_prepare_req_success': {
+                        'type': 'str',
+                    },
+                    'ntlm_prepare_req_error': {
+                        'type': 'str',
+                    },
+                    'ntlm_auth_success': {
+                        'type': 'str',
+                    },
+                    'ntlm_auth_failure': {
+                        'type': 'str',
+                    },
+                    'ntlm_timeout_error': {
+                        'type': 'str',
+                    },
+                    'ntlm_other_error': {
+                        'type': 'str',
+                    }
+                }
             }
         }
     })

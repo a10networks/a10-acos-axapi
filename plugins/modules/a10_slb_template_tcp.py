@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_tcp
 description:
     - L4 TCP switch config
-short_description: Configures A10 slb.template.tcp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,117 +22,144 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    del_session_on_server_down:
-        description:
-        - "Delete session if the server/port goes down (either disabled/hm down)"
-        required: False
-    initial_window_size:
-        description:
-        - "Set the initial window size (number)"
-        required: False
-    half_open_idle_timeout:
-        description:
-        - "TCP Half Open Idle Timeout (sec), default off (half open idle timeout in
-          second, default off)"
-        required: False
-    logging:
-        description:
-        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and
-          termination log;"
+        type: str
         required: False
     name:
         description:
         - "Fast TCP Template Name"
+        type: str
         required: True
-    reset_fwd:
+    logging:
         description:
-        - "send reset to server if error happens"
-        required: False
-    reset_follow_fin:
-        description:
-        - "send reset to client or server upon receiving first fin"
-        required: False
-    alive_if_active:
-        description:
-        - "keep connection alive if active traffic"
+        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and
+          termination log;"
+        type: str
         required: False
     idle_timeout:
         description:
         - "Idle Timeout value (Interval of 60 seconds), default 120 seconds (idle timeout
           in second, default 120)"
+        type: int
         required: False
-    force_delete_timeout:
+    half_open_idle_timeout:
         description:
-        - "The maximum time that a session can stay in the system before being delete
-          (number (second))"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    down:
-        description:
-        - "send reset to client when server is down"
-        required: False
-    disable:
-        description:
-        - "send reset to client when server is disabled"
-        required: False
-    reset_rev:
-        description:
-        - "send reset to client if error happens"
-        required: False
-    insert_client_ip:
-        description:
-        - "Insert client ip into TCP option"
-        required: False
-    lan_fast_ack:
-        description:
-        - "Enable fast TCP ack on LAN"
+        - "TCP Half Open Idle Timeout (sec), default off (half open idle timeout in
+          second, default off)"
+        type: int
         required: False
     half_close_idle_timeout:
         description:
         - "TCP Half Close Idle Timeout (sec), default off (half close idle timeout in
           second, default off)"
+        type: int
+        required: False
+    initial_window_size:
+        description:
+        - "Set the initial window size (number)"
+        type: int
+        required: False
+    force_delete_timeout:
+        description:
+        - "The maximum time that a session can stay in the system before being delete
+          (number (second))"
+        type: int
         required: False
     force_delete_timeout_100ms:
         description:
         - "The maximum time that a session can stay in the system before being delete
           (number in 100ms)"
+        type: int
+        required: False
+    alive_if_active:
+        description:
+        - "keep connection alive if active traffic"
+        type: bool
         required: False
     qos:
         description:
         - "QOS level (number)"
+        type: int
+        required: False
+    insert_client_ip:
+        description:
+        - "Insert client ip into TCP option"
+        type: bool
+        required: False
+    lan_fast_ack:
+        description:
+        - "Enable fast TCP ack on LAN"
+        type: bool
+        required: False
+    reset_fwd:
+        description:
+        - "send reset to server if error happens"
+        type: bool
+        required: False
+    reset_rev:
+        description:
+        - "send reset to client if error happens"
+        type: bool
+        required: False
+    reset_follow_fin:
+        description:
+        - "send reset to client or server upon receiving first fin"
+        type: bool
+        required: False
+    disable:
+        description:
+        - "send reset to client when server is disabled"
+        type: bool
+        required: False
+    down:
+        description:
+        - "send reset to client when server is down"
+        type: bool
+        required: False
+    del_session_on_server_down:
+        description:
+        - "Delete session if the server/port goes down (either disabled/hm down)"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -207,49 +232,37 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'del_session_on_server_down': {
-            'type': 'bool',
-        },
-        'initial_window_size': {
-            'type': 'int',
-        },
-        'half_open_idle_timeout': {
-            'type': 'int',
+        'name': {
+            'type': 'str',
+            'required': True,
         },
         'logging': {
             'type': 'str',
             'choices': ['init', 'term', 'both']
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'reset_fwd': {
-            'type': 'bool',
-        },
-        'reset_follow_fin': {
-            'type': 'bool',
-        },
-        'alive_if_active': {
-            'type': 'bool',
-        },
         'idle_timeout': {
+            'type': 'int',
+        },
+        'half_open_idle_timeout': {
+            'type': 'int',
+        },
+        'half_close_idle_timeout': {
+            'type': 'int',
+        },
+        'initial_window_size': {
             'type': 'int',
         },
         'force_delete_timeout': {
             'type': 'int',
         },
-        'user_tag': {
-            'type': 'str',
+        'force_delete_timeout_100ms': {
+            'type': 'int',
         },
-        'down': {
+        'alive_if_active': {
             'type': 'bool',
         },
-        'disable': {
-            'type': 'bool',
-        },
-        'reset_rev': {
-            'type': 'bool',
+        'qos': {
+            'type': 'int',
         },
         'insert_client_ip': {
             'type': 'bool',
@@ -257,16 +270,28 @@ def get_argspec():
         'lan_fast_ack': {
             'type': 'bool',
         },
-        'half_close_idle_timeout': {
-            'type': 'int',
+        'reset_fwd': {
+            'type': 'bool',
         },
-        'force_delete_timeout_100ms': {
-            'type': 'int',
+        'reset_rev': {
+            'type': 'bool',
         },
-        'qos': {
-            'type': 'int',
+        'reset_follow_fin': {
+            'type': 'bool',
+        },
+        'disable': {
+            'type': 'bool',
+        },
+        'down': {
+            'type': 'bool',
+        },
+        'del_session_on_server_down': {
+            'type': 'bool',
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_pcp
 description:
     - Port Control Protocol Template
-short_description: Configures A10 cgnv6.template.pcp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,113 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    source_ipv6:
-        description:
-        - "Specify source IPv6 address for IPv6 ANNOUNCE message"
-        required: False
-    allow_third_party_from_lan:
-        description:
-        - "Allow third party request coming from LAN (default is disabled)"
+        type: str
         required: False
     name:
         description:
         - "PCP Template name"
+        type: str
         required: True
-    map:
+    allow_third_party_from_lan:
         description:
-        - "PCP MAP Opcode (default is enabled)"
+        - "Allow third party request coming from LAN (default is disabled)"
+        type: bool
         required: False
     allow_third_party_from_wan:
         description:
         - "Allow third party request coming from WAN (default is disabled)"
-        required: False
-    maximum:
-        description:
-        - "To set maximum lifetime of PCP mappings (default 1440 minutes)"
-        required: False
-    disable_map_filter:
-        description:
-        - "To disable processing of FILTER options in MAP request"
+        type: bool
         required: False
     check_client_nonce:
         description:
         - "To validate NONCE value in PCP request (default= disabled)"
+        type: bool
         required: False
-    minimum:
+    disable_map_filter:
         description:
-        - "To set minimum lifetime of PCP mappings (default 2 minutes)"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    peer:
-        description:
-        - "PCP PEER Opcode (default is enabled)"
+        - "To disable processing of FILTER options in MAP request"
+        type: bool
         required: False
     announce:
         description:
         - "PCP ANNOUNCE Opcode (default is enabled)"
+        type: bool
         required: False
-    source_ip:
+    map:
         description:
-        - "Specify source IP address for IPv4 ANNOUNCE message"
+        - "PCP MAP Opcode (default is enabled)"
+        type: bool
+        required: False
+    peer:
+        description:
+        - "PCP PEER Opcode (default is enabled)"
+        type: bool
+        required: False
+    maximum:
+        description:
+        - "To set maximum lifetime of PCP mappings (default 1440 minutes)"
+        type: int
+        required: False
+    minimum:
+        description:
+        - "To set minimum lifetime of PCP mappings (default 2 minutes)"
+        type: int
         required: False
     pcp_server_port:
         description:
         - "PCP server listening port (default 5351) (PCP UDP destination port)"
+        type: int
+        required: False
+    source_ip:
+        description:
+        - "Specify source IP address for IPv4 ANNOUNCE message"
+        type: str
+        required: False
+    source_ipv6:
+        description:
+        - "Specify source IPv6 address for IPv6 ANNOUNCE message"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -176,50 +196,50 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'source_ipv6': {
-            'type': 'str',
-        },
-        'allow_third_party_from_lan': {
-            'type': 'bool',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'map': {
+        'allow_third_party_from_lan': {
             'type': 'bool',
         },
         'allow_third_party_from_wan': {
             'type': 'bool',
         },
-        'maximum': {
-            'type': 'int',
-        },
-        'disable_map_filter': {
-            'type': 'bool',
-        },
         'check_client_nonce': {
             'type': 'bool',
         },
-        'minimum': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'peer': {
+        'disable_map_filter': {
             'type': 'bool',
         },
         'announce': {
             'type': 'bool',
         },
-        'source_ip': {
-            'type': 'str',
+        'map': {
+            'type': 'bool',
+        },
+        'peer': {
+            'type': 'bool',
+        },
+        'maximum': {
+            'type': 'int',
+        },
+        'minimum': {
+            'type': 'int',
         },
         'pcp_server_port': {
             'type': 'int',
         },
+        'source_ip': {
+            'type': 'str',
+        },
+        'source_ipv6': {
+            'type': 'str',
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

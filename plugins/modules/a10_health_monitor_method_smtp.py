@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_smtp
 description:
     - SMTP type
-short_description: Configures A10 health.monitor.method.smtp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,61 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    smtp_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    smtp:
         description:
-        - "Specify SMTP port, default is 25 (Port Number (default 25))"
-        required: False
-    smtp_starttls:
-        description:
-        - "Check the STARTTLS support at helo response"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        - "SMTP type"
+        type: bool
         required: False
     smtp_domain:
         description:
         - "Specify domain name of 'helo' command"
+        type: str
         required: False
-    smtp:
+    smtp_port:
         description:
-        - "SMTP type"
+        - "Specify SMTP port, default is 25 (Port Number (default 25))"
+        type: int
+        required: False
+    smtp_starttls:
+        description:
+        - "Check the STARTTLS support at helo response"
+        type: bool
         required: False
     mail_from:
         description:
         - "Specify SMTP Sender"
+        type: str
         required: False
     rcpt_to:
         description:
         - "Specify SMTP Receiver"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -138,25 +153,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'smtp': {
+            'type': 'bool',
+        },
+        'smtp_domain': {
+            'type': 'str',
+        },
         'smtp_port': {
             'type': 'int',
         },
         'smtp_starttls': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'smtp_domain': {
-            'type': 'str',
-        },
-        'smtp': {
-            'type': 'bool',
-        },
         'mail_from': {
             'type': 'str',
         },
         'rcpt_to': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         }
     })

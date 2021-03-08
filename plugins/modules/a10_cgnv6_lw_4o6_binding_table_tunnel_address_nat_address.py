@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_binding_table_tunnel_address_nat_address
 description:
     - NAT IPv4 address
-short_description: Configures A10 cgnv6.lw.4o6.binding.table.tunnel.address.nat-address
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     tunnel_address_ipv6_tunnel_addr:
         description:
-        - Key to identify parent object    binding_table_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    binding_table_name:
         description:
-        - Key to identify parent object    ipv4_nat_addr:
+        - Key to identify parent object
+        type: str
+        required: True
+    ipv4_nat_addr:
         description:
         - "NAT IPv4 Address"
+        type: str
         required: True
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     port_range_list:
         description:
         - "Field port_range_list"
+        type: list
         required: False
         suboptions:
             port_start:
                 description:
                 - "Single Port or Port Range Start"
+                type: int
+            port_end:
+                description:
+                - "Port Range End"
+                type: int
             tunnel_endpoint_address:
                 description:
                 - "Configure LW-4over6 IPIP Tunnel Endpoint Address (LW-4over6 Tunnel Endpoint
           Address)"
-            port_end:
-                description:
-                - "Port Range End"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+                type: str
 
 '''
 
@@ -135,23 +152,23 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
+        'user_tag': {
+            'type': 'str',
+        },
         'port_range_list': {
             'type': 'list',
             'port_start': {
                 'type': 'int',
                 'required': True,
             },
-            'tunnel_endpoint_address': {
-                'type': 'str',
-                'required': True,
-            },
             'port_end': {
                 'type': 'int',
                 'required': True,
+            },
+            'tunnel_endpoint_address': {
+                'type': 'str',
+                'required': True,
             }
-        },
-        'user_tag': {
-            'type': 'str',
         }
     })
     # Parent keys

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_access_list_standard
 description:
     - Configure Standard Access List
-short_description: Configures A10 access-list.standard
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,72 +22,91 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     std:
         description:
         - "IP standard access list"
+        type: int
         required: True
     stdrules:
         description:
         - "Field stdrules"
+        type: list
         required: False
         suboptions:
-            subnet:
-                description:
-                - "Source Address"
-            std_remark:
-                description:
-                - "Access list entry comment (Notes for this ACL)"
-            log:
-                description:
-                - "Log matches against this entry"
-            transparent_session_only:
-                description:
-                - "Only log transparent sessions"
             seq_num:
                 description:
                 - "Sequence number"
-            rev_subnet_mask:
+                type: int
+            std_remark:
                 description:
-                - "Network Mask 0=apply 255=ignore"
-            host:
-                description:
-                - "A single source host (Host address)"
+                - "Access list entry comment (Notes for this ACL)"
+                type: str
             action:
                 description:
                 - "'deny'= Deny; 'permit'= Permit; 'l3-vlan-fwd-disable'= Disable L3 forwarding
           between VLANs;"
+                type: str
             any:
                 description:
                 - "Any source host"
+                type: bool
+            host:
+                description:
+                - "A single source host (Host address)"
+                type: str
+            subnet:
+                description:
+                - "Source Address"
+                type: str
+            rev_subnet_mask:
+                description:
+                - "Network Mask 0=apply 255=ignore"
+                type: str
+            log:
+                description:
+                - "Log matches against this entry"
+                type: bool
+            transparent_session_only:
+                description:
+                - "Only log transparent sessions"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -151,25 +168,10 @@ def get_argspec():
         },
         'stdrules': {
             'type': 'list',
-            'subnet': {
-                'type': 'str',
-            },
-            'std_remark': {
-                'type': 'str',
-            },
-            'log': {
-                'type': 'bool',
-            },
-            'transparent_session_only': {
-                'type': 'bool',
-            },
             'seq_num': {
                 'type': 'int',
             },
-            'rev_subnet_mask': {
-                'type': 'str',
-            },
-            'host': {
+            'std_remark': {
                 'type': 'str',
             },
             'action': {
@@ -177,6 +179,21 @@ def get_argspec():
                 'choices': ['deny', 'permit', 'l3-vlan-fwd-disable']
             },
             'any': {
+                'type': 'bool',
+            },
+            'host': {
+                'type': 'str',
+            },
+            'subnet': {
+                'type': 'str',
+            },
+            'rev_subnet_mask': {
+                'type': 'str',
+            },
+            'log': {
+                'type': 'bool',
+            },
+            'transparent_session_only': {
                 'type': 'bool',
             }
         },

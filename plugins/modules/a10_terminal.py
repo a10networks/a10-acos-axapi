@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_terminal
 description:
     - Set Terminal Startup Parameters
-short_description: Configures A10 terminal
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,101 +22,126 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    gslb_cfg:
-        description:
-        - "Field gslb_cfg"
-        required: False
-        suboptions:
-            gslb_prompt:
-                description:
-                - "The gslb status prompt function set"
-            symbol:
-                description:
-                - "Show 'gslb' symbol on CLI prompt"
-            disable:
-                description:
-                - "Group status show disable"
-            group_role:
-                description:
-                - "Show GSLB group role on CLI prompt"
-    history_cfg:
-        description:
-        - "Field history_cfg"
-        required: False
-        suboptions:
-            enable:
-                description:
-                - "Enable terminal history"
-            size:
-                description:
-                - "Set history buffer size (Size of history buffer, default is 256)"
-    idle_timeout:
-        description:
-        - "Set interval for closing connection when there is no input detected (Timeout in
-          minutes, 0 means never timeout, default is 15)"
-        required: False
-    prompt_cfg:
-        description:
-        - "Field prompt_cfg"
-        required: False
-        suboptions:
-            hostname:
-                description:
-                - "Display hostname in prompt"
-            prompt:
-                description:
-                - "Configure the normal prompt format"
-            vcs_cfg:
-                description:
-                - "Field vcs_cfg"
-    width:
-        description:
-        - "Set width of the display terminal (Number of characters on a screen line, 0
-          means infinite, default is 80)"
-        required: False
-    length:
-        description:
-        - "Set number of lines on a screen(0 for no pausing) (Number of lines on screen, 0
-          for no pausing, default is 24)"
-        required: False
-    editing:
-        description:
-        - "Enable command line editing"
+        type: str
         required: False
     auto_size:
         description:
         - "Enable terminal length and width automatically (not work if width or length set
           to 0)"
+        type: bool
+        required: False
+    editing:
+        description:
+        - "Enable command line editing"
+        type: bool
+        required: False
+    gslb_cfg:
+        description:
+        - "Field gslb_cfg"
+        type: dict
+        required: False
+        suboptions:
+            gslb_prompt:
+                description:
+                - "The gslb status prompt function set"
+                type: bool
+            disable:
+                description:
+                - "Group status show disable"
+                type: bool
+            group_role:
+                description:
+                - "Show GSLB group role on CLI prompt"
+                type: bool
+            symbol:
+                description:
+                - "Show 'gslb' symbol on CLI prompt"
+                type: bool
+    history_cfg:
+        description:
+        - "Field history_cfg"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable terminal history"
+                type: bool
+            size:
+                description:
+                - "Set history buffer size (Size of history buffer, default is 256)"
+                type: int
+    idle_timeout:
+        description:
+        - "Set interval for closing connection when there is no input detected (Timeout in
+          minutes, 0 means never timeout, default is 15)"
+        type: int
+        required: False
+    length:
+        description:
+        - "Set number of lines on a screen(0 for no pausing) (Number of lines on screen, 0
+          for no pausing, default is 24)"
+        type: int
+        required: False
+    prompt_cfg:
+        description:
+        - "Field prompt_cfg"
+        type: dict
+        required: False
+        suboptions:
+            prompt:
+                description:
+                - "Configure the normal prompt format"
+                type: bool
+            hostname:
+                description:
+                - "Display hostname in prompt"
+                type: bool
+            vcs_cfg:
+                description:
+                - "Field vcs_cfg"
+                type: dict
+    width:
+        description:
+        - "Set width of the display terminal (Number of characters on a screen line, 0
+          means infinite, default is 80)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -180,21 +203,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
+        'auto_size': {
+            'type': 'bool',
+        },
+        'editing': {
+            'type': 'bool',
         },
         'gslb_cfg': {
             'type': 'dict',
             'gslb_prompt': {
                 'type': 'bool',
             },
-            'symbol': {
-                'type': 'bool',
-            },
             'disable': {
                 'type': 'bool',
             },
             'group_role': {
+                'type': 'bool',
+            },
+            'symbol': {
                 'type': 'bool',
             }
         },
@@ -210,12 +236,15 @@ def get_argspec():
         'idle_timeout': {
             'type': 'int',
         },
+        'length': {
+            'type': 'int',
+        },
         'prompt_cfg': {
             'type': 'dict',
-            'hostname': {
+            'prompt': {
                 'type': 'bool',
             },
-            'prompt': {
+            'hostname': {
                 'type': 'bool',
             },
             'vcs_cfg': {
@@ -228,14 +257,8 @@ def get_argspec():
         'width': {
             'type': 'int',
         },
-        'length': {
-            'type': 'int',
-        },
-        'editing': {
-            'type': 'bool',
-        },
-        'auto_size': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

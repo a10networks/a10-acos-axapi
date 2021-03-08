@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_service_group
 description:
     - Service Group
-short_description: Configures A10 slb.service-group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,252 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    conn_rate:
+    name:
         description:
-        - "Dynamically enable stateless method by conn-rate (Rate to trigger stateless
-          method(conn/sec))"
-        required: False
-    reset_on_server_selection_fail:
-        description:
-        - "Send reset to client if server selection fails"
-        required: False
-    health_check_disable:
-        description:
-        - "Disable health check"
-        required: False
+        - "SLB Service Name"
+        type: str
+        required: True
     protocol:
         description:
         - "'tcp'= TCP LB service; 'udp'= UDP LB service;"
-        required: False
-    traffic_replication_mirror_ip_repl:
-        description:
-        - "Replaces IP with server-IP"
-        required: False
-    reset_priority_affinity:
-        description:
-        - "Reset"
-        required: False
-    priorities:
-        description:
-        - "Field priorities"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "Priority option. Define different action for each priority node. (Priority in
-          the Group)"
-            priority_action:
-                description:
-                - "'drop'= Drop request when all priority nodes fail; 'drop-if-exceed-limit'= Drop
-          request when connection over limit; 'proceed'= Proceed to next priority when
-          all priority nodes fail(default); 'reset'= Send client reset when all priority
-          nodes fail; 'reset-if-exceed-limit'= Send client reset when connection over
-          limit;"
-    min_active_member:
-        description:
-        - "Minimum Active Member Per Priority (Minimum Active Member before Action)"
-        required: False
-    member_list:
-        description:
-        - "Field member_list"
-        required: False
-        suboptions:
-            member_priority:
-                description:
-                - "Priority of Port in the Group (Priority of Port in the Group, default is 1)"
-            uuid:
-                description:
-                - "uuid of the object"
-            fqdn_name:
-                description:
-                - "Server hostname - Not applicable if real server is already defined"
-            resolve_as:
-                description:
-                - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use
-          AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as
-          AAAA Query to resolve FQDN;"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            member_template:
-                description:
-                - "Real server port template (Real server port template name)"
-            name:
-                description:
-                - "Member name"
-            host:
-                description:
-                - "IP Address - Not applicable if real server is already defined"
-            user_tag:
-                description:
-                - "Customized tag"
-            member_state:
-                description:
-                - "'enable'= Enable member service port; 'disable'= Disable member service port;
-          'disable-with-health-check'= disable member service port, but health check
-          work;"
-            server_ipv6_addr:
-                description:
-                - "IPV6 Address - Not applicable if real server is already defined"
-            port:
-                description:
-                - "Port number"
-            member_stats_data_disable:
-                description:
-                - "Disable statistical data collection"
-    stats_data_action:
-        description:
-        - "'stats-data-enable'= Enable statistical data collection for service group;
-          'stats-data-disable'= Disable statistical data collection for service group;"
-        required: False
-    traffic_replication_mirror_da_repl:
-        description:
-        - "Replace Destination MAC"
-        required: False
-    template_policy_shared:
-        description:
-        - "Policy template"
-        required: False
-    rpt_ext_server:
-        description:
-        - "Report top 10 fastest/slowest servers"
+        type: str
         required: False
     template_port:
         description:
         - "Port template (Port template name)"
+        type: str
         required: False
-    conn_rate_grace_period:
+    template_policy:
         description:
-        - "Define the grace period during transition (Define the grace period during
-          transition(seconds))"
-        required: False
-    l4_session_usage_duration:
-        description:
-        - "Period that trigger condition consistently happens(seconds)"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            service_resp_2xx:
-                description:
-                - "Service Group response 2xx count"
-            member_list:
-                description:
-                - "Field member_list"
-            service_unhealthy_host:
-                description:
-                - "Service Group unhealthy host count"
-            service_curr_conn_overflow:
-                description:
-                - "Current connection counter overflow count"
-            name:
-                description:
-                - "SLB Service Name"
-            server_selection_fail_drop:
-                description:
-                - "Drops due to Service selection failure"
-            service_healthy_host:
-                description:
-                - "Service Group healthy host count"
-            service_resp_count:
-                description:
-                - "Service Group response count"
-            service_req_count:
-                description:
-                - "Service Group request count"
-            service_resp_4xx:
-                description:
-                - "Service Group response 4xx count"
-            service_peak_conn:
-                description:
-                - "Peak connection count for the Service Group"
-            server_selection_fail_reset:
-                description:
-                - "Resets sent out for Service selection failure"
-            service_resp_3xx:
-                description:
-                - "Service Group response 3xx count"
-            service_resp_5xx:
-                description:
-                - "Service Group response 5xx count"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    backup_server_event_log:
-        description:
-        - "Send log info on back up server events"
-        required: False
-    lc_method:
-        description:
-        - "'least-connection'= Least connection on server level; 'service-least-
-          connection'= Least connection on service port level; 'weighted-least-
-          connection'= Weighted least connection on server level; 'service-weighted-
-          least-connection'= Weighted least connection on service port level;"
-        required: False
-    pseudo_round_robin:
-        description:
-        - "PRR, select the oldest node for sub-select"
+        - "Policy template (Policy template name)"
+        type: str
         required: False
     shared_partition_policy_template:
         description:
         - "Reference a policy template from shared partition"
+        type: bool
         required: False
-    l4_session_usage_revert_rate:
+    template_policy_shared:
         description:
-        - "Usage to revert to statelful method"
-        required: False
-    shared_partition_svcgrp_health_check:
-        description:
-        - "Reference a health-check from shared partition"
-        required: False
-    template_server:
-        description:
-        - "Server template (Server template name)"
-        required: False
-    svcgrp_health_check_shared:
-        description:
-        - "Health Check (Monitor Name)"
-        required: False
-    traffic_replication_mirror:
-        description:
-        - "Mirror Bi-directional Packet"
-        required: False
-    l4_session_revert_duration:
-        description:
-        - "Period that revert condition consistently happens(seconds)"
-        required: False
-    traffic_replication_mirror_sa_da_repl:
-        description:
-        - "Replace Source MAC and Destination MAC"
+        - "Policy template"
+        type: str
         required: False
     lb_method:
         description:
@@ -282,108 +96,15 @@ options:
           robin on service port level; 'round-robin'= Round robin on server level;
           'round-robin-strict'= Strict mode round robin on server level; 'odd-even-hash'=
           odd/even hash based of client src-ip;"
+        type: str
         required: False
-    stateless_auto_switch:
+    lc_method:
         description:
-        - "Enable auto stateless method"
-        required: False
-    min_active_member_action:
-        description:
-        - "'dynamic-priority'= dynamic change member priority to met the min-active-member
-          requirement; 'skip-pri-set'= Skip Current Priority Set If Min not met;"
-        required: False
-    l4_session_usage:
-        description:
-        - "Dynamically enable stateless method by session usage (Usage to trigger
-          stateless method)"
-        required: False
-    extended_stats:
-        description:
-        - "Enable extended statistics on service group"
-        required: False
-    conn_rate_revert_duration:
-        description:
-        - "Period that revert condition consistently happens(seconds)"
-        required: False
-    strict_select:
-        description:
-        - "strict selection"
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            pri_affinity_priority:
-                description:
-                - "Field pri_affinity_priority"
-            name:
-                description:
-                - "SLB Service Name"
-            stateless_current_rate:
-                description:
-                - "Field stateless_current_rate"
-            servers_down:
-                description:
-                - "Field servers_down"
-            stateless_state:
-                description:
-                - "Field stateless_state"
-            servers_disable:
-                description:
-                - "Field servers_disable"
-            stateless_type:
-                description:
-                - "Field stateless_type"
-            servers_total:
-                description:
-                - "Field servers_total"
-            state:
-                description:
-                - "Field state"
-            member_list:
-                description:
-                - "Field member_list"
-            servers_up:
-                description:
-                - "Field servers_up"
-            stateless_current_usage:
-                description:
-                - "Field stateless_current_usage"
-            hm_dsr_enable_all_vip:
-                description:
-                - "Field hm_dsr_enable_all_vip"
-    name:
-        description:
-        - "SLB Service Name"
-        required: True
-    reset:
-        description:
-        - "Field reset"
-        required: False
-        suboptions:
-            auto_switch:
-                description:
-                - "Reset auto stateless state"
-    traffic_replication_mirror_sa_repl:
-        description:
-        - "Replace Source MAC"
-        required: False
-    report_delay:
-        description:
-        - "Reporting frequency (in minutes)"
-        required: False
-    conn_rate_log:
-        description:
-        - "Send log if transition happens"
-        required: False
-    l4_session_usage_log:
-        description:
-        - "Send log if transition happens"
-        required: False
-    conn_rate_duration:
-        description:
-        - "Period that trigger condition consistently happens(seconds)"
+        - "'least-connection'= Least connection on server level; 'service-least-
+          connection'= Least connection on service port level; 'weighted-least-
+          connection'= Weighted least connection on server level; 'service-weighted-
+          least-connection'= Weighted least connection on service port level;"
+        type: str
         required: False
     stateless_lb_method:
         description:
@@ -395,10 +116,17 @@ options:
           'stateless-src-ip-hash'= Stateless load-balancing based on Src IP and Src port
           hash; 'stateless-src-ip-only-hash'= Stateless load-balancing based on only Src
           IP hash;"
+        type: str
         required: False
-    template_policy:
+    pseudo_round_robin:
         description:
-        - "Policy template (Policy template name)"
+        - "PRR, select the oldest node for sub-select"
+        type: bool
+        required: False
+    stateless_auto_switch:
+        description:
+        - "Enable auto stateless method"
+        type: bool
         required: False
     stateless_lb_method2:
         description:
@@ -410,18 +138,228 @@ options:
           'stateless-src-ip-hash'= Stateless load-balancing based on Src IP and Src port
           hash; 'stateless-src-ip-only-hash'= Stateless load-balancing based on only Src
           IP hash;"
+        type: str
+        required: False
+    conn_rate:
+        description:
+        - "Dynamically enable stateless method by conn-rate (Rate to trigger stateless
+          method(conn/sec))"
+        type: int
+        required: False
+    conn_rate_duration:
+        description:
+        - "Period that trigger condition consistently happens(seconds)"
+        type: int
+        required: False
+    conn_revert_rate:
+        description:
+        - "Rate to revert to statelful method (conn/sec)"
+        type: int
+        required: False
+    conn_rate_revert_duration:
+        description:
+        - "Period that revert condition consistently happens(seconds)"
+        type: int
+        required: False
+    conn_rate_grace_period:
+        description:
+        - "Define the grace period during transition (Define the grace period during
+          transition(seconds))"
+        type: int
+        required: False
+    conn_rate_log:
+        description:
+        - "Send log if transition happens"
+        type: bool
+        required: False
+    l4_session_usage:
+        description:
+        - "Dynamically enable stateless method by session usage (Usage to trigger
+          stateless method)"
+        type: int
+        required: False
+    l4_session_usage_duration:
+        description:
+        - "Period that trigger condition consistently happens(seconds)"
+        type: int
+        required: False
+    l4_session_usage_revert_rate:
+        description:
+        - "Usage to revert to statelful method"
+        type: int
+        required: False
+    l4_session_revert_duration:
+        description:
+        - "Period that revert condition consistently happens(seconds)"
+        type: int
+        required: False
+    l4_session_usage_grace_period:
+        description:
+        - "Define the grace period during transition (Define the grace period during
+          transition(seconds))"
+        type: int
+        required: False
+    l4_session_usage_log:
+        description:
+        - "Send log if transition happens"
+        type: bool
+        required: False
+    min_active_member:
+        description:
+        - "Minimum Active Member Per Priority (Minimum Active Member before Action)"
+        type: int
+        required: False
+    min_active_member_action:
+        description:
+        - "'dynamic-priority'= dynamic change member priority to met the min-active-member
+          requirement; 'skip-pri-set'= Skip Current Priority Set If Min not met;"
+        type: str
+        required: False
+    reset_on_server_selection_fail:
+        description:
+        - "Send reset to client if server selection fails"
+        type: bool
+        required: False
+    priority_affinity:
+        description:
+        - "Priority affinity. Persist to the same priority if possible."
+        type: bool
+        required: False
+    reset_priority_affinity:
+        description:
+        - "Reset"
+        type: bool
+        required: False
+    backup_server_event_log:
+        description:
+        - "Send log info on back up server events"
+        type: bool
+        required: False
+    strict_select:
+        description:
+        - "strict selection"
+        type: bool
+        required: False
+    stats_data_action:
+        description:
+        - "'stats-data-enable'= Enable statistical data collection for service group;
+          'stats-data-disable'= Disable statistical data collection for service group;"
+        type: str
+        required: False
+    extended_stats:
+        description:
+        - "Enable extended statistics on service group"
+        type: bool
+        required: False
+    traffic_replication_mirror:
+        description:
+        - "Mirror Bi-directional Packet"
+        type: bool
+        required: False
+    traffic_replication_mirror_da_repl:
+        description:
+        - "Replace Destination MAC"
+        type: bool
+        required: False
+    traffic_replication_mirror_ip_repl:
+        description:
+        - "Replaces IP with server-IP"
+        type: bool
+        required: False
+    traffic_replication_mirror_sa_da_repl:
+        description:
+        - "Replace Source MAC and Destination MAC"
+        type: bool
+        required: False
+    traffic_replication_mirror_sa_repl:
+        description:
+        - "Replace Source MAC"
+        type: bool
+        required: False
+    health_check:
+        description:
+        - "Health Check (Monitor Name)"
+        type: str
+        required: False
+    shared_partition_svcgrp_health_check:
+        description:
+        - "Reference a health-check from shared partition"
+        type: bool
+        required: False
+    svcgrp_health_check_shared:
+        description:
+        - "Health Check (Monitor Name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable health check"
+        type: bool
+        required: False
+    priorities:
+        description:
+        - "Field priorities"
+        type: list
+        required: False
+        suboptions:
+            priority:
+                description:
+                - "Priority option. Define different action for each priority node. (Priority in
+          the Group)"
+                type: int
+            priority_action:
+                description:
+                - "'drop'= Drop request when all priority nodes fail; 'drop-if-exceed-limit'= Drop
+          request when connection over limit; 'proceed'= Proceed to next priority when
+          all priority nodes fail(default); 'reset'= Send client reset when all priority
+          nodes fail; 'reset-if-exceed-limit'= Send client reset when connection over
+          limit;"
+                type: str
+    sample_rsp_time:
+        description:
+        - "sample server response time"
+        type: bool
+        required: False
+    rpt_ext_server:
+        description:
+        - "Report top 10 fastest/slowest servers"
+        type: bool
+        required: False
+    report_delay:
+        description:
+        - "Reporting frequency (in minutes)"
+        type: int
+        required: False
+    top_slowest:
+        description:
+        - "Report top 10 slowest servers"
+        type: bool
+        required: False
+    top_fastest:
+        description:
+        - "Report top 10 fastest servers"
+        type: bool
+        required: False
+    persist_scoring:
+        description:
+        - "'global'= Use Global Configuration; 'enable'= Enable persist-scoring;
+          'disable'= Disable persist-scoring;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
-        required: False
-    sample_rsp_time:
-        description:
-        - "sample server response time"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -437,31 +375,207 @@ options:
           Service Group response 4xx count; 'service_resp_5xx'= Service Group response
           5xx count; 'service_curr_conn_overflow'= Current connection counter overflow
           count;"
-    top_fastest:
+                type: str
+    reset:
         description:
-        - "Report top 10 fastest servers"
+        - "Field reset"
+        type: dict
         required: False
-    conn_revert_rate:
+        suboptions:
+            auto_switch:
+                description:
+                - "Reset auto stateless state"
+                type: bool
+    member_list:
         description:
-        - "Rate to revert to statelful method (conn/sec)"
+        - "Field member_list"
+        type: list
         required: False
-    l4_session_usage_grace_period:
+        suboptions:
+            name:
+                description:
+                - "Member name"
+                type: str
+            port:
+                description:
+                - "Port number"
+                type: int
+            fqdn_name:
+                description:
+                - "Server hostname - Not applicable if real server is already defined"
+                type: str
+            resolve_as:
+                description:
+                - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use
+          AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as
+          AAAA Query to resolve FQDN;"
+                type: str
+            host:
+                description:
+                - "IP Address - Not applicable if real server is already defined"
+                type: str
+            server_ipv6_addr:
+                description:
+                - "IPV6 Address - Not applicable if real server is already defined"
+                type: str
+            member_state:
+                description:
+                - "'enable'= Enable member service port; 'disable'= Disable member service port;
+          'disable-with-health-check'= disable member service port, but health check
+          work;"
+                type: str
+            member_stats_data_disable:
+                description:
+                - "Disable statistical data collection"
+                type: bool
+            member_template:
+                description:
+                - "Real server port template (Real server port template name)"
+                type: str
+            member_priority:
+                description:
+                - "Priority of Port in the Group (Priority of Port in the Group, default is 1)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    oper:
         description:
-        - "Define the grace period during transition (Define the grace period during
-          transition(seconds))"
+        - "Field oper"
+        type: dict
         required: False
-    priority_affinity:
+        suboptions:
+            state:
+                description:
+                - "Field state"
+                type: str
+            servers_up:
+                description:
+                - "Field servers_up"
+                type: int
+            servers_down:
+                description:
+                - "Field servers_down"
+                type: int
+            servers_disable:
+                description:
+                - "Field servers_disable"
+                type: int
+            servers_total:
+                description:
+                - "Field servers_total"
+                type: int
+            stateless_current_rate:
+                description:
+                - "Field stateless_current_rate"
+                type: int
+            stateless_current_usage:
+                description:
+                - "Field stateless_current_usage"
+                type: int
+            stateless_state:
+                description:
+                - "Field stateless_state"
+                type: int
+            stateless_type:
+                description:
+                - "Field stateless_type"
+                type: int
+            hm_dsr_enable_all_vip:
+                description:
+                - "Field hm_dsr_enable_all_vip"
+                type: int
+            pri_affinity_priority:
+                description:
+                - "Field pri_affinity_priority"
+                type: int
+            filter:
+                description:
+                - "Field filter"
+                type: str
+            sgm_list:
+                description:
+                - "Field sgm_list"
+                type: list
+            name:
+                description:
+                - "SLB Service Name"
+                type: str
+            member_list:
+                description:
+                - "Field member_list"
+                type: list
+    stats:
         description:
-        - "Priority affinity. Persist to the same priority if possible."
+        - "Field stats"
+        type: dict
         required: False
-    top_slowest:
-        description:
-        - "Report top 10 slowest servers"
-        required: False
-    health_check:
-        description:
-        - "Health Check (Monitor Name)"
-        required: False
+        suboptions:
+            server_selection_fail_drop:
+                description:
+                - "Drops due to Service selection failure"
+                type: str
+            server_selection_fail_reset:
+                description:
+                - "Resets sent out for Service selection failure"
+                type: str
+            service_peak_conn:
+                description:
+                - "Peak connection count for the Service Group"
+                type: str
+            service_healthy_host:
+                description:
+                - "Service Group healthy host count"
+                type: str
+            service_unhealthy_host:
+                description:
+                - "Service Group unhealthy host count"
+                type: str
+            service_req_count:
+                description:
+                - "Service Group request count"
+                type: str
+            service_resp_count:
+                description:
+                - "Service Group response count"
+                type: str
+            service_resp_2xx:
+                description:
+                - "Service Group response 2xx count"
+                type: str
+            service_resp_3xx:
+                description:
+                - "Service Group response 3xx count"
+                type: str
+            service_resp_4xx:
+                description:
+                - "Service Group response 4xx count"
+                type: str
+            service_resp_5xx:
+                description:
+                - "Service Group response 5xx count"
+                type: str
+            service_curr_conn_overflow:
+                description:
+                - "Current connection counter overflow count"
+                type: str
+            name:
+                description:
+                - "SLB Service Name"
+                type: str
+            member_list:
+                description:
+                - "Field member_list"
+                type: list
 
 '''
 
@@ -499,6 +613,7 @@ AVAILABLE_PROPERTIES = [
     "min_active_member_action",
     "name",
     "oper",
+    "persist_scoring",
     "priorities",
     "priority_affinity",
     "protocol",
@@ -522,7 +637,6 @@ AVAILABLE_PROPERTIES = [
     "template_policy",
     "template_policy_shared",
     "template_port",
-    "template_server",
     "top_fastest",
     "top_slowest",
     "traffic_replication_mirror",
@@ -569,23 +683,159 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'conn_rate': {
-            'type': 'int',
-        },
-        'reset_on_server_selection_fail': {
-            'type': 'bool',
-        },
-        'health_check_disable': {
-            'type': 'bool',
+        'name': {
+            'type': 'str',
+            'required': True,
         },
         'protocol': {
             'type': 'str',
             'choices': ['tcp', 'udp']
         },
-        'traffic_replication_mirror_ip_repl': {
+        'template_port': {
+            'type': 'str',
+        },
+        'template_policy': {
+            'type': 'str',
+        },
+        'shared_partition_policy_template': {
+            'type': 'bool',
+        },
+        'template_policy_shared': {
+            'type': 'str',
+        },
+        'lb_method': {
+            'type':
+            'str',
+            'choices': [
+                'dst-ip-hash', 'dst-ip-only-hash', 'fastest-response',
+                'least-request', 'src-ip-hash', 'src-ip-only-hash',
+                'weighted-rr', 'service-weighted-rr', 'round-robin',
+                'round-robin-strict', 'odd-even-hash'
+            ]
+        },
+        'lc_method': {
+            'type':
+            'str',
+            'choices': [
+                'least-connection', 'service-least-connection',
+                'weighted-least-connection',
+                'service-weighted-least-connection'
+            ]
+        },
+        'stateless_lb_method': {
+            'type':
+            'str',
+            'choices': [
+                'stateless-dst-ip-hash', 'stateless-per-pkt-round-robin',
+                'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash',
+                'stateless-src-ip-hash', 'stateless-src-ip-only-hash'
+            ]
+        },
+        'pseudo_round_robin': {
+            'type': 'bool',
+        },
+        'stateless_auto_switch': {
+            'type': 'bool',
+        },
+        'stateless_lb_method2': {
+            'type':
+            'str',
+            'choices': [
+                'stateless-dst-ip-hash', 'stateless-per-pkt-round-robin',
+                'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash',
+                'stateless-src-ip-hash', 'stateless-src-ip-only-hash'
+            ]
+        },
+        'conn_rate': {
+            'type': 'int',
+        },
+        'conn_rate_duration': {
+            'type': 'int',
+        },
+        'conn_revert_rate': {
+            'type': 'int',
+        },
+        'conn_rate_revert_duration': {
+            'type': 'int',
+        },
+        'conn_rate_grace_period': {
+            'type': 'int',
+        },
+        'conn_rate_log': {
+            'type': 'bool',
+        },
+        'l4_session_usage': {
+            'type': 'int',
+        },
+        'l4_session_usage_duration': {
+            'type': 'int',
+        },
+        'l4_session_usage_revert_rate': {
+            'type': 'int',
+        },
+        'l4_session_revert_duration': {
+            'type': 'int',
+        },
+        'l4_session_usage_grace_period': {
+            'type': 'int',
+        },
+        'l4_session_usage_log': {
+            'type': 'bool',
+        },
+        'min_active_member': {
+            'type': 'int',
+        },
+        'min_active_member_action': {
+            'type': 'str',
+            'choices': ['dynamic-priority', 'skip-pri-set']
+        },
+        'reset_on_server_selection_fail': {
+            'type': 'bool',
+        },
+        'priority_affinity': {
             'type': 'bool',
         },
         'reset_priority_affinity': {
+            'type': 'bool',
+        },
+        'backup_server_event_log': {
+            'type': 'bool',
+        },
+        'strict_select': {
+            'type': 'bool',
+        },
+        'stats_data_action': {
+            'type': 'str',
+            'choices': ['stats-data-enable', 'stats-data-disable']
+        },
+        'extended_stats': {
+            'type': 'bool',
+        },
+        'traffic_replication_mirror': {
+            'type': 'bool',
+        },
+        'traffic_replication_mirror_da_repl': {
+            'type': 'bool',
+        },
+        'traffic_replication_mirror_ip_repl': {
+            'type': 'bool',
+        },
+        'traffic_replication_mirror_sa_da_repl': {
+            'type': 'bool',
+        },
+        'traffic_replication_mirror_sa_repl': {
+            'type': 'bool',
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'shared_partition_svcgrp_health_check': {
+            'type': 'bool',
+        },
+        'svcgrp_health_check_shared': {
+            'type': 'str',
+        },
+        'health_check_disable': {
             'type': 'bool',
         },
         'priorities': {
@@ -602,16 +852,61 @@ def get_argspec():
                 ]
             }
         },
-        'min_active_member': {
+        'sample_rsp_time': {
+            'type': 'bool',
+        },
+        'rpt_ext_server': {
+            'type': 'bool',
+        },
+        'report_delay': {
             'type': 'int',
+        },
+        'top_slowest': {
+            'type': 'bool',
+        },
+        'top_fastest': {
+            'type': 'bool',
+        },
+        'persist_scoring': {
+            'type': 'str',
+            'choices': ['global', 'enable', 'disable']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'server_selection_fail_drop',
+                    'server_selection_fail_reset', 'service_peak_conn',
+                    'service_healthy_host', 'service_unhealthy_host',
+                    'service_req_count', 'service_resp_count',
+                    'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx',
+                    'service_resp_5xx', 'service_curr_conn_overflow'
+                ]
+            }
+        },
+        'reset': {
+            'type': 'dict',
+            'auto_switch': {
+                'type': 'bool',
+            }
         },
         'member_list': {
             'type': 'list',
-            'member_priority': {
-                'type': 'int',
-            },
-            'uuid': {
+            'name': {
                 'type': 'str',
+                'required': True,
+            },
+            'port': {
+                'type': 'int',
+                'required': True,
             },
             'fqdn_name': {
                 'type': 'str',
@@ -623,6 +918,31 @@ def get_argspec():
                     'resolve-to-ipv4', 'resolve-to-ipv6',
                     'resolve-to-ipv4-and-ipv6'
                 ]
+            },
+            'host': {
+                'type': 'str',
+            },
+            'server_ipv6_addr': {
+                'type': 'str',
+            },
+            'member_state': {
+                'type': 'str',
+                'choices': ['enable', 'disable', 'disable-with-health-check']
+            },
+            'member_stats_data_disable': {
+                'type': 'bool',
+            },
+            'member_template': {
+                'type': 'str',
+            },
+            'member_priority': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -641,127 +961,63 @@ def get_argspec():
                         'curr_conn_overflow', 'state_flaps'
                     ]
                 }
-            },
-            'member_template': {
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'state': {
                 'type': 'str',
+                'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
+            },
+            'servers_up': {
+                'type': 'int',
+            },
+            'servers_down': {
+                'type': 'int',
+            },
+            'servers_disable': {
+                'type': 'int',
+            },
+            'servers_total': {
+                'type': 'int',
+            },
+            'stateless_current_rate': {
+                'type': 'int',
+            },
+            'stateless_current_usage': {
+                'type': 'int',
+            },
+            'stateless_state': {
+                'type': 'int',
+            },
+            'stateless_type': {
+                'type': 'int',
+            },
+            'hm_dsr_enable_all_vip': {
+                'type': 'int',
+            },
+            'pri_affinity_priority': {
+                'type': 'int',
+            },
+            'filter': {
+                'type': 'str',
+                'choices': ['sgm-sort-config']
+            },
+            'sgm_list': {
+                'type': 'list',
+                'sgm_name': {
+                    'type': 'str',
+                },
+                'sgm_port': {
+                    'type': 'int',
+                }
             },
             'name': {
                 'type': 'str',
                 'required': True,
             },
-            'host': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'member_state': {
-                'type': 'str',
-                'choices': ['enable', 'disable', 'disable-with-health-check']
-            },
-            'server_ipv6_addr': {
-                'type': 'str',
-            },
-            'port': {
-                'type': 'int',
-                'required': True,
-            },
-            'member_stats_data_disable': {
-                'type': 'bool',
-            }
-        },
-        'stats_data_action': {
-            'type': 'str',
-            'choices': ['stats-data-enable', 'stats-data-disable']
-        },
-        'traffic_replication_mirror_da_repl': {
-            'type': 'bool',
-        },
-        'template_policy_shared': {
-            'type': 'str',
-        },
-        'rpt_ext_server': {
-            'type': 'bool',
-        },
-        'template_port': {
-            'type': 'str',
-        },
-        'conn_rate_grace_period': {
-            'type': 'int',
-        },
-        'l4_session_usage_duration': {
-            'type': 'int',
-        },
-        'stats': {
-            'type': 'dict',
-            'service_resp_2xx': {
-                'type': 'str',
-            },
             'member_list': {
                 'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'curr_req': {
-                        'type': 'str',
-                    },
-                    'total_rev_bytes': {
-                        'type': 'str',
-                    },
-                    'peak_conn': {
-                        'type': 'str',
-                    },
-                    'total_ssl_conn': {
-                        'type': 'str',
-                    },
-                    'total_conn': {
-                        'type': 'str',
-                    },
-                    'fastest_rsp_time': {
-                        'type': 'str',
-                    },
-                    'total_fwd_pkts': {
-                        'type': 'str',
-                    },
-                    'total_req': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts': {
-                        'type': 'str',
-                    },
-                    'curr_ssl_conn': {
-                        'type': 'str',
-                    },
-                    'total_req_succ': {
-                        'type': 'str',
-                    },
-                    'state_flaps': {
-                        'type': 'str',
-                    },
-                    'curr_conn': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected_status_code_non_5xx': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected_status_code_2xx': {
-                        'type': 'str',
-                    },
-                    'curr_conn_overflow': {
-                        'type': 'str',
-                    },
-                    'total_fwd_bytes': {
-                        'type': 'str',
-                    },
-                    'slowest_rsp_time': {
-                        'type': 'str',
-                    },
-                    'response_time': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected': {
-                        'type': 'str',
-                    }
-                },
                 'name': {
                     'type': 'str',
                     'required': True,
@@ -769,9 +1025,149 @@ def get_argspec():
                 'port': {
                     'type': 'int',
                     'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'state': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN',
+                            'DIS-MAINTENANCE', 'DIS-DAMP'
+                        ]
+                    },
+                    'hm_key': {
+                        'type': 'int',
+                    },
+                    'hm_index': {
+                        'type': 'int',
+                    },
+                    'drs_list': {
+                        'type': 'list',
+                        'drs_name': {
+                            'type': 'str',
+                        },
+                        'drs_state': {
+                            'type': 'str',
+                        },
+                        'drs_hm_key': {
+                            'type': 'int',
+                        },
+                        'drs_hm_index': {
+                            'type': 'int',
+                        },
+                        'drs_port': {
+                            'type': 'int',
+                        },
+                        'drs_priority': {
+                            'type': 'int',
+                        },
+                        'drs_curr_conn': {
+                            'type': 'int',
+                        },
+                        'drs_pers_conn': {
+                            'type': 'int',
+                        },
+                        'drs_total_conn': {
+                            'type': 'int',
+                        },
+                        'drs_curr_req': {
+                            'type': 'int',
+                        },
+                        'drs_total_req': {
+                            'type': 'int',
+                        },
+                        'drs_total_req_succ': {
+                            'type': 'int',
+                        },
+                        'drs_rev_pkts': {
+                            'type': 'int',
+                        },
+                        'drs_fwd_pkts': {
+                            'type': 'int',
+                        },
+                        'drs_rev_bts': {
+                            'type': 'int',
+                        },
+                        'drs_fwd_bts': {
+                            'type': 'int',
+                        },
+                        'drs_peak_conn': {
+                            'type': 'int',
+                        },
+                        'drs_rsp_time': {
+                            'type': 'int',
+                        },
+                        'drs_frsp_time': {
+                            'type': 'int',
+                        },
+                        'drs_srsp_time': {
+                            'type': 'int',
+                        }
+                    },
+                    'alt_list': {
+                        'type': 'list',
+                        'alt_name': {
+                            'type': 'str',
+                        },
+                        'alt_port': {
+                            'type': 'int',
+                        },
+                        'alt_state': {
+                            'type': 'str',
+                        },
+                        'alt_curr_conn': {
+                            'type': 'int',
+                        },
+                        'alt_total_conn': {
+                            'type': 'int',
+                        },
+                        'alt_rev_pkts': {
+                            'type': 'int',
+                        },
+                        'alt_fwd_pkts': {
+                            'type': 'int',
+                        },
+                        'alt_peak_conn': {
+                            'type': 'int',
+                        }
+                    }
                 }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'server_selection_fail_drop': {
+                'type': 'str',
+            },
+            'server_selection_fail_reset': {
+                'type': 'str',
+            },
+            'service_peak_conn': {
+                'type': 'str',
+            },
+            'service_healthy_host': {
+                'type': 'str',
             },
             'service_unhealthy_host': {
+                'type': 'str',
+            },
+            'service_req_count': {
+                'type': 'str',
+            },
+            'service_resp_count': {
+                'type': 'str',
+            },
+            'service_resp_2xx': {
+                'type': 'str',
+            },
+            'service_resp_3xx': {
+                'type': 'str',
+            },
+            'service_resp_4xx': {
+                'type': 'str',
+            },
+            'service_resp_5xx': {
                 'type': 'str',
             },
             'service_curr_conn_overflow': {
@@ -781,245 +1177,8 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
             },
-            'server_selection_fail_drop': {
-                'type': 'str',
-            },
-            'service_healthy_host': {
-                'type': 'str',
-            },
-            'service_resp_count': {
-                'type': 'str',
-            },
-            'service_req_count': {
-                'type': 'str',
-            },
-            'service_resp_4xx': {
-                'type': 'str',
-            },
-            'service_peak_conn': {
-                'type': 'str',
-            },
-            'server_selection_fail_reset': {
-                'type': 'str',
-            },
-            'service_resp_3xx': {
-                'type': 'str',
-            },
-            'service_resp_5xx': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'backup_server_event_log': {
-            'type': 'bool',
-        },
-        'lc_method': {
-            'type':
-            'str',
-            'choices': [
-                'least-connection', 'service-least-connection',
-                'weighted-least-connection',
-                'service-weighted-least-connection'
-            ]
-        },
-        'pseudo_round_robin': {
-            'type': 'bool',
-        },
-        'shared_partition_policy_template': {
-            'type': 'bool',
-        },
-        'l4_session_usage_revert_rate': {
-            'type': 'int',
-        },
-        'shared_partition_svcgrp_health_check': {
-            'type': 'bool',
-        },
-        'template_server': {
-            'type': 'str',
-        },
-        'svcgrp_health_check_shared': {
-            'type': 'str',
-        },
-        'traffic_replication_mirror': {
-            'type': 'bool',
-        },
-        'l4_session_revert_duration': {
-            'type': 'int',
-        },
-        'traffic_replication_mirror_sa_da_repl': {
-            'type': 'bool',
-        },
-        'lb_method': {
-            'type':
-            'str',
-            'choices': [
-                'dst-ip-hash', 'dst-ip-only-hash', 'fastest-response',
-                'least-request', 'src-ip-hash', 'src-ip-only-hash',
-                'weighted-rr', 'service-weighted-rr', 'round-robin',
-                'round-robin-strict', 'odd-even-hash'
-            ]
-        },
-        'stateless_auto_switch': {
-            'type': 'bool',
-        },
-        'min_active_member_action': {
-            'type': 'str',
-            'choices': ['dynamic-priority', 'skip-pri-set']
-        },
-        'l4_session_usage': {
-            'type': 'int',
-        },
-        'extended_stats': {
-            'type': 'bool',
-        },
-        'conn_rate_revert_duration': {
-            'type': 'int',
-        },
-        'strict_select': {
-            'type': 'bool',
-        },
-        'oper': {
-            'type': 'dict',
-            'pri_affinity_priority': {
-                'type': 'int',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'stateless_current_rate': {
-                'type': 'int',
-            },
-            'servers_down': {
-                'type': 'int',
-            },
-            'stateless_state': {
-                'type': 'int',
-            },
-            'servers_disable': {
-                'type': 'int',
-            },
-            'stateless_type': {
-                'type': 'int',
-            },
-            'servers_total': {
-                'type': 'int',
-            },
-            'state': {
-                'type': 'str',
-                'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
-            },
             'member_list': {
                 'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'hm_key': {
-                        'type': 'int',
-                    },
-                    'alt_list': {
-                        'type': 'list',
-                        'alt_state': {
-                            'type': 'str',
-                        },
-                        'alt_rev_pkts': {
-                            'type': 'int',
-                        },
-                        'alt_port': {
-                            'type': 'int',
-                        },
-                        'alt_peak_conn': {
-                            'type': 'int',
-                        },
-                        'alt_curr_conn': {
-                            'type': 'int',
-                        },
-                        'alt_fwd_pkts': {
-                            'type': 'int',
-                        },
-                        'alt_total_conn': {
-                            'type': 'int',
-                        },
-                        'alt_name': {
-                            'type': 'str',
-                        }
-                    },
-                    'hm_index': {
-                        'type': 'int',
-                    },
-                    'state': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN',
-                            'DIS-MAINTENANCE', 'DIS-DAMP'
-                        ]
-                    },
-                    'drs_list': {
-                        'type': 'list',
-                        'drs_fwd_bts': {
-                            'type': 'int',
-                        },
-                        'drs_fwd_pkts': {
-                            'type': 'int',
-                        },
-                        'drs_rev_bts': {
-                            'type': 'int',
-                        },
-                        'drs_port': {
-                            'type': 'int',
-                        },
-                        'drs_curr_req': {
-                            'type': 'int',
-                        },
-                        'drs_name': {
-                            'type': 'str',
-                        },
-                        'drs_pers_conn': {
-                            'type': 'int',
-                        },
-                        'drs_priority': {
-                            'type': 'int',
-                        },
-                        'drs_total_req_succ': {
-                            'type': 'int',
-                        },
-                        'drs_hm_key': {
-                            'type': 'int',
-                        },
-                        'drs_hm_index': {
-                            'type': 'int',
-                        },
-                        'drs_rev_pkts': {
-                            'type': 'int',
-                        },
-                        'drs_total_conn': {
-                            'type': 'int',
-                        },
-                        'drs_state': {
-                            'type': 'str',
-                        },
-                        'drs_frsp_time': {
-                            'type': 'int',
-                        },
-                        'drs_peak_conn': {
-                            'type': 'int',
-                        },
-                        'drs_curr_conn': {
-                            'type': 'int',
-                        },
-                        'drs_rsp_time': {
-                            'type': 'int',
-                        },
-                        'drs_total_req': {
-                            'type': 'int',
-                        },
-                        'drs_srsp_time': {
-                            'type': 'int',
-                        }
-                    }
-                },
                 'name': {
                     'type': 'str',
                     'required': True,
@@ -1027,102 +1186,71 @@ def get_argspec():
                 'port': {
                     'type': 'int',
                     'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'curr_conn': {
+                        'type': 'str',
+                    },
+                    'total_fwd_bytes': {
+                        'type': 'str',
+                    },
+                    'total_fwd_pkts': {
+                        'type': 'str',
+                    },
+                    'total_rev_bytes': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts': {
+                        'type': 'str',
+                    },
+                    'total_conn': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_status_code_2xx': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_status_code_non_5xx': {
+                        'type': 'str',
+                    },
+                    'curr_req': {
+                        'type': 'str',
+                    },
+                    'total_req': {
+                        'type': 'str',
+                    },
+                    'total_req_succ': {
+                        'type': 'str',
+                    },
+                    'peak_conn': {
+                        'type': 'str',
+                    },
+                    'response_time': {
+                        'type': 'str',
+                    },
+                    'fastest_rsp_time': {
+                        'type': 'str',
+                    },
+                    'slowest_rsp_time': {
+                        'type': 'str',
+                    },
+                    'curr_ssl_conn': {
+                        'type': 'str',
+                    },
+                    'total_ssl_conn': {
+                        'type': 'str',
+                    },
+                    'curr_conn_overflow': {
+                        'type': 'str',
+                    },
+                    'state_flaps': {
+                        'type': 'str',
+                    }
                 }
-            },
-            'servers_up': {
-                'type': 'int',
-            },
-            'stateless_current_usage': {
-                'type': 'int',
-            },
-            'hm_dsr_enable_all_vip': {
-                'type': 'int',
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'reset': {
-            'type': 'dict',
-            'auto_switch': {
-                'type': 'bool',
-            }
-        },
-        'traffic_replication_mirror_sa_repl': {
-            'type': 'bool',
-        },
-        'report_delay': {
-            'type': 'int',
-        },
-        'conn_rate_log': {
-            'type': 'bool',
-        },
-        'l4_session_usage_log': {
-            'type': 'bool',
-        },
-        'conn_rate_duration': {
-            'type': 'int',
-        },
-        'stateless_lb_method': {
-            'type':
-            'str',
-            'choices': [
-                'stateless-dst-ip-hash', 'stateless-per-pkt-round-robin',
-                'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash',
-                'stateless-src-ip-hash', 'stateless-src-ip-only-hash'
-            ]
-        },
-        'template_policy': {
-            'type': 'str',
-        },
-        'stateless_lb_method2': {
-            'type':
-            'str',
-            'choices': [
-                'stateless-dst-ip-hash', 'stateless-per-pkt-round-robin',
-                'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash',
-                'stateless-src-ip-hash', 'stateless-src-ip-only-hash'
-            ]
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'sample_rsp_time': {
-            'type': 'bool',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'server_selection_fail_drop',
-                    'server_selection_fail_reset', 'service_peak_conn',
-                    'service_healthy_host', 'service_unhealthy_host',
-                    'service_req_count', 'service_resp_count',
-                    'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx',
-                    'service_resp_5xx', 'service_curr_conn_overflow'
-                ]
-            }
-        },
-        'top_fastest': {
-            'type': 'bool',
-        },
-        'conn_revert_rate': {
-            'type': 'int',
-        },
-        'l4_session_usage_grace_period': {
-            'type': 'int',
-        },
-        'priority_affinity': {
-            'type': 'bool',
-        },
-        'top_slowest': {
-            'type': 'bool',
-        },
-        'health_check': {
-            'type': 'str',
         }
     })
     return rv
@@ -1228,7 +1356,7 @@ def new_url(module):
 
 def validate(params):
     # Ensure that params contains all the keys.
-    requires_one_of = sorted(['lb_method', 'stateless-lb-method', 'lc_method'])
+    requires_one_of = sorted([])
     present_keys = sorted([
         x for x in requires_one_of if x in params and params.get(x) is not None
     ])

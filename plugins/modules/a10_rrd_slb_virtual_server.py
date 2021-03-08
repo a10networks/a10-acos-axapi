@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rrd_slb_virtual_server
 description:
     - slb virtual server statistics in RRD
-short_description: Configures A10 rrd.slb-virtual-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,66 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            slb_server_statistics:
-                description:
-                - "Field slb_server_statistics"
             start_time:
                 description:
                 - "Field start_time"
+                type: int
             end_time:
                 description:
                 - "Field end_time"
+                type: int
             slb_virtual_server_name:
                 description:
                 - "Field slb_virtual_server_name"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            slb_server_statistics:
+                description:
+                - "Field slb_server_statistics"
+                type: list
 
 '''
 
@@ -124,32 +135,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'slb_server_statistics': {
-                'type': 'list',
-                'out_bytes': {
-                    'type': 'int',
-                },
-                'in_bytes': {
-                    'type': 'int',
-                },
-                'p_conn': {
-                    'type': 'int',
-                },
-                'out_pkts': {
-                    'type': 'int',
-                },
-                'cur_conn': {
-                    'type': 'int',
-                },
-                'time': {
-                    'type': 'int',
-                },
-                'in_pkts': {
-                    'type': 'int',
-                }
-            },
             'start_time': {
                 'type': 'int',
             },
@@ -158,10 +148,31 @@ def get_argspec():
             },
             'slb_virtual_server_name': {
                 'type': 'str',
+            },
+            'slb_server_statistics': {
+                'type': 'list',
+                'time': {
+                    'type': 'int',
+                },
+                'in_pkts': {
+                    'type': 'int',
+                },
+                'in_bytes': {
+                    'type': 'int',
+                },
+                'out_pkts': {
+                    'type': 'int',
+                },
+                'out_bytes': {
+                    'type': 'int',
+                },
+                'cur_conn': {
+                    'type': 'int',
+                },
+                'p_conn': {
+                    'type': 'int',
+                }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

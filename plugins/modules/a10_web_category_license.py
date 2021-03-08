@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_category_license
 description:
     - License information
-short_description: Configures A10 web.category.license
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,65 +22,82 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            license_status:
-                description:
-                - "Field license_status"
-            grace_period:
-                description:
-                - "Field grace_period"
-            is_grace:
-                description:
-                - "Field is_grace"
-            license_expiry:
-                description:
-                - "Field license_expiry"
-            serial_number:
-                description:
-                - "Field serial_number"
-            remaining_period:
-                description:
-                - "Field remaining_period"
-            license_type:
-                description:
-                - "Field license_type"
             module_status:
                 description:
                 - "Field module_status"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            license_status:
+                description:
+                - "Field license_status"
+                type: str
+            license_type:
+                description:
+                - "Field license_type"
+                type: str
+            license_expiry:
+                description:
+                - "Field license_expiry"
+                type: str
+            remaining_period:
+                description:
+                - "Field remaining_period"
+                type: str
+            is_grace:
+                description:
+                - "Field is_grace"
+                type: str
+            grace_period:
+                description:
+                - "Field grace_period"
+                type: str
+            serial_number:
+                description:
+                - "Field serial_number"
+                type: str
 
 '''
 
@@ -136,35 +151,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'module_status': {
+                'type': 'str',
+            },
             'license_status': {
-                'type': 'str',
-            },
-            'grace_period': {
-                'type': 'str',
-            },
-            'is_grace': {
-                'type': 'str',
-            },
-            'license_expiry': {
-                'type': 'str',
-            },
-            'serial_number': {
-                'type': 'str',
-            },
-            'remaining_period': {
                 'type': 'str',
             },
             'license_type': {
                 'type': 'str',
             },
-            'module_status': {
+            'license_expiry': {
+                'type': 'str',
+            },
+            'remaining_period': {
+                'type': 'str',
+            },
+            'is_grace': {
+                'type': 'str',
+            },
+            'grace_period': {
+                'type': 'str',
+            },
+            'serial_number': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

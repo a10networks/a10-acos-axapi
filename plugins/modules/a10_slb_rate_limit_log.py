@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_rate_limit_log
 description:
     - Configure rate limit logging
-short_description: Configures A10 slb.rate-limit-log
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            rate_limit_log_cpu_list:
-                description:
-                - "Field rate_limit_log_cpu_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -76,60 +76,87 @@ options:
           'alloc_conn'= Log-session alloc; 'free_conn'= Log-session free;
           'conn_alloc_fail'= Log-session alloc fail; 'no_repeat_msg'= No repeat message;
           'local_log_dropped'= Local log dropped due to rate-limit;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            rate_limit_log_cpu_list:
+                description:
+                - "Field rate_limit_log_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            msg_too_big:
-                description:
-                - "Log message too big"
-            buff_send_fail:
-                description:
-                - "Buffer send fail"
             total_log_times:
                 description:
                 - "Total log times"
-            remote_log_rate:
-                description:
-                - "Remote rate (per sec)"
-            alloc_conn:
-                description:
-                - "Log-session alloc"
-            free_conn:
-                description:
-                - "Log-session free"
-            conn_alloc_fail:
-                description:
-                - "Log-session alloc fail"
-            local_log_msg:
-                description:
-                - "Local log messages"
-            local_log_dropped:
-                description:
-                - "Local log dropped due to rate-limit"
-            no_repeat_msg:
-                description:
-                - "No repeat message"
-            no_route:
-                description:
-                - "No route"
-            remote_log_msg:
-                description:
-                - "Remote log messages"
+                type: str
             total_log_msg:
                 description:
                 - "Total log messages"
+                type: str
+            local_log_msg:
+                description:
+                - "Local log messages"
+                type: str
+            remote_log_msg:
+                description:
+                - "Remote log messages"
+                type: str
             local_log_rate:
                 description:
                 - "Local rate (per sec)"
+                type: str
+            remote_log_rate:
+                description:
+                - "Remote rate (per sec)"
+                type: str
+            msg_too_big:
+                description:
+                - "Log message too big"
+                type: str
             buff_alloc_fail:
                 description:
                 - "Buffer alloc fail"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            no_route:
+                description:
+                - "No route"
+                type: str
+            buff_send_fail:
+                description:
+                - "Buffer send fail"
+                type: str
+            alloc_conn:
+                description:
+                - "Log-session alloc"
+                type: str
+            free_conn:
+                description:
+                - "Log-session free"
+                type: str
+            conn_alloc_fail:
+                description:
+                - "Log-session alloc fail"
+                type: str
+            no_repeat_msg:
+                description:
+                - "No repeat message"
+                type: str
+            local_log_dropped:
+                description:
+                - "Local log dropped due to rate-limit"
+                type: str
 
 '''
 
@@ -185,59 +212,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'cpu_count': {
-                'type': 'int',
-            },
-            'rate_limit_log_cpu_list': {
-                'type': 'list',
-                'msg_too_big': {
-                    'type': 'int',
-                },
-                'buff_send_fail': {
-                    'type': 'int',
-                },
-                'total_log_times': {
-                    'type': 'int',
-                },
-                'remote_log_rate': {
-                    'type': 'int',
-                },
-                'alloc_conn': {
-                    'type': 'int',
-                },
-                'free_conn': {
-                    'type': 'int',
-                },
-                'conn_alloc_fail': {
-                    'type': 'int',
-                },
-                'local_log_msg': {
-                    'type': 'int',
-                },
-                'local_log_dropped': {
-                    'type': 'int',
-                },
-                'no_repeat_msg': {
-                    'type': 'int',
-                },
-                'no_route': {
-                    'type': 'int',
-                },
-                'remote_log_msg': {
-                    'type': 'int',
-                },
-                'total_log_msg': {
-                    'type': 'int',
-                },
-                'local_log_rate': {
-                    'type': 'int',
-                },
-                'buff_alloc_fail': {
-                    'type': 'int',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -253,18 +229,90 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'rate_limit_log_cpu_list': {
+                'type': 'list',
+                'total_log_times': {
+                    'type': 'int',
+                },
+                'total_log_msg': {
+                    'type': 'int',
+                },
+                'local_log_msg': {
+                    'type': 'int',
+                },
+                'remote_log_msg': {
+                    'type': 'int',
+                },
+                'local_log_rate': {
+                    'type': 'int',
+                },
+                'remote_log_rate': {
+                    'type': 'int',
+                },
+                'msg_too_big': {
+                    'type': 'int',
+                },
+                'buff_alloc_fail': {
+                    'type': 'int',
+                },
+                'no_route': {
+                    'type': 'int',
+                },
+                'buff_send_fail': {
+                    'type': 'int',
+                },
+                'alloc_conn': {
+                    'type': 'int',
+                },
+                'free_conn': {
+                    'type': 'int',
+                },
+                'conn_alloc_fail': {
+                    'type': 'int',
+                },
+                'no_repeat_msg': {
+                    'type': 'int',
+                },
+                'local_log_dropped': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'msg_too_big': {
-                'type': 'str',
-            },
-            'buff_send_fail': {
-                'type': 'str',
-            },
             'total_log_times': {
                 'type': 'str',
             },
+            'total_log_msg': {
+                'type': 'str',
+            },
+            'local_log_msg': {
+                'type': 'str',
+            },
+            'remote_log_msg': {
+                'type': 'str',
+            },
+            'local_log_rate': {
+                'type': 'str',
+            },
             'remote_log_rate': {
+                'type': 'str',
+            },
+            'msg_too_big': {
+                'type': 'str',
+            },
+            'buff_alloc_fail': {
+                'type': 'str',
+            },
+            'no_route': {
+                'type': 'str',
+            },
+            'buff_send_fail': {
                 'type': 'str',
             },
             'alloc_conn': {
@@ -276,33 +324,12 @@ def get_argspec():
             'conn_alloc_fail': {
                 'type': 'str',
             },
-            'local_log_msg': {
+            'no_repeat_msg': {
                 'type': 'str',
             },
             'local_log_dropped': {
                 'type': 'str',
-            },
-            'no_repeat_msg': {
-                'type': 'str',
-            },
-            'no_route': {
-                'type': 'str',
-            },
-            'remote_log_msg': {
-                'type': 'str',
-            },
-            'total_log_msg': {
-                'type': 'str',
-            },
-            'local_log_rate': {
-                'type': 'str',
-            },
-            'buff_alloc_fail': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

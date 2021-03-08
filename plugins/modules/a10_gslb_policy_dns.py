@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy_dns
 description:
     - DNS related policy
-short_description: Configures A10 gslb.policy.dns
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,279 +22,349 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    server_mode_only:
+        - Key to identify parent object
+        type: str
+        required: True
+    action:
         description:
-        - "Only run GSLB as DNS server mode"
+        - "Apply DNS action for service"
+        type: bool
         required: False
-    external_soa:
+    active_only:
         description:
-        - "Return DNS response with external SOA Record"
-        required: False
-    server_sec:
-        description:
-        - "Provide DNSSEC support"
-        required: False
-    sticky_ipv6_mask:
-        description:
-        - "Specify IPv6 mask length, default is 128"
-        required: False
-    sticky:
-        description:
-        - "Make DNS Record sticky for certain time"
-        required: False
-    delegation:
-        description:
-        - "Zone Delegation"
+        - "Only keep active servers"
+        type: bool
         required: False
     active_only_fail_safe:
         description:
         - "Continue if no candidate"
-        required: False
-    cname_detect:
-        description:
-        - "Apply GSLB for DNS Server response when service is Canonical Name (CNAME)"
-        required: False
-    ttl:
-        description:
-        - "Specify the TTL value contained in DNS record (TTL value, unit= second, default
-          is 10)"
-        required: False
-    dynamic_preference:
-        description:
-        - "Make dynamically change the preference"
-        required: False
-    use_server_ttl:
-        description:
-        - "Use DNS Server Response TTL value in GSLB Proxy mode"
-        required: False
-    server_ptr:
-        description:
-        - "Provide PTR Records"
-        required: False
-    selected_only:
-        description:
-        - "Only keep selected servers"
-        required: False
-    ip_replace:
-        description:
-        - "Replace DNS Server Response with GSLB Service-IPs"
+        type: bool
         required: False
     dns_addition_mx:
         description:
         - "Append MX Records in Addition Section"
+        type: bool
+        required: False
+    dns_auto_map:
+        description:
+        - "Automatically build DNS Infrastructure"
+        type: bool
         required: False
     backup_alias:
         description:
         - "Return alias name when fail"
+        type: bool
         required: False
-    server_any:
+    backup_server:
         description:
-        - "Provide All Records"
-        required: False
-    hint:
-        description:
-        - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'=
-          Append Hint Records in DNS Addition Section;"
-        required: False
-    cache:
-        description:
-        - "Cache DNS Server response"
+        - "Return fallback server when fail"
+        type: bool
         required: False
     external_ip:
         description:
         - "Return DNS response with external IP address"
+        type: bool
         required: False
-    server_txt:
+    external_soa:
         description:
-        - "Provide TXT Records"
+        - "Return DNS response with external SOA Record"
+        type: bool
         required: False
-    server_addition_mx:
+    cname_detect:
         description:
-        - "Append MX Records in Addition Section"
+        - "Apply GSLB for DNS Server response when service is Canonical Name (CNAME)"
+        type: bool
+        required: False
+    ip_replace:
+        description:
+        - "Replace DNS Server Response with GSLB Service-IPs"
+        type: bool
+        required: False
+    geoloc_alias:
+        description:
+        - "Return alias name by geo-location"
+        type: bool
+        required: False
+    geoloc_action:
+        description:
+        - "Apply DNS action by geo-location"
+        type: bool
+        required: False
+    geoloc_policy:
+        description:
+        - "Apply different policy by geo-location"
+        type: bool
+        required: False
+    selected_only:
+        description:
+        - "Only keep selected servers"
+        type: bool
+        required: False
+    selected_only_value:
+        description:
+        - "Answer Number"
+        type: int
+        required: False
+    cache:
+        description:
+        - "Cache DNS Server response"
+        type: bool
         required: False
     aging_time:
         description:
         - "Specify aging-time, default is TTL in DNS record, unit= second (Aging time,
           default 0 means using TTL in DNS record as aging time)"
+        type: int
         required: False
-    block_action:
+    delegation:
         description:
-        - "Specify Action"
+        - "Zone Delegation"
+        type: bool
         required: False
-    template:
+    hint:
         description:
-        - "Logging template (Logging Template Name)"
-        required: False
-    ipv6:
-        description:
-        - "Field ipv6"
-        required: False
-        suboptions:
-            dns_ipv6_mapping_type:
-                description:
-                - "'addition'= Append Mapped Record in DNS Addition Section; 'answer'= Append
-          Mapped Record in DNS Answer Section; 'exclusive'= Only return AAAA Record;
-          'replace'= Replace Record with Mapped Record;"
-            dns_ipv6_option:
-                description:
-                - "'mix'= Return both AAAA Record and A Record; 'smart'= Return AAAA Record by DNS
-          Query Type; 'mapping'= Map A Record to AAAA Record;"
-    selected_only_value:
-        description:
-        - "Answer Number"
-        required: False
-    geoloc_action:
-        description:
-        - "Apply DNS action by geo-location"
-        required: False
-    server_ns:
-        description:
-        - "Provide NS Records"
-        required: False
-    action_type:
-        description:
-        - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty
-          response;"
-        required: False
-    server_naptr:
-        description:
-        - "Provide NAPTR Records"
-        required: False
-    active_only:
-        description:
-        - "Only keep active servers"
-        required: False
-    block_value:
-        description:
-        - "Field block_value"
-        required: False
-        suboptions:
-            block_value:
-                description:
-                - "Specify Type Number"
-    server_srv:
-        description:
-        - "Provide SRV Records"
-        required: False
-    server_auto_ptr:
-        description:
-        - "Provide PTR Records automatically"
-        required: False
-    server_cname:
-        description:
-        - "Provide CNAME Records"
-        required: False
-    server_authoritative:
-        description:
-        - "As authoritative server"
-        required: False
-    server_full_list:
-        description:
-        - "Append All A Records in Authoritative Section"
-        required: False
-    server_any_with_metric:
-        description:
-        - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
-        required: False
-    dns_auto_map:
-        description:
-        - "Automatically build DNS Infrastructure"
-        required: False
-    block_type:
-        description:
-        - "Field block_type"
-        required: False
-    sticky_mask:
-        description:
-        - "Specify IP mask, default is /32"
-        required: False
-    geoloc_alias:
-        description:
-        - "Return alias name by geo-location"
+        - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'=
+          Append Hint Records in DNS Addition Section;"
+        type: str
         required: False
     logging:
         description:
         - "'none'= None; 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS
           Query and Response;"
+        type: str
         required: False
-    backup_server:
+    template:
         description:
-        - "Return fallback server when fail"
+        - "Logging template (Logging Template Name)"
+        type: str
         required: False
-    sticky_aging_time:
+    ttl:
         description:
-        - "Specify aging-time, unit= min, default is 5 (Aging time)"
+        - "Specify the TTL value contained in DNS record (TTL value, unit= second, default
+          is 10)"
+        type: int
         required: False
-    geoloc_policy:
+    use_server_ttl:
         description:
-        - "Apply different policy by geo-location"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        - "Use DNS Server Response TTL value in GSLB Proxy mode"
+        type: bool
         required: False
     server:
         description:
         - "Run GSLB as DNS server mode"
+        type: bool
         required: False
-    dynamic_weight:
+    server_srv:
         description:
-        - "dynamically change the weight"
+        - "Provide SRV Records"
+        type: bool
         required: False
-    server_ns_list:
+    server_mx:
         description:
-        - "Append All NS Records in Authoritative Section"
+        - "Provide MX Records"
+        type: bool
+        required: False
+    server_naptr:
+        description:
+        - "Provide NAPTR Records"
+        type: bool
+        required: False
+    server_addition_mx:
+        description:
+        - "Append MX Records in Addition Section"
+        type: bool
+        required: False
+    server_ns:
+        description:
+        - "Provide NS Records"
+        type: bool
         required: False
     server_auto_ns:
         description:
         - "Provide A-Records for NS-Records automatically"
+        type: bool
         required: False
-    action:
+    server_ptr:
         description:
-        - "Apply DNS action for service"
+        - "Provide PTR Records"
+        type: bool
+        required: False
+    server_auto_ptr:
+        description:
+        - "Provide PTR Records automatically"
+        type: bool
+        required: False
+    server_txt:
+        description:
+        - "Provide TXT Records"
+        type: bool
+        required: False
+    server_any:
+        description:
+        - "Provide All Records"
+        type: bool
+        required: False
+    server_any_with_metric:
+        description:
+        - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
+        type: bool
+        required: False
+    server_authoritative:
+        description:
+        - "As authoritative server"
+        type: bool
+        required: False
+    server_sec:
+        description:
+        - "Provide DNSSEC support"
+        type: bool
+        required: False
+    server_ns_list:
+        description:
+        - "Append All NS Records in Authoritative Section"
+        type: bool
+        required: False
+    server_full_list:
+        description:
+        - "Append All A Records in Authoritative Section"
+        type: bool
+        required: False
+    server_mode_only:
+        description:
+        - "Only run GSLB as DNS server mode"
+        type: bool
+        required: False
+    server_cname:
+        description:
+        - "Provide CNAME Records"
+        type: bool
+        required: False
+    ipv6:
+        description:
+        - "Field ipv6"
+        type: list
+        required: False
+        suboptions:
+            dns_ipv6_option:
+                description:
+                - "'mix'= Return both AAAA Record and A Record; 'smart'= Return AAAA Record by DNS
+          Query Type; 'mapping'= Map A Record to AAAA Record;"
+                type: str
+            dns_ipv6_mapping_type:
+                description:
+                - "'addition'= Append Mapped Record in DNS Addition Section; 'answer'= Append
+          Mapped Record in DNS Answer Section; 'exclusive'= Only return AAAA Record;
+          'replace'= Replace Record with Mapped Record;"
+                type: str
+    block_action:
+        description:
+        - "Specify Action"
+        type: bool
+        required: False
+    action_type:
+        description:
+        - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty
+          response;"
+        type: str
         required: False
     proxy_block_port_range_list:
         description:
         - "Field proxy_block_port_range_list"
+        type: list
         required: False
         suboptions:
             proxy_block_range_from:
                 description:
                 - "Specify Type Range (From)"
+                type: int
             proxy_block_range_to:
                 description:
                 - "To"
-    server_mx:
+                type: int
+    block_value:
         description:
-        - "Provide MX Records"
+        - "Field block_value"
+        type: list
+        required: False
+        suboptions:
+            block_value:
+                description:
+                - "Specify Type Number"
+                type: int
+    block_type:
+        description:
+        - "Field block_type"
+        type: str
+        required: False
+    sticky:
+        description:
+        - "Make DNS Record sticky for certain time"
+        type: bool
+        required: False
+    sticky_mask:
+        description:
+        - "Specify IP mask, default is /32"
+        type: str
+        required: False
+    sticky_ipv6_mask:
+        description:
+        - "Specify IPv6 mask length, default is 128"
+        type: int
+        required: False
+    sticky_aging_time:
+        description:
+        - "Specify aging-time, unit= min, default is 5 (Aging time)"
+        type: int
+        required: False
+    dynamic_preference:
+        description:
+        - "Make dynamically change the preference"
+        type: bool
+        required: False
+    dynamic_weight:
+        description:
+        - "dynamically change the weight"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -404,181 +472,151 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'server_mode_only': {
+        'action': {
             'type': 'bool',
         },
-        'external_soa': {
-            'type': 'bool',
-        },
-        'server_sec': {
-            'type': 'bool',
-        },
-        'sticky_ipv6_mask': {
-            'type': 'int',
-        },
-        'sticky': {
-            'type': 'bool',
-        },
-        'delegation': {
+        'active_only': {
             'type': 'bool',
         },
         'active_only_fail_safe': {
             'type': 'bool',
         },
-        'cname_detect': {
-            'type': 'bool',
-        },
-        'ttl': {
-            'type': 'int',
-        },
-        'dynamic_preference': {
-            'type': 'bool',
-        },
-        'use_server_ttl': {
-            'type': 'bool',
-        },
-        'server_ptr': {
-            'type': 'bool',
-        },
-        'selected_only': {
-            'type': 'bool',
-        },
-        'ip_replace': {
-            'type': 'bool',
-        },
         'dns_addition_mx': {
+            'type': 'bool',
+        },
+        'dns_auto_map': {
             'type': 'bool',
         },
         'backup_alias': {
             'type': 'bool',
         },
-        'server_any': {
+        'backup_server': {
+            'type': 'bool',
+        },
+        'external_ip': {
+            'type': 'bool',
+        },
+        'external_soa': {
+            'type': 'bool',
+        },
+        'cname_detect': {
+            'type': 'bool',
+        },
+        'ip_replace': {
+            'type': 'bool',
+        },
+        'geoloc_alias': {
+            'type': 'bool',
+        },
+        'geoloc_action': {
+            'type': 'bool',
+        },
+        'geoloc_policy': {
+            'type': 'bool',
+        },
+        'selected_only': {
+            'type': 'bool',
+        },
+        'selected_only_value': {
+            'type': 'int',
+        },
+        'cache': {
+            'type': 'bool',
+        },
+        'aging_time': {
+            'type': 'int',
+        },
+        'delegation': {
             'type': 'bool',
         },
         'hint': {
             'type': 'str',
             'choices': ['none', 'answer', 'addition']
         },
-        'cache': {
+        'logging': {
+            'type': 'str',
+            'choices': ['none', 'query', 'response', 'both']
+        },
+        'template': {
+            'type': 'str',
+        },
+        'ttl': {
+            'type': 'int',
+        },
+        'use_server_ttl': {
             'type': 'bool',
         },
-        'external_ip': {
+        'server': {
             'type': 'bool',
         },
-        'server_txt': {
+        'server_srv': {
+            'type': 'bool',
+        },
+        'server_mx': {
+            'type': 'bool',
+        },
+        'server_naptr': {
             'type': 'bool',
         },
         'server_addition_mx': {
             'type': 'bool',
         },
-        'aging_time': {
-            'type': 'int',
-        },
-        'block_action': {
-            'type': 'bool',
-        },
-        'template': {
-            'type': 'str',
-        },
-        'ipv6': {
-            'type': 'list',
-            'dns_ipv6_mapping_type': {
-                'type': 'str',
-                'choices': ['addition', 'answer', 'exclusive', 'replace']
-            },
-            'dns_ipv6_option': {
-                'type': 'str',
-                'choices': ['mix', 'smart', 'mapping']
-            }
-        },
-        'selected_only_value': {
-            'type': 'int',
-        },
-        'geoloc_action': {
-            'type': 'bool',
-        },
         'server_ns': {
-            'type': 'bool',
-        },
-        'action_type': {
-            'type': 'str',
-            'choices': ['drop', 'reject', 'ignore']
-        },
-        'server_naptr': {
-            'type': 'bool',
-        },
-        'active_only': {
-            'type': 'bool',
-        },
-        'block_value': {
-            'type': 'list',
-            'block_value': {
-                'type': 'int',
-            }
-        },
-        'server_srv': {
-            'type': 'bool',
-        },
-        'server_auto_ptr': {
-            'type': 'bool',
-        },
-        'server_cname': {
-            'type': 'bool',
-        },
-        'server_authoritative': {
-            'type': 'bool',
-        },
-        'server_full_list': {
-            'type': 'bool',
-        },
-        'server_any_with_metric': {
-            'type': 'bool',
-        },
-        'dns_auto_map': {
-            'type': 'bool',
-        },
-        'block_type': {
-            'type':
-            'str',
-            'choices':
-            ['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']
-        },
-        'sticky_mask': {
-            'type': 'str',
-        },
-        'geoloc_alias': {
-            'type': 'bool',
-        },
-        'logging': {
-            'type': 'str',
-            'choices': ['none', 'query', 'response', 'both']
-        },
-        'backup_server': {
-            'type': 'bool',
-        },
-        'sticky_aging_time': {
-            'type': 'int',
-        },
-        'geoloc_policy': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'server': {
-            'type': 'bool',
-        },
-        'dynamic_weight': {
-            'type': 'bool',
-        },
-        'server_ns_list': {
             'type': 'bool',
         },
         'server_auto_ns': {
             'type': 'bool',
         },
-        'action': {
+        'server_ptr': {
             'type': 'bool',
+        },
+        'server_auto_ptr': {
+            'type': 'bool',
+        },
+        'server_txt': {
+            'type': 'bool',
+        },
+        'server_any': {
+            'type': 'bool',
+        },
+        'server_any_with_metric': {
+            'type': 'bool',
+        },
+        'server_authoritative': {
+            'type': 'bool',
+        },
+        'server_sec': {
+            'type': 'bool',
+        },
+        'server_ns_list': {
+            'type': 'bool',
+        },
+        'server_full_list': {
+            'type': 'bool',
+        },
+        'server_mode_only': {
+            'type': 'bool',
+        },
+        'server_cname': {
+            'type': 'bool',
+        },
+        'ipv6': {
+            'type': 'list',
+            'dns_ipv6_option': {
+                'type': 'str',
+                'choices': ['mix', 'smart', 'mapping']
+            },
+            'dns_ipv6_mapping_type': {
+                'type': 'str',
+                'choices': ['addition', 'answer', 'exclusive', 'replace']
+            }
+        },
+        'block_action': {
+            'type': 'bool',
+        },
+        'action_type': {
+            'type': 'str',
+            'choices': ['drop', 'reject', 'ignore']
         },
         'proxy_block_port_range_list': {
             'type': 'list',
@@ -589,8 +627,38 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'server_mx': {
+        'block_value': {
+            'type': 'list',
+            'block_value': {
+                'type': 'int',
+            }
+        },
+        'block_type': {
+            'type':
+            'str',
+            'choices':
+            ['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']
+        },
+        'sticky': {
             'type': 'bool',
+        },
+        'sticky_mask': {
+            'type': 'str',
+        },
+        'sticky_ipv6_mask': {
+            'type': 'int',
+        },
+        'sticky_aging_time': {
+            'type': 'int',
+        },
+        'dynamic_preference': {
+            'type': 'bool',
+        },
+        'dynamic_weight': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

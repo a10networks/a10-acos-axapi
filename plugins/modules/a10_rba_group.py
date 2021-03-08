@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rba_group
 description:
     - RBA configuration for a group
-short_description: Configures A10 rba.group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,72 +22,90 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    partition_list:
+    name:
         description:
-        - "Field partition_list"
-        required: False
-        suboptions:
-            partition_name:
-                description:
-                - "partition name"
-            role_list:
-                description:
-                - "Field role_list"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
-            rule_list:
-                description:
-                - "Field rule_list"
+        - "Name of a RBA group"
+        type: str
+        required: True
     user_list:
         description:
         - "Field user_list"
+        type: list
         required: False
         suboptions:
             user:
                 description:
                 - "Users in the group"
-    name:
-        description:
-        - "Name of a RBA group"
-        required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    partition_list:
+        description:
+        - "Field partition_list"
+        type: list
+        required: False
+        suboptions:
+            partition_name:
+                description:
+                - "partition name"
+                type: str
+            role_list:
+                description:
+                - "Field role_list"
+                type: list
+            rule_list:
+                description:
+                - "Field rule_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -146,6 +162,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'user_list': {
+            'type': 'list',
+            'user': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'partition_list': {
             'type': 'list',
             'partition_name': {
@@ -158,38 +190,22 @@ def get_argspec():
                     'type': 'str',
                 }
             },
+            'rule_list': {
+                'type': 'list',
+                'object': {
+                    'type': 'str',
+                },
+                'operation': {
+                    'type': 'str',
+                    'choices': ['no-access', 'read', 'oper', 'write']
+                }
+            },
             'uuid': {
                 'type': 'str',
             },
             'user_tag': {
                 'type': 'str',
-            },
-            'rule_list': {
-                'type': 'list',
-                'operation': {
-                    'type': 'str',
-                    'choices': ['no-access', 'read', 'oper', 'write']
-                },
-                'object': {
-                    'type': 'str',
-                }
             }
-        },
-        'user_list': {
-            'type': 'list',
-            'user': {
-                'type': 'str',
-            }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

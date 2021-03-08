@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_hc
 description:
     - Debug Harmony Controller
-short_description: Configures A10 debug.hc
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,71 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    per_connection:
-        description:
-        - "Debug logs for harmony controller (per-connection)"
+        type: str
         required: False
     metrics:
         description:
         - "Debug logs for harmony controller (metrics)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    registration:
-        description:
-        - "Debug logs for harmony controller (registration)"
-        required: False
-    uri:
-        description:
-        - "URI of the object to filter"
+        type: bool
         required: False
     object_uuid:
         description:
         - "UUID of the object to filter"
+        type: str
         required: False
-    error:
+    uri:
         description:
-        - "Debug logs for harmony controller (error)"
-        required: False
-    app_svc_id:
-        description:
-        - "Application service id (virtual-server_port_protocol)"
+        - "URI of the object to filter"
+        type: str
         required: False
     per_request:
         description:
         - "Debug logs for harmony controller (per-request)"
+        type: bool
+        required: False
+    app_svc_id:
+        description:
+        - "Application service id (virtual-server_port_protocol)"
+        type: str
         required: False
     anomaly:
         description:
         - "Dump per-request in anomaly cases only"
+        type: bool
+        required: False
+    registration:
+        description:
+        - "Debug logs for harmony controller (registration)"
+        type: bool
+        required: False
+    error:
+        description:
+        - "Debug logs for harmony controller (error)"
+        type: bool
+        required: False
+    per_connection:
+        description:
+        - "Debug logs for harmony controller (per-connection)"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -151,35 +166,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'per_connection': {
-            'type': 'bool',
-        },
         'metrics': {
             'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'registration': {
-            'type': 'bool',
-        },
-        'uri': {
-            'type': 'str',
         },
         'object_uuid': {
             'type': 'str',
         },
-        'error': {
-            'type': 'bool',
-        },
-        'app_svc_id': {
+        'uri': {
             'type': 'str',
         },
         'per_request': {
             'type': 'bool',
         },
+        'app_svc_id': {
+            'type': 'str',
+        },
         'anomaly': {
             'type': 'bool',
+        },
+        'registration': {
+            'type': 'bool',
+        },
+        'error': {
+            'type': 'bool',
+        },
+        'per_connection': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

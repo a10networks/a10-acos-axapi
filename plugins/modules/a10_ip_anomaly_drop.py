@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_anomaly_drop
 description:
     - Set IP anomaly drop policy
-short_description: Configures A10 ip.anomaly-drop
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,208 +22,131 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    frag:
-        description:
-        - "drop all fragmented packets"
-        required: False
-    out_of_sequence:
-        description:
-        - "out of sequence packet threshold (threshold value)"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            tcp_frg_hdr:
-                description:
-                - "Field tcp_frg_hdr"
-            tcp_null_frg:
-                description:
-                - "Field tcp_null_frg"
-            over_ip_payload:
-                description:
-                - "Field over_ip_payload"
-            udp_bad_csum:
-                description:
-                - "Field udp_bad_csum"
-            nvgre_err:
-                description:
-                - "Field nvgre_err"
-            tcp_syn_fin:
-                description:
-                - "Field tcp_syn_fin"
-            udp_kerb_frg:
-                description:
-                - "Field udp_kerb_frg"
-            tcp_syn_frg:
-                description:
-                - "Field tcp_syn_frg"
-            tcp_bad_iplen:
-                description:
-                - "Field tcp_bad_iplen"
-            ipip_tnl_err:
-                description:
-                - "Field ipip_tnl_err"
-            csum:
-                description:
-                - "Field csum"
-            tcp_xmas:
-                description:
-                - "Field tcp_xmas"
-            pod:
-                description:
-                - "Field pod"
-            tcp_bad_csum:
-                description:
-                - "Field tcp_bad_csum"
-            emp_frg:
-                description:
-                - "Field emp_frg"
-            frg:
-                description:
-                - "Field frg"
-            bad_ip_ttl:
-                description:
-                - "Field bad_ip_ttl"
-            bad_ip_frg_offset:
-                description:
-                - "Field bad_ip_frg_offset"
-            tcp_sht_hdr:
-                description:
-                - "Field tcp_sht_hdr"
-            tcp_xmas_scan:
-                description:
-                - "Field tcp_xmas_scan"
-            no_ip_payload:
-                description:
-                - "Field no_ip_payload"
-            udp_bad_len:
-                description:
-                - "Field udp_bad_len"
-            opt:
-                description:
-                - "Field opt"
-            vxlan_err:
-                description:
-                - "Field vxlan_err"
-            bad_ip_payload_len:
-                description:
-                - "Field bad_ip_payload_len"
-            runt_ip_hdr:
-                description:
-                - "Field runt_ip_hdr"
-            runt_tcp_udp_hdr:
-                description:
-                - "Field runt_tcp_udp_hdr"
-            emp_mic_frg:
-                description:
-                - "Field emp_mic_frg"
-            bad_ip_hdrlen:
-                description:
-                - "Field bad_ip_hdrlen"
-            tcp_null_scan:
-                description:
-                - "Field tcp_null_scan"
-            land:
-                description:
-                - "Field land"
-            tcp_opt_err:
-                description:
-                - "Field tcp_opt_err"
-            bad_ip_flg:
-                description:
-                - "Field bad_ip_flg"
-            udp_srt_hdr:
-                description:
-                - "Field udp_srt_hdr"
-            udp_port_lb:
-                description:
-                - "Field udp_port_lb"
-            bad_tcp_urg_offset:
-                description:
-                - "Field bad_tcp_urg_offset"
-            gre_pptp_err:
-                description:
-                - "Field gre_pptp_err"
-            ipip_tnl_msmtch:
-                description:
-                - "Field ipip_tnl_msmtch"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    tcp_syn_fin:
-        description:
-        - "drop TCP packets with both syn and fin flags set"
-        required: False
-    drop_all:
-        description:
-        - "drop all IP anomaly packets"
-        required: False
-    ping_of_death:
-        description:
-        - "drop oversize ICMP packets"
-        required: False
-    security_attack:
-        description:
-        - "Field security_attack"
-        required: False
-        suboptions:
-            security_attack_layer_3:
-                description:
-                - "drop packets with layer 3 anomaly"
-            security_attack_layer_4:
-                description:
-                - "drop packets with layer 4 anomaly"
-    tcp_no_flag:
-        description:
-        - "drop TCP packets with no flag"
+        type: str
         required: False
     packet_deformity:
         description:
         - "Field packet_deformity"
+        type: dict
         required: False
         suboptions:
             packet_deformity_layer_3:
                 description:
                 - "drop packets with layer 3 anomaly"
+                type: bool
             packet_deformity_layer_4:
                 description:
                 - "drop packets with layer 4 anomaly"
+                type: bool
+    security_attack:
+        description:
+        - "Field security_attack"
+        type: dict
+        required: False
+        suboptions:
+            security_attack_layer_3:
+                description:
+                - "drop packets with layer 3 anomaly"
+                type: bool
+            security_attack_layer_4:
+                description:
+                - "drop packets with layer 4 anomaly"
+                type: bool
+    bad_content:
+        description:
+        - "bad content threshold (threshold value)"
+        type: int
+        required: False
+    drop_all:
+        description:
+        - "drop all IP anomaly packets"
+        type: bool
+        required: False
+    frag:
+        description:
+        - "drop all fragmented packets"
+        type: bool
+        required: False
+    ip_option:
+        description:
+        - "drop packets with IP options"
+        type: bool
+        required: False
+    land_attack:
+        description:
+        - "drop IP packets with the same source and destination addresses"
+        type: bool
+        required: False
+    out_of_sequence:
+        description:
+        - "out of sequence packet threshold (threshold value)"
+        type: int
+        required: False
+    ping_of_death:
+        description:
+        - "drop oversize ICMP packets"
+        type: bool
+        required: False
+    tcp_no_flag:
+        description:
+        - "drop TCP packets with no flag"
+        type: bool
+        required: False
+    tcp_syn_fin:
+        description:
+        - "drop TCP packets with both syn and fin flags set"
+        type: bool
+        required: False
+    tcp_syn_frag:
+        description:
+        - "drop fragmented TCP packets with syn flag set"
+        type: bool
+        required: False
     zero_window:
         description:
         - "zero window size threshold (threshold value)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -245,22 +166,165 @@ options:
           'runt_tcp_udp_hdr'= runt_tcp_udp_hdr; 'ipip_tnl_msmtch'= ipip_tnl_msmtch;
           'tcp_opt_err'= tcp_opt_err; 'ipip_tnl_err'= ipip_tnl_err; 'vxlan_err'=
           vxlan_err; 'nvgre_err'= nvgre_err; 'gre_pptp_err'= gre_pptp_err;"
-    ip_option:
+                type: str
+    stats:
         description:
-        - "drop packets with IP options"
+        - "Field stats"
+        type: dict
         required: False
-    land_attack:
-        description:
-        - "drop IP packets with the same source and destination addresses"
-        required: False
-    tcp_syn_frag:
-        description:
-        - "drop fragmented TCP packets with syn flag set"
-        required: False
-    bad_content:
-        description:
-        - "bad content threshold (threshold value)"
-        required: False
+        suboptions:
+            land:
+                description:
+                - "Field land"
+                type: str
+            emp_frg:
+                description:
+                - "Field emp_frg"
+                type: str
+            emp_mic_frg:
+                description:
+                - "Field emp_mic_frg"
+                type: str
+            opt:
+                description:
+                - "Field opt"
+                type: str
+            frg:
+                description:
+                - "Field frg"
+                type: str
+            bad_ip_hdrlen:
+                description:
+                - "Field bad_ip_hdrlen"
+                type: str
+            bad_ip_flg:
+                description:
+                - "Field bad_ip_flg"
+                type: str
+            bad_ip_ttl:
+                description:
+                - "Field bad_ip_ttl"
+                type: str
+            no_ip_payload:
+                description:
+                - "Field no_ip_payload"
+                type: str
+            over_ip_payload:
+                description:
+                - "Field over_ip_payload"
+                type: str
+            bad_ip_payload_len:
+                description:
+                - "Field bad_ip_payload_len"
+                type: str
+            bad_ip_frg_offset:
+                description:
+                - "Field bad_ip_frg_offset"
+                type: str
+            csum:
+                description:
+                - "Field csum"
+                type: str
+            pod:
+                description:
+                - "Field pod"
+                type: str
+            bad_tcp_urg_offset:
+                description:
+                - "Field bad_tcp_urg_offset"
+                type: str
+            tcp_sht_hdr:
+                description:
+                - "Field tcp_sht_hdr"
+                type: str
+            tcp_bad_iplen:
+                description:
+                - "Field tcp_bad_iplen"
+                type: str
+            tcp_null_frg:
+                description:
+                - "Field tcp_null_frg"
+                type: str
+            tcp_null_scan:
+                description:
+                - "Field tcp_null_scan"
+                type: str
+            tcp_syn_fin:
+                description:
+                - "Field tcp_syn_fin"
+                type: str
+            tcp_xmas:
+                description:
+                - "Field tcp_xmas"
+                type: str
+            tcp_xmas_scan:
+                description:
+                - "Field tcp_xmas_scan"
+                type: str
+            tcp_syn_frg:
+                description:
+                - "Field tcp_syn_frg"
+                type: str
+            tcp_frg_hdr:
+                description:
+                - "Field tcp_frg_hdr"
+                type: str
+            tcp_bad_csum:
+                description:
+                - "Field tcp_bad_csum"
+                type: str
+            udp_srt_hdr:
+                description:
+                - "Field udp_srt_hdr"
+                type: str
+            udp_bad_len:
+                description:
+                - "Field udp_bad_len"
+                type: str
+            udp_kerb_frg:
+                description:
+                - "Field udp_kerb_frg"
+                type: str
+            udp_port_lb:
+                description:
+                - "Field udp_port_lb"
+                type: str
+            udp_bad_csum:
+                description:
+                - "Field udp_bad_csum"
+                type: str
+            runt_ip_hdr:
+                description:
+                - "Field runt_ip_hdr"
+                type: str
+            runt_tcp_udp_hdr:
+                description:
+                - "Field runt_tcp_udp_hdr"
+                type: str
+            ipip_tnl_msmtch:
+                description:
+                - "Field ipip_tnl_msmtch"
+                type: str
+            tcp_opt_err:
+                description:
+                - "Field tcp_opt_err"
+                type: str
+            ipip_tnl_err:
+                description:
+                - "Field ipip_tnl_err"
+                type: str
+            vxlan_err:
+                description:
+                - "Field vxlan_err"
+                type: str
+            nvgre_err:
+                description:
+                - "Field nvgre_err"
+                type: str
+            gre_pptp_err:
+                description:
+                - "Field gre_pptp_err"
+                type: str
 
 '''
 
@@ -328,140 +392,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'frag': {
-            'type': 'bool',
-        },
-        'out_of_sequence': {
-            'type': 'int',
-        },
-        'stats': {
+        'packet_deformity': {
             'type': 'dict',
-            'tcp_frg_hdr': {
-                'type': 'str',
+            'packet_deformity_layer_3': {
+                'type': 'bool',
             },
-            'tcp_null_frg': {
-                'type': 'str',
-            },
-            'over_ip_payload': {
-                'type': 'str',
-            },
-            'udp_bad_csum': {
-                'type': 'str',
-            },
-            'nvgre_err': {
-                'type': 'str',
-            },
-            'tcp_syn_fin': {
-                'type': 'str',
-            },
-            'udp_kerb_frg': {
-                'type': 'str',
-            },
-            'tcp_syn_frg': {
-                'type': 'str',
-            },
-            'tcp_bad_iplen': {
-                'type': 'str',
-            },
-            'ipip_tnl_err': {
-                'type': 'str',
-            },
-            'csum': {
-                'type': 'str',
-            },
-            'tcp_xmas': {
-                'type': 'str',
-            },
-            'pod': {
-                'type': 'str',
-            },
-            'tcp_bad_csum': {
-                'type': 'str',
-            },
-            'emp_frg': {
-                'type': 'str',
-            },
-            'frg': {
-                'type': 'str',
-            },
-            'bad_ip_ttl': {
-                'type': 'str',
-            },
-            'bad_ip_frg_offset': {
-                'type': 'str',
-            },
-            'tcp_sht_hdr': {
-                'type': 'str',
-            },
-            'tcp_xmas_scan': {
-                'type': 'str',
-            },
-            'no_ip_payload': {
-                'type': 'str',
-            },
-            'udp_bad_len': {
-                'type': 'str',
-            },
-            'opt': {
-                'type': 'str',
-            },
-            'vxlan_err': {
-                'type': 'str',
-            },
-            'bad_ip_payload_len': {
-                'type': 'str',
-            },
-            'runt_ip_hdr': {
-                'type': 'str',
-            },
-            'runt_tcp_udp_hdr': {
-                'type': 'str',
-            },
-            'emp_mic_frg': {
-                'type': 'str',
-            },
-            'bad_ip_hdrlen': {
-                'type': 'str',
-            },
-            'tcp_null_scan': {
-                'type': 'str',
-            },
-            'land': {
-                'type': 'str',
-            },
-            'tcp_opt_err': {
-                'type': 'str',
-            },
-            'bad_ip_flg': {
-                'type': 'str',
-            },
-            'udp_srt_hdr': {
-                'type': 'str',
-            },
-            'udp_port_lb': {
-                'type': 'str',
-            },
-            'bad_tcp_urg_offset': {
-                'type': 'str',
-            },
-            'gre_pptp_err': {
-                'type': 'str',
-            },
-            'ipip_tnl_msmtch': {
-                'type': 'str',
+            'packet_deformity_layer_4': {
+                'type': 'bool',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'tcp_syn_fin': {
-            'type': 'bool',
-        },
-        'drop_all': {
-            'type': 'bool',
-        },
-        'ping_of_death': {
-            'type': 'bool',
         },
         'security_attack': {
             'type': 'dict',
@@ -472,20 +410,41 @@ def get_argspec():
                 'type': 'bool',
             }
         },
+        'bad_content': {
+            'type': 'int',
+        },
+        'drop_all': {
+            'type': 'bool',
+        },
+        'frag': {
+            'type': 'bool',
+        },
+        'ip_option': {
+            'type': 'bool',
+        },
+        'land_attack': {
+            'type': 'bool',
+        },
+        'out_of_sequence': {
+            'type': 'int',
+        },
+        'ping_of_death': {
+            'type': 'bool',
+        },
         'tcp_no_flag': {
             'type': 'bool',
         },
-        'packet_deformity': {
-            'type': 'dict',
-            'packet_deformity_layer_3': {
-                'type': 'bool',
-            },
-            'packet_deformity_layer_4': {
-                'type': 'bool',
-            }
+        'tcp_syn_fin': {
+            'type': 'bool',
+        },
+        'tcp_syn_frag': {
+            'type': 'bool',
         },
         'zero_window': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -508,17 +467,122 @@ def get_argspec():
                 ]
             }
         },
-        'ip_option': {
-            'type': 'bool',
-        },
-        'land_attack': {
-            'type': 'bool',
-        },
-        'tcp_syn_frag': {
-            'type': 'bool',
-        },
-        'bad_content': {
-            'type': 'int',
+        'stats': {
+            'type': 'dict',
+            'land': {
+                'type': 'str',
+            },
+            'emp_frg': {
+                'type': 'str',
+            },
+            'emp_mic_frg': {
+                'type': 'str',
+            },
+            'opt': {
+                'type': 'str',
+            },
+            'frg': {
+                'type': 'str',
+            },
+            'bad_ip_hdrlen': {
+                'type': 'str',
+            },
+            'bad_ip_flg': {
+                'type': 'str',
+            },
+            'bad_ip_ttl': {
+                'type': 'str',
+            },
+            'no_ip_payload': {
+                'type': 'str',
+            },
+            'over_ip_payload': {
+                'type': 'str',
+            },
+            'bad_ip_payload_len': {
+                'type': 'str',
+            },
+            'bad_ip_frg_offset': {
+                'type': 'str',
+            },
+            'csum': {
+                'type': 'str',
+            },
+            'pod': {
+                'type': 'str',
+            },
+            'bad_tcp_urg_offset': {
+                'type': 'str',
+            },
+            'tcp_sht_hdr': {
+                'type': 'str',
+            },
+            'tcp_bad_iplen': {
+                'type': 'str',
+            },
+            'tcp_null_frg': {
+                'type': 'str',
+            },
+            'tcp_null_scan': {
+                'type': 'str',
+            },
+            'tcp_syn_fin': {
+                'type': 'str',
+            },
+            'tcp_xmas': {
+                'type': 'str',
+            },
+            'tcp_xmas_scan': {
+                'type': 'str',
+            },
+            'tcp_syn_frg': {
+                'type': 'str',
+            },
+            'tcp_frg_hdr': {
+                'type': 'str',
+            },
+            'tcp_bad_csum': {
+                'type': 'str',
+            },
+            'udp_srt_hdr': {
+                'type': 'str',
+            },
+            'udp_bad_len': {
+                'type': 'str',
+            },
+            'udp_kerb_frg': {
+                'type': 'str',
+            },
+            'udp_port_lb': {
+                'type': 'str',
+            },
+            'udp_bad_csum': {
+                'type': 'str',
+            },
+            'runt_ip_hdr': {
+                'type': 'str',
+            },
+            'runt_tcp_udp_hdr': {
+                'type': 'str',
+            },
+            'ipip_tnl_msmtch': {
+                'type': 'str',
+            },
+            'tcp_opt_err': {
+                'type': 'str',
+            },
+            'ipip_tnl_err': {
+                'type': 'str',
+            },
+            'vxlan_err': {
+                'type': 'str',
+            },
+            'nvgre_err': {
+                'type': 'str',
+            },
+            'gre_pptp_err': {
+                'type': 'str',
+            }
         }
     })
     return rv

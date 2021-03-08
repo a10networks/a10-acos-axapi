@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_l4
 description:
     - Configure L4
-short_description: Configures A10 slb.l4
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -131,361 +131,502 @@ options:
           'synreceived_hw'= TCP SYN (HW SYN cookie); 'dns_id_switch'= DNS query id
           switch; 'server_down_del'= Server Down Del switch; 'dnssec_switch'= DNSSEC SG
           switch; 'rate_drop_reset_unkn'= Rate Drop reset; 'tcp_connections_closed'= TCP
-          Connections Closed;"
+          Connections Closed; 'snat_force_preserve_alloc'= Snat port preserve allocated;
+          'snat_force_preserve_free'= Snat port preserve freed;
+          'snat_port_overload_fail'= Snat port overload fail;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            conn_rate_limit_drop:
-                description:
-                - "Conn rate limit drops"
-            outrst_stale_sess:
-                description:
-                - "TCP out RST stale sess"
-            concurrent_conn_exceed:
-                description:
-                - "L3V Conn Limit Drop"
-            tcp_sess_aged_out:
-                description:
-                - "TCP Session aged out"
-            ignore_msl:
-                description:
-                - "ignore msl"
-            no_vport_drop:
-                description:
-                - "vport not matching drops"
-            snat_icmp_error_process:
-                description:
-                - "Source NAT ICMP Process"
-            port_preserve_attempt:
-                description:
-                - "NAT Port Preserve Try"
-            anomaly_pbslb_drop:
-                description:
-                - "Anomaly pbslb drop"
-            proxy_nosock_drop:
-                description:
-                - "Proxy no sock drops"
-            svr_syn_handshake_fail:
-                description:
-                - "L4 server handshake fail"
-            snat_icmp_no_match:
-                description:
-                - "Source NAT ICMP No Match"
-            drop_gslb:
-                description:
-                - "Drop GSLB"
-            outrst_aflex:
-                description:
-                - "TCP out RST aFleX"
-            anomaly_zero_win:
-                description:
-                - "Anomaly zero window"
-            nosyn_drop_rst:
-                description:
-                - "No SYN pkt drops - RST"
-            anomaly_bad_content:
-                description:
-                - "Anomaly bad content"
-            bw_rate_limit_exceed:
-                description:
-                - "BW-Limit Exceed drop"
-            tcp_fwd_last_ack:
-                description:
-                - "L4 rcv fwd last ACK"
-            nosyn_drop_fin:
-                description:
-                - "No SYN pkt drops - FIN"
-            anomaly_out_seq:
-                description:
-                - "Anomaly out of sequence"
-            tcp_rev_ackfin:
-                description:
-                - "L4 rcv rev FIN|ACK"
-            tcp_rev_fin:
-                description:
-                - "L4 rcv rev FIN"
-            tcp_fwd_fin:
-                description:
-                - "L4 rcv fwd FIN"
-            l2_dsr:
-                description:
-                - "L2 DSR received"
-            bw_watermark_drop:
-                description:
-                - "BW-Watermark drop"
-            reset_l7_on_failover:
-                description:
-                - "RST L7 on failover"
-            tcp_invalid_drop:
-                description:
-                - "TCP invalid drop"
-            syn_stale_sess:
-                description:
-                - "SYN stale sess drop"
-            syncookie_buff_drop:
-                description:
-                - "TCP SYN cookie buff drop"
-            inudp:
-                description:
-                - "UDP received"
-            tcpotherflags_drop:
-                description:
-                - "TCP SYN Other Flags Drop"
-            udp_sess_aged_out:
-                description:
-                - "UDP Session aged out"
-            auto_reassign:
-                description:
-                - "Auto-reselect server"
-            stateless_conn_timeout:
-                description:
-                - "L4 stateless Conn TO"
-            fast_aging_set:
-                description:
-                - "Fast aging set"
-            udp_req_oneplus_no_resp:
-                description:
-                - "L4 UDP reqs no rsp"
-            connlimit_drop:
-                description:
-                - "Conn Limit drops"
-            tcp_connections_closed:
-                description:
-                - "TCP Connections Closed"
-            udp_req_one_oneplus_resp:
-                description:
-                - "L4 UDP req rsps"
-            connlimit_reset:
-                description:
-                - "Conn Limit resets"
-            ssl_cps_exceed:
-                description:
-                - "SSL CPS exceed drop"
-            syncookiessentfailed:
-                description:
-                - "TCP SYN cookie snt fail"
-            ssl_tpt_exceed:
-                description:
-                - "SSL TPT exceed drop"
-            smart_nat_id_mismatch:
-                description:
-                - "Auto NAT id mismatch"
-            tcp_fwd_ackfin:
-                description:
-                - "L4 rcv fwd FIN|ACK"
-            ssl_watermark_drop:
-                description:
-                - "SSL TPT-Watermark drop"
-            tcp_rexmit_synack_delq:
-                description:
-                - "L4 rcv rexmit SYN|ACK DQ"
-            conn_rate_limit_reset:
-                description:
-                - "Conn rate limit resets"
-            tcp_fwd_fin_dup:
-                description:
-                - "L4 rcv fwd FIN dup"
-            other_sess_aged_out:
-                description:
-                - "Other Session aged out"
-            tcp_rexmit_synack:
-                description:
-                - "L4 rcv rexmit SYN|ACK"
-            skip_insert_client_ip:
-                description:
-                - "Skip Insert-client-ip"
-            server_down_del:
-                description:
-                - "Server Down Del switch"
-            l3_dsr:
-                description:
-                - "L3 DSR received"
-            tcp_sess_noest_aged_out:
-                description:
-                - "TCP no-Est Sess aged out"
-            syn_rate:
-                description:
-                - "TCP SYN rate per sec"
-            l7_cps_exceed:
-                description:
-                - "L7 CPS exceed drop"
-            outrst_ack_attack:
-                description:
-                - "TCP out RST ACK attack"
-            synattack:
-                description:
-                - "L4 SYN attack"
-            drop_aflex:
-                description:
-                - "aFleX drops"
-            tcp_est:
-                description:
-                - "L4 TCP Established"
-            svrselfail:
-                description:
-                - "Server sel failure"
-            outrst_broker:
-                description:
-                - "TCP out RST L4 proxy"
-            tcp_sess_noest_csyn_rcv_aged_out:
-                description:
-                - "no-Est CSYN rcv aged out"
-            novport_drop:
-                description:
-                - "NAT no session drops"
-            fast_aging_reset:
-                description:
-                - "Fast aging reset"
-            syncookiessent:
-                description:
-                - "TCP SYN cookie snt"
-            tcp_rexmit_syn:
-                description:
-                - "L4 rcv rexmit SYN"
-            outrst:
-                description:
-                - "TCP out RST"
-            tcp_ax_rexmit_syn:
-                description:
-                - "L4 AX re-xmit SYN"
-            tcp_sess_noest_ssyn_xmit_aged_out:
-                description:
-                - "no-Est SSYN snt aged out"
-            syncookie_buff_queue:
-                description:
-                - "TCP SYN cookie buff queue"
-            sess_aged_out:
-                description:
-                - "Session aged out"
-            throttle_syn:
-                description:
-                - "SYN Throttle"
-            nosyn_drop:
-                description:
-                - "No SYN pkt drops"
-            l4_cps_exceed:
-                description:
-                - "L4 CPS exceed drop"
-            udp_req_resp_notmatch:
-                description:
-                - "L4 UDP req/rsp not match"
-            snat_fail:
-                description:
-                - "Source NAT failure"
-            no_resourse_drop:
-                description:
-                - "No resource drop"
-            inband_hm_retry:
-                description:
-                - "Inband HM retry"
-            synreceived:
-                description:
-                - "TCP SYN received"
-            nat_cps_exceed:
-                description:
-                - "NAT CPS exceed drop"
-            out_seq_ack_drop:
-                description:
-                - "Out of sequence ACK drop"
-            outrst_nosyn:
-                description:
-                - "TCP out RST no SYN"
-            udp_req_more_resp:
-                description:
-                - "L4 UDP req greater than rsps"
-            dns_policy_drop:
-                description:
-                - "DNS Policy Drop"
-            rate_drop_reset_unkn:
-                description:
-                - "Rate Drop reset"
-            nosyn_drop_ack:
-                description:
-                - "No SYN pkt drops - ACK"
-            snat_no_rev_route:
-                description:
-                - "Source NAT no rev route"
-            tcp_fwd_rst:
-                description:
-                - "L4 rcv fwd RST"
-            tcp_no_slb:
-                description:
-                - "TCP no SLB"
-            reset_unknown_conn:
-                description:
-                - "Reset unknown conn"
-            udp_resp_oneplus:
-                description:
-                - "L4 UDP rsps"
-            outrst_tcpproxy:
-                description:
-                - "TCP out RST TCP proxy"
-            snat_no_fwd_route:
-                description:
-                - "Source NAT no fwd route"
-            tcp_rev_fin_dup:
-                description:
-                - "L4 rcv rev FIN dup"
-            udp_no_slb:
-                description:
-                - "UDP no SLB"
-            port_preserve_succ:
-                description:
-                - "NAT Port Preserve Succ"
-            udp_resp_more_req:
-                description:
-                - "L4 UDP rsps greater than reqs"
-            inband_hm_reassign:
-                description:
-                - "Inband HM reassign"
-            tcpsyndata_drop:
-                description:
-                - "TCP SYN With Data Drop"
-            syncookiescheckfailed:
-                description:
-                - "TCP SYN cookie failed"
-            tcp_rexmit_syn_delq:
-                description:
-                - "L4 rcv rexmit SYN (delq)"
-            tcp_syn_rcv_rst:
-                description:
-                - "L4 rcv RST on SYN"
-            dns_id_switch:
-                description:
-                - "DNS query id switch"
-            tcp_rev_last_ack:
-                description:
-                - "L4 rcv rev last ACK"
-            tcp_rev_rst:
-                description:
-                - "L4 rcv rev RST"
-            noroute:
-                description:
-                - "IP out noroute"
-            udp_req_oneplus:
-                description:
-                - "L4 UDP reqs"
-            dnssec_switch:
-                description:
-                - "DNSSEC SG switch"
-            syncookiessent_ts:
-                description:
-                - "TCP SYN cookie snt ts"
-            tcp_syn_rcv_ack:
-                description:
-                - "L4 rcv ACK on SYN"
-            synreceived_hw:
-                description:
-                - "TCP SYN (HW SYN cookie)"
             intcp:
                 description:
                 - "TCP received"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            synreceived:
+                description:
+                - "TCP SYN received"
+                type: str
+            tcp_fwd_last_ack:
+                description:
+                - "L4 rcv fwd last ACK"
+                type: str
+            tcp_rev_last_ack:
+                description:
+                - "L4 rcv rev last ACK"
+                type: str
+            tcp_rev_fin:
+                description:
+                - "L4 rcv rev FIN"
+                type: str
+            tcp_fwd_fin:
+                description:
+                - "L4 rcv fwd FIN"
+                type: str
+            tcp_fwd_ackfin:
+                description:
+                - "L4 rcv fwd FIN|ACK"
+                type: str
+            inudp:
+                description:
+                - "UDP received"
+                type: str
+            syncookiessent:
+                description:
+                - "TCP SYN cookie snt"
+                type: str
+            syncookiessent_ts:
+                description:
+                - "TCP SYN cookie snt ts"
+                type: str
+            syncookiessentfailed:
+                description:
+                - "TCP SYN cookie snt fail"
+                type: str
+            outrst:
+                description:
+                - "TCP out RST"
+                type: str
+            outrst_nosyn:
+                description:
+                - "TCP out RST no SYN"
+                type: str
+            outrst_broker:
+                description:
+                - "TCP out RST L4 proxy"
+                type: str
+            outrst_ack_attack:
+                description:
+                - "TCP out RST ACK attack"
+                type: str
+            outrst_aflex:
+                description:
+                - "TCP out RST aFleX"
+                type: str
+            outrst_stale_sess:
+                description:
+                - "TCP out RST stale sess"
+                type: str
+            syn_stale_sess:
+                description:
+                - "SYN stale sess drop"
+                type: str
+            outrst_tcpproxy:
+                description:
+                - "TCP out RST TCP proxy"
+                type: str
+            svrselfail:
+                description:
+                - "Server sel failure"
+                type: str
+            noroute:
+                description:
+                - "IP out noroute"
+                type: str
+            snat_fail:
+                description:
+                - "Source NAT failure"
+                type: str
+            snat_no_fwd_route:
+                description:
+                - "Source NAT no fwd route"
+                type: str
+            snat_no_rev_route:
+                description:
+                - "Source NAT no rev route"
+                type: str
+            snat_icmp_error_process:
+                description:
+                - "Source NAT ICMP Process"
+                type: str
+            snat_icmp_no_match:
+                description:
+                - "Source NAT ICMP No Match"
+                type: str
+            smart_nat_id_mismatch:
+                description:
+                - "Auto NAT id mismatch"
+                type: str
+            syncookiescheckfailed:
+                description:
+                - "TCP SYN cookie failed"
+                type: str
+            novport_drop:
+                description:
+                - "NAT no session drops"
+                type: str
+            no_vport_drop:
+                description:
+                - "vport not matching drops"
+                type: str
+            nosyn_drop:
+                description:
+                - "No SYN pkt drops"
+                type: str
+            nosyn_drop_fin:
+                description:
+                - "No SYN pkt drops - FIN"
+                type: str
+            nosyn_drop_rst:
+                description:
+                - "No SYN pkt drops - RST"
+                type: str
+            nosyn_drop_ack:
+                description:
+                - "No SYN pkt drops - ACK"
+                type: str
+            connlimit_drop:
+                description:
+                - "Conn Limit drops"
+                type: str
+            connlimit_reset:
+                description:
+                - "Conn Limit resets"
+                type: str
+            conn_rate_limit_drop:
+                description:
+                - "Conn rate limit drops"
+                type: str
+            conn_rate_limit_reset:
+                description:
+                - "Conn rate limit resets"
+                type: str
+            proxy_nosock_drop:
+                description:
+                - "Proxy no sock drops"
+                type: str
+            drop_aflex:
+                description:
+                - "aFleX drops"
+                type: str
+            sess_aged_out:
+                description:
+                - "Session aged out"
+                type: str
+            tcp_sess_aged_out:
+                description:
+                - "TCP Session aged out"
+                type: str
+            udp_sess_aged_out:
+                description:
+                - "UDP Session aged out"
+                type: str
+            other_sess_aged_out:
+                description:
+                - "Other Session aged out"
+                type: str
+            tcp_no_slb:
+                description:
+                - "TCP no SLB"
+                type: str
+            udp_no_slb:
+                description:
+                - "UDP no SLB"
+                type: str
+            throttle_syn:
+                description:
+                - "SYN Throttle"
+                type: str
+            drop_gslb:
+                description:
+                - "Drop GSLB"
+                type: str
+            inband_hm_retry:
+                description:
+                - "Inband HM retry"
+                type: str
+            inband_hm_reassign:
+                description:
+                - "Inband HM reassign"
+                type: str
+            auto_reassign:
+                description:
+                - "Auto-reselect server"
+                type: str
+            fast_aging_set:
+                description:
+                - "Fast aging set"
+                type: str
+            fast_aging_reset:
+                description:
+                - "Fast aging reset"
+                type: str
+            dns_policy_drop:
+                description:
+                - "DNS Policy Drop"
+                type: str
+            tcp_invalid_drop:
+                description:
+                - "TCP invalid drop"
+                type: str
+            anomaly_out_seq:
+                description:
+                - "Anomaly out of sequence"
+                type: str
+            anomaly_zero_win:
+                description:
+                - "Anomaly zero window"
+                type: str
+            anomaly_bad_content:
+                description:
+                - "Anomaly bad content"
+                type: str
+            anomaly_pbslb_drop:
+                description:
+                - "Anomaly pbslb drop"
+                type: str
+            no_resourse_drop:
+                description:
+                - "No resource drop"
+                type: str
+            reset_unknown_conn:
+                description:
+                - "Reset unknown conn"
+                type: str
+            reset_l7_on_failover:
+                description:
+                - "RST L7 on failover"
+                type: str
+            ignore_msl:
+                description:
+                - "ignore msl"
+                type: str
+            l2_dsr:
+                description:
+                - "L2 DSR received"
+                type: str
+            l3_dsr:
+                description:
+                - "L3 DSR received"
+                type: str
+            port_preserve_attempt:
+                description:
+                - "NAT Port Preserve Try"
+                type: str
+            port_preserve_succ:
+                description:
+                - "NAT Port Preserve Succ"
+                type: str
+            tcpsyndata_drop:
+                description:
+                - "TCP SYN With Data Drop"
+                type: str
+            tcpotherflags_drop:
+                description:
+                - "TCP SYN Other Flags Drop"
+                type: str
+            bw_rate_limit_exceed:
+                description:
+                - "BW-Limit Exceed drop"
+                type: str
+            bw_watermark_drop:
+                description:
+                - "BW-Watermark drop"
+                type: str
+            l4_cps_exceed:
+                description:
+                - "L4 CPS exceed drop"
+                type: str
+            nat_cps_exceed:
+                description:
+                - "NAT CPS exceed drop"
+                type: str
+            l7_cps_exceed:
+                description:
+                - "L7 CPS exceed drop"
+                type: str
+            ssl_cps_exceed:
+                description:
+                - "SSL CPS exceed drop"
+                type: str
+            ssl_tpt_exceed:
+                description:
+                - "SSL TPT exceed drop"
+                type: str
+            ssl_watermark_drop:
+                description:
+                - "SSL TPT-Watermark drop"
+                type: str
+            concurrent_conn_exceed:
+                description:
+                - "L3V Conn Limit Drop"
+                type: str
+            svr_syn_handshake_fail:
+                description:
+                - "L4 server handshake fail"
+                type: str
+            stateless_conn_timeout:
+                description:
+                - "L4 stateless Conn TO"
+                type: str
+            tcp_ax_rexmit_syn:
+                description:
+                - "L4 AX re-xmit SYN"
+                type: str
+            tcp_syn_rcv_ack:
+                description:
+                - "L4 rcv ACK on SYN"
+                type: str
+            tcp_syn_rcv_rst:
+                description:
+                - "L4 rcv RST on SYN"
+                type: str
+            tcp_sess_noest_aged_out:
+                description:
+                - "TCP no-Est Sess aged out"
+                type: str
+            tcp_sess_noest_csyn_rcv_aged_out:
+                description:
+                - "no-Est CSYN rcv aged out"
+                type: str
+            tcp_sess_noest_ssyn_xmit_aged_out:
+                description:
+                - "no-Est SSYN snt aged out"
+                type: str
+            tcp_rexmit_syn:
+                description:
+                - "L4 rcv rexmit SYN"
+                type: str
+            tcp_rexmit_syn_delq:
+                description:
+                - "L4 rcv rexmit SYN (delq)"
+                type: str
+            tcp_rexmit_synack:
+                description:
+                - "L4 rcv rexmit SYN|ACK"
+                type: str
+            tcp_rexmit_synack_delq:
+                description:
+                - "L4 rcv rexmit SYN|ACK DQ"
+                type: str
+            tcp_fwd_fin_dup:
+                description:
+                - "L4 rcv fwd FIN dup"
+                type: str
+            tcp_rev_fin_dup:
+                description:
+                - "L4 rcv rev FIN dup"
+                type: str
+            tcp_rev_ackfin:
+                description:
+                - "L4 rcv rev FIN|ACK"
+                type: str
+            tcp_fwd_rst:
+                description:
+                - "L4 rcv fwd RST"
+                type: str
+            tcp_rev_rst:
+                description:
+                - "L4 rcv rev RST"
+                type: str
+            udp_req_oneplus_no_resp:
+                description:
+                - "L4 UDP reqs no rsp"
+                type: str
+            udp_req_one_oneplus_resp:
+                description:
+                - "L4 UDP req rsps"
+                type: str
+            udp_req_resp_notmatch:
+                description:
+                - "L4 UDP req/rsp not match"
+                type: str
+            udp_req_more_resp:
+                description:
+                - "L4 UDP req greater than rsps"
+                type: str
+            udp_resp_more_req:
+                description:
+                - "L4 UDP rsps greater than reqs"
+                type: str
+            udp_req_oneplus:
+                description:
+                - "L4 UDP reqs"
+                type: str
+            udp_resp_oneplus:
+                description:
+                - "L4 UDP rsps"
+                type: str
+            out_seq_ack_drop:
+                description:
+                - "Out of sequence ACK drop"
+                type: str
+            tcp_est:
+                description:
+                - "L4 TCP Established"
+                type: str
+            synattack:
+                description:
+                - "L4 SYN attack"
+                type: str
+            syn_rate:
+                description:
+                - "TCP SYN rate per sec"
+                type: str
+            syncookie_buff_drop:
+                description:
+                - "TCP SYN cookie buff drop"
+                type: str
+            syncookie_buff_queue:
+                description:
+                - "TCP SYN cookie buff queue"
+                type: str
+            skip_insert_client_ip:
+                description:
+                - "Skip Insert-client-ip"
+                type: str
+            synreceived_hw:
+                description:
+                - "TCP SYN (HW SYN cookie)"
+                type: str
+            dns_id_switch:
+                description:
+                - "DNS query id switch"
+                type: str
+            server_down_del:
+                description:
+                - "Server Down Del switch"
+                type: str
+            dnssec_switch:
+                description:
+                - "DNSSEC SG switch"
+                type: str
+            rate_drop_reset_unkn:
+                description:
+                - "Rate Drop reset"
+                type: str
+            tcp_connections_closed:
+                description:
+                - "TCP Connections Closed"
+                type: str
+            snat_force_preserve_alloc:
+                description:
+                - "Snat port preserve allocated"
+                type: str
+            snat_force_preserve_free:
+                description:
+                - "Snat port preserve freed"
+                type: str
+            snat_port_overload_fail:
+                description:
+                - "Snat port overload fail"
+                type: str
 
 '''
 
@@ -541,350 +682,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'conn_rate_limit_drop': {
-                    'type': 'int',
-                },
-                'connlimit_reset': {
-                    'type': 'int',
-                },
-                'syncookies_buff_drop': {
-                    'type': 'int',
-                },
-                'tcp_outrst_ack_attack': {
-                    'type': 'int',
-                },
-                'tcp_sess_aged_out': {
-                    'type': 'int',
-                },
-                'tcp_outrst_stale_sess': {
-                    'type': 'int',
-                },
-                'ignore_msl': {
-                    'type': 'int',
-                },
-                'no_vport_drop': {
-                    'type': 'int',
-                },
-                'snat_icmp_error_process': {
-                    'type': 'int',
-                },
-                'port_preserve_attempt': {
-                    'type': 'int',
-                },
-                'rcv_fwd_last_ack': {
-                    'type': 'int',
-                },
-                'anomaly_pbslb_drop': {
-                    'type': 'int',
-                },
-                'tcp_synreceived_hw': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_synack_delq': {
-                    'type': 'int',
-                },
-                'tcp_outrst_broker': {
-                    'type': 'int',
-                },
-                'snat_icmp_no_match': {
-                    'type': 'int',
-                },
-                'rcv_fwd_rst': {
-                    'type': 'int',
-                },
-                'anomaly_zero_win': {
-                    'type': 'int',
-                },
-                'tcp_syn_stale_sess': {
-                    'type': 'int',
-                },
-                'other_sess_aged_out': {
-                    'type': 'int',
-                },
-                'reset_l7_on_failover': {
-                    'type': 'int',
-                },
-                'tcp_outrst_nosyn': {
-                    'type': 'int',
-                },
-                'nosyn_drop_rst': {
-                    'type': 'int',
-                },
-                'anomaly_bad_content': {
-                    'type': 'int',
-                },
-                'ip_outnoroute': {
-                    'type': 'int',
-                },
-                'no_resource_drop': {
-                    'type': 'int',
-                },
-                'l4_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'nosyn_drop_fin': {
-                    'type': 'int',
-                },
-                'anomaly_out_seq': {
-                    'type': 'int',
-                },
-                'conn_rate_limit_reset': {
-                    'type': 'int',
-                },
-                'tcp_syn_otherflags': {
-                    'type': 'int',
-                },
-                'out_seq_ack_drop': {
-                    'type': 'int',
-                },
-                'rcv_rev_rst': {
-                    'type': 'int',
-                },
-                'ssl_tpt_exceed_drop': {
-                    'type': 'int',
-                },
-                'bw_watermark_drop': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_synack': {
-                    'type': 'int',
-                },
-                'sess_aged_out': {
-                    'type': 'int',
-                },
-                'tcp_invalid_drop': {
-                    'type': 'int',
-                },
-                'rcv_rev_fin': {
-                    'type': 'int',
-                },
-                'inudp': {
-                    'type': 'int',
-                },
-                'udp_sess_aged_out': {
-                    'type': 'int',
-                },
-                'rcv_rsps_morethan_reqs': {
-                    'type': 'int',
-                },
-                'auto_reassign': {
-                    'type': 'int',
-                },
-                'ax_rexmit_syn': {
-                    'type': 'int',
-                },
-                'stateless_conn_timeout': {
-                    'type': 'int',
-                },
-                'fast_aging_set': {
-                    'type': 'int',
-                },
-                'rcv_rev_finack': {
-                    'type': 'int',
-                },
-                'connlimit_drop': {
-                    'type': 'int',
-                },
-                'tcp_connections_closed': {
-                    'type': 'int',
-                },
-                'tcp_outrst_aflex': {
-                    'type': 'int',
-                },
-                'conn_limit_exceed_drop': {
-                    'type': 'int',
-                },
-                'tcp_synreceived': {
-                    'type': 'int',
-                },
-                'tcp_syncookiessent_ts': {
-                    'type': 'int',
-                },
-                'smart_nat_id_mismatch': {
-                    'type': 'int',
-                },
-                'proxy_nosock_drop': {
-                    'type': 'int',
-                },
-                'ssl_watermark_drop': {
-                    'type': 'int',
-                },
-                'nat_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'rcv_req_morethan_rsps': {
-                    'type': 'int',
-                },
-                'rcv_rev_last_ack': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_syn_delq': {
-                    'type': 'int',
-                },
-                'skip_insert_client_ip': {
-                    'type': 'int',
-                },
-                'server_down_del': {
-                    'type': 'int',
-                },
-                'l3_dsr': {
-                    'type': 'int',
-                },
-                'rcv_fwd_fin': {
-                    'type': 'int',
-                },
-                'noest_client_syn_aged_out': {
-                    'type': 'int',
-                },
-                'tcp_syncookiescheckfailed': {
-                    'type': 'int',
-                },
-                'rcv_rev_fin_dup': {
-                    'type': 'int',
-                },
-                'synattack': {
-                    'type': 'int',
-                },
-                'tcp_est': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_syn': {
-                    'type': 'int',
-                },
-                'novport_drop': {
-                    'type': 'int',
-                },
-                'l7_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'fast_aging_reset': {
-                    'type': 'int',
-                },
-                'aflex_drop': {
-                    'type': 'int',
-                },
-                'syncookies_buff_queue': {
-                    'type': 'int',
-                },
-                'rcv_ack_on_syn': {
-                    'type': 'int',
-                },
-                'tcp_outrst': {
-                    'type': 'int',
-                },
-                'tcp_noest_aged_out': {
-                    'type': 'int',
-                },
-                'throttle_syn': {
-                    'type': 'int',
-                },
-                'tcp_outrst_tcpproxy': {
-                    'type': 'int',
-                },
-                'nosyn_drop': {
-                    'type': 'int',
-                },
-                'snat_fail': {
-                    'type': 'int',
-                },
-                'rcv_udp_rsps': {
-                    'type': 'int',
-                },
-                'inband_hm_retry': {
-                    'type': 'int',
-                },
-                'rcv_reqs_no_rsp': {
-                    'type': 'int',
-                },
-                'bw_rate_limit_exceed_drop': {
-                    'type': 'int',
-                },
-                'l2_dsr': {
-                    'type': 'int',
-                },
-                'nosyn_drop_ack': {
-                    'type': 'int',
-                },
-                'tcp_syn_rate': {
-                    'type': 'int',
-                },
-                'l4_svr_handshake_fail': {
-                    'type': 'int',
-                },
-                'rcv_udp_reqs': {
-                    'type': 'int',
-                },
-                'snat_no_rev_route': {
-                    'type': 'int',
-                },
-                'tcp_no_slb': {
-                    'type': 'int',
-                },
-                'reset_unknown_conn': {
-                    'type': 'int',
-                },
-                'rcv_fwd_finack': {
-                    'type': 'int',
-                },
-                'udp_no_slb': {
-                    'type': 'int',
-                },
-                'tcp_syn_withdata': {
-                    'type': 'int',
-                },
-                'port_preserve_succ': {
-                    'type': 'int',
-                },
-                'inband_hm_reassign': {
-                    'type': 'int',
-                },
-                'ssl_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'svr_sel_failed': {
-                    'type': 'int',
-                },
-                'dns_id_switch': {
-                    'type': 'int',
-                },
-                'noest_server_syn_xmit_aged_out': {
-                    'type': 'int',
-                },
-                'tcp_syncookiessentfailed': {
-                    'type': 'int',
-                },
-                'tcp_syncookiessent': {
-                    'type': 'int',
-                },
-                'dnssec_switch': {
-                    'type': 'int',
-                },
-                'snat_no_fwd_route': {
-                    'type': 'int',
-                },
-                'rcv_req_rsps': {
-                    'type': 'int',
-                },
-                'rcv_rst_on_syn': {
-                    'type': 'int',
-                },
-                'intcp': {
-                    'type': 'int',
-                },
-                'rcv_fwd_fin_dup': {
-                    'type': 'int',
-                },
-                'rcv_req_not_match': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -938,76 +737,377 @@ def get_argspec():
                     'syncookie_buff_queue', 'skip_insert_client_ip',
                     'synreceived_hw', 'dns_id_switch', 'server_down_del',
                     'dnssec_switch', 'rate_drop_reset_unkn',
-                    'tcp_connections_closed'
+                    'tcp_connections_closed', 'snat_force_preserve_alloc',
+                    'snat_force_preserve_free', 'snat_port_overload_fail'
                 ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'ip_outnoroute': {
+                    'type': 'int',
+                },
+                'tcp_outrst': {
+                    'type': 'int',
+                },
+                'tcp_outrst_nosyn': {
+                    'type': 'int',
+                },
+                'tcp_outrst_broker': {
+                    'type': 'int',
+                },
+                'tcp_outrst_ack_attack': {
+                    'type': 'int',
+                },
+                'tcp_outrst_aflex': {
+                    'type': 'int',
+                },
+                'tcp_outrst_stale_sess': {
+                    'type': 'int',
+                },
+                'tcp_syn_stale_sess': {
+                    'type': 'int',
+                },
+                'tcp_outrst_tcpproxy': {
+                    'type': 'int',
+                },
+                'tcp_synreceived': {
+                    'type': 'int',
+                },
+                'tcp_synreceived_hw': {
+                    'type': 'int',
+                },
+                'tcp_syn_rate': {
+                    'type': 'int',
+                },
+                'tcp_syncookiessent': {
+                    'type': 'int',
+                },
+                'tcp_syncookiessent_ts': {
+                    'type': 'int',
+                },
+                'tcp_syncookiessentfailed': {
+                    'type': 'int',
+                },
+                'intcp': {
+                    'type': 'int',
+                },
+                'inudp': {
+                    'type': 'int',
+                },
+                'svr_sel_failed': {
+                    'type': 'int',
+                },
+                'snat_fail': {
+                    'type': 'int',
+                },
+                'snat_no_fwd_route': {
+                    'type': 'int',
+                },
+                'snat_no_rev_route': {
+                    'type': 'int',
+                },
+                'snat_icmp_error_process': {
+                    'type': 'int',
+                },
+                'snat_icmp_no_match': {
+                    'type': 'int',
+                },
+                'smart_nat_id_mismatch': {
+                    'type': 'int',
+                },
+                'tcp_syncookiescheckfailed': {
+                    'type': 'int',
+                },
+                'novport_drop': {
+                    'type': 'int',
+                },
+                'no_vport_drop': {
+                    'type': 'int',
+                },
+                'nosyn_drop': {
+                    'type': 'int',
+                },
+                'nosyn_drop_fin': {
+                    'type': 'int',
+                },
+                'nosyn_drop_rst': {
+                    'type': 'int',
+                },
+                'nosyn_drop_ack': {
+                    'type': 'int',
+                },
+                'connlimit_drop': {
+                    'type': 'int',
+                },
+                'connlimit_reset': {
+                    'type': 'int',
+                },
+                'conn_rate_limit_drop': {
+                    'type': 'int',
+                },
+                'conn_rate_limit_reset': {
+                    'type': 'int',
+                },
+                'proxy_nosock_drop': {
+                    'type': 'int',
+                },
+                'aflex_drop': {
+                    'type': 'int',
+                },
+                'sess_aged_out': {
+                    'type': 'int',
+                },
+                'tcp_sess_aged_out': {
+                    'type': 'int',
+                },
+                'udp_sess_aged_out': {
+                    'type': 'int',
+                },
+                'other_sess_aged_out': {
+                    'type': 'int',
+                },
+                'tcp_no_slb': {
+                    'type': 'int',
+                },
+                'udp_no_slb': {
+                    'type': 'int',
+                },
+                'throttle_syn': {
+                    'type': 'int',
+                },
+                'inband_hm_retry': {
+                    'type': 'int',
+                },
+                'inband_hm_reassign': {
+                    'type': 'int',
+                },
+                'auto_reassign': {
+                    'type': 'int',
+                },
+                'fast_aging_set': {
+                    'type': 'int',
+                },
+                'fast_aging_reset': {
+                    'type': 'int',
+                },
+                'tcp_invalid_drop': {
+                    'type': 'int',
+                },
+                'out_seq_ack_drop': {
+                    'type': 'int',
+                },
+                'anomaly_out_seq': {
+                    'type': 'int',
+                },
+                'anomaly_zero_win': {
+                    'type': 'int',
+                },
+                'anomaly_bad_content': {
+                    'type': 'int',
+                },
+                'anomaly_pbslb_drop': {
+                    'type': 'int',
+                },
+                'no_resource_drop': {
+                    'type': 'int',
+                },
+                'reset_unknown_conn': {
+                    'type': 'int',
+                },
+                'reset_l7_on_failover': {
+                    'type': 'int',
+                },
+                'tcp_syn_otherflags': {
+                    'type': 'int',
+                },
+                'tcp_syn_withdata': {
+                    'type': 'int',
+                },
+                'ignore_msl': {
+                    'type': 'int',
+                },
+                'l2_dsr': {
+                    'type': 'int',
+                },
+                'l3_dsr': {
+                    'type': 'int',
+                },
+                'port_preserve_attempt': {
+                    'type': 'int',
+                },
+                'port_preserve_succ': {
+                    'type': 'int',
+                },
+                'bw_rate_limit_exceed_drop': {
+                    'type': 'int',
+                },
+                'bw_watermark_drop': {
+                    'type': 'int',
+                },
+                'l4_cps_exceed_drop': {
+                    'type': 'int',
+                },
+                'nat_cps_exceed_drop': {
+                    'type': 'int',
+                },
+                'l7_cps_exceed_drop': {
+                    'type': 'int',
+                },
+                'ssl_cps_exceed_drop': {
+                    'type': 'int',
+                },
+                'ssl_tpt_exceed_drop': {
+                    'type': 'int',
+                },
+                'ssl_watermark_drop': {
+                    'type': 'int',
+                },
+                'conn_limit_exceed_drop': {
+                    'type': 'int',
+                },
+                'l4_svr_handshake_fail': {
+                    'type': 'int',
+                },
+                'stateless_conn_timeout': {
+                    'type': 'int',
+                },
+                'ax_rexmit_syn': {
+                    'type': 'int',
+                },
+                'rcv_ack_on_syn': {
+                    'type': 'int',
+                },
+                'rcv_rst_on_syn': {
+                    'type': 'int',
+                },
+                'tcp_noest_aged_out': {
+                    'type': 'int',
+                },
+                'noest_client_syn_aged_out': {
+                    'type': 'int',
+                },
+                'noest_server_syn_xmit_aged_out': {
+                    'type': 'int',
+                },
+                'rcv_rexmit_syn': {
+                    'type': 'int',
+                },
+                'rcv_rexmit_syn_delq': {
+                    'type': 'int',
+                },
+                'rcv_rexmit_synack': {
+                    'type': 'int',
+                },
+                'rcv_rexmit_synack_delq': {
+                    'type': 'int',
+                },
+                'rcv_fwd_last_ack': {
+                    'type': 'int',
+                },
+                'rcv_rev_last_ack': {
+                    'type': 'int',
+                },
+                'rcv_fwd_fin': {
+                    'type': 'int',
+                },
+                'rcv_fwd_fin_dup': {
+                    'type': 'int',
+                },
+                'rcv_fwd_finack': {
+                    'type': 'int',
+                },
+                'rcv_rev_fin': {
+                    'type': 'int',
+                },
+                'rcv_rev_fin_dup': {
+                    'type': 'int',
+                },
+                'rcv_rev_finack': {
+                    'type': 'int',
+                },
+                'rcv_fwd_rst': {
+                    'type': 'int',
+                },
+                'rcv_rev_rst': {
+                    'type': 'int',
+                },
+                'rcv_reqs_no_rsp': {
+                    'type': 'int',
+                },
+                'rcv_req_rsps': {
+                    'type': 'int',
+                },
+                'rcv_req_not_match': {
+                    'type': 'int',
+                },
+                'rcv_req_morethan_rsps': {
+                    'type': 'int',
+                },
+                'rcv_rsps_morethan_reqs': {
+                    'type': 'int',
+                },
+                'rcv_udp_reqs': {
+                    'type': 'int',
+                },
+                'rcv_udp_rsps': {
+                    'type': 'int',
+                },
+                'tcp_est': {
+                    'type': 'int',
+                },
+                'synattack': {
+                    'type': 'int',
+                },
+                'skip_insert_client_ip': {
+                    'type': 'int',
+                },
+                'dns_id_switch': {
+                    'type': 'int',
+                },
+                'dnssec_switch': {
+                    'type': 'int',
+                },
+                'syncookies_buff_queue': {
+                    'type': 'int',
+                },
+                'syncookies_buff_drop': {
+                    'type': 'int',
+                },
+                'server_down_del': {
+                    'type': 'int',
+                },
+                'tcp_connections_closed': {
+                    'type': 'int',
+                },
+                'snat_force_preserve_alloc': {
+                    'type': 'int',
+                },
+                'snat_force_preserve_free': {
+                    'type': 'int',
+                },
+                'snat_port_overload_fail': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
             }
         },
         'stats': {
             'type': 'dict',
-            'conn_rate_limit_drop': {
+            'intcp': {
                 'type': 'str',
             },
-            'outrst_stale_sess': {
-                'type': 'str',
-            },
-            'concurrent_conn_exceed': {
-                'type': 'str',
-            },
-            'tcp_sess_aged_out': {
-                'type': 'str',
-            },
-            'ignore_msl': {
-                'type': 'str',
-            },
-            'no_vport_drop': {
-                'type': 'str',
-            },
-            'snat_icmp_error_process': {
-                'type': 'str',
-            },
-            'port_preserve_attempt': {
-                'type': 'str',
-            },
-            'anomaly_pbslb_drop': {
-                'type': 'str',
-            },
-            'proxy_nosock_drop': {
-                'type': 'str',
-            },
-            'svr_syn_handshake_fail': {
-                'type': 'str',
-            },
-            'snat_icmp_no_match': {
-                'type': 'str',
-            },
-            'drop_gslb': {
-                'type': 'str',
-            },
-            'outrst_aflex': {
-                'type': 'str',
-            },
-            'anomaly_zero_win': {
-                'type': 'str',
-            },
-            'nosyn_drop_rst': {
-                'type': 'str',
-            },
-            'anomaly_bad_content': {
-                'type': 'str',
-            },
-            'bw_rate_limit_exceed': {
+            'synreceived': {
                 'type': 'str',
             },
             'tcp_fwd_last_ack': {
                 'type': 'str',
             },
-            'nosyn_drop_fin': {
-                'type': 'str',
-            },
-            'anomaly_out_seq': {
-                'type': 'str',
-            },
-            'tcp_rev_ackfin': {
+            'tcp_rev_last_ack': {
                 'type': 'str',
             },
             'tcp_rev_fin': {
@@ -1016,282 +1116,342 @@ def get_argspec():
             'tcp_fwd_fin': {
                 'type': 'str',
             },
-            'l2_dsr': {
-                'type': 'str',
-            },
-            'bw_watermark_drop': {
-                'type': 'str',
-            },
-            'reset_l7_on_failover': {
-                'type': 'str',
-            },
-            'tcp_invalid_drop': {
-                'type': 'str',
-            },
-            'syn_stale_sess': {
-                'type': 'str',
-            },
-            'syncookie_buff_drop': {
+            'tcp_fwd_ackfin': {
                 'type': 'str',
             },
             'inudp': {
                 'type': 'str',
             },
-            'tcpotherflags_drop': {
-                'type': 'str',
-            },
-            'udp_sess_aged_out': {
-                'type': 'str',
-            },
-            'auto_reassign': {
-                'type': 'str',
-            },
-            'stateless_conn_timeout': {
-                'type': 'str',
-            },
-            'fast_aging_set': {
-                'type': 'str',
-            },
-            'udp_req_oneplus_no_resp': {
-                'type': 'str',
-            },
-            'connlimit_drop': {
-                'type': 'str',
-            },
-            'tcp_connections_closed': {
-                'type': 'str',
-            },
-            'udp_req_one_oneplus_resp': {
-                'type': 'str',
-            },
-            'connlimit_reset': {
-                'type': 'str',
-            },
-            'ssl_cps_exceed': {
-                'type': 'str',
-            },
-            'syncookiessentfailed': {
-                'type': 'str',
-            },
-            'ssl_tpt_exceed': {
-                'type': 'str',
-            },
-            'smart_nat_id_mismatch': {
-                'type': 'str',
-            },
-            'tcp_fwd_ackfin': {
-                'type': 'str',
-            },
-            'ssl_watermark_drop': {
-                'type': 'str',
-            },
-            'tcp_rexmit_synack_delq': {
-                'type': 'str',
-            },
-            'conn_rate_limit_reset': {
-                'type': 'str',
-            },
-            'tcp_fwd_fin_dup': {
-                'type': 'str',
-            },
-            'other_sess_aged_out': {
-                'type': 'str',
-            },
-            'tcp_rexmit_synack': {
-                'type': 'str',
-            },
-            'skip_insert_client_ip': {
-                'type': 'str',
-            },
-            'server_down_del': {
-                'type': 'str',
-            },
-            'l3_dsr': {
-                'type': 'str',
-            },
-            'tcp_sess_noest_aged_out': {
-                'type': 'str',
-            },
-            'syn_rate': {
-                'type': 'str',
-            },
-            'l7_cps_exceed': {
-                'type': 'str',
-            },
-            'outrst_ack_attack': {
-                'type': 'str',
-            },
-            'synattack': {
-                'type': 'str',
-            },
-            'drop_aflex': {
-                'type': 'str',
-            },
-            'tcp_est': {
-                'type': 'str',
-            },
-            'svrselfail': {
-                'type': 'str',
-            },
-            'outrst_broker': {
-                'type': 'str',
-            },
-            'tcp_sess_noest_csyn_rcv_aged_out': {
-                'type': 'str',
-            },
-            'novport_drop': {
-                'type': 'str',
-            },
-            'fast_aging_reset': {
-                'type': 'str',
-            },
             'syncookiessent': {
-                'type': 'str',
-            },
-            'tcp_rexmit_syn': {
-                'type': 'str',
-            },
-            'outrst': {
-                'type': 'str',
-            },
-            'tcp_ax_rexmit_syn': {
-                'type': 'str',
-            },
-            'tcp_sess_noest_ssyn_xmit_aged_out': {
-                'type': 'str',
-            },
-            'syncookie_buff_queue': {
-                'type': 'str',
-            },
-            'sess_aged_out': {
-                'type': 'str',
-            },
-            'throttle_syn': {
-                'type': 'str',
-            },
-            'nosyn_drop': {
-                'type': 'str',
-            },
-            'l4_cps_exceed': {
-                'type': 'str',
-            },
-            'udp_req_resp_notmatch': {
-                'type': 'str',
-            },
-            'snat_fail': {
-                'type': 'str',
-            },
-            'no_resourse_drop': {
-                'type': 'str',
-            },
-            'inband_hm_retry': {
-                'type': 'str',
-            },
-            'synreceived': {
-                'type': 'str',
-            },
-            'nat_cps_exceed': {
-                'type': 'str',
-            },
-            'out_seq_ack_drop': {
-                'type': 'str',
-            },
-            'outrst_nosyn': {
-                'type': 'str',
-            },
-            'udp_req_more_resp': {
-                'type': 'str',
-            },
-            'dns_policy_drop': {
-                'type': 'str',
-            },
-            'rate_drop_reset_unkn': {
-                'type': 'str',
-            },
-            'nosyn_drop_ack': {
-                'type': 'str',
-            },
-            'snat_no_rev_route': {
-                'type': 'str',
-            },
-            'tcp_fwd_rst': {
-                'type': 'str',
-            },
-            'tcp_no_slb': {
-                'type': 'str',
-            },
-            'reset_unknown_conn': {
-                'type': 'str',
-            },
-            'udp_resp_oneplus': {
-                'type': 'str',
-            },
-            'outrst_tcpproxy': {
-                'type': 'str',
-            },
-            'snat_no_fwd_route': {
-                'type': 'str',
-            },
-            'tcp_rev_fin_dup': {
-                'type': 'str',
-            },
-            'udp_no_slb': {
-                'type': 'str',
-            },
-            'port_preserve_succ': {
-                'type': 'str',
-            },
-            'udp_resp_more_req': {
-                'type': 'str',
-            },
-            'inband_hm_reassign': {
-                'type': 'str',
-            },
-            'tcpsyndata_drop': {
-                'type': 'str',
-            },
-            'syncookiescheckfailed': {
-                'type': 'str',
-            },
-            'tcp_rexmit_syn_delq': {
-                'type': 'str',
-            },
-            'tcp_syn_rcv_rst': {
-                'type': 'str',
-            },
-            'dns_id_switch': {
-                'type': 'str',
-            },
-            'tcp_rev_last_ack': {
-                'type': 'str',
-            },
-            'tcp_rev_rst': {
-                'type': 'str',
-            },
-            'noroute': {
-                'type': 'str',
-            },
-            'udp_req_oneplus': {
-                'type': 'str',
-            },
-            'dnssec_switch': {
                 'type': 'str',
             },
             'syncookiessent_ts': {
                 'type': 'str',
             },
+            'syncookiessentfailed': {
+                'type': 'str',
+            },
+            'outrst': {
+                'type': 'str',
+            },
+            'outrst_nosyn': {
+                'type': 'str',
+            },
+            'outrst_broker': {
+                'type': 'str',
+            },
+            'outrst_ack_attack': {
+                'type': 'str',
+            },
+            'outrst_aflex': {
+                'type': 'str',
+            },
+            'outrst_stale_sess': {
+                'type': 'str',
+            },
+            'syn_stale_sess': {
+                'type': 'str',
+            },
+            'outrst_tcpproxy': {
+                'type': 'str',
+            },
+            'svrselfail': {
+                'type': 'str',
+            },
+            'noroute': {
+                'type': 'str',
+            },
+            'snat_fail': {
+                'type': 'str',
+            },
+            'snat_no_fwd_route': {
+                'type': 'str',
+            },
+            'snat_no_rev_route': {
+                'type': 'str',
+            },
+            'snat_icmp_error_process': {
+                'type': 'str',
+            },
+            'snat_icmp_no_match': {
+                'type': 'str',
+            },
+            'smart_nat_id_mismatch': {
+                'type': 'str',
+            },
+            'syncookiescheckfailed': {
+                'type': 'str',
+            },
+            'novport_drop': {
+                'type': 'str',
+            },
+            'no_vport_drop': {
+                'type': 'str',
+            },
+            'nosyn_drop': {
+                'type': 'str',
+            },
+            'nosyn_drop_fin': {
+                'type': 'str',
+            },
+            'nosyn_drop_rst': {
+                'type': 'str',
+            },
+            'nosyn_drop_ack': {
+                'type': 'str',
+            },
+            'connlimit_drop': {
+                'type': 'str',
+            },
+            'connlimit_reset': {
+                'type': 'str',
+            },
+            'conn_rate_limit_drop': {
+                'type': 'str',
+            },
+            'conn_rate_limit_reset': {
+                'type': 'str',
+            },
+            'proxy_nosock_drop': {
+                'type': 'str',
+            },
+            'drop_aflex': {
+                'type': 'str',
+            },
+            'sess_aged_out': {
+                'type': 'str',
+            },
+            'tcp_sess_aged_out': {
+                'type': 'str',
+            },
+            'udp_sess_aged_out': {
+                'type': 'str',
+            },
+            'other_sess_aged_out': {
+                'type': 'str',
+            },
+            'tcp_no_slb': {
+                'type': 'str',
+            },
+            'udp_no_slb': {
+                'type': 'str',
+            },
+            'throttle_syn': {
+                'type': 'str',
+            },
+            'drop_gslb': {
+                'type': 'str',
+            },
+            'inband_hm_retry': {
+                'type': 'str',
+            },
+            'inband_hm_reassign': {
+                'type': 'str',
+            },
+            'auto_reassign': {
+                'type': 'str',
+            },
+            'fast_aging_set': {
+                'type': 'str',
+            },
+            'fast_aging_reset': {
+                'type': 'str',
+            },
+            'dns_policy_drop': {
+                'type': 'str',
+            },
+            'tcp_invalid_drop': {
+                'type': 'str',
+            },
+            'anomaly_out_seq': {
+                'type': 'str',
+            },
+            'anomaly_zero_win': {
+                'type': 'str',
+            },
+            'anomaly_bad_content': {
+                'type': 'str',
+            },
+            'anomaly_pbslb_drop': {
+                'type': 'str',
+            },
+            'no_resourse_drop': {
+                'type': 'str',
+            },
+            'reset_unknown_conn': {
+                'type': 'str',
+            },
+            'reset_l7_on_failover': {
+                'type': 'str',
+            },
+            'ignore_msl': {
+                'type': 'str',
+            },
+            'l2_dsr': {
+                'type': 'str',
+            },
+            'l3_dsr': {
+                'type': 'str',
+            },
+            'port_preserve_attempt': {
+                'type': 'str',
+            },
+            'port_preserve_succ': {
+                'type': 'str',
+            },
+            'tcpsyndata_drop': {
+                'type': 'str',
+            },
+            'tcpotherflags_drop': {
+                'type': 'str',
+            },
+            'bw_rate_limit_exceed': {
+                'type': 'str',
+            },
+            'bw_watermark_drop': {
+                'type': 'str',
+            },
+            'l4_cps_exceed': {
+                'type': 'str',
+            },
+            'nat_cps_exceed': {
+                'type': 'str',
+            },
+            'l7_cps_exceed': {
+                'type': 'str',
+            },
+            'ssl_cps_exceed': {
+                'type': 'str',
+            },
+            'ssl_tpt_exceed': {
+                'type': 'str',
+            },
+            'ssl_watermark_drop': {
+                'type': 'str',
+            },
+            'concurrent_conn_exceed': {
+                'type': 'str',
+            },
+            'svr_syn_handshake_fail': {
+                'type': 'str',
+            },
+            'stateless_conn_timeout': {
+                'type': 'str',
+            },
+            'tcp_ax_rexmit_syn': {
+                'type': 'str',
+            },
             'tcp_syn_rcv_ack': {
+                'type': 'str',
+            },
+            'tcp_syn_rcv_rst': {
+                'type': 'str',
+            },
+            'tcp_sess_noest_aged_out': {
+                'type': 'str',
+            },
+            'tcp_sess_noest_csyn_rcv_aged_out': {
+                'type': 'str',
+            },
+            'tcp_sess_noest_ssyn_xmit_aged_out': {
+                'type': 'str',
+            },
+            'tcp_rexmit_syn': {
+                'type': 'str',
+            },
+            'tcp_rexmit_syn_delq': {
+                'type': 'str',
+            },
+            'tcp_rexmit_synack': {
+                'type': 'str',
+            },
+            'tcp_rexmit_synack_delq': {
+                'type': 'str',
+            },
+            'tcp_fwd_fin_dup': {
+                'type': 'str',
+            },
+            'tcp_rev_fin_dup': {
+                'type': 'str',
+            },
+            'tcp_rev_ackfin': {
+                'type': 'str',
+            },
+            'tcp_fwd_rst': {
+                'type': 'str',
+            },
+            'tcp_rev_rst': {
+                'type': 'str',
+            },
+            'udp_req_oneplus_no_resp': {
+                'type': 'str',
+            },
+            'udp_req_one_oneplus_resp': {
+                'type': 'str',
+            },
+            'udp_req_resp_notmatch': {
+                'type': 'str',
+            },
+            'udp_req_more_resp': {
+                'type': 'str',
+            },
+            'udp_resp_more_req': {
+                'type': 'str',
+            },
+            'udp_req_oneplus': {
+                'type': 'str',
+            },
+            'udp_resp_oneplus': {
+                'type': 'str',
+            },
+            'out_seq_ack_drop': {
+                'type': 'str',
+            },
+            'tcp_est': {
+                'type': 'str',
+            },
+            'synattack': {
+                'type': 'str',
+            },
+            'syn_rate': {
+                'type': 'str',
+            },
+            'syncookie_buff_drop': {
+                'type': 'str',
+            },
+            'syncookie_buff_queue': {
+                'type': 'str',
+            },
+            'skip_insert_client_ip': {
                 'type': 'str',
             },
             'synreceived_hw': {
                 'type': 'str',
             },
-            'intcp': {
+            'dns_id_switch': {
+                'type': 'str',
+            },
+            'server_down_del': {
+                'type': 'str',
+            },
+            'dnssec_switch': {
+                'type': 'str',
+            },
+            'rate_drop_reset_unkn': {
+                'type': 'str',
+            },
+            'tcp_connections_closed': {
+                'type': 'str',
+            },
+            'snat_force_preserve_alloc': {
+                'type': 'str',
+            },
+            'snat_force_preserve_free': {
+                'type': 'str',
+            },
+            'snat_port_overload_fail': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_smtp
 description:
     - Configure SMTP
-short_description: Configures A10 slb.smtp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            smtp_cpu_list:
-                description:
-                - "Field smtp_cpu_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -112,225 +112,307 @@ options:
           'server_STARTTLS_fail'= Server side STARTTLS fail; 'rserver_STARTTLS_disable'=
           real server not support STARTTLS; 'recv_client_command_TURN'= Recv client TURN;
           'recv_client_command_ETRN'= Recv client ETRN;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            smtp_cpu_list:
+                description:
+                - "Field smtp_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            request_success:
-                description:
-                - "SMTP requests (success)"
-            recv_client_command_RCPT:
-                description:
-                - "Recv client RCPT"
-            recv_client_command_ETRN:
-                description:
-                - "Recv client ETRN"
-            forward_req_fail:
-                description:
-                - "Forward request failure"
-            recv_server_unknow_reply_code:
-                description:
-                - "Recv server unknown-code"
-            total_proxy:
-                description:
-                - "Total proxy conns"
-            L4_switch:
-                description:
-                - "L4 switching"
-            too_many_headers:
-                description:
-                - "Too many headers"
-            recv_client_command_QUIT:
-                description:
-                - "Recv client QUIT"
-            recv_client_command_NOOP:
-                description:
-                - "Recv client NOOP"
-            new_server_conn:
-                description:
-                - "Server connection made"
-            req_retran:
-                description:
-                - "Request retransmit"
-            server_reselect:
-                description:
-                - "Server reselection"
-            recv_client_command_MAIL:
-                description:
-                - "Recv client MAIL"
-            send_client_start_TLS_first:
-                description:
-                - "Sent client STARTTLS-1st"
-            recv_client_command_VRFY:
-                description:
-                - "Recv client VRFY"
-            server_prem_close:
-                description:
-                - "Server premature close"
-            parse_resonse_line_fail:
-                description:
-                - "Parse response line fail"
-            send_client_close_connection:
-                description:
-                - "Sent client close-conn"
-            forward_req_data_fail:
-                description:
-                - "Forward REQ data failure"
-            recv_client_command_HELO:
-                description:
-                - "Recv client HELO"
-            no_proxy:
-                description:
-                - "No proxy error"
-            client_reset:
-                description:
-                - "Client reset"
-            line_across_packet:
-                description:
-                - "Line across packets"
-            server_STARTTLS_init:
-                description:
-                - "Init server side STARTTLS"
-            recv_client_command_HELP:
-                description:
-                - "Recv client HELP"
-            client_domain_switch_ok:
-                description:
-                - "Client domain sw (succ)"
-            recv_client_command_RSET:
-                description:
-                - "Recv client RSET"
-            recv_client_command_STARTTLS:
-                description:
-                - "Recv client STARTTLS"
-            recv_client_command_others:
-                description:
-                - "Recv client other cmds"
-            recv_client_command_EXPN:
-                description:
-                - "Recv client EXPN"
-            LB_switch:
-                description:
-                - "LB switching"
-            no_tuple:
-                description:
-                - "No tuple error"
-            send_client_no_command:
-                description:
-                - "Sent client no-such-cmd"
-            Aflex_switch_ok:
-                description:
-                - "aFleX switching (succ)"
-            rserver_STARTTLS_disable:
-                description:
-                - "real server not support STARTTLS"
-            server_select_fail:
-                description:
-                - "Server selection failure"
-            tcp_out_reset:
-                description:
-                - "TCP out reset"
-            line_table_extend:
-                description:
-                - "Table extend"
-            send_server_cmd_reset:
-                description:
-                - "Sent server RSET"
-            line_extend_fail:
-                description:
-                - "Line extend fail"
-            recv_client_command_DATA:
-                description:
-                - "Recv client DATA"
-            Aflex_lb_reselect:
-                description:
-                - "aFleX lb reselect"
             curr_proxy:
                 description:
                 - "Current proxy conns"
-            send_client_service_ready:
+                type: str
+            total_proxy:
                 description:
-                - "Sent client serv-rdy"
-            send_client_go_ahead:
-                description:
-                - "Sent client go-ahead"
-            req_ofo:
-                description:
-                - "Request pkt out-of-order"
-            client_domain_switch:
-                description:
-                - "Client domain switching"
-            server_reset:
-                description:
-                - "Server reset"
-            snat_fail:
-                description:
-                - "Source NAT failure"
-            recv_server_service_not_ready:
-                description:
-                - "Recv server serv-not-rdy"
-            parse_request_line_fail:
-                description:
-                - "Parse request line fail"
-            remove_resonse_line_fail:
-                description:
-                - "Del response line fail"
-            line_table_extend_fail:
-                description:
-                - "Table extend fail"
-            get_all_headers_fail:
-                description:
-                - "Get all headers fail"
-            parse_req_fail:
-                description:
-                - "Parse request failure"
-            LB_switch_ok:
-                description:
-                - "LB switching (succ)"
-            Aflex_switch:
-                description:
-                - "aFleX switching"
-            send_client_service_not_ready:
-                description:
-                - "Sent client serv-not-rdy"
-            line_too_long:
-                description:
-                - "Line too long"
+                - "Total proxy conns"
+                type: str
             request:
                 description:
                 - "SMTP requests"
-            line_extend:
+                type: str
+            request_success:
                 description:
-                - "Line extend"
-            Aflex_lb_reselect_ok:
+                - "SMTP requests (success)"
+                type: str
+            no_proxy:
                 description:
-                - "aFleX lb reselect (succ)"
-            server_STARTTLS_fail:
+                - "No proxy error"
+                type: str
+            client_reset:
                 description:
-                - "Server side STARTTLS fail"
+                - "Client reset"
+                type: str
+            server_reset:
+                description:
+                - "Server reset"
+                type: str
+            no_tuple:
+                description:
+                - "No tuple error"
+                type: str
+            parse_req_fail:
+                description:
+                - "Parse request failure"
+                type: str
+            server_select_fail:
+                description:
+                - "Server selection failure"
+                type: str
+            forward_req_fail:
+                description:
+                - "Forward request failure"
+                type: str
+            forward_req_data_fail:
+                description:
+                - "Forward REQ data failure"
+                type: str
+            req_retran:
+                description:
+                - "Request retransmit"
+                type: str
+            req_ofo:
+                description:
+                - "Request pkt out-of-order"
+                type: str
+            server_reselect:
+                description:
+                - "Server reselection"
+                type: str
+            server_prem_close:
+                description:
+                - "Server premature close"
+                type: str
+            new_server_conn:
+                description:
+                - "Server connection made"
+                type: str
+            snat_fail:
+                description:
+                - "Source NAT failure"
+                type: str
+            tcp_out_reset:
+                description:
+                - "TCP out reset"
+                type: str
             recv_client_command_EHLO:
                 description:
                 - "Recv client EHLO"
-            insert_resonse_line_fail:
+                type: str
+            recv_client_command_HELO:
                 description:
-                - "Ins response line fail"
+                - "Recv client HELO"
+                type: str
+            recv_client_command_MAIL:
+                description:
+                - "Recv client MAIL"
+                type: str
+            recv_client_command_RCPT:
+                description:
+                - "Recv client RCPT"
+                type: str
+            recv_client_command_DATA:
+                description:
+                - "Recv client DATA"
+                type: str
+            recv_client_command_RSET:
+                description:
+                - "Recv client RSET"
+                type: str
+            recv_client_command_VRFY:
+                description:
+                - "Recv client VRFY"
+                type: str
+            recv_client_command_EXPN:
+                description:
+                - "Recv client EXPN"
+                type: str
+            recv_client_command_HELP:
+                description:
+                - "Recv client HELP"
+                type: str
+            recv_client_command_NOOP:
+                description:
+                - "Recv client NOOP"
+                type: str
+            recv_client_command_QUIT:
+                description:
+                - "Recv client QUIT"
+                type: str
+            recv_client_command_STARTTLS:
+                description:
+                - "Recv client STARTTLS"
+                type: str
+            recv_client_command_others:
+                description:
+                - "Recv client other cmds"
+                type: str
+            recv_server_service_not_ready:
+                description:
+                - "Recv server serv-not-rdy"
+                type: str
+            recv_server_unknow_reply_code:
+                description:
+                - "Recv server unknown-code"
+                type: str
+            send_client_service_ready:
+                description:
+                - "Sent client serv-rdy"
+                type: str
+            send_client_service_not_ready:
+                description:
+                - "Sent client serv-not-rdy"
+                type: str
+            send_client_close_connection:
+                description:
+                - "Sent client close-conn"
+                type: str
+            send_client_go_ahead:
+                description:
+                - "Sent client go-ahead"
+                type: str
+            send_client_start_TLS_first:
+                description:
+                - "Sent client STARTTLS-1st"
+                type: str
             send_client_TLS_not_available:
                 description:
                 - "Sent client TLS-not-aval"
-            read_request_line_fail:
+                type: str
+            send_client_no_command:
                 description:
-                - "Read request line fail"
-            recv_client_command_TURN:
+                - "Sent client no-such-cmd"
+                type: str
+            send_server_cmd_reset:
                 description:
-                - "Recv client TURN"
+                - "Sent server RSET"
+                type: str
             TLS_established:
                 description:
                 - "SSL session established"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            L4_switch:
+                description:
+                - "L4 switching"
+                type: str
+            Aflex_switch:
+                description:
+                - "aFleX switching"
+                type: str
+            Aflex_switch_ok:
+                description:
+                - "aFleX switching (succ)"
+                type: str
+            client_domain_switch:
+                description:
+                - "Client domain switching"
+                type: str
+            client_domain_switch_ok:
+                description:
+                - "Client domain sw (succ)"
+                type: str
+            LB_switch:
+                description:
+                - "LB switching"
+                type: str
+            LB_switch_ok:
+                description:
+                - "LB switching (succ)"
+                type: str
+            read_request_line_fail:
+                description:
+                - "Read request line fail"
+                type: str
+            get_all_headers_fail:
+                description:
+                - "Get all headers fail"
+                type: str
+            too_many_headers:
+                description:
+                - "Too many headers"
+                type: str
+            line_too_long:
+                description:
+                - "Line too long"
+                type: str
+            line_across_packet:
+                description:
+                - "Line across packets"
+                type: str
+            line_extend:
+                description:
+                - "Line extend"
+                type: str
+            line_extend_fail:
+                description:
+                - "Line extend fail"
+                type: str
+            line_table_extend:
+                description:
+                - "Table extend"
+                type: str
+            line_table_extend_fail:
+                description:
+                - "Table extend fail"
+                type: str
+            parse_request_line_fail:
+                description:
+                - "Parse request line fail"
+                type: str
+            insert_resonse_line_fail:
+                description:
+                - "Ins response line fail"
+                type: str
+            remove_resonse_line_fail:
+                description:
+                - "Del response line fail"
+                type: str
+            parse_resonse_line_fail:
+                description:
+                - "Parse response line fail"
+                type: str
+            Aflex_lb_reselect:
+                description:
+                - "aFleX lb reselect"
+                type: str
+            Aflex_lb_reselect_ok:
+                description:
+                - "aFleX lb reselect (succ)"
+                type: str
+            server_STARTTLS_init:
+                description:
+                - "Init server side STARTTLS"
+                type: str
+            server_STARTTLS_fail:
+                description:
+                - "Server side STARTTLS fail"
+                type: str
+            rserver_STARTTLS_disable:
+                description:
+                - "real server not support STARTTLS"
+                type: str
+            recv_client_command_TURN:
+                description:
+                - "Recv client TURN"
+                type: str
+            recv_client_command_ETRN:
+                description:
+                - "Recv client ETRN"
+                type: str
 
 '''
 
@@ -386,224 +468,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'cpu_count': {
-                'type': 'int',
-            },
-            'smtp_cpu_list': {
-                'type': 'list',
-                'request_success': {
-                    'type': 'int',
-                },
-                'recv_client_command_RCPT': {
-                    'type': 'int',
-                },
-                'recv_client_command_ETRN': {
-                    'type': 'int',
-                },
-                'forward_req_fail': {
-                    'type': 'int',
-                },
-                'recv_server_unknow_reply_code': {
-                    'type': 'int',
-                },
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'L4_switch': {
-                    'type': 'int',
-                },
-                'too_many_headers': {
-                    'type': 'int',
-                },
-                'recv_client_command_QUIT': {
-                    'type': 'int',
-                },
-                'recv_client_command_NOOP': {
-                    'type': 'int',
-                },
-                'new_server_conn': {
-                    'type': 'int',
-                },
-                'req_retran': {
-                    'type': 'int',
-                },
-                'server_reselect': {
-                    'type': 'int',
-                },
-                'recv_client_command_MAIL': {
-                    'type': 'int',
-                },
-                'send_client_start_TLS_first': {
-                    'type': 'int',
-                },
-                'recv_client_command_VRFY': {
-                    'type': 'int',
-                },
-                'server_prem_close': {
-                    'type': 'int',
-                },
-                'parse_resonse_line_fail': {
-                    'type': 'int',
-                },
-                'send_client_close_connection': {
-                    'type': 'int',
-                },
-                'forward_req_data_fail': {
-                    'type': 'int',
-                },
-                'recv_client_command_HELO': {
-                    'type': 'int',
-                },
-                'no_proxy': {
-                    'type': 'int',
-                },
-                'client_reset': {
-                    'type': 'int',
-                },
-                'line_across_packet': {
-                    'type': 'int',
-                },
-                'server_STARTTLS_init': {
-                    'type': 'int',
-                },
-                'recv_client_command_HELP': {
-                    'type': 'int',
-                },
-                'client_domain_switch_ok': {
-                    'type': 'int',
-                },
-                'recv_client_command_RSET': {
-                    'type': 'int',
-                },
-                'recv_client_command_STARTTLS': {
-                    'type': 'int',
-                },
-                'recv_client_command_others': {
-                    'type': 'int',
-                },
-                'recv_client_command_EXPN': {
-                    'type': 'int',
-                },
-                'LB_switch': {
-                    'type': 'int',
-                },
-                'no_tuple': {
-                    'type': 'int',
-                },
-                'send_client_no_command': {
-                    'type': 'int',
-                },
-                'Aflex_switch_ok': {
-                    'type': 'int',
-                },
-                'rserver_STARTTLS_disable': {
-                    'type': 'int',
-                },
-                'server_select_fail': {
-                    'type': 'int',
-                },
-                'tcp_out_reset': {
-                    'type': 'int',
-                },
-                'line_table_extend': {
-                    'type': 'int',
-                },
-                'send_server_cmd_reset': {
-                    'type': 'int',
-                },
-                'line_extend_fail': {
-                    'type': 'int',
-                },
-                'recv_client_command_DATA': {
-                    'type': 'int',
-                },
-                'Aflex_lb_reselect': {
-                    'type': 'int',
-                },
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'send_client_service_ready': {
-                    'type': 'int',
-                },
-                'send_client_go_ahead': {
-                    'type': 'int',
-                },
-                'req_ofo': {
-                    'type': 'int',
-                },
-                'client_domain_switch': {
-                    'type': 'int',
-                },
-                'server_reset': {
-                    'type': 'int',
-                },
-                'snat_fail': {
-                    'type': 'int',
-                },
-                'recv_server_service_not_ready': {
-                    'type': 'int',
-                },
-                'parse_request_line_fail': {
-                    'type': 'int',
-                },
-                'remove_resonse_line_fail': {
-                    'type': 'int',
-                },
-                'line_table_extend_fail': {
-                    'type': 'int',
-                },
-                'get_all_headers_fail': {
-                    'type': 'int',
-                },
-                'parse_req_fail': {
-                    'type': 'int',
-                },
-                'LB_switch_ok': {
-                    'type': 'int',
-                },
-                'Aflex_switch': {
-                    'type': 'int',
-                },
-                'send_client_service_not_ready': {
-                    'type': 'int',
-                },
-                'line_too_long': {
-                    'type': 'int',
-                },
-                'request': {
-                    'type': 'int',
-                },
-                'line_extend': {
-                    'type': 'int',
-                },
-                'Aflex_lb_reselect_ok': {
-                    'type': 'int',
-                },
-                'server_STARTTLS_fail': {
-                    'type': 'int',
-                },
-                'recv_client_command_EHLO': {
-                    'type': 'int',
-                },
-                'insert_resonse_line_fail': {
-                    'type': 'int',
-                },
-                'send_client_TLS_not_available': {
-                    'type': 'int',
-                },
-                'read_request_line_fail': {
-                    'type': 'int',
-                },
-                'recv_client_command_TURN': {
-                    'type': 'int',
-                },
-                'TLS_established': {
-                    'type': 'int',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -647,69 +513,237 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'smtp_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'request': {
+                    'type': 'int',
+                },
+                'request_success': {
+                    'type': 'int',
+                },
+                'no_proxy': {
+                    'type': 'int',
+                },
+                'client_reset': {
+                    'type': 'int',
+                },
+                'server_reset': {
+                    'type': 'int',
+                },
+                'no_tuple': {
+                    'type': 'int',
+                },
+                'parse_req_fail': {
+                    'type': 'int',
+                },
+                'server_select_fail': {
+                    'type': 'int',
+                },
+                'forward_req_fail': {
+                    'type': 'int',
+                },
+                'forward_req_data_fail': {
+                    'type': 'int',
+                },
+                'req_retran': {
+                    'type': 'int',
+                },
+                'req_ofo': {
+                    'type': 'int',
+                },
+                'server_reselect': {
+                    'type': 'int',
+                },
+                'server_prem_close': {
+                    'type': 'int',
+                },
+                'new_server_conn': {
+                    'type': 'int',
+                },
+                'snat_fail': {
+                    'type': 'int',
+                },
+                'tcp_out_reset': {
+                    'type': 'int',
+                },
+                'recv_client_command_EHLO': {
+                    'type': 'int',
+                },
+                'recv_client_command_HELO': {
+                    'type': 'int',
+                },
+                'recv_client_command_MAIL': {
+                    'type': 'int',
+                },
+                'recv_client_command_RCPT': {
+                    'type': 'int',
+                },
+                'recv_client_command_DATA': {
+                    'type': 'int',
+                },
+                'recv_client_command_RSET': {
+                    'type': 'int',
+                },
+                'recv_client_command_VRFY': {
+                    'type': 'int',
+                },
+                'recv_client_command_EXPN': {
+                    'type': 'int',
+                },
+                'recv_client_command_HELP': {
+                    'type': 'int',
+                },
+                'recv_client_command_NOOP': {
+                    'type': 'int',
+                },
+                'recv_client_command_QUIT': {
+                    'type': 'int',
+                },
+                'recv_client_command_STARTTLS': {
+                    'type': 'int',
+                },
+                'recv_client_command_TURN': {
+                    'type': 'int',
+                },
+                'recv_client_command_ETRN': {
+                    'type': 'int',
+                },
+                'recv_client_command_others': {
+                    'type': 'int',
+                },
+                'recv_server_service_not_ready': {
+                    'type': 'int',
+                },
+                'recv_server_unknow_reply_code': {
+                    'type': 'int',
+                },
+                'send_client_service_ready': {
+                    'type': 'int',
+                },
+                'send_client_service_not_ready': {
+                    'type': 'int',
+                },
+                'send_client_close_connection': {
+                    'type': 'int',
+                },
+                'send_client_go_ahead': {
+                    'type': 'int',
+                },
+                'send_client_start_TLS_first': {
+                    'type': 'int',
+                },
+                'send_client_TLS_not_available': {
+                    'type': 'int',
+                },
+                'send_client_no_command': {
+                    'type': 'int',
+                },
+                'send_server_cmd_reset': {
+                    'type': 'int',
+                },
+                'TLS_established': {
+                    'type': 'int',
+                },
+                'L4_switch': {
+                    'type': 'int',
+                },
+                'Aflex_switch': {
+                    'type': 'int',
+                },
+                'Aflex_switch_ok': {
+                    'type': 'int',
+                },
+                'client_domain_switch': {
+                    'type': 'int',
+                },
+                'client_domain_switch_ok': {
+                    'type': 'int',
+                },
+                'LB_switch': {
+                    'type': 'int',
+                },
+                'LB_switch_ok': {
+                    'type': 'int',
+                },
+                'read_request_line_fail': {
+                    'type': 'int',
+                },
+                'get_all_headers_fail': {
+                    'type': 'int',
+                },
+                'too_many_headers': {
+                    'type': 'int',
+                },
+                'line_too_long': {
+                    'type': 'int',
+                },
+                'line_across_packet': {
+                    'type': 'int',
+                },
+                'line_extend': {
+                    'type': 'int',
+                },
+                'line_extend_fail': {
+                    'type': 'int',
+                },
+                'line_table_extend': {
+                    'type': 'int',
+                },
+                'line_table_extend_fail': {
+                    'type': 'int',
+                },
+                'parse_request_line_fail': {
+                    'type': 'int',
+                },
+                'insert_resonse_line_fail': {
+                    'type': 'int',
+                },
+                'remove_resonse_line_fail': {
+                    'type': 'int',
+                },
+                'parse_resonse_line_fail': {
+                    'type': 'int',
+                },
+                'Aflex_lb_reselect': {
+                    'type': 'int',
+                },
+                'Aflex_lb_reselect_ok': {
+                    'type': 'int',
+                },
+                'server_STARTTLS_init': {
+                    'type': 'int',
+                },
+                'server_STARTTLS_fail': {
+                    'type': 'int',
+                },
+                'rserver_STARTTLS_disable': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'request_success': {
-                'type': 'str',
-            },
-            'recv_client_command_RCPT': {
-                'type': 'str',
-            },
-            'recv_client_command_ETRN': {
-                'type': 'str',
-            },
-            'forward_req_fail': {
-                'type': 'str',
-            },
-            'recv_server_unknow_reply_code': {
+            'curr_proxy': {
                 'type': 'str',
             },
             'total_proxy': {
                 'type': 'str',
             },
-            'L4_switch': {
+            'request': {
                 'type': 'str',
             },
-            'too_many_headers': {
-                'type': 'str',
-            },
-            'recv_client_command_QUIT': {
-                'type': 'str',
-            },
-            'recv_client_command_NOOP': {
-                'type': 'str',
-            },
-            'new_server_conn': {
-                'type': 'str',
-            },
-            'req_retran': {
-                'type': 'str',
-            },
-            'server_reselect': {
-                'type': 'str',
-            },
-            'recv_client_command_MAIL': {
-                'type': 'str',
-            },
-            'send_client_start_TLS_first': {
-                'type': 'str',
-            },
-            'recv_client_command_VRFY': {
-                'type': 'str',
-            },
-            'server_prem_close': {
-                'type': 'str',
-            },
-            'parse_resonse_line_fail': {
-                'type': 'str',
-            },
-            'send_client_close_connection': {
-                'type': 'str',
-            },
-            'forward_req_data_fail': {
-                'type': 'str',
-            },
-            'recv_client_command_HELO': {
+            'request_success': {
                 'type': 'str',
             },
             'no_proxy': {
@@ -718,19 +752,76 @@ def get_argspec():
             'client_reset': {
                 'type': 'str',
             },
-            'line_across_packet': {
+            'server_reset': {
                 'type': 'str',
             },
-            'server_STARTTLS_init': {
+            'no_tuple': {
+                'type': 'str',
+            },
+            'parse_req_fail': {
+                'type': 'str',
+            },
+            'server_select_fail': {
+                'type': 'str',
+            },
+            'forward_req_fail': {
+                'type': 'str',
+            },
+            'forward_req_data_fail': {
+                'type': 'str',
+            },
+            'req_retran': {
+                'type': 'str',
+            },
+            'req_ofo': {
+                'type': 'str',
+            },
+            'server_reselect': {
+                'type': 'str',
+            },
+            'server_prem_close': {
+                'type': 'str',
+            },
+            'new_server_conn': {
+                'type': 'str',
+            },
+            'snat_fail': {
+                'type': 'str',
+            },
+            'tcp_out_reset': {
+                'type': 'str',
+            },
+            'recv_client_command_EHLO': {
+                'type': 'str',
+            },
+            'recv_client_command_HELO': {
+                'type': 'str',
+            },
+            'recv_client_command_MAIL': {
+                'type': 'str',
+            },
+            'recv_client_command_RCPT': {
+                'type': 'str',
+            },
+            'recv_client_command_DATA': {
+                'type': 'str',
+            },
+            'recv_client_command_RSET': {
+                'type': 'str',
+            },
+            'recv_client_command_VRFY': {
+                'type': 'str',
+            },
+            'recv_client_command_EXPN': {
                 'type': 'str',
             },
             'recv_client_command_HELP': {
                 'type': 'str',
             },
-            'client_domain_switch_ok': {
+            'recv_client_command_NOOP': {
                 'type': 'str',
             },
-            'recv_client_command_RSET': {
+            'recv_client_command_QUIT': {
                 'type': 'str',
             },
             'recv_client_command_STARTTLS': {
@@ -739,129 +830,120 @@ def get_argspec():
             'recv_client_command_others': {
                 'type': 'str',
             },
-            'recv_client_command_EXPN': {
+            'recv_server_service_not_ready': {
                 'type': 'str',
             },
-            'LB_switch': {
-                'type': 'str',
-            },
-            'no_tuple': {
-                'type': 'str',
-            },
-            'send_client_no_command': {
-                'type': 'str',
-            },
-            'Aflex_switch_ok': {
-                'type': 'str',
-            },
-            'rserver_STARTTLS_disable': {
-                'type': 'str',
-            },
-            'server_select_fail': {
-                'type': 'str',
-            },
-            'tcp_out_reset': {
-                'type': 'str',
-            },
-            'line_table_extend': {
-                'type': 'str',
-            },
-            'send_server_cmd_reset': {
-                'type': 'str',
-            },
-            'line_extend_fail': {
-                'type': 'str',
-            },
-            'recv_client_command_DATA': {
-                'type': 'str',
-            },
-            'Aflex_lb_reselect': {
-                'type': 'str',
-            },
-            'curr_proxy': {
+            'recv_server_unknow_reply_code': {
                 'type': 'str',
             },
             'send_client_service_ready': {
                 'type': 'str',
             },
-            'send_client_go_ahead': {
-                'type': 'str',
-            },
-            'req_ofo': {
-                'type': 'str',
-            },
-            'client_domain_switch': {
-                'type': 'str',
-            },
-            'server_reset': {
-                'type': 'str',
-            },
-            'snat_fail': {
-                'type': 'str',
-            },
-            'recv_server_service_not_ready': {
-                'type': 'str',
-            },
-            'parse_request_line_fail': {
-                'type': 'str',
-            },
-            'remove_resonse_line_fail': {
-                'type': 'str',
-            },
-            'line_table_extend_fail': {
-                'type': 'str',
-            },
-            'get_all_headers_fail': {
-                'type': 'str',
-            },
-            'parse_req_fail': {
-                'type': 'str',
-            },
-            'LB_switch_ok': {
-                'type': 'str',
-            },
-            'Aflex_switch': {
-                'type': 'str',
-            },
             'send_client_service_not_ready': {
                 'type': 'str',
             },
-            'line_too_long': {
+            'send_client_close_connection': {
                 'type': 'str',
             },
-            'request': {
+            'send_client_go_ahead': {
                 'type': 'str',
             },
-            'line_extend': {
-                'type': 'str',
-            },
-            'Aflex_lb_reselect_ok': {
-                'type': 'str',
-            },
-            'server_STARTTLS_fail': {
-                'type': 'str',
-            },
-            'recv_client_command_EHLO': {
-                'type': 'str',
-            },
-            'insert_resonse_line_fail': {
+            'send_client_start_TLS_first': {
                 'type': 'str',
             },
             'send_client_TLS_not_available': {
                 'type': 'str',
             },
+            'send_client_no_command': {
+                'type': 'str',
+            },
+            'send_server_cmd_reset': {
+                'type': 'str',
+            },
+            'TLS_established': {
+                'type': 'str',
+            },
+            'L4_switch': {
+                'type': 'str',
+            },
+            'Aflex_switch': {
+                'type': 'str',
+            },
+            'Aflex_switch_ok': {
+                'type': 'str',
+            },
+            'client_domain_switch': {
+                'type': 'str',
+            },
+            'client_domain_switch_ok': {
+                'type': 'str',
+            },
+            'LB_switch': {
+                'type': 'str',
+            },
+            'LB_switch_ok': {
+                'type': 'str',
+            },
             'read_request_line_fail': {
+                'type': 'str',
+            },
+            'get_all_headers_fail': {
+                'type': 'str',
+            },
+            'too_many_headers': {
+                'type': 'str',
+            },
+            'line_too_long': {
+                'type': 'str',
+            },
+            'line_across_packet': {
+                'type': 'str',
+            },
+            'line_extend': {
+                'type': 'str',
+            },
+            'line_extend_fail': {
+                'type': 'str',
+            },
+            'line_table_extend': {
+                'type': 'str',
+            },
+            'line_table_extend_fail': {
+                'type': 'str',
+            },
+            'parse_request_line_fail': {
+                'type': 'str',
+            },
+            'insert_resonse_line_fail': {
+                'type': 'str',
+            },
+            'remove_resonse_line_fail': {
+                'type': 'str',
+            },
+            'parse_resonse_line_fail': {
+                'type': 'str',
+            },
+            'Aflex_lb_reselect': {
+                'type': 'str',
+            },
+            'Aflex_lb_reselect_ok': {
+                'type': 'str',
+            },
+            'server_STARTTLS_init': {
+                'type': 'str',
+            },
+            'server_STARTTLS_fail': {
+                'type': 'str',
+            },
+            'rserver_STARTTLS_disable': {
                 'type': 'str',
             },
             'recv_client_command_TURN': {
                 'type': 'str',
             },
-            'TLS_established': {
+            'recv_client_command_ETRN': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

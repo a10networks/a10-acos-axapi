@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_telemetry_log_device_status
 description:
     - Device status
-short_description: Configures A10 system.telemetry.log.device-status
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,62 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            control_cpu_usage:
-                description:
-                - "Field control_cpu_usage"
-            total_bytes_out:
-                description:
-                - "Field total_bytes_out"
             memory_usage:
                 description:
                 - "Field memory_usage"
-            total_bytes_in:
+                type: str
+            control_cpu_usage:
                 description:
-                - "Field total_bytes_in"
-            ratio_buffer_count:
-                description:
-                - "Field ratio_buffer_count"
-            ratio_session_count:
-                description:
-                - "Field ratio_session_count"
+                - "Field control_cpu_usage"
+                type: int
             cpu_usage_overall:
                 description:
                 - "Field cpu_usage_overall"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            ratio_session_count:
+                description:
+                - "Field ratio_session_count"
+                type: str
+            ratio_buffer_count:
+                description:
+                - "Field ratio_buffer_count"
+                type: str
+            total_bytes_in:
+                description:
+                - "Field total_bytes_in"
+                type: int
+            total_bytes_out:
+                description:
+                - "Field total_bytes_out"
+                type: int
 
 '''
 
@@ -133,32 +147,32 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'memory_usage': {
+                'type': 'str',
+            },
             'control_cpu_usage': {
                 'type': 'int',
             },
-            'total_bytes_out': {
+            'cpu_usage_overall': {
                 'type': 'int',
             },
-            'memory_usage': {
+            'ratio_session_count': {
+                'type': 'str',
+            },
+            'ratio_buffer_count': {
                 'type': 'str',
             },
             'total_bytes_in': {
                 'type': 'int',
             },
-            'ratio_buffer_count': {
-                'type': 'str',
-            },
-            'ratio_session_count': {
-                'type': 'str',
-            },
-            'cpu_usage_overall': {
+            'total_bytes_out': {
                 'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

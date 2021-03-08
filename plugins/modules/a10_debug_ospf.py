@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_ospf
 description:
     - Debug Open Shortest Path First (OSPF)
-short_description: Configures A10 debug.ospf
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,194 +22,249 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Field all"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-    ifsm:
-        description:
-        - "Field ifsm"
-        required: False
-        suboptions:
-            status:
-                description:
-                - "IFSM Status Information"
-            timers:
-                description:
-                - "IFSM Timer Information"
-            events:
-                description:
-                - "IFSM Event Information"
-            uuid:
-                description:
-                - "uuid of the object"
+                type: str
     bfd:
         description:
         - "Field bfd"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-    route:
-        description:
-        - "Field route"
-        required: False
-        suboptions:
-            ia:
-                description:
-                - "Inter-Area route calculation information"
-            ase:
-                description:
-                - "External route calculation information"
-            install:
-                description:
-                - "Route installation information"
-            spf:
-                description:
-                - "SPF calculation information"
-            uuid:
-                description:
-                - "uuid of the object"
-    lsa:
-        description:
-        - "Field lsa"
-        required: False
-        suboptions:
-            gererate:
-                description:
-                - "LSA Generation"
-            uuid:
-                description:
-                - "uuid of the object"
-            maxage:
-                description:
-                - "LSA MaxAge processing"
-            refresh:
-                description:
-                - "LSA Refreshment"
-            install:
-                description:
-                - "LSA Installation"
-            flooding:
-                description:
-                - "LSA Flooding"
-    nfsm:
-        description:
-        - "Field nfsm"
-        required: False
-        suboptions:
-            status:
-                description:
-                - "NFSM Status Information"
-            timers:
-                description:
-                - "NFSM Timer Information"
-            events:
-                description:
-                - "NFSM Event Information"
-            uuid:
-                description:
-                - "uuid of the object"
-    packet:
-        description:
-        - "Field packet"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ls_request:
-                description:
-                - "OSPFv3 Link State Request"
-            dd:
-                description:
-                - "OSPFv3 Database Description"
-            detail:
-                description:
-                - "Detail information"
-            send:
-                description:
-                - "Packet sent"
-            ls_ack:
-                description:
-                - "OSPFv3 Link State Acknowledgment"
-            ls_update:
-                description:
-                - "OSPFv3 Link State Update"
-            recv:
-                description:
-                - "Packet received"
-            hello:
-                description:
-                - "OSPFv3 Hello"
+                type: str
     events:
         description:
         - "Field events"
+        type: dict
         required: False
         suboptions:
-            asbr:
-                description:
-                - "OSPF ASBR events"
-            uuid:
-                description:
-                - "uuid of the object"
             abr:
                 description:
                 - "OSPF ABR events"
-            router:
+                type: bool
+            asbr:
                 description:
-                - "Other router events"
-            vlink:
-                description:
-                - "Virtual-Link event"
+                - "OSPF ASBR events"
+                type: bool
             os:
                 description:
                 - "OS events"
+                type: bool
+            router:
+                description:
+                - "Other router events"
+                type: bool
+            vlink:
+                description:
+                - "Virtual-Link event"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    ifsm:
+        description:
+        - "Field ifsm"
+        type: dict
+        required: False
+        suboptions:
+            events:
+                description:
+                - "IFSM Event Information"
+                type: bool
+            status:
+                description:
+                - "IFSM Status Information"
+                type: bool
+            timers:
+                description:
+                - "IFSM Timer Information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    lsa:
+        description:
+        - "Field lsa"
+        type: dict
+        required: False
+        suboptions:
+            flooding:
+                description:
+                - "LSA Flooding"
+                type: bool
+            gererate:
+                description:
+                - "LSA Generation"
+                type: bool
+            install:
+                description:
+                - "LSA Installation"
+                type: bool
+            maxage:
+                description:
+                - "LSA MaxAge processing"
+                type: bool
+            refresh:
+                description:
+                - "LSA Refreshment"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    nfsm:
+        description:
+        - "Field nfsm"
+        type: dict
+        required: False
+        suboptions:
+            events:
+                description:
+                - "NFSM Event Information"
+                type: bool
+            status:
+                description:
+                - "NFSM Status Information"
+                type: bool
+            timers:
+                description:
+                - "NFSM Timer Information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     nsm:
         description:
         - "Field nsm"
+        type: dict
         required: False
         suboptions:
             interface:
                 description:
                 - "NSM interface"
+                type: bool
             redistribute:
                 description:
                 - "NSM redistribute"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    packet:
+        description:
+        - "Field packet"
+        type: dict
+        required: False
+        suboptions:
+            dd:
+                description:
+                - "OSPFv3 Database Description"
+                type: bool
+            detail:
+                description:
+                - "Detail information"
+                type: bool
+            hello:
+                description:
+                - "OSPFv3 Hello"
+                type: bool
+            ls_ack:
+                description:
+                - "OSPFv3 Link State Acknowledgment"
+                type: bool
+            ls_request:
+                description:
+                - "OSPFv3 Link State Request"
+                type: bool
+            ls_update:
+                description:
+                - "OSPFv3 Link State Update"
+                type: bool
+            recv:
+                description:
+                - "Packet received"
+                type: bool
+            send:
+                description:
+                - "Packet sent"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    route:
+        description:
+        - "Field route"
+        type: dict
+        required: False
+        suboptions:
+            ase:
+                description:
+                - "External route calculation information"
+                type: bool
+            ia:
+                description:
+                - "Inter-Area route calculation information"
+                type: bool
+            install:
+                description:
+                - "Route installation information"
+                type: bool
+            spf:
+                description:
+                - "SPF calculation information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -278,120 +331,21 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'ifsm': {
-            'type': 'dict',
-            'status': {
-                'type': 'bool',
-            },
-            'timers': {
-                'type': 'bool',
-            },
-            'events': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
         'bfd': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
             }
         },
-        'route': {
-            'type': 'dict',
-            'ia': {
-                'type': 'bool',
-            },
-            'ase': {
-                'type': 'bool',
-            },
-            'install': {
-                'type': 'bool',
-            },
-            'spf': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'lsa': {
-            'type': 'dict',
-            'gererate': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'maxage': {
-                'type': 'bool',
-            },
-            'refresh': {
-                'type': 'bool',
-            },
-            'install': {
-                'type': 'bool',
-            },
-            'flooding': {
-                'type': 'bool',
-            }
-        },
-        'nfsm': {
-            'type': 'dict',
-            'status': {
-                'type': 'bool',
-            },
-            'timers': {
-                'type': 'bool',
-            },
-            'events': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'packet': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'ls_request': {
-                'type': 'bool',
-            },
-            'dd': {
-                'type': 'bool',
-            },
-            'detail': {
-                'type': 'bool',
-            },
-            'send': {
-                'type': 'bool',
-            },
-            'ls_ack': {
-                'type': 'bool',
-            },
-            'ls_update': {
-                'type': 'bool',
-            },
-            'recv': {
-                'type': 'bool',
-            },
-            'hello': {
-                'type': 'bool',
-            }
-        },
         'events': {
             'type': 'dict',
+            'abr': {
+                'type': 'bool',
+            },
             'asbr': {
                 'type': 'bool',
             },
-            'uuid': {
-                'type': 'str',
-            },
-            'abr': {
+            'os': {
                 'type': 'bool',
             },
             'router': {
@@ -400,8 +354,59 @@ def get_argspec():
             'vlink': {
                 'type': 'bool',
             },
-            'os': {
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'ifsm': {
+            'type': 'dict',
+            'events': {
                 'type': 'bool',
+            },
+            'status': {
+                'type': 'bool',
+            },
+            'timers': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'lsa': {
+            'type': 'dict',
+            'flooding': {
+                'type': 'bool',
+            },
+            'gererate': {
+                'type': 'bool',
+            },
+            'install': {
+                'type': 'bool',
+            },
+            'maxage': {
+                'type': 'bool',
+            },
+            'refresh': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'nfsm': {
+            'type': 'dict',
+            'events': {
+                'type': 'bool',
+            },
+            'status': {
+                'type': 'bool',
+            },
+            'timers': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
             }
         },
         'nsm': {
@@ -410,6 +415,54 @@ def get_argspec():
                 'type': 'bool',
             },
             'redistribute': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'packet': {
+            'type': 'dict',
+            'dd': {
+                'type': 'bool',
+            },
+            'detail': {
+                'type': 'bool',
+            },
+            'hello': {
+                'type': 'bool',
+            },
+            'ls_ack': {
+                'type': 'bool',
+            },
+            'ls_request': {
+                'type': 'bool',
+            },
+            'ls_update': {
+                'type': 'bool',
+            },
+            'recv': {
+                'type': 'bool',
+            },
+            'send': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'route': {
+            'type': 'dict',
+            'ase': {
+                'type': 'bool',
+            },
+            'ia': {
+                'type': 'bool',
+            },
+            'install': {
+                'type': 'bool',
+            },
+            'spf': {
                 'type': 'bool',
             },
             'uuid': {

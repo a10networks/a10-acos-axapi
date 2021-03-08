@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_isis
 description:
     - Intermediate System - Intermediate System (IS-IS)
-short_description: Configures A10 router.isis
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,89 +22,187 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    tag:
+        description:
+        - "ISO routing area tag"
+        type: str
+        required: True
+    adjacency_check:
+        description:
+        - "Check ISIS neighbor protocol support"
+        type: bool
+        required: False
+    area_password_cfg:
+        description:
+        - "Field area_password_cfg"
+        type: dict
+        required: False
+        suboptions:
+            password:
+                description:
+                - "Configure the authentication password for an area (Area password)"
+                type: str
+            authenticate:
+                description:
+                - "Field authenticate"
+                type: dict
+    authentication:
+        description:
+        - "Field authentication"
+        type: dict
+        required: False
+        suboptions:
+            send_only_list:
+                description:
+                - "Field send_only_list"
+                type: list
+            mode_list:
+                description:
+                - "Field mode_list"
+                type: list
+            key_chain_list:
+                description:
+                - "Field key_chain_list"
+                type: list
+    bfd:
+        description:
+        - "'all-interfaces'= Enable BFD on all interfaces;"
+        type: str
+        required: False
+    default_information:
+        description:
+        - "'originate'= Distribute a default route;"
+        type: str
+        required: False
+    distance_list:
+        description:
+        - "Field distance_list"
+        type: list
+        required: False
+        suboptions:
+            distance:
+                description:
+                - "ISIS Administrative Distance (Distance value)"
+                type: int
+            System_ID:
+                description:
+                - "System-ID in XXXX.XXXX.XXXX"
+                type: str
+            acl:
+                description:
+                - "Access list name"
+                type: str
     domain_password_cfg:
         description:
         - "Field domain_password_cfg"
+        type: dict
         required: False
         suboptions:
             password:
                 description:
                 - "Set the authentication password for a routing domain (Routing domain password)"
+                type: str
             authenticate:
                 description:
                 - "Field authenticate"
-    max_lsp_lifetime:
+                type: dict
+    ha_standby_extra_cost:
         description:
-        - "Set maximum LSP lifetime (Maximum LSP lifetime in seconds)"
+        - "Field ha_standby_extra_cost"
+        type: list
         required: False
-    tag:
+        suboptions:
+            extra_cost:
+                description:
+                - "The extra cost value"
+                type: int
+            group:
+                description:
+                - "Group (Group ID)"
+                type: int
+    ignore_lsp_errors:
         description:
-        - "ISO routing area tag"
-        required: True
+        - "Ignore LSPs with bad checksums"
+        type: bool
+        required: False
+    is_type:
+        description:
+        - "'level-1'= Act as a station router only; 'level-1-2'= Act as both a station
+          router and an area router; 'level-2-only'= Act as an area router only;"
+        type: str
+        required: False
+    log_adjacency_changes_cfg:
+        description:
+        - "Field log_adjacency_changes_cfg"
+        type: dict
+        required: False
+        suboptions:
+            state:
+                description:
+                - "'detail'= Log changes in adjacency state; 'disable'= Disable logging;"
+                type: str
+    lsp_gen_interval_list:
+        description:
+        - "Field lsp_gen_interval_list"
+        type: list
+        required: False
+        suboptions:
+            interval:
+                description:
+                - "Minimum interval in seconds"
+                type: int
+            level:
+                description:
+                - "'level-1'= Set interval for level 1 only; 'level-2'= Set interval for level 2
+          only;"
+                type: str
     lsp_refresh_interval:
         description:
         - "Set LSP refresh interval (LSP refresh time in seconds)"
+        type: int
         required: False
-    set_overload_bit_cfg:
+    max_lsp_lifetime:
         description:
-        - "Field set_overload_bit_cfg"
-        required: False
-        suboptions:
-            suppress_cfg:
-                description:
-                - "Field suppress_cfg"
-            set_overload_bit:
-                description:
-                - "Signal other touers not to use us in SPF"
-            on_startup:
-                description:
-                - "Field on_startup"
-    net_list:
-        description:
-        - "Field net_list"
-        required: False
-        suboptions:
-            net:
-                description:
-                - "A Network Entity Title for this process (XX.XXXX. ... .XXXX.XX  Network entity
-          title (NET))"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    bfd:
-        description:
-        - "'all-interfaces'= Enable BFD on all interfaces;"
+        - "Set maximum LSP lifetime (Maximum LSP lifetime in seconds)"
+        type: int
         required: False
     metric_style_list:
         description:
         - "Field metric_style_list"
+        type: list
         required: False
         suboptions:
             ntype:
@@ -116,183 +212,156 @@ options:
           during transition; 'narrow-transition'= Send old style of TLVs with narrow
           metric with accepting both styles of TLVs; 'wide-transition'= Send new style of
           TLVs to carry wider metric with accepting both styles of TLVs;"
+                type: str
             level:
                 description:
                 - "'level-1'= Level-1 only; 'level-1-2'= Level-1-2; 'level-2'= Level-2 only;"
-    authentication:
+                type: str
+    passive_interface_list:
         description:
-        - "Field authentication"
+        - "Field passive_interface_list"
+        type: list
         required: False
         suboptions:
-            send_only_list:
+            ethernet:
                 description:
-                - "Field send_only_list"
-            mode_list:
+                - "Ethernet interface (Port number)"
+                type: str
+            loopback:
                 description:
-                - "Field mode_list"
-            key_chain_list:
+                - "Loopback interface (Port number)"
+                type: str
+            trunk:
                 description:
-                - "Field key_chain_list"
-    ignore_lsp_errors:
-        description:
-        - "Ignore LSPs with bad checksums"
-        required: False
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            lif:
+                description:
+                - "Logical interface (Lif interface number)"
+                type: str
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: str
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+                type: str
     protocol_list:
         description:
         - "Field protocol_list"
+        type: list
         required: False
         suboptions:
             protocol_topology:
                 description:
                 - "Protocol Topology"
-    log_adjacency_changes_cfg:
+                type: bool
+    set_overload_bit_cfg:
         description:
-        - "Field log_adjacency_changes_cfg"
+        - "Field set_overload_bit_cfg"
+        type: dict
         required: False
         suboptions:
-            state:
+            set_overload_bit:
                 description:
-                - "'detail'= Log changes in adjacency state; 'disable'= Disable logging;"
+                - "Signal other touers not to use us in SPF"
+                type: bool
+            on_startup:
+                description:
+                - "Field on_startup"
+                type: dict
+            suppress_cfg:
+                description:
+                - "Field suppress_cfg"
+                type: dict
     spf_interval_exp_list:
         description:
         - "Field spf_interval_exp_list"
+        type: list
         required: False
         suboptions:
-            max:
-                description:
-                - "Maximum Delay between receiving a change to SPF calculation in milliseconds"
             min:
                 description:
                 - "Minimum Delay between receiving a change to SPF calculation in milliseconds"
+                type: int
+            max:
+                description:
+                - "Maximum Delay between receiving a change to SPF calculation in milliseconds"
+                type: int
             level:
                 description:
                 - "'level-1'= Set interval for level 1 only; 'level-2'= Set interval for level 2
           only;"
-    passive_interface_list:
-        description:
-        - "Field passive_interface_list"
-        required: False
-        suboptions:
-            lif:
-                description:
-                - "Logical interface (Lif interface number)"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
-            trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
-            ethernet:
-                description:
-                - "Ethernet interface (Port number)"
+                type: str
     summary_address_list:
         description:
         - "Field summary_address_list"
+        type: list
         required: False
         suboptions:
             prefix:
                 description:
                 - "IP network prefix"
+                type: str
             level:
                 description:
                 - "'level-1'= Summarize into level-1 area; 'level-1-2'= Summarize into both area
           and sub-domain; 'level-2'= Summarize into level-2 sub-domain;"
-    adjacency_check:
+                type: str
+    net_list:
         description:
-        - "Check ISIS neighbor protocol support"
+        - "Field net_list"
+        type: list
         required: False
-    default_information:
+        suboptions:
+            net:
+                description:
+                - "A Network Entity Title for this process (XX.XXXX. ... .XXXX.XX  Network entity
+          title (NET))"
+                type: str
+    uuid:
         description:
-        - "'originate'= Distribute a default route;"
+        - "uuid of the object"
+        type: str
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    redistribute:
+        description:
+        - "Field redistribute"
+        type: dict
+        required: False
+        suboptions:
+            redist_list:
+                description:
+                - "Field redist_list"
+                type: list
+            vip_list:
+                description:
+                - "Field vip_list"
+                type: list
+            isis:
+                description:
+                - "Field isis"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     address_family:
         description:
         - "Field address_family"
+        type: dict
         required: False
         suboptions:
             ipv6:
                 description:
                 - "Field ipv6"
-    redistribute:
-        description:
-        - "Field redistribute"
-        required: False
-        suboptions:
-            vip_list:
-                description:
-                - "Field vip_list"
-            redist_list:
-                description:
-                - "Field redist_list"
-            isis:
-                description:
-                - "Field isis"
-            uuid:
-                description:
-                - "uuid of the object"
-    ha_standby_extra_cost:
-        description:
-        - "Field ha_standby_extra_cost"
-        required: False
-        suboptions:
-            group:
-                description:
-                - "Group (Group ID)"
-            extra_cost:
-                description:
-                - "The extra cost value"
-    lsp_gen_interval_list:
-        description:
-        - "Field lsp_gen_interval_list"
-        required: False
-        suboptions:
-            interval:
-                description:
-                - "Minimum interval in seconds"
-            level:
-                description:
-                - "'level-1'= Set interval for level 1 only; 'level-2'= Set interval for level 2
-          only;"
-    is_type:
-        description:
-        - "'level-1'= Act as a station router only; 'level-1-2'= Act as both a station
-          router and an area router; 'level-2-only'= Act as an area router only;"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    distance_list:
-        description:
-        - "Field distance_list"
-        required: False
-        suboptions:
-            distance:
-                description:
-                - "ISIS Administrative Distance (Distance value)"
-            System_ID:
-                description:
-                - "System-ID in XXXX.XXXX.XXXX"
-            acl:
-                description:
-                - "Access list name"
-    area_password_cfg:
-        description:
-        - "Field area_password_cfg"
-        required: False
-        suboptions:
-            password:
-                description:
-                - "Configure the authentication password for an area (Area password)"
-            authenticate:
-                description:
-                - "Field authenticate"
+                type: dict
 
 '''
 
@@ -370,7 +439,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'domain_password_cfg': {
+        'tag': {
+            'type': 'str',
+            'required': True,
+        },
+        'adjacency_check': {
+            'type': 'bool',
+        },
+        'area_password_cfg': {
             'type': 'dict',
             'password': {
                 'type': 'str',
@@ -381,68 +457,6 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['send-only', 'validate']
                 }
-            }
-        },
-        'max_lsp_lifetime': {
-            'type': 'int',
-        },
-        'tag': {
-            'type': 'str',
-            'required': True,
-        },
-        'lsp_refresh_interval': {
-            'type': 'int',
-        },
-        'set_overload_bit_cfg': {
-            'type': 'dict',
-            'suppress_cfg': {
-                'type': 'dict',
-                'interlevel': {
-                    'type': 'bool',
-                },
-                'external': {
-                    'type': 'bool',
-                }
-            },
-            'set_overload_bit': {
-                'type': 'bool',
-            },
-            'on_startup': {
-                'type': 'dict',
-                'delay': {
-                    'type': 'int',
-                },
-                'wait_for_bgp': {
-                    'type': 'bool',
-                }
-            }
-        },
-        'net_list': {
-            'type': 'list',
-            'net': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'bfd': {
-            'type': 'str',
-            'choices': ['all-interfaces']
-        },
-        'metric_style_list': {
-            'type': 'list',
-            'ntype': {
-                'type':
-                'str',
-                'choices': [
-                    'narrow', 'wide', 'transition', 'narrow-transition',
-                    'wide-transition'
-                ]
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-1-2', 'level-2']
             }
         },
         'authentication': {
@@ -479,302 +493,13 @@ def get_argspec():
                 }
             }
         },
-        'ignore_lsp_errors': {
-            'type': 'bool',
-        },
-        'protocol_list': {
-            'type': 'list',
-            'protocol_topology': {
-                'type': 'bool',
-            }
-        },
-        'log_adjacency_changes_cfg': {
-            'type': 'dict',
-            'state': {
-                'type': 'str',
-                'choices': ['detail', 'disable']
-            }
-        },
-        'spf_interval_exp_list': {
-            'type': 'list',
-            'max': {
-                'type': 'int',
-            },
-            'min': {
-                'type': 'int',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-2']
-            }
-        },
-        'passive_interface_list': {
-            'type': 'list',
-            'lif': {
-                'type': 'str',
-            },
-            've': {
-                'type': 'str',
-            },
-            'loopback': {
-                'type': 'str',
-            },
-            'tunnel': {
-                'type': 'str',
-            },
-            'trunk': {
-                'type': 'str',
-            },
-            'ethernet': {
-                'type': 'str',
-            }
-        },
-        'summary_address_list': {
-            'type': 'list',
-            'prefix': {
-                'type': 'str',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-1-2', 'level-2']
-            }
-        },
-        'adjacency_check': {
-            'type': 'bool',
+        'bfd': {
+            'type': 'str',
+            'choices': ['all-interfaces']
         },
         'default_information': {
             'type': 'str',
             'choices': ['originate']
-        },
-        'address_family': {
-            'type': 'dict',
-            'ipv6': {
-                'type': 'dict',
-                'distance': {
-                    'type': 'int',
-                },
-                'redistribute': {
-                    'type': 'dict',
-                    'vip_list': {
-                        'type': 'list',
-                        'vip_metric': {
-                            'type': 'int',
-                        },
-                        'vip_level': {
-                            'type': 'str',
-                            'choices': ['level-1', 'level-1-2', 'level-2']
-                        },
-                        'vip_metric_type': {
-                            'type': 'str',
-                            'choices': ['external', 'internal']
-                        },
-                        'vip_type': {
-                            'type': 'str',
-                            'choices': ['only-flagged', 'only-not-flagged']
-                        },
-                        'vip_route_map': {
-                            'type': 'str',
-                        }
-                    },
-                    'redist_list': {
-                        'type': 'list',
-                        'metric': {
-                            'type': 'int',
-                        },
-                        'route_map': {
-                            'type': 'str',
-                        },
-                        'ntype': {
-                            'type':
-                            'str',
-                            'choices': [
-                                'bgp', 'connected', 'floating-ip',
-                                'ip-nat-list', 'ip-nat', 'lw4o6', 'nat-map',
-                                'nat64', 'ospf', 'rip', 'static'
-                            ]
-                        },
-                        'metric_type': {
-                            'type': 'str',
-                            'choices': ['external', 'internal']
-                        },
-                        'level': {
-                            'type': 'str',
-                            'choices': ['level-1', 'level-1-2', 'level-2']
-                        }
-                    },
-                    'isis': {
-                        'type': 'dict',
-                        'level_2_from': {
-                            'type': 'dict',
-                            'into_2': {
-                                'type': 'dict',
-                                'distribute_list': {
-                                    'type': 'str',
-                                },
-                                'level_1': {
-                                    'type': 'bool',
-                                }
-                            }
-                        },
-                        'level_1_from': {
-                            'type': 'dict',
-                            'into_1': {
-                                'type': 'dict',
-                                'level_2': {
-                                    'type': 'bool',
-                                },
-                                'distribute_list': {
-                                    'type': 'str',
-                                }
-                            }
-                        }
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'multi_topology_cfg': {
-                    'type': 'dict',
-                    'multi_topology': {
-                        'type': 'bool',
-                    },
-                    'level_transition': {
-                        'type': 'bool',
-                    },
-                    'transition': {
-                        'type': 'bool',
-                    },
-                    'level': {
-                        'type': 'str',
-                        'choices': ['level-1', 'level-1-2', 'level-2']
-                    }
-                },
-                'adjacency_check': {
-                    'type': 'bool',
-                },
-                'summary_prefix_list': {
-                    'type': 'list',
-                    'prefix': {
-                        'type': 'str',
-                    },
-                    'level': {
-                        'type': 'str',
-                        'choices': ['level-1', 'level-1-2', 'level-2']
-                    }
-                },
-                'default_information': {
-                    'type': 'str',
-                    'choices': ['originate']
-                }
-            }
-        },
-        'redistribute': {
-            'type': 'dict',
-            'vip_list': {
-                'type': 'list',
-                'vip_metric': {
-                    'type': 'int',
-                },
-                'vip_level': {
-                    'type': 'str',
-                    'choices': ['level-1', 'level-1-2', 'level-2']
-                },
-                'vip_metric_type': {
-                    'type': 'str',
-                    'choices': ['external', 'internal']
-                },
-                'vip_type': {
-                    'type': 'str',
-                    'choices': ['only-flagged', 'only-not-flagged']
-                },
-                'vip_route_map': {
-                    'type': 'str',
-                }
-            },
-            'redist_list': {
-                'type': 'list',
-                'metric': {
-                    'type': 'int',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
-                        'ip-nat', 'lw4o6', 'nat-map', 'ospf', 'rip', 'static'
-                    ]
-                },
-                'metric_type': {
-                    'type': 'str',
-                    'choices': ['external', 'internal']
-                },
-                'level': {
-                    'type': 'str',
-                    'choices': ['level-1', 'level-1-2', 'level-2']
-                }
-            },
-            'isis': {
-                'type': 'dict',
-                'level_2_from': {
-                    'type': 'dict',
-                    'into_2': {
-                        'type': 'dict',
-                        'distribute_list': {
-                            'type': 'str',
-                        },
-                        'level_1': {
-                            'type': 'bool',
-                        }
-                    }
-                },
-                'level_1_from': {
-                    'type': 'dict',
-                    'into_1': {
-                        'type': 'dict',
-                        'level_2': {
-                            'type': 'bool',
-                        },
-                        'distribute_list': {
-                            'type': 'str',
-                        }
-                    }
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'ha_standby_extra_cost': {
-            'type': 'list',
-            'group': {
-                'type': 'int',
-            },
-            'extra_cost': {
-                'type': 'int',
-            }
-        },
-        'lsp_gen_interval_list': {
-            'type': 'list',
-            'interval': {
-                'type': 'int',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['level-1', 'level-2']
-            }
-        },
-        'is_type': {
-            'type': 'str',
-            'choices': ['level-1', 'level-1-2', 'level-2-only']
-        },
-        'user_tag': {
-            'type': 'str',
         },
         'distance_list': {
             'type': 'list',
@@ -788,7 +513,7 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'area_password_cfg': {
+        'domain_password_cfg': {
             'type': 'dict',
             'password': {
                 'type': 'str',
@@ -798,6 +523,351 @@ def get_argspec():
                 'snp': {
                     'type': 'str',
                     'choices': ['send-only', 'validate']
+                }
+            }
+        },
+        'ha_standby_extra_cost': {
+            'type': 'list',
+            'extra_cost': {
+                'type': 'int',
+            },
+            'group': {
+                'type': 'int',
+            }
+        },
+        'ignore_lsp_errors': {
+            'type': 'bool',
+        },
+        'is_type': {
+            'type': 'str',
+            'choices': ['level-1', 'level-1-2', 'level-2-only']
+        },
+        'log_adjacency_changes_cfg': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+                'choices': ['detail', 'disable']
+            }
+        },
+        'lsp_gen_interval_list': {
+            'type': 'list',
+            'interval': {
+                'type': 'int',
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-2']
+            }
+        },
+        'lsp_refresh_interval': {
+            'type': 'int',
+        },
+        'max_lsp_lifetime': {
+            'type': 'int',
+        },
+        'metric_style_list': {
+            'type': 'list',
+            'ntype': {
+                'type':
+                'str',
+                'choices': [
+                    'narrow', 'wide', 'transition', 'narrow-transition',
+                    'wide-transition'
+                ]
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-1-2', 'level-2']
+            }
+        },
+        'passive_interface_list': {
+            'type': 'list',
+            'ethernet': {
+                'type': 'str',
+            },
+            'loopback': {
+                'type': 'str',
+            },
+            'trunk': {
+                'type': 'str',
+            },
+            'lif': {
+                'type': 'str',
+            },
+            've': {
+                'type': 'str',
+            },
+            'tunnel': {
+                'type': 'str',
+            }
+        },
+        'protocol_list': {
+            'type': 'list',
+            'protocol_topology': {
+                'type': 'bool',
+            }
+        },
+        'set_overload_bit_cfg': {
+            'type': 'dict',
+            'set_overload_bit': {
+                'type': 'bool',
+            },
+            'on_startup': {
+                'type': 'dict',
+                'delay': {
+                    'type': 'int',
+                },
+                'wait_for_bgp': {
+                    'type': 'bool',
+                }
+            },
+            'suppress_cfg': {
+                'type': 'dict',
+                'external': {
+                    'type': 'bool',
+                },
+                'interlevel': {
+                    'type': 'bool',
+                }
+            }
+        },
+        'spf_interval_exp_list': {
+            'type': 'list',
+            'min': {
+                'type': 'int',
+            },
+            'max': {
+                'type': 'int',
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-2']
+            }
+        },
+        'summary_address_list': {
+            'type': 'list',
+            'prefix': {
+                'type': 'str',
+            },
+            'level': {
+                'type': 'str',
+                'choices': ['level-1', 'level-1-2', 'level-2']
+            }
+        },
+        'net_list': {
+            'type': 'list',
+            'net': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
+                'type': 'list',
+                'ntype': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
+                        'ip-nat', 'lw4o6', 'nat-map', 'static-nat', 'ospf',
+                        'rip', 'static'
+                    ]
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'metric_type': {
+                    'type': 'str',
+                    'choices': ['external', 'internal']
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-1-2', 'level-2']
+                }
+            },
+            'vip_list': {
+                'type': 'list',
+                'vip_type': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                },
+                'vip_metric': {
+                    'type': 'int',
+                },
+                'vip_route_map': {
+                    'type': 'str',
+                },
+                'vip_metric_type': {
+                    'type': 'str',
+                    'choices': ['external', 'internal']
+                },
+                'vip_level': {
+                    'type': 'str',
+                    'choices': ['level-1', 'level-1-2', 'level-2']
+                }
+            },
+            'isis': {
+                'type': 'dict',
+                'level_1_from': {
+                    'type': 'dict',
+                    'into_1': {
+                        'type': 'dict',
+                        'level_2': {
+                            'type': 'bool',
+                        },
+                        'distribute_list': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'level_2_from': {
+                    'type': 'dict',
+                    'into_2': {
+                        'type': 'dict',
+                        'level_1': {
+                            'type': 'bool',
+                        },
+                        'distribute_list': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'address_family': {
+            'type': 'dict',
+            'ipv6': {
+                'type': 'dict',
+                'default_information': {
+                    'type': 'str',
+                    'choices': ['originate']
+                },
+                'adjacency_check': {
+                    'type': 'bool',
+                },
+                'distance': {
+                    'type': 'int',
+                },
+                'multi_topology_cfg': {
+                    'type': 'dict',
+                    'multi_topology': {
+                        'type': 'bool',
+                    },
+                    'level': {
+                        'type': 'str',
+                        'choices': ['level-1', 'level-1-2', 'level-2']
+                    },
+                    'transition': {
+                        'type': 'bool',
+                    },
+                    'level_transition': {
+                        'type': 'bool',
+                    }
+                },
+                'summary_prefix_list': {
+                    'type': 'list',
+                    'prefix': {
+                        'type': 'str',
+                    },
+                    'level': {
+                        'type': 'str',
+                        'choices': ['level-1', 'level-1-2', 'level-2']
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'redistribute': {
+                    'type': 'dict',
+                    'redist_list': {
+                        'type': 'list',
+                        'ntype': {
+                            'type':
+                            'str',
+                            'choices': [
+                                'bgp', 'connected', 'floating-ip',
+                                'ip-nat-list', 'ip-nat', 'lw4o6', 'nat-map',
+                                'static-nat', 'nat64', 'ospf', 'rip', 'static'
+                            ]
+                        },
+                        'metric': {
+                            'type': 'int',
+                        },
+                        'metric_type': {
+                            'type': 'str',
+                            'choices': ['external', 'internal']
+                        },
+                        'route_map': {
+                            'type': 'str',
+                        },
+                        'level': {
+                            'type': 'str',
+                            'choices': ['level-1', 'level-1-2', 'level-2']
+                        }
+                    },
+                    'vip_list': {
+                        'type': 'list',
+                        'vip_type': {
+                            'type': 'str',
+                            'choices': ['only-flagged', 'only-not-flagged']
+                        },
+                        'vip_metric': {
+                            'type': 'int',
+                        },
+                        'vip_route_map': {
+                            'type': 'str',
+                        },
+                        'vip_metric_type': {
+                            'type': 'str',
+                            'choices': ['external', 'internal']
+                        },
+                        'vip_level': {
+                            'type': 'str',
+                            'choices': ['level-1', 'level-1-2', 'level-2']
+                        }
+                    },
+                    'isis': {
+                        'type': 'dict',
+                        'level_1_from': {
+                            'type': 'dict',
+                            'into_1': {
+                                'type': 'dict',
+                                'level_2': {
+                                    'type': 'bool',
+                                },
+                                'distribute_list': {
+                                    'type': 'str',
+                                }
+                            }
+                        },
+                        'level_2_from': {
+                            'type': 'dict',
+                            'into_2': {
+                                'type': 'dict',
+                                'level_1': {
+                                    'type': 'bool',
+                                },
+                                'distribute_list': {
+                                    'type': 'str',
+                                }
+                            }
+                        }
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
                 }
             }
         }

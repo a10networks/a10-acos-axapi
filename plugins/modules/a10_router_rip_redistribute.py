@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_rip_redistribute
 description:
     - Redistribute information from another routing protocol
-short_description: Configures A10 router.rip.redistribute
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,67 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    vip_list:
-        description:
-        - "Field vip_list"
-        required: False
-        suboptions:
-            vip_metric:
-                description:
-                - "Metric for redistributed routes (metric value)"
-            vip_route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
-            vip_type:
-                description:
-                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not
-          flagged;"
     redist_list:
         description:
         - "Field redist_list"
+        type: list
         required: False
         suboptions:
-            metric:
-                description:
-                - "Metric for redistributed routes (metric value)"
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
             ntype:
                 description:
                 - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'=
           Floating IP; 'ip-nat-list'= IP NAT list; 'ip-nat'= IP NAT; 'isis'= ISO IS-IS;
-          'lw4o6'= LW4O6 Prefix; 'nat-map'= NAT MAP Prefix; 'ospf'= Open Shortest Path
-          First (OSPF); 'static'= Static routes;"
+          'lw4o6'= LW4O6 Prefix; 'nat-map'= NAT MAP Prefix; 'static-nat'= Static NAT;
+          'ospf'= Open Shortest Path First (OSPF); 'static'= Static routes;"
+                type: str
+            metric:
+                description:
+                - "Metric for redistributed routes (metric value)"
+                type: int
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
+    vip_list:
+        description:
+        - "Field vip_list"
+        type: list
+        required: False
+        suboptions:
+            vip_type:
+                description:
+                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not
+          flagged;"
+                type: str
+            vip_metric:
+                description:
+                - "Metric for redistributed routes (metric value)"
+                type: int
+            vip_route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -140,34 +154,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'vip_list': {
-            'type': 'list',
-            'vip_metric': {
-                'type': 'int',
-            },
-            'vip_route_map': {
-                'type': 'str',
-            },
-            'vip_type': {
-                'type': 'str',
-                'choices': ['only-flagged', 'only-not-flagged']
-            }
-        },
         'redist_list': {
             'type': 'list',
-            'metric': {
-                'type': 'int',
-            },
-            'route_map': {
-                'type': 'str',
-            },
             'ntype': {
                 'type':
                 'str',
                 'choices': [
                     'bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat',
-                    'isis', 'lw4o6', 'nat-map', 'ospf', 'static'
+                    'isis', 'lw4o6', 'nat-map', 'static-nat', 'ospf', 'static'
                 ]
+            },
+            'metric': {
+                'type': 'int',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
+        'vip_list': {
+            'type': 'list',
+            'vip_type': {
+                'type': 'str',
+                'choices': ['only-flagged', 'only-not-flagged']
+            },
+            'vip_metric': {
+                'type': 'int',
+            },
+            'vip_route_map': {
+                'type': 'str',
             }
         },
         'uuid': {

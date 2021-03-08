@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_class_list
 description:
     - Configure classification list
-short_description: Configures A10 slb.template.policy.class-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,139 +22,181 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    header_name:
-        description:
-        - "Specify L7 header name"
-        required: False
-    lid_list:
-        description:
-        - "Field lid_list"
-        required: False
-        suboptions:
-            request_rate_limit:
-                description:
-                - "Request rate limit (Specify request rate limit)"
-            action_value:
-                description:
-                - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the
-          connection when it exceeds limit;"
-            request_per:
-                description:
-                - "Per (Specify interval in number of 100ms)"
-            bw_rate_limit:
-                description:
-                - "Specify bandwidth rate limit (Bandwidth rate limit in bytes)"
-            conn_limit:
-                description:
-                - "Connection limit"
-            log:
-                description:
-                - "Log a message"
-            direct_action_value:
-                description:
-                - "'drop'= drop the packet; 'reset'= Send reset back;"
-            conn_per:
-                description:
-                - "Per (Specify interval in number of 100ms)"
-            direct_fail:
-                description:
-                - "Only log unsuccessful connections"
-            conn_rate_limit:
-                description:
-                - "Specify connection rate limit"
-            direct_pbslb_logging:
-                description:
-                - "Configure PBSLB logging"
-            dns64:
-                description:
-                - "Field dns64"
-            lidnum:
-                description:
-                - "Specify a limit ID"
-            over_limit_action:
-                description:
-                - "Set action when exceeds limit"
-            response_code_rate_limit:
-                description:
-                - "Field response_code_rate_limit"
-            direct_service_group:
-                description:
-                - "Specify a service group (Specify the service group name)"
-            uuid:
-                description:
-                - "uuid of the object"
-            request_limit:
-                description:
-                - "Request limit (Specify request limit)"
-            direct_action_interval:
-                description:
-                - "Specify logging interval in minute (default is 3)"
-            bw_per:
-                description:
-                - "Per (Specify interval in number of 100ms)"
-            interval:
-                description:
-                - "Specify log interval in minutes, by default system will log every over limit
-          instance"
-            user_tag:
-                description:
-                - "Customized tag"
-            direct_action:
-                description:
-                - "Set action when match the lid"
-            lockout:
-                description:
-                - "Don't accept any new connection for certain time (Lockout duration in minutes)"
-            direct_logging_drp_rst:
-                description:
-                - "Configure PBSLB logging"
-            direct_pbslb_interval:
-                description:
-                - "Specify logging interval in minutes(default is 3)"
+        - Key to identify parent object
+        type: str
+        required: True
     name:
         description:
         - "Class list name or geo-location-class-list name"
+        type: str
         required: True
     client_ip_l3_dest:
         description:
         - "Use destination IP as client IP address"
+        type: bool
         required: False
     client_ip_l7_header:
         description:
         - "Use extract client IP address from L7 header"
+        type: bool
+        required: False
+    header_name:
+        description:
+        - "Specify L7 header name"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    lid_list:
+        description:
+        - "Field lid_list"
+        type: list
+        required: False
+        suboptions:
+            lidnum:
+                description:
+                - "Specify a limit ID"
+                type: int
+            conn_limit:
+                description:
+                - "Connection limit"
+                type: int
+            conn_rate_limit:
+                description:
+                - "Specify connection rate limit"
+                type: int
+            conn_per:
+                description:
+                - "Per (Specify interval in number of 100ms)"
+                type: int
+            request_limit:
+                description:
+                - "Request limit (Specify request limit)"
+                type: int
+            request_rate_limit:
+                description:
+                - "Request rate limit (Specify request rate limit)"
+                type: int
+            request_per:
+                description:
+                - "Per (Specify interval in number of 100ms)"
+                type: int
+            bw_rate_limit:
+                description:
+                - "Specify bandwidth rate limit (Bandwidth rate limit in bytes)"
+                type: int
+            bw_per:
+                description:
+                - "Per (Specify interval in number of 100ms)"
+                type: int
+            over_limit_action:
+                description:
+                - "Set action when exceeds limit"
+                type: bool
+            action_value:
+                description:
+                - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the
+          connection when it exceeds limit;"
+                type: str
+            lockout:
+                description:
+                - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+                type: int
+            log:
+                description:
+                - "Log a message"
+                type: bool
+            interval:
+                description:
+                - "Specify log interval in minutes, by default system will log every over limit
+          instance"
+                type: int
+            direct_action:
+                description:
+                - "Set action when match the lid"
+                type: bool
+            direct_service_group:
+                description:
+                - "Specify a service group (Specify the service group name)"
+                type: str
+            direct_pbslb_logging:
+                description:
+                - "Configure PBSLB logging"
+                type: bool
+            direct_pbslb_interval:
+                description:
+                - "Specify logging interval in minutes(default is 3)"
+                type: int
+            direct_fail:
+                description:
+                - "Only log unsuccessful connections"
+                type: bool
+            direct_action_value:
+                description:
+                - "'drop'= drop the packet; 'reset'= Send reset back;"
+                type: str
+            direct_logging_drp_rst:
+                description:
+                - "Configure PBSLB logging"
+                type: bool
+            direct_action_interval:
+                description:
+                - "Specify logging interval in minute (default is 3)"
+                type: int
+            response_code_rate_limit:
+                description:
+                - "Field response_code_rate_limit"
+                type: list
+            dns64:
+                description:
+                - "Field dns64"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -214,114 +254,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'header_name': {
-            'type': 'str',
-        },
-        'lid_list': {
-            'type': 'list',
-            'request_rate_limit': {
-                'type': 'int',
-            },
-            'action_value': {
-                'type': 'str',
-                'choices': ['forward', 'reset']
-            },
-            'request_per': {
-                'type': 'int',
-            },
-            'bw_rate_limit': {
-                'type': 'int',
-            },
-            'conn_limit': {
-                'type': 'int',
-            },
-            'log': {
-                'type': 'bool',
-            },
-            'direct_action_value': {
-                'type': 'str',
-                'choices': ['drop', 'reset']
-            },
-            'conn_per': {
-                'type': 'int',
-            },
-            'direct_fail': {
-                'type': 'bool',
-            },
-            'conn_rate_limit': {
-                'type': 'int',
-            },
-            'direct_pbslb_logging': {
-                'type': 'bool',
-            },
-            'dns64': {
-                'type': 'dict',
-                'prefix': {
-                    'type': 'str',
-                },
-                'exclusive_answer': {
-                    'type': 'bool',
-                },
-                'disable': {
-                    'type': 'bool',
-                }
-            },
-            'lidnum': {
-                'type': 'int',
-                'required': True,
-            },
-            'over_limit_action': {
-                'type': 'bool',
-            },
-            'response_code_rate_limit': {
-                'type': 'list',
-                'threshold': {
-                    'type': 'int',
-                },
-                'code_range_end': {
-                    'type': 'int',
-                },
-                'code_range_start': {
-                    'type': 'int',
-                },
-                'period': {
-                    'type': 'int',
-                }
-            },
-            'direct_service_group': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'request_limit': {
-                'type': 'int',
-            },
-            'direct_action_interval': {
-                'type': 'int',
-            },
-            'bw_per': {
-                'type': 'int',
-            },
-            'interval': {
-                'type': 'int',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'direct_action': {
-                'type': 'bool',
-            },
-            'lockout': {
-                'type': 'int',
-            },
-            'direct_logging_drp_rst': {
-                'type': 'bool',
-            },
-            'direct_pbslb_interval': {
-                'type': 'int',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
@@ -332,8 +264,116 @@ def get_argspec():
         'client_ip_l7_header': {
             'type': 'bool',
         },
+        'header_name': {
+            'type': 'str',
+        },
         'uuid': {
             'type': 'str',
+        },
+        'lid_list': {
+            'type': 'list',
+            'lidnum': {
+                'type': 'int',
+                'required': True,
+            },
+            'conn_limit': {
+                'type': 'int',
+            },
+            'conn_rate_limit': {
+                'type': 'int',
+            },
+            'conn_per': {
+                'type': 'int',
+            },
+            'request_limit': {
+                'type': 'int',
+            },
+            'request_rate_limit': {
+                'type': 'int',
+            },
+            'request_per': {
+                'type': 'int',
+            },
+            'bw_rate_limit': {
+                'type': 'int',
+            },
+            'bw_per': {
+                'type': 'int',
+            },
+            'over_limit_action': {
+                'type': 'bool',
+            },
+            'action_value': {
+                'type': 'str',
+                'choices': ['forward', 'reset']
+            },
+            'lockout': {
+                'type': 'int',
+            },
+            'log': {
+                'type': 'bool',
+            },
+            'interval': {
+                'type': 'int',
+            },
+            'direct_action': {
+                'type': 'bool',
+            },
+            'direct_service_group': {
+                'type': 'str',
+            },
+            'direct_pbslb_logging': {
+                'type': 'bool',
+            },
+            'direct_pbslb_interval': {
+                'type': 'int',
+            },
+            'direct_fail': {
+                'type': 'bool',
+            },
+            'direct_action_value': {
+                'type': 'str',
+                'choices': ['drop', 'reset']
+            },
+            'direct_logging_drp_rst': {
+                'type': 'bool',
+            },
+            'direct_action_interval': {
+                'type': 'int',
+            },
+            'response_code_rate_limit': {
+                'type': 'list',
+                'code_range_start': {
+                    'type': 'int',
+                },
+                'code_range_end': {
+                    'type': 'int',
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'period': {
+                    'type': 'int',
+                }
+            },
+            'dns64': {
+                'type': 'dict',
+                'disable': {
+                    'type': 'bool',
+                },
+                'exclusive_answer': {
+                    'type': 'bool',
+                },
+                'prefix': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
         }
     })
     # Parent keys

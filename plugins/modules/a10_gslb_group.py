@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_group
 description:
     - GSLB Group
-short_description: Configures A10 gslb.group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,108 +22,134 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    config_save:
+    name:
         description:
-        - "Accept config-save message from master"
-        required: False
-    enable:
+        - "Specify Group domain name"
+        type: str
+        required: True
+    auto_map_smart:
         description:
-        - "Join GSLB Group"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    standalone:
-        description:
-        - "Run GSLB Group in standalone mode"
+        - "Choose Best IP address"
+        type: bool
         required: False
     mgmt_interface:
         description:
         - "Management Interface IP Address"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    dns_discover:
-        description:
-        - "Discover member via DNS Protocol"
-        required: False
-    priority:
-        description:
-        - "Specify Local Priority, default is 100"
-        required: False
-    config_anywhere:
-        description:
-        - "Every member can do config"
+        type: bool
         required: False
     data_interface:
         description:
         - "Data Interface IP Address"
+        type: bool
         required: False
     auto_map_primary:
         description:
         - "Primary Controller's IP address"
+        type: bool
+        required: False
+    auto_map_learn:
+        description:
+        - "IP Address learned from other controller"
+        type: bool
+        required: False
+    config_anywhere:
+        description:
+        - "Every member can do config"
+        type: bool
+        required: False
+    config_merge:
+        description:
+        - "Merge old master's config when new one take over"
+        type: bool
+        required: False
+    config_save:
+        description:
+        - "Accept config-save message from master"
+        type: bool
+        required: False
+    dns_discover:
+        description:
+        - "Discover member via DNS Protocol"
+        type: bool
+        required: False
+    enable:
+        description:
+        - "Join GSLB Group"
+        type: bool
         required: False
     learn:
         description:
         - "Learn neighbour information from other controllers"
+        type: bool
         required: False
     primary_list:
         description:
         - "Field primary_list"
+        type: list
         required: False
         suboptions:
             primary:
                 description:
                 - "Specify Primary controller's IP address"
-    auto_map_learn:
+                type: str
+    priority:
         description:
-        - "IP Address learned from other controller"
+        - "Specify Local Priority, default is 100"
+        type: int
         required: False
     suffix:
         description:
         - "Set DNS Suffix (Name)"
+        type: str
         required: False
-    config_merge:
+    standalone:
         description:
-        - "Merge old master's config when new one take over"
+        - "Run GSLB Group in standalone mode"
+        type: bool
         required: False
-    auto_map_smart:
+    uuid:
         description:
-        - "Choose Best IP address"
+        - "uuid of the object"
+        type: str
         required: False
-    name:
+    user_tag:
         description:
-        - "Specify Group domain name"
-        required: True
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -195,37 +219,38 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'config_save': {
-            'type': 'bool',
-        },
-        'enable': {
-            'type': 'bool',
-        },
-        'uuid': {
+        'name': {
             'type': 'str',
+            'required': True,
         },
-        'standalone': {
+        'auto_map_smart': {
             'type': 'bool',
         },
         'mgmt_interface': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'dns_discover': {
-            'type': 'bool',
-        },
-        'priority': {
-            'type': 'int',
-        },
-        'config_anywhere': {
             'type': 'bool',
         },
         'data_interface': {
             'type': 'bool',
         },
         'auto_map_primary': {
+            'type': 'bool',
+        },
+        'auto_map_learn': {
+            'type': 'bool',
+        },
+        'config_anywhere': {
+            'type': 'bool',
+        },
+        'config_merge': {
+            'type': 'bool',
+        },
+        'config_save': {
+            'type': 'bool',
+        },
+        'dns_discover': {
+            'type': 'bool',
+        },
+        'enable': {
             'type': 'bool',
         },
         'learn': {
@@ -237,21 +262,20 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'auto_map_learn': {
-            'type': 'bool',
+        'priority': {
+            'type': 'int',
         },
         'suffix': {
             'type': 'str',
         },
-        'config_merge': {
+        'standalone': {
             'type': 'bool',
         },
-        'auto_map_smart': {
-            'type': 'bool',
-        },
-        'name': {
+        'uuid': {
             'type': 'str',
-            'required': True,
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

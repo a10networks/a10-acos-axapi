@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_service_group
 description:
     - Specify GSLB Service Group
-short_description: Configures A10 gslb.service-group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,101 +22,126 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            total_sessions:
-                description:
-                - "Field total_sessions"
-            service_group_name:
-                description:
-                - "Specify Service Group name"
-            session_list:
-                description:
-                - "Field session_list"
-            matched:
-                description:
-                - "Field matched"
     service_group_name:
         description:
         - "Specify Service Group name"
+        type: str
         required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    dependency_site:
-        description:
-        - "Dependency on site"
-        required: False
-    disable_site_list:
-        description:
-        - "Field disable_site_list"
-        required: False
-        suboptions:
-            disable_site:
-                description:
-                - "Site name"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    persistent_mask:
-        description:
-        - "Specify IP mask, default is /32"
-        required: False
     member:
         description:
         - "Field member"
+        type: list
         required: False
         suboptions:
             member_name:
                 description:
                 - "Service name"
+                type: str
     disable:
         description:
         - "Disable all members"
+        type: bool
         required: False
-    persistent_ipv6_mask:
+    disable_site_list:
         description:
-        - "Specify IPv6 mask length, default is 128"
+        - "Field disable_site_list"
+        type: list
         required: False
-    persistent_aging_time:
+        suboptions:
+            disable_site:
+                description:
+                - "Site name"
+                type: str
+    dependency_site:
         description:
-        - "Specify aging-time, unit= min, default is 5 (Aging time)"
+        - "Dependency on site"
+        type: bool
         required: False
     persistent_site:
         description:
         - "Persistent based on site"
+        type: bool
         required: False
+    persistent_mask:
+        description:
+        - "Specify IP mask, default is /32"
+        type: str
+        required: False
+    persistent_ipv6_mask:
+        description:
+        - "Specify IPv6 mask length, default is 128"
+        type: int
+        required: False
+    persistent_aging_time:
+        description:
+        - "Specify aging-time, unit= min, default is 5 (Aging time)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            session_list:
+                description:
+                - "Field session_list"
+                type: list
+            matched:
+                description:
+                - "Field matched"
+                type: int
+            total_sessions:
+                description:
+                - "Field total_sessions"
+                type: int
+            service_group_name:
+                description:
+                - "Specify Service Group name"
+                type: str
 
 '''
 
@@ -182,67 +205,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'total_sessions': {
-                'type': 'int',
-            },
-            'service_group_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'session_list': {
-                'type': 'list',
-                'aging': {
-                    'type': 'int',
-                },
-                'hits': {
-                    'type': 'int',
-                },
-                'update': {
-                    'type': 'int',
-                },
-                'client': {
-                    'type': 'str',
-                },
-                'last_second_hits': {
-                    'type': 'int',
-                },
-                'mode': {
-                    'type': 'str',
-                },
-                'ttl': {
-                    'type': 'str',
-                },
-                'best': {
-                    'type': 'str',
-                }
-            },
-            'matched': {
-                'type': 'int',
-            }
-        },
         'service_group_name': {
             'type': 'str',
             'required': True,
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'dependency_site': {
-            'type': 'bool',
-        },
-        'disable_site_list': {
-            'type': 'list',
-            'disable_site': {
-                'type': 'str',
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'persistent_mask': {
-            'type': 'str',
         },
         'member': {
             'type': 'list',
@@ -253,14 +218,72 @@ def get_argspec():
         'disable': {
             'type': 'bool',
         },
+        'disable_site_list': {
+            'type': 'list',
+            'disable_site': {
+                'type': 'str',
+            }
+        },
+        'dependency_site': {
+            'type': 'bool',
+        },
+        'persistent_site': {
+            'type': 'bool',
+        },
+        'persistent_mask': {
+            'type': 'str',
+        },
         'persistent_ipv6_mask': {
             'type': 'int',
         },
         'persistent_aging_time': {
             'type': 'int',
         },
-        'persistent_site': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'oper': {
+            'type': 'dict',
+            'session_list': {
+                'type': 'list',
+                'client': {
+                    'type': 'str',
+                },
+                'best': {
+                    'type': 'str',
+                },
+                'mode': {
+                    'type': 'str',
+                },
+                'hits': {
+                    'type': 'int',
+                },
+                'last_second_hits': {
+                    'type': 'int',
+                },
+                'ttl': {
+                    'type': 'str',
+                },
+                'update': {
+                    'type': 'int',
+                },
+                'aging': {
+                    'type': 'int',
+                }
+            },
+            'matched': {
+                'type': 'int',
+            },
+            'total_sessions': {
+                'type': 'int',
+            },
+            'service_group_name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

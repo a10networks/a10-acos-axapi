@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_default
 description:
     - Default
-short_description: Configures A10 vpn.default
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,125 +22,162 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            ike_local_address:
-                description:
-                - "Field ike_local_address"
             ike_version:
                 description:
                 - "Field ike_version"
-            IPsec_remote_subnet:
-                description:
-                - "Field IPsec_remote_subnet"
-            IPsec_mode:
-                description:
-                - "Field IPsec_mode"
-            ike_nat_traversal:
-                description:
-                - "Field ike_nat_traversal"
-            ike_dpd_interval:
-                description:
-                - "Field ike_dpd_interval"
-            IPsec_priority:
-                description:
-                - "Field IPsec_priority"
-            IPsec_traffic_selector:
-                description:
-                - "Field IPsec_traffic_selector"
-            ike_encryption:
-                description:
-                - "Field ike_encryption"
-            IPsec_remote_port:
-                description:
-                - "Field IPsec_remote_port"
-            IPsec_hash:
-                description:
-                - "Field IPsec_hash"
-            IPsec_protocol:
-                description:
-                - "Field IPsec_protocol"
-            ike_priority:
-                description:
-                - "Field ike_priority"
-            ike_hash:
-                description:
-                - "Field ike_hash"
-            IPsec_remote_protocol:
-                description:
-                - "Field IPsec_remote_protocol"
-            ike_remote_address:
-                description:
-                - "Field ike_remote_address"
-            ike_dh_group:
-                description:
-                - "Field ike_dh_group"
-            ike_auth_method:
-                description:
-                - "Field ike_auth_method"
-            IPsec_anti_replay_window:
-                description:
-                - "Field IPsec_anti_replay_window"
-            ike_lifetime:
-                description:
-                - "Field ike_lifetime"
-            IPsec_lifetime:
-                description:
-                - "Field IPsec_lifetime"
-            IPsec_local_protocol:
-                description:
-                - "Field IPsec_local_protocol"
-            IPsec_local_port:
-                description:
-                - "Field IPsec_local_port"
-            IPsec_lifebytes:
-                description:
-                - "Field IPsec_lifebytes"
-            IPsec_encryption:
-                description:
-                - "Field IPsec_encryption"
-            IPsec_local_subnet:
-                description:
-                - "Field IPsec_local_subnet"
-            IPsec_dh_group:
-                description:
-                - "Field IPsec_dh_group"
+                type: str
             ike_mode:
                 description:
                 - "Field ike_mode"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ike_dh_group:
+                description:
+                - "Field ike_dh_group"
+                type: str
+            ike_auth_method:
+                description:
+                - "Field ike_auth_method"
+                type: str
+            ike_encryption:
+                description:
+                - "Field ike_encryption"
+                type: str
+            ike_hash:
+                description:
+                - "Field ike_hash"
+                type: str
+            ike_priority:
+                description:
+                - "Field ike_priority"
+                type: int
+            ike_lifetime:
+                description:
+                - "Field ike_lifetime"
+                type: int
+            ike_nat_traversal:
+                description:
+                - "Field ike_nat_traversal"
+                type: str
+            ike_local_address:
+                description:
+                - "Field ike_local_address"
+                type: str
+            ike_remote_address:
+                description:
+                - "Field ike_remote_address"
+                type: str
+            ike_dpd_interval:
+                description:
+                - "Field ike_dpd_interval"
+                type: int
+            IPsec_mode:
+                description:
+                - "Field IPsec_mode"
+                type: str
+            IPsec_protocol:
+                description:
+                - "Field IPsec_protocol"
+                type: str
+            IPsec_dh_group:
+                description:
+                - "Field IPsec_dh_group"
+                type: str
+            IPsec_encryption:
+                description:
+                - "Field IPsec_encryption"
+                type: str
+            IPsec_hash:
+                description:
+                - "Field IPsec_hash"
+                type: str
+            IPsec_priority:
+                description:
+                - "Field IPsec_priority"
+                type: int
+            IPsec_lifetime:
+                description:
+                - "Field IPsec_lifetime"
+                type: int
+            IPsec_lifebytes:
+                description:
+                - "Field IPsec_lifebytes"
+                type: int
+            IPsec_traffic_selector:
+                description:
+                - "Field IPsec_traffic_selector"
+                type: str
+            IPsec_local_subnet:
+                description:
+                - "Field IPsec_local_subnet"
+                type: str
+            IPsec_local_port:
+                description:
+                - "Field IPsec_local_port"
+                type: int
+            IPsec_local_protocol:
+                description:
+                - "Field IPsec_local_protocol"
+                type: int
+            IPsec_remote_subnet:
+                description:
+                - "Field IPsec_remote_subnet"
+                type: str
+            IPsec_remote_port:
+                description:
+                - "Field IPsec_remote_port"
+                type: int
+            IPsec_remote_protocol:
+                description:
+                - "Field IPsec_remote_protocol"
+                type: int
+            IPsec_anti_replay_window:
+                description:
+                - "Field IPsec_anti_replay_window"
+                type: int
 
 '''
 
@@ -196,54 +231,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'ike_local_address': {
-                'type': 'str',
-            },
             'ike_version': {
                 'type': 'str',
             },
-            'IPsec_remote_subnet': {
-                'type': 'str',
-            },
-            'IPsec_mode': {
-                'type': 'str',
-            },
-            'ike_nat_traversal': {
-                'type': 'str',
-            },
-            'ike_dpd_interval': {
-                'type': 'int',
-            },
-            'IPsec_priority': {
-                'type': 'int',
-            },
-            'IPsec_traffic_selector': {
-                'type': 'str',
-            },
-            'ike_encryption': {
-                'type': 'str',
-            },
-            'IPsec_remote_port': {
-                'type': 'int',
-            },
-            'IPsec_hash': {
-                'type': 'str',
-            },
-            'IPsec_protocol': {
-                'type': 'str',
-            },
-            'ike_priority': {
-                'type': 'int',
-            },
-            'ike_hash': {
-                'type': 'str',
-            },
-            'IPsec_remote_protocol': {
-                'type': 'int',
-            },
-            'ike_remote_address': {
+            'ike_mode': {
                 'type': 'str',
             },
             'ike_dh_group': {
@@ -252,39 +248,78 @@ def get_argspec():
             'ike_auth_method': {
                 'type': 'str',
             },
-            'IPsec_anti_replay_window': {
+            'ike_encryption': {
+                'type': 'str',
+            },
+            'ike_hash': {
+                'type': 'str',
+            },
+            'ike_priority': {
                 'type': 'int',
             },
             'ike_lifetime': {
                 'type': 'int',
             },
-            'IPsec_lifetime': {
-                'type': 'int',
-            },
-            'IPsec_local_protocol': {
-                'type': 'int',
-            },
-            'IPsec_local_port': {
-                'type': 'int',
-            },
-            'IPsec_lifebytes': {
-                'type': 'int',
-            },
-            'IPsec_encryption': {
+            'ike_nat_traversal': {
                 'type': 'str',
             },
-            'IPsec_local_subnet': {
+            'ike_local_address': {
+                'type': 'str',
+            },
+            'ike_remote_address': {
+                'type': 'str',
+            },
+            'ike_dpd_interval': {
+                'type': 'int',
+            },
+            'IPsec_mode': {
+                'type': 'str',
+            },
+            'IPsec_protocol': {
                 'type': 'str',
             },
             'IPsec_dh_group': {
                 'type': 'str',
             },
-            'ike_mode': {
+            'IPsec_encryption': {
                 'type': 'str',
+            },
+            'IPsec_hash': {
+                'type': 'str',
+            },
+            'IPsec_priority': {
+                'type': 'int',
+            },
+            'IPsec_lifetime': {
+                'type': 'int',
+            },
+            'IPsec_lifebytes': {
+                'type': 'int',
+            },
+            'IPsec_traffic_selector': {
+                'type': 'str',
+            },
+            'IPsec_local_subnet': {
+                'type': 'str',
+            },
+            'IPsec_local_port': {
+                'type': 'int',
+            },
+            'IPsec_local_protocol': {
+                'type': 'int',
+            },
+            'IPsec_remote_subnet': {
+                'type': 'str',
+            },
+            'IPsec_remote_port': {
+                'type': 'int',
+            },
+            'IPsec_remote_protocol': {
+                'type': 'int',
+            },
+            'IPsec_anti_replay_window': {
+                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

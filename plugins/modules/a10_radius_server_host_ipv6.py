@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_radius_server_host_ipv6
 description:
     - Specify the hostname of RADIUS server
-short_description: Configures A10 radius-server.host.ipv6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,54 +22,67 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    ipv6_addr:
+        description:
+        - "IPV6 address of RADIUS server"
+        type: str
+        required: True
     secret:
         description:
         - "Field secret"
+        type: dict
         required: False
         suboptions:
-            port_cfg:
+            secret_value:
                 description:
-                - "Field port_cfg"
+                - "The RADIUS server's secret"
+                type: str
             encrypted:
                 description:
                 - " Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
-            secret_value:
+                type: str
+            port_cfg:
                 description:
-                - "The RADIUS server's secret"
-    ipv6_addr:
-        description:
-        - "IPV6 address of RADIUS server"
-        required: True
+                - "Field port_cfg"
+                type: dict
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -127,10 +138,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ipv6_addr': {
+            'type': 'str',
+            'required': True,
+        },
         'secret': {
             'type': 'dict',
+            'secret_value': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            },
             'port_cfg': {
                 'type': 'dict',
+                'auth_port': {
+                    'type': 'int',
+                },
                 'acct_port': {
                     'type': 'int',
                 },
@@ -139,21 +163,8 @@ def get_argspec():
                 },
                 'timeout': {
                     'type': 'int',
-                },
-                'auth_port': {
-                    'type': 'int',
                 }
-            },
-            'encrypted': {
-                'type': 'str',
-            },
-            'secret_value': {
-                'type': 'str',
             }
-        },
-        'ipv6_addr': {
-            'type': 'str',
-            'required': True,
         },
         'uuid': {
             'type': 'str',

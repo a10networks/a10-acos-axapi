@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_logon_form_based
 description:
     - Form-based Authentication Logon
-short_description: Configures A10 aam.authentication.logon.form-based
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,176 +22,223 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    name:
+        description:
+        - "Specify form-based authentication logon name"
+        type: str
+        required: True
+    portal:
+        description:
+        - "Field portal"
+        type: dict
+        required: False
+        suboptions:
+            default_portal:
+                description:
+                - "Use default portal"
+                type: bool
+            portal_name:
+                description:
+                - "Specify portal name"
+                type: str
+            logon:
+                description:
+                - "Specify logon page name"
+                type: str
+            failpage:
+                description:
+                - "Specify logon fail page name (portal fail page name)"
+                type: str
+            changepasswordpage:
+                description:
+                - "Specify change password page name"
+                type: str
+            notifychangepasswordpage:
+                description:
+                - "Specify change password notification page name"
+                type: str
+            challenge_page:
+                description:
+                - "Specify challenge page name for RSA-RADIUS"
+                type: str
+            new_pin_page:
+                description:
+                - "Specify new PIN page name for RSA-RADIUS"
+                type: str
+            next_token_page:
+                description:
+                - "Specify next token page name for RSA-RADIUS"
+                type: str
     logon_page_cfg:
         description:
         - "Field logon_page_cfg"
+        type: dict
         required: False
         suboptions:
             action_url:
                 description:
                 - "Specify form submission action url"
+                type: str
             username_variable:
                 description:
                 - "Specify username variable name in form submission"
+                type: str
+            password_variable:
+                description:
+                - "Specify password variable name in form submission"
+                type: str
+            passcode_variable:
+                description:
+                - "Specify passcode variable name in form submission"
+                type: str
             login_failure_message:
                 description:
                 - "Specify login failure message shown in logon page (Specify error string,
           default is 'Invalid username or password. Please try again.')"
-            passcode_variable:
-                description:
-                - "Specify passcode variable name in form submission"
-            disable_change_password_link:
-                description:
-                - "Don't display change password link on logon page forcibly even backend
-          authentication server supports it (LDAP or Kerberos)"
-            password_variable:
-                description:
-                - "Specify password variable name in form submission"
+                type: str
             authz_failure_message:
                 description:
                 - "Specify authorization failure message shown in logon page (Specify error
           string, default is 'Authorization failed. Please contact your system
           administrator.')"
-    retry:
+                type: str
+            disable_change_password_link:
+                description:
+                - "Don't display change password link on logon page forcibly even backend
+          authentication server supports it (LDAP or Kerberos)"
+                type: bool
+    cp_page_cfg:
         description:
-        - "Maximum number of consecutive failed logon attempts (default 3)"
+        - "Field cp_page_cfg"
+        type: dict
         required: False
-    name:
-        description:
-        - "Specify form-based authentication logon name"
-        required: True
-    next_token_variable:
-        description:
-        - "Specify next-token variable name in form submission"
-        required: False
-    challenge_variable:
-        description:
-        - "Specify challenge variable name in form submission"
-        required: False
+        suboptions:
+            changepassword_url:
+                description:
+                - "Specify changepassword form submission action url (changepassword action url)"
+                type: str
+            cp_user_enum:
+                description:
+                - "'changepassword-username-variable'= Specify username variable name in form
+          submission;"
+                type: str
+            cp_user_var:
+                description:
+                - "Specify username variable name"
+                type: str
+            cp_old_pwd_enum:
+                description:
+                - "'changepassword-old-password-variable'= Specify old password variable name in
+          form submission;"
+                type: str
+            cp_old_pwd_var:
+                description:
+                - "Specify old password variable name"
+                type: str
+            cp_new_pwd_enum:
+                description:
+                - "'changepassword-new-password-variable'= Specify new password variable name in
+          form submission;"
+                type: str
+            cp_new_pwd_var:
+                description:
+                - "Specify new password variable name"
+                type: str
+            cp_cfm_pwd_enum:
+                description:
+                - "'changepassword-password-confirm-variable'= Specify password confirm variable
+          name in form submission;"
+                type: str
+            cp_cfm_pwd_var:
+                description:
+                - "Specify password confirm variable name"
+                type: str
     notify_cp_page_cfg:
         description:
         - "Field notify_cp_page_cfg"
+        type: dict
         required: False
         suboptions:
             notifychangepassword_change_url:
                 description:
                 - "Specify change password action url for notifychangepassword form"
+                type: str
             notifychangepassword_continue_url:
                 description:
                 - "Specify continue action url for notifychangepassword form"
+                type: str
+    challenge_variable:
+        description:
+        - "Specify challenge variable name in form submission"
+        type: str
+        required: False
     new_pin_variable:
         description:
         - "Specify new-pin variable name in form submission"
+        type: str
         required: False
-    portal:
+    next_token_variable:
         description:
-        - "Field portal"
+        - "Specify next-token variable name in form submission"
+        type: str
         required: False
-        suboptions:
-            new_pin_page:
-                description:
-                - "Specify new PIN page name for RSA-RADIUS"
-            challenge_page:
-                description:
-                - "Specify challenge page name for RSA-RADIUS"
-            portal_name:
-                description:
-                - "Specify portal name"
-            logon:
-                description:
-                - "Specify logon page name"
-            next_token_page:
-                description:
-                - "Specify next token page name for RSA-RADIUS"
-            notifychangepasswordpage:
-                description:
-                - "Specify change password notification page name"
-            failpage:
-                description:
-                - "Specify logon fail page name (portal fail page name)"
-            changepasswordpage:
-                description:
-                - "Specify change password page name"
-            default_portal:
-                description:
-                - "Use default portal"
-    user_tag:
+    retry:
         description:
-        - "Customized tag"
+        - "Maximum number of consecutive failed logon attempts (default 3)"
+        type: int
         required: False
     account_lock:
         description:
         - "Lock the account when the failed logon attempts is exceeded"
+        type: bool
         required: False
     duration:
         description:
         - "The time an account remains locked in seconds (default 1800)"
+        type: int
         required: False
-    cp_page_cfg:
-        description:
-        - "Field cp_page_cfg"
-        required: False
-        suboptions:
-            cp_cfm_pwd_var:
-                description:
-                - "Specify password confirm variable name"
-            cp_new_pwd_var:
-                description:
-                - "Specify new password variable name"
-            changepassword_url:
-                description:
-                - "Specify changepassword form submission action url (changepassword action url)"
-            cp_cfm_pwd_enum:
-                description:
-                - "'changepassword-password-confirm-variable'= Specify password confirm variable
-          name in form submission;"
-            cp_new_pwd_enum:
-                description:
-                - "'changepassword-new-password-variable'= Specify new password variable name in
-          form submission;"
-            cp_old_pwd_enum:
-                description:
-                - "'changepassword-old-password-variable'= Specify old password variable name in
-          form submission;"
-            cp_user_var:
-                description:
-                - "Specify username variable name"
-            cp_old_pwd_var:
-                description:
-                - "Specify old password variable name"
-            cp_user_enum:
-                description:
-                - "'changepassword-username-variable'= Specify username variable name in form
-          submission;"
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -259,6 +304,40 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'portal': {
+            'type': 'dict',
+            'default_portal': {
+                'type': 'bool',
+            },
+            'portal_name': {
+                'type': 'str',
+            },
+            'logon': {
+                'type': 'str',
+            },
+            'failpage': {
+                'type': 'str',
+            },
+            'changepasswordpage': {
+                'type': 'str',
+            },
+            'notifychangepasswordpage': {
+                'type': 'str',
+            },
+            'challenge_page': {
+                'type': 'str',
+            },
+            'new_pin_page': {
+                'type': 'str',
+            },
+            'next_token_page': {
+                'type': 'str',
+            }
+        },
         'logon_page_cfg': {
             'type': 'dict',
             'action_url': {
@@ -267,34 +346,55 @@ def get_argspec():
             'username_variable': {
                 'type': 'str',
             },
-            'login_failure_message': {
+            'password_variable': {
                 'type': 'str',
             },
             'passcode_variable': {
                 'type': 'str',
             },
-            'disable_change_password_link': {
-                'type': 'bool',
-            },
-            'password_variable': {
+            'login_failure_message': {
                 'type': 'str',
             },
             'authz_failure_message': {
                 'type': 'str',
+            },
+            'disable_change_password_link': {
+                'type': 'bool',
             }
         },
-        'retry': {
-            'type': 'int',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'next_token_variable': {
-            'type': 'str',
-        },
-        'challenge_variable': {
-            'type': 'str',
+        'cp_page_cfg': {
+            'type': 'dict',
+            'changepassword_url': {
+                'type': 'str',
+            },
+            'cp_user_enum': {
+                'type': 'str',
+                'choices': ['changepassword-username-variable']
+            },
+            'cp_user_var': {
+                'type': 'str',
+            },
+            'cp_old_pwd_enum': {
+                'type': 'str',
+                'choices': ['changepassword-old-password-variable']
+            },
+            'cp_old_pwd_var': {
+                'type': 'str',
+            },
+            'cp_new_pwd_enum': {
+                'type': 'str',
+                'choices': ['changepassword-new-password-variable']
+            },
+            'cp_new_pwd_var': {
+                'type': 'str',
+            },
+            'cp_cfm_pwd_enum': {
+                'type': 'str',
+                'choices': ['changepassword-password-confirm-variable']
+            },
+            'cp_cfm_pwd_var': {
+                'type': 'str',
+            }
         },
         'notify_cp_page_cfg': {
             'type': 'dict',
@@ -305,41 +405,17 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'challenge_variable': {
+            'type': 'str',
+        },
         'new_pin_variable': {
             'type': 'str',
         },
-        'portal': {
-            'type': 'dict',
-            'new_pin_page': {
-                'type': 'str',
-            },
-            'challenge_page': {
-                'type': 'str',
-            },
-            'portal_name': {
-                'type': 'str',
-            },
-            'logon': {
-                'type': 'str',
-            },
-            'next_token_page': {
-                'type': 'str',
-            },
-            'notifychangepasswordpage': {
-                'type': 'str',
-            },
-            'failpage': {
-                'type': 'str',
-            },
-            'changepasswordpage': {
-                'type': 'str',
-            },
-            'default_portal': {
-                'type': 'bool',
-            }
-        },
-        'user_tag': {
+        'next_token_variable': {
             'type': 'str',
+        },
+        'retry': {
+            'type': 'int',
         },
         'account_lock': {
             'type': 'bool',
@@ -347,41 +423,10 @@ def get_argspec():
         'duration': {
             'type': 'int',
         },
-        'cp_page_cfg': {
-            'type': 'dict',
-            'cp_cfm_pwd_var': {
-                'type': 'str',
-            },
-            'cp_new_pwd_var': {
-                'type': 'str',
-            },
-            'changepassword_url': {
-                'type': 'str',
-            },
-            'cp_cfm_pwd_enum': {
-                'type': 'str',
-                'choices': ['changepassword-password-confirm-variable']
-            },
-            'cp_new_pwd_enum': {
-                'type': 'str',
-                'choices': ['changepassword-new-password-variable']
-            },
-            'cp_old_pwd_enum': {
-                'type': 'str',
-                'choices': ['changepassword-old-password-variable']
-            },
-            'cp_user_var': {
-                'type': 'str',
-            },
-            'cp_old_pwd_var': {
-                'type': 'str',
-            },
-            'cp_user_enum': {
-                'type': 'str',
-                'choices': ['changepassword-username-variable']
-            }
-        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

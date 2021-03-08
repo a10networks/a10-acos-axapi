@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_tunnel_ipv6
 description:
     - Global IPv6 configuration subcommands
-short_description: Configures A10 interface.tunnel.ipv6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,106 +22,137 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     tunnel_ifnum:
         description:
-        - Key to identify parent object    router:
+        - Key to identify parent object
+        type: str
+        required: True
+    address_cfg:
+        description:
+        - "Field address_cfg"
+        type: list
+        required: False
+        suboptions:
+            ipv6_addr:
+                description:
+                - "Set the IPv6 address of an interface"
+                type: str
+            address_type:
+                description:
+                - "'anycast'= Configure an IPv6 anycast address; 'link-local'= Configure an IPv6
+          link local address;"
+                type: str
+    ipv6_enable:
+        description:
+        - "Enable IPv6 processing"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    router:
         description:
         - "Field router"
+        type: dict
         required: False
         suboptions:
             ripng:
                 description:
                 - "Field ripng"
+                type: dict
             ospf:
                 description:
                 - "Field ospf"
-    address_cfg:
-        description:
-        - "Field address_cfg"
-        required: False
-        suboptions:
-            address_type:
-                description:
-                - "'anycast'= Configure an IPv6 anycast address; 'link-local'= Configure an IPv6
-          link local address;"
-            ipv6_addr:
-                description:
-                - "Set the IPv6 address of an interface"
+                type: dict
     ospf:
         description:
         - "Field ospf"
+        type: dict
         required: False
         suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            bfd:
-                description:
-                - "Bidirectional Forwarding Detection (BFD)"
-            cost_cfg:
-                description:
-                - "Field cost_cfg"
-            priority_cfg:
-                description:
-                - "Field priority_cfg"
-            hello_interval_cfg:
-                description:
-                - "Field hello_interval_cfg"
-            mtu_ignore_cfg:
-                description:
-                - "Field mtu_ignore_cfg"
-            retransmit_interval_cfg:
-                description:
-                - "Field retransmit_interval_cfg"
-            disable:
-                description:
-                - "Disable BFD"
-            transmit_delay_cfg:
-                description:
-                - "Field transmit_delay_cfg"
-            neighbor_cfg:
-                description:
-                - "Field neighbor_cfg"
             network_list:
                 description:
                 - "Field network_list"
+                type: list
+            bfd:
+                description:
+                - "Bidirectional Forwarding Detection (BFD)"
+                type: bool
+            disable:
+                description:
+                - "Disable BFD"
+                type: bool
+            cost_cfg:
+                description:
+                - "Field cost_cfg"
+                type: list
             dead_interval_cfg:
                 description:
                 - "Field dead_interval_cfg"
-    ipv6_enable:
-        description:
-        - "Enable IPv6 processing"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
+            hello_interval_cfg:
+                description:
+                - "Field hello_interval_cfg"
+                type: list
+            mtu_ignore_cfg:
+                description:
+                - "Field mtu_ignore_cfg"
+                type: list
+            neighbor_cfg:
+                description:
+                - "Field neighbor_cfg"
+                type: list
+            priority_cfg:
+                description:
+                - "Field priority_cfg"
+                type: list
+            retransmit_interval_cfg:
+                description:
+                - "Field retransmit_interval_cfg"
+                type: list
+            transmit_delay_cfg:
+                description:
+                - "Field transmit_delay_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -180,21 +209,40 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'address_cfg': {
+            'type': 'list',
+            'ipv6_addr': {
+                'type': 'str',
+            },
+            'address_type': {
+                'type': 'str',
+                'choices': ['anycast', 'link-local']
+            }
+        },
+        'ipv6_enable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'router': {
             'type': 'dict',
             'ripng': {
                 'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
                 'rip': {
                     'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
                 }
             },
             'ospf': {
                 'type': 'dict',
                 'area_list': {
                     'type': 'list',
+                    'area_id_num': {
+                        'type': 'int',
+                    },
                     'area_id_addr': {
                         'type': 'str',
                     },
@@ -203,9 +251,6 @@ def get_argspec():
                     },
                     'instance_id': {
                         'type': 'int',
-                    },
-                    'area_id_num': {
-                        'type': 'int',
                     }
                 },
                 'uuid': {
@@ -213,22 +258,29 @@ def get_argspec():
                 }
             }
         },
-        'address_cfg': {
-            'type': 'list',
-            'address_type': {
-                'type': 'str',
-                'choices': ['anycast', 'link-local']
-            },
-            'ipv6_addr': {
-                'type': 'str',
-            }
-        },
         'ospf': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
+            'network_list': {
+                'type': 'list',
+                'broadcast_type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'broadcast', 'non-broadcast', 'point-to-point',
+                        'point-to-multipoint'
+                    ]
+                },
+                'p2mp_nbma': {
+                    'type': 'bool',
+                },
+                'network_instance_id': {
+                    'type': 'int',
+                }
             },
             'bfd': {
+                'type': 'bool',
+            },
+            'disable': {
                 'type': 'bool',
             },
             'cost_cfg': {
@@ -240,9 +292,9 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'priority_cfg': {
+            'dead_interval_cfg': {
                 'type': 'list',
-                'priority': {
+                'dead_interval': {
                     'type': 'int',
                 },
                 'instance_id': {
@@ -267,6 +319,33 @@ def get_argspec():
                     'type': 'int',
                 }
             },
+            'neighbor_cfg': {
+                'type': 'list',
+                'neighbor': {
+                    'type': 'str',
+                },
+                'neig_inst': {
+                    'type': 'int',
+                },
+                'neighbor_cost': {
+                    'type': 'int',
+                },
+                'neighbor_poll_interval': {
+                    'type': 'int',
+                },
+                'neighbor_priority': {
+                    'type': 'int',
+                }
+            },
+            'priority_cfg': {
+                'type': 'list',
+                'priority': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
             'retransmit_interval_cfg': {
                 'type': 'list',
                 'retransmit_interval': {
@@ -275,9 +354,6 @@ def get_argspec():
                 'instance_id': {
                     'type': 'int',
                 }
-            },
-            'disable': {
-                'type': 'bool',
             },
             'transmit_delay_cfg': {
                 'type': 'list',
@@ -288,56 +364,9 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'neighbor_cfg': {
-                'type': 'list',
-                'neighbor_priority': {
-                    'type': 'int',
-                },
-                'neighbor_poll_interval': {
-                    'type': 'int',
-                },
-                'neig_inst': {
-                    'type': 'int',
-                },
-                'neighbor': {
-                    'type': 'str',
-                },
-                'neighbor_cost': {
-                    'type': 'int',
-                }
-            },
-            'network_list': {
-                'type': 'list',
-                'broadcast_type': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'broadcast', 'non-broadcast', 'point-to-point',
-                        'point-to-multipoint'
-                    ]
-                },
-                'p2mp_nbma': {
-                    'type': 'bool',
-                },
-                'network_instance_id': {
-                    'type': 'int',
-                }
-            },
-            'dead_interval_cfg': {
-                'type': 'list',
-                'dead_interval': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'ipv6_enable': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

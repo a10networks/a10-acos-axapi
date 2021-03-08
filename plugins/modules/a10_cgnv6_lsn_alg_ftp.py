@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_ftp
 description:
     - Change LSN FTP ALG Settings
-short_description: Configures A10 cgnv6.lsn.alg.ftp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    ftp_value:
+        description:
+        - "'disable'= Disable FTP ALG for LSN;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -69,37 +85,37 @@ options:
           failure'= Port Helper Creation Failure; 'pasv-helper-creation-failure'= Passive
           Helper Creation Failure; 'get-conn-ext-failure'= Get Conn Extension Failure;
           'smp-app-type-mismatch'= SMP ALG App Type Mismatch;"
-    ftp_value:
-        description:
-        - "'disable'= Disable FTP ALG for LSN;"
-        required: False
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            lpsv_replies:
-                description:
-                - "LPSV Replies From Server"
             port_requests:
                 description:
                 - "PORT Requests From Client"
+                type: str
             eprt_requests:
                 description:
                 - "EPRT Requests From Client"
-            pasv_replies:
-                description:
-                - "PASV Replies From Server"
-            epsv_replies:
-                description:
-                - "EPSV Replies From Server"
+                type: str
             lprt_requests:
                 description:
                 - "LPRT Requests From Client"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            pasv_replies:
+                description:
+                - "PASV Replies From Server"
+                type: str
+            epsv_replies:
+                description:
+                - "EPSV Replies From Server"
+                type: str
+            lpsv_replies:
+                description:
+                - "LPSV Replies From Server"
+                type: str
 
 '''
 
@@ -155,6 +171,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ftp_value': {
+            'type': 'str',
+            'choices': ['disable']
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -173,19 +196,15 @@ def get_argspec():
                 ]
             }
         },
-        'ftp_value': {
-            'type': 'str',
-            'choices': ['disable']
-        },
         'stats': {
             'type': 'dict',
-            'lpsv_replies': {
-                'type': 'str',
-            },
             'port_requests': {
                 'type': 'str',
             },
             'eprt_requests': {
+                'type': 'str',
+            },
+            'lprt_requests': {
                 'type': 'str',
             },
             'pasv_replies': {
@@ -194,12 +213,9 @@ def get_argspec():
             'epsv_replies': {
                 'type': 'str',
             },
-            'lprt_requests': {
+            'lpsv_replies': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

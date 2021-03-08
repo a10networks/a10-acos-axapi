@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_global
 description:
     - sFlow global
-short_description: Configures A10 sflow.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,43 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            if_stats_list:
-                description:
-                - "Field if_stats_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -68,24 +71,35 @@ options:
                 - "'all'= all; 'total-packet-sample-records'= Total packet sample records; 'total-
           counter-sample-records'= Total counter sample records; 'total-sflow-packets-
           sent'= Total sflow packets sent;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            if_stats_list:
+                description:
+                - "Field if_stats_list"
+                type: list
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             total_packet_sample_records:
                 description:
                 - "Total packet sample records"
+                type: str
             total_counter_sample_records:
                 description:
                 - "Total counter sample records"
+                type: str
             total_sflow_packets_sent:
                 description:
                 - "Total sflow packets sent"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -141,24 +155,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'if_stats_list': {
-                'type': 'list',
-                'if_num': {
-                    'type': 'int',
-                },
-                'packet_sample_records': {
-                    'type': 'int',
-                },
-                'counter_sample_records': {
-                    'type': 'int',
-                },
-                'if_type': {
-                    'type': 'str',
-                    'choices': ['Ethernet', 'VE']
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -169,6 +167,25 @@ def get_argspec():
                     'all', 'total-packet-sample-records',
                     'total-counter-sample-records', 'total-sflow-packets-sent'
                 ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'if_stats_list': {
+                'type': 'list',
+                'if_type': {
+                    'type': 'str',
+                    'choices': ['Ethernet', 'VE']
+                },
+                'if_num': {
+                    'type': 'int',
+                },
+                'packet_sample_records': {
+                    'type': 'int',
+                },
+                'counter_sample_records': {
+                    'type': 'int',
+                }
             }
         },
         'stats': {
@@ -182,9 +199,6 @@ def get_argspec():
             'total_sflow_packets_sent': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

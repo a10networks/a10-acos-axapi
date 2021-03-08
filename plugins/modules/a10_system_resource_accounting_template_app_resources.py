@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_app_resources
 description:
     - Enter the application resource limits
-short_description: Configures A10 system.resource.accounting.template.app-resources
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,231 +21,291 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    gslb_site_cfg:
+        - Key to identify parent object
+        type: str
+        required: True
+    gslb_device_cfg:
         description:
-        - "Field gslb_site_cfg"
+        - "Field gslb_device_cfg"
+        type: dict
         required: False
         suboptions:
-            gslb_site_min_guarantee:
+            gslb_device_max:
                 description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-            gslb_site_max:
-                description:
-                - "Enter the number of gslb-site allowed (gslb-site count (default is max-value))"
-    gslb_policy_cfg:
-        description:
-        - "Field gslb_policy_cfg"
-        required: False
-        suboptions:
-            gslb_policy_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-            gslb_policy_max:
-                description:
-                - "Enter the number of gslb-policy allowed (gslb-policy count (default is max-
+                - "Enter the number of gslb-device allowed (gslb-device count (default is max-
           value))"
-    gslb_service_cfg:
-        description:
-        - "Field gslb_service_cfg"
-        required: False
-        suboptions:
-            gslb_service_min_guarantee:
+                type: int
+            gslb_device_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
-            gslb_service_max:
-                description:
-                - "Enter the number of gslb-service allowed (gslb-service count (default is max-
-          value)"
+                type: int
     gslb_geo_location_cfg:
         description:
         - "Field gslb_geo_location_cfg"
+        type: dict
         required: False
         suboptions:
             gslb_geo_location_max:
                 description:
                 - "Enter the number of gslb-geo-location allowed (gslb-geo-location count (default
           is max-value))"
+                type: int
             gslb_geo_location_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    real_server_cfg:
-        description:
-        - "Field real_server_cfg"
-        required: False
-        suboptions:
-            real_server_max:
-                description:
-                - "Enter the number of real-servers allowed (real-server count (default is max-
-          value))"
-            real_server_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
     gslb_ip_list_cfg:
         description:
         - "Field gslb_ip_list_cfg"
+        type: dict
         required: False
         suboptions:
             gslb_ip_list_max:
                 description:
                 - "Enter the number of gslb-ip-list allowed (gslb-ip-list count (default is max-
           value))"
+                type: int
             gslb_ip_list_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
-    gslb_template_cfg:
+                type: int
+    gslb_policy_cfg:
         description:
-        - "Field gslb_template_cfg"
+        - "Field gslb_policy_cfg"
+        type: dict
         required: False
         suboptions:
-            gslb_template_max:
+            gslb_policy_max:
                 description:
-                - "Enter the number of gslb-template allowed (gslb-template count (default is max-
+                - "Enter the number of gslb-policy allowed (gslb-policy count (default is max-
           value))"
-            gslb_template_min_guarantee:
+                type: int
+            gslb_policy_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
-    gslb_zone_cfg:
+                type: int
+    gslb_service_cfg:
         description:
-        - "Field gslb_zone_cfg"
+        - "Field gslb_service_cfg"
+        type: dict
         required: False
         suboptions:
-            gslb_zone_min_guarantee:
+            gslb_service_max:
+                description:
+                - "Enter the number of gslb-service allowed (gslb-service count (default is max-
+          value)"
+                type: int
+            gslb_service_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
-            gslb_zone_max:
-                description:
-                - "Enter the number of gslb-zone allowed (gslb-zone count (default is max-value))"
-    gslb_device_cfg:
-        description:
-        - "Field gslb_device_cfg"
-        required: False
-        suboptions:
-            gslb_device_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-            gslb_device_max:
-                description:
-                - "Enter the number of gslb-device allowed (gslb-device count (default is max-
-          value))"
-    virtual_server_cfg:
-        description:
-        - "Field virtual_server_cfg"
-        required: False
-        suboptions:
-            virtual_server_max:
-                description:
-                - "Enter the number of virtual-servers allowed (virtual-server count (default is
-          max-value))"
-            virtual_server_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-    real_port_cfg:
-        description:
-        - "Field real_port_cfg"
-        required: False
-        suboptions:
-            real_port_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-            real_port_max:
-                description:
-                - "Enter the number of real-ports allowed (real-port count (default is max-value))"
-    health_monitor_cfg:
-        description:
-        - "Field health_monitor_cfg"
-        required: False
-        suboptions:
-            health_monitor_max:
-                description:
-                - "Enter the number of health monitors allowed (health-monitor count (default is
-          max-value))"
-            health_monitor_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-    threshold:
-        description:
-        - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
-        required: False
-    gslb_svc_group_cfg:
-        description:
-        - "Field gslb_svc_group_cfg"
-        required: False
-        suboptions:
-            gslb_svc_group_max:
-                description:
-                - "Enter the number of gslb-svc-group allowed (gslb-svc-group count (default is
-          max-value))"
-            gslb_svc_group_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-    service_group_cfg:
-        description:
-        - "Field service_group_cfg"
-        required: False
-        suboptions:
-            service_group_max:
-                description:
-                - "Enter the number of service groups allowed (service-group count (default is
-          max-value))"
-            service_group_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-    gslb_service_port_cfg:
-        description:
-        - "Field gslb_service_port_cfg"
-        required: False
-        suboptions:
-            gslb_service_port_max:
-                description:
-                - "Enter the number of gslb-service-port allowed ( gslb-service-port count
-          (default is max-value))"
-            gslb_service_port_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
     gslb_service_ip_cfg:
         description:
         - "Field gslb_service_ip_cfg"
+        type: dict
         required: False
         suboptions:
             gslb_service_ip_max:
                 description:
                 - "Enter the number of gslb-service-ip allowed (gslb-service-ip count (default is
           max-value))"
+                type: int
             gslb_service_ip_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    gslb_service_port_cfg:
+        description:
+        - "Field gslb_service_port_cfg"
+        type: dict
+        required: False
+        suboptions:
+            gslb_service_port_max:
+                description:
+                - "Enter the number of gslb-service-port allowed ( gslb-service-port count
+          (default is max-value))"
+                type: int
+            gslb_service_port_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    gslb_site_cfg:
+        description:
+        - "Field gslb_site_cfg"
+        type: dict
+        required: False
+        suboptions:
+            gslb_site_max:
+                description:
+                - "Enter the number of gslb-site allowed (gslb-site count (default is max-value))"
+                type: int
+            gslb_site_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    gslb_svc_group_cfg:
+        description:
+        - "Field gslb_svc_group_cfg"
+        type: dict
+        required: False
+        suboptions:
+            gslb_svc_group_max:
+                description:
+                - "Enter the number of gslb-svc-group allowed (gslb-svc-group count (default is
+          max-value))"
+                type: int
+            gslb_svc_group_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    gslb_template_cfg:
+        description:
+        - "Field gslb_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            gslb_template_max:
+                description:
+                - "Enter the number of gslb-template allowed (gslb-template count (default is max-
+          value))"
+                type: int
+            gslb_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    gslb_zone_cfg:
+        description:
+        - "Field gslb_zone_cfg"
+        type: dict
+        required: False
+        suboptions:
+            gslb_zone_max:
+                description:
+                - "Enter the number of gslb-zone allowed (gslb-zone count (default is max-value))"
+                type: int
+            gslb_zone_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    health_monitor_cfg:
+        description:
+        - "Field health_monitor_cfg"
+        type: dict
+        required: False
+        suboptions:
+            health_monitor_max:
+                description:
+                - "Enter the number of health monitors allowed (health-monitor count (default is
+          max-value))"
+                type: int
+            health_monitor_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    real_port_cfg:
+        description:
+        - "Field real_port_cfg"
+        type: dict
+        required: False
+        suboptions:
+            real_port_max:
+                description:
+                - "Enter the number of real-ports allowed (real-port count (default is max-value))"
+                type: int
+            real_port_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    real_server_cfg:
+        description:
+        - "Field real_server_cfg"
+        type: dict
+        required: False
+        suboptions:
+            real_server_max:
+                description:
+                - "Enter the number of real-servers allowed (real-server count (default is max-
+          value))"
+                type: int
+            real_server_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    service_group_cfg:
+        description:
+        - "Field service_group_cfg"
+        type: dict
+        required: False
+        suboptions:
+            service_group_max:
+                description:
+                - "Enter the number of service groups allowed (service-group count (default is
+          max-value))"
+                type: int
+            service_group_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    virtual_server_cfg:
+        description:
+        - "Field virtual_server_cfg"
+        type: dict
+        required: False
+        suboptions:
+            virtual_server_max:
+                description:
+                - "Enter the number of virtual-servers allowed (virtual-server count (default is
+          max-value))"
+                type: int
+            virtual_server_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    threshold:
+        description:
+        - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -315,30 +373,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'gslb_site_cfg': {
+        'gslb_device_cfg': {
             'type': 'dict',
-            'gslb_site_min_guarantee': {
+            'gslb_device_max': {
                 'type': 'int',
             },
-            'gslb_site_max': {
-                'type': 'int',
-            }
-        },
-        'gslb_policy_cfg': {
-            'type': 'dict',
-            'gslb_policy_min_guarantee': {
-                'type': 'int',
-            },
-            'gslb_policy_max': {
-                'type': 'int',
-            }
-        },
-        'gslb_service_cfg': {
-            'type': 'dict',
-            'gslb_service_min_guarantee': {
-                'type': 'int',
-            },
-            'gslb_service_max': {
+            'gslb_device_min_guarantee': {
                 'type': 'int',
             }
         },
@@ -351,24 +391,66 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'real_server_cfg': {
-            'type': 'dict',
-            'real_server_max': {
-                'type': 'int',
-            },
-            'real_server_min_guarantee': {
-                'type': 'int',
-            }
-        },
         'gslb_ip_list_cfg': {
             'type': 'dict',
             'gslb_ip_list_max': {
                 'type': 'int',
             },
             'gslb_ip_list_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'gslb_policy_cfg': {
+            'type': 'dict',
+            'gslb_policy_max': {
+                'type': 'int',
+            },
+            'gslb_policy_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'gslb_service_cfg': {
+            'type': 'dict',
+            'gslb_service_max': {
+                'type': 'int',
+            },
+            'gslb_service_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'gslb_service_ip_cfg': {
+            'type': 'dict',
+            'gslb_service_ip_max': {
+                'type': 'int',
+            },
+            'gslb_service_ip_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'gslb_service_port_cfg': {
+            'type': 'dict',
+            'gslb_service_port_max': {
+                'type': 'int',
+            },
+            'gslb_service_port_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'gslb_site_cfg': {
+            'type': 'dict',
+            'gslb_site_max': {
+                'type': 'int',
+            },
+            'gslb_site_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'gslb_svc_group_cfg': {
+            'type': 'dict',
+            'gslb_svc_group_max': {
+                'type': 'int',
+            },
+            'gslb_svc_group_min_guarantee': {
                 'type': 'int',
             }
         },
@@ -383,37 +465,10 @@ def get_argspec():
         },
         'gslb_zone_cfg': {
             'type': 'dict',
-            'gslb_zone_min_guarantee': {
-                'type': 'int',
-            },
             'gslb_zone_max': {
                 'type': 'int',
-            }
-        },
-        'gslb_device_cfg': {
-            'type': 'dict',
-            'gslb_device_min_guarantee': {
-                'type': 'int',
             },
-            'gslb_device_max': {
-                'type': 'int',
-            }
-        },
-        'virtual_server_cfg': {
-            'type': 'dict',
-            'virtual_server_max': {
-                'type': 'int',
-            },
-            'virtual_server_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'real_port_cfg': {
-            'type': 'dict',
-            'real_port_min_guarantee': {
-                'type': 'int',
-            },
-            'real_port_max': {
+            'gslb_zone_min_guarantee': {
                 'type': 'int',
             }
         },
@@ -426,15 +481,21 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'threshold': {
-            'type': 'int',
-        },
-        'gslb_svc_group_cfg': {
+        'real_port_cfg': {
             'type': 'dict',
-            'gslb_svc_group_max': {
+            'real_port_max': {
                 'type': 'int',
             },
-            'gslb_svc_group_min_guarantee': {
+            'real_port_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'real_server_cfg': {
+            'type': 'dict',
+            'real_server_max': {
+                'type': 'int',
+            },
+            'real_server_min_guarantee': {
                 'type': 'int',
             }
         },
@@ -447,23 +508,20 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'gslb_service_port_cfg': {
+        'virtual_server_cfg': {
             'type': 'dict',
-            'gslb_service_port_max': {
+            'virtual_server_max': {
                 'type': 'int',
             },
-            'gslb_service_port_min_guarantee': {
+            'virtual_server_min_guarantee': {
                 'type': 'int',
             }
         },
-        'gslb_service_ip_cfg': {
-            'type': 'dict',
-            'gslb_service_ip_max': {
-                'type': 'int',
-            },
-            'gslb_service_ip_min_guarantee': {
-                'type': 'int',
-            }
+        'threshold': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

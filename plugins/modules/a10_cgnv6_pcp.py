@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_pcp
 description:
     - Set Port Control Protocol parameters
-short_description: Configures A10 cgnv6.pcp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    default_template:
+        description:
+        - "Bind the default template for PCP (Bind a PCP template)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -87,115 +103,141 @@ options:
           Fullcone Extension Reuse; 'client-nonce-mismatch'= PCP Client Nonce Mismatch;
           'map-filter-set'= PCP MAP Filter Set; 'map-filter-deny'= PCP MAP Filter Deny
           Inbound; 'inter-board-pkts'= PCP Inter board packets;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            unsol_ance_sent_fail:
-                description:
-                - "Unsolicited Announce Send Failure"
-            unsupp_opcode:
-                description:
-                - "Unsupported PCP Opcode"
-            malform_request:
-                description:
-                - "PCP Request Malformed"
-            unsupp_option:
-                description:
-                - "Unsupported PCP Option"
-            unsupported_version:
-                description:
-                - "Unsupported PCP version"
-            l4_process_error:
-                description:
-                - "L3/L4 Process Error"
-            nat64_map_process_success:
-                description:
-                - "PCP MAP Request Processing Success (NAT64)"
-            dslite_announce_process_success:
-                description:
-                - "PCP ANNOUNCE Request Processing Success (DS-Lite)"
-            not_authorized:
-                description:
-                - "PCP Request Not Authorized"
-            ha_sync_epoch_sent:
-                description:
-                - "HA Sync PCP Epoch Sent"
-            nat64_announce_process_success:
-                description:
-                - "PCP ANNOUNCE Request Processing Success (NAT64)"
-            pkt_not_from_nat_inside:
-                description:
-                - "Packet Dropped For Not Coming From NAT Inside"
-            user_quota_exceeded:
-                description:
-                - "User Quota Exceeded"
-            dslite_map_process_success:
-                description:
-                - "PCP MAP Request Processing Success (DS-Lite)"
             packets_rcv:
                 description:
                 - "Packets Received"
-            lsn_announce_process_success:
-                description:
-                - "PCP ANNOUNCE Request Processing Success (NAT44)"
-            cannot_provide_suggest:
-                description:
-                - "Cannot Provide Suggested Port When PREFER_FAILURE"
-            internal_error_drop:
-                description:
-                - "Internal Error"
-            dslite_peer_process_success:
-                description:
-                - "PCP PEER Request Processing Success (DS-Lite)"
-            malform_option:
-                description:
-                - "PCP Option Malformed"
-            excessive_remote_peers:
-                description:
-                - "Excessive Remote Peers"
+                type: str
             lsn_map_process_success:
                 description:
                 - "PCP MAP Request Processing Success (NAT44)"
-            address_mismatch:
+                type: str
+            dslite_map_process_success:
                 description:
-                - "PCP Client Address Mismatch"
-            unsupp_protocol:
+                - "PCP MAP Request Processing Success (DS-Lite)"
+                type: str
+            nat64_map_process_success:
                 description:
-                - "Unsupported Mapping Protocol"
-            ha_sync_epoch_rcv:
-                description:
-                - "HA Sync PCP Epoch Recv"
-            unsol_ance_sent_succ:
-                description:
-                - "Unsolicited Announce Sent"
-            pkt_not_request_drop:
-                description:
-                - "Packet Not a PCP Request"
-            no_resources:
-                description:
-                - "No System or NAT Resources"
-            noroute_drop:
-                description:
-                - "Response No Route"
+                - "PCP MAP Request Processing Success (NAT64)"
+                type: str
             lsn_peer_process_success:
                 description:
                 - "PCP PEER Request Processing Success (NAT44)"
+                type: str
+            dslite_peer_process_success:
+                description:
+                - "PCP PEER Request Processing Success (DS-Lite)"
+                type: str
             nat64_peer_process_success:
                 description:
                 - "PCP PEER Request Processing Success (NAT64)"
+                type: str
+            lsn_announce_process_success:
+                description:
+                - "PCP ANNOUNCE Request Processing Success (NAT44)"
+                type: str
+            dslite_announce_process_success:
+                description:
+                - "PCP ANNOUNCE Request Processing Success (DS-Lite)"
+                type: str
+            nat64_announce_process_success:
+                description:
+                - "PCP ANNOUNCE Request Processing Success (NAT64)"
+                type: str
+            pkt_not_request_drop:
+                description:
+                - "Packet Not a PCP Request"
+                type: str
             pkt_too_short_drop:
                 description:
                 - "Packet Too Short"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    default_template:
-        description:
-        - "Bind the default template for PCP (Bind a PCP template)"
-        required: False
+                type: str
+            noroute_drop:
+                description:
+                - "Response No Route"
+                type: str
+            unsupported_version:
+                description:
+                - "Unsupported PCP version"
+                type: str
+            not_authorized:
+                description:
+                - "PCP Request Not Authorized"
+                type: str
+            malform_request:
+                description:
+                - "PCP Request Malformed"
+                type: str
+            unsupp_opcode:
+                description:
+                - "Unsupported PCP Opcode"
+                type: str
+            unsupp_option:
+                description:
+                - "Unsupported PCP Option"
+                type: str
+            malform_option:
+                description:
+                - "PCP Option Malformed"
+                type: str
+            no_resources:
+                description:
+                - "No System or NAT Resources"
+                type: str
+            unsupp_protocol:
+                description:
+                - "Unsupported Mapping Protocol"
+                type: str
+            user_quota_exceeded:
+                description:
+                - "User Quota Exceeded"
+                type: str
+            cannot_provide_suggest:
+                description:
+                - "Cannot Provide Suggested Port When PREFER_FAILURE"
+                type: str
+            address_mismatch:
+                description:
+                - "PCP Client Address Mismatch"
+                type: str
+            excessive_remote_peers:
+                description:
+                - "Excessive Remote Peers"
+                type: str
+            pkt_not_from_nat_inside:
+                description:
+                - "Packet Dropped For Not Coming From NAT Inside"
+                type: str
+            l4_process_error:
+                description:
+                - "L3/L4 Process Error"
+                type: str
+            internal_error_drop:
+                description:
+                - "Internal Error"
+                type: str
+            unsol_ance_sent_succ:
+                description:
+                - "Unsolicited Announce Sent"
+                type: str
+            unsol_ance_sent_fail:
+                description:
+                - "Unsolicited Announce Send Failure"
+                type: str
+            ha_sync_epoch_sent:
+                description:
+                - "HA Sync PCP Epoch Sent"
+                type: str
+            ha_sync_epoch_rcv:
+                description:
+                - "HA Sync PCP Epoch Recv"
+                type: str
 
 '''
 
@@ -251,6 +293,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'default_template': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -282,108 +330,102 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'unsol_ance_sent_fail': {
-                'type': 'str',
-            },
-            'unsupp_opcode': {
-                'type': 'str',
-            },
-            'malform_request': {
-                'type': 'str',
-            },
-            'unsupp_option': {
-                'type': 'str',
-            },
-            'unsupported_version': {
-                'type': 'str',
-            },
-            'l4_process_error': {
-                'type': 'str',
-            },
-            'nat64_map_process_success': {
-                'type': 'str',
-            },
-            'dslite_announce_process_success': {
-                'type': 'str',
-            },
-            'not_authorized': {
-                'type': 'str',
-            },
-            'ha_sync_epoch_sent': {
-                'type': 'str',
-            },
-            'nat64_announce_process_success': {
-                'type': 'str',
-            },
-            'pkt_not_from_nat_inside': {
-                'type': 'str',
-            },
-            'user_quota_exceeded': {
-                'type': 'str',
-            },
-            'dslite_map_process_success': {
-                'type': 'str',
-            },
             'packets_rcv': {
-                'type': 'str',
-            },
-            'lsn_announce_process_success': {
-                'type': 'str',
-            },
-            'cannot_provide_suggest': {
-                'type': 'str',
-            },
-            'internal_error_drop': {
-                'type': 'str',
-            },
-            'dslite_peer_process_success': {
-                'type': 'str',
-            },
-            'malform_option': {
-                'type': 'str',
-            },
-            'excessive_remote_peers': {
                 'type': 'str',
             },
             'lsn_map_process_success': {
                 'type': 'str',
             },
-            'address_mismatch': {
+            'dslite_map_process_success': {
                 'type': 'str',
             },
-            'unsupp_protocol': {
-                'type': 'str',
-            },
-            'ha_sync_epoch_rcv': {
-                'type': 'str',
-            },
-            'unsol_ance_sent_succ': {
-                'type': 'str',
-            },
-            'pkt_not_request_drop': {
-                'type': 'str',
-            },
-            'no_resources': {
-                'type': 'str',
-            },
-            'noroute_drop': {
+            'nat64_map_process_success': {
                 'type': 'str',
             },
             'lsn_peer_process_success': {
                 'type': 'str',
             },
+            'dslite_peer_process_success': {
+                'type': 'str',
+            },
             'nat64_peer_process_success': {
+                'type': 'str',
+            },
+            'lsn_announce_process_success': {
+                'type': 'str',
+            },
+            'dslite_announce_process_success': {
+                'type': 'str',
+            },
+            'nat64_announce_process_success': {
+                'type': 'str',
+            },
+            'pkt_not_request_drop': {
                 'type': 'str',
             },
             'pkt_too_short_drop': {
                 'type': 'str',
+            },
+            'noroute_drop': {
+                'type': 'str',
+            },
+            'unsupported_version': {
+                'type': 'str',
+            },
+            'not_authorized': {
+                'type': 'str',
+            },
+            'malform_request': {
+                'type': 'str',
+            },
+            'unsupp_opcode': {
+                'type': 'str',
+            },
+            'unsupp_option': {
+                'type': 'str',
+            },
+            'malform_option': {
+                'type': 'str',
+            },
+            'no_resources': {
+                'type': 'str',
+            },
+            'unsupp_protocol': {
+                'type': 'str',
+            },
+            'user_quota_exceeded': {
+                'type': 'str',
+            },
+            'cannot_provide_suggest': {
+                'type': 'str',
+            },
+            'address_mismatch': {
+                'type': 'str',
+            },
+            'excessive_remote_peers': {
+                'type': 'str',
+            },
+            'pkt_not_from_nat_inside': {
+                'type': 'str',
+            },
+            'l4_process_error': {
+                'type': 'str',
+            },
+            'internal_error_drop': {
+                'type': 'str',
+            },
+            'unsol_ance_sent_succ': {
+                'type': 'str',
+            },
+            'unsol_ance_sent_fail': {
+                'type': 'str',
+            },
+            'ha_sync_epoch_sent': {
+                'type': 'str',
+            },
+            'ha_sync_epoch_rcv': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'default_template': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_geoloc
 description:
     - Field geoloc
-short_description: Configures A10 gslb.geoloc
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,77 +22,98 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            ipv6rangestrt:
-                description:
-                - "Field ipv6rangestrt"
-            pol_name:
-                description:
-                - "Field pol_name"
-            total_geolocs:
-                description:
-                - "Field total_geolocs"
-            iprangestrt:
-                description:
-                - "Field iprangestrt"
-            filter4:
-                description:
-                - "Field filter4"
-            depth:
-                description:
-                - "Field depth"
-            iprangeend:
-                description:
-                - "Field iprangeend"
-            filter1:
-                description:
-                - "Field filter1"
-            filter3:
-                description:
-                - "Field filter3"
-            filter2:
-                description:
-                - "Field filter2"
-            geo_name:
-                description:
-                - "Field geo_name"
             geoloc_list:
                 description:
                 - "Field geoloc_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
+            total_geolocs:
+                description:
+                - "Field total_geolocs"
+                type: int
+            geo_name:
+                description:
+                - "Field geo_name"
+                type: str
+            filter1:
+                description:
+                - "Field filter1"
+                type: str
+            filter2:
+                description:
+                - "Field filter2"
+                type: str
+            filter3:
+                description:
+                - "Field filter3"
+                type: str
+            filter4:
+                description:
+                - "Field filter4"
+                type: str
+            pol_name:
+                description:
+                - "Field pol_name"
+                type: str
+            iprangestrt:
+                description:
+                - "Field iprangestrt"
+                type: str
+            iprangeend:
+                description:
+                - "Field iprangeend"
+                type: str
+            ipv6rangestrt:
+                description:
+                - "Field ipv6rangestrt"
+                type: str
+            depth:
+                description:
+                - "Field depth"
+                type: int
 
 '''
 
@@ -148,35 +167,42 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'ipv6rangestrt': {
-                'type': 'str',
-            },
-            'pol_name': {
-                'type': 'str',
+            'geoloc_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                },
+                'from': {
+                    'type': 'str',
+                },
+                'tomask': {
+                    'type': 'str',
+                },
+                'last': {
+                    'type': 'str',
+                },
+                'hits': {
+                    'type': 'int',
+                },
+                'subcnt': {
+                    'type': 'int',
+                },
+                'ntype': {
+                    'type': 'str',
+                }
             },
             'total_geolocs': {
                 'type': 'int',
             },
-            'iprangestrt': {
-                'type': 'str',
-            },
-            'filter4': {
-                'type': 'str',
-                'choices': ['ip', 'ipv6', 'ipstat', 'ipv6stat']
-            },
-            'depth': {
-                'type': 'int',
-            },
-            'iprangeend': {
+            'geo_name': {
                 'type': 'str',
             },
             'filter1': {
-                'type': 'str',
-                'choices': ['directory', 'statistics', 'global']
-            },
-            'filter3': {
                 'type': 'str',
                 'choices': ['directory', 'statistics', 'global']
             },
@@ -184,36 +210,29 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['directory', 'statistics', 'global']
             },
-            'geo_name': {
+            'filter3': {
+                'type': 'str',
+                'choices': ['directory', 'statistics', 'global']
+            },
+            'filter4': {
+                'type': 'str',
+                'choices': ['ip', 'ipv6', 'ipstat', 'ipv6stat']
+            },
+            'pol_name': {
                 'type': 'str',
             },
-            'geoloc_list': {
-                'type': 'list',
-                'tomask': {
-                    'type': 'str',
-                },
-                'hits': {
-                    'type': 'int',
-                },
-                'from': {
-                    'type': 'str',
-                },
-                'subcnt': {
-                    'type': 'int',
-                },
-                'last': {
-                    'type': 'str',
-                },
-                'ntype': {
-                    'type': 'str',
-                },
-                'name': {
-                    'type': 'str',
-                }
+            'iprangestrt': {
+                'type': 'str',
+            },
+            'iprangeend': {
+                'type': 'str',
+            },
+            'ipv6rangestrt': {
+                'type': 'str',
+            },
+            'depth': {
+                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

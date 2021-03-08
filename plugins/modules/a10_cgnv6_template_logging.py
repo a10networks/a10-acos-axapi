@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_logging
 description:
     - Logging Template
-short_description: Configures A10 cgnv6.template.logging
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,41 +22,188 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Logging template name"
+        type: str
+        required: True
+    resolution:
+        description:
+        - "'seconds'= Logging timestamp resolution in seconds (default);
+          '10-milliseconds'= Logging timestamp resolution in 10s of milli-seconds;"
+        type: str
+        required: False
+    log:
+        description:
+        - "Field log"
+        type: dict
+        required: False
+        suboptions:
+            fixed_nat:
+                description:
+                - "Field fixed_nat"
+                type: dict
+            map_dhcpv6:
+                description:
+                - "Field map_dhcpv6"
+                type: dict
+            http_requests:
+                description:
+                - "'host'= Log the HTTP Host Header; 'url'= Log the HTTP Request URL;"
+                type: str
+            port_mappings:
+                description:
+                - "'creation'= Log only creation of NAT mappings; 'disable'= Disable Log creation
+          and deletion of NAT mappings; 'both'= Log creation and deletion of NAT
+          mappings;"
+                type: str
+            port_overloading:
+                description:
+                - "Force logging of all port-overloading sessions"
+                type: bool
+            user_data:
+                description:
+                - "Log LSN Subscriber Information"
+                type: bool
+            sessions:
+                description:
+                - "Log all data sessions created using NAT"
+                type: bool
+            merged_style:
+                description:
+                - "Merge creation and deletion of session logs to one"
+                type: bool
+    include_destination:
+        description:
+        - "Include the destination IP and port in logs"
+        type: bool
+        required: False
+    include_inside_user_mac:
+        description:
+        - "Include the inside user MAC address in logs"
+        type: bool
+        required: False
+    include_partition_name:
+        description:
+        - "Include partition name in logging events"
+        type: bool
+        required: False
+    include_session_byte_count:
+        description:
+        - "include byte count in session deletion logs"
+        type: bool
         required: False
     include_port_block_account:
         description:
         - "include bytes accounting information in port-batch-v2 port-mapping and fixed-
           nat user-ports messages"
+        type: bool
         required: False
-    include_inside_user_mac:
+    include_radius_attribute:
         description:
-        - "Include the inside user MAC address in logs"
+        - "Field include_radius_attribute"
+        type: dict
         required: False
+        suboptions:
+            attr_cfg:
+                description:
+                - "Field attr_cfg"
+                type: list
+            no_quote:
+                description:
+                - "No quotation marks for RADIUS attributes in logs"
+                type: bool
+            insert_if_not_existing:
+                description:
+                - "Configure what string is to be inserted for custom RADIUS attributes"
+                type: bool
+            zero_in_custom_attr:
+                description:
+                - "Insert 0000 for standard and custom attributes in log string"
+                type: bool
+            framed_ipv6_prefix:
+                description:
+                - "Include radius attributes for the prefix"
+                type: bool
+            prefix_length:
+                description:
+                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'=
+          Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112;"
+                type: str
+    include_http:
+        description:
+        - "Field include_http"
+        type: dict
+        required: False
+        suboptions:
+            header_cfg:
+                description:
+                - "Field header_cfg"
+                type: list
+            l4_session_info:
+                description:
+                - "Log the L4 session information of the HTTP request"
+                type: bool
+            method:
+                description:
+                - "Log the HTTP Request Method"
+                type: bool
+            request_number:
+                description:
+                - "HTTP Request Number"
+                type: bool
+            file_extension:
+                description:
+                - "HTTP file extension"
+                type: bool
+    rule:
+        description:
+        - "Field rule"
+        type: dict
+        required: False
+        suboptions:
+            rule_http_requests:
+                description:
+                - "Field rule_http_requests"
+                type: dict
+            interim_update_interval:
+                description:
+                - "Log interim update of NAT mappings (Interim update interval in minutes(Interval
+          is floored to a multiple of 5))"
+                type: int
     facility:
         description:
         - "'kernel'= 0= Kernel; 'user'= 1= User-level; 'mail'= 2= Mail; 'daemon'= 3=
@@ -70,34 +215,12 @@ options:
           16= Local use 0; 'local1'= 17= Local use 1; 'local2'= 18= Local use 2;
           'local3'= 19= Local use 3; 'local4'= 20= Local use 4; 'local5'= 21= Local use
           5; 'local6'= 22= Local use 6; 'local7'= 23= Local use 7;"
-        required: False
-    include_http:
-        description:
-        - "Field include_http"
-        required: False
-        suboptions:
-            header_cfg:
-                description:
-                - "Field header_cfg"
-            request_number:
-                description:
-                - "HTTP Request Number"
-            file_extension:
-                description:
-                - "HTTP file extension"
-            method:
-                description:
-                - "Log the HTTP Request Method"
-            l4_session_info:
-                description:
-                - "Log the L4 session information of the HTTP request"
-    include_partition_name:
-        description:
-        - "Include partition name in logging events"
+        type: str
         required: False
     severity:
         description:
         - "Field severity"
+        type: dict
         required: False
         suboptions:
             severity_string:
@@ -105,211 +228,162 @@ options:
                 - "'emergency'= 0= Emergency; 'alert'= 1= Alert; 'critical'= 2= Critical; 'error'=
           3= Error; 'warning'= 4= Warning; 'notice'= 5= Notice; 'informational'= 6=
           Informational; 'debug'= 7= Debug;"
+                type: str
             severity_val:
                 description:
                 - "Logging severity level"
-    custom:
-        description:
-        - "Field custom"
-        required: False
-        suboptions:
-            custom_header:
-                description:
-                - "'use-syslog-header'= Use syslog header as custom log header;"
-            custom_message:
-                description:
-                - "Field custom_message"
-            custom_time_stamp_format:
-                description:
-                - "Customize the time stamp format (Customize the time-stamp format.
-          Default=%Y%m%d%H%M%S)"
-    service_group:
-        description:
-        - "Set NAT logging service-group"
-        required: False
-    shared:
-        description:
-        - "Service group is in shared patition"
-        required: False
-    include_session_byte_count:
-        description:
-        - "include byte count in session deletion logs"
-        required: False
+                type: int
     format:
         description:
         - "'binary'= Binary logging format; 'compact'= Compact ASCII logging format (Hex
           format with compact representation); 'custom'= Arbitrary custom logging format;
           'default'= Default A10 logging format (ASCII); 'rfc5424'= RFC5424 compliant
           logging format; 'cef'= Common Event Format for logging;"
+        type: str
         required: False
-    source_address:
+    batched_logging_disable:
         description:
-        - "Field source_address"
+        - "Disable multiple logs per packet"
+        type: bool
+        required: False
+    log_receiver:
+        description:
+        - "Field log_receiver"
+        type: dict
         required: False
         suboptions:
-            ip:
+            radius:
                 description:
-                - "Specify source IP address"
-            uuid:
+                - "Use RADIUS server for NAT logging"
+                type: bool
+            secret_string:
                 description:
-                - "uuid of the object"
-            ipv6:
+                - "The RADIUS server's secret"
+                type: str
+            encrypted:
                 description:
-                - "Specify source IPv6 address"
-    log:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+    service_group:
         description:
-        - "Field log"
+        - "Set NAT logging service-group"
+        type: str
         required: False
-        suboptions:
-            sessions:
-                description:
-                - "Log all data sessions created using NAT"
-            map_dhcpv6:
-                description:
-                - "Field map_dhcpv6"
-            user_data:
-                description:
-                - "Log LSN Subscriber Information"
-            port_overloading:
-                description:
-                - "Force logging of all port-overloading sessions"
-            http_requests:
-                description:
-                - "'host'= Log the HTTP Host Header; 'url'= Log the HTTP Request URL;"
-            port_mappings:
-                description:
-                - "'creation'= Log only creation of NAT mappings; 'disable'= Disable Log creation
-          and deletion of NAT mappings; 'both'= Log creation and deletion of NAT
-          mappings;"
-            merged_style:
-                description:
-                - "Merge creation and deletion of session logs to one"
-            fixed_nat:
-                description:
-                - "Field fixed_nat"
+    shared:
+        description:
+        - "Service group is in shared patition"
+        type: bool
+        required: False
     source_port:
         description:
         - "Field source_port"
+        type: dict
         required: False
         suboptions:
             source_port_num:
                 description:
                 - "Set source port for sending NAT syslogs (default= 514)"
+                type: int
             any:
                 description:
                 - "Use any source port"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    batched_logging_disable:
-        description:
-        - "Disable multiple logs per packet"
-        required: False
-    log_receiver:
-        description:
-        - "Field log_receiver"
-        required: False
-        suboptions:
-            encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-            radius:
-                description:
-                - "Use RADIUS server for NAT logging"
-            secret_string:
-                description:
-                - "The RADIUS server's secret"
-    name:
-        description:
-        - "Logging template name"
-        required: True
-    include_destination:
-        description:
-        - "Include the destination IP and port in logs"
-        required: False
-    rule:
-        description:
-        - "Field rule"
-        required: False
-        suboptions:
-            rule_http_requests:
-                description:
-                - "Field rule_http_requests"
-            interim_update_interval:
-                description:
-                - "Log interim update of NAT mappings (Interim update interval in minutes)"
-    include_radius_attribute:
-        description:
-        - "Field include_radius_attribute"
-        required: False
-        suboptions:
-            framed_ipv6_prefix:
-                description:
-                - "Include radius attributes for the prefix"
-            prefix_length:
-                description:
-                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'=
-          Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112;"
-            insert_if_not_existing:
-                description:
-                - "Configure what string is to be inserted for custom RADIUS attributes"
-            zero_in_custom_attr:
-                description:
-                - "Insert 0000 for standard and custom attributes in log string"
-            no_quote:
-                description:
-                - "No quotation marks for RADIUS attributes in logs"
-            attr_cfg:
-                description:
-                - "Field attr_cfg"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    disable_log_by_destination:
-        description:
-        - "Field disable_log_by_destination"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ip_list:
-                description:
-                - "Field ip_list"
-            tcp_list:
-                description:
-                - "Field tcp_list"
-            others:
-                description:
-                - "Disable logging for other L4 protocols"
-            ip6_list:
-                description:
-                - "Field ip6_list"
-            udp_list:
-                description:
-                - "Field udp_list"
-            icmp:
-                description:
-                - "Disable logging for icmp traffic"
+                type: bool
     rfc_custom:
         description:
         - "Field rfc_custom"
+        type: dict
         required: False
         suboptions:
             header:
                 description:
                 - "Field header"
+                type: dict
             message:
                 description:
                 - "Field message"
-    resolution:
+                type: dict
+    custom:
         description:
-        - "'seconds'= Logging timestamp resolution in seconds (default);
-          '10-milliseconds'= Logging timestamp resolution in 10s of milli-seconds;"
+        - "Field custom"
+        type: dict
         required: False
+        suboptions:
+            custom_header:
+                description:
+                - "'use-syslog-header'= Use syslog header as custom log header;"
+                type: str
+            custom_message:
+                description:
+                - "Field custom_message"
+                type: dict
+            custom_time_stamp_format:
+                description:
+                - "Customize the time stamp format (Customize the time-stamp format.
+          Default=%Y%m%d%H%M%S)"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    source_address:
+        description:
+        - "Field source_address"
+        type: dict
+        required: False
+        suboptions:
+            ip:
+                description:
+                - "Specify source IP address"
+                type: str
+            ipv6:
+                description:
+                - "Specify source IPv6 address"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    disable_log_by_destination:
+        description:
+        - "Field disable_log_by_destination"
+        type: dict
+        required: False
+        suboptions:
+            tcp_list:
+                description:
+                - "Field tcp_list"
+                type: list
+            udp_list:
+                description:
+                - "Field udp_list"
+                type: list
+            icmp:
+                description:
+                - "Disable logging for icmp traffic"
+                type: bool
+            others:
+                description:
+                - "Disable logging for other L4 protocols"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            ip_list:
+                description:
+                - "Field ip_list"
+                type: list
+            ip6_list:
+                description:
+                - "Field ip6_list"
+                type: list
 
 '''
 
@@ -386,157 +460,44 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'include_port_block_account': {
-            'type': 'bool',
-        },
-        'include_inside_user_mac': {
-            'type': 'bool',
-        },
-        'facility': {
-            'type':
-            'str',
-            'choices': [
-                'kernel', 'user', 'mail', 'daemon', 'security-authorization',
-                'syslog', 'line-printer', 'news', 'uucp', 'cron',
-                'security-authorization-private', 'ftp', 'ntp', 'audit',
-                'alert', 'clock', 'local0', 'local1', 'local2', 'local3',
-                'local4', 'local5', 'local6', 'local7'
-            ]
-        },
-        'include_http': {
-            'type': 'dict',
-            'header_cfg': {
-                'type': 'list',
-                'custom_max_length': {
-                    'type': 'int',
-                },
-                'http_header': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'cookie', 'referer', 'user-agent', 'header1',
-                        'header2', 'header3'
-                    ]
-                },
-                'max_length': {
-                    'type': 'int',
-                },
-                'custom_header_name': {
-                    'type': 'str',
-                }
-            },
-            'request_number': {
-                'type': 'bool',
-            },
-            'file_extension': {
-                'type': 'bool',
-            },
-            'method': {
-                'type': 'bool',
-            },
-            'l4_session_info': {
-                'type': 'bool',
-            }
-        },
-        'include_partition_name': {
-            'type': 'bool',
-        },
-        'severity': {
-            'type': 'dict',
-            'severity_string': {
-                'type':
-                'str',
-                'choices': [
-                    'emergency', 'alert', 'critical', 'error', 'warning',
-                    'notice', 'informational', 'debug'
-                ]
-            },
-            'severity_val': {
-                'type': 'int',
-            }
-        },
-        'custom': {
-            'type': 'dict',
-            'custom_header': {
-                'type': 'str',
-                'choices': ['use-syslog-header']
-            },
-            'custom_message': {
-                'type': 'dict',
-                'custom_http_request_got': {
-                    'type': 'str',
-                },
-                'custom_port_batch_v2_allocated': {
-                    'type': 'str',
-                },
-                'custom_fixed_nat_allocated': {
-                    'type': 'str',
-                },
-                'custom_port_batch_v2_freed': {
-                    'type': 'str',
-                },
-                'custom_port_batch_v2_interim_update': {
-                    'type': 'str',
-                },
-                'custom_port_batch_freed': {
-                    'type': 'str',
-                },
-                'custom_fixed_nat_freed': {
-                    'type': 'str',
-                },
-                'custom_port_batch_allocated': {
-                    'type': 'str',
-                },
-                'custom_port_allocated': {
-                    'type': 'str',
-                },
-                'custom_session_deleted': {
-                    'type': 'str',
-                },
-                'custom_fixed_nat_interim_update': {
-                    'type': 'str',
-                },
-                'custom_port_freed': {
-                    'type': 'str',
-                },
-                'custom_session_created': {
-                    'type': 'str',
-                }
-            },
-            'custom_time_stamp_format': {
-                'type': 'str',
-            }
-        },
-        'service_group': {
+        'name': {
             'type': 'str',
+            'required': True,
         },
-        'shared': {
-            'type': 'bool',
-        },
-        'include_session_byte_count': {
-            'type': 'bool',
-        },
-        'format': {
+        'resolution': {
             'type': 'str',
-            'choices':
-            ['binary', 'compact', 'custom', 'default', 'rfc5424', 'cef']
-        },
-        'source_address': {
-            'type': 'dict',
-            'ip': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ipv6': {
-                'type': 'str',
-            }
+            'choices': ['seconds', '10-milliseconds']
         },
         'log': {
             'type': 'dict',
-            'sessions': {
-                'type': 'bool',
+            'fixed_nat': {
+                'type': 'dict',
+                'fixed_nat_http_requests': {
+                    'type': 'str',
+                    'choices': ['host', 'url']
+                },
+                'fixed_nat_port_mappings': {
+                    'type': 'str',
+                    'choices': ['both', 'creation']
+                },
+                'fixed_nat_sessions': {
+                    'type': 'bool',
+                },
+                'fixed_nat_merged_style': {
+                    'type': 'bool',
+                },
+                'user_ports': {
+                    'type': 'dict',
+                    'user_ports': {
+                        'type': 'bool',
+                    },
+                    'days': {
+                        'type': 'int',
+                    },
+                    'start_time': {
+                        'type': 'str',
+                    }
+                }
             },
             'map_dhcpv6': {
                 'type': 'dict',
@@ -555,12 +516,6 @@ def get_argspec():
                     }
                 }
             },
-            'user_data': {
-                'type': 'bool',
-            },
-            'port_overloading': {
-                'type': 'bool',
-            },
             'http_requests': {
                 'type': 'str',
                 'choices': ['host', 'url']
@@ -569,131 +524,38 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['creation', 'disable', 'both']
             },
+            'port_overloading': {
+                'type': 'bool',
+            },
+            'user_data': {
+                'type': 'bool',
+            },
+            'sessions': {
+                'type': 'bool',
+            },
             'merged_style': {
                 'type': 'bool',
-            },
-            'fixed_nat': {
-                'type': 'dict',
-                'fixed_nat_sessions': {
-                    'type': 'bool',
-                },
-                'fixed_nat_http_requests': {
-                    'type': 'str',
-                    'choices': ['host', 'url']
-                },
-                'user_ports': {
-                    'type': 'dict',
-                    'user_ports': {
-                        'type': 'bool',
-                    },
-                    'start_time': {
-                        'type': 'str',
-                    },
-                    'days': {
-                        'type': 'int',
-                    }
-                },
-                'fixed_nat_port_mappings': {
-                    'type': 'str',
-                    'choices': ['both', 'creation']
-                },
-                'fixed_nat_merged_style': {
-                    'type': 'bool',
-                }
             }
-        },
-        'source_port': {
-            'type': 'dict',
-            'source_port_num': {
-                'type': 'int',
-            },
-            'any': {
-                'type': 'bool',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'batched_logging_disable': {
-            'type': 'bool',
-        },
-        'log_receiver': {
-            'type': 'dict',
-            'encrypted': {
-                'type': 'str',
-            },
-            'radius': {
-                'type': 'bool',
-            },
-            'secret_string': {
-                'type': 'str',
-            }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         },
         'include_destination': {
             'type': 'bool',
         },
-        'rule': {
-            'type': 'dict',
-            'rule_http_requests': {
-                'type': 'dict',
-                'log_every_http_request': {
-                    'type': 'bool',
-                },
-                'disable_sequence_check': {
-                    'type': 'bool',
-                },
-                'include_all_headers': {
-                    'type': 'bool',
-                },
-                'dest_port': {
-                    'type': 'list',
-                    'include_byte_count': {
-                        'type': 'bool',
-                    },
-                    'dest_port_number': {
-                        'type': 'int',
-                    }
-                },
-                'max_url_len': {
-                    'type': 'int',
-                }
-            },
-            'interim_update_interval': {
-                'type': 'int',
-            }
+        'include_inside_user_mac': {
+            'type': 'bool',
+        },
+        'include_partition_name': {
+            'type': 'bool',
+        },
+        'include_session_byte_count': {
+            'type': 'bool',
+        },
+        'include_port_block_account': {
+            'type': 'bool',
         },
         'include_radius_attribute': {
             'type': 'dict',
-            'framed_ipv6_prefix': {
-                'type': 'bool',
-            },
-            'prefix_length': {
-                'type': 'str',
-                'choices': ['32', '48', '64', '80', '96', '112']
-            },
-            'insert_if_not_existing': {
-                'type': 'bool',
-            },
-            'zero_in_custom_attr': {
-                'type': 'bool',
-            },
-            'no_quote': {
-                'type': 'bool',
-            },
             'attr_cfg': {
                 'type': 'list',
-                'attr_event': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'http-requests', 'port-mappings', 'sessions',
-                        'user-data'
-                    ]
-                },
                 'attr': {
                     'type':
                     'str',
@@ -701,113 +563,155 @@ def get_argspec():
                         'imei', 'imsi', 'msisdn', 'custom1', 'custom2',
                         'custom3'
                     ]
-                }
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'disable_log_by_destination': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'ip_list': {
-                'type': 'list',
-                'uuid': {
-                    'type': 'str',
                 },
-                'ipv4_addr': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'tcp_list': {
-                    'type': 'list',
-                    'tcp_port_start': {
-                        'type': 'int',
-                    },
-                    'tcp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'others': {
-                    'type': 'bool',
-                },
-                'udp_list': {
-                    'type': 'list',
-                    'udp_port_start': {
-                        'type': 'int',
-                    },
-                    'udp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'icmp': {
-                    'type': 'bool',
+                'attr_event': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'http-requests', 'port-mappings', 'sessions',
+                        'user-data'
+                    ]
                 }
             },
-            'tcp_list': {
-                'type': 'list',
-                'tcp_port_start': {
-                    'type': 'int',
-                },
-                'tcp_port_end': {
-                    'type': 'int',
-                }
-            },
-            'others': {
+            'no_quote': {
                 'type': 'bool',
             },
-            'ip6_list': {
-                'type': 'list',
-                'uuid': {
-                    'type': 'str',
-                },
-                'ipv6_addr': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'tcp_list': {
-                    'type': 'list',
-                    'tcp_port_start': {
-                        'type': 'int',
-                    },
-                    'tcp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'others': {
-                    'type': 'bool',
-                },
-                'udp_list': {
-                    'type': 'list',
-                    'udp_port_start': {
-                        'type': 'int',
-                    },
-                    'udp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'icmp': {
-                    'type': 'bool',
-                }
+            'insert_if_not_existing': {
+                'type': 'bool',
             },
-            'udp_list': {
+            'zero_in_custom_attr': {
+                'type': 'bool',
+            },
+            'framed_ipv6_prefix': {
+                'type': 'bool',
+            },
+            'prefix_length': {
+                'type': 'str',
+                'choices': ['32', '48', '64', '80', '96', '112']
+            }
+        },
+        'include_http': {
+            'type': 'dict',
+            'header_cfg': {
                 'type': 'list',
-                'udp_port_start': {
+                'http_header': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'cookie', 'referer', 'user-agent', 'header1',
+                        'header2', 'header3'
+                    ]
+                },
+                'max_length': {
                     'type': 'int',
                 },
-                'udp_port_end': {
+                'custom_header_name': {
+                    'type': 'str',
+                },
+                'custom_max_length': {
                     'type': 'int',
                 }
             },
-            'icmp': {
+            'l4_session_info': {
+                'type': 'bool',
+            },
+            'method': {
+                'type': 'bool',
+            },
+            'request_number': {
+                'type': 'bool',
+            },
+            'file_extension': {
+                'type': 'bool',
+            }
+        },
+        'rule': {
+            'type': 'dict',
+            'rule_http_requests': {
+                'type': 'dict',
+                'dest_port': {
+                    'type': 'list',
+                    'dest_port_number': {
+                        'type': 'int',
+                    },
+                    'include_byte_count': {
+                        'type': 'bool',
+                    }
+                },
+                'log_every_http_request': {
+                    'type': 'bool',
+                },
+                'max_url_len': {
+                    'type': 'int',
+                },
+                'include_all_headers': {
+                    'type': 'bool',
+                },
+                'disable_sequence_check': {
+                    'type': 'bool',
+                }
+            },
+            'interim_update_interval': {
+                'type': 'int',
+            }
+        },
+        'facility': {
+            'type':
+            'str',
+            'choices': [
+                'kernel', 'user', 'mail', 'daemon', 'security-authorization',
+                'syslog', 'line-printer', 'news', 'uucp', 'cron',
+                'security-authorization-private', 'ftp', 'ntp', 'audit',
+                'alert', 'clock', 'local0', 'local1', 'local2', 'local3',
+                'local4', 'local5', 'local6', 'local7'
+            ]
+        },
+        'severity': {
+            'type': 'dict',
+            'severity_string': {
+                'type':
+                'str',
+                'choices': [
+                    'emergency', 'alert', 'critical', 'error', 'warning',
+                    'notice', 'informational', 'debug'
+                ]
+            },
+            'severity_val': {
+                'type': 'int',
+            }
+        },
+        'format': {
+            'type': 'str',
+            'choices':
+            ['binary', 'compact', 'custom', 'default', 'rfc5424', 'cef']
+        },
+        'batched_logging_disable': {
+            'type': 'bool',
+        },
+        'log_receiver': {
+            'type': 'dict',
+            'radius': {
+                'type': 'bool',
+            },
+            'secret_string': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            }
+        },
+        'service_group': {
+            'type': 'str',
+        },
+        'shared': {
+            'type': 'bool',
+        },
+        'source_port': {
+            'type': 'dict',
+            'source_port_num': {
+                'type': 'int',
+            },
+            'any': {
                 'type': 'bool',
             }
         },
@@ -821,23 +725,8 @@ def get_argspec():
             },
             'message': {
                 'type': 'dict',
-                'session_created': {
-                    'type': 'str',
-                },
-                'http_request_got': {
-                    'type': 'str',
-                },
-                'session_deleted': {
-                    'type': 'str',
-                },
                 'ipv6_tech': {
                     'type': 'list',
-                    'fixed_nat_freed': {
-                        'type': 'str',
-                    },
-                    'port_batch_freed': {
-                        'type': 'str',
-                    },
                     'tech_type': {
                         'type': 'str',
                         'choices': ['lsn', 'nat64', 'ds-lite', 'sixrd-nat64']
@@ -845,27 +734,212 @@ def get_argspec():
                     'fixed_nat_allocated': {
                         'type': 'str',
                     },
-                    'port_allocated': {
+                    'fixed_nat_freed': {
                         'type': 'str',
                     },
-                    'port_batch_v2_allocated': {
+                    'port_allocated': {
                         'type': 'str',
                     },
                     'port_freed': {
                         'type': 'str',
                     },
-                    'port_batch_v2_freed': {
-                        'type': 'str',
-                    },
                     'port_batch_allocated': {
                         'type': 'str',
+                    },
+                    'port_batch_freed': {
+                        'type': 'str',
+                    },
+                    'port_batch_v2_allocated': {
+                        'type': 'str',
+                    },
+                    'port_batch_v2_freed': {
+                        'type': 'str',
                     }
+                },
+                'http_request_got': {
+                    'type': 'str',
+                },
+                'session_created': {
+                    'type': 'str',
+                },
+                'session_deleted': {
+                    'type': 'str',
                 }
             }
         },
-        'resolution': {
+        'custom': {
+            'type': 'dict',
+            'custom_header': {
+                'type': 'str',
+                'choices': ['use-syslog-header']
+            },
+            'custom_message': {
+                'type': 'dict',
+                'custom_fixed_nat_allocated': {
+                    'type': 'str',
+                },
+                'custom_fixed_nat_interim_update': {
+                    'type': 'str',
+                },
+                'custom_fixed_nat_freed': {
+                    'type': 'str',
+                },
+                'custom_http_request_got': {
+                    'type': 'str',
+                },
+                'custom_port_allocated': {
+                    'type': 'str',
+                },
+                'custom_port_batch_allocated': {
+                    'type': 'str',
+                },
+                'custom_port_batch_freed': {
+                    'type': 'str',
+                },
+                'custom_port_batch_v2_allocated': {
+                    'type': 'str',
+                },
+                'custom_port_batch_v2_freed': {
+                    'type': 'str',
+                },
+                'custom_port_batch_v2_interim_update': {
+                    'type': 'str',
+                },
+                'custom_port_freed': {
+                    'type': 'str',
+                },
+                'custom_session_created': {
+                    'type': 'str',
+                },
+                'custom_session_deleted': {
+                    'type': 'str',
+                }
+            },
+            'custom_time_stamp_format': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
             'type': 'str',
-            'choices': ['seconds', '10-milliseconds']
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'source_address': {
+            'type': 'dict',
+            'ip': {
+                'type': 'str',
+            },
+            'ipv6': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'disable_log_by_destination': {
+            'type': 'dict',
+            'tcp_list': {
+                'type': 'list',
+                'tcp_port_start': {
+                    'type': 'int',
+                },
+                'tcp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'udp_list': {
+                'type': 'list',
+                'udp_port_start': {
+                    'type': 'int',
+                },
+                'udp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'icmp': {
+                'type': 'bool',
+            },
+            'others': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'ip_list': {
+                'type': 'list',
+                'ipv4_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                    },
+                    'tcp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                    },
+                    'udp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'icmp': {
+                    'type': 'bool',
+                },
+                'others': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            },
+            'ip6_list': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'tcp_list': {
+                    'type': 'list',
+                    'tcp_port_start': {
+                        'type': 'int',
+                    },
+                    'tcp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'udp_list': {
+                    'type': 'list',
+                    'udp_port_start': {
+                        'type': 'int',
+                    },
+                    'udp_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'icmp': {
+                    'type': 'bool',
+                },
+                'others': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            }
         }
     })
     return rv

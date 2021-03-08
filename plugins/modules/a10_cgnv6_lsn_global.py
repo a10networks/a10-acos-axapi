@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_global
 description:
     - Set Large-Scale NAT config parameters
-short_description: Configures A10 cgnv6.lsn.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,60 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     strictly_sticky_nat:
         description:
         - "Strictly adheres to sticky-nat (default= disabled)"
+        type: bool
         required: False
-    logging:
+    enhanced_user_tracking:
         description:
-        - "Field logging"
+        - "Enable enhanced user tracking and visibility (default= disabled)"
+        type: bool
         required: False
-        suboptions:
-            partition_name:
-                description:
-                - "Select partition name for logging"
-            shared:
-                description:
-                - "Select shared partition"
-            default_template:
-                description:
-                - "Bind the default NAT logging template for LSN (Bind a NAT logging template)"
-            pool:
-                description:
-                - "Field pool"
-    uuid:
+    attempt_port_preservation:
         description:
-        - "uuid of the object"
-        required: False
-    inbound_refresh:
-        description:
-        - "'disable'= Disable NAT Inbound Refresh Behavior;"
+        - "'disable'= Don't attempt port preservation for NAT allocation;"
+        type: str
         required: False
     hairpinning:
         description:
@@ -85,28 +76,12 @@ options:
           TCP will use filter-self-ip-port; 'filter-self-ip'= Block hairpinning to the
           user's own IP; 'filter-self-ip-port'= Block hairpinning to the user's same IP
           and port combination;"
+        type: str
         required: False
-    port_batching:
+    inbound_refresh:
         description:
-        - "Field port_batching"
-        required: False
-        suboptions:
-            tcp_time_wait_interval:
-                description:
-                - "Minutes before TCP NAT ports can be reused (default= 2)"
-            size:
-                description:
-                - "'1'= Allocate 1 port at a time (default); '8'= Allocate 8 ports at a time;
-          '16'= Allocate 16 ports at a time; '32'= Allocate 32 ports at a time; '64'=
-          Allocate 64 ports at a time; '128'= Allocate 128 ports at a time; '256'=
-          Allocate 256 ports at a time; '512'= Allocate 512 ports at a time;"
-    half_close_timeout:
-        description:
-        - "Set LSN Half close timeout (Half close timeout in seconds (default not set))"
-        required: False
-    attempt_port_preservation:
-        description:
-        - "'disable'= Don't attempt port preservation for NAT allocation;"
+        - "'disable'= Disable NAT Inbound Refresh Behavior;"
+        type: str
         required: False
     ip_selection:
         description:
@@ -117,63 +92,86 @@ options:
           udp-reserved-strict'= Fewest UDP NAT ports reserved; 'least-tcp-reserved-
           strict'= Fewest TCP NAT ports reserved; 'least-users-strict'= Fewest number of
           users;"
+        type: str
         required: False
     syn_timeout:
         description:
         - "Set LSN SYN timeout (SYN idle-timeout in seconds (default= 4 seconds))"
+        type: int
+        required: False
+    half_close_timeout:
+        description:
+        - "Set LSN Half close timeout (Half close timeout in seconds (default not set))"
+        type: int
+        required: False
+    icmp:
+        description:
+        - "Field icmp"
+        type: dict
+        required: False
+        suboptions:
+            send_on_port_unavailable:
+                description:
+                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'=
+          Send ICMP admin filtered; 'disable'= Disable ICMP port unavailable message
+          (default);"
+                type: str
+            send_on_user_quota_exceeded:
+                description:
+                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'=
+          Send ICMP admin filtered (default); 'disable'= Disable ICMP quota exceeded
+          message;"
+                type: str
+    logging:
+        description:
+        - "Field logging"
+        type: dict
+        required: False
+        suboptions:
+            default_template:
+                description:
+                - "Bind the default NAT logging template for LSN (Bind a NAT logging template)"
+                type: str
+            pool:
+                description:
+                - "Field pool"
+                type: list
+            shared:
+                description:
+                - "Select shared partition"
+                type: bool
+            partition_name:
+                description:
+                - "Select partition name for logging"
+                type: str
+    port_batching:
+        description:
+        - "Field port_batching"
+        type: dict
+        required: False
+        suboptions:
+            size:
+                description:
+                - "'1'= Allocate 1 port at a time (default); '8'= Allocate 8 ports at a time;
+          '16'= Allocate 16 ports at a time; '32'= Allocate 32 ports at a time; '64'=
+          Allocate 64 ports at a time; '128'= Allocate 128 ports at a time; '256'=
+          Allocate 256 ports at a time; '512'= Allocate 512 ports at a time;"
+                type: str
+            tcp_time_wait_interval:
+                description:
+                - "Minutes before TCP NAT ports can be reused (default= 2)"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
-            counters4:
-                description:
-                - "'acl_http_domain_node_exceeded'= ACL HTTP Domain Node Exceeded;
-          'fwd_ingress_packets_tcp'= Forward Ingress Packets TCP;
-          'fwd_egress_packets_tcp'= Forward Egress Packets TCP;
-          'rev_ingress_packets_tcp'= Reverse Ingress Packets TCP;
-          'rev_egress_packets_tcp'= Reverse Egress Packets TCP; 'fwd_ingress_bytes_tcp'=
-          Forward Ingress Bytes TCP; 'fwd_egress_bytes_tcp'= Forward Egress Bytes TCP;
-          'rev_ingress_bytes_tcp'= Reverse Ingress Bytes TCP; 'rev_egress_bytes_tcp'=
-          Reverse Egress Bytes TCP; 'fwd_ingress_packets_udp'= Forward Ingress Packets
-          UDP; 'fwd_egress_packets_udp'= Forward Egress Packets UDP;
-          'rev_ingress_packets_udp'= Reverse Ingress Packets UDP;
-          'rev_egress_packets_udp'= Reverse Egress Packets UDP; 'fwd_ingress_bytes_udp'=
-          Forward Ingress Bytes UDP; 'fwd_egress_bytes_udp'= Forward Egress Bytes UDP;
-          'rev_ingress_bytes_udp'= Reverse Ingress Bytes UDP; 'rev_egress_bytes_udp'=
-          Reverse Egress Bytes UDP; 'fwd_ingress_packets_icmp'= Forward Ingress Packets
-          ICMP; 'fwd_egress_packets_icmp'= Forward Egress Packets ICMP;
-          'rev_ingress_packets_icmp'= Reverse Ingress Packets ICMP;
-          'rev_egress_packets_icmp'= Reverse Egress Packets ICMP;
-          'fwd_ingress_bytes_icmp'= Forward Ingress Bytes ICMP; 'fwd_egress_bytes_icmp'=
-          Forward Egress Bytes ICMP; 'rev_ingress_bytes_icmp'= Reverse Ingress Bytes
-          ICMP; 'rev_egress_bytes_icmp'= Reverse Egress Bytes ICMP;
-          'fwd_ingress_packets_others'= Forward Ingress Packets OTHERS;
-          'fwd_egress_packets_others'= Forward Egress Packets OTHERS;
-          'rev_ingress_packets_others'= Reverse Ingress Packets OTHERS;
-          'rev_egress_packets_others'= Reverse Egress Packets OTHERS;
-          'fwd_ingress_bytes_others'= Forward Ingress Bytes OTHERS;
-          'fwd_egress_bytes_others'= Forward Egress Bytes OTHERS;
-          'rev_ingress_bytes_others'= Reverse Ingress Bytes OTHERS;
-          'rev_egress_bytes_others'= Reverse Egress Bytes OTHERS;
-          'fwd_ingress_pkt_size_range1'= Forward Ingress Packet size between 0 and 200;
-          'fwd_ingress_pkt_size_range2'= Forward Ingress Packet size between 201 and 800;
-          'fwd_ingress_pkt_size_range3'= Forward Ingress Packet size between 801 and
-          1550; 'fwd_ingress_pkt_size_range4'= Forward Ingress Packet size between 1551
-          and 9000; 'fwd_egress_pkt_size_range1'= Forward Egress Packet size between 0
-          and 200; 'fwd_egress_pkt_size_range2'= Forward Egress Packet size between 201
-          and 800; 'fwd_egress_pkt_size_range3'= Forward Egress Packet size between 801
-          and 1550; 'fwd_egress_pkt_size_range4'= Forward Egress Packet size between 1551
-          and 9000; 'rev_ingress_pkt_size_range1'= Reverse Ingress Packet size between 0
-          and 200; 'rev_ingress_pkt_size_range2'= Reverse Ingress Packet size between 201
-          and 800; 'rev_ingress_pkt_size_range3'= Reverse Ingress Packet size between 801
-          and 1550; 'rev_ingress_pkt_size_range4'= Reverse Ingress Packet size between
-          1551 and 9000; 'rev_egress_pkt_size_range1'= Reverse Egress Packet size between
-          0 and 200; 'rev_egress_pkt_size_range2'= Reverse Egress Packet size between 201
-          and 800; 'rev_egress_pkt_size_range3'= Reverse Egress Packet size between 801
-          and 1550; 'rev_egress_pkt_size_range4'= Reverse Egress Packet size between 1551
-          and 9000;"
             counters1:
                 description:
                 - "'all'= all; 'total_tcp_allocated'= Total TCP Ports Allocated;
@@ -284,6 +282,7 @@ options:
           admin filtered sent; 'icmp_out_of_state_uqe_host_unreachable_sent'= Total User
           Quota Exceeded ICMP host unreachable sent; 'icmp_out_of_state_uqe_dropped'=
           Total User Queue Exceeded ICMP notification dropped;"
+                type: str
             counters2:
                 description:
                 - "'user_quota_not_found'= User-Quota Not Found; 'tcp_fullcone_created_shadow'=
@@ -396,6 +395,7 @@ options:
           'port_batch_freed_from_quota'= Port Batch Freed From Quota;
           'specific_port_allocated_from_quota_consecutive'= Specific Port Allocated from
           Quota Consecutive;"
+                type: str
             counters3:
                 description:
                 - "'specific_port_allocated_from_quota_partition'= Specific Port Allocated from
@@ -505,324 +505,453 @@ options:
           'cross_cpu_helper_free_not_found_udp'= UDP Cross CPU Helper Free Not Found;
           'adc_port_allocation_failed'= ADC Port Allocation Failed;
           'adc_port_allocation_ineligible'= ADC Port Allocation Not Allowed;"
+                type: str
+            counters4:
+                description:
+                - "'acl_http_domain_node_exceeded'= ACL HTTP Domain Node Exceeded;
+          'fwd_ingress_packets_tcp'= Forward Ingress Packets TCP;
+          'fwd_egress_packets_tcp'= Forward Egress Packets TCP;
+          'rev_ingress_packets_tcp'= Reverse Ingress Packets TCP;
+          'rev_egress_packets_tcp'= Reverse Egress Packets TCP; 'fwd_ingress_bytes_tcp'=
+          Forward Ingress Bytes TCP; 'fwd_egress_bytes_tcp'= Forward Egress Bytes TCP;
+          'rev_ingress_bytes_tcp'= Reverse Ingress Bytes TCP; 'rev_egress_bytes_tcp'=
+          Reverse Egress Bytes TCP; 'fwd_ingress_packets_udp'= Forward Ingress Packets
+          UDP; 'fwd_egress_packets_udp'= Forward Egress Packets UDP;
+          'rev_ingress_packets_udp'= Reverse Ingress Packets UDP;
+          'rev_egress_packets_udp'= Reverse Egress Packets UDP; 'fwd_ingress_bytes_udp'=
+          Forward Ingress Bytes UDP; 'fwd_egress_bytes_udp'= Forward Egress Bytes UDP;
+          'rev_ingress_bytes_udp'= Reverse Ingress Bytes UDP; 'rev_egress_bytes_udp'=
+          Reverse Egress Bytes UDP; 'fwd_ingress_packets_icmp'= Forward Ingress Packets
+          ICMP; 'fwd_egress_packets_icmp'= Forward Egress Packets ICMP;
+          'rev_ingress_packets_icmp'= Reverse Ingress Packets ICMP;
+          'rev_egress_packets_icmp'= Reverse Egress Packets ICMP;
+          'fwd_ingress_bytes_icmp'= Forward Ingress Bytes ICMP; 'fwd_egress_bytes_icmp'=
+          Forward Egress Bytes ICMP; 'rev_ingress_bytes_icmp'= Reverse Ingress Bytes
+          ICMP; 'rev_egress_bytes_icmp'= Reverse Egress Bytes ICMP;
+          'fwd_ingress_packets_others'= Forward Ingress Packets OTHERS;
+          'fwd_egress_packets_others'= Forward Egress Packets OTHERS;
+          'rev_ingress_packets_others'= Reverse Ingress Packets OTHERS;
+          'rev_egress_packets_others'= Reverse Egress Packets OTHERS;
+          'fwd_ingress_bytes_others'= Forward Ingress Bytes OTHERS;
+          'fwd_egress_bytes_others'= Forward Egress Bytes OTHERS;
+          'rev_ingress_bytes_others'= Reverse Ingress Bytes OTHERS;
+          'rev_egress_bytes_others'= Reverse Egress Bytes OTHERS;
+          'fwd_ingress_pkt_size_range1'= Forward Ingress Packet size between 0 and 200;
+          'fwd_ingress_pkt_size_range2'= Forward Ingress Packet size between 201 and 800;
+          'fwd_ingress_pkt_size_range3'= Forward Ingress Packet size between 801 and
+          1550; 'fwd_ingress_pkt_size_range4'= Forward Ingress Packet size between 1551
+          and 9000; 'fwd_egress_pkt_size_range1'= Forward Egress Packet size between 0
+          and 200; 'fwd_egress_pkt_size_range2'= Forward Egress Packet size between 201
+          and 800; 'fwd_egress_pkt_size_range3'= Forward Egress Packet size between 801
+          and 1550; 'fwd_egress_pkt_size_range4'= Forward Egress Packet size between 1551
+          and 9000; 'rev_ingress_pkt_size_range1'= Reverse Ingress Packet size between 0
+          and 200; 'rev_ingress_pkt_size_range2'= Reverse Ingress Packet size between 201
+          and 800; 'rev_ingress_pkt_size_range3'= Reverse Ingress Packet size between 801
+          and 1550; 'rev_ingress_pkt_size_range4'= Reverse Ingress Packet size between
+          1551 and 9000; 'rev_egress_pkt_size_range1'= Reverse Egress Packet size between
+          0 and 200; 'rev_egress_pkt_size_range2'= Reverse Egress Packet size between 201
+          and 800; 'rev_egress_pkt_size_range3'= Reverse Egress Packet size between 801
+          and 1550; 'rev_egress_pkt_size_range4'= Reverse Egress Packet size between 1551
+          and 9000;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            rev_egress_pkt_size_range1:
-                description:
-                - "Reverse Egress Packet size between 0 and 200"
-            endpoint_indep_filter_match:
-                description:
-                - "Endpoint-Independent Filtering Matched"
-            hairpin:
-                description:
-                - "Hairpin Session Created"
-            fwd_ingress_packets_udp:
-                description:
-                - "Forward Ingress Packets UDP"
-            fwd_egress_packets_tcp:
-                description:
-                - "Forward Egress Packets TCP"
-            rev_egress_bytes_tcp:
-                description:
-                - "Reverse Egress Bytes TCP"
-            fwd_egress_bytes_others:
-                description:
-                - "Forward Egress Bytes OTHERS"
-            fwd_egress_bytes_udp:
-                description:
-                - "Forward Egress Bytes UDP"
-            ha_nat_pool_unusable:
-                description:
-                - "HA NAT Pool Unusable"
-            tcp_user_quota_exceeded:
-                description:
-                - "TCP User-Quota Exceeded"
-            rev_ingress_packets_udp:
-                description:
-                - "Reverse Ingress Packets UDP"
-            rev_egress_bytes_icmp:
-                description:
-                - "Reverse Egress Bytes ICMP"
-            ha_nat_pool_batch_type_mismatch:
-                description:
-                - "HA NAT Pool Batch Type Mismatch"
-            rev_ingress_packets_others:
-                description:
-                - "Reverse Ingress Packets OTHERS"
-            user_quota_unusable_drop:
-                description:
-                - "User-Quota Unusable Drop"
-            fwd_egress_packets_icmp:
-                description:
-                - "Forward Egress Packets ICMP"
-            fullcone_failure:
-                description:
-                - "Full-cone Session Creation Failed"
-            fwd_ingress_pkt_size_range2:
-                description:
-                - "Forward Ingress Packet size between 201 and 800"
-            fwd_ingress_pkt_size_range3:
-                description:
-                - "Forward Ingress Packet size between 801 and 1550"
-            fwd_ingress_pkt_size_range1:
-                description:
-                - "Forward Ingress Packet size between 0 and 200"
-            data_sesn_user_quota_exceeded:
-                description:
-                - "Data Session User-Quota Exceeded"
-            lid_drop:
-                description:
-                - "LSN LID Drop"
-            fwd_ingress_pkt_size_range4:
-                description:
-                - "Forward Ingress Packet size between 1551 and 9000"
-            fwd_egress_bytes_tcp:
-                description:
-                - "Forward Egress Bytes TCP"
-            user_quota_put_in_del_q:
-                description:
-                - "User-Quota Freed"
-            rev_ingress_packets_tcp:
-                description:
-                - "Reverse Ingress Packets TCP"
-            udp_user_quota_exceeded:
-                description:
-                - "UDP User-Quota Exceeded"
-            total_tcp_freed:
-                description:
-                - "Total TCP Ports Freed"
-            lid_pass_through:
-                description:
-                - "LSN LID Pass-through"
-            user_quota_unusable:
-                description:
-                - "User-Quota Marked Unusable"
-            tcp_fullcone_created:
-                description:
-                - "TCP Full-cone Session Created"
-            fwd_egress_packets_others:
-                description:
-                - "Forward Egress Packets OTHERS"
-            udp_fullcone_created:
-                description:
-                - "UDP Full-cone Session Created"
-            icmp_user_quota_exceeded:
-                description:
-                - "ICMP User-Quota Exceeded"
             total_tcp_allocated:
                 description:
                 - "Total TCP Ports Allocated"
-            rev_egress_bytes_udp:
+                type: str
+            total_tcp_freed:
                 description:
-                - "Reverse Egress Bytes UDP"
-            user_quota_failure:
-                description:
-                - "User-Quota Creation Failed"
-            user_quota_created:
-                description:
-                - "User-Quota Created"
-            rev_egress_packets_icmp:
-                description:
-                - "Reverse Egress Packets ICMP"
-            data_sesn_rate_user_quota_exceeded:
-                description:
-                - "Conn Rate User-Quota Exceeded"
-            fullcone_self_hairpinning_drop:
-                description:
-                - "Self-Hairpinning Drop"
-            new_user_resource_unavailable:
-                description:
-                - "New User NAT Resource Unavailable"
+                - "Total TCP Ports Freed"
+                type: str
             total_udp_allocated:
                 description:
                 - "Total UDP Ports Allocated"
-            data_session_created:
-                description:
-                - "Data Session Created"
-            rev_ingress_bytes_tcp:
-                description:
-                - "Reverse Ingress Bytes TCP"
-            fwd_ingress_bytes_others:
-                description:
-                - "Forward Ingress Bytes OTHERS"
-            rev_ingress_bytes_others:
-                description:
-                - "Reverse Ingress Bytes OTHERS"
-            rev_egress_packets_tcp:
-                description:
-                - "Reverse Egress Packets TCP"
-            fwd_ingress_bytes_tcp:
-                description:
-                - "Forward Ingress Bytes TCP"
-            nat_port_unavailable_icmp:
-                description:
-                - "ICMP NAT Port Unavailable"
-            extended_quota_matched:
-                description:
-                - "Extended User-Quota Matched"
-            tcp_fullcone_freed:
-                description:
-                - "TCP Full-cone Session Freed"
-            udp_fullcone_freed:
-                description:
-                - "UDP Full-cone Session Freed"
-            fwd_egress_bytes_icmp:
-                description:
-                - "Forward Egress Bytes ICMP"
-            eif_limit_exceeded:
-                description:
-                - "Endpoint-Independent Filtering Inbound Limit Exceeded"
-            port_overloading_smp_inserted_udp:
-                description:
-                - "UDP Port Overloading Session Created"
+                type: str
             total_udp_freed:
                 description:
                 - "Total UDP Ports Freed"
-            fwd_egress_pkt_size_range3:
-                description:
-                - "Forward Egress Packet size between 801 and 1550"
-            fwd_egress_pkt_size_range2:
-                description:
-                - "Forward Egress Packet size between 201 and 800"
-            nat_port_unavailable_tcp:
-                description:
-                - "TCP NAT Port Unavailable"
-            total_tcp_overloaded:
-                description:
-                - "TCP Port Overloaded"
-            fwd_ingress_packets_tcp:
-                description:
-                - "Forward Ingress Packets TCP"
-            total_icmp_freed:
-                description:
-                - "Total ICMP Ports Freed"
-            nat_ip_max_udp_ports_allocated:
-                description:
-                - "NAT IP UDP Max Ports Allocated"
-            fwd_ingress_packets_others:
-                description:
-                - "Forward Ingress Packets OTHERS"
-            rev_egress_packets_others:
-                description:
-                - "Reverse Egress Packets OTHERS"
-            no_radius_profile_match:
-                description:
-                - "No RADIUS Profile Match"
-            endpoint_indep_map_match:
-                description:
-                - "Endpoint-Independent Mapping Matched"
-            rev_ingress_pkt_size_range4:
-                description:
-                - "Reverse Ingress Packet size between 1551 and 9000"
-            rev_ingress_pkt_size_range2:
-                description:
-                - "Reverse Ingress Packet size between 201 and 800"
-            rev_ingress_pkt_size_range3:
-                description:
-                - "Reverse Ingress Packet size between 801 and 1550"
-            rev_ingress_pkt_size_range1:
-                description:
-                - "Reverse Ingress Packet size between 0 and 200"
+                type: str
             total_icmp_allocated:
                 description:
                 - "Total ICMP Ports Allocated"
-            no_class_list_match:
+                type: str
+            total_icmp_freed:
                 description:
-                - "No Class-List Match"
-            inbound_filtered:
+                - "Total ICMP Ports Freed"
+                type: str
+            data_session_created:
                 description:
-                - "Endpoint-Dependent Filtering Drop"
-            fwd_egress_packets_udp:
-                description:
-                - "Forward Egress Packets UDP"
+                - "Data Session Created"
+                type: str
             data_session_freed:
                 description:
                 - "Data Session Freed"
-            total_udp_overloaded:
+                type: str
+            user_quota_created:
                 description:
-                - "UDP Port Overloaded"
-            port_overloading_smp_inserted_tcp:
+                - "User-Quota Created"
+                type: str
+            user_quota_put_in_del_q:
                 description:
-                - "TCP Port Overloading Session Created"
-            nat_pool_unusable:
+                - "User-Quota Freed"
+                type: str
+            user_quota_failure:
                 description:
-                - "NAT Pool Unusable"
+                - "User-Quota Creation Failed"
+                type: str
+            nat_port_unavailable_tcp:
+                description:
+                - "TCP NAT Port Unavailable"
+                type: str
             nat_port_unavailable_udp:
                 description:
                 - "UDP NAT Port Unavailable"
-            port_overloading_smp_free_tcp:
+                type: str
+            nat_port_unavailable_icmp:
                 description:
-                - "TCP Port Overloading Session Freed"
-            rev_ingress_bytes_udp:
+                - "ICMP NAT Port Unavailable"
+                type: str
+            new_user_resource_unavailable:
                 description:
-                - "Reverse Ingress Bytes UDP"
-            rev_ingress_bytes_icmp:
+                - "New User NAT Resource Unavailable"
+                type: str
+            tcp_user_quota_exceeded:
                 description:
-                - "Reverse Ingress Bytes ICMP"
-            rev_egress_bytes_others:
+                - "TCP User-Quota Exceeded"
+                type: str
+            udp_user_quota_exceeded:
                 description:
-                - "Reverse Egress Bytes OTHERS"
-            port_overloading_smp_free_udp:
+                - "UDP User-Quota Exceeded"
+                type: str
+            icmp_user_quota_exceeded:
                 description:
-                - "UDP Port Overloading Session Freed"
-            fwd_ingress_bytes_icmp:
+                - "ICMP User-Quota Exceeded"
+                type: str
+            extended_quota_matched:
                 description:
-                - "Forward Ingress Bytes ICMP"
-            fwd_egress_pkt_size_range1:
-                description:
-                - "Forward Egress Packet size between 0 and 200"
-            rev_ingress_packets_icmp:
-                description:
-                - "Reverse Ingress Packets ICMP"
-            rev_egress_packets_udp:
-                description:
-                - "Reverse Egress Packets UDP"
-            fwd_ingress_bytes_udp:
-                description:
-                - "Forward Ingress Bytes UDP"
-            nat_ip_max_tcp_ports_allocated:
-                description:
-                - "NAT IP TCP Max Ports Allocated"
-            fwd_egress_pkt_size_range4:
-                description:
-                - "Forward Egress Packet size between 1551 and 9000"
+                - "Extended User-Quota Matched"
+                type: str
             extended_quota_exceeded:
                 description:
                 - "Extended User-Quota Exceeded"
-            rev_egress_pkt_size_range4:
+                type: str
+            data_sesn_user_quota_exceeded:
                 description:
-                - "Reverse Egress Packet size between 1551 and 9000"
-            rev_egress_pkt_size_range3:
+                - "Data Session User-Quota Exceeded"
+                type: str
+            data_sesn_rate_user_quota_exceeded:
                 description:
-                - "Reverse Egress Packet size between 801 and 1550"
+                - "Conn Rate User-Quota Exceeded"
+                type: str
+            tcp_fullcone_created:
+                description:
+                - "TCP Full-cone Session Created"
+                type: str
+            tcp_fullcone_freed:
+                description:
+                - "TCP Full-cone Session Freed"
+                type: str
+            udp_fullcone_created:
+                description:
+                - "UDP Full-cone Session Created"
+                type: str
+            udp_fullcone_freed:
+                description:
+                - "UDP Full-cone Session Freed"
+                type: str
+            fullcone_failure:
+                description:
+                - "Full-cone Session Creation Failed"
+                type: str
+            hairpin:
+                description:
+                - "Hairpin Session Created"
+                type: str
+            fullcone_self_hairpinning_drop:
+                description:
+                - "Self-Hairpinning Drop"
+                type: str
+            endpoint_indep_map_match:
+                description:
+                - "Endpoint-Independent Mapping Matched"
+                type: str
+            endpoint_indep_filter_match:
+                description:
+                - "Endpoint-Independent Filtering Matched"
+                type: str
+            inbound_filtered:
+                description:
+                - "Endpoint-Dependent Filtering Drop"
+                type: str
+            eif_limit_exceeded:
+                description:
+                - "Endpoint-Independent Filtering Inbound Limit Exceeded"
+                type: str
+            total_tcp_overloaded:
+                description:
+                - "TCP Port Overloaded"
+                type: str
+            total_udp_overloaded:
+                description:
+                - "UDP Port Overloaded"
+                type: str
+            port_overloading_smp_inserted_tcp:
+                description:
+                - "TCP Port Overloading Session Created"
+                type: str
+            port_overloading_smp_inserted_udp:
+                description:
+                - "UDP Port Overloading Session Created"
+                type: str
+            port_overloading_smp_free_tcp:
+                description:
+                - "TCP Port Overloading Session Freed"
+                type: str
+            port_overloading_smp_free_udp:
+                description:
+                - "UDP Port Overloading Session Freed"
+                type: str
+            nat_pool_unusable:
+                description:
+                - "NAT Pool Unusable"
+                type: str
+            ha_nat_pool_unusable:
+                description:
+                - "HA NAT Pool Unusable"
+                type: str
+            ha_nat_pool_batch_type_mismatch:
+                description:
+                - "HA NAT Pool Batch Type Mismatch"
+                type: str
+            no_radius_profile_match:
+                description:
+                - "No RADIUS Profile Match"
+                type: str
+            nat_ip_max_tcp_ports_allocated:
+                description:
+                - "NAT IP TCP Max Ports Allocated"
+                type: str
+            nat_ip_max_udp_ports_allocated:
+                description:
+                - "NAT IP UDP Max Ports Allocated"
+                type: str
+            no_class_list_match:
+                description:
+                - "No Class-List Match"
+                type: str
+            lid_drop:
+                description:
+                - "LSN LID Drop"
+                type: str
+            lid_pass_through:
+                description:
+                - "LSN LID Pass-through"
+                type: str
+            user_quota_unusable_drop:
+                description:
+                - "User-Quota Unusable Drop"
+                type: str
+            user_quota_unusable:
+                description:
+                - "User-Quota Marked Unusable"
+                type: str
+            fwd_ingress_packets_tcp:
+                description:
+                - "Forward Ingress Packets TCP"
+                type: str
+            fwd_egress_packets_tcp:
+                description:
+                - "Forward Egress Packets TCP"
+                type: str
+            rev_ingress_packets_tcp:
+                description:
+                - "Reverse Ingress Packets TCP"
+                type: str
+            rev_egress_packets_tcp:
+                description:
+                - "Reverse Egress Packets TCP"
+                type: str
+            fwd_ingress_bytes_tcp:
+                description:
+                - "Forward Ingress Bytes TCP"
+                type: str
+            fwd_egress_bytes_tcp:
+                description:
+                - "Forward Egress Bytes TCP"
+                type: str
+            rev_ingress_bytes_tcp:
+                description:
+                - "Reverse Ingress Bytes TCP"
+                type: str
+            rev_egress_bytes_tcp:
+                description:
+                - "Reverse Egress Bytes TCP"
+                type: str
+            fwd_ingress_packets_udp:
+                description:
+                - "Forward Ingress Packets UDP"
+                type: str
+            fwd_egress_packets_udp:
+                description:
+                - "Forward Egress Packets UDP"
+                type: str
+            rev_ingress_packets_udp:
+                description:
+                - "Reverse Ingress Packets UDP"
+                type: str
+            rev_egress_packets_udp:
+                description:
+                - "Reverse Egress Packets UDP"
+                type: str
+            fwd_ingress_bytes_udp:
+                description:
+                - "Forward Ingress Bytes UDP"
+                type: str
+            fwd_egress_bytes_udp:
+                description:
+                - "Forward Egress Bytes UDP"
+                type: str
+            rev_ingress_bytes_udp:
+                description:
+                - "Reverse Ingress Bytes UDP"
+                type: str
+            rev_egress_bytes_udp:
+                description:
+                - "Reverse Egress Bytes UDP"
+                type: str
             fwd_ingress_packets_icmp:
                 description:
                 - "Forward Ingress Packets ICMP"
+                type: str
+            fwd_egress_packets_icmp:
+                description:
+                - "Forward Egress Packets ICMP"
+                type: str
+            rev_ingress_packets_icmp:
+                description:
+                - "Reverse Ingress Packets ICMP"
+                type: str
+            rev_egress_packets_icmp:
+                description:
+                - "Reverse Egress Packets ICMP"
+                type: str
+            fwd_ingress_bytes_icmp:
+                description:
+                - "Forward Ingress Bytes ICMP"
+                type: str
+            fwd_egress_bytes_icmp:
+                description:
+                - "Forward Egress Bytes ICMP"
+                type: str
+            rev_ingress_bytes_icmp:
+                description:
+                - "Reverse Ingress Bytes ICMP"
+                type: str
+            rev_egress_bytes_icmp:
+                description:
+                - "Reverse Egress Bytes ICMP"
+                type: str
+            fwd_ingress_packets_others:
+                description:
+                - "Forward Ingress Packets OTHERS"
+                type: str
+            fwd_egress_packets_others:
+                description:
+                - "Forward Egress Packets OTHERS"
+                type: str
+            rev_ingress_packets_others:
+                description:
+                - "Reverse Ingress Packets OTHERS"
+                type: str
+            rev_egress_packets_others:
+                description:
+                - "Reverse Egress Packets OTHERS"
+                type: str
+            fwd_ingress_bytes_others:
+                description:
+                - "Forward Ingress Bytes OTHERS"
+                type: str
+            fwd_egress_bytes_others:
+                description:
+                - "Forward Egress Bytes OTHERS"
+                type: str
+            rev_ingress_bytes_others:
+                description:
+                - "Reverse Ingress Bytes OTHERS"
+                type: str
+            rev_egress_bytes_others:
+                description:
+                - "Reverse Egress Bytes OTHERS"
+                type: str
+            fwd_ingress_pkt_size_range1:
+                description:
+                - "Forward Ingress Packet size between 0 and 200"
+                type: str
+            fwd_ingress_pkt_size_range2:
+                description:
+                - "Forward Ingress Packet size between 201 and 800"
+                type: str
+            fwd_ingress_pkt_size_range3:
+                description:
+                - "Forward Ingress Packet size between 801 and 1550"
+                type: str
+            fwd_ingress_pkt_size_range4:
+                description:
+                - "Forward Ingress Packet size between 1551 and 9000"
+                type: str
+            fwd_egress_pkt_size_range1:
+                description:
+                - "Forward Egress Packet size between 0 and 200"
+                type: str
+            fwd_egress_pkt_size_range2:
+                description:
+                - "Forward Egress Packet size between 201 and 800"
+                type: str
+            fwd_egress_pkt_size_range3:
+                description:
+                - "Forward Egress Packet size between 801 and 1550"
+                type: str
+            fwd_egress_pkt_size_range4:
+                description:
+                - "Forward Egress Packet size between 1551 and 9000"
+                type: str
+            rev_ingress_pkt_size_range1:
+                description:
+                - "Reverse Ingress Packet size between 0 and 200"
+                type: str
+            rev_ingress_pkt_size_range2:
+                description:
+                - "Reverse Ingress Packet size between 201 and 800"
+                type: str
+            rev_ingress_pkt_size_range3:
+                description:
+                - "Reverse Ingress Packet size between 801 and 1550"
+                type: str
+            rev_ingress_pkt_size_range4:
+                description:
+                - "Reverse Ingress Packet size between 1551 and 9000"
+                type: str
+            rev_egress_pkt_size_range1:
+                description:
+                - "Reverse Egress Packet size between 0 and 200"
+                type: str
             rev_egress_pkt_size_range2:
                 description:
                 - "Reverse Egress Packet size between 201 and 800"
-    enhanced_user_tracking:
-        description:
-        - "Enable enhanced user tracking and visibility (default= disabled)"
-        required: False
-    icmp:
-        description:
-        - "Field icmp"
-        required: False
-        suboptions:
-            send_on_user_quota_exceeded:
+                type: str
+            rev_egress_pkt_size_range3:
                 description:
-                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'=
-          Send ICMP admin filtered (default); 'disable'= Disable ICMP quota exceeded
-          message;"
-            send_on_port_unavailable:
+                - "Reverse Egress Packet size between 801 and 1550"
+                type: str
+            rev_egress_pkt_size_range4:
                 description:
-                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'=
-          Send ICMP admin filtered; 'disable'= Disable ICMP port unavailable message
-          (default);"
+                - "Reverse Egress Packet size between 1551 and 9000"
+                type: str
 
 '''
 
@@ -891,31 +1020,10 @@ def get_argspec():
         'strictly_sticky_nat': {
             'type': 'bool',
         },
-        'logging': {
-            'type': 'dict',
-            'partition_name': {
-                'type': 'str',
-            },
-            'shared': {
-                'type': 'bool',
-            },
-            'default_template': {
-                'type': 'str',
-            },
-            'pool': {
-                'type': 'list',
-                'template': {
-                    'type': 'str',
-                },
-                'pool_name': {
-                    'type': 'str',
-                }
-            }
+        'enhanced_user_tracking': {
+            'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'inbound_refresh': {
+        'attempt_port_preservation': {
             'type': 'str',
             'choices': ['disable']
         },
@@ -924,20 +1032,7 @@ def get_argspec():
             'choices':
             ['filter-none', 'filter-self-ip', 'filter-self-ip-port']
         },
-        'port_batching': {
-            'type': 'dict',
-            'tcp_time_wait_interval': {
-                'type': 'int',
-            },
-            'size': {
-                'type': 'str',
-                'choices': ['1', '8', '16', '32', '64', '128', '256', '512']
-            }
-        },
-        'half_close_timeout': {
-            'type': 'int',
-        },
-        'attempt_port_preservation': {
+        'inbound_refresh': {
             'type': 'str',
             'choices': ['disable']
         },
@@ -954,42 +1049,56 @@ def get_argspec():
         'syn_timeout': {
             'type': 'int',
         },
+        'half_close_timeout': {
+            'type': 'int',
+        },
+        'icmp': {
+            'type': 'dict',
+            'send_on_port_unavailable': {
+                'type': 'str',
+                'choices': ['host-unreachable', 'admin-filtered', 'disable']
+            },
+            'send_on_user_quota_exceeded': {
+                'type': 'str',
+                'choices': ['host-unreachable', 'admin-filtered', 'disable']
+            }
+        },
+        'logging': {
+            'type': 'dict',
+            'default_template': {
+                'type': 'str',
+            },
+            'pool': {
+                'type': 'list',
+                'pool_name': {
+                    'type': 'str',
+                },
+                'template': {
+                    'type': 'str',
+                }
+            },
+            'shared': {
+                'type': 'bool',
+            },
+            'partition_name': {
+                'type': 'str',
+            }
+        },
+        'port_batching': {
+            'type': 'dict',
+            'size': {
+                'type': 'str',
+                'choices': ['1', '8', '16', '32', '64', '128', '256', '512']
+            },
+            'tcp_time_wait_interval': {
+                'type': 'int',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
-            'counters4': {
-                'type':
-                'str',
-                'choices': [
-                    'acl_http_domain_node_exceeded', 'fwd_ingress_packets_tcp',
-                    'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp',
-                    'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp',
-                    'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp',
-                    'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp',
-                    'fwd_egress_packets_udp', 'rev_ingress_packets_udp',
-                    'rev_egress_packets_udp', 'fwd_ingress_bytes_udp',
-                    'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp',
-                    'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp',
-                    'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp',
-                    'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp',
-                    'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp',
-                    'rev_egress_bytes_icmp', 'fwd_ingress_packets_others',
-                    'fwd_egress_packets_others', 'rev_ingress_packets_others',
-                    'rev_egress_packets_others', 'fwd_ingress_bytes_others',
-                    'fwd_egress_bytes_others', 'rev_ingress_bytes_others',
-                    'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1',
-                    'fwd_ingress_pkt_size_range2',
-                    'fwd_ingress_pkt_size_range3',
-                    'fwd_ingress_pkt_size_range4',
-                    'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
-                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4',
-                    'rev_ingress_pkt_size_range1',
-                    'rev_ingress_pkt_size_range2',
-                    'rev_ingress_pkt_size_range3',
-                    'rev_ingress_pkt_size_range4',
-                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2',
-                    'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
-                ]
-            },
             'counters1': {
                 'type':
                 'str',
@@ -1262,239 +1371,144 @@ def get_argspec():
                     'adc_port_allocation_failed',
                     'adc_port_allocation_ineligible'
                 ]
+            },
+            'counters4': {
+                'type':
+                'str',
+                'choices': [
+                    'acl_http_domain_node_exceeded', 'fwd_ingress_packets_tcp',
+                    'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp',
+                    'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp',
+                    'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp',
+                    'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp',
+                    'fwd_egress_packets_udp', 'rev_ingress_packets_udp',
+                    'rev_egress_packets_udp', 'fwd_ingress_bytes_udp',
+                    'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp',
+                    'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp',
+                    'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp',
+                    'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp',
+                    'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp',
+                    'rev_egress_bytes_icmp', 'fwd_ingress_packets_others',
+                    'fwd_egress_packets_others', 'rev_ingress_packets_others',
+                    'rev_egress_packets_others', 'fwd_ingress_bytes_others',
+                    'fwd_egress_bytes_others', 'rev_ingress_bytes_others',
+                    'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1',
+                    'fwd_ingress_pkt_size_range2',
+                    'fwd_ingress_pkt_size_range3',
+                    'fwd_ingress_pkt_size_range4',
+                    'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
+                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4',
+                    'rev_ingress_pkt_size_range1',
+                    'rev_ingress_pkt_size_range2',
+                    'rev_ingress_pkt_size_range3',
+                    'rev_ingress_pkt_size_range4',
+                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2',
+                    'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
+                ]
             }
         },
         'stats': {
             'type': 'dict',
-            'rev_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'endpoint_indep_filter_match': {
-                'type': 'str',
-            },
-            'hairpin': {
-                'type': 'str',
-            },
-            'fwd_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'fwd_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'ha_nat_pool_unusable': {
-                'type': 'str',
-            },
-            'tcp_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'rev_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'ha_nat_pool_batch_type_mismatch': {
-                'type': 'str',
-            },
-            'rev_ingress_packets_others': {
-                'type': 'str',
-            },
-            'user_quota_unusable_drop': {
-                'type': 'str',
-            },
-            'fwd_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fullcone_failure': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'data_sesn_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'lid_drop': {
-                'type': 'str',
-            },
-            'fwd_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'user_quota_put_in_del_q': {
-                'type': 'str',
-            },
-            'rev_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'udp_user_quota_exceeded': {
+            'total_tcp_allocated': {
                 'type': 'str',
             },
             'total_tcp_freed': {
                 'type': 'str',
             },
-            'lid_pass_through': {
-                'type': 'str',
-            },
-            'user_quota_unusable': {
-                'type': 'str',
-            },
-            'tcp_fullcone_created': {
-                'type': 'str',
-            },
-            'fwd_egress_packets_others': {
-                'type': 'str',
-            },
-            'udp_fullcone_created': {
-                'type': 'str',
-            },
-            'icmp_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'total_tcp_allocated': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'user_quota_failure': {
-                'type': 'str',
-            },
-            'user_quota_created': {
-                'type': 'str',
-            },
-            'rev_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'data_sesn_rate_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'fullcone_self_hairpinning_drop': {
-                'type': 'str',
-            },
-            'new_user_resource_unavailable': {
-                'type': 'str',
-            },
             'total_udp_allocated': {
-                'type': 'str',
-            },
-            'data_session_created': {
-                'type': 'str',
-            },
-            'rev_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fwd_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'rev_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'rev_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fwd_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'nat_port_unavailable_icmp': {
-                'type': 'str',
-            },
-            'extended_quota_matched': {
-                'type': 'str',
-            },
-            'tcp_fullcone_freed': {
-                'type': 'str',
-            },
-            'udp_fullcone_freed': {
-                'type': 'str',
-            },
-            'fwd_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'eif_limit_exceeded': {
-                'type': 'str',
-            },
-            'port_overloading_smp_inserted_udp': {
                 'type': 'str',
             },
             'total_udp_freed': {
                 'type': 'str',
             },
-            'fwd_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fwd_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'nat_port_unavailable_tcp': {
-                'type': 'str',
-            },
-            'total_tcp_overloaded': {
-                'type': 'str',
-            },
-            'fwd_ingress_packets_tcp': {
+            'total_icmp_allocated': {
                 'type': 'str',
             },
             'total_icmp_freed': {
                 'type': 'str',
             },
-            'nat_ip_max_udp_ports_allocated': {
+            'data_session_created': {
                 'type': 'str',
             },
-            'fwd_ingress_packets_others': {
+            'data_session_freed': {
                 'type': 'str',
             },
-            'rev_egress_packets_others': {
+            'user_quota_created': {
                 'type': 'str',
             },
-            'no_radius_profile_match': {
+            'user_quota_put_in_del_q': {
+                'type': 'str',
+            },
+            'user_quota_failure': {
+                'type': 'str',
+            },
+            'nat_port_unavailable_tcp': {
+                'type': 'str',
+            },
+            'nat_port_unavailable_udp': {
+                'type': 'str',
+            },
+            'nat_port_unavailable_icmp': {
+                'type': 'str',
+            },
+            'new_user_resource_unavailable': {
+                'type': 'str',
+            },
+            'tcp_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'udp_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'icmp_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'extended_quota_matched': {
+                'type': 'str',
+            },
+            'extended_quota_exceeded': {
+                'type': 'str',
+            },
+            'data_sesn_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'data_sesn_rate_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'tcp_fullcone_created': {
+                'type': 'str',
+            },
+            'tcp_fullcone_freed': {
+                'type': 'str',
+            },
+            'udp_fullcone_created': {
+                'type': 'str',
+            },
+            'udp_fullcone_freed': {
+                'type': 'str',
+            },
+            'fullcone_failure': {
+                'type': 'str',
+            },
+            'hairpin': {
+                'type': 'str',
+            },
+            'fullcone_self_hairpinning_drop': {
                 'type': 'str',
             },
             'endpoint_indep_map_match': {
                 'type': 'str',
             },
-            'rev_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'rev_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'rev_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'rev_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'total_icmp_allocated': {
-                'type': 'str',
-            },
-            'no_class_list_match': {
+            'endpoint_indep_filter_match': {
                 'type': 'str',
             },
             'inbound_filtered': {
                 'type': 'str',
             },
-            'fwd_egress_packets_udp': {
+            'eif_limit_exceeded': {
                 'type': 'str',
             },
-            'data_session_freed': {
+            'total_tcp_overloaded': {
                 'type': 'str',
             },
             'total_udp_overloaded': {
@@ -1503,34 +1517,79 @@ def get_argspec():
             'port_overloading_smp_inserted_tcp': {
                 'type': 'str',
             },
-            'nat_pool_unusable': {
-                'type': 'str',
-            },
-            'nat_port_unavailable_udp': {
+            'port_overloading_smp_inserted_udp': {
                 'type': 'str',
             },
             'port_overloading_smp_free_tcp': {
                 'type': 'str',
             },
-            'rev_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'rev_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'rev_egress_bytes_others': {
-                'type': 'str',
-            },
             'port_overloading_smp_free_udp': {
                 'type': 'str',
             },
-            'fwd_ingress_bytes_icmp': {
+            'nat_pool_unusable': {
                 'type': 'str',
             },
-            'fwd_egress_pkt_size_range1': {
+            'ha_nat_pool_unusable': {
                 'type': 'str',
             },
-            'rev_ingress_packets_icmp': {
+            'ha_nat_pool_batch_type_mismatch': {
+                'type': 'str',
+            },
+            'no_radius_profile_match': {
+                'type': 'str',
+            },
+            'nat_ip_max_tcp_ports_allocated': {
+                'type': 'str',
+            },
+            'nat_ip_max_udp_ports_allocated': {
+                'type': 'str',
+            },
+            'no_class_list_match': {
+                'type': 'str',
+            },
+            'lid_drop': {
+                'type': 'str',
+            },
+            'lid_pass_through': {
+                'type': 'str',
+            },
+            'user_quota_unusable_drop': {
+                'type': 'str',
+            },
+            'user_quota_unusable': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_udp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_udp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_udp': {
                 'type': 'str',
             },
             'rev_egress_packets_udp': {
@@ -1539,40 +1598,110 @@ def get_argspec():
             'fwd_ingress_bytes_udp': {
                 'type': 'str',
             },
-            'nat_ip_max_tcp_ports_allocated': {
+            'fwd_egress_bytes_udp': {
                 'type': 'str',
             },
-            'fwd_egress_pkt_size_range4': {
+            'rev_ingress_bytes_udp': {
                 'type': 'str',
             },
-            'extended_quota_exceeded': {
-                'type': 'str',
-            },
-            'rev_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'rev_egress_pkt_size_range3': {
+            'rev_egress_bytes_udp': {
                 'type': 'str',
             },
             'fwd_ingress_packets_icmp': {
                 'type': 'str',
             },
+            'fwd_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_others': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_others': {
+                'type': 'str',
+            },
+            'rev_egress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range1': {
+                'type': 'str',
+            },
             'rev_egress_pkt_size_range2': {
                 'type': 'str',
-            }
-        },
-        'enhanced_user_tracking': {
-            'type': 'bool',
-        },
-        'icmp': {
-            'type': 'dict',
-            'send_on_user_quota_exceeded': {
-                'type': 'str',
-                'choices': ['host-unreachable', 'admin-filtered', 'disable']
             },
-            'send_on_port_unavailable': {
+            'rev_egress_pkt_size_range3': {
                 'type': 'str',
-                'choices': ['host-unreachable', 'admin-filtered', 'disable']
+            },
+            'rev_egress_pkt_size_range4': {
+                'type': 'str',
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fail_safe_config
 description:
     - Fail Safe Global Commands
-short_description: Configures A10 fail.safe.config
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,68 +22,86 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            fpga_mon_threshold:
-                description:
-                - "Field fpga_mon_threshold"
             sw_error_mon:
                 description:
                 - "Field sw_error_mon"
-            sw_recovery_timeout:
-                description:
-                - "Field sw_recovery_timeout"
-            hw_recovery_timeout:
-                description:
-                - "Field hw_recovery_timeout"
-            fpga_mon_interval:
-                description:
-                - "Field fpga_mon_interval"
-            fpga_mon_forced_reboot:
-                description:
-                - "Field fpga_mon_forced_reboot"
-            fpga_mon_enable:
-                description:
-                - "Field fpga_mon_enable"
-            mem_mon:
-                description:
-                - "Field mem_mon"
+                type: str
             hw_error_mon:
                 description:
                 - "Field hw_error_mon"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            sw_recovery_timeout:
+                description:
+                - "Field sw_recovery_timeout"
+                type: str
+            hw_recovery_timeout:
+                description:
+                - "Field hw_recovery_timeout"
+                type: str
+            fpga_mon_enable:
+                description:
+                - "Field fpga_mon_enable"
+                type: str
+            fpga_mon_forced_reboot:
+                description:
+                - "Field fpga_mon_forced_reboot"
+                type: str
+            fpga_mon_interval:
+                description:
+                - "Field fpga_mon_interval"
+                type: str
+            fpga_mon_threshold:
+                description:
+                - "Field fpga_mon_threshold"
+                type: str
+            mem_mon:
+                description:
+                - "Field mem_mon"
+                type: str
 
 '''
 
@@ -139,12 +155,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'fpga_mon_threshold': {
+            'sw_error_mon': {
                 'type': 'str',
             },
-            'sw_error_mon': {
+            'hw_error_mon': {
                 'type': 'str',
             },
             'sw_recovery_timeout': {
@@ -153,24 +172,21 @@ def get_argspec():
             'hw_recovery_timeout': {
                 'type': 'str',
             },
-            'fpga_mon_interval': {
+            'fpga_mon_enable': {
                 'type': 'str',
             },
             'fpga_mon_forced_reboot': {
                 'type': 'str',
             },
-            'fpga_mon_enable': {
+            'fpga_mon_interval': {
+                'type': 'str',
+            },
+            'fpga_mon_threshold': {
                 'type': 'str',
             },
             'mem_mon': {
                 'type': 'str',
-            },
-            'hw_error_mon': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

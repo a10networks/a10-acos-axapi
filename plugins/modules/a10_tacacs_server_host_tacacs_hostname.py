@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_tacacs_server_host_tacacs_hostname
 description:
     - Specify the hostname of TACACS+ server
-short_description: Configures A10 tacacs-server.host.tacacs-hostname
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,95 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    hostname:
+        description:
+        - "Hostname of TACACS+ server"
+        type: str
+        required: True
     secret:
         description:
         - "Field secret"
+        type: dict
         required: False
         suboptions:
-            source_ipv6:
+            secret_value:
                 description:
-                - "IPV6 address"
-            source_trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
-            source_ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                - "The TACACS+ server's secret"
+                type: str
             encrypted:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) help-val
           The ENCRYPTED secret string"
+                type: str
             source_ip:
                 description:
                 - "IP address"
-            source_eth:
+                type: str
+            source_ipv6:
                 description:
-                - "Ethernet interface (Port number)"
-            port_cfg:
-                description:
-                - "Field port_cfg"
-            source_lif:
-                description:
-                - "Logical interface (Lif interface number)"
+                - "IPV6 address"
+                type: str
             source_loopback:
                 description:
                 - "Loopback interface (Port number)"
-            secret_value:
+                type: str
+            source_eth:
                 description:
-                - "The TACACS+ server's secret"
-    hostname:
-        description:
-        - "Hostname of TACACS+ server"
-        required: True
+                - "Ethernet interface (Port number)"
+                type: str
+            source_ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: str
+            source_trunk:
+                description:
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            source_lif:
+                description:
+                - "Logical interface (Lif interface number)"
+                type: int
+            port_cfg:
+                description:
+                - "Field port_cfg"
+                type: dict
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -148,15 +166,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'hostname': {
+            'type': 'str',
+            'required': True,
+        },
         'secret': {
             'type': 'dict',
-            'source_ipv6': {
-                'type': 'str',
-            },
-            'source_trunk': {
-                'type': 'str',
-            },
-            'source_ve': {
+            'secret_value': {
                 'type': 'str',
             },
             'encrypted': {
@@ -165,46 +181,48 @@ def get_argspec():
             'source_ip': {
                 'type': 'str',
             },
+            'source_ipv6': {
+                'type': 'str',
+            },
+            'source_loopback': {
+                'type': 'str',
+            },
             'source_eth': {
                 'type': 'str',
             },
+            'source_ve': {
+                'type': 'str',
+            },
+            'source_trunk': {
+                'type': 'str',
+            },
+            'source_lif': {
+                'type': 'int',
+            },
             'port_cfg': {
                 'type': 'dict',
-                'username': {
-                    'type': 'str',
-                },
-                'monitor': {
-                    'type': 'bool',
-                },
-                'encrypted': {
-                    'type': 'str',
+                'port': {
+                    'type': 'int',
                 },
                 'timeout': {
                     'type': 'int',
                 },
-                'password_value': {
+                'monitor': {
+                    'type': 'bool',
+                },
+                'username': {
                     'type': 'str',
                 },
                 'password': {
                     'type': 'bool',
                 },
-                'port': {
-                    'type': 'int',
+                'password_value': {
+                    'type': 'str',
+                },
+                'encrypted': {
+                    'type': 'str',
                 }
-            },
-            'source_lif': {
-                'type': 'int',
-            },
-            'source_loopback': {
-                'type': 'str',
-            },
-            'secret_value': {
-                'type': 'str',
             }
-        },
-        'hostname': {
-            'type': 'str',
-            'required': True,
         },
         'uuid': {
             'type': 'str',

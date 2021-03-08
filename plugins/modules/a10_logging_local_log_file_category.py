@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_local_log_file_category
 description:
     - File category Info
-short_description: Configures A10 logging.local.log.file-category
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,70 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            interval:
-                description:
-                - "Field interval"
-            start_time:
-                description:
-                - "Field start_time"
-            top_n:
-                description:
-                - "Field top_n"
-            log_list:
-                description:
-                - "Field log_list"
-            max_entries:
-                description:
-                - "Field max_entries"
-            interval_position:
-                description:
-                - "Field interval_position"
-            total:
-                description:
-                - "Field total"
     top_n:
         description:
         - "Field top_n"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-    uuid:
+                type: str
+    oper:
         description:
-        - "uuid of the object"
+        - "Field oper"
+        type: dict
         required: False
+        suboptions:
+            max_entries:
+                description:
+                - "Field max_entries"
+                type: int
+            start_time:
+                description:
+                - "Field start_time"
+                type: str
+            interval:
+                description:
+                - "Field interval"
+                type: str
+            interval_position:
+                description:
+                - "Field interval_position"
+                type: str
+            total:
+                description:
+                - "Field total"
+                type: int
+            log_list:
+                description:
+                - "Field log_list"
+                type: list
+            top_n:
+                description:
+                - "Field top_n"
+                type: dict
 
 '''
 
@@ -142,19 +158,67 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'top_n': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
-            'interval': {
-                'type': 'str',
+            'max_entries': {
+                'type': 'int',
             },
             'start_time': {
                 'type': 'str',
+            },
+            'interval': {
+                'type': 'str',
+            },
+            'interval_position': {
+                'type': 'str',
+            },
+            'total': {
+                'type': 'int',
+            },
+            'log_list': {
+                'type': 'list',
+                'time': {
+                    'type': 'str',
+                },
+                'source_ip': {
+                    'type': 'str',
+                },
+                'destination_ip': {
+                    'type': 'str',
+                },
+                'file_name': {
+                    'type': 'str',
+                },
+                'file_ext': {
+                    'type': 'str',
+                },
+                'file_category': {
+                    'type': 'str',
+                },
+                'file_size': {
+                    'type': 'int',
+                },
+                'url': {
+                    'type': 'str',
+                }
             },
             'top_n': {
                 'type': 'dict',
                 'oper': {
                     'type': 'dict',
-                    'file_category': {
+                    'max_entries': {
+                        'type': 'int',
+                    },
+                    'start_time': {
                         'type': 'str',
                     },
                     'interval': {
@@ -166,71 +230,23 @@ def get_argspec():
                     'top': {
                         'type': 'str',
                     },
-                    'log_list': {
-                        'type': 'list',
-                        'counter': {
-                            'type': 'int',
-                        },
-                        'name': {
-                            'type': 'str',
-                        }
-                    },
-                    'max_entries': {
-                        'type': 'int',
-                    },
-                    'start_time': {
+                    'file_category': {
                         'type': 'str',
                     },
                     'total': {
                         'type': 'int',
+                    },
+                    'log_list': {
+                        'type': 'list',
+                        'name': {
+                            'type': 'str',
+                        },
+                        'counter': {
+                            'type': 'int',
+                        }
                     }
                 }
-            },
-            'log_list': {
-                'type': 'list',
-                'file_category': {
-                    'type': 'str',
-                },
-                'file_name': {
-                    'type': 'str',
-                },
-                'url': {
-                    'type': 'str',
-                },
-                'file_size': {
-                    'type': 'int',
-                },
-                'source_ip': {
-                    'type': 'str',
-                },
-                'file_ext': {
-                    'type': 'str',
-                },
-                'destination_ip': {
-                    'type': 'str',
-                },
-                'time': {
-                    'type': 'str',
-                }
-            },
-            'max_entries': {
-                'type': 'int',
-            },
-            'interval_position': {
-                'type': 'str',
-            },
-            'total': {
-                'type': 'int',
             }
-        },
-        'top_n': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

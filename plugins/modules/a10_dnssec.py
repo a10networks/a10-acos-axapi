@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_dnssec
 description:
     - Domain Name System Security Extensions commands
-short_description: Configures A10 dnssec
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,275 +22,358 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            ptr_memory:
-                description:
-                - "Field ptr_memory"
-            total_memory:
-                description:
-                - "Field total_memory"
-            reference_objects:
-                description:
-                - "Field reference_objects"
-            cname_memory:
-                description:
-                - "Field cname_memory"
-            ds_objects:
-                description:
-                - "Field ds_objects"
-            nsec_objects:
-                description:
-                - "Field nsec_objects"
-            array_memory:
-                description:
-                - "Field array_memory"
-            nsec3param_objects:
-                description:
-                - "Field nsec3param_objects"
-            srv_memory:
-                description:
-                - "Field srv_memory"
-            reference_memory:
-                description:
-                - "Field reference_memory"
-            a_memory:
-                description:
-                - "Field a_memory"
-            table_memory:
-                description:
-                - "Field table_memory"
-            a_objects:
-                description:
-                - "Field a_objects"
-            ns_memory:
-                description:
-                - "Field ns_memory"
-            aaaa_memory:
-                description:
-                - "Field aaaa_memory"
-            zone_objects:
-                description:
-                - "Field zone_objects"
-            table_objects:
-                description:
-                - "Field table_objects"
-            mx_memory:
-                description:
-                - "Field mx_memory"
-            soa_memory:
-                description:
-                - "Field soa_memory"
-            domain_objects:
-                description:
-                - "Field domain_objects"
-            nsec_memory:
-                description:
-                - "Field nsec_memory"
-            nsec3_objects:
-                description:
-                - "Field nsec3_objects"
-            srv_objects:
-                description:
-                - "Field srv_objects"
-            array_objects:
-                description:
-                - "Field array_objects"
-            ns_objects:
-                description:
-                - "Field ns_objects"
-            soa_objects:
-                description:
-                - "Field soa_objects"
-            ds_memory:
-                description:
-                - "Field ds_memory"
-            cname_objects:
-                description:
-                - "Field cname_objects"
-            domain_memory:
-                description:
-                - "Field domain_memory"
-            nsec3param_memory:
-                description:
-                - "Field nsec3param_memory"
-            txt_memory:
-                description:
-                - "Field txt_memory"
-            dnskey_memory:
-                description:
-                - "Field dnskey_memory"
-            total_objects:
-                description:
-                - "Field total_objects"
-            ptr_objects:
-                description:
-                - "Field ptr_objects"
-            aaaa_objects:
-                description:
-                - "Field aaaa_objects"
-            mx_objects:
-                description:
-                - "Field mx_objects"
-            txt_objects:
-                description:
-                - "Field txt_objects"
-            rrsig_objects:
-                description:
-                - "Field rrsig_objects"
-            rrsig2_memory:
-                description:
-                - "Field rrsig2_memory"
-            nsec3_memory:
-                description:
-                - "Field nsec3_memory"
-            zone_memory:
-                description:
-                - "Field zone_memory"
-            rrsig2_objects:
-                description:
-                - "Field rrsig2_objects"
-            rrsig_memory:
-                description:
-                - "Field rrsig_memory"
-            dnskey_objects:
-                description:
-                - "Field dnskey_objects"
-    key_rollover:
-        description:
-        - "Field key_rollover"
-        required: False
-        suboptions:
-            dnssec_key_type:
-                description:
-                - "'ZSK'= Zone Signing Key; 'KSK'= Key Signing Key;"
-            zsk_start:
-                description:
-                - "start ZSK rollover in emergency mode"
-            ksk_start:
-                description:
-                - "start KSK rollover in emergency mode"
-            ds_ready_in_parent_zone:
-                description:
-                - "DS RR is already ready in the parent zone"
-            zone_name:
-                description:
-                - "Specify the name for the DNS zone"
     standalone:
         description:
         - "Run DNSSEC in standalone mode, in GSLB group mode by default"
+        type: bool
         required: False
-    sign_zone_now:
+    uuid:
         description:
-        - "Field sign_zone_now"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            zone_name:
-                description:
-                - "Specify the name for the DNS zone, empty means sign all zones"
     dnskey:
         description:
         - "Field dnskey"
+        type: dict
         required: False
         suboptions:
             key_delete:
                 description:
                 - "Delete the DNSKEY file"
+                type: bool
             zone_name:
                 description:
                 - "DNS zone name of the child zone"
-    template_list:
-        description:
-        - "Field template_list"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            algorithm:
-                description:
-                - "'RSASHA1'= RSASHA1 algorithm; 'RSASHA256'= RSASHA256 algorithm; 'RSASHA512'=
-          RSASHA512 algorithm;"
-            combinations_limit:
-                description:
-                - "the max number of combinations per RRset (Default value is 31)"
-            dnskey_ttl_k:
-                description:
-                - "The TTL value of DNSKEY RR"
-            user_tag:
-                description:
-                - "Customized tag"
-            hsm:
-                description:
-                - "specify the HSM template"
-            enable_nsec3:
-                description:
-                - "enable NSEC3 support. disabled by default"
-            return_nsec_on_failure:
-                description:
-                - "return NSEC/NSEC3 or not on failure case. return by default"
-            dnskey_ttl_v:
-                description:
-                - "in seconds, 14400 seconds by default"
-            signature_validity_period_k:
-                description:
-                - "The period that a signature is valid"
-            dnssec_template_ksk:
-                description:
-                - "Field dnssec_template_ksk"
-            dnssec_template_zsk:
-                description:
-                - "Field dnssec_template_zsk"
-            signature_validity_period_v:
-                description:
-                - "in days, 10 days by default"
-            dnssec_temp_name:
-                description:
-                - "DNSSEC Template Name"
+                type: str
     ds:
         description:
         - "Field ds"
+        type: dict
         required: False
         suboptions:
             ds_delete:
                 description:
                 - "Delete the DS file"
+                type: bool
             zone_name:
                 description:
                 - "DNS zone name of the child zone"
-    uuid:
+                type: str
+    sign_zone_now:
         description:
-        - "uuid of the object"
+        - "Field sign_zone_now"
+        type: dict
         required: False
+        suboptions:
+            zone_name:
+                description:
+                - "Specify the name for the DNS zone, empty means sign all zones"
+                type: str
+    key_rollover:
+        description:
+        - "Field key_rollover"
+        type: dict
+        required: False
+        suboptions:
+            zone_name:
+                description:
+                - "Specify the name for the DNS zone"
+                type: str
+            dnssec_key_type:
+                description:
+                - "'ZSK'= Zone Signing Key; 'KSK'= Key Signing Key;"
+                type: str
+            zsk_start:
+                description:
+                - "start ZSK rollover in emergency mode"
+                type: bool
+            ksk_start:
+                description:
+                - "start KSK rollover in emergency mode"
+                type: bool
+            ds_ready_in_parent_zone:
+                description:
+                - "DS RR is already ready in the parent zone"
+                type: bool
+    template_list:
+        description:
+        - "Field template_list"
+        type: list
+        required: False
+        suboptions:
+            dnssec_temp_name:
+                description:
+                - "DNSSEC Template Name"
+                type: str
+            algorithm:
+                description:
+                - "'RSASHA1'= RSASHA1 algorithm; 'RSASHA256'= RSASHA256 algorithm; 'RSASHA512'=
+          RSASHA512 algorithm;"
+                type: str
+            combinations_limit:
+                description:
+                - "the max number of combinations per RRset (Default value is 31)"
+                type: int
+            dnskey_ttl_k:
+                description:
+                - "The TTL value of DNSKEY RR"
+                type: bool
+            dnskey_ttl_v:
+                description:
+                - "in seconds, 14400 seconds by default"
+                type: int
+            enable_nsec3:
+                description:
+                - "enable NSEC3 support. disabled by default"
+                type: bool
+            return_nsec_on_failure:
+                description:
+                - "return NSEC/NSEC3 or not on failure case. return by default"
+                type: bool
+            signature_validity_period_k:
+                description:
+                - "The period that a signature is valid"
+                type: bool
+            signature_validity_period_v:
+                description:
+                - "in days, 10 days by default"
+                type: int
+            hsm:
+                description:
+                - "specify the HSM template"
+                type: str
+            dnssec_template_zsk:
+                description:
+                - "Field dnssec_template_zsk"
+                type: dict
+            dnssec_template_ksk:
+                description:
+                - "Field dnssec_template_ksk"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            soa_memory:
+                description:
+                - "Field soa_memory"
+                type: int
+            soa_objects:
+                description:
+                - "Field soa_objects"
+                type: int
+            dnskey_memory:
+                description:
+                - "Field dnskey_memory"
+                type: int
+            dnskey_objects:
+                description:
+                - "Field dnskey_objects"
+                type: int
+            ds_memory:
+                description:
+                - "Field ds_memory"
+                type: int
+            ds_objects:
+                description:
+                - "Field ds_objects"
+                type: int
+            nsec3param_memory:
+                description:
+                - "Field nsec3param_memory"
+                type: int
+            nsec3param_objects:
+                description:
+                - "Field nsec3param_objects"
+                type: int
+            nsec_memory:
+                description:
+                - "Field nsec_memory"
+                type: int
+            nsec_objects:
+                description:
+                - "Field nsec_objects"
+                type: int
+            nsec3_memory:
+                description:
+                - "Field nsec3_memory"
+                type: int
+            nsec3_objects:
+                description:
+                - "Field nsec3_objects"
+                type: int
+            rrsig_memory:
+                description:
+                - "Field rrsig_memory"
+                type: int
+            rrsig_objects:
+                description:
+                - "Field rrsig_objects"
+                type: int
+            a_memory:
+                description:
+                - "Field a_memory"
+                type: int
+            a_objects:
+                description:
+                - "Field a_objects"
+                type: int
+            aaaa_memory:
+                description:
+                - "Field aaaa_memory"
+                type: int
+            aaaa_objects:
+                description:
+                - "Field aaaa_objects"
+                type: int
+            ptr_memory:
+                description:
+                - "Field ptr_memory"
+                type: int
+            ptr_objects:
+                description:
+                - "Field ptr_objects"
+                type: int
+            cname_memory:
+                description:
+                - "Field cname_memory"
+                type: int
+            cname_objects:
+                description:
+                - "Field cname_objects"
+                type: int
+            ns_memory:
+                description:
+                - "Field ns_memory"
+                type: int
+            ns_objects:
+                description:
+                - "Field ns_objects"
+                type: int
+            mx_memory:
+                description:
+                - "Field mx_memory"
+                type: int
+            mx_objects:
+                description:
+                - "Field mx_objects"
+                type: int
+            srv_memory:
+                description:
+                - "Field srv_memory"
+                type: int
+            srv_objects:
+                description:
+                - "Field srv_objects"
+                type: int
+            txt_memory:
+                description:
+                - "Field txt_memory"
+                type: int
+            txt_objects:
+                description:
+                - "Field txt_objects"
+                type: int
+            zone_memory:
+                description:
+                - "Field zone_memory"
+                type: int
+            zone_objects:
+                description:
+                - "Field zone_objects"
+                type: int
+            domain_memory:
+                description:
+                - "Field domain_memory"
+                type: int
+            domain_objects:
+                description:
+                - "Field domain_objects"
+                type: int
+            table_memory:
+                description:
+                - "Field table_memory"
+                type: int
+            table_objects:
+                description:
+                - "Field table_objects"
+                type: int
+            reference_memory:
+                description:
+                - "Field reference_memory"
+                type: int
+            reference_objects:
+                description:
+                - "Field reference_objects"
+                type: int
+            array_memory:
+                description:
+                - "Field array_memory"
+                type: int
+            array_objects:
+                description:
+                - "Field array_objects"
+                type: int
+            rrsig2_memory:
+                description:
+                - "Field rrsig2_memory"
+                type: int
+            rrsig2_objects:
+                description:
+                - "Field rrsig2_objects"
+                type: int
+            total_memory:
+                description:
+                - "Field total_memory"
+                type: int
+            total_objects:
+                description:
+                - "Field total_objects"
+                type: int
 
 '''
 
@@ -352,143 +433,41 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
+        'standalone': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'dnskey': {
             'type': 'dict',
-            'ptr_memory': {
-                'type': 'int',
+            'key_delete': {
+                'type': 'bool',
             },
-            'total_memory': {
-                'type': 'int',
+            'zone_name': {
+                'type': 'str',
+            }
+        },
+        'ds': {
+            'type': 'dict',
+            'ds_delete': {
+                'type': 'bool',
             },
-            'reference_objects': {
-                'type': 'int',
-            },
-            'cname_memory': {
-                'type': 'int',
-            },
-            'ds_objects': {
-                'type': 'int',
-            },
-            'nsec_objects': {
-                'type': 'int',
-            },
-            'array_memory': {
-                'type': 'int',
-            },
-            'nsec3param_objects': {
-                'type': 'int',
-            },
-            'srv_memory': {
-                'type': 'int',
-            },
-            'reference_memory': {
-                'type': 'int',
-            },
-            'a_memory': {
-                'type': 'int',
-            },
-            'table_memory': {
-                'type': 'int',
-            },
-            'a_objects': {
-                'type': 'int',
-            },
-            'ns_memory': {
-                'type': 'int',
-            },
-            'aaaa_memory': {
-                'type': 'int',
-            },
-            'zone_objects': {
-                'type': 'int',
-            },
-            'table_objects': {
-                'type': 'int',
-            },
-            'mx_memory': {
-                'type': 'int',
-            },
-            'soa_memory': {
-                'type': 'int',
-            },
-            'domain_objects': {
-                'type': 'int',
-            },
-            'nsec_memory': {
-                'type': 'int',
-            },
-            'nsec3_objects': {
-                'type': 'int',
-            },
-            'srv_objects': {
-                'type': 'int',
-            },
-            'array_objects': {
-                'type': 'int',
-            },
-            'ns_objects': {
-                'type': 'int',
-            },
-            'soa_objects': {
-                'type': 'int',
-            },
-            'ds_memory': {
-                'type': 'int',
-            },
-            'cname_objects': {
-                'type': 'int',
-            },
-            'domain_memory': {
-                'type': 'int',
-            },
-            'nsec3param_memory': {
-                'type': 'int',
-            },
-            'txt_memory': {
-                'type': 'int',
-            },
-            'dnskey_memory': {
-                'type': 'int',
-            },
-            'total_objects': {
-                'type': 'int',
-            },
-            'ptr_objects': {
-                'type': 'int',
-            },
-            'aaaa_objects': {
-                'type': 'int',
-            },
-            'mx_objects': {
-                'type': 'int',
-            },
-            'txt_objects': {
-                'type': 'int',
-            },
-            'rrsig_objects': {
-                'type': 'int',
-            },
-            'rrsig2_memory': {
-                'type': 'int',
-            },
-            'nsec3_memory': {
-                'type': 'int',
-            },
-            'zone_memory': {
-                'type': 'int',
-            },
-            'rrsig2_objects': {
-                'type': 'int',
-            },
-            'rrsig_memory': {
-                'type': 'int',
-            },
-            'dnskey_objects': {
-                'type': 'int',
+            'zone_name': {
+                'type': 'str',
+            }
+        },
+        'sign_zone_now': {
+            'type': 'dict',
+            'zone_name': {
+                'type': 'str',
             }
         },
         'key_rollover': {
             'type': 'dict',
+            'zone_name': {
+                'type': 'str',
+            },
             'dnssec_key_type': {
                 'type': 'str',
                 'choices': ['ZSK', 'KSK']
@@ -501,33 +480,13 @@ def get_argspec():
             },
             'ds_ready_in_parent_zone': {
                 'type': 'bool',
-            },
-            'zone_name': {
-                'type': 'str',
-            }
-        },
-        'standalone': {
-            'type': 'bool',
-        },
-        'sign_zone_now': {
-            'type': 'dict',
-            'zone_name': {
-                'type': 'str',
-            }
-        },
-        'dnskey': {
-            'type': 'dict',
-            'key_delete': {
-                'type': 'bool',
-            },
-            'zone_name': {
-                'type': 'str',
             }
         },
         'template_list': {
             'type': 'list',
-            'uuid': {
+            'dnssec_temp_name': {
                 'type': 'str',
+                'required': True,
             },
             'algorithm': {
                 'type': 'str',
@@ -539,11 +498,8 @@ def get_argspec():
             'dnskey_ttl_k': {
                 'type': 'bool',
             },
-            'user_tag': {
-                'type': 'str',
-            },
-            'hsm': {
-                'type': 'str',
+            'dnskey_ttl_v': {
+                'type': 'int',
             },
             'enable_nsec3': {
                 'type': 'bool',
@@ -551,22 +507,46 @@ def get_argspec():
             'return_nsec_on_failure': {
                 'type': 'bool',
             },
-            'dnskey_ttl_v': {
-                'type': 'int',
-            },
             'signature_validity_period_k': {
                 'type': 'bool',
+            },
+            'signature_validity_period_v': {
+                'type': 'int',
+            },
+            'hsm': {
+                'type': 'str',
+            },
+            'dnssec_template_zsk': {
+                'type': 'dict',
+                'zsk_keysize_k': {
+                    'type': 'bool',
+                },
+                'zsk_keysize_v': {
+                    'type': 'int',
+                },
+                'zsk_lifetime_k': {
+                    'type': 'bool',
+                },
+                'zsk_lifetime_v': {
+                    'type': 'int',
+                },
+                'zsk_rollover_time_k': {
+                    'type': 'bool',
+                },
+                'zsk_rollover_time_v': {
+                    'type': 'int',
+                }
             },
             'dnssec_template_ksk': {
                 'type': 'dict',
                 'ksk_keysize_k': {
                     'type': 'bool',
                 },
-                'zsk_rollover_time_v': {
-                    'type': 'int',
-                },
                 'ksk_keysize_v': {
                     'type': 'int',
+                },
+                'ksk_lifetime_k': {
+                    'type': 'bool',
                 },
                 'ksk_lifetime_v': {
                     'type': 'int',
@@ -574,50 +554,151 @@ def get_argspec():
                 'ksk_rollover_time_k': {
                     'type': 'bool',
                 },
-                'ksk_lifetime_k': {
-                    'type': 'bool',
-                }
-            },
-            'dnssec_template_zsk': {
-                'type': 'dict',
-                'zsk_keysize_v': {
-                    'type': 'int',
-                },
                 'zsk_rollover_time_v': {
                     'type': 'int',
-                },
-                'zsk_lifetime_v': {
-                    'type': 'int',
-                },
-                'zsk_lifetime_k': {
-                    'type': 'bool',
-                },
-                'zsk_keysize_k': {
-                    'type': 'bool',
-                },
-                'zsk_rollover_time_k': {
-                    'type': 'bool',
                 }
             },
-            'signature_validity_period_v': {
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'soa_memory': {
                 'type': 'int',
             },
-            'dnssec_temp_name': {
-                'type': 'str',
-                'required': True,
-            }
-        },
-        'ds': {
-            'type': 'dict',
-            'ds_delete': {
-                'type': 'bool',
+            'soa_objects': {
+                'type': 'int',
             },
-            'zone_name': {
-                'type': 'str',
+            'dnskey_memory': {
+                'type': 'int',
+            },
+            'dnskey_objects': {
+                'type': 'int',
+            },
+            'ds_memory': {
+                'type': 'int',
+            },
+            'ds_objects': {
+                'type': 'int',
+            },
+            'nsec3param_memory': {
+                'type': 'int',
+            },
+            'nsec3param_objects': {
+                'type': 'int',
+            },
+            'nsec_memory': {
+                'type': 'int',
+            },
+            'nsec_objects': {
+                'type': 'int',
+            },
+            'nsec3_memory': {
+                'type': 'int',
+            },
+            'nsec3_objects': {
+                'type': 'int',
+            },
+            'rrsig_memory': {
+                'type': 'int',
+            },
+            'rrsig_objects': {
+                'type': 'int',
+            },
+            'a_memory': {
+                'type': 'int',
+            },
+            'a_objects': {
+                'type': 'int',
+            },
+            'aaaa_memory': {
+                'type': 'int',
+            },
+            'aaaa_objects': {
+                'type': 'int',
+            },
+            'ptr_memory': {
+                'type': 'int',
+            },
+            'ptr_objects': {
+                'type': 'int',
+            },
+            'cname_memory': {
+                'type': 'int',
+            },
+            'cname_objects': {
+                'type': 'int',
+            },
+            'ns_memory': {
+                'type': 'int',
+            },
+            'ns_objects': {
+                'type': 'int',
+            },
+            'mx_memory': {
+                'type': 'int',
+            },
+            'mx_objects': {
+                'type': 'int',
+            },
+            'srv_memory': {
+                'type': 'int',
+            },
+            'srv_objects': {
+                'type': 'int',
+            },
+            'txt_memory': {
+                'type': 'int',
+            },
+            'txt_objects': {
+                'type': 'int',
+            },
+            'zone_memory': {
+                'type': 'int',
+            },
+            'zone_objects': {
+                'type': 'int',
+            },
+            'domain_memory': {
+                'type': 'int',
+            },
+            'domain_objects': {
+                'type': 'int',
+            },
+            'table_memory': {
+                'type': 'int',
+            },
+            'table_objects': {
+                'type': 'int',
+            },
+            'reference_memory': {
+                'type': 'int',
+            },
+            'reference_objects': {
+                'type': 'int',
+            },
+            'array_memory': {
+                'type': 'int',
+            },
+            'array_objects': {
+                'type': 'int',
+            },
+            'rrsig2_memory': {
+                'type': 'int',
+            },
+            'rrsig2_objects': {
+                'type': 'int',
+            },
+            'total_memory': {
+                'type': 'int',
+            },
+            'total_objects': {
+                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_inside_source_static
 description:
     - Static Address Translations
-short_description: Configures A10 ip.nat.inside.source.static
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,52 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    action:
-        description:
-        - "'enable'= Enable static mapping (default); 'disable'= Disable static mapping;"
-        required: False
-    nat_address:
-        description:
-        - "NAT Address"
-        required: True
-    vrid:
-        description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     src_address:
         description:
         - "Original Source Address"
+        type: str
         required: True
+    nat_address:
+        description:
+        - "NAT Address"
+        type: str
+        required: True
+    vrid:
+        description:
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
+        required: False
+    action:
+        description:
+        - "'enable'= Enable static mapping (default); 'disable'= Disable static mapping;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -126,9 +136,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'action': {
+        'src_address': {
             'type': 'str',
-            'choices': ['enable', 'disable']
+            'required': True,
         },
         'nat_address': {
             'type': 'str',
@@ -137,12 +147,12 @@ def get_argspec():
         'vrid': {
             'type': 'int',
         },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
         'uuid': {
             'type': 'str',
-        },
-        'src_address': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

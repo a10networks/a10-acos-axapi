@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_accounting
 description:
     - Configuration for accounting
-short_description: Configures A10 accounting
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,69 +22,85 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     commands:
         description:
         - "Enable level for commands accounting"
+        type: int
+        required: False
+    debug:
+        description:
+        - "Specify the debug level for accounting (Debug level for command accounting.
+          bitwise OR of the following= 1(common), 2(packet),4(packet detail), 8(md5))"
+        type: int
+        required: False
+    stop_only:
+        description:
+        - "Record stop when service terminates"
+        type: bool
+        required: False
+    tacplus:
+        description:
+        - "Use TACACS+ servers for accounting"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     nexec:
         description:
         - "Field exec"
+        type: dict
         required: False
         suboptions:
             accounting_exec_type:
                 description:
                 - "'start-stop'= Record start and stop without waiting; 'stop-only'= Record stop
           when service terminates;"
+                type: str
             accounting_exec_method:
                 description:
                 - "'tacplus'= Use TACACS+ servers for accounting; 'radius'= Use radius servers for
           accounting;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-    stop_only:
-        description:
-        - "Record stop when service terminates"
-        required: False
-    tacplus:
-        description:
-        - "Use TACACS+ servers for accounting"
-        required: False
-    debug:
-        description:
-        - "Specify the debug level for accounting (Debug level for command accounting.
-          bitwise OR of the following= 1(common), 2(packet),4(packet detail), 8(md5))"
-        required: False
+                type: str
 
 '''
 
@@ -147,6 +161,15 @@ def get_argspec():
         'commands': {
             'type': 'int',
         },
+        'debug': {
+            'type': 'int',
+        },
+        'stop_only': {
+            'type': 'bool',
+        },
+        'tacplus': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },
@@ -163,15 +186,6 @@ def get_argspec():
             'uuid': {
                 'type': 'str',
             }
-        },
-        'stop_only': {
-            'type': 'bool',
-        },
-        'tacplus': {
-            'type': 'bool',
-        },
-        'debug': {
-            'type': 'int',
         }
     })
     return rv

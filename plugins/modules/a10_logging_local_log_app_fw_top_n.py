@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_local_log_app_fw_top_n
 description:
     - Application firewall
-short_description: Configures A10 logging.local.log.app.fw.top-n
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,74 +22,94 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            category:
-                description:
-                - "Field category"
-            interval:
-                description:
-                - "Field interval"
-            interval_position:
-                description:
-                - "Field interval_position"
-            application_name:
-                description:
-                - "Field application_name"
-            top:
-                description:
-                - "Field top"
-            log_list:
-                description:
-                - "Field log_list"
             max_entries:
                 description:
                 - "Field max_entries"
-            action:
-                description:
-                - "Field action"
-            client_ip:
-                description:
-                - "Field client_ip"
-            total:
-                description:
-                - "Field total"
+                type: int
             start_time:
                 description:
                 - "Field start_time"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            interval:
+                description:
+                - "Field interval"
+                type: str
+            interval_position:
+                description:
+                - "Field interval_position"
+                type: str
+            top:
+                description:
+                - "Field top"
+                type: str
+            application_name:
+                description:
+                - "Field application_name"
+                type: str
+            category:
+                description:
+                - "Field category"
+                type: str
+            client_ip:
+                description:
+                - "Field client_ip"
+                type: str
+            action:
+                description:
+                - "Field action"
+                type: str
+            total:
+                description:
+                - "Field total"
+                type: int
+            log_list:
+                description:
+                - "Field log_list"
+                type: list
 
 '''
 
@@ -145,9 +163,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'category': {
+            'max_entries': {
+                'type': 'int',
+            },
+            'start_time': {
                 'type': 'str',
             },
             'interval': {
@@ -156,39 +180,33 @@ def get_argspec():
             'interval_position': {
                 'type': 'str',
             },
-            'application_name': {
-                'type': 'str',
-            },
             'top': {
                 'type': 'str',
             },
-            'log_list': {
-                'type': 'list',
-                'counter': {
-                    'type': 'int',
-                },
-                'name': {
-                    'type': 'str',
-                }
+            'application_name': {
+                'type': 'str',
             },
-            'max_entries': {
-                'type': 'int',
-            },
-            'action': {
+            'category': {
                 'type': 'str',
             },
             'client_ip': {
                 'type': 'str',
             },
+            'action': {
+                'type': 'str',
+            },
             'total': {
                 'type': 'int',
             },
-            'start_time': {
-                'type': 'str',
+            'log_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                },
+                'counter': {
+                    'type': 'int',
+                }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_mysql
 description:
     - Configure mysql
-short_description: Configures A10 slb.mysql
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -63,48 +74,57 @@ options:
           Encryption Conns; 'client_fin'= Client FIN; 'server_fin'= Server FIN;
           'session_err'= Session err; 'queries'= DB Queries; 'commands'= DB commands
           reply;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            server_fin:
-                description:
-                - "Server FIN"
-            curr_be_enc:
-                description:
-                - "Curr BE Encryption Conns"
-            total_be_enc:
-                description:
-                - "Total BE Encryption Conns"
-            total_proxy:
-                description:
-                - "Total Proxy Conns"
             curr_proxy:
                 description:
                 - "Curr Proxy Conns"
-            commands:
+                type: str
+            total_proxy:
                 description:
-                - "DB commands reply"
-            client_fin:
+                - "Total Proxy Conns"
+                type: str
+            curr_be_enc:
                 description:
-                - "Client FIN"
+                - "Curr BE Encryption Conns"
+                type: str
+            total_be_enc:
+                description:
+                - "Total BE Encryption Conns"
+                type: str
             curr_fe_enc:
                 description:
                 - "Curr FE Encryption Conns"
-            queries:
-                description:
-                - "DB Queries"
-            session_err:
-                description:
-                - "Session err"
+                type: str
             total_fe_enc:
                 description:
                 - "Total FE Encryption Conns"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            client_fin:
+                description:
+                - "Client FIN"
+                type: str
+            server_fin:
+                description:
+                - "Server FIN"
+                type: str
+            session_err:
+                description:
+                - "Session err"
+                type: str
+            queries:
+                description:
+                - "DB Queries"
+                type: str
+            commands:
+                description:
+                - "DB commands reply"
+                type: str
 
 '''
 
@@ -159,6 +179,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -174,7 +197,10 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'server_fin': {
+            'curr_proxy': {
+                'type': 'str',
+            },
+            'total_proxy': {
                 'type': 'str',
             },
             'curr_be_enc': {
@@ -183,33 +209,27 @@ def get_argspec():
             'total_be_enc': {
                 'type': 'str',
             },
-            'total_proxy': {
+            'curr_fe_enc': {
                 'type': 'str',
             },
-            'curr_proxy': {
-                'type': 'str',
-            },
-            'commands': {
+            'total_fe_enc': {
                 'type': 'str',
             },
             'client_fin': {
                 'type': 'str',
             },
-            'curr_fe_enc': {
-                'type': 'str',
-            },
-            'queries': {
+            'server_fin': {
                 'type': 'str',
             },
             'session_err': {
                 'type': 'str',
             },
-            'total_fe_enc': {
+            'queries': {
+                'type': 'str',
+            },
+            'commands': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

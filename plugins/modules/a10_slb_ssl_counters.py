@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_counters
 description:
     - Client side SSL Vport Statistics
-short_description: Configures A10 slb.ssl-counters
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,521 +22,690 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            tls1_dhe_rsa_aes_128_gcm_sha256_failures:
-                description:
-                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Failures"
-            tls1_rsa_aes_256_sha256_successes:
-                description:
-                - "TLS1_RSA_AES_256_SHA256 Successes"
-            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Failures"
-            tls11_successes:
-                description:
-                - "Successful TLS1.1 connections"
-            tls1_dhe_rsa_chacha20_poly1305_sha256_failures:
-                description:
-                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
-            tls1_dhe_rsa_aes_256_gcm_sha384_successes:
-                description:
-                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Successes"
-            ssl3_rsa_rc4_128_sha_successes:
-                description:
-                - "SSL3_RSA_RC4_128_SHA Successes"
-            tls1_rsa_aes_256_gcm_sha384_id:
-                description:
-                - "TLS1_RSA_AES_256_GCM_SHA384 Cipher ID"
-            tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures:
-                description:
-                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
-            tls1_ecdhe_ecdsa_aes_256_sha384_id:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Cipher ID"
             vserver:
                 description:
                 - "virtual server name"
-            tls1_dhe_rsa_aes_128_gcm_sha256_successes:
-                description:
-                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Successes"
-            ssl3_rsa_des_40_cbc_sha_failures:
-                description:
-                - "SSL3_RSA_DES_40_CBC_SHA Failures"
-            tls1_ecdhe_rsa_aes_256_gcm_sha384_failures:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Failures"
-            tls1_dhe_rsa_aes_256_sha256_successes:
-                description:
-                - "TLS1_DHE_RSA_AES_256_SHA256 Successes"
-            kex_rsa_4096_successes:
-                description:
-                - "Successful 4096-bit RSA key exchanges"
-            tls1_ecdhe_rsa_aes_256_sha384_successes:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_SHA384 Successes"
-            tls1_ecdhe_rsa_aes_256_sha384_failures:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_SHA384 Failures"
-            cumulative_sessions:
-                description:
-                - "Cumulative SSL sessions"
-            tls1_rsa_aes_256_sha256_failures:
-                description:
-                - "TLS1_RSA_AES_256_SHA256 Failures"
-            tls1_rsa_export1024_rc4_56_md5_successes:
-                description:
-                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Successes"
-            tls1_rsa_aes_128_gcm_sha256_id:
-                description:
-                - "TLS1_RSA_AES_128_GCM_SHA256 Cipher ID"
-            ssl3_rsa_des_40_cbc_sha_id:
-                description:
-                - "SSL3_RSA_DES_40_CBC_SHA Cipher ID"
-            kex_ecdhe_secp384r1_failures:
-                description:
-                - "Failed secp384r1 ECDHE key exchanges"
-            tls1_ecdhe_ecdsa_aes_128_sha256_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Failures"
-            ssl3_rsa_rc4_40_md5_failures:
-                description:
-                - "SSL3_RSA_RC4_40_MD5 Failures"
-            tls1_rsa_aes_128_sha_id:
-                description:
-                - "TLS1_RSA_AES_128_SHA Cipher ID"
-            tls1_dhe_rsa_aes_128_sha256_id:
-                description:
-                - "TLS1_DHE_RSA_AES_128_SHA256 Cipher ID"
-            tls1_rsa_aes_128_sha256_id:
-                description:
-                - "TLS1_RSA_AES_128_SHA256 Cipher ID"
-            tls1_rsa_aes_128_sha_successes:
-                description:
-                - "TLS1_RSA_AES_128_SHA Successes"
-            tls1_rsa_export1024_rc4_56_sha_successes:
-                description:
-                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Successes"
-            sni_automap_missing_cert:
-                description:
-                - "Failed SNI auto map due to missing cert/key"
-            renego_ssl3_successes:
-                description:
-                - "Successful SSL3 renegotiations"
-            kex_dhe_1024_successes:
-                description:
-                - "Successful 1024-bit DHE key exchanges"
-            ssl3_rsa_rc4_128_md5_successes:
-                description:
-                - "SSL3_RSA_RC4_128_MD5 Successes"
-            ssl3_rsa_rc4_128_sha_id:
-                description:
-                - "SSL3_RSA_RC4_128_SHA Cipher ID"
-            tls1_rsa_export1024_rc4_56_sha_id:
-                description:
-                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Cipher ID"
-            kex_rsa_4096_failures:
-                description:
-                - "Failed 4096-bit RSA key exchanges"
-            kex_dhe_512_failures:
-                description:
-                - "Failed 512-bit DHE key exchanges"
-            ssl3_rsa_des_64_cbc_sha_id:
-                description:
-                - "SSL3_RSA_DES_64_CBC_SHA Cipher ID"
-            tls1_dhe_rsa_aes_256_sha256_failures:
-                description:
-                - "TLS1_DHE_RSA_AES_256_SHA256 Failures"
-            tls1_dhe_rsa_aes_256_gcm_sha384_failures:
-                description:
-                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Failures"
-            ssl3_rsa_rc4_128_sha_failures:
-                description:
-                - "SSL3_RSA_RC4_128_SHA Failures"
-            tls1_ecdhe_ecdsa_aes_128_sha_id:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_SHA Cipher ID"
+                type: str
             port:
                 description:
                 - "Virtual Port"
-            tls1_ecdhe_rsa_aes_256_gcm_sha384_successes:
+                type: int
+            cumulative_sessions:
                 description:
-                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Successes"
-            tls1_rsa_aes_256_sha_failures:
-                description:
-                - "TLS1_RSA_AES_256_SHA Failures"
+                - "Cumulative SSL sessions"
+                type: int
             ssl3_rsa_des_192_cbc3_sha_id:
                 description:
                 - "SSL3_RSA_DES_192_CBC3_SHA Cipher ID"
-            ssl3_rsa_des_64_cbc_sha_failures:
+                type: str
+            ssl3_rsa_des_40_cbc_sha_id:
                 description:
-                - "SSL3_RSA_DES_64_CBC_SHA Failures"
-            tls1_rsa_export1024_rc4_56_sha_failures:
+                - "SSL3_RSA_DES_40_CBC_SHA Cipher ID"
+                type: str
+            ssl3_rsa_des_64_cbc_sha_id:
                 description:
-                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Failures"
-            tls1_rsa_export1024_rc4_56_md5_id:
-                description:
-                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Cipher ID"
+                - "SSL3_RSA_DES_64_CBC_SHA Cipher ID"
+                type: str
             ssl3_rsa_rc4_128_md5_id:
                 description:
                 - "SSL3_RSA_RC4_128_MD5 Cipher ID"
-            tls1_rsa_aes_128_gcm_sha256_successes:
+                type: str
+            ssl3_rsa_rc4_128_sha_id:
                 description:
-                - "TLS1_RSA_AES_128_GCM_SHA256 Successes"
-            tls1_ecdhe_rsa_aes_256_sha384_id:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_SHA384 Cipher ID"
-            sess_cache_hit:
-                description:
-                - "Session cache hits"
-            ssl3_rsa_des_40_cbc_sha_successes:
-                description:
-                - "SSL3_RSA_DES_40_CBC_SHA Successes"
-            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes:
-                description:
-                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher successes"
-            tls1_ecdhe_ecdsa_aes_128_sha256_successes:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Successes"
-            tls1_rsa_aes_128_sha256_failures:
-                description:
-                - "TLS1_RSA_AES_128_SHA256 Failures"
-            tls1_ecdhe_ecdsa_aes_128_sha_successes:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_SHA Successes"
-            sni_automap_failures:
-                description:
-                - "Failed SNI auto mappings"
-            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Failures"
-            ssl3_rsa_rc4_128_md5_failures:
-                description:
-                - "SSL3_RSA_RC4_128_MD5 Failures"
-            tls1_ecdhe_rsa_aes_128_sha_successes:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_SHA Successes"
-            tls1_ecdhe_ecdsa_aes_128_sha_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_SHA Failures"
-            tls1_ecdhe_rsa_aes_128_gcm_sha256_failures:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Failures"
-            tls1_rsa_aes_256_sha256_id:
-                description:
-                - "TLS1_RSA_AES_256_SHA256 Cipher ID"
-            kex_dhe_2048_successes:
-                description:
-                - "Successful 2048-bit DHE key exchanges"
-            hs_avg_time:
-                description:
-                - "Average handshake time in milliseconds"
-            tls12_failures:
-                description:
-                - "Failed TLS1.2 connections"
-            tls1_ecdhe_rsa_aes_128_sha256_successes:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_SHA256 Successes"
-            ssl3_rsa_des_192_cbc3_sha_successes:
-                description:
-                - "SSL3_RSA_DES_192_CBC3_SHA Successes"
-            renego_ssl2_successes:
-                description:
-                - "Successful SSL2 renegotiations"
-            tls1_rsa_aes_256_sha_successes:
-                description:
-                - "TLS1_RSA_AES_256_SHA Successes"
-            sni_automap_conn_closed:
-                description:
-                - "Conn closed before SNI auto mappings"
-            renego_tls10_successes:
-                description:
-                - "Successful TLS1.0 renegotiations"
-            renego_tls12_failures:
-                description:
-                - "Failed TLS1.2 renegotiations"
-            tls1_dhe_rsa_aes_256_gcm_sha384_id:
-                description:
-                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Cipher ID"
-            cert_vfy:
-                description:
-                - "Sent certificate verify for authentication"
-            sni_automap_successes:
-                description:
-                - "Successful SNI auto mappings"
-            tls1_rsa_aes_128_sha256_successes:
-                description:
-                - "TLS1_RSA_AES_128_SHA256 Successes"
-            tls1_dhe_rsa_aes_256_sha_successes:
-                description:
-                - "TLS1_DHE_RSA_AES_256_SHA Successes"
-            tls1_dhe_rsa_aes_256_sha_failures:
-                description:
-                - "TLS1_DHE_RSA_AES_256_SHA Failures"
-            tls1_ecdhe_ecdsa_aes_128_sha256_id:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Cipher ID"
-            tls1_dhe_rsa_aes_128_gcm_sha256_id:
-                description:
-                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Cipher ID"
-            tls1_ecdhe_rsa_aes_128_sha_failures:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_SHA Failures"
-            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher failures"
-            renego_tls10_failures:
-                description:
-                - "Failed TLS1.0 renegotiations"
-            tls1_ecdhe_rsa_aes_128_sha_id:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_SHA Cipher ID"
-            kex_rsa_1024_failures:
-                description:
-                - "Failed 1024-bit RSA key exchanges"
-            tls1_ecdhe_rsa_aes_128_gcm_sha256_successes:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Successes"
-            sni_automap_max_active_conn:
-                description:
-                - "Failed SNI auto map due to max active limit"
-            sess_cache_curr_conn:
-                description:
-                - "Session cache current connections"
-            tls11_failures:
-                description:
-                - "Failed TLS1.1 connections"
-            kex_rsa_512_failures:
-                description:
-                - "Failed 512-bit RSA key exchanges"
-            tls1_dhe_rsa_aes_128_sha256_successes:
-                description:
-                - "TLS1_DHE_RSA_AES_128_SHA256 Successes"
-            tls1_ecdhe_rsa_aes_256_sha_failures:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_SHA Failures"
-            tls10_successes:
-                description:
-                - "Successful TLS1.0 connections"
+                - "SSL3_RSA_RC4_128_SHA Cipher ID"
+                type: str
             ssl3_rsa_rc4_40_md5_id:
                 description:
                 - "SSL3_RSA_RC4_40_MD5 Cipher ID"
-            tls1_ecdhe_ecdsa_aes_256_sha_successes:
+                type: str
+            tls1_dhe_rsa_aes_128_gcm_sha256_id:
                 description:
-                - "TLS1_ECDHE_ECDSA_AES_256_SHA Successes"
-            tls1_ecdhe_ecdsa_aes_256_sha384_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Failures"
-            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Successes"
-            tls1_ecdhe_rsa_aes_256_gcm_sha384_id:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Cipher ID"
-            ssl2_successes:
-                description:
-                - "Successful SSL2 connections"
-            kex_ecdhe_secp256r1_failures:
-                description:
-                - "Failed secp256r1 ECDHE key exchanges"
-            sess_cache_new:
-                description:
-                - "Session cache new entries"
-            renego_tls11_failures:
-                description:
-                - "Failed TLS1.1 renegotiations"
-            tls1_dhe_rsa_aes_128_sha256_failures:
-                description:
-                - "TLS1_DHE_RSA_AES_128_SHA256 Failures"
-            tls1_dhe_rsa_aes_128_sha_failures:
-                description:
-                - "TLS1_DHE_RSA_AES_128_SHA Failures"
-            tls12_successes:
-                description:
-                - "Successful TLS1.2 connections"
-            kex_rsa_2048_successes:
-                description:
-                - "Successful 2048-bit RSA key exchanges"
-            kex_rsa_2048_failures:
-                description:
-                - "Failed 2048-bit RSA key exchanges"
-            renego_ssl2_failures:
-                description:
-                - "Failed SSL2 renegotiations"
-            tls1_ecdhe_rsa_aes_128_sha256_id:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_SHA256 Cipher ID"
-            tls1_ecdhe_ecdsa_aes_256_sha384_successes:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Successes"
-            tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes:
-                description:
-                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
-            sess_cache_miss:
-                description:
-                - "Session cache misses"
-            kex_dhe_2048_failures:
-                description:
-                - "Failed 2048-bit DHE key exchanges"
-            tls1_rsa_aes_128_sha_failures:
-                description:
-                - "TLS1_RSA_AES_128_SHA Failures"
-            kex_dhe_512_successes:
-                description:
-                - "Successful 512-bit DHE key exchanges"
-            renego_tls12_successes:
-                description:
-                - "Successful TLS1.2 renegotiations"
-            kex_ecdhe_secp384r1_successes:
-                description:
-                - "Successful secp384r1 ECDHE key exchanges"
-            tls1_dhe_rsa_chacha20_poly1305_sha256_id:
-                description:
-                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
-            renego_tls11_successes:
-                description:
-                - "Successful TLS1.1 renegotiations"
-            tls1_dhe_rsa_aes_256_sha256_id:
-                description:
-                - "TLS1_DHE_RSA_AES_256_SHA256 Cipher ID"
-            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Cipher ID"
-            tls1_ecdhe_rsa_chacha20_poly1305_sha256_id:
-                description:
-                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
-            ssl3_rsa_rc4_40_md5_successes:
-                description:
-                - "SSL3_RSA_RC4_40_MD5 Successes"
-            tls1_ecdhe_rsa_aes_128_gcm_sha256_id:
-                description:
-                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Cipher ID"
-            ssl3_successes:
-                description:
-                - "Successful SSL3 connections"
-            kex_rsa_1024_successes:
-                description:
-                - "Successful 1024-bit RSA key exchanges"
-            renego_ssl3_failures:
-                description:
-                - "Failed SSL3 renegotiations"
-            kex_dhe_1024_failures:
-                description:
-                - "Failed 1024-bit DHE key exchanges"
-            tls1_ecdhe_ecdsa_aes_256_sha_id:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_SHA Cipher ID"
-            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Cipher ID"
-            tls1_dhe_rsa_chacha20_poly1305_sha256_successes:
-                description:
-                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
-            renegotiation_total:
-                description:
-                - "Total renegotiations"
-            kex_rsa_512_successes:
-                description:
-                - "Successful 512-bit RSA key exchanges"
-            tls1_dhe_rsa_aes_128_sha_successes:
-                description:
-                - "TLS1_DHE_RSA_AES_128_SHA Successes"
+                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Cipher ID"
+                type: str
             tls1_dhe_rsa_aes_128_sha_id:
                 description:
                 - "TLS1_DHE_RSA_AES_128_SHA Cipher ID"
-            tls10_failures:
+                type: str
+            tls1_dhe_rsa_aes_128_sha256_id:
                 description:
-                - "Failed TLS1.0 connections"
-            tls1_rsa_aes_256_gcm_sha384_failures:
+                - "TLS1_DHE_RSA_AES_128_SHA256 Cipher ID"
+                type: str
+            tls1_dhe_rsa_aes_256_gcm_sha384_id:
                 description:
-                - "TLS1_RSA_AES_256_GCM_SHA384 Failures"
-            ssl3_rsa_des_192_cbc3_sha_failures:
-                description:
-                - "SSL3_RSA_DES_192_CBC3_SHA Failures"
-            tls1_rsa_aes_256_gcm_sha384_successes:
-                description:
-                - "TLS1_RSA_AES_256_GCM_SHA384 Successes"
-            tls1_ecdhe_ecdsa_aes_256_sha_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_256_SHA Failures"
-            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id:
-                description:
-                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher ID"
-            ssl3_rsa_des_64_cbc_sha_successes:
-                description:
-                - "SSL3_RSA_DES_64_CBC_SHA Successes"
-            ssl3_failures:
-                description:
-                - "Failed SSL3 connections"
-            tls1_rsa_aes_128_gcm_sha256_failures:
-                description:
-                - "TLS1_RSA_AES_128_GCM_SHA256 Failures"
-            hs_failures:
-                description:
-                - "Total handshake failures"
-            tls1_ecdhe_rsa_aes_256_sha_id:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_SHA Cipher ID"
-            ssl2_failures:
-                description:
-                - "Failed SSL2 connections"
-            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes:
-                description:
-                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Successes"
-            sess_cache_timeout:
-                description:
-                - "Session cache timeouts"
-            tls1_ecdhe_rsa_aes_256_sha_successes:
-                description:
-                - "TLS1_ECDHE_RSA_AES_256_SHA Successes"
-            tls1_rsa_export1024_rc4_56_md5_failures:
-                description:
-                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Failures"
+                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Cipher ID"
+                type: str
             tls1_dhe_rsa_aes_256_sha_id:
                 description:
                 - "TLS1_DHE_RSA_AES_256_SHA Cipher ID"
+                type: str
+            tls1_dhe_rsa_aes_256_sha256_id:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA256 Cipher ID"
+                type: str
+            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Cipher ID"
+                type: str
+            tls1_ecdhe_ecdsa_aes_128_sha_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA Cipher ID"
+                type: str
+            tls1_ecdhe_ecdsa_aes_128_sha256_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Cipher ID"
+                type: str
+            tls1_ecdhe_ecdsa_aes_256_sha384_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Cipher ID"
+                type: str
+            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Cipher ID"
+                type: str
+            tls1_ecdhe_ecdsa_aes_256_sha_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA Cipher ID"
+                type: str
+            tls1_ecdhe_rsa_aes_128_gcm_sha256_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Cipher ID"
+                type: str
+            tls1_ecdhe_rsa_aes_128_sha_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA Cipher ID"
+                type: str
+            tls1_ecdhe_rsa_aes_128_sha256_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA256 Cipher ID"
+                type: str
+            tls1_ecdhe_rsa_aes_256_sha384_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA384 Cipher ID"
+                type: str
+            tls1_ecdhe_rsa_aes_256_gcm_sha384_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Cipher ID"
+                type: str
+            tls1_ecdhe_rsa_aes_256_sha_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA Cipher ID"
+                type: str
+            tls1_rsa_aes_128_gcm_sha256_id:
+                description:
+                - "TLS1_RSA_AES_128_GCM_SHA256 Cipher ID"
+                type: str
+            tls1_rsa_aes_128_sha_id:
+                description:
+                - "TLS1_RSA_AES_128_SHA Cipher ID"
+                type: str
+            tls1_rsa_aes_128_sha256_id:
+                description:
+                - "TLS1_RSA_AES_128_SHA256 Cipher ID"
+                type: str
+            tls1_rsa_aes_256_gcm_sha384_id:
+                description:
+                - "TLS1_RSA_AES_256_GCM_SHA384 Cipher ID"
+                type: str
             tls1_rsa_aes_256_sha_id:
                 description:
                 - "TLS1_RSA_AES_256_SHA Cipher ID"
+                type: str
+            tls1_rsa_aes_256_sha256_id:
+                description:
+                - "TLS1_RSA_AES_256_SHA256 Cipher ID"
+                type: str
+            tls1_rsa_export1024_rc4_56_md5_id:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Cipher ID"
+                type: str
+            tls1_rsa_export1024_rc4_56_sha_id:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Cipher ID"
+                type: str
+            tls1_ecdhe_rsa_chacha20_poly1305_sha256_id:
+                description:
+                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
+                type: str
+            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher ID"
+                type: str
+            tls1_dhe_rsa_chacha20_poly1305_sha256_id:
+                description:
+                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
+                type: str
+            ssl3_rsa_des_192_cbc3_sha_successes:
+                description:
+                - "SSL3_RSA_DES_192_CBC3_SHA Successes"
+                type: int
+            ssl3_rsa_des_40_cbc_sha_successes:
+                description:
+                - "SSL3_RSA_DES_40_CBC_SHA Successes"
+                type: int
+            ssl3_rsa_des_64_cbc_sha_successes:
+                description:
+                - "SSL3_RSA_DES_64_CBC_SHA Successes"
+                type: int
+            ssl3_rsa_rc4_128_md5_successes:
+                description:
+                - "SSL3_RSA_RC4_128_MD5 Successes"
+                type: int
+            ssl3_rsa_rc4_128_sha_successes:
+                description:
+                - "SSL3_RSA_RC4_128_SHA Successes"
+                type: int
+            ssl3_rsa_rc4_40_md5_successes:
+                description:
+                - "SSL3_RSA_RC4_40_MD5 Successes"
+                type: int
+            tls1_dhe_rsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Successes"
+                type: int
+            tls1_dhe_rsa_aes_128_sha_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA Successes"
+                type: int
+            tls1_dhe_rsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA256 Successes"
+                type: int
+            tls1_dhe_rsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Successes"
+                type: int
+            tls1_dhe_rsa_aes_256_sha_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA Successes"
+                type: int
+            tls1_dhe_rsa_aes_256_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA256 Successes"
+                type: int
+            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Successes"
+                type: int
+            tls1_ecdhe_ecdsa_aes_128_sha_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA Successes"
+                type: int
+            tls1_ecdhe_ecdsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Successes"
+                type: int
+            tls1_ecdhe_ecdsa_aes_256_sha384_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Successes"
+                type: int
+            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Successes"
+                type: int
+            tls1_ecdhe_ecdsa_aes_256_sha_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA Successes"
+                type: int
+            tls1_ecdhe_rsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Successes"
+                type: int
+            tls1_ecdhe_rsa_aes_128_sha_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA Successes"
+                type: int
+            tls1_ecdhe_rsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA256 Successes"
+                type: int
+            tls1_ecdhe_rsa_aes_256_sha384_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA384 Successes"
+                type: int
+            tls1_ecdhe_rsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Successes"
+                type: int
+            tls1_ecdhe_rsa_aes_256_sha_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA Successes"
+                type: int
+            tls1_rsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_RSA_AES_128_GCM_SHA256 Successes"
+                type: int
+            tls1_rsa_aes_128_sha_successes:
+                description:
+                - "TLS1_RSA_AES_128_SHA Successes"
+                type: int
+            tls1_rsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_RSA_AES_128_SHA256 Successes"
+                type: int
+            tls1_rsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_RSA_AES_256_GCM_SHA384 Successes"
+                type: int
+            tls1_rsa_aes_256_sha_successes:
+                description:
+                - "TLS1_RSA_AES_256_SHA Successes"
+                type: int
+            tls1_rsa_aes_256_sha256_successes:
+                description:
+                - "TLS1_RSA_AES_256_SHA256 Successes"
+                type: int
+            tls1_rsa_export1024_rc4_56_md5_successes:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Successes"
+                type: int
+            tls1_rsa_export1024_rc4_56_sha_successes:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Successes"
+                type: int
+            tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes:
+                description:
+                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+                type: int
+            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+                type: int
+            tls1_dhe_rsa_chacha20_poly1305_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+                type: int
+            ssl3_rsa_des_192_cbc3_sha_failures:
+                description:
+                - "SSL3_RSA_DES_192_CBC3_SHA Failures"
+                type: int
+            ssl3_rsa_des_40_cbc_sha_failures:
+                description:
+                - "SSL3_RSA_DES_40_CBC_SHA Failures"
+                type: int
+            ssl3_rsa_des_64_cbc_sha_failures:
+                description:
+                - "SSL3_RSA_DES_64_CBC_SHA Failures"
+                type: int
+            ssl3_rsa_rc4_128_md5_failures:
+                description:
+                - "SSL3_RSA_RC4_128_MD5 Failures"
+                type: int
+            ssl3_rsa_rc4_128_sha_failures:
+                description:
+                - "SSL3_RSA_RC4_128_SHA Failures"
+                type: int
+            ssl3_rsa_rc4_40_md5_failures:
+                description:
+                - "SSL3_RSA_RC4_40_MD5 Failures"
+                type: int
+            tls1_dhe_rsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Failures"
+                type: int
+            tls1_dhe_rsa_aes_128_sha_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA Failures"
+                type: int
+            tls1_dhe_rsa_aes_128_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA256 Failures"
+                type: int
+            tls1_dhe_rsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Failures"
+                type: int
+            tls1_dhe_rsa_aes_256_sha_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA Failures"
+                type: int
+            tls1_dhe_rsa_aes_256_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA256 Failures"
+                type: int
+            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Failures"
+                type: int
+            tls1_ecdhe_ecdsa_aes_128_sha_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA Failures"
+                type: int
+            tls1_ecdhe_ecdsa_aes_128_sha256_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Failures"
+                type: int
+            tls1_ecdhe_ecdsa_aes_256_sha384_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Failures"
+                type: int
+            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Failures"
+                type: int
+            tls1_ecdhe_ecdsa_aes_256_sha_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA Failures"
+                type: int
+            tls1_ecdhe_rsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Failures"
+                type: int
+            tls1_ecdhe_rsa_aes_128_sha_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA Failures"
+                type: int
             tls1_ecdhe_rsa_aes_128_sha256_failures:
                 description:
                 - "TLS1_ECDHE_RSA_AES_128_SHA256 Failures"
+                type: int
+            tls1_ecdhe_rsa_aes_256_sha384_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA384 Failures"
+                type: int
+            tls1_ecdhe_rsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Failures"
+                type: int
+            tls1_ecdhe_rsa_aes_256_sha_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA Failures"
+                type: int
+            tls1_rsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_RSA_AES_128_GCM_SHA256 Failures"
+                type: int
+            tls1_rsa_aes_128_sha_failures:
+                description:
+                - "TLS1_RSA_AES_128_SHA Failures"
+                type: int
+            tls1_rsa_aes_128_sha256_failures:
+                description:
+                - "TLS1_RSA_AES_128_SHA256 Failures"
+                type: int
+            tls1_rsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_RSA_AES_256_GCM_SHA384 Failures"
+                type: int
+            tls1_rsa_aes_256_sha_failures:
+                description:
+                - "TLS1_RSA_AES_256_SHA Failures"
+                type: int
+            tls1_rsa_aes_256_sha256_failures:
+                description:
+                - "TLS1_RSA_AES_256_SHA256 Failures"
+                type: int
+            tls1_rsa_export1024_rc4_56_md5_failures:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Failures"
+                type: int
+            tls1_rsa_export1024_rc4_56_sha_failures:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Failures"
+                type: int
+            tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures:
+                description:
+                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
+                type: int
+            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher failures"
+                type: int
+            tls1_dhe_rsa_chacha20_poly1305_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
+                type: int
+            kex_rsa_512_successes:
+                description:
+                - "Successful 512-bit RSA key exchanges"
+                type: int
+            kex_rsa_1024_successes:
+                description:
+                - "Successful 1024-bit RSA key exchanges"
+                type: int
+            kex_rsa_2048_successes:
+                description:
+                - "Successful 2048-bit RSA key exchanges"
+                type: int
+            kex_rsa_4096_successes:
+                description:
+                - "Successful 4096-bit RSA key exchanges"
+                type: int
+            kex_rsa_512_failures:
+                description:
+                - "Failed 512-bit RSA key exchanges"
+                type: int
+            kex_rsa_1024_failures:
+                description:
+                - "Failed 1024-bit RSA key exchanges"
+                type: int
+            kex_rsa_2048_failures:
+                description:
+                - "Failed 2048-bit RSA key exchanges"
+                type: int
+            kex_rsa_4096_failures:
+                description:
+                - "Failed 4096-bit RSA key exchanges"
+                type: int
             kex_ecdhe_secp256r1_successes:
                 description:
                 - "Successful secp256r1 ECDHE key exchanges"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            kex_ecdhe_secp384r1_successes:
+                description:
+                - "Successful secp384r1 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_secp256r1_failures:
+                description:
+                - "Failed secp256r1 ECDHE key exchanges"
+                type: int
+            kex_ecdhe_secp384r1_failures:
+                description:
+                - "Failed secp384r1 ECDHE key exchanges"
+                type: int
+            kex_dhe_512_successes:
+                description:
+                - "Successful 512-bit DHE key exchanges"
+                type: int
+            kex_dhe_1024_successes:
+                description:
+                - "Successful 1024-bit DHE key exchanges"
+                type: int
+            kex_dhe_2048_successes:
+                description:
+                - "Successful 2048-bit DHE key exchanges"
+                type: int
+            kex_dhe_512_failures:
+                description:
+                - "Failed 512-bit DHE key exchanges"
+                type: int
+            kex_dhe_1024_failures:
+                description:
+                - "Failed 1024-bit DHE key exchanges"
+                type: int
+            kex_dhe_2048_failures:
+                description:
+                - "Failed 2048-bit DHE key exchanges"
+                type: int
+            ssl2_successes:
+                description:
+                - "Successful SSL2 connections"
+                type: int
+            ssl3_successes:
+                description:
+                - "Successful SSL3 connections"
+                type: int
+            tls10_successes:
+                description:
+                - "Successful TLS1.0 connections"
+                type: int
+            tls11_successes:
+                description:
+                - "Successful TLS1.1 connections"
+                type: int
+            tls12_successes:
+                description:
+                - "Successful TLS1.2 connections"
+                type: int
+            ssl2_failures:
+                description:
+                - "Failed SSL2 connections"
+                type: int
+            ssl3_failures:
+                description:
+                - "Failed SSL3 connections"
+                type: int
+            tls10_failures:
+                description:
+                - "Failed TLS1.0 connections"
+                type: int
+            tls11_failures:
+                description:
+                - "Failed TLS1.1 connections"
+                type: int
+            tls12_failures:
+                description:
+                - "Failed TLS1.2 connections"
+                type: int
+            sess_cache_new:
+                description:
+                - "Session cache new entries"
+                type: int
+            sess_cache_hit:
+                description:
+                - "Session cache hits"
+                type: int
+            sess_cache_miss:
+                description:
+                - "Session cache misses"
+                type: int
+            sess_cache_timeout:
+                description:
+                - "Session cache timeouts"
+                type: int
+            sess_cache_curr_conn:
+                description:
+                - "Session cache current connections"
+                type: int
+            hs_failures:
+                description:
+                - "Total handshake failures"
+                type: int
+            cert_vfy:
+                description:
+                - "Sent certificate verify for authentication"
+                type: int
+            hs_avg_time:
+                description:
+                - "Average handshake time in milliseconds"
+                type: int
+            sni_automap_successes:
+                description:
+                - "Successful SNI auto mappings"
+                type: int
+            sni_automap_failures:
+                description:
+                - "Failed SNI auto mappings"
+                type: int
+            sni_automap_conn_closed:
+                description:
+                - "Conn closed before SNI auto mappings"
+                type: int
+            sni_automap_max_active_conn:
+                description:
+                - "Failed SNI auto map due to max active limit"
+                type: int
+            sni_automap_missing_cert:
+                description:
+                - "Failed SNI auto map due to missing cert/key"
+                type: int
+            renegotiation_total:
+                description:
+                - "Total renegotiations"
+                type: int
+            renego_ssl2_successes:
+                description:
+                - "Successful SSL2 renegotiations"
+                type: int
+            renego_ssl3_successes:
+                description:
+                - "Successful SSL3 renegotiations"
+                type: int
+            renego_tls10_successes:
+                description:
+                - "Successful TLS1.0 renegotiations"
+                type: int
+            renego_tls11_successes:
+                description:
+                - "Successful TLS1.1 renegotiations"
+                type: int
+            renego_tls12_successes:
+                description:
+                - "Successful TLS1.2 renegotiations"
+                type: int
+            renego_ssl2_failures:
+                description:
+                - "Failed SSL2 renegotiations"
+                type: int
+            renego_ssl3_failures:
+                description:
+                - "Failed SSL3 renegotiations"
+                type: int
+            renego_tls10_failures:
+                description:
+                - "Failed TLS1.0 renegotiations"
+                type: int
+            renego_tls11_failures:
+                description:
+                - "Failed TLS1.1 renegotiations"
+                type: int
+            renego_tls12_failures:
+                description:
+                - "Failed TLS1.2 renegotiations"
+                type: int
 
 '''
 
@@ -592,491 +759,491 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'tls1_dhe_rsa_aes_128_gcm_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_sha256_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures': {
-                'type': 'int',
-            },
-            'tls11_successes': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_chacha20_poly1305_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_256_gcm_sha384_successes': {
-                'type': 'int',
-            },
-            'ssl3_rsa_rc4_128_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_gcm_sha384_id': {
-                'type': 'str',
-            },
-            'tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_sha384_id': {
-                'type': 'str',
-            },
             'vserver': {
-                'type': 'str',
-            },
-            'tls1_dhe_rsa_aes_128_gcm_sha256_successes': {
-                'type': 'int',
-            },
-            'ssl3_rsa_des_40_cbc_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_256_gcm_sha384_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_256_sha256_successes': {
-                'type': 'int',
-            },
-            'kex_rsa_4096_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_256_sha384_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_256_sha384_failures': {
-                'type': 'int',
-            },
-            'cumulative_sessions': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_export1024_rc4_56_md5_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_128_gcm_sha256_id': {
-                'type': 'str',
-            },
-            'ssl3_rsa_des_40_cbc_sha_id': {
-                'type': 'str',
-            },
-            'kex_ecdhe_secp384r1_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_128_sha256_failures': {
-                'type': 'int',
-            },
-            'ssl3_rsa_rc4_40_md5_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_128_sha_id': {
-                'type': 'str',
-            },
-            'tls1_dhe_rsa_aes_128_sha256_id': {
-                'type': 'str',
-            },
-            'tls1_rsa_aes_128_sha256_id': {
-                'type': 'str',
-            },
-            'tls1_rsa_aes_128_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_export1024_rc4_56_sha_successes': {
-                'type': 'int',
-            },
-            'sni_automap_missing_cert': {
-                'type': 'int',
-            },
-            'renego_ssl3_successes': {
-                'type': 'int',
-            },
-            'kex_dhe_1024_successes': {
-                'type': 'int',
-            },
-            'ssl3_rsa_rc4_128_md5_successes': {
-                'type': 'int',
-            },
-            'ssl3_rsa_rc4_128_sha_id': {
-                'type': 'str',
-            },
-            'tls1_rsa_export1024_rc4_56_sha_id': {
-                'type': 'str',
-            },
-            'kex_rsa_4096_failures': {
-                'type': 'int',
-            },
-            'kex_dhe_512_failures': {
-                'type': 'int',
-            },
-            'ssl3_rsa_des_64_cbc_sha_id': {
-                'type': 'str',
-            },
-            'tls1_dhe_rsa_aes_256_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_256_gcm_sha384_failures': {
-                'type': 'int',
-            },
-            'ssl3_rsa_rc4_128_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_128_sha_id': {
                 'type': 'str',
             },
             'port': {
                 'type': 'int',
             },
-            'tls1_ecdhe_rsa_aes_256_gcm_sha384_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_sha_failures': {
+            'cumulative_sessions': {
                 'type': 'int',
             },
             'ssl3_rsa_des_192_cbc3_sha_id': {
                 'type': 'str',
             },
-            'ssl3_rsa_des_64_cbc_sha_failures': {
-                'type': 'int',
+            'ssl3_rsa_des_40_cbc_sha_id': {
+                'type': 'str',
             },
-            'tls1_rsa_export1024_rc4_56_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_export1024_rc4_56_md5_id': {
+            'ssl3_rsa_des_64_cbc_sha_id': {
                 'type': 'str',
             },
             'ssl3_rsa_rc4_128_md5_id': {
                 'type': 'str',
             },
-            'tls1_rsa_aes_128_gcm_sha256_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_256_sha384_id': {
+            'ssl3_rsa_rc4_128_sha_id': {
                 'type': 'str',
             },
-            'sess_cache_hit': {
-                'type': 'int',
-            },
-            'ssl3_rsa_des_40_cbc_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_128_sha256_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_128_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_128_sha_successes': {
-                'type': 'int',
-            },
-            'sni_automap_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures': {
-                'type': 'int',
-            },
-            'ssl3_rsa_rc4_128_md5_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_128_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_128_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_128_gcm_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_sha256_id': {
-                'type': 'str',
-            },
-            'kex_dhe_2048_successes': {
-                'type': 'int',
-            },
-            'hs_avg_time': {
-                'type': 'int',
-            },
-            'tls12_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_128_sha256_successes': {
-                'type': 'int',
-            },
-            'ssl3_rsa_des_192_cbc3_sha_successes': {
-                'type': 'int',
-            },
-            'renego_ssl2_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_sha_successes': {
-                'type': 'int',
-            },
-            'sni_automap_conn_closed': {
-                'type': 'int',
-            },
-            'renego_tls10_successes': {
-                'type': 'int',
-            },
-            'renego_tls12_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_256_gcm_sha384_id': {
-                'type': 'str',
-            },
-            'cert_vfy': {
-                'type': 'int',
-            },
-            'sni_automap_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_128_sha256_successes': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_256_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_256_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_128_sha256_id': {
+            'ssl3_rsa_rc4_40_md5_id': {
                 'type': 'str',
             },
             'tls1_dhe_rsa_aes_128_gcm_sha256_id': {
                 'type': 'str',
             },
-            'tls1_ecdhe_rsa_aes_128_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures': {
-                'type': 'int',
-            },
-            'renego_tls10_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_128_sha_id': {
+            'tls1_dhe_rsa_aes_128_sha_id': {
                 'type': 'str',
             },
-            'kex_rsa_1024_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_128_gcm_sha256_successes': {
-                'type': 'int',
-            },
-            'sni_automap_max_active_conn': {
-                'type': 'int',
-            },
-            'sess_cache_curr_conn': {
-                'type': 'int',
-            },
-            'tls11_failures': {
-                'type': 'int',
-            },
-            'kex_rsa_512_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_128_sha256_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_256_sha_failures': {
-                'type': 'int',
-            },
-            'tls10_successes': {
-                'type': 'int',
-            },
-            'ssl3_rsa_rc4_40_md5_id': {
+            'tls1_dhe_rsa_aes_128_sha256_id': {
                 'type': 'str',
             },
-            'tls1_ecdhe_ecdsa_aes_256_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_sha384_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_256_gcm_sha384_id': {
+            'tls1_dhe_rsa_aes_256_gcm_sha384_id': {
                 'type': 'str',
             },
-            'ssl2_successes': {
-                'type': 'int',
-            },
-            'kex_ecdhe_secp256r1_failures': {
-                'type': 'int',
-            },
-            'sess_cache_new': {
-                'type': 'int',
-            },
-            'renego_tls11_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_128_sha256_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_128_sha_failures': {
-                'type': 'int',
-            },
-            'tls12_successes': {
-                'type': 'int',
-            },
-            'kex_rsa_2048_successes': {
-                'type': 'int',
-            },
-            'kex_rsa_2048_failures': {
-                'type': 'int',
-            },
-            'renego_ssl2_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_128_sha256_id': {
+            'tls1_dhe_rsa_aes_256_sha_id': {
                 'type': 'str',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_sha384_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes': {
-                'type': 'int',
-            },
-            'sess_cache_miss': {
-                'type': 'int',
-            },
-            'kex_dhe_2048_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_128_sha_failures': {
-                'type': 'int',
-            },
-            'kex_dhe_512_successes': {
-                'type': 'int',
-            },
-            'renego_tls12_successes': {
-                'type': 'int',
-            },
-            'kex_ecdhe_secp384r1_successes': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_chacha20_poly1305_sha256_id': {
-                'type': 'str',
-            },
-            'renego_tls11_successes': {
-                'type': 'int',
             },
             'tls1_dhe_rsa_aes_256_sha256_id': {
-                'type': 'str',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id': {
-                'type': 'str',
-            },
-            'tls1_ecdhe_rsa_chacha20_poly1305_sha256_id': {
-                'type': 'str',
-            },
-            'ssl3_rsa_rc4_40_md5_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_rsa_aes_128_gcm_sha256_id': {
-                'type': 'str',
-            },
-            'ssl3_successes': {
-                'type': 'int',
-            },
-            'kex_rsa_1024_successes': {
-                'type': 'int',
-            },
-            'renego_ssl3_failures': {
-                'type': 'int',
-            },
-            'kex_dhe_1024_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_sha_id': {
                 'type': 'str',
             },
             'tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id': {
                 'type': 'str',
             },
-            'tls1_dhe_rsa_chacha20_poly1305_sha256_successes': {
-                'type': 'int',
-            },
-            'renegotiation_total': {
-                'type': 'int',
-            },
-            'kex_rsa_512_successes': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_128_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_128_sha_id': {
+            'tls1_ecdhe_ecdsa_aes_128_sha_id': {
                 'type': 'str',
             },
-            'tls10_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_gcm_sha384_failures': {
-                'type': 'int',
-            },
-            'ssl3_rsa_des_192_cbc3_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_rsa_aes_256_gcm_sha384_successes': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_aes_256_sha_failures': {
-                'type': 'int',
-            },
-            'tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id': {
+            'tls1_ecdhe_ecdsa_aes_128_sha256_id': {
                 'type': 'str',
             },
-            'ssl3_rsa_des_64_cbc_sha_successes': {
-                'type': 'int',
+            'tls1_ecdhe_ecdsa_aes_256_sha384_id': {
+                'type': 'str',
             },
-            'ssl3_failures': {
-                'type': 'int',
+            'tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id': {
+                'type': 'str',
             },
-            'tls1_rsa_aes_128_gcm_sha256_failures': {
-                'type': 'int',
+            'tls1_ecdhe_ecdsa_aes_256_sha_id': {
+                'type': 'str',
             },
-            'hs_failures': {
-                'type': 'int',
+            'tls1_ecdhe_rsa_aes_128_gcm_sha256_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_rsa_aes_128_sha_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_rsa_aes_128_sha256_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_rsa_aes_256_sha384_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_rsa_aes_256_gcm_sha384_id': {
+                'type': 'str',
             },
             'tls1_ecdhe_rsa_aes_256_sha_id': {
                 'type': 'str',
             },
-            'ssl2_failures': {
-                'type': 'int',
+            'tls1_rsa_aes_128_gcm_sha256_id': {
+                'type': 'str',
             },
-            'tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes': {
-                'type': 'int',
+            'tls1_rsa_aes_128_sha_id': {
+                'type': 'str',
             },
-            'sess_cache_timeout': {
-                'type': 'int',
+            'tls1_rsa_aes_128_sha256_id': {
+                'type': 'str',
             },
-            'tls1_ecdhe_rsa_aes_256_sha_successes': {
-                'type': 'int',
-            },
-            'tls1_rsa_export1024_rc4_56_md5_failures': {
-                'type': 'int',
-            },
-            'tls1_dhe_rsa_aes_256_sha_id': {
+            'tls1_rsa_aes_256_gcm_sha384_id': {
                 'type': 'str',
             },
             'tls1_rsa_aes_256_sha_id': {
                 'type': 'str',
             },
+            'tls1_rsa_aes_256_sha256_id': {
+                'type': 'str',
+            },
+            'tls1_rsa_export1024_rc4_56_md5_id': {
+                'type': 'str',
+            },
+            'tls1_rsa_export1024_rc4_56_sha_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_rsa_chacha20_poly1305_sha256_id': {
+                'type': 'str',
+            },
+            'tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id': {
+                'type': 'str',
+            },
+            'tls1_dhe_rsa_chacha20_poly1305_sha256_id': {
+                'type': 'str',
+            },
+            'ssl3_rsa_des_192_cbc3_sha_successes': {
+                'type': 'int',
+            },
+            'ssl3_rsa_des_40_cbc_sha_successes': {
+                'type': 'int',
+            },
+            'ssl3_rsa_des_64_cbc_sha_successes': {
+                'type': 'int',
+            },
+            'ssl3_rsa_rc4_128_md5_successes': {
+                'type': 'int',
+            },
+            'ssl3_rsa_rc4_128_sha_successes': {
+                'type': 'int',
+            },
+            'ssl3_rsa_rc4_40_md5_successes': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_128_gcm_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_128_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_128_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_256_gcm_sha384_successes': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_256_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_256_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_128_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_128_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_256_sha384_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_256_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_128_gcm_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_128_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_128_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_256_sha384_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_256_gcm_sha384_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_256_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_128_gcm_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_128_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_128_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_256_gcm_sha384_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_256_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_256_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_export1024_rc4_56_md5_successes': {
+                'type': 'int',
+            },
+            'tls1_rsa_export1024_rc4_56_sha_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_chacha20_poly1305_sha256_successes': {
+                'type': 'int',
+            },
+            'ssl3_rsa_des_192_cbc3_sha_failures': {
+                'type': 'int',
+            },
+            'ssl3_rsa_des_40_cbc_sha_failures': {
+                'type': 'int',
+            },
+            'ssl3_rsa_des_64_cbc_sha_failures': {
+                'type': 'int',
+            },
+            'ssl3_rsa_rc4_128_md5_failures': {
+                'type': 'int',
+            },
+            'ssl3_rsa_rc4_128_sha_failures': {
+                'type': 'int',
+            },
+            'ssl3_rsa_rc4_40_md5_failures': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_128_gcm_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_128_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_128_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_256_gcm_sha384_failures': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_256_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_aes_256_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_128_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_128_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_256_sha384_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_aes_256_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_128_gcm_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_128_sha_failures': {
+                'type': 'int',
+            },
             'tls1_ecdhe_rsa_aes_128_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_256_sha384_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_256_gcm_sha384_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_aes_256_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_128_gcm_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_128_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_128_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_256_gcm_sha384_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_256_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_aes_256_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_export1024_rc4_56_md5_failures': {
+                'type': 'int',
+            },
+            'tls1_rsa_export1024_rc4_56_sha_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures': {
+                'type': 'int',
+            },
+            'tls1_dhe_rsa_chacha20_poly1305_sha256_failures': {
+                'type': 'int',
+            },
+            'kex_rsa_512_successes': {
+                'type': 'int',
+            },
+            'kex_rsa_1024_successes': {
+                'type': 'int',
+            },
+            'kex_rsa_2048_successes': {
+                'type': 'int',
+            },
+            'kex_rsa_4096_successes': {
+                'type': 'int',
+            },
+            'kex_rsa_512_failures': {
+                'type': 'int',
+            },
+            'kex_rsa_1024_failures': {
+                'type': 'int',
+            },
+            'kex_rsa_2048_failures': {
+                'type': 'int',
+            },
+            'kex_rsa_4096_failures': {
                 'type': 'int',
             },
             'kex_ecdhe_secp256r1_successes': {
                 'type': 'int',
+            },
+            'kex_ecdhe_secp384r1_successes': {
+                'type': 'int',
+            },
+            'kex_ecdhe_secp256r1_failures': {
+                'type': 'int',
+            },
+            'kex_ecdhe_secp384r1_failures': {
+                'type': 'int',
+            },
+            'kex_dhe_512_successes': {
+                'type': 'int',
+            },
+            'kex_dhe_1024_successes': {
+                'type': 'int',
+            },
+            'kex_dhe_2048_successes': {
+                'type': 'int',
+            },
+            'kex_dhe_512_failures': {
+                'type': 'int',
+            },
+            'kex_dhe_1024_failures': {
+                'type': 'int',
+            },
+            'kex_dhe_2048_failures': {
+                'type': 'int',
+            },
+            'ssl2_successes': {
+                'type': 'int',
+            },
+            'ssl3_successes': {
+                'type': 'int',
+            },
+            'tls10_successes': {
+                'type': 'int',
+            },
+            'tls11_successes': {
+                'type': 'int',
+            },
+            'tls12_successes': {
+                'type': 'int',
+            },
+            'ssl2_failures': {
+                'type': 'int',
+            },
+            'ssl3_failures': {
+                'type': 'int',
+            },
+            'tls10_failures': {
+                'type': 'int',
+            },
+            'tls11_failures': {
+                'type': 'int',
+            },
+            'tls12_failures': {
+                'type': 'int',
+            },
+            'sess_cache_new': {
+                'type': 'int',
+            },
+            'sess_cache_hit': {
+                'type': 'int',
+            },
+            'sess_cache_miss': {
+                'type': 'int',
+            },
+            'sess_cache_timeout': {
+                'type': 'int',
+            },
+            'sess_cache_curr_conn': {
+                'type': 'int',
+            },
+            'hs_failures': {
+                'type': 'int',
+            },
+            'cert_vfy': {
+                'type': 'int',
+            },
+            'hs_avg_time': {
+                'type': 'int',
+            },
+            'sni_automap_successes': {
+                'type': 'int',
+            },
+            'sni_automap_failures': {
+                'type': 'int',
+            },
+            'sni_automap_conn_closed': {
+                'type': 'int',
+            },
+            'sni_automap_max_active_conn': {
+                'type': 'int',
+            },
+            'sni_automap_missing_cert': {
+                'type': 'int',
+            },
+            'renegotiation_total': {
+                'type': 'int',
+            },
+            'renego_ssl2_successes': {
+                'type': 'int',
+            },
+            'renego_ssl3_successes': {
+                'type': 'int',
+            },
+            'renego_tls10_successes': {
+                'type': 'int',
+            },
+            'renego_tls11_successes': {
+                'type': 'int',
+            },
+            'renego_tls12_successes': {
+                'type': 'int',
+            },
+            'renego_ssl2_failures': {
+                'type': 'int',
+            },
+            'renego_ssl3_failures': {
+                'type': 'int',
+            },
+            'renego_tls10_failures': {
+                'type': 'int',
+            },
+            'renego_tls11_failures': {
+                'type': 'int',
+            },
+            'renego_tls12_failures': {
+                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

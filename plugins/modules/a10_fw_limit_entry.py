@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_limit_entry
 description:
     - Rate Limit Information
-short_description: Configures A10 fw.limit-entry
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,68 +22,86 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            user_quota:
-                description:
-                - "Field user_quota"
-            prefix_len4:
-                description:
-                - "Field prefix_len4"
-            prefix6:
-                description:
-                - "Field prefix6"
-            pps:
-                description:
-                - "Field pps"
             limit_entry_list:
                 description:
                 - "Field limit_entry_list"
-            throughput:
+                type: list
+            prefix6:
                 description:
-                - "Field throughput"
-            limit_entry_count:
-                description:
-                - "Field limit_entry_count"
-            prefix_len6:
-                description:
-                - "Field prefix_len6"
+                - "Field prefix6"
+                type: str
             prefix4:
                 description:
                 - "Field prefix4"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            prefix_len6:
+                description:
+                - "Field prefix_len6"
+                type: int
+            prefix_len4:
+                description:
+                - "Field prefix_len4"
+                type: int
+            pps:
+                description:
+                - "Field pps"
+                type: bool
+            throughput:
+                description:
+                - "Field throughput"
+                type: bool
+            user_quota:
+                description:
+                - "Field user_quota"
+                type: bool
+            limit_entry_count:
+                description:
+                - "Field limit_entry_count"
+                type: int
 
 '''
 
@@ -139,24 +155,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'user_quota': {
-                'type': 'bool',
-            },
-            'prefix_len4': {
-                'type': 'int',
-            },
-            'prefix6': {
-                'type': 'str',
-            },
-            'pps': {
-                'type': 'bool',
-            },
             'limit_entry_list': {
                 'type': 'list',
-                'ref_count': {
-                    'type': 'int',
+                'address': {
+                    'type': 'str',
                 },
                 'prefix_len': {
                     'type': 'int',
@@ -167,31 +174,40 @@ def get_argspec():
                 'curr_count': {
                     'type': 'int',
                 },
-                'address': {
-                    'type': 'str',
-                },
                 'max_count': {
+                    'type': 'int',
+                },
+                'ref_count': {
                     'type': 'int',
                 },
                 'ntype': {
                     'type': 'str',
                 }
             },
-            'throughput': {
-                'type': 'bool',
+            'prefix6': {
+                'type': 'str',
             },
-            'limit_entry_count': {
-                'type': 'int',
+            'prefix4': {
+                'type': 'str',
             },
             'prefix_len6': {
                 'type': 'int',
             },
-            'prefix4': {
-                'type': 'str',
+            'prefix_len4': {
+                'type': 'int',
+            },
+            'pps': {
+                'type': 'bool',
+            },
+            'throughput': {
+                'type': 'bool',
+            },
+            'user_quota': {
+                'type': 'bool',
+            },
+            'limit_entry_count': {
+                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

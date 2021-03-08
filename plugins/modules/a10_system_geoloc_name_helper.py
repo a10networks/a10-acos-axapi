@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_geoloc_name_helper
 description:
     - Geolocation name helper
-short_description: Configures A10 system.geoloc-name-helper
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,58 +22,72 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            geoloc:
-                description:
-                - "Field geoloc"
-            geoloc_candidate_list:
-                description:
-                - "Field geoloc_candidate_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'place-holder'= place-holder;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            geoloc_candidate_list:
+                description:
+                - "Field geoloc_candidate_list"
+                type: list
+            geoloc:
+                description:
+                - "Field geoloc"
+                type: str
     stats:
         description:
         - "Field stats"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: dict
         required: False
 
 '''
@@ -132,20 +144,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'geoloc': {
-                'type': 'str',
-            },
-            'geoloc_candidate_list': {
-                'type': 'list',
-                'geoloc_name': {
-                    'type': 'str',
-                },
-                'has_subregion': {
-                    'type': 'int',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -154,11 +154,23 @@ def get_argspec():
                 'choices': ['all', 'place-holder']
             }
         },
+        'oper': {
+            'type': 'dict',
+            'geoloc_candidate_list': {
+                'type': 'list',
+                'geoloc_name': {
+                    'type': 'str',
+                },
+                'has_subregion': {
+                    'type': 'int',
+                }
+            },
+            'geoloc': {
+                'type': 'str',
+            }
+        },
         'stats': {
             'type': 'dict',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

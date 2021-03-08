@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy
 description:
     - Policy for GSLB zone, service or geo-location
-short_description: Configures A10 gslb.policy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,504 +22,649 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    name:
+        description:
+        - "Specify policy name"
+        type: str
+        required: True
+    health_check:
+        description:
+        - "Select Service-IP by health status"
+        type: bool
+        required: False
+    health_check_preference_enable:
+        description:
+        - "Check health preference"
+        type: bool
+        required: False
+    health_preference_top:
+        description:
+        - "Only keep top n"
+        type: int
+        required: False
+    amount_first:
+        description:
+        - "Select record based on the amount of available service-ip"
+        type: bool
+        required: False
+    weighted_ip_enable:
+        description:
+        - "Enable Select Service-IP by weighted preference"
+        type: bool
+        required: False
+    weighted_ip_total_hits:
+        description:
+        - "Weighted by total hits"
+        type: bool
+        required: False
+    weighted_site_enable:
+        description:
+        - "Enable Select Service-IP by weighted site preference"
+        type: bool
+        required: False
+    weighted_site_total_hits:
+        description:
+        - "Weighted by total hits"
+        type: bool
+        required: False
+    weighted_alias:
+        description:
+        - "Select alias name by weighted preference"
+        type: bool
+        required: False
+    active_servers_enable:
+        description:
+        - "Enable Select Service-IP with the highest number of active servers"
+        type: bool
+        required: False
+    active_servers_fail_break:
+        description:
+        - "Break when no active server"
+        type: bool
+        required: False
+    bw_cost_enable:
+        description:
+        - "Enable bw cost"
+        type: bool
+        required: False
+    bw_cost_fail_break:
+        description:
+        - "Break when exceed limit"
+        type: bool
+        required: False
+    geographic:
+        description:
+        - "Select Service-IP by geographic"
+        type: bool
+        required: False
+    num_session_enable:
+        description:
+        - "Enable Select Service-IP for device having maximum number of available sessions"
+        type: bool
+        required: False
+    num_session_tolerance:
+        description:
+        - "The difference between the available sessions, default is 10 (Tolerance)"
+        type: int
+        required: False
+    admin_preference:
+        description:
+        - "Select Service-IP for the device having maximum admin preference"
+        type: bool
+        required: False
+    alias_admin_preference:
+        description:
+        - "Select alias name having maximum admin preference"
+        type: bool
+        required: False
+    least_response:
+        description:
+        - "Least response selection"
+        type: bool
+        required: False
+    admin_ip_enable:
+        description:
+        - "Enable admin ip"
+        type: bool
+        required: False
+    admin_ip_top_only:
+        description:
+        - "Return highest priority server only"
+        type: bool
+        required: False
+    ordered_ip_top_only:
+        description:
+        - "Return highest priority server only"
+        type: bool
+        required: False
+    round_robin:
+        description:
+        - "Round robin selection, enabled by default"
+        type: bool
+        required: False
+    metric_force_check:
+        description:
+        - "Always check Service-IP for all enabled metrics"
+        type: bool
+        required: False
+    metric_fail_break:
+        description:
+        - "Break if no valid Service-IP"
+        type: bool
+        required: False
+    ip_list:
+        description:
+        - "Specify IP List (IP List Name)"
+        type: str
+        required: False
+    metric_order:
+        description:
+        - "Specify order of metric"
+        type: bool
+        required: False
+    metric_type:
+        description:
+        - "Field metric_type"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    capacity:
+        description:
+        - "Field capacity"
+        type: dict
+        required: False
+        suboptions:
+            capacity_enable:
+                description:
+                - "Enable capacity"
+                type: bool
+            threshold:
+                description:
+                - "Specify capacity threshold, default is 90"
+                type: int
+            capacity_fail_break:
+                description:
+                - "Break when exceed threshold"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    connection_load:
+        description:
+        - "Field connection_load"
+        type: dict
+        required: False
+        suboptions:
+            connection_load_enable:
+                description:
+                - "Enable connection-load"
+                type: bool
+            connection_load_fail_break:
+                description:
+                - "Break when exceed limit"
+                type: bool
+            connection_load_samples:
+                description:
+                - "Specify samples for connection-load (Number of samples used to calculate the
+          connection load, default is 5)"
+                type: int
+            connection_load_interval:
+                description:
+                - "Interval between two samples, Unit= second (Interval value,default is 5)"
+                type: int
+            limit:
+                description:
+                - "Limit of maxinum connection load, default is unlimited"
+                type: bool
+            connection_load_limit:
+                description:
+                - "The value of the connection-load limit, default is unlimited"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    dns:
+        description:
+        - "Field dns"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "Apply DNS action for service"
+                type: bool
+            active_only:
+                description:
+                - "Only keep active servers"
+                type: bool
+            active_only_fail_safe:
+                description:
+                - "Continue if no candidate"
+                type: bool
+            dns_addition_mx:
+                description:
+                - "Append MX Records in Addition Section"
+                type: bool
+            dns_auto_map:
+                description:
+                - "Automatically build DNS Infrastructure"
+                type: bool
+            backup_alias:
+                description:
+                - "Return alias name when fail"
+                type: bool
+            backup_server:
+                description:
+                - "Return fallback server when fail"
+                type: bool
+            external_ip:
+                description:
+                - "Return DNS response with external IP address"
+                type: bool
+            external_soa:
+                description:
+                - "Return DNS response with external SOA Record"
+                type: bool
+            cname_detect:
+                description:
+                - "Apply GSLB for DNS Server response when service is Canonical Name (CNAME)"
+                type: bool
+            ip_replace:
+                description:
+                - "Replace DNS Server Response with GSLB Service-IPs"
+                type: bool
+            geoloc_alias:
+                description:
+                - "Return alias name by geo-location"
+                type: bool
+            geoloc_action:
+                description:
+                - "Apply DNS action by geo-location"
+                type: bool
+            geoloc_policy:
+                description:
+                - "Apply different policy by geo-location"
+                type: bool
+            selected_only:
+                description:
+                - "Only keep selected servers"
+                type: bool
+            selected_only_value:
+                description:
+                - "Answer Number"
+                type: int
+            cache:
+                description:
+                - "Cache DNS Server response"
+                type: bool
+            aging_time:
+                description:
+                - "Specify aging-time, default is TTL in DNS record, unit= second (Aging time,
+          default 0 means using TTL in DNS record as aging time)"
+                type: int
+            delegation:
+                description:
+                - "Zone Delegation"
+                type: bool
+            hint:
+                description:
+                - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'=
+          Append Hint Records in DNS Addition Section;"
+                type: str
+            logging:
+                description:
+                - "'none'= None; 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS
+          Query and Response;"
+                type: str
+            template:
+                description:
+                - "Logging template (Logging Template Name)"
+                type: str
+            ttl:
+                description:
+                - "Specify the TTL value contained in DNS record (TTL value, unit= second, default
+          is 10)"
+                type: int
+            use_server_ttl:
+                description:
+                - "Use DNS Server Response TTL value in GSLB Proxy mode"
+                type: bool
+            server:
+                description:
+                - "Run GSLB as DNS server mode"
+                type: bool
+            server_srv:
+                description:
+                - "Provide SRV Records"
+                type: bool
+            server_mx:
+                description:
+                - "Provide MX Records"
+                type: bool
+            server_naptr:
+                description:
+                - "Provide NAPTR Records"
+                type: bool
+            server_addition_mx:
+                description:
+                - "Append MX Records in Addition Section"
+                type: bool
+            server_ns:
+                description:
+                - "Provide NS Records"
+                type: bool
+            server_auto_ns:
+                description:
+                - "Provide A-Records for NS-Records automatically"
+                type: bool
+            server_ptr:
+                description:
+                - "Provide PTR Records"
+                type: bool
+            server_auto_ptr:
+                description:
+                - "Provide PTR Records automatically"
+                type: bool
+            server_txt:
+                description:
+                - "Provide TXT Records"
+                type: bool
+            server_any:
+                description:
+                - "Provide All Records"
+                type: bool
+            server_any_with_metric:
+                description:
+                - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
+                type: bool
+            server_authoritative:
+                description:
+                - "As authoritative server"
+                type: bool
+            server_sec:
+                description:
+                - "Provide DNSSEC support"
+                type: bool
+            server_ns_list:
+                description:
+                - "Append All NS Records in Authoritative Section"
+                type: bool
+            server_full_list:
+                description:
+                - "Append All A Records in Authoritative Section"
+                type: bool
+            server_mode_only:
+                description:
+                - "Only run GSLB as DNS server mode"
+                type: bool
+            server_cname:
+                description:
+                - "Provide CNAME Records"
+                type: bool
+            ipv6:
+                description:
+                - "Field ipv6"
+                type: list
+            block_action:
+                description:
+                - "Specify Action"
+                type: bool
+            action_type:
+                description:
+                - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty
+          response;"
+                type: str
+            proxy_block_port_range_list:
+                description:
+                - "Field proxy_block_port_range_list"
+                type: list
+            block_value:
+                description:
+                - "Field block_value"
+                type: list
+            block_type:
+                description:
+                - "Field block_type"
+                type: str
+            sticky:
+                description:
+                - "Make DNS Record sticky for certain time"
+                type: bool
+            sticky_mask:
+                description:
+                - "Specify IP mask, default is /32"
+                type: str
+            sticky_ipv6_mask:
+                description:
+                - "Specify IPv6 mask length, default is 128"
+                type: int
+            sticky_aging_time:
+                description:
+                - "Specify aging-time, unit= min, default is 5 (Aging time)"
+                type: int
+            dynamic_preference:
+                description:
+                - "Make dynamically change the preference"
+                type: bool
+            dynamic_weight:
+                description:
+                - "dynamically change the weight"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    geo_location_list:
+        description:
+        - "Field geo_location_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Specify geo-location name, section range is (1-15)"
+                type: str
+            ip_multiple_fields:
+                description:
+                - "Field ip_multiple_fields"
+                type: list
+            ipv6_multiple_fields:
+                description:
+                - "Field ipv6_multiple_fields"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    geo_location_match:
+        description:
+        - "Field geo_location_match"
+        type: dict
+        required: False
+        suboptions:
+            overlap:
+                description:
+                - "Enable overlap mode to do longest match"
+                type: bool
+            geo_type_overlap:
+                description:
+                - "'global'= Global Geo-location; 'policy'= Policy Geo-location;"
+                type: str
+            match_first:
+                description:
+                - "'global'= Global Geo-location; 'policy'= Policy Geo-location;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    active_rdt:
+        description:
+        - "Field active_rdt"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable the active rdt"
+                type: bool
+            single_shot:
+                description:
+                - "Single Shot RDT"
+                type: bool
+            timeout:
+                description:
+                - "Specify timeout if round-delay-time samples are not ready (Specify timeout,
+          unit=sec,default is 3)"
+                type: int
+            skip:
+                description:
+                - "Skip query if round-delay-time samples are not ready (Specify maximum skip
+          count,default is 3)"
+                type: int
+            keep_tracking:
+                description:
+                - "Keep tracking client even round-delay-time samples are ready"
+                type: bool
+            ignore_id:
+                description:
+                - "Ignore IP Address specified in IP List by ID"
+                type: int
+            samples:
+                description:
+                - "Specify samples number for round-delay-time (Number of samples,default is 5)"
+                type: int
+            tolerance:
+                description:
+                - "The difference percentage between the round-delay-time, default is 10
+          (Tolerance)"
+                type: int
+            difference:
+                description:
+                - "The difference between the round-delay-time, default is 0"
+                type: int
+            limit:
+                description:
+                - "Limit of allowed RDT, default is 16383 (Limit, unit= millisecond)"
+                type: int
+            fail_break:
+                description:
+                - "Break when no valid RDT"
+                type: bool
+            controller:
+                description:
+                - "Active round-delay-time by controller"
+                type: bool
+            proto_rdt_enable:
+                description:
+                - "Enable the round-delay-time to the controller"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    auto_map:
+        description:
+        - "Field auto_map"
+        type: dict
+        required: False
+        suboptions:
+            ttl:
+                description:
+                - "Specify Auto Map TTL (TTL, default is 300)"
+                type: int
+            module_disable:
+                description:
+                - "Specify Disable Auto Map Module"
+                type: bool
+            all:
+                description:
+                - "All modules"
+                type: bool
+            module_type:
+                description:
+                - "Field module_type"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    edns:
+        description:
+        - "Field edns"
+        type: dict
+        required: False
+        suboptions:
+            client_subnet_geographic:
+                description:
+                - "Use client subnet for geo-location"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             metric_list:
                 description:
                 - "Field metric_list"
+                type: list
             name:
                 description:
                 - "Specify policy name"
-    weighted_ip_enable:
-        description:
-        - "Enable Select Service-IP by weighted preference"
-        required: False
-    alias_admin_preference:
-        description:
-        - "Select alias name having maximum admin preference"
-        required: False
-    admin_ip_top_only:
-        description:
-        - "Return highest priority server only"
-        required: False
-    least_response:
-        description:
-        - "Least response selection"
-        required: False
-    auto_map:
-        description:
-        - "Field auto_map"
-        required: False
-        suboptions:
-            all:
-                description:
-                - "All modules"
-            ttl:
-                description:
-                - "Specify Auto Map TTL (TTL, default is 300)"
-            uuid:
-                description:
-                - "uuid of the object"
-            module_type:
-                description:
-                - "Field module_type"
-            module_disable:
-                description:
-                - "Specify Disable Auto Map Module"
-    bw_cost_fail_break:
-        description:
-        - "Break when exceed limit"
-        required: False
-    metric_fail_break:
-        description:
-        - "Break if no valid Service-IP"
-        required: False
-    edns:
-        description:
-        - "Field edns"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            client_subnet_geographic:
-                description:
-                - "Use client subnet for geo-location"
-    active_rdt:
-        description:
-        - "Field active_rdt"
-        required: False
-        suboptions:
-            ignore_id:
-                description:
-                - "Ignore IP Address specified in IP List by ID"
-            keep_tracking:
-                description:
-                - "Keep tracking client even round-delay-time samples are ready"
-            enable:
-                description:
-                - "Enable the active rdt"
-            timeout:
-                description:
-                - "Specify timeout if round-delay-time samples are not ready (Specify timeout,
-          unit=sec,default is 3)"
-            skip:
-                description:
-                - "Skip query if round-delay-time samples are not ready (Specify maximum skip
-          count,default is 3)"
-            fail_break:
-                description:
-                - "Break when no valid RDT"
-            controller:
-                description:
-                - "Active round-delay-time by controller"
-            limit:
-                description:
-                - "Limit of allowed RDT, default is 16383 (Limit, unit= millisecond)"
-            samples:
-                description:
-                - "Specify samples number for round-delay-time (Number of samples,default is 5)"
-            proto_rdt_enable:
-                description:
-                - "Enable the round-delay-time to the controller"
-            single_shot:
-                description:
-                - "Single Shot RDT"
-            difference:
-                description:
-                - "The difference between the round-delay-time, default is 0"
-            tolerance:
-                description:
-                - "The difference percentage between the round-delay-time, default is 10
-          (Tolerance)"
-            uuid:
-                description:
-                - "uuid of the object"
-    round_robin:
-        description:
-        - "Round robin selection, enabled by default"
-        required: False
-    admin_preference:
-        description:
-        - "Select Service-IP for the device having maximum admin preference"
-        required: False
-    capacity:
-        description:
-        - "Field capacity"
-        required: False
-        suboptions:
-            threshold:
-                description:
-                - "Specify capacity threshold, default is 90"
-            capacity_enable:
-                description:
-                - "Enable capacity"
-            capacity_fail_break:
-                description:
-                - "Break when exceed threshold"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    active_servers_fail_break:
-        description:
-        - "Break when no active server"
-        required: False
-    metric_type:
-        description:
-        - "Field metric_type"
-        required: False
-    num_session_tolerance:
-        description:
-        - "The difference between the available sessions, default is 10 (Tolerance)"
-        required: False
-    name:
-        description:
-        - "Specify policy name"
-        required: True
-    dns:
-        description:
-        - "Field dns"
-        required: False
-        suboptions:
-            server_mode_only:
-                description:
-                - "Only run GSLB as DNS server mode"
-            external_soa:
-                description:
-                - "Return DNS response with external SOA Record"
-            server_sec:
-                description:
-                - "Provide DNSSEC support"
-            sticky_ipv6_mask:
-                description:
-                - "Specify IPv6 mask length, default is 128"
-            sticky:
-                description:
-                - "Make DNS Record sticky for certain time"
-            delegation:
-                description:
-                - "Zone Delegation"
-            active_only_fail_safe:
-                description:
-                - "Continue if no candidate"
-            cname_detect:
-                description:
-                - "Apply GSLB for DNS Server response when service is Canonical Name (CNAME)"
-            ttl:
-                description:
-                - "Specify the TTL value contained in DNS record (TTL value, unit= second, default
-          is 10)"
-            dynamic_preference:
-                description:
-                - "Make dynamically change the preference"
-            use_server_ttl:
-                description:
-                - "Use DNS Server Response TTL value in GSLB Proxy mode"
-            server_ptr:
-                description:
-                - "Provide PTR Records"
-            selected_only:
-                description:
-                - "Only keep selected servers"
-            ip_replace:
-                description:
-                - "Replace DNS Server Response with GSLB Service-IPs"
-            dns_addition_mx:
-                description:
-                - "Append MX Records in Addition Section"
-            backup_alias:
-                description:
-                - "Return alias name when fail"
-            server_any:
-                description:
-                - "Provide All Records"
-            hint:
-                description:
-                - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'=
-          Append Hint Records in DNS Addition Section;"
-            cache:
-                description:
-                - "Cache DNS Server response"
-            external_ip:
-                description:
-                - "Return DNS response with external IP address"
-            server_txt:
-                description:
-                - "Provide TXT Records"
-            server_addition_mx:
-                description:
-                - "Append MX Records in Addition Section"
-            aging_time:
-                description:
-                - "Specify aging-time, default is TTL in DNS record, unit= second (Aging time,
-          default 0 means using TTL in DNS record as aging time)"
-            block_action:
-                description:
-                - "Specify Action"
-            template:
-                description:
-                - "Logging template (Logging Template Name)"
-            ipv6:
-                description:
-                - "Field ipv6"
-            selected_only_value:
-                description:
-                - "Answer Number"
-            geoloc_action:
-                description:
-                - "Apply DNS action by geo-location"
-            server_ns:
-                description:
-                - "Provide NS Records"
-            action_type:
-                description:
-                - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty
-          response;"
-            server_naptr:
-                description:
-                - "Provide NAPTR Records"
-            active_only:
-                description:
-                - "Only keep active servers"
-            block_value:
-                description:
-                - "Field block_value"
-            server_srv:
-                description:
-                - "Provide SRV Records"
-            server_auto_ptr:
-                description:
-                - "Provide PTR Records automatically"
-            server_cname:
-                description:
-                - "Provide CNAME Records"
-            server_authoritative:
-                description:
-                - "As authoritative server"
-            server_full_list:
-                description:
-                - "Append All A Records in Authoritative Section"
-            server_any_with_metric:
-                description:
-                - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
-            dns_auto_map:
-                description:
-                - "Automatically build DNS Infrastructure"
-            block_type:
-                description:
-                - "Field block_type"
-            sticky_mask:
-                description:
-                - "Specify IP mask, default is /32"
-            geoloc_alias:
-                description:
-                - "Return alias name by geo-location"
-            logging:
-                description:
-                - "'none'= None; 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS
-          Query and Response;"
-            backup_server:
-                description:
-                - "Return fallback server when fail"
-            sticky_aging_time:
-                description:
-                - "Specify aging-time, unit= min, default is 5 (Aging time)"
-            geoloc_policy:
-                description:
-                - "Apply different policy by geo-location"
-            uuid:
-                description:
-                - "uuid of the object"
-            server:
-                description:
-                - "Run GSLB as DNS server mode"
-            dynamic_weight:
-                description:
-                - "dynamically change the weight"
-            server_ns_list:
-                description:
-                - "Append All NS Records in Authoritative Section"
-            server_auto_ns:
-                description:
-                - "Provide A-Records for NS-Records automatically"
-            action:
-                description:
-                - "Apply DNS action for service"
-            proxy_block_port_range_list:
-                description:
-                - "Field proxy_block_port_range_list"
-            server_mx:
-                description:
-                - "Provide MX Records"
-    weighted_ip_total_hits:
-        description:
-        - "Weighted by total hits"
-        required: False
-    weighted_site_total_hits:
-        description:
-        - "Weighted by total hits"
-        required: False
-    ip_list:
-        description:
-        - "Specify IP List (IP List Name)"
-        required: False
-    ordered_ip_top_only:
-        description:
-        - "Return highest priority server only"
-        required: False
-    weighted_site_enable:
-        description:
-        - "Enable Select Service-IP by weighted site preference"
-        required: False
-    metric_force_check:
-        description:
-        - "Always check Service-IP for all enabled metrics"
-        required: False
-    admin_ip_enable:
-        description:
-        - "Enable admin ip"
-        required: False
-    geo_location_list:
-        description:
-        - "Field geo_location_list"
-        required: False
-        suboptions:
-            ip_multiple_fields:
-                description:
-                - "Field ip_multiple_fields"
-            uuid:
-                description:
-                - "uuid of the object"
-            name:
-                description:
-                - "Specify geo-location name, section range is (1-15)"
-            user_tag:
-                description:
-                - "Customized tag"
-            ipv6_multiple_fields:
-                description:
-                - "Field ipv6_multiple_fields"
-    weighted_alias:
-        description:
-        - "Select alias name by weighted preference"
-        required: False
-    geo_location_match:
-        description:
-        - "Field geo_location_match"
-        required: False
-        suboptions:
-            match_first:
-                description:
-                - "'global'= Global Geo-location; 'policy'= Policy Geo-location;"
-            uuid:
-                description:
-                - "uuid of the object"
-            geo_type_overlap:
-                description:
-                - "'global'= Global Geo-location; 'policy'= Policy Geo-location;"
-            overlap:
-                description:
-                - "Enable overlap mode to do longest match"
-    num_session_enable:
-        description:
-        - "Enable Select Service-IP for device having maximum number of available sessions"
-        required: False
-    bw_cost_enable:
-        description:
-        - "Enable bw cost"
-        required: False
-    active_servers_enable:
-        description:
-        - "Enable Select Service-IP with the highest number of active servers"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    amount_first:
-        description:
-        - "Select record based on the amount of available service-ip"
-        required: False
-    connection_load:
-        description:
-        - "Field connection_load"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            connection_load_enable:
-                description:
-                - "Enable connection-load"
-            connection_load_interval:
-                description:
-                - "Interval between two samples, Unit= second (Interval value,default is 5)"
-            limit:
-                description:
-                - "Limit of maxinum connection load, default is unlimited"
-            connection_load_samples:
-                description:
-                - "Specify samples for connection-load (Number of samples used to calculate the
-          connection load, default is 5)"
-            connection_load_limit:
-                description:
-                - "The value of the connection-load limit, default is unlimited"
-            connection_load_fail_break:
-                description:
-                - "Break when exceed limit"
-    metric_order:
-        description:
-        - "Specify order of metric"
-        required: False
-    health_check_preference_enable:
-        description:
-        - "Check health preference"
-        required: False
-    health_preference_top:
-        description:
-        - "Only keep top n"
-        required: False
-    health_check:
-        description:
-        - "Select Service-IP by health status"
-        required: False
-    geographic:
-        description:
-        - "Select Service-IP by geographic"
-        required: False
+                type: str
 
 '''
 
@@ -613,6 +756,468 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'health_check': {
+            'type': 'bool',
+        },
+        'health_check_preference_enable': {
+            'type': 'bool',
+        },
+        'health_preference_top': {
+            'type': 'int',
+        },
+        'amount_first': {
+            'type': 'bool',
+        },
+        'weighted_ip_enable': {
+            'type': 'bool',
+        },
+        'weighted_ip_total_hits': {
+            'type': 'bool',
+        },
+        'weighted_site_enable': {
+            'type': 'bool',
+        },
+        'weighted_site_total_hits': {
+            'type': 'bool',
+        },
+        'weighted_alias': {
+            'type': 'bool',
+        },
+        'active_servers_enable': {
+            'type': 'bool',
+        },
+        'active_servers_fail_break': {
+            'type': 'bool',
+        },
+        'bw_cost_enable': {
+            'type': 'bool',
+        },
+        'bw_cost_fail_break': {
+            'type': 'bool',
+        },
+        'geographic': {
+            'type': 'bool',
+        },
+        'num_session_enable': {
+            'type': 'bool',
+        },
+        'num_session_tolerance': {
+            'type': 'int',
+        },
+        'admin_preference': {
+            'type': 'bool',
+        },
+        'alias_admin_preference': {
+            'type': 'bool',
+        },
+        'least_response': {
+            'type': 'bool',
+        },
+        'admin_ip_enable': {
+            'type': 'bool',
+        },
+        'admin_ip_top_only': {
+            'type': 'bool',
+        },
+        'ordered_ip_top_only': {
+            'type': 'bool',
+        },
+        'round_robin': {
+            'type': 'bool',
+        },
+        'metric_force_check': {
+            'type': 'bool',
+        },
+        'metric_fail_break': {
+            'type': 'bool',
+        },
+        'ip_list': {
+            'type': 'str',
+        },
+        'metric_order': {
+            'type': 'bool',
+        },
+        'metric_type': {
+            'type':
+            'str',
+            'choices': [
+                'health-check', 'weighted-ip', 'weighted-site', 'capacity',
+                'active-servers', 'active-rdt', 'geographic',
+                'connection-load', 'num-session', 'admin-preference',
+                'bw-cost', 'least-response', 'admin-ip'
+            ]
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'capacity': {
+            'type': 'dict',
+            'capacity_enable': {
+                'type': 'bool',
+            },
+            'threshold': {
+                'type': 'int',
+            },
+            'capacity_fail_break': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'connection_load': {
+            'type': 'dict',
+            'connection_load_enable': {
+                'type': 'bool',
+            },
+            'connection_load_fail_break': {
+                'type': 'bool',
+            },
+            'connection_load_samples': {
+                'type': 'int',
+            },
+            'connection_load_interval': {
+                'type': 'int',
+            },
+            'limit': {
+                'type': 'bool',
+            },
+            'connection_load_limit': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'dns': {
+            'type': 'dict',
+            'action': {
+                'type': 'bool',
+            },
+            'active_only': {
+                'type': 'bool',
+            },
+            'active_only_fail_safe': {
+                'type': 'bool',
+            },
+            'dns_addition_mx': {
+                'type': 'bool',
+            },
+            'dns_auto_map': {
+                'type': 'bool',
+            },
+            'backup_alias': {
+                'type': 'bool',
+            },
+            'backup_server': {
+                'type': 'bool',
+            },
+            'external_ip': {
+                'type': 'bool',
+            },
+            'external_soa': {
+                'type': 'bool',
+            },
+            'cname_detect': {
+                'type': 'bool',
+            },
+            'ip_replace': {
+                'type': 'bool',
+            },
+            'geoloc_alias': {
+                'type': 'bool',
+            },
+            'geoloc_action': {
+                'type': 'bool',
+            },
+            'geoloc_policy': {
+                'type': 'bool',
+            },
+            'selected_only': {
+                'type': 'bool',
+            },
+            'selected_only_value': {
+                'type': 'int',
+            },
+            'cache': {
+                'type': 'bool',
+            },
+            'aging_time': {
+                'type': 'int',
+            },
+            'delegation': {
+                'type': 'bool',
+            },
+            'hint': {
+                'type': 'str',
+                'choices': ['none', 'answer', 'addition']
+            },
+            'logging': {
+                'type': 'str',
+                'choices': ['none', 'query', 'response', 'both']
+            },
+            'template': {
+                'type': 'str',
+            },
+            'ttl': {
+                'type': 'int',
+            },
+            'use_server_ttl': {
+                'type': 'bool',
+            },
+            'server': {
+                'type': 'bool',
+            },
+            'server_srv': {
+                'type': 'bool',
+            },
+            'server_mx': {
+                'type': 'bool',
+            },
+            'server_naptr': {
+                'type': 'bool',
+            },
+            'server_addition_mx': {
+                'type': 'bool',
+            },
+            'server_ns': {
+                'type': 'bool',
+            },
+            'server_auto_ns': {
+                'type': 'bool',
+            },
+            'server_ptr': {
+                'type': 'bool',
+            },
+            'server_auto_ptr': {
+                'type': 'bool',
+            },
+            'server_txt': {
+                'type': 'bool',
+            },
+            'server_any': {
+                'type': 'bool',
+            },
+            'server_any_with_metric': {
+                'type': 'bool',
+            },
+            'server_authoritative': {
+                'type': 'bool',
+            },
+            'server_sec': {
+                'type': 'bool',
+            },
+            'server_ns_list': {
+                'type': 'bool',
+            },
+            'server_full_list': {
+                'type': 'bool',
+            },
+            'server_mode_only': {
+                'type': 'bool',
+            },
+            'server_cname': {
+                'type': 'bool',
+            },
+            'ipv6': {
+                'type': 'list',
+                'dns_ipv6_option': {
+                    'type': 'str',
+                    'choices': ['mix', 'smart', 'mapping']
+                },
+                'dns_ipv6_mapping_type': {
+                    'type': 'str',
+                    'choices': ['addition', 'answer', 'exclusive', 'replace']
+                }
+            },
+            'block_action': {
+                'type': 'bool',
+            },
+            'action_type': {
+                'type': 'str',
+                'choices': ['drop', 'reject', 'ignore']
+            },
+            'proxy_block_port_range_list': {
+                'type': 'list',
+                'proxy_block_range_from': {
+                    'type': 'int',
+                },
+                'proxy_block_range_to': {
+                    'type': 'int',
+                }
+            },
+            'block_value': {
+                'type': 'list',
+                'block_value': {
+                    'type': 'int',
+                }
+            },
+            'block_type': {
+                'type':
+                'str',
+                'choices':
+                ['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']
+            },
+            'sticky': {
+                'type': 'bool',
+            },
+            'sticky_mask': {
+                'type': 'str',
+            },
+            'sticky_ipv6_mask': {
+                'type': 'int',
+            },
+            'sticky_aging_time': {
+                'type': 'int',
+            },
+            'dynamic_preference': {
+                'type': 'bool',
+            },
+            'dynamic_weight': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'geo_location_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'ip_multiple_fields': {
+                'type': 'list',
+                'ip_sub': {
+                    'type': 'str',
+                },
+                'ip_mask_sub': {
+                    'type': 'str',
+                },
+                'ip_addr2_sub': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_multiple_fields': {
+                'type': 'list',
+                'ipv6_sub': {
+                    'type': 'str',
+                },
+                'ipv6_mask_sub': {
+                    'type': 'int',
+                },
+                'ipv6_addr2_sub': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'geo_location_match': {
+            'type': 'dict',
+            'overlap': {
+                'type': 'bool',
+            },
+            'geo_type_overlap': {
+                'type': 'str',
+                'choices': ['global', 'policy']
+            },
+            'match_first': {
+                'type': 'str',
+                'choices': ['global', 'policy']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'active_rdt': {
+            'type': 'dict',
+            'enable': {
+                'type': 'bool',
+            },
+            'single_shot': {
+                'type': 'bool',
+            },
+            'timeout': {
+                'type': 'int',
+            },
+            'skip': {
+                'type': 'int',
+            },
+            'keep_tracking': {
+                'type': 'bool',
+            },
+            'ignore_id': {
+                'type': 'int',
+            },
+            'samples': {
+                'type': 'int',
+            },
+            'tolerance': {
+                'type': 'int',
+            },
+            'difference': {
+                'type': 'int',
+            },
+            'limit': {
+                'type': 'int',
+            },
+            'fail_break': {
+                'type': 'bool',
+            },
+            'controller': {
+                'type': 'bool',
+            },
+            'proto_rdt_enable': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'auto_map': {
+            'type': 'dict',
+            'ttl': {
+                'type': 'int',
+            },
+            'module_disable': {
+                'type': 'bool',
+            },
+            'all': {
+                'type': 'bool',
+            },
+            'module_type': {
+                'type':
+                'str',
+                'choices': [
+                    'slb-virtual-server', 'slb-device', 'slb-server',
+                    'gslb-service-ip', 'gslb-site', 'gslb-group', 'hostname'
+                ]
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'edns': {
+            'type': 'dict',
+            'client_subnet_geographic': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
             'metric_list': {
@@ -628,468 +1233,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
             }
-        },
-        'weighted_ip_enable': {
-            'type': 'bool',
-        },
-        'alias_admin_preference': {
-            'type': 'bool',
-        },
-        'admin_ip_top_only': {
-            'type': 'bool',
-        },
-        'least_response': {
-            'type': 'bool',
-        },
-        'auto_map': {
-            'type': 'dict',
-            'all': {
-                'type': 'bool',
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'module_type': {
-                'type':
-                'str',
-                'choices': [
-                    'slb-virtual-server', 'slb-device', 'slb-server',
-                    'gslb-service-ip', 'gslb-site', 'gslb-group', 'hostname'
-                ]
-            },
-            'module_disable': {
-                'type': 'bool',
-            }
-        },
-        'bw_cost_fail_break': {
-            'type': 'bool',
-        },
-        'metric_fail_break': {
-            'type': 'bool',
-        },
-        'edns': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'client_subnet_geographic': {
-                'type': 'bool',
-            }
-        },
-        'active_rdt': {
-            'type': 'dict',
-            'ignore_id': {
-                'type': 'int',
-            },
-            'keep_tracking': {
-                'type': 'bool',
-            },
-            'enable': {
-                'type': 'bool',
-            },
-            'timeout': {
-                'type': 'int',
-            },
-            'skip': {
-                'type': 'int',
-            },
-            'fail_break': {
-                'type': 'bool',
-            },
-            'controller': {
-                'type': 'bool',
-            },
-            'limit': {
-                'type': 'int',
-            },
-            'samples': {
-                'type': 'int',
-            },
-            'proto_rdt_enable': {
-                'type': 'bool',
-            },
-            'single_shot': {
-                'type': 'bool',
-            },
-            'difference': {
-                'type': 'int',
-            },
-            'tolerance': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'round_robin': {
-            'type': 'bool',
-        },
-        'admin_preference': {
-            'type': 'bool',
-        },
-        'capacity': {
-            'type': 'dict',
-            'threshold': {
-                'type': 'int',
-            },
-            'capacity_enable': {
-                'type': 'bool',
-            },
-            'capacity_fail_break': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'active_servers_fail_break': {
-            'type': 'bool',
-        },
-        'metric_type': {
-            'type':
-            'str',
-            'choices': [
-                'health-check', 'weighted-ip', 'weighted-site', 'capacity',
-                'active-servers', 'active-rdt', 'geographic',
-                'connection-load', 'num-session', 'admin-preference',
-                'bw-cost', 'least-response', 'admin-ip'
-            ]
-        },
-        'num_session_tolerance': {
-            'type': 'int',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'dns': {
-            'type': 'dict',
-            'server_mode_only': {
-                'type': 'bool',
-            },
-            'external_soa': {
-                'type': 'bool',
-            },
-            'server_sec': {
-                'type': 'bool',
-            },
-            'sticky_ipv6_mask': {
-                'type': 'int',
-            },
-            'sticky': {
-                'type': 'bool',
-            },
-            'delegation': {
-                'type': 'bool',
-            },
-            'active_only_fail_safe': {
-                'type': 'bool',
-            },
-            'cname_detect': {
-                'type': 'bool',
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'dynamic_preference': {
-                'type': 'bool',
-            },
-            'use_server_ttl': {
-                'type': 'bool',
-            },
-            'server_ptr': {
-                'type': 'bool',
-            },
-            'selected_only': {
-                'type': 'bool',
-            },
-            'ip_replace': {
-                'type': 'bool',
-            },
-            'dns_addition_mx': {
-                'type': 'bool',
-            },
-            'backup_alias': {
-                'type': 'bool',
-            },
-            'server_any': {
-                'type': 'bool',
-            },
-            'hint': {
-                'type': 'str',
-                'choices': ['none', 'answer', 'addition']
-            },
-            'cache': {
-                'type': 'bool',
-            },
-            'external_ip': {
-                'type': 'bool',
-            },
-            'server_txt': {
-                'type': 'bool',
-            },
-            'server_addition_mx': {
-                'type': 'bool',
-            },
-            'aging_time': {
-                'type': 'int',
-            },
-            'block_action': {
-                'type': 'bool',
-            },
-            'template': {
-                'type': 'str',
-            },
-            'ipv6': {
-                'type': 'list',
-                'dns_ipv6_mapping_type': {
-                    'type': 'str',
-                    'choices': ['addition', 'answer', 'exclusive', 'replace']
-                },
-                'dns_ipv6_option': {
-                    'type': 'str',
-                    'choices': ['mix', 'smart', 'mapping']
-                }
-            },
-            'selected_only_value': {
-                'type': 'int',
-            },
-            'geoloc_action': {
-                'type': 'bool',
-            },
-            'server_ns': {
-                'type': 'bool',
-            },
-            'action_type': {
-                'type': 'str',
-                'choices': ['drop', 'reject', 'ignore']
-            },
-            'server_naptr': {
-                'type': 'bool',
-            },
-            'active_only': {
-                'type': 'bool',
-            },
-            'block_value': {
-                'type': 'list',
-                'block_value': {
-                    'type': 'int',
-                }
-            },
-            'server_srv': {
-                'type': 'bool',
-            },
-            'server_auto_ptr': {
-                'type': 'bool',
-            },
-            'server_cname': {
-                'type': 'bool',
-            },
-            'server_authoritative': {
-                'type': 'bool',
-            },
-            'server_full_list': {
-                'type': 'bool',
-            },
-            'server_any_with_metric': {
-                'type': 'bool',
-            },
-            'dns_auto_map': {
-                'type': 'bool',
-            },
-            'block_type': {
-                'type':
-                'str',
-                'choices':
-                ['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']
-            },
-            'sticky_mask': {
-                'type': 'str',
-            },
-            'geoloc_alias': {
-                'type': 'bool',
-            },
-            'logging': {
-                'type': 'str',
-                'choices': ['none', 'query', 'response', 'both']
-            },
-            'backup_server': {
-                'type': 'bool',
-            },
-            'sticky_aging_time': {
-                'type': 'int',
-            },
-            'geoloc_policy': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'server': {
-                'type': 'bool',
-            },
-            'dynamic_weight': {
-                'type': 'bool',
-            },
-            'server_ns_list': {
-                'type': 'bool',
-            },
-            'server_auto_ns': {
-                'type': 'bool',
-            },
-            'action': {
-                'type': 'bool',
-            },
-            'proxy_block_port_range_list': {
-                'type': 'list',
-                'proxy_block_range_from': {
-                    'type': 'int',
-                },
-                'proxy_block_range_to': {
-                    'type': 'int',
-                }
-            },
-            'server_mx': {
-                'type': 'bool',
-            }
-        },
-        'weighted_ip_total_hits': {
-            'type': 'bool',
-        },
-        'weighted_site_total_hits': {
-            'type': 'bool',
-        },
-        'ip_list': {
-            'type': 'str',
-        },
-        'ordered_ip_top_only': {
-            'type': 'bool',
-        },
-        'weighted_site_enable': {
-            'type': 'bool',
-        },
-        'metric_force_check': {
-            'type': 'bool',
-        },
-        'admin_ip_enable': {
-            'type': 'bool',
-        },
-        'geo_location_list': {
-            'type': 'list',
-            'ip_multiple_fields': {
-                'type': 'list',
-                'ip_addr2_sub': {
-                    'type': 'str',
-                },
-                'ip_sub': {
-                    'type': 'str',
-                },
-                'ip_mask_sub': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'ipv6_multiple_fields': {
-                'type': 'list',
-                'ipv6_mask_sub': {
-                    'type': 'int',
-                },
-                'ipv6_sub': {
-                    'type': 'str',
-                },
-                'ipv6_addr2_sub': {
-                    'type': 'str',
-                }
-            }
-        },
-        'weighted_alias': {
-            'type': 'bool',
-        },
-        'geo_location_match': {
-            'type': 'dict',
-            'match_first': {
-                'type': 'str',
-                'choices': ['global', 'policy']
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'geo_type_overlap': {
-                'type': 'str',
-                'choices': ['global', 'policy']
-            },
-            'overlap': {
-                'type': 'bool',
-            }
-        },
-        'num_session_enable': {
-            'type': 'bool',
-        },
-        'bw_cost_enable': {
-            'type': 'bool',
-        },
-        'active_servers_enable': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'amount_first': {
-            'type': 'bool',
-        },
-        'connection_load': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'connection_load_enable': {
-                'type': 'bool',
-            },
-            'connection_load_interval': {
-                'type': 'int',
-            },
-            'limit': {
-                'type': 'bool',
-            },
-            'connection_load_samples': {
-                'type': 'int',
-            },
-            'connection_load_limit': {
-                'type': 'int',
-            },
-            'connection_load_fail_break': {
-                'type': 'bool',
-            }
-        },
-        'metric_order': {
-            'type': 'bool',
-        },
-        'health_check_preference_enable': {
-            'type': 'bool',
-        },
-        'health_preference_top': {
-            'type': 'int',
-        },
-        'health_check': {
-            'type': 'bool',
-        },
-        'geographic': {
-            'type': 'bool',
         }
     })
     return rv

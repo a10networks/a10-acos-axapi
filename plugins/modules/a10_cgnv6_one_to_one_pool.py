@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_one_to_one_pool
 description:
     - Configure CGNv6 one-to-one pool
-short_description: Configures A10 cgnv6.one.to.one.pool
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,85 +22,106 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    partition:
+    pool_name:
         description:
-        - "Share with a single partition (Partition Name)"
-        required: False
-    group:
-        description:
-        - "Share with a partition group (Partition Group Name)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - "Specify pool name or pool group"
+        type: str
+        required: True
     start_address:
         description:
         - "Configure start IP address of NAT pool"
+        type: str
+        required: False
+    end_address:
+        description:
+        - "Configure end IP address of NAT pool"
+        type: str
+        required: False
+    netmask:
+        description:
+        - "Configure mask for pool"
+        type: str
         required: False
     vrid:
         description:
         - "Configure VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
+        required: False
+    shared:
+        description:
+        - "Share this pool with other partitions (default= not shared)"
+        type: bool
+        required: False
+    group:
+        description:
+        - "Share with a partition group (Partition Group Name)"
+        type: str
+        required: False
+    partition:
+        description:
+        - "Share with a single partition (Partition Name)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             total_address:
                 description:
                 - "Total Address"
-            pool_name:
-                description:
-                - "Specify pool name or pool group"
+                type: str
             used_address:
                 description:
                 - "Used Address"
+                type: str
             free_address:
                 description:
                 - "Free Address"
-    netmask:
-        description:
-        - "Configure mask for pool"
-        required: False
-    end_address:
-        description:
-        - "Configure end IP address of NAT pool"
-        required: False
-    shared:
-        description:
-        - "Share this pool with other partitions (default= not shared)"
-        required: False
-    pool_name:
-        description:
-        - "Specify pool name or pool group"
-        required: True
+                type: str
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
+                type: str
 
 '''
 
@@ -164,49 +183,49 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'partition': {
+        'pool_name': {
             'type': 'str',
-        },
-        'group': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
+            'required': True,
         },
         'start_address': {
             'type': 'str',
         },
+        'end_address': {
+            'type': 'str',
+        },
+        'netmask': {
+            'type': 'str',
+        },
         'vrid': {
             'type': 'int',
+        },
+        'shared': {
+            'type': 'bool',
+        },
+        'group': {
+            'type': 'str',
+        },
+        'partition': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'stats': {
             'type': 'dict',
             'total_address': {
                 'type': 'str',
             },
-            'pool_name': {
-                'type': 'str',
-                'required': True,
-            },
             'used_address': {
                 'type': 'str',
             },
             'free_address': {
                 'type': 'str',
+            },
+            'pool_name': {
+                'type': 'str',
+                'required': True,
             }
-        },
-        'netmask': {
-            'type': 'str',
-        },
-        'end_address': {
-            'type': 'str',
-        },
-        'shared': {
-            'type': 'bool',
-        },
-        'pool_name': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_mon_entity_telemetry_data
 description:
     - dummy schema for sflow exports
-short_description: Configures A10 visibility.mon-entity-telemetry-data
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,35 +21,48 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -80,99 +91,125 @@ options:
           telemetry Metric TCP IN ZERO wnd; 'tcp_out_zero_wnd'= Monitored Entity
           telemetry Metric TCP OUT ZERO wnd; 'tcp_fwd_syn_per_fin'= Monitored Entity
           telemetry Metric TCP FWD SYN per FIN;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            in_bytes:
-                description:
-                - "Monitored Entity telemetry Metric IN bytes"
-            tcp_in_empty_ack:
-                description:
-                - "Monitored Entity telemetry Metric TCP_IN EMPTY ack"
-            in_small_pkt:
-                description:
-                - "Monitored Entity telemetry Metric IN SMALL pkt"
-            tcp_out_empty_ack:
-                description:
-                - "Monitored Entity telemetry Metric TCP OUT EMPTY ack"
-            concurrent_conn:
-                description:
-                - "Field concurrent_conn"
-            out_frag:
-                description:
-                - "Monitored Entity telemetry Metric OUT frag"
-            tcp_out_rst:
-                description:
-                - "Monitored Entity telemetry Metric TCP OUT rst"
-            tcp_out_zero_wnd:
-                description:
-                - "Monitored Entity telemetry Metric TCP OUT ZERO wnd"
-            errors:
-                description:
-                - "Monitored Entity telemetry Metric ERRORS"
-            out_small_pkt:
-                description:
-                - "Monitored Entity telemetry Metric OUT SMALL pkt"
-            tcp_in_rexmit:
-                description:
-                - "Monitored Entity telemetry Metric TCP IN rexmit"
-            tcp_out_fin:
-                description:
-                - "Monitored Entity telemetry Metric TCP OUT fin"
-            in_bytes_per_out_bytes:
-                description:
-                - "Monitored Entity telemetry Metric IN bytes per OUT bytes"
-            tcp_in_payload:
-                description:
-                - "Monitored Entity telemetry Metric TCP IN payload"
-            tcp_out_syn:
-                description:
-                - "Monitored Entity telemetry Metric TCP OUT syn"
-            tcp_out_rexmit:
-                description:
-                - "Monitored Entity telemetry Metric TCP OUT rexmit"
-            tcp_in_zero_wnd:
-                description:
-                - "Monitored Entity telemetry Metric TCP IN ZERO wnd"
-            tcp_in_fin:
-                description:
-                - "Monitored Entity telemetry Metric TCP IN fin"
-            out_pkts:
-                description:
-                - "Monitored Entity telemetry Metric OUT pkts"
-            tcp_fwd_syn_per_fin:
-                description:
-                - "Monitored Entity telemetry Metric TCP FWD SYN per FIN"
             in_pkts:
                 description:
                 - "Monitored Entity telemetry Metric IN pkts"
+                type: str
+            out_pkts:
+                description:
+                - "Monitored Entity telemetry Metric OUT pkts"
+                type: str
+            in_bytes:
+                description:
+                - "Monitored Entity telemetry Metric IN bytes"
+                type: str
             out_bytes:
                 description:
                 - "Monitored Entity telemetry Metric OUT bytes"
+                type: str
+            errors:
+                description:
+                - "Monitored Entity telemetry Metric ERRORS"
+                type: str
+            in_small_pkt:
+                description:
+                - "Monitored Entity telemetry Metric IN SMALL pkt"
+                type: str
             in_frag:
                 description:
                 - "Monitored Entity telemetry Metric IN frag"
-            drop_pkts_per_pkts:
+                type: str
+            out_small_pkt:
                 description:
-                - "Monitored Entity telemetry Metric Drop pkts per pkts"
-            tcp_in_syn:
+                - "Monitored Entity telemetry Metric OUT SMALL pkt"
+                type: str
+            out_frag:
                 description:
-                - "Monitored Entity telemetry Metric TCP IN syn"
-            tcp_out_payload:
-                description:
-                - "Monitored Entity telemetry Metric TCP OUT payload"
+                - "Monitored Entity telemetry Metric OUT frag"
+                type: str
             new_conn:
                 description:
                 - "Monitored Entity telemetry Metric New Sessions"
+                type: str
+            concurrent_conn:
+                description:
+                - "Field concurrent_conn"
+                type: str
+            in_bytes_per_out_bytes:
+                description:
+                - "Monitored Entity telemetry Metric IN bytes per OUT bytes"
+                type: str
+            drop_pkts_per_pkts:
+                description:
+                - "Monitored Entity telemetry Metric Drop pkts per pkts"
+                type: str
+            tcp_in_syn:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN syn"
+                type: str
+            tcp_out_syn:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT syn"
+                type: str
+            tcp_in_fin:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN fin"
+                type: str
+            tcp_out_fin:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT fin"
+                type: str
+            tcp_in_payload:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN payload"
+                type: str
+            tcp_out_payload:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT payload"
+                type: str
+            tcp_in_rexmit:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN rexmit"
+                type: str
+            tcp_out_rexmit:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT rexmit"
+                type: str
             tcp_in_rst:
                 description:
                 - "Monitored Entity telemetry Metric TCP IN rst"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            tcp_out_rst:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT rst"
+                type: str
+            tcp_in_empty_ack:
+                description:
+                - "Monitored Entity telemetry Metric TCP_IN EMPTY ack"
+                type: str
+            tcp_out_empty_ack:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT EMPTY ack"
+                type: str
+            tcp_in_zero_wnd:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN ZERO wnd"
+                type: str
+            tcp_out_zero_wnd:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT ZERO wnd"
+                type: str
+            tcp_fwd_syn_per_fin:
+                description:
+                - "Monitored Entity telemetry Metric TCP FWD SYN per FIN"
+                type: str
 
 '''
 
@@ -225,6 +262,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -245,73 +285,40 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'in_bytes': {
-                'type': 'str',
-            },
-            'tcp_in_empty_ack': {
-                'type': 'str',
-            },
-            'in_small_pkt': {
-                'type': 'str',
-            },
-            'tcp_out_empty_ack': {
-                'type': 'str',
-            },
-            'concurrent_conn': {
-                'type': 'str',
-            },
-            'out_frag': {
-                'type': 'str',
-            },
-            'tcp_out_rst': {
-                'type': 'str',
-            },
-            'tcp_out_zero_wnd': {
-                'type': 'str',
-            },
-            'errors': {
-                'type': 'str',
-            },
-            'out_small_pkt': {
-                'type': 'str',
-            },
-            'tcp_in_rexmit': {
-                'type': 'str',
-            },
-            'tcp_out_fin': {
-                'type': 'str',
-            },
-            'in_bytes_per_out_bytes': {
-                'type': 'str',
-            },
-            'tcp_in_payload': {
-                'type': 'str',
-            },
-            'tcp_out_syn': {
-                'type': 'str',
-            },
-            'tcp_out_rexmit': {
-                'type': 'str',
-            },
-            'tcp_in_zero_wnd': {
-                'type': 'str',
-            },
-            'tcp_in_fin': {
+            'in_pkts': {
                 'type': 'str',
             },
             'out_pkts': {
                 'type': 'str',
             },
-            'tcp_fwd_syn_per_fin': {
-                'type': 'str',
-            },
-            'in_pkts': {
+            'in_bytes': {
                 'type': 'str',
             },
             'out_bytes': {
                 'type': 'str',
             },
+            'errors': {
+                'type': 'str',
+            },
+            'in_small_pkt': {
+                'type': 'str',
+            },
             'in_frag': {
+                'type': 'str',
+            },
+            'out_small_pkt': {
+                'type': 'str',
+            },
+            'out_frag': {
+                'type': 'str',
+            },
+            'new_conn': {
+                'type': 'str',
+            },
+            'concurrent_conn': {
+                'type': 'str',
+            },
+            'in_bytes_per_out_bytes': {
                 'type': 'str',
             },
             'drop_pkts_per_pkts': {
@@ -320,18 +327,48 @@ def get_argspec():
             'tcp_in_syn': {
                 'type': 'str',
             },
+            'tcp_out_syn': {
+                'type': 'str',
+            },
+            'tcp_in_fin': {
+                'type': 'str',
+            },
+            'tcp_out_fin': {
+                'type': 'str',
+            },
+            'tcp_in_payload': {
+                'type': 'str',
+            },
             'tcp_out_payload': {
                 'type': 'str',
             },
-            'new_conn': {
+            'tcp_in_rexmit': {
+                'type': 'str',
+            },
+            'tcp_out_rexmit': {
                 'type': 'str',
             },
             'tcp_in_rst': {
                 'type': 'str',
+            },
+            'tcp_out_rst': {
+                'type': 'str',
+            },
+            'tcp_in_empty_ack': {
+                'type': 'str',
+            },
+            'tcp_out_empty_ack': {
+                'type': 'str',
+            },
+            'tcp_in_zero_wnd': {
+                'type': 'str',
+            },
+            'tcp_out_zero_wnd': {
+                'type': 'str',
+            },
+            'tcp_fwd_syn_per_fin': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

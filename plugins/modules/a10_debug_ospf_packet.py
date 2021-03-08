@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_ospf_packet
 description:
     - OSPFv3 packets
-short_description: Configures A10 debug.ospf.packet
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,67 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ls_request:
-        description:
-        - "OSPFv3 Link State Request"
+        type: str
         required: False
     dd:
         description:
         - "OSPFv3 Database Description"
+        type: bool
         required: False
     detail:
         description:
         - "Detail information"
-        required: False
-    send:
-        description:
-        - "Packet sent"
-        required: False
-    ls_ack:
-        description:
-        - "OSPFv3 Link State Acknowledgment"
-        required: False
-    ls_update:
-        description:
-        - "OSPFv3 Link State Update"
-        required: False
-    recv:
-        description:
-        - "Packet received"
+        type: bool
         required: False
     hello:
         description:
         - "OSPFv3 Hello"
+        type: bool
+        required: False
+    ls_ack:
+        description:
+        - "OSPFv3 Link State Acknowledgment"
+        type: bool
+        required: False
+    ls_request:
+        description:
+        - "OSPFv3 Link State Request"
+        type: bool
+        required: False
+    ls_update:
+        description:
+        - "OSPFv3 Link State Update"
+        type: bool
+        required: False
+    recv:
+        description:
+        - "Packet received"
+        type: bool
+        required: False
+    send:
+        description:
+        - "Packet sent"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -146,22 +160,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'ls_request': {
-            'type': 'bool',
-        },
         'dd': {
             'type': 'bool',
         },
         'detail': {
             'type': 'bool',
         },
-        'send': {
+        'hello': {
             'type': 'bool',
         },
         'ls_ack': {
+            'type': 'bool',
+        },
+        'ls_request': {
             'type': 'bool',
         },
         'ls_update': {
@@ -170,8 +181,11 @@ def get_argspec():
         'recv': {
             'type': 'bool',
         },
-        'hello': {
+        'send': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

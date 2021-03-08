@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_aaa_policy
 description:
     - AAM AAA policy configuration
-short_description: Configures A10 aam.aaa-policy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,123 +22,58 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    aaa_rule_list:
+    name:
         description:
-        - "Field aaa_rule_list"
-        required: False
-        suboptions:
-            index:
-                description:
-                - "Specify AAA rule index"
-            match_encoded_uri:
-                description:
-                - "Enable URL decoding for URI matching"
-            uuid:
-                description:
-                - "uuid of the object"
-            authorize_policy:
-                description:
-                - "Specify authorization policy to bind to the AAA rule"
-            uri:
-                description:
-                - "Field uri"
-            user_tag:
-                description:
-                - "Customized tag"
-            user_agent:
-                description:
-                - "Field user_agent"
-            host:
-                description:
-                - "Field host"
-            access_list:
-                description:
-                - "Field access_list"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            auth_failure_bypass:
-                description:
-                - "Forward client’s request even though authentication has failed"
-            authentication_template:
-                description:
-                - "Specify authentication template name to bind to the AAA rule"
-            action:
-                description:
-                - "'allow'= Allow traffic that matches this rule; 'deny'= Deny traffic that
-          matches this rule;"
-            port:
-                description:
-                - "Specify port number for aaa-rule, default is 0 for all port numbers"
-            domain_name:
-                description:
-                - "Specify domain name to bind to the AAA rule (ex= a10networks.com,
-          www.a10networks.com)"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            aaa_rule_list:
-                description:
-                - "Field aaa_rule_list"
-            req_bypass:
-                description:
-                - "Request Bypassed"
-            name:
-                description:
-                - "Specify AAA policy name"
-            failure_bypass:
-                description:
-                - "Auth Failure Bypass"
-            req:
-                description:
-                - "Request"
-            req_skip:
-                description:
-                - "Request Skipped"
-            req_auth:
-                description:
-                - "Request Matching Authentication Template"
-            error:
-                description:
-                - "Error"
-            req_reject:
-                description:
-                - "Request Rejected"
+        - "Specify AAA policy name"
+        type: str
+        required: True
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -148,14 +81,117 @@ options:
                 - "'all'= all; 'req'= Request; 'req-reject'= Request Rejected; 'req-auth'= Request
           Matching Authentication Template; 'req-bypass'= Request Bypassed; 'req-skip'=
           Request Skipped; 'error'= Error; 'failure-bypass'= Auth Failure Bypass;"
-    user_tag:
+                type: str
+    aaa_rule_list:
         description:
-        - "Customized tag"
+        - "Field aaa_rule_list"
+        type: list
         required: False
-    name:
+        suboptions:
+            index:
+                description:
+                - "Specify AAA rule index"
+                type: int
+            uri:
+                description:
+                - "Field uri"
+                type: list
+            host:
+                description:
+                - "Field host"
+                type: list
+            port:
+                description:
+                - "Specify port number for aaa-rule, default is 0 for all port numbers"
+                type: int
+            match_encoded_uri:
+                description:
+                - "Enable URL decoding for URI matching"
+                type: bool
+            access_list:
+                description:
+                - "Field access_list"
+                type: dict
+            domain_name:
+                description:
+                - "Specify domain name to bind to the AAA rule (ex= a10networks.com,
+          www.a10networks.com)"
+                type: str
+            user_agent:
+                description:
+                - "Field user_agent"
+                type: list
+            action:
+                description:
+                - "'allow'= Allow traffic that matches this rule; 'deny'= Deny traffic that
+          matches this rule;"
+                type: str
+            authentication_template:
+                description:
+                - "Specify authentication template name to bind to the AAA rule"
+                type: str
+            authorize_policy:
+                description:
+                - "Specify authorization policy to bind to the AAA rule"
+                type: str
+            auth_failure_bypass:
+                description:
+                - "Forward client’s request even though authentication has failed"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    stats:
         description:
-        - "Specify AAA policy name"
-        required: True
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            req:
+                description:
+                - "Request"
+                type: str
+            req_reject:
+                description:
+                - "Request Rejected"
+                type: str
+            req_auth:
+                description:
+                - "Request Matching Authentication Template"
+                type: str
+            req_bypass:
+                description:
+                - "Request Bypassed"
+                type: str
+            req_skip:
+                description:
+                - "Request Skipped"
+                type: str
+            error:
+                description:
+                - "Error"
+                type: str
+            failure_bypass:
+                description:
+                - "Auth Failure Bypass"
+                type: str
+            name:
+                description:
+                - "Specify AAA policy name"
+                type: str
+            aaa_rule_list:
+                description:
+                - "Field aaa_rule_list"
+                type: list
 
 '''
 
@@ -213,152 +249,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'aaa_rule_list': {
-            'type': 'list',
-            'index': {
-                'type': 'int',
-                'required': True,
-            },
-            'match_encoded_uri': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'authorize_policy': {
-                'type': 'str',
-            },
-            'uri': {
-                'type': 'list',
-                'match_type': {
-                    'type': 'str',
-                    'choices':
-                    ['contains', 'ends-with', 'equals', 'starts-with']
-                },
-                'uri_str': {
-                    'type': 'str',
-                }
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'user_agent': {
-                'type': 'list',
-                'user_agent_str': {
-                    'type': 'str',
-                },
-                'user_agent_match_type': {
-                    'type': 'str',
-                    'choices':
-                    ['contains', 'ends-with', 'equals', 'starts-with']
-                }
-            },
-            'host': {
-                'type': 'list',
-                'host_str': {
-                    'type': 'str',
-                },
-                'host_match_type': {
-                    'type': 'str',
-                    'choices':
-                    ['contains', 'ends-with', 'equals', 'starts-with']
-                }
-            },
-            'access_list': {
-                'type': 'dict',
-                'acl_name': {
-                    'type': 'str',
-                    'choices': ['ip-name', 'ipv6-name']
-                },
-                'acl_id': {
-                    'type': 'int',
-                },
-                'name': {
-                    'type': 'str',
-                }
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'total_count', 'hit_deny', 'hit_auth',
-                        'hit_bypass', 'failure_bypass'
-                    ]
-                }
-            },
-            'auth_failure_bypass': {
-                'type': 'bool',
-            },
-            'authentication_template': {
-                'type': 'str',
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['allow', 'deny']
-            },
-            'port': {
-                'type': 'int',
-            },
-            'domain_name': {
-                'type': 'str',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'aaa_rule_list': {
-                'type': 'list',
-                'index': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'total_count': {
-                        'type': 'str',
-                    },
-                    'failure_bypass': {
-                        'type': 'str',
-                    },
-                    'hit_auth': {
-                        'type': 'str',
-                    },
-                    'hit_bypass': {
-                        'type': 'str',
-                    },
-                    'hit_deny': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'req_bypass': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'failure_bypass': {
-                'type': 'str',
-            },
-            'req': {
-                'type': 'str',
-            },
-            'req_skip': {
-                'type': 'str',
-            },
-            'req_auth': {
-                'type': 'str',
-            },
-            'error': {
-                'type': 'str',
-            },
-            'req_reject': {
-                'type': 'str',
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         },
         'sampling_enable': {
@@ -372,12 +270,150 @@ def get_argspec():
                 ]
             }
         },
-        'user_tag': {
-            'type': 'str',
+        'aaa_rule_list': {
+            'type': 'list',
+            'index': {
+                'type': 'int',
+                'required': True,
+            },
+            'uri': {
+                'type': 'list',
+                'match_type': {
+                    'type': 'str',
+                    'choices':
+                    ['contains', 'ends-with', 'equals', 'starts-with']
+                },
+                'uri_str': {
+                    'type': 'str',
+                }
+            },
+            'host': {
+                'type': 'list',
+                'host_match_type': {
+                    'type': 'str',
+                    'choices':
+                    ['contains', 'ends-with', 'equals', 'starts-with']
+                },
+                'host_str': {
+                    'type': 'str',
+                }
+            },
+            'port': {
+                'type': 'int',
+            },
+            'match_encoded_uri': {
+                'type': 'bool',
+            },
+            'access_list': {
+                'type': 'dict',
+                'acl_id': {
+                    'type': 'int',
+                },
+                'acl_name': {
+                    'type': 'str',
+                    'choices': ['ip-name', 'ipv6-name']
+                },
+                'name': {
+                    'type': 'str',
+                }
+            },
+            'domain_name': {
+                'type': 'str',
+            },
+            'user_agent': {
+                'type': 'list',
+                'user_agent_match_type': {
+                    'type': 'str',
+                    'choices':
+                    ['contains', 'ends-with', 'equals', 'starts-with']
+                },
+                'user_agent_str': {
+                    'type': 'str',
+                }
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['allow', 'deny']
+            },
+            'authentication_template': {
+                'type': 'str',
+            },
+            'authorize_policy': {
+                'type': 'str',
+            },
+            'auth_failure_bypass': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'total_count', 'hit_deny', 'hit_auth',
+                        'hit_bypass', 'failure_bypass'
+                    ]
+                }
+            }
         },
-        'name': {
-            'type': 'str',
-            'required': True,
+        'stats': {
+            'type': 'dict',
+            'req': {
+                'type': 'str',
+            },
+            'req_reject': {
+                'type': 'str',
+            },
+            'req_auth': {
+                'type': 'str',
+            },
+            'req_bypass': {
+                'type': 'str',
+            },
+            'req_skip': {
+                'type': 'str',
+            },
+            'error': {
+                'type': 'str',
+            },
+            'failure_bypass': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'aaa_rule_list': {
+                'type': 'list',
+                'index': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'total_count': {
+                        'type': 'str',
+                    },
+                    'hit_deny': {
+                        'type': 'str',
+                    },
+                    'hit_auth': {
+                        'type': 'str',
+                    },
+                    'hit_bypass': {
+                        'type': 'str',
+                    },
+                    'failure_bypass': {
+                        'type': 'str',
+                    }
+                }
+            }
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_form_based_instance
 description:
     - Form-based Authentication Relay
-short_description: Configures A10 aam.authentication.relay.form.based.instance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,39 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    name:
+        description:
+        - "Specify form-based authentication relay name"
+        type: str
+        required: True
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -65,82 +77,101 @@ options:
           'post_fail'= POST Failed; 'invalid_cred'= Invalid Credential; 'bad_req'= Bad
           Request; 'not_fnd'= Not Found; 'error'= Internal Server Error; 'other_error'=
           Other Error;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            invalid_cred:
-                description:
-                - "Invalid Credential"
-            bad_req:
-                description:
-                - "Bad Request"
-            name:
-                description:
-                - "Specify form-based authentication relay name"
-            other_error:
-                description:
-                - "Other Error"
-            request:
-                description:
-                - "Request"
-            invalid_srv_rsp:
-                description:
-                - "Invalid Server Response"
-            post_fail:
-                description:
-                - "POST Failed"
-            error:
-                description:
-                - "Internal Server Error"
-            not_fnd:
-                description:
-                - "Not Found"
-    name:
-        description:
-        - "Specify form-based authentication relay name"
-        required: True
+                type: str
     request_uri_list:
         description:
         - "Field request_uri_list"
+        type: list
         required: False
         suboptions:
-            other_variables:
-                description:
-                - "Specify other variables (n1=v1&n2=v2) in form relay"
-            max_packet_collect_size:
-                description:
-                - "Specify the max packet collection size in bytes, default is 1MB"
-            action_uri:
-                description:
-                - "Specify the action-URI"
-            uri:
-                description:
-                - "Specify request URI"
-            user_tag:
-                description:
-                - "Customized tag"
-            cookie:
-                description:
-                - "Field cookie"
-            user_variable:
-                description:
-                - "Specify username variable name"
-            domain_variable:
-                description:
-                - "Specify domain variable name"
-            password_variable:
-                description:
-                - "Specify password variable name"
             match_type:
                 description:
                 - "'equals'= URI exactly matches the string; 'contains'= URI string contains
           another sub string; 'starts-with'= URI string starts with sub string; 'ends-
           with'= URI string ends with sub string;"
+                type: str
+            uri:
+                description:
+                - "Specify request URI"
+                type: str
+            user_variable:
+                description:
+                - "Specify username variable name"
+                type: str
+            password_variable:
+                description:
+                - "Specify password variable name"
+                type: str
+            domain_variable:
+                description:
+                - "Specify domain variable name"
+                type: str
+            other_variables:
+                description:
+                - "Specify other variables (n1=v1&n2=v2) in form relay"
+                type: str
+            max_packet_collect_size:
+                description:
+                - "Specify the max packet collection size in bytes, default is 1MB"
+                type: int
+            cookie:
+                description:
+                - "Field cookie"
+                type: dict
+            action_uri:
+                description:
+                - "Specify the action-URI"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            request:
+                description:
+                - "Request"
+                type: str
+            invalid_srv_rsp:
+                description:
+                - "Invalid Server Response"
+                type: str
+            post_fail:
+                description:
+                - "POST Failed"
+                type: str
+            invalid_cred:
+                description:
+                - "Invalid Credential"
+                type: str
+            bad_req:
+                description:
+                - "Bad Request"
+                type: str
+            not_fnd:
+                description:
+                - "Not Found"
+                type: str
+            error:
+                description:
+                - "Internal Server Error"
+                type: str
+            other_error:
+                description:
+                - "Other Error"
+                type: str
+            name:
+                description:
+                - "Specify form-based authentication relay name"
+                type: str
 
 '''
 
@@ -197,6 +228,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
         'uuid': {
             'type': 'str',
         },
@@ -212,58 +247,31 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'invalid_cred': {
-                'type': 'str',
-            },
-            'bad_req': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'other_error': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'invalid_srv_rsp': {
-                'type': 'str',
-            },
-            'post_fail': {
-                'type': 'str',
-            },
-            'error': {
-                'type': 'str',
-            },
-            'not_fnd': {
-                'type': 'str',
-            }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
         'request_uri_list': {
             'type': 'list',
-            'other_variables': {
+            'match_type': {
                 'type': 'str',
-            },
-            'max_packet_collect_size': {
-                'type': 'int',
-            },
-            'action_uri': {
-                'type': 'str',
+                'required': True,
+                'choices': ['equals', 'contains', 'starts-with', 'ends-with']
             },
             'uri': {
                 'type': 'str',
                 'required': True,
             },
-            'user_tag': {
+            'user_variable': {
                 'type': 'str',
+            },
+            'password_variable': {
+                'type': 'str',
+            },
+            'domain_variable': {
+                'type': 'str',
+            },
+            'other_variables': {
+                'type': 'str',
+            },
+            'max_packet_collect_size': {
+                'type': 'int',
             },
             'cookie': {
                 'type': 'dict',
@@ -274,22 +282,45 @@ def get_argspec():
                     }
                 }
             },
-            'user_variable': {
+            'action_uri': {
                 'type': 'str',
-            },
-            'domain_variable': {
-                'type': 'str',
-            },
-            'password_variable': {
-                'type': 'str',
-            },
-            'match_type': {
-                'type': 'str',
-                'required': True,
-                'choices': ['equals', 'contains', 'starts-with', 'ends-with']
             },
             'uuid': {
                 'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'request': {
+                'type': 'str',
+            },
+            'invalid_srv_rsp': {
+                'type': 'str',
+            },
+            'post_fail': {
+                'type': 'str',
+            },
+            'invalid_cred': {
+                'type': 'str',
+            },
+            'bad_req': {
+                'type': 'str',
+            },
+            'not_fnd': {
+                'type': 'str',
+            },
+            'error': {
+                'type': 'str',
+            },
+            'other_error': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_resource_usage
 description:
     - Configure SLB Resource Usage
-short_description: Configures A10 slb.resource-usage
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,400 +22,539 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            service_group_min:
-                description:
-                - "Field service_group_min"
-            service_group_default:
-                description:
-                - "Field service_group_default"
-            service_group_max:
-                description:
-                - "Field service_group_max"
-            gslb_service_port_count_max:
-                description:
-                - "Field gslb_service_port_count_max"
-            slb_threshold_res_usage_default:
-                description:
-                - "Field slb_threshold_res_usage_default"
-            gslb_service_port_count_min:
-                description:
-                - "Field gslb_service_port_count_min"
-            health_monitor_count_default:
-                description:
-                - "Field health_monitor_count_default"
-            gslb_template_count_min:
-                description:
-                - "Field gslb_template_count_min"
-            gslb_policy_count_default:
-                description:
-                - "Field gslb_policy_count_default"
-            proxy_template_default:
-                description:
-                - "Field proxy_template_default"
-            client_ssl_template_min:
-                description:
-                - "Field client_ssl_template_min"
-            client_ssl_template_default:
-                description:
-                - "Field client_ssl_template_default"
-            fast_tcp_template_min:
-                description:
-                - "Field fast_tcp_template_min"
-            fast_tcp_template_max:
-                description:
-                - "Field fast_tcp_template_max"
-            client_ssl_template_max:
-                description:
-                - "Field client_ssl_template_max"
-            gslb_site_count_min:
-                description:
-                - "Field gslb_site_count_min"
-            gslb_service_count_max:
-                description:
-                - "Field gslb_service_count_max"
-            cache_template_max:
-                description:
-                - "Field cache_template_max"
-            gslb_template_count_max:
-                description:
-                - "Field gslb_template_count_max"
-            cache_template_min:
-                description:
-                - "Field cache_template_min"
-            proxy_template_max:
-                description:
-                - "Field proxy_template_max"
-            pbslb_subnet_count_min:
-                description:
-                - "Field pbslb_subnet_count_min"
-            gslb_service_count_min:
-                description:
-                - "Field gslb_service_count_min"
-            cache_template_default:
-                description:
-                - "Field cache_template_default"
-            real_port_max:
-                description:
-                - "Field real_port_max"
-            nat_pool_addr_max:
-                description:
-                - "Field nat_pool_addr_max"
-            gslb_geo_location_count_min:
-                description:
-                - "Field gslb_geo_location_count_min"
-            real_server_min:
-                description:
-                - "Field real_server_min"
-            virtual_server_default:
-                description:
-                - "Field virtual_server_default"
-            gslb_device_count_max:
-                description:
-                - "Field gslb_device_count_max"
-            gslb_template_count_default:
-                description:
-                - "Field gslb_template_count_default"
-            fast_udp_template_max:
-                description:
-                - "Field fast_udp_template_max"
-            fast_udp_template_min:
-                description:
-                - "Field fast_udp_template_min"
-            gslb_geo_location_count_max:
-                description:
-                - "Field gslb_geo_location_count_max"
-            gslb_site_count_max:
-                description:
-                - "Field gslb_site_count_max"
-            gslb_service_ip_count_max:
-                description:
-                - "Field gslb_service_ip_count_max"
-            gslb_device_count_min:
-                description:
-                - "Field gslb_device_count_min"
-            gslb_zone_count_min:
-                description:
-                - "Field gslb_zone_count_min"
-            gslb_service_ip_count_min:
-                description:
-                - "Field gslb_service_ip_count_min"
-            gslb_service_count_default:
-                description:
-                - "Field gslb_service_count_default"
-            persist_cookie_template_default:
-                description:
-                - "Field persist_cookie_template_default"
-            fast_udp_template_default:
-                description:
-                - "Field fast_udp_template_default"
-            real_server_default:
-                description:
-                - "Field real_server_default"
-            gslb_zone_count_max:
-                description:
-                - "Field gslb_zone_count_max"
-            gslb_device_count_default:
-                description:
-                - "Field gslb_device_count_default"
-            conn_reuse_template_min:
-                description:
-                - "Field conn_reuse_template_min"
-            real_port_default:
-                description:
-                - "Field real_port_default"
-            gslb_ip_list_count_min:
-                description:
-                - "Field gslb_ip_list_count_min"
-            http_template_default:
-                description:
-                - "Field http_template_default"
-            persist_srcip_template_default:
-                description:
-                - "Field persist_srcip_template_default"
-            gslb_policy_count_max:
-                description:
-                - "Field gslb_policy_count_max"
-            gslb_svcgroup_count_max:
-                description:
-                - "Field gslb_svcgroup_count_max"
-            proxy_template_min:
-                description:
-                - "Field proxy_template_min"
-            gslb_policy_count_min:
-                description:
-                - "Field gslb_policy_count_min"
-            gslb_geo_location_count_default:
-                description:
-                - "Field gslb_geo_location_count_default"
-            gslb_zone_count_default:
-                description:
-                - "Field gslb_zone_count_default"
-            server_ssl_template_default:
-                description:
-                - "Field server_ssl_template_default"
-            server_ssl_template_min:
-                description:
-                - "Field server_ssl_template_min"
-            slb_threshold_res_usage_min:
-                description:
-                - "Field slb_threshold_res_usage_min"
-            real_port_min:
-                description:
-                - "Field real_port_min"
-            gslb_ip_list_count_max:
-                description:
-                - "Field gslb_ip_list_count_max"
-            persist_cookie_template_min:
-                description:
-                - "Field persist_cookie_template_min"
-            slb_threshold_res_usage_max:
-                description:
-                - "Field slb_threshold_res_usage_max"
-            server_ssl_template_max:
-                description:
-                - "Field server_ssl_template_max"
-            gslb_site_count_default:
-                description:
-                - "Field gslb_site_count_default"
-            gslb_ip_list_count_default:
-                description:
-                - "Field gslb_ip_list_count_default"
-            virtual_server_max:
-                description:
-                - "Field virtual_server_max"
-            real_server_max:
-                description:
-                - "Field real_server_max"
-            conn_reuse_template_default:
-                description:
-                - "Field conn_reuse_template_default"
-            persist_cookie_template_max:
-                description:
-                - "Field persist_cookie_template_max"
-            virtual_server_min:
-                description:
-                - "Field virtual_server_min"
-            stream_template_max:
-                description:
-                - "Field stream_template_max"
-            fast_tcp_template_default:
-                description:
-                - "Field fast_tcp_template_default"
-            virtual_port_min:
-                description:
-                - "Field virtual_port_min"
-            nat_pool_addr_min:
-                description:
-                - "Field nat_pool_addr_min"
-            virtual_port_max:
-                description:
-                - "Field virtual_port_max"
-            virtual_port_default:
-                description:
-                - "Field virtual_port_default"
-            pbslb_subnet_count_max:
-                description:
-                - "Field pbslb_subnet_count_max"
-            gslb_service_port_count_default:
-                description:
-                - "Field gslb_service_port_count_default"
-            persist_srcip_template_min:
-                description:
-                - "Field persist_srcip_template_min"
-            stream_template_min:
-                description:
-                - "Field stream_template_min"
-            nat_pool_addr_default:
-                description:
-                - "Field nat_pool_addr_default"
-            http_template_max:
-                description:
-                - "Field http_template_max"
-            stream_template_default:
-                description:
-                - "Field stream_template_default"
-            gslb_svcgroup_count_default:
-                description:
-                - "Field gslb_svcgroup_count_default"
-            health_monitor_count_min:
-                description:
-                - "Field health_monitor_count_min"
-            pbslb_subnet_count_default:
-                description:
-                - "Field pbslb_subnet_count_default"
-            health_monitor_count_max:
-                description:
-                - "Field health_monitor_count_max"
-            persist_srcip_template_max:
-                description:
-                - "Field persist_srcip_template_max"
-            conn_reuse_template_max:
-                description:
-                - "Field conn_reuse_template_max"
-            http_template_min:
-                description:
-                - "Field http_template_min"
-            gslb_svcgroup_count_min:
-                description:
-                - "Field gslb_svcgroup_count_min"
-            gslb_service_ip_count_default:
-                description:
-                - "Field gslb_service_ip_count_default"
-    nat_pool_addr_count:
-        description:
-        - "Total configurable NAT Pool addresses in the System (deprecated)"
-        required: False
-    fast_tcp_template_count:
-        description:
-        - "Total configurable Fast TCP Templates in the System"
-        required: False
-    cache_template_count:
-        description:
-        - "Total configurable HTTP Cache Templates in the System"
-        required: False
-    proxy_template_count:
-        description:
-        - "Total configurable Proxy Templates in the System"
-        required: False
-    persist_srcip_template_count:
-        description:
-        - "Total configurable Source IP Persistent Templates in the System"
+        type: str
         required: False
     client_ssl_template_count:
         description:
         - "Total configurable Client SSL Templates in the System"
-        required: False
-    pbslb_subnet_count:
-        description:
-        - "Total PBSLB Subnets in the System"
-        required: False
-    persist_cookie_template_count:
-        description:
-        - "Total configurable Persistent cookie Templates in the System"
-        required: False
-    stream_template_count:
-        description:
-        - "Total configurable Streaming media in the System"
+        type: int
         required: False
     conn_reuse_template_count:
         description:
         - "Total configurable Connection reuse Templates in the System"
+        type: int
         required: False
-    real_port_count:
+    fast_tcp_template_count:
         description:
-        - "Total Real Server Ports in the System"
-        required: False
-    http_template_count:
-        description:
-        - "Total configurable HTTP Templates in the System"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    service_group_count:
-        description:
-        - "Total Service Groups in the System"
-        required: False
-    virtual_server_count:
-        description:
-        - "Total Virtual Servers in the System"
+        - "Total configurable Fast TCP Templates in the System"
+        type: int
         required: False
     fast_udp_template_count:
         description:
         - "Total configurable Fast UDP Templates in the System"
+        type: int
         required: False
-    virtual_port_count:
+    http_template_count:
         description:
-        - "Total Virtual Server Ports in the System"
+        - "Total configurable HTTP Templates in the System"
+        type: int
         required: False
-    slb_threshold_res_usage_percent:
+    fix_template_count:
         description:
-        - "Enter the threshold as a percentage (Threshold in percentage(default is 0%))"
+        - "Total configurable FIX Templates in the System"
+        type: int
         required: False
-    health_monitor_count:
+    cache_template_count:
         description:
-        - "Total Health Monitors in the System"
+        - "Total configurable HTTP Cache Templates in the System"
+        type: int
         required: False
-    server_ssl_template_count:
+    nat_pool_addr_count:
         description:
-        - "Total configurable Server SSL Templates in the System"
+        - "Total configurable NAT Pool addresses in the System (deprecated)"
+        type: int
+        required: False
+    persist_cookie_template_count:
+        description:
+        - "Total configurable Persistent cookie Templates in the System"
+        type: int
+        required: False
+    persist_srcip_template_count:
+        description:
+        - "Total configurable Source IP Persistent Templates in the System"
+        type: int
+        required: False
+    proxy_template_count:
+        description:
+        - "Total configurable Proxy Templates in the System"
+        type: int
+        required: False
+    real_port_count:
+        description:
+        - "Total Real Server Ports in the System"
+        type: int
         required: False
     real_server_count:
         description:
         - "Total Real Servers in the System"
+        type: int
         required: False
+    server_ssl_template_count:
+        description:
+        - "Total configurable Server SSL Templates in the System"
+        type: int
+        required: False
+    service_group_count:
+        description:
+        - "Total Service Groups in the System"
+        type: int
+        required: False
+    stream_template_count:
+        description:
+        - "Total configurable Streaming media in the System"
+        type: int
+        required: False
+    virtual_port_count:
+        description:
+        - "Total Virtual Server Ports in the System"
+        type: int
+        required: False
+    virtual_server_count:
+        description:
+        - "Total Virtual Servers in the System"
+        type: int
+        required: False
+    health_monitor_count:
+        description:
+        - "Total Health Monitors in the System"
+        type: int
+        required: False
+    pbslb_subnet_count:
+        description:
+        - "Total PBSLB Subnets in the System"
+        type: int
+        required: False
+    slb_threshold_res_usage_percent:
+        description:
+        - "Enter the threshold as a percentage (Threshold in percentage(default is 0%))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            nat_pool_addr_min:
+                description:
+                - "Field nat_pool_addr_min"
+                type: int
+            nat_pool_addr_max:
+                description:
+                - "Field nat_pool_addr_max"
+                type: int
+            nat_pool_addr_default:
+                description:
+                - "Field nat_pool_addr_default"
+                type: int
+            real_server_min:
+                description:
+                - "Field real_server_min"
+                type: int
+            real_server_max:
+                description:
+                - "Field real_server_max"
+                type: int
+            real_server_default:
+                description:
+                - "Field real_server_default"
+                type: int
+            real_port_min:
+                description:
+                - "Field real_port_min"
+                type: int
+            real_port_max:
+                description:
+                - "Field real_port_max"
+                type: int
+            real_port_default:
+                description:
+                - "Field real_port_default"
+                type: int
+            service_group_min:
+                description:
+                - "Field service_group_min"
+                type: int
+            service_group_max:
+                description:
+                - "Field service_group_max"
+                type: int
+            service_group_default:
+                description:
+                - "Field service_group_default"
+                type: int
+            virtual_port_min:
+                description:
+                - "Field virtual_port_min"
+                type: int
+            virtual_port_max:
+                description:
+                - "Field virtual_port_max"
+                type: int
+            virtual_port_default:
+                description:
+                - "Field virtual_port_default"
+                type: int
+            virtual_server_min:
+                description:
+                - "Field virtual_server_min"
+                type: int
+            virtual_server_max:
+                description:
+                - "Field virtual_server_max"
+                type: int
+            virtual_server_default:
+                description:
+                - "Field virtual_server_default"
+                type: int
+            http_template_min:
+                description:
+                - "Field http_template_min"
+                type: int
+            http_template_max:
+                description:
+                - "Field http_template_max"
+                type: int
+            http_template_default:
+                description:
+                - "Field http_template_default"
+                type: int
+            fix_template_min:
+                description:
+                - "Field fix_template_min"
+                type: int
+            fix_template_max:
+                description:
+                - "Field fix_template_max"
+                type: int
+            fix_template_default:
+                description:
+                - "Field fix_template_default"
+                type: int
+            proxy_template_min:
+                description:
+                - "Field proxy_template_min"
+                type: int
+            proxy_template_max:
+                description:
+                - "Field proxy_template_max"
+                type: int
+            proxy_template_default:
+                description:
+                - "Field proxy_template_default"
+                type: int
+            conn_reuse_template_min:
+                description:
+                - "Field conn_reuse_template_min"
+                type: int
+            conn_reuse_template_max:
+                description:
+                - "Field conn_reuse_template_max"
+                type: int
+            conn_reuse_template_default:
+                description:
+                - "Field conn_reuse_template_default"
+                type: int
+            fast_tcp_template_min:
+                description:
+                - "Field fast_tcp_template_min"
+                type: int
+            fast_tcp_template_max:
+                description:
+                - "Field fast_tcp_template_max"
+                type: int
+            fast_tcp_template_default:
+                description:
+                - "Field fast_tcp_template_default"
+                type: int
+            fast_udp_template_min:
+                description:
+                - "Field fast_udp_template_min"
+                type: int
+            fast_udp_template_max:
+                description:
+                - "Field fast_udp_template_max"
+                type: int
+            fast_udp_template_default:
+                description:
+                - "Field fast_udp_template_default"
+                type: int
+            client_ssl_template_min:
+                description:
+                - "Field client_ssl_template_min"
+                type: int
+            client_ssl_template_max:
+                description:
+                - "Field client_ssl_template_max"
+                type: int
+            client_ssl_template_default:
+                description:
+                - "Field client_ssl_template_default"
+                type: int
+            server_ssl_template_min:
+                description:
+                - "Field server_ssl_template_min"
+                type: int
+            server_ssl_template_max:
+                description:
+                - "Field server_ssl_template_max"
+                type: int
+            server_ssl_template_default:
+                description:
+                - "Field server_ssl_template_default"
+                type: int
+            stream_template_min:
+                description:
+                - "Field stream_template_min"
+                type: int
+            stream_template_max:
+                description:
+                - "Field stream_template_max"
+                type: int
+            stream_template_default:
+                description:
+                - "Field stream_template_default"
+                type: int
+            persist_cookie_template_min:
+                description:
+                - "Field persist_cookie_template_min"
+                type: int
+            persist_cookie_template_max:
+                description:
+                - "Field persist_cookie_template_max"
+                type: int
+            persist_cookie_template_default:
+                description:
+                - "Field persist_cookie_template_default"
+                type: int
+            persist_srcip_template_min:
+                description:
+                - "Field persist_srcip_template_min"
+                type: int
+            persist_srcip_template_max:
+                description:
+                - "Field persist_srcip_template_max"
+                type: int
+            persist_srcip_template_default:
+                description:
+                - "Field persist_srcip_template_default"
+                type: int
+            health_monitor_count_min:
+                description:
+                - "Field health_monitor_count_min"
+                type: int
+            health_monitor_count_max:
+                description:
+                - "Field health_monitor_count_max"
+                type: int
+            health_monitor_count_default:
+                description:
+                - "Field health_monitor_count_default"
+                type: int
+            pbslb_subnet_count_min:
+                description:
+                - "Field pbslb_subnet_count_min"
+                type: int
+            pbslb_subnet_count_max:
+                description:
+                - "Field pbslb_subnet_count_max"
+                type: int
+            pbslb_subnet_count_default:
+                description:
+                - "Field pbslb_subnet_count_default"
+                type: int
+            gslb_site_count_min:
+                description:
+                - "Field gslb_site_count_min"
+                type: int
+            gslb_site_count_max:
+                description:
+                - "Field gslb_site_count_max"
+                type: int
+            gslb_site_count_default:
+                description:
+                - "Field gslb_site_count_default"
+                type: int
+            gslb_device_count_min:
+                description:
+                - "Field gslb_device_count_min"
+                type: int
+            gslb_device_count_max:
+                description:
+                - "Field gslb_device_count_max"
+                type: int
+            gslb_device_count_default:
+                description:
+                - "Field gslb_device_count_default"
+                type: int
+            gslb_service_ip_count_min:
+                description:
+                - "Field gslb_service_ip_count_min"
+                type: int
+            gslb_service_ip_count_max:
+                description:
+                - "Field gslb_service_ip_count_max"
+                type: int
+            gslb_service_ip_count_default:
+                description:
+                - "Field gslb_service_ip_count_default"
+                type: int
+            gslb_service_port_count_min:
+                description:
+                - "Field gslb_service_port_count_min"
+                type: int
+            gslb_service_port_count_max:
+                description:
+                - "Field gslb_service_port_count_max"
+                type: int
+            gslb_service_port_count_default:
+                description:
+                - "Field gslb_service_port_count_default"
+                type: int
+            gslb_zone_count_min:
+                description:
+                - "Field gslb_zone_count_min"
+                type: int
+            gslb_zone_count_max:
+                description:
+                - "Field gslb_zone_count_max"
+                type: int
+            gslb_zone_count_default:
+                description:
+                - "Field gslb_zone_count_default"
+                type: int
+            gslb_service_count_min:
+                description:
+                - "Field gslb_service_count_min"
+                type: int
+            gslb_service_count_max:
+                description:
+                - "Field gslb_service_count_max"
+                type: int
+            gslb_service_count_default:
+                description:
+                - "Field gslb_service_count_default"
+                type: int
+            gslb_policy_count_min:
+                description:
+                - "Field gslb_policy_count_min"
+                type: int
+            gslb_policy_count_max:
+                description:
+                - "Field gslb_policy_count_max"
+                type: int
+            gslb_policy_count_default:
+                description:
+                - "Field gslb_policy_count_default"
+                type: int
+            gslb_geo_location_count_min:
+                description:
+                - "Field gslb_geo_location_count_min"
+                type: int
+            gslb_geo_location_count_max:
+                description:
+                - "Field gslb_geo_location_count_max"
+                type: int
+            gslb_geo_location_count_default:
+                description:
+                - "Field gslb_geo_location_count_default"
+                type: int
+            gslb_ip_list_count_min:
+                description:
+                - "Field gslb_ip_list_count_min"
+                type: int
+            gslb_ip_list_count_max:
+                description:
+                - "Field gslb_ip_list_count_max"
+                type: int
+            gslb_ip_list_count_default:
+                description:
+                - "Field gslb_ip_list_count_default"
+                type: int
+            gslb_template_count_min:
+                description:
+                - "Field gslb_template_count_min"
+                type: int
+            gslb_template_count_max:
+                description:
+                - "Field gslb_template_count_max"
+                type: int
+            gslb_template_count_default:
+                description:
+                - "Field gslb_template_count_default"
+                type: int
+            gslb_svcgroup_count_min:
+                description:
+                - "Field gslb_svcgroup_count_min"
+                type: int
+            gslb_svcgroup_count_max:
+                description:
+                - "Field gslb_svcgroup_count_max"
+                type: int
+            gslb_svcgroup_count_default:
+                description:
+                - "Field gslb_svcgroup_count_default"
+                type: int
+            cache_template_min:
+                description:
+                - "Field cache_template_min"
+                type: int
+            cache_template_max:
+                description:
+                - "Field cache_template_max"
+                type: int
+            cache_template_default:
+                description:
+                - "Field cache_template_default"
+                type: int
+            slb_threshold_res_usage_default:
+                description:
+                - "Field slb_threshold_res_usage_default"
+                type: int
+            slb_threshold_res_usage_min:
+                description:
+                - "Field slb_threshold_res_usage_min"
+                type: int
+            slb_threshold_res_usage_max:
+                description:
+                - "Field slb_threshold_res_usage_max"
+                type: int
 
 '''
 
@@ -437,6 +574,7 @@ AVAILABLE_PROPERTIES = [
     "conn_reuse_template_count",
     "fast_tcp_template_count",
     "fast_udp_template_count",
+    "fix_template_count",
     "health_monitor_count",
     "http_template_count",
     "nat_pool_addr_count",
@@ -491,231 +629,111 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'client_ssl_template_count': {
+            'type': 'int',
+        },
+        'conn_reuse_template_count': {
+            'type': 'int',
+        },
+        'fast_tcp_template_count': {
+            'type': 'int',
+        },
+        'fast_udp_template_count': {
+            'type': 'int',
+        },
+        'http_template_count': {
+            'type': 'int',
+        },
+        'fix_template_count': {
+            'type': 'int',
+        },
+        'cache_template_count': {
+            'type': 'int',
+        },
+        'nat_pool_addr_count': {
+            'type': 'int',
+        },
+        'persist_cookie_template_count': {
+            'type': 'int',
+        },
+        'persist_srcip_template_count': {
+            'type': 'int',
+        },
+        'proxy_template_count': {
+            'type': 'int',
+        },
+        'real_port_count': {
+            'type': 'int',
+        },
+        'real_server_count': {
+            'type': 'int',
+        },
+        'server_ssl_template_count': {
+            'type': 'int',
+        },
+        'service_group_count': {
+            'type': 'int',
+        },
+        'stream_template_count': {
+            'type': 'int',
+        },
+        'virtual_port_count': {
+            'type': 'int',
+        },
+        'virtual_server_count': {
+            'type': 'int',
+        },
+        'health_monitor_count': {
+            'type': 'int',
+        },
+        'pbslb_subnet_count': {
+            'type': 'int',
+        },
+        'slb_threshold_res_usage_percent': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'service_group_min': {
-                'type': 'int',
-            },
-            'service_group_default': {
-                'type': 'int',
-            },
-            'service_group_max': {
-                'type': 'int',
-            },
-            'gslb_service_port_count_max': {
-                'type': 'int',
-            },
-            'slb_threshold_res_usage_default': {
-                'type': 'int',
-            },
-            'gslb_service_port_count_min': {
-                'type': 'int',
-            },
-            'health_monitor_count_default': {
-                'type': 'int',
-            },
-            'gslb_template_count_min': {
-                'type': 'int',
-            },
-            'gslb_policy_count_default': {
-                'type': 'int',
-            },
-            'proxy_template_default': {
-                'type': 'int',
-            },
-            'client_ssl_template_min': {
-                'type': 'int',
-            },
-            'client_ssl_template_default': {
-                'type': 'int',
-            },
-            'fast_tcp_template_min': {
-                'type': 'int',
-            },
-            'fast_tcp_template_max': {
-                'type': 'int',
-            },
-            'client_ssl_template_max': {
-                'type': 'int',
-            },
-            'gslb_site_count_min': {
-                'type': 'int',
-            },
-            'gslb_service_count_max': {
-                'type': 'int',
-            },
-            'cache_template_max': {
-                'type': 'int',
-            },
-            'gslb_template_count_max': {
-                'type': 'int',
-            },
-            'cache_template_min': {
-                'type': 'int',
-            },
-            'proxy_template_max': {
-                'type': 'int',
-            },
-            'pbslb_subnet_count_min': {
-                'type': 'int',
-            },
-            'gslb_service_count_min': {
-                'type': 'int',
-            },
-            'cache_template_default': {
-                'type': 'int',
-            },
-            'real_port_max': {
+            'nat_pool_addr_min': {
                 'type': 'int',
             },
             'nat_pool_addr_max': {
                 'type': 'int',
             },
-            'gslb_geo_location_count_min': {
+            'nat_pool_addr_default': {
                 'type': 'int',
             },
             'real_server_min': {
                 'type': 'int',
             },
-            'virtual_server_default': {
-                'type': 'int',
-            },
-            'gslb_device_count_max': {
-                'type': 'int',
-            },
-            'gslb_template_count_default': {
-                'type': 'int',
-            },
-            'fast_udp_template_max': {
-                'type': 'int',
-            },
-            'fast_udp_template_min': {
-                'type': 'int',
-            },
-            'gslb_geo_location_count_max': {
-                'type': 'int',
-            },
-            'gslb_site_count_max': {
-                'type': 'int',
-            },
-            'gslb_service_ip_count_max': {
-                'type': 'int',
-            },
-            'gslb_device_count_min': {
-                'type': 'int',
-            },
-            'gslb_zone_count_min': {
-                'type': 'int',
-            },
-            'gslb_service_ip_count_min': {
-                'type': 'int',
-            },
-            'gslb_service_count_default': {
-                'type': 'int',
-            },
-            'persist_cookie_template_default': {
-                'type': 'int',
-            },
-            'fast_udp_template_default': {
+            'real_server_max': {
                 'type': 'int',
             },
             'real_server_default': {
                 'type': 'int',
             },
-            'gslb_zone_count_max': {
+            'real_port_min': {
                 'type': 'int',
             },
-            'gslb_device_count_default': {
-                'type': 'int',
-            },
-            'conn_reuse_template_min': {
+            'real_port_max': {
                 'type': 'int',
             },
             'real_port_default': {
                 'type': 'int',
             },
-            'gslb_ip_list_count_min': {
+            'service_group_min': {
                 'type': 'int',
             },
-            'http_template_default': {
+            'service_group_max': {
                 'type': 'int',
             },
-            'persist_srcip_template_default': {
-                'type': 'int',
-            },
-            'gslb_policy_count_max': {
-                'type': 'int',
-            },
-            'gslb_svcgroup_count_max': {
-                'type': 'int',
-            },
-            'proxy_template_min': {
-                'type': 'int',
-            },
-            'gslb_policy_count_min': {
-                'type': 'int',
-            },
-            'gslb_geo_location_count_default': {
-                'type': 'int',
-            },
-            'gslb_zone_count_default': {
-                'type': 'int',
-            },
-            'server_ssl_template_default': {
-                'type': 'int',
-            },
-            'server_ssl_template_min': {
-                'type': 'int',
-            },
-            'slb_threshold_res_usage_min': {
-                'type': 'int',
-            },
-            'real_port_min': {
-                'type': 'int',
-            },
-            'gslb_ip_list_count_max': {
-                'type': 'int',
-            },
-            'persist_cookie_template_min': {
-                'type': 'int',
-            },
-            'slb_threshold_res_usage_max': {
-                'type': 'int',
-            },
-            'server_ssl_template_max': {
-                'type': 'int',
-            },
-            'gslb_site_count_default': {
-                'type': 'int',
-            },
-            'gslb_ip_list_count_default': {
-                'type': 'int',
-            },
-            'virtual_server_max': {
-                'type': 'int',
-            },
-            'real_server_max': {
-                'type': 'int',
-            },
-            'conn_reuse_template_default': {
-                'type': 'int',
-            },
-            'persist_cookie_template_max': {
-                'type': 'int',
-            },
-            'virtual_server_min': {
-                'type': 'int',
-            },
-            'stream_template_max': {
-                'type': 'int',
-            },
-            'fast_tcp_template_default': {
+            'service_group_default': {
                 'type': 'int',
             },
             'virtual_port_min': {
-                'type': 'int',
-            },
-            'nat_pool_addr_min': {
                 'type': 'int',
             },
             'virtual_port_max': {
@@ -724,117 +742,249 @@ def get_argspec():
             'virtual_port_default': {
                 'type': 'int',
             },
-            'pbslb_subnet_count_max': {
+            'virtual_server_min': {
                 'type': 'int',
             },
-            'gslb_service_port_count_default': {
+            'virtual_server_max': {
                 'type': 'int',
             },
-            'persist_srcip_template_min': {
-                'type': 'int',
-            },
-            'stream_template_min': {
-                'type': 'int',
-            },
-            'nat_pool_addr_default': {
-                'type': 'int',
-            },
-            'http_template_max': {
-                'type': 'int',
-            },
-            'stream_template_default': {
-                'type': 'int',
-            },
-            'gslb_svcgroup_count_default': {
-                'type': 'int',
-            },
-            'health_monitor_count_min': {
-                'type': 'int',
-            },
-            'pbslb_subnet_count_default': {
-                'type': 'int',
-            },
-            'health_monitor_count_max': {
-                'type': 'int',
-            },
-            'persist_srcip_template_max': {
-                'type': 'int',
-            },
-            'conn_reuse_template_max': {
+            'virtual_server_default': {
                 'type': 'int',
             },
             'http_template_min': {
                 'type': 'int',
             },
-            'gslb_svcgroup_count_min': {
+            'http_template_max': {
+                'type': 'int',
+            },
+            'http_template_default': {
+                'type': 'int',
+            },
+            'fix_template_min': {
+                'type': 'int',
+            },
+            'fix_template_max': {
+                'type': 'int',
+            },
+            'fix_template_default': {
+                'type': 'int',
+            },
+            'proxy_template_min': {
+                'type': 'int',
+            },
+            'proxy_template_max': {
+                'type': 'int',
+            },
+            'proxy_template_default': {
+                'type': 'int',
+            },
+            'conn_reuse_template_min': {
+                'type': 'int',
+            },
+            'conn_reuse_template_max': {
+                'type': 'int',
+            },
+            'conn_reuse_template_default': {
+                'type': 'int',
+            },
+            'fast_tcp_template_min': {
+                'type': 'int',
+            },
+            'fast_tcp_template_max': {
+                'type': 'int',
+            },
+            'fast_tcp_template_default': {
+                'type': 'int',
+            },
+            'fast_udp_template_min': {
+                'type': 'int',
+            },
+            'fast_udp_template_max': {
+                'type': 'int',
+            },
+            'fast_udp_template_default': {
+                'type': 'int',
+            },
+            'client_ssl_template_min': {
+                'type': 'int',
+            },
+            'client_ssl_template_max': {
+                'type': 'int',
+            },
+            'client_ssl_template_default': {
+                'type': 'int',
+            },
+            'server_ssl_template_min': {
+                'type': 'int',
+            },
+            'server_ssl_template_max': {
+                'type': 'int',
+            },
+            'server_ssl_template_default': {
+                'type': 'int',
+            },
+            'stream_template_min': {
+                'type': 'int',
+            },
+            'stream_template_max': {
+                'type': 'int',
+            },
+            'stream_template_default': {
+                'type': 'int',
+            },
+            'persist_cookie_template_min': {
+                'type': 'int',
+            },
+            'persist_cookie_template_max': {
+                'type': 'int',
+            },
+            'persist_cookie_template_default': {
+                'type': 'int',
+            },
+            'persist_srcip_template_min': {
+                'type': 'int',
+            },
+            'persist_srcip_template_max': {
+                'type': 'int',
+            },
+            'persist_srcip_template_default': {
+                'type': 'int',
+            },
+            'health_monitor_count_min': {
+                'type': 'int',
+            },
+            'health_monitor_count_max': {
+                'type': 'int',
+            },
+            'health_monitor_count_default': {
+                'type': 'int',
+            },
+            'pbslb_subnet_count_min': {
+                'type': 'int',
+            },
+            'pbslb_subnet_count_max': {
+                'type': 'int',
+            },
+            'pbslb_subnet_count_default': {
+                'type': 'int',
+            },
+            'gslb_site_count_min': {
+                'type': 'int',
+            },
+            'gslb_site_count_max': {
+                'type': 'int',
+            },
+            'gslb_site_count_default': {
+                'type': 'int',
+            },
+            'gslb_device_count_min': {
+                'type': 'int',
+            },
+            'gslb_device_count_max': {
+                'type': 'int',
+            },
+            'gslb_device_count_default': {
+                'type': 'int',
+            },
+            'gslb_service_ip_count_min': {
+                'type': 'int',
+            },
+            'gslb_service_ip_count_max': {
                 'type': 'int',
             },
             'gslb_service_ip_count_default': {
                 'type': 'int',
+            },
+            'gslb_service_port_count_min': {
+                'type': 'int',
+            },
+            'gslb_service_port_count_max': {
+                'type': 'int',
+            },
+            'gslb_service_port_count_default': {
+                'type': 'int',
+            },
+            'gslb_zone_count_min': {
+                'type': 'int',
+            },
+            'gslb_zone_count_max': {
+                'type': 'int',
+            },
+            'gslb_zone_count_default': {
+                'type': 'int',
+            },
+            'gslb_service_count_min': {
+                'type': 'int',
+            },
+            'gslb_service_count_max': {
+                'type': 'int',
+            },
+            'gslb_service_count_default': {
+                'type': 'int',
+            },
+            'gslb_policy_count_min': {
+                'type': 'int',
+            },
+            'gslb_policy_count_max': {
+                'type': 'int',
+            },
+            'gslb_policy_count_default': {
+                'type': 'int',
+            },
+            'gslb_geo_location_count_min': {
+                'type': 'int',
+            },
+            'gslb_geo_location_count_max': {
+                'type': 'int',
+            },
+            'gslb_geo_location_count_default': {
+                'type': 'int',
+            },
+            'gslb_ip_list_count_min': {
+                'type': 'int',
+            },
+            'gslb_ip_list_count_max': {
+                'type': 'int',
+            },
+            'gslb_ip_list_count_default': {
+                'type': 'int',
+            },
+            'gslb_template_count_min': {
+                'type': 'int',
+            },
+            'gslb_template_count_max': {
+                'type': 'int',
+            },
+            'gslb_template_count_default': {
+                'type': 'int',
+            },
+            'gslb_svcgroup_count_min': {
+                'type': 'int',
+            },
+            'gslb_svcgroup_count_max': {
+                'type': 'int',
+            },
+            'gslb_svcgroup_count_default': {
+                'type': 'int',
+            },
+            'cache_template_min': {
+                'type': 'int',
+            },
+            'cache_template_max': {
+                'type': 'int',
+            },
+            'cache_template_default': {
+                'type': 'int',
+            },
+            'slb_threshold_res_usage_default': {
+                'type': 'int',
+            },
+            'slb_threshold_res_usage_min': {
+                'type': 'int',
+            },
+            'slb_threshold_res_usage_max': {
+                'type': 'int',
             }
-        },
-        'nat_pool_addr_count': {
-            'type': 'int',
-        },
-        'fast_tcp_template_count': {
-            'type': 'int',
-        },
-        'cache_template_count': {
-            'type': 'int',
-        },
-        'proxy_template_count': {
-            'type': 'int',
-        },
-        'persist_srcip_template_count': {
-            'type': 'int',
-        },
-        'client_ssl_template_count': {
-            'type': 'int',
-        },
-        'pbslb_subnet_count': {
-            'type': 'int',
-        },
-        'persist_cookie_template_count': {
-            'type': 'int',
-        },
-        'stream_template_count': {
-            'type': 'int',
-        },
-        'conn_reuse_template_count': {
-            'type': 'int',
-        },
-        'real_port_count': {
-            'type': 'int',
-        },
-        'http_template_count': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'service_group_count': {
-            'type': 'int',
-        },
-        'virtual_server_count': {
-            'type': 'int',
-        },
-        'fast_udp_template_count': {
-            'type': 'int',
-        },
-        'virtual_port_count': {
-            'type': 'int',
-        },
-        'slb_threshold_res_usage_percent': {
-            'type': 'int',
-        },
-        'health_monitor_count': {
-            'type': 'int',
-        },
-        'server_ssl_template_count': {
-            'type': 'int',
-        },
-        'real_server_count': {
-            'type': 'int',
         }
     })
     return rv

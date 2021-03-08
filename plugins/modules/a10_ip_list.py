@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_list
 description:
     - Configure ip list
-short_description: Configures A10 ip-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,79 +22,99 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
         - "Specify name of the ip list"
+        type: str
         required: True
-    ipv6_config:
-        description:
-        - "Field ipv6_config"
-        required: False
-        suboptions:
-            ipv6_end_addr:
-                description:
-                - "IPv6 Range End Address"
-            ipv6_start_addr:
-                description:
-                - "IPv6 Range Start Address / IPv6 Address"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     ipv4_config:
         description:
         - "Field ipv4_config"
+        type: list
         required: False
         suboptions:
             ipv4_start_addr:
                 description:
                 - "IPv4 Range Start Address / IPv4 Address"
+                type: str
             ipv4_end_addr:
                 description:
                 - "IPv4 Range End Address"
+                type: str
+    ipv6_config:
+        description:
+        - "Field ipv6_config"
+        type: list
+        required: False
+        suboptions:
+            ipv6_start_addr:
+                description:
+                - "IPv6 Range Start Address / IPv6 Address"
+                type: str
+            ipv6_end_addr:
+                description:
+                - "IPv6 Range End Address"
+                type: str
     ipv6_prefix_config:
         description:
         - "Field ipv6_prefix_config"
+        type: list
         required: False
         suboptions:
-            ipv6_prefix_to:
-                description:
-                - "IPv6 Prefix Range End"
-            count:
-                description:
-                - "Number of IPv6 prefixes"
             ipv6_addr_prefix:
                 description:
                 - "IPv6 Prefix Range Start / IPv6 Prefix"
+                type: str
+            ipv6_prefix_to:
+                description:
+                - "IPv6 Prefix Range End"
+                type: str
+            count:
+                description:
+                - "Number of IPv6 prefixes"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -159,18 +177,6 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'ipv6_config': {
-            'type': 'list',
-            'ipv6_end_addr': {
-                'type': 'str',
-            },
-            'ipv6_start_addr': {
-                'type': 'str',
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
         'ipv4_config': {
             'type': 'list',
             'ipv4_start_addr': {
@@ -180,19 +186,31 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'ipv6_config': {
+            'type': 'list',
+            'ipv6_start_addr': {
+                'type': 'str',
+            },
+            'ipv6_end_addr': {
+                'type': 'str',
+            }
+        },
         'ipv6_prefix_config': {
             'type': 'list',
+            'ipv6_addr_prefix': {
+                'type': 'str',
+            },
             'ipv6_prefix_to': {
                 'type': 'str',
             },
             'count': {
                 'type': 'int',
-            },
-            'ipv6_addr_prefix': {
-                'type': 'str',
             }
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

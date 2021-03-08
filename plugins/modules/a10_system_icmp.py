@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_icmp
 description:
     - Display ICMP statistics
-short_description: Configures A10 system.icmp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -69,96 +80,121 @@ options:
           Out Redirects; 'outechos'= Out Echo Requests; 'outechoreps'= Out Echo Replies;
           'outtimestamps'= Out Time Stamp; 'outtimestampreps'= Out Time Stamp Rep;
           'outaddrmasks'= Out Address Mask; 'outaddrmaskreps'= Out Address Mask Rep;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            inechoreps:
-                description:
-                - "In Echo replies"
-            outaddrmaskreps:
-                description:
-                - "Out Address Mask Rep"
-            outtimestampreps:
-                description:
-                - "Out Time Stamp Rep"
-            inechos:
-                description:
-                - "In Echo requests"
             num:
                 description:
                 - "Total number"
-            intimestampreps:
-                description:
-                - "In Timestamp Rep"
-            outechos:
-                description:
-                - "Out Echo Requests"
-            inaddrmasks:
-                description:
-                - "In Address Masks"
-            outsrcquenchs:
-                description:
-                - "Out Source Quench Error"
-            inerrors:
-                description:
-                - "In Errors"
-            inaddrmaskreps:
-                description:
-                - "In Address Mask Rep"
-            outmsgs:
-                description:
-                - "Out Message"
-            outtimestamps:
-                description:
-                - "Out Time Stamp"
-            outaddrmasks:
-                description:
-                - "Out Address Mask"
-            inparmprobs:
-                description:
-                - "In Parameter Problem"
-            insrcquenchs:
-                description:
-                - "In Source Quench Error"
-            inredirects:
-                description:
-                - "In Redirects"
-            outerrors:
-                description:
-                - "Out Errors"
+                type: str
             inmsgs:
                 description:
                 - "In Messages"
-            outtimeexcds:
+                type: str
+            inerrors:
                 description:
-                - "Out TTL Exceeds"
-            outredirects:
-                description:
-                - "Out Redirects"
+                - "In Errors"
+                type: str
             indestunreachs:
                 description:
                 - "In Destination Unreachable"
+                type: str
             intimeexcds:
                 description:
                 - "In TTL Exceeds"
-            outparmprobs:
+                type: str
+            inparmprobs:
                 description:
-                - "Out Parameter Problem"
+                - "In Parameter Problem"
+                type: str
+            insrcquenchs:
+                description:
+                - "In Source Quench Error"
+                type: str
+            inredirects:
+                description:
+                - "In Redirects"
+                type: str
+            inechos:
+                description:
+                - "In Echo requests"
+                type: str
+            inechoreps:
+                description:
+                - "In Echo replies"
+                type: str
             intimestamps:
                 description:
                 - "In Timestamp"
-            outechoreps:
+                type: str
+            intimestampreps:
                 description:
-                - "Out Echo Replies"
+                - "In Timestamp Rep"
+                type: str
+            inaddrmasks:
+                description:
+                - "In Address Masks"
+                type: str
+            inaddrmaskreps:
+                description:
+                - "In Address Mask Rep"
+                type: str
+            outmsgs:
+                description:
+                - "Out Message"
+                type: str
+            outerrors:
+                description:
+                - "Out Errors"
+                type: str
             outdestunreachs:
                 description:
                 - "Out Destination Unreachable"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            outtimeexcds:
+                description:
+                - "Out TTL Exceeds"
+                type: str
+            outparmprobs:
+                description:
+                - "Out Parameter Problem"
+                type: str
+            outsrcquenchs:
+                description:
+                - "Out Source Quench Error"
+                type: str
+            outredirects:
+                description:
+                - "Out Redirects"
+                type: str
+            outechos:
+                description:
+                - "Out Echo Requests"
+                type: str
+            outechoreps:
+                description:
+                - "Out Echo Replies"
+                type: str
+            outtimestamps:
+                description:
+                - "Out Time Stamp"
+                type: str
+            outtimestampreps:
+                description:
+                - "Out Time Stamp Rep"
+                type: str
+            outaddrmasks:
+                description:
+                - "Out Address Mask"
+                type: str
+            outaddrmaskreps:
+                description:
+                - "Out Address Mask Rep"
+                type: str
 
 '''
 
@@ -213,6 +249,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -232,46 +271,19 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'inechoreps': {
-                'type': 'str',
-            },
-            'outaddrmaskreps': {
-                'type': 'str',
-            },
-            'outtimestampreps': {
-                'type': 'str',
-            },
-            'inechos': {
-                'type': 'str',
-            },
             'num': {
                 'type': 'str',
             },
-            'intimestampreps': {
-                'type': 'str',
-            },
-            'outechos': {
-                'type': 'str',
-            },
-            'inaddrmasks': {
-                'type': 'str',
-            },
-            'outsrcquenchs': {
+            'inmsgs': {
                 'type': 'str',
             },
             'inerrors': {
                 'type': 'str',
             },
-            'inaddrmaskreps': {
+            'indestunreachs': {
                 'type': 'str',
             },
-            'outmsgs': {
-                'type': 'str',
-            },
-            'outtimestamps': {
-                'type': 'str',
-            },
-            'outaddrmasks': {
+            'intimeexcds': {
                 'type': 'str',
             },
             'inparmprobs': {
@@ -283,39 +295,63 @@ def get_argspec():
             'inredirects': {
                 'type': 'str',
             },
-            'outerrors': {
+            'inechos': {
                 'type': 'str',
             },
-            'inmsgs': {
-                'type': 'str',
-            },
-            'outtimeexcds': {
-                'type': 'str',
-            },
-            'outredirects': {
-                'type': 'str',
-            },
-            'indestunreachs': {
-                'type': 'str',
-            },
-            'intimeexcds': {
-                'type': 'str',
-            },
-            'outparmprobs': {
+            'inechoreps': {
                 'type': 'str',
             },
             'intimestamps': {
                 'type': 'str',
             },
-            'outechoreps': {
+            'intimestampreps': {
+                'type': 'str',
+            },
+            'inaddrmasks': {
+                'type': 'str',
+            },
+            'inaddrmaskreps': {
+                'type': 'str',
+            },
+            'outmsgs': {
+                'type': 'str',
+            },
+            'outerrors': {
                 'type': 'str',
             },
             'outdestunreachs': {
                 'type': 'str',
+            },
+            'outtimeexcds': {
+                'type': 'str',
+            },
+            'outparmprobs': {
+                'type': 'str',
+            },
+            'outsrcquenchs': {
+                'type': 'str',
+            },
+            'outredirects': {
+                'type': 'str',
+            },
+            'outechos': {
+                'type': 'str',
+            },
+            'outechoreps': {
+                'type': 'str',
+            },
+            'outtimestamps': {
+                'type': 'str',
+            },
+            'outtimestampreps': {
+                'type': 'str',
+            },
+            'outaddrmasks': {
+                'type': 'str',
+            },
+            'outaddrmaskreps': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

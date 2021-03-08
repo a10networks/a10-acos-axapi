@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ipv6_class_list
 description:
     - IPv6 subnet add remove config
-short_description: Configures A10 slb.ipv6-class-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,63 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
         - "Specify name of the class list"
+        type: str
         required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     ipv6_list:
         description:
         - "Field ipv6_list"
+        type: list
         required: False
         suboptions:
-            lid:
-                description:
-                - "Use Limit ID defined in template (Specify LID index)"
-            glid:
-                description:
-                - "Use global Limit ID (Specify global LID index)"
-            ipv6_addr:
-                description:
-                - "Specify IPv6 host or subnet"
-            lsn_lid:
-                description:
-                - "LSN Limit ID (LID index)"
             action:
                 description:
                 - "'add'= Add the entry; 'delete'= Delete the entry;"
+                type: str
+            ipv6_addr:
+                description:
+                - "Specify IPv6 host or subnet"
+                type: str
+            lid:
+                description:
+                - "Use Limit ID defined in template (Specify LID index)"
+                type: int
+            glid:
+                description:
+                - "Use global Limit ID (Specify global LID index)"
+                type: int
+            lsn_lid:
+                description:
+                - "LSN Limit ID (LID index)"
+                type: int
             lsn_radius_profile:
                 description:
                 - "LSN RADIUS Profile Index"
+                type: int
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -139,30 +153,30 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'user_tag': {
-            'type': 'str',
-        },
         'ipv6_list': {
             'type': 'list',
+            'action': {
+                'type': 'str',
+                'choices': ['add', 'delete']
+            },
+            'ipv6_addr': {
+                'type': 'str',
+            },
             'lid': {
                 'type': 'int',
             },
             'glid': {
                 'type': 'int',
             },
-            'ipv6_addr': {
-                'type': 'str',
-            },
             'lsn_lid': {
                 'type': 'int',
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['add', 'delete']
             },
             'lsn_radius_profile': {
                 'type': 'int',
             }
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

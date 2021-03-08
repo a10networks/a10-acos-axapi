@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_upgrade_gui
 description:
     - Upgrade or Rollback GUI
-short_description: Configures A10 upgrade.gui
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,63 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    rollback:
-        description:
-        - "Rollback to a specific local GUI image"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
+        type: str
         required: False
     image:
         description:
         - "'pri'= Primary image; 'sec'= Secondary image;"
-        required: False
-    upload:
-        description:
-        - "Upload GUI image from remote"
-        required: False
-    source_ip_address:
-        description:
-        - "Source IP address"
+        type: str
         required: False
     local:
         description:
         - "Local GUI image name"
+        type: str
         required: False
-    file_url:
+    rollback:
         description:
-        - "File URL"
+        - "Rollback to a specific local GUI image"
+        type: str
         required: False
     delete:
         description:
         - "Delete one local GUI image"
+        type: str
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
+        required: False
+    source_ip_address:
+        description:
+        - "Source IP address"
+        type: str
+        required: False
+    upload:
+        description:
+        - "Upload GUI image from remote"
+        type: bool
+        required: False
+    file_url:
+        description:
+        - "File URL"
+        type: str
         required: False
 
 '''
@@ -141,29 +154,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'image': {
+            'type': 'str',
+            'choices': ['pri', 'sec']
+        },
+        'local': {
+            'type': 'str',
+        },
         'rollback': {
+            'type': 'str',
+        },
+        'delete': {
             'type': 'str',
         },
         'use_mgmt_port': {
             'type': 'bool',
         },
-        'image': {
+        'source_ip_address': {
             'type': 'str',
-            'choices': ['pri', 'sec']
         },
         'upload': {
             'type': 'bool',
         },
-        'source_ip_address': {
-            'type': 'str',
-        },
-        'local': {
-            'type': 'str',
-        },
         'file_url': {
-            'type': 'str',
-        },
-        'delete': {
             'type': 'str',
         }
     })

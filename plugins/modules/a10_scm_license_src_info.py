@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scm_license_src_info
 description:
     - license source opers
-short_description: Configures A10 scm.license-src-info
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,80 +22,102 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            source2:
-                description:
-                - "Field source2"
-            product:
-                description:
-                - "Field product"
-            source3_module_list:
-                description:
-                - "Field source3_module_list"
-            billing_serial:
-                description:
-                - "Field billing_serial"
             uuid:
                 description:
                 - "Field uuid"
+                type: str
             usb_uuid:
                 description:
                 - "Field usb_uuid"
-            platform:
+                type: str
+            billing_serial:
                 description:
-                - "Field platform"
-            source2_module_list:
-                description:
-                - "Field source2_module_list"
-            source3:
-                description:
-                - "Field source3"
+                - "Field billing_serial"
+                type: str
             token:
                 description:
                 - "Field token"
-            source1:
+                type: str
+            product:
                 description:
-                - "Field source1"
+                - "Field product"
+                type: str
+            platform:
+                description:
+                - "Field platform"
+                type: str
             glm_ping_interval:
                 description:
                 - "Field glm_ping_interval"
+                type: int
+            source1:
+                description:
+                - "Field source1"
+                type: str
             source1_module_list:
                 description:
                 - "Field source1_module_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
+            source2:
+                description:
+                - "Field source2"
+                type: str
+            source2_module_list:
+                description:
+                - "Field source2_module_list"
+                type: list
+            source3:
+                description:
+                - "Field source3"
+                type: str
+            source3_module_list:
+                description:
+                - "Field source3_module_list"
+                type: list
 
 '''
 
@@ -151,12 +171,63 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'source2': {
+            'uuid': {
+                'type': 'str',
+            },
+            'usb_uuid': {
+                'type': 'str',
+            },
+            'billing_serial': {
+                'type': 'str',
+            },
+            'token': {
                 'type': 'str',
             },
             'product': {
+                'type': 'str',
+            },
+            'platform': {
+                'type': 'str',
+            },
+            'glm_ping_interval': {
+                'type': 'int',
+            },
+            'source1': {
+                'type': 'str',
+            },
+            'source1_module_list': {
+                'type': 'list',
+                'source1_module': {
+                    'type': 'str',
+                },
+                'source1_expiry': {
+                    'type': 'str',
+                },
+                'source1_notes': {
+                    'type': 'str',
+                }
+            },
+            'source2': {
+                'type': 'str',
+            },
+            'source2_module_list': {
+                'type': 'list',
+                'source2_module': {
+                    'type': 'str',
+                },
+                'source2_expiry': {
+                    'type': 'str',
+                },
+                'source2_notes': {
+                    'type': 'str',
+                }
+            },
+            'source3': {
                 'type': 'str',
             },
             'source3_module_list': {
@@ -164,64 +235,13 @@ def get_argspec():
                 'source3_module': {
                     'type': 'str',
                 },
-                'source3_notes': {
-                    'type': 'str',
-                },
                 'source3_expiry': {
                     'type': 'str',
-                }
-            },
-            'billing_serial': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'usb_uuid': {
-                'type': 'str',
-            },
-            'platform': {
-                'type': 'str',
-            },
-            'source2_module_list': {
-                'type': 'list',
-                'source2_notes': {
-                    'type': 'str',
                 },
-                'source2_module': {
-                    'type': 'str',
-                },
-                'source2_expiry': {
-                    'type': 'str',
-                }
-            },
-            'source3': {
-                'type': 'str',
-            },
-            'token': {
-                'type': 'str',
-            },
-            'source1': {
-                'type': 'str',
-            },
-            'glm_ping_interval': {
-                'type': 'int',
-            },
-            'source1_module_list': {
-                'type': 'list',
-                'source1_module': {
-                    'type': 'str',
-                },
-                'source1_notes': {
-                    'type': 'str',
-                },
-                'source1_expiry': {
+                'source3_notes': {
                     'type': 'str',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

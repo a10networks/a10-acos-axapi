@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_state_next_state_case_action_l3
 description:
     - L3 packet paramters
-short_description: Configures A10 sys.ut.state.next.state.case.action.l3
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,96 +22,131 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     action_direction:
         description:
-        - Key to identify parent object    case_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    case_number:
         description:
-        - Key to identify parent object    name:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
         description:
-        - Key to identify parent object    state_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    state_name:
         description:
-        - Key to identify parent object    protocol:
+        - Key to identify parent object
+        type: str
+        required: True
+    protocol:
         description:
         - "L4 Protocol"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    checksum:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    value:
-        description:
-        - "protocol number"
-        required: False
-    ip_list:
-        description:
-        - "Field ip_list"
-        required: False
-        suboptions:
-            ve:
-                description:
-                - "Virtual Ethernet interface"
-            virtual_server:
-                description:
-                - "vip"
-            src_dst:
-                description:
-                - "'dest'= dest; 'src'= src;"
-            nat_pool:
-                description:
-                - "Nat pool"
-            trunk:
-                description:
-                - "Trunk number"
-            ipv6_address:
-                description:
-                - "Ipv6 address"
-            ethernet:
-                description:
-                - "Ethernet interface"
-            ipv4_address:
-                description:
-                - "IP address"
-            uuid:
-                description:
-                - "uuid of the object"
-    ttl:
-        description:
-        - "Field ttl"
+        type: bool
         required: False
     ntype:
         description:
         - "'tcp'= tcp; 'udp'= udp; 'icmp'= icmp;"
+        type: str
         required: False
+    value:
+        description:
+        - "protocol number"
+        type: int
+        required: False
+    checksum:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    ttl:
+        description:
+        - "Field ttl"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    ip_list:
+        description:
+        - "Field ip_list"
+        type: list
+        required: False
+        suboptions:
+            src_dst:
+                description:
+                - "'dest'= dest; 'src'= src;"
+                type: str
+            ipv4_address:
+                description:
+                - "IP address"
+                type: str
+            ipv6_address:
+                description:
+                - "Ipv6 address"
+                type: str
+            virtual_server:
+                description:
+                - "vip"
+                type: str
+            nat_pool:
+                description:
+                - "Nat pool"
+                type: str
+            ethernet:
+                description:
+                - "Ethernet interface"
+                type: str
+            ve:
+                description:
+                - "Virtual Ethernet interface"
+                type: str
+            trunk:
+                description:
+                - "Trunk number"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -175,54 +208,54 @@ def get_argspec():
         'protocol': {
             'type': 'bool',
         },
-        'uuid': {
+        'ntype': {
             'type': 'str',
+            'choices': ['tcp', 'udp', 'icmp']
+        },
+        'value': {
+            'type': 'int',
         },
         'checksum': {
             'type': 'str',
             'choices': ['valid', 'invalid']
         },
-        'value': {
+        'ttl': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'ip_list': {
             'type': 'list',
-            've': {
-                'type': 'str',
-            },
-            'virtual_server': {
-                'type': 'str',
-            },
             'src_dst': {
                 'type': 'str',
                 'required': True,
                 'choices': ['dest', 'src']
             },
-            'nat_pool': {
-                'type': 'str',
-            },
-            'trunk': {
+            'ipv4_address': {
                 'type': 'str',
             },
             'ipv6_address': {
                 'type': 'str',
             },
+            'virtual_server': {
+                'type': 'str',
+            },
+            'nat_pool': {
+                'type': 'str',
+            },
             'ethernet': {
                 'type': 'str',
             },
-            'ipv4_address': {
+            've': {
+                'type': 'str',
+            },
+            'trunk': {
                 'type': 'str',
             },
             'uuid': {
                 'type': 'str',
             }
-        },
-        'ttl': {
-            'type': 'int',
-        },
-        'ntype': {
-            'type': 'str',
-            'choices': ['tcp', 'udp', 'icmp']
         }
     })
     # Parent keys

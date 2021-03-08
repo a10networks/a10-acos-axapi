@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_event_action_l1
 description:
     - L1 packet paramters
-short_description: Configures A10 sys.ut.event.action.l1
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,74 +22,97 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     action_direction:
         description:
-        - Key to identify parent object    event_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    event_number:
         description:
-        - Key to identify parent object    eth_list:
+        - Key to identify parent object
+        type: str
+        required: True
+    eth_list:
         description:
         - "Field eth_list"
+        type: list
         required: False
         suboptions:
             ethernet_start:
                 description:
                 - "Ethernet port (Interface number)"
+                type: str
             ethernet_end:
                 description:
                 - "Ethernet port"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    auto:
-        description:
-        - "Auto calculate pkt len"
-        required: False
-    value:
-        description:
-        - "Total packet length starting at L2 header"
-        required: False
-    length:
-        description:
-        - "packet length"
-        required: False
+                type: str
     trunk_list:
         description:
         - "Field trunk_list"
+        type: list
         required: False
         suboptions:
             trunk_start:
                 description:
                 - "Trunk groups"
+                type: int
             trunk_end:
                 description:
                 - "Trunk Group"
+                type: int
+    length:
+        description:
+        - "packet length"
+        type: bool
+        required: False
+    value:
+        description:
+        - "Total packet length starting at L2 header"
+        type: int
+        required: False
+    auto:
+        description:
+        - "Auto calculate pkt len"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -158,18 +179,6 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'auto': {
-            'type': 'bool',
-        },
-        'value': {
-            'type': 'int',
-        },
-        'length': {
-            'type': 'bool',
-        },
         'trunk_list': {
             'type': 'list',
             'trunk_start': {
@@ -178,6 +187,18 @@ def get_argspec():
             'trunk_end': {
                 'type': 'int',
             }
+        },
+        'length': {
+            'type': 'bool',
+        },
+        'value': {
+            'type': 'int',
+        },
+        'auto': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_ntlm
 description:
     - NTLM Authentication Relay
-short_description: Configures A10 aam.authentication.relay.ntlm
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,121 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    domain:
-        description:
-        - "Specify NTLM domain, default is null"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            parse_header_fail:
-                description:
-                - "Parse Header Failure"
-            ntlm_auth_skipped:
-                description:
-                - "Requests for which NTLM relay is skipped"
-            head_negotiate_request_sent:
-                description:
-                - "HEAD requests sent with NEGOTIATE header"
-            http_code_other:
-                description:
-                - "Other HTTP Response"
-            internal_error:
-                description:
-                - "Internal Error"
-            buffer_alloc_fail:
-                description:
-                - "Buffer Allocation Failure"
-            failure:
-                description:
-                - "Failure"
-            http_code_400:
-                description:
-                - "HTTP 400 Bad Request"
-            http_code_401:
-                description:
-                - "HTTP 401 Unauthorized"
-            http_code_403:
-                description:
-                - "HTTP 403 Forbidden"
-            http_code_404:
-                description:
-                - "HTTP 404 Not Found"
-            http_code_500:
-                description:
-                - "HTTP 500 Internal Server Error"
-            http_code_503:
-                description:
-                - "HTTP 503 Service Unavailable"
-            large_request_processing:
-                description:
-                - "Requests invoking large request processing"
-            response:
-                description:
-                - "Response"
-            head_auth_request_sent:
-                description:
-                - "HEAD requests sent with AUTH header"
-            name:
-                description:
-                - "Specify NTLM authentication relay name"
-            http_code_200:
-                description:
-                - "HTTP 200 OK"
-            success:
-                description:
-                - "Success"
-            encoding_fail:
-                description:
-                - "Encoding Failure"
-            request:
-                description:
-                - "Request"
-            large_request_flushed:
-                description:
-                - "Large requests sent to server"
-            insert_header_fail:
-                description:
-                - "Insert Header Failure"
     name:
         description:
         - "Specify NTLM authentication relay name"
+        type: str
         required: True
+    domain:
+        description:
+        - "Specify NTLM domain, default is null"
+        type: str
+        required: False
+    version:
+        description:
+        - "Specify NTLM version, default is NTLM 2"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -156,14 +101,105 @@ options:
           request-flushed'= Large requests sent to server; 'head-negotiate-request-sent'=
           HEAD requests sent with NEGOTIATE header; 'head-auth-request-sent'= HEAD
           requests sent with AUTH header;"
-    version:
+                type: str
+    stats:
         description:
-        - "Specify NTLM version, default is NTLM 2"
+        - "Field stats"
+        type: dict
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            success:
+                description:
+                - "Success"
+                type: str
+            failure:
+                description:
+                - "Failure"
+                type: str
+            request:
+                description:
+                - "Request"
+                type: str
+            response:
+                description:
+                - "Response"
+                type: str
+            http_code_200:
+                description:
+                - "HTTP 200 OK"
+                type: str
+            http_code_400:
+                description:
+                - "HTTP 400 Bad Request"
+                type: str
+            http_code_401:
+                description:
+                - "HTTP 401 Unauthorized"
+                type: str
+            http_code_403:
+                description:
+                - "HTTP 403 Forbidden"
+                type: str
+            http_code_404:
+                description:
+                - "HTTP 404 Not Found"
+                type: str
+            http_code_500:
+                description:
+                - "HTTP 500 Internal Server Error"
+                type: str
+            http_code_503:
+                description:
+                - "HTTP 503 Service Unavailable"
+                type: str
+            http_code_other:
+                description:
+                - "Other HTTP Response"
+                type: str
+            buffer_alloc_fail:
+                description:
+                - "Buffer Allocation Failure"
+                type: str
+            encoding_fail:
+                description:
+                - "Encoding Failure"
+                type: str
+            insert_header_fail:
+                description:
+                - "Insert Header Failure"
+                type: str
+            parse_header_fail:
+                description:
+                - "Parse Header Failure"
+                type: str
+            internal_error:
+                description:
+                - "Internal Error"
+                type: str
+            ntlm_auth_skipped:
+                description:
+                - "Requests for which NTLM relay is skipped"
+                type: str
+            large_request_processing:
+                description:
+                - "Requests invoking large request processing"
+                type: str
+            large_request_flushed:
+                description:
+                - "Large requests sent to server"
+                type: str
+            head_negotiate_request_sent:
+                description:
+                - "HEAD requests sent with NEGOTIATE header"
+                type: str
+            head_auth_request_sent:
+                description:
+                - "HEAD requests sent with AUTH header"
+                type: str
+            name:
+                description:
+                - "Specify NTLM authentication relay name"
+                type: str
 
 '''
 
@@ -222,85 +258,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'domain': {
-            'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'parse_header_fail': {
-                'type': 'str',
-            },
-            'ntlm_auth_skipped': {
-                'type': 'str',
-            },
-            'head_negotiate_request_sent': {
-                'type': 'str',
-            },
-            'http_code_other': {
-                'type': 'str',
-            },
-            'internal_error': {
-                'type': 'str',
-            },
-            'buffer_alloc_fail': {
-                'type': 'str',
-            },
-            'failure': {
-                'type': 'str',
-            },
-            'http_code_400': {
-                'type': 'str',
-            },
-            'http_code_401': {
-                'type': 'str',
-            },
-            'http_code_403': {
-                'type': 'str',
-            },
-            'http_code_404': {
-                'type': 'str',
-            },
-            'http_code_500': {
-                'type': 'str',
-            },
-            'http_code_503': {
-                'type': 'str',
-            },
-            'large_request_processing': {
-                'type': 'str',
-            },
-            'response': {
-                'type': 'str',
-            },
-            'head_auth_request_sent': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'http_code_200': {
-                'type': 'str',
-            },
-            'success': {
-                'type': 'str',
-            },
-            'encoding_fail': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'large_request_flushed': {
-                'type': 'str',
-            },
-            'insert_header_fail': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
+        },
+        'domain': {
+            'type': 'str',
+        },
+        'version': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'user_tag': {
             'type': 'str',
@@ -322,11 +291,78 @@ def get_argspec():
                 ]
             }
         },
-        'version': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'success': {
+                'type': 'str',
+            },
+            'failure': {
+                'type': 'str',
+            },
+            'request': {
+                'type': 'str',
+            },
+            'response': {
+                'type': 'str',
+            },
+            'http_code_200': {
+                'type': 'str',
+            },
+            'http_code_400': {
+                'type': 'str',
+            },
+            'http_code_401': {
+                'type': 'str',
+            },
+            'http_code_403': {
+                'type': 'str',
+            },
+            'http_code_404': {
+                'type': 'str',
+            },
+            'http_code_500': {
+                'type': 'str',
+            },
+            'http_code_503': {
+                'type': 'str',
+            },
+            'http_code_other': {
+                'type': 'str',
+            },
+            'buffer_alloc_fail': {
+                'type': 'str',
+            },
+            'encoding_fail': {
+                'type': 'str',
+            },
+            'insert_header_fail': {
+                'type': 'str',
+            },
+            'parse_header_fail': {
+                'type': 'str',
+            },
+            'internal_error': {
+                'type': 'str',
+            },
+            'ntlm_auth_skipped': {
+                'type': 'str',
+            },
+            'large_request_processing': {
+                'type': 'str',
+            },
+            'large_request_flushed': {
+                'type': 'str',
+            },
+            'head_negotiate_request_sent': {
+                'type': 'str',
+            },
+            'head_auth_request_sent': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

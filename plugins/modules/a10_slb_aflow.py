@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_aflow
 description:
     - Configure aFlow
-short_description: Configures A10 slb.aflow
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            aflow_cpu_list:
-                description:
-                - "Field aflow_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -75,48 +75,71 @@ options:
           Resume conn by error; 'open_new_server_conn'= Open new server conn;
           'reuse_server_idle_conn'= Reuse idle server conn; 'inc_aflow_limit'= Inc aFlow
           limit;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            aflow_cpu_list:
+                description:
+                - "Field aflow_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            open_new_server_conn:
-                description:
-                - "Open new server conn"
-            reuse_server_idle_conn:
-                description:
-                - "Reuse idle server conn"
-            inc_aflow_limit:
-                description:
-                - "Inc aFlow limit"
             pause_conn:
                 description:
                 - "Pause connection"
+                type: str
             pause_conn_fail:
                 description:
                 - "Pause connection fail"
-            event_resume_conn:
-                description:
-                - "Resume conn by event"
-            try_to_resume_conn:
-                description:
-                - "Resume conn by trying"
+                type: str
             resume_conn:
                 description:
                 - "Resume connection"
-            retry_resume_conn:
+                type: str
+            event_resume_conn:
                 description:
-                - "Resume conn by retry"
-            error_resume_conn:
-                description:
-                - "Resume conn by error"
+                - "Resume conn by event"
+                type: str
             timer_resume_conn:
                 description:
                 - "Resume conn by timer"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            try_to_resume_conn:
+                description:
+                - "Resume conn by trying"
+                type: str
+            retry_resume_conn:
+                description:
+                - "Resume conn by retry"
+                type: str
+            error_resume_conn:
+                description:
+                - "Resume conn by error"
+                type: str
+            open_new_server_conn:
+                description:
+                - "Open new server conn"
+                type: str
+            reuse_server_idle_conn:
+                description:
+                - "Reuse idle server conn"
+                type: str
+            inc_aflow_limit:
+                description:
+                - "Inc aFlow limit"
+                type: str
 
 '''
 
@@ -172,47 +195,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'aflow_cpu_list': {
-                'type': 'list',
-                'open_new_server_conn': {
-                    'type': 'int',
-                },
-                'reuse_server_idle_conn': {
-                    'type': 'int',
-                },
-                'inc_aflow_limit': {
-                    'type': 'int',
-                },
-                'pause_conn': {
-                    'type': 'int',
-                },
-                'pause_conn_fail': {
-                    'type': 'int',
-                },
-                'event_resume_conn': {
-                    'type': 'int',
-                },
-                'try_to_resume_conn': {
-                    'type': 'int',
-                },
-                'resume_conn': {
-                    'type': 'int',
-                },
-                'retry_resume_conn': {
-                    'type': 'int',
-                },
-                'error_resume_conn': {
-                    'type': 'int',
-                },
-                'timer_resume_conn': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -228,30 +212,66 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'aflow_cpu_list': {
+                'type': 'list',
+                'pause_conn': {
+                    'type': 'int',
+                },
+                'pause_conn_fail': {
+                    'type': 'int',
+                },
+                'resume_conn': {
+                    'type': 'int',
+                },
+                'event_resume_conn': {
+                    'type': 'int',
+                },
+                'timer_resume_conn': {
+                    'type': 'int',
+                },
+                'try_to_resume_conn': {
+                    'type': 'int',
+                },
+                'retry_resume_conn': {
+                    'type': 'int',
+                },
+                'error_resume_conn': {
+                    'type': 'int',
+                },
+                'open_new_server_conn': {
+                    'type': 'int',
+                },
+                'reuse_server_idle_conn': {
+                    'type': 'int',
+                },
+                'inc_aflow_limit': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'open_new_server_conn': {
-                'type': 'str',
-            },
-            'reuse_server_idle_conn': {
-                'type': 'str',
-            },
-            'inc_aflow_limit': {
-                'type': 'str',
-            },
             'pause_conn': {
                 'type': 'str',
             },
             'pause_conn_fail': {
                 'type': 'str',
             },
+            'resume_conn': {
+                'type': 'str',
+            },
             'event_resume_conn': {
                 'type': 'str',
             },
-            'try_to_resume_conn': {
+            'timer_resume_conn': {
                 'type': 'str',
             },
-            'resume_conn': {
+            'try_to_resume_conn': {
                 'type': 'str',
             },
             'retry_resume_conn': {
@@ -260,12 +280,15 @@ def get_argspec():
             'error_resume_conn': {
                 'type': 'str',
             },
-            'timer_resume_conn': {
+            'open_new_server_conn': {
+                'type': 'str',
+            },
+            'reuse_server_idle_conn': {
+                'type': 'str',
+            },
+            'inc_aflow_limit': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

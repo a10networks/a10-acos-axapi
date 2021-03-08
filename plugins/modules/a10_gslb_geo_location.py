@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_geo_location
 description:
     - Configure a GSLB global geo-location object
-short_description: Configures A10 gslb.geo-location
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,66 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     geo_locn_obj_name:
         description:
         - "Specify geo-location name, section range is (1-15)"
+        type: str
         required: True
     geo_locn_multiple_addresses:
         description:
         - "Field geo_locn_multiple_addresses"
+        type: list
         required: False
         suboptions:
             first_ip_address:
                 description:
                 - "Specify IP information (Specify IP address)"
-            first_ipv6_address:
-                description:
-                - "Specify IPv6 address"
+                type: str
             geol_ipv4_mask:
                 description:
                 - "Specify IPv4 mask"
+                type: str
             ip_addr2:
                 description:
                 - "Specify IP address range"
-            ipv6_addr2:
+                type: str
+            first_ipv6_address:
                 description:
-                - "Specify IPv6 address range"
+                - "Specify IPv6 address"
+                type: str
             geol_ipv6_mask:
                 description:
                 - "Specify IPv6 mask"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+                type: int
+            ipv6_addr2:
+                description:
+                - "Specify IPv6 address range"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -149,26 +164,26 @@ def get_argspec():
             'first_ip_address': {
                 'type': 'str',
             },
-            'first_ipv6_address': {
-                'type': 'str',
-            },
             'geol_ipv4_mask': {
                 'type': 'str',
             },
             'ip_addr2': {
                 'type': 'str',
             },
-            'ipv6_addr2': {
+            'first_ipv6_address': {
                 'type': 'str',
             },
             'geol_ipv6_mask': {
                 'type': 'int',
+            },
+            'ipv6_addr2': {
+                'type': 'str',
             }
         },
-        'user_tag': {
+        'uuid': {
             'type': 'str',
         },
-        'uuid': {
+        'user_tag': {
             'type': 'str',
         }
     })

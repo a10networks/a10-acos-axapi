@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_community_list_standard_num
 description:
     - Configure Standard number Community-list
-short_description: Configures A10 ip.community.list.standard-num
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,52 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    std_list_num:
+        description:
+        - "Community list number (standard)"
+        type: int
+        required: True
     rules_list:
         description:
         - "Field rules_list"
+        type: list
         required: False
         suboptions:
             std_list_action:
                 description:
                 - "'deny'= Specify community to reject; 'permit'= Specify community to accept;"
+                type: str
             std_list_comm_value:
                 description:
-                - "community value in the format 1-4294967295|AA=NN|internet|local-AS|no-advertise
-          |no-export"
+                - "community value in the format 1-4294967295|AA=NN|internet|local-AS|no-
+          advertise|no-export"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    std_list_num:
-        description:
-        - "Community list number (standard)"
-        required: True
 
 '''
 
@@ -124,6 +134,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'std_list_num': {
+            'type': 'int',
+            'required': True,
+        },
         'rules_list': {
             'type': 'list',
             'std_list_action': {
@@ -136,10 +150,6 @@ def get_argspec():
         },
         'uuid': {
             'type': 'str',
-        },
-        'std_list_num': {
-            'type': 'int',
-            'required': True,
         }
     })
     return rv

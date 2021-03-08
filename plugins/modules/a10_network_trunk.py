@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_trunk
 description:
     - Trunk Settings
-short_description: Configures A10 network.trunk
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             trunk:
                 description:
                 - "Field trunk"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -115,23 +123,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'trunk': {
                 'type': 'list',
-                'trunk_member_status': {
-                    'type': 'list',
-                    'oper_status': {
-                        'type': 'str',
-                        'choices': ['Blocked', 'Up', 'Dn']
-                    },
-                    'cfg_status': {
-                        'type': 'str',
-                        'choices': ['Enb', 'Dis']
-                    },
-                    'members': {
-                        'type': 'int',
-                    }
+                'trunk_id': {
+                    'type': 'int',
                 },
                 'member_count': {
                     'type': 'int',
@@ -139,41 +139,49 @@ def get_argspec():
                 'trunk_name': {
                     'type': 'str',
                 },
-                'trunk_type': {
-                    'type': 'str',
-                    'choices': ['Dynamic-LACP', 'Static']
-                },
-                'timer': {
-                    'type': 'int',
-                },
                 'trunk_status': {
                     'type': 'str',
                     'choices': ['Up', 'Down']
                 },
-                'ports_threshold_block': {
+                'trunk_type': {
                     'type': 'str',
-                    'choices': ['Yes', 'No']
+                    'choices': ['Dynamic-LACP', 'Static']
                 },
                 'admin_key': {
+                    'type': 'int',
+                },
+                'trunk_member_status': {
+                    'type': 'list',
+                    'members': {
+                        'type': 'int',
+                    },
+                    'cfg_status': {
+                        'type': 'str',
+                        'choices': ['Enb', 'Dis']
+                    },
+                    'oper_status': {
+                        'type': 'str',
+                        'choices': ['Blocked', 'Up', 'Dn']
+                    }
+                },
+                'ports_threshold': {
+                    'type': 'int',
+                },
+                'timer': {
                     'type': 'int',
                 },
                 'timer_running': {
                     'type': 'str',
                     'choices': ['Yes', 'No']
                 },
-                'ports_threshold': {
-                    'type': 'int',
-                },
-                'trunk_id': {
-                    'type': 'int',
+                'ports_threshold_block': {
+                    'type': 'str',
+                    'choices': ['Yes', 'No']
                 },
                 'working_lead': {
                     'type': 'int',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

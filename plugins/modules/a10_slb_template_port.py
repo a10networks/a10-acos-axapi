@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_port
 description:
     - Port template
-short_description: Configures A10 slb.template.port
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,233 +22,287 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    health_check_disable:
+    name:
         description:
-        - "Disable configured health check configuration"
-        required: False
-    stats_data_action:
-        description:
-        - "'stats-data-enable'= Enable statistical data collection for real server port;
-          'stats-data-disable'= Disable statistical data collection for real server port;"
-        required: False
-    resel_on_reset:
-        description:
-        - "When receiving reset from server, do the server/port reselection (default is 0,
-          don't do reselection)"
-        required: False
-    dest_nat:
-        description:
-        - "Destination NAT"
-        required: False
-    restore_svc_time:
-        description:
-        - "put the service back to the rotation after time in seconds"
-        required: False
-    request_rate_limit:
-        description:
-        - "Request rate limit"
-        required: False
-    dynamic_member_priority:
-        description:
-        - "Set dynamic member's priority (Initial priority (default is 16))"
-        required: False
-    bw_rate_limit:
-        description:
-        - "Configure bandwidth rate limit on real server port (Bandwidth rate limit in
-          Kbps)"
-        required: False
-    slow_start:
-        description:
-        - "Slowly ramp up the connection number after port is up"
-        required: False
-    decrement:
-        description:
-        - "Decrease after every round of DNS query (default is 0)"
-        required: False
+        - "Port template name"
+        type: str
+        required: True
     conn_limit:
         description:
         - "Connection limit"
-        required: False
-    retry:
-        description:
-        - "Maximum retry times before reassign this connection to another server/port
-          (default is 2) (The maximum retry number)"
-        required: False
-    weight:
-        description:
-        - "Weight (port weight)"
-        required: False
-    inband_health_check:
-        description:
-        - "Use inband traffic to detect port's health status"
+        type: int
         required: False
     resume:
         description:
         - "Resume accepting new connection after connection number drops below threshold
           (Connection resume threshold)"
+        type: int
+        required: False
+    conn_limit_no_logging:
+        description:
+        - "Do not log connection over limit event"
+        type: bool
+        required: False
+    conn_rate_limit:
+        description:
+        - "Connection rate limit"
+        type: int
         required: False
     rate_interval:
         description:
         - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling
           interval;"
+        type: str
         required: False
-    no_ssl:
+    conn_rate_limit_no_logging:
         description:
-        - "No SSL"
+        - "Do not log connection over limit event"
+        type: bool
         required: False
-    till:
+    request_rate_limit:
         description:
-        - "Slow start ends when slow start connection limit reaches a number (default
-          4096) (Slow start ends when connection limit reaches this number)"
-        required: False
-    flap_period:
-        description:
-        - "take service out of rotation if max-flaps exceeded within time in seconds"
-        required: False
-    sub_group:
-        description:
-        - "Divide service group members into different sub groups (Sub group ID (default
-          is 0))"
-        required: False
-    dampening_flaps:
-        description:
-        - "service dampening flaps count (max-flaps allowed in flap period)"
-        required: False
-    bw_rate_limit_no_logging:
-        description:
-        - "Do not log bandwidth rate limit related state transitions"
-        required: False
-    down_grace_period:
-        description:
-        - "Port down grace period (Down grace period in seconds)"
-        required: False
-    initial_slow_start:
-        description:
-        - "Initial slow start connection limit (default 128)"
-        required: False
-    dscp:
-        description:
-        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
+        - "Request rate limit"
+        type: int
         required: False
     request_rate_interval:
         description:
         - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling
           interval;"
-        required: False
-    add:
-        description:
-        - "Slow start connection limit add by a number every interval (Add by this number
-          every interval)"
-        required: False
-    every:
-        description:
-        - "Slow start connection limit increment interval (default 10)"
-        required: False
-    shared_partition_pool:
-        description:
-        - "Reference a NAT pool or pool-group from shared partition"
-        required: False
-    conn_limit_no_logging:
-        description:
-        - "Do not log connection over limit event"
-        required: False
-    extended_stats:
-        description:
-        - "Enable extended statistics on real server port"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     reset:
         description:
         - "Send client reset when connection rate over limit"
-        required: False
-    del_session_on_server_down:
-        description:
-        - "Delete session if the server/port goes down (either disabled/hm down)"
-        required: False
-    conn_rate_limit_no_logging:
-        description:
-        - "Do not log connection over limit event"
-        required: False
-    name:
-        description:
-        - "Port template name"
-        required: True
-    template_port_pool_shared:
-        description:
-        - "Source NAT (IP NAT Pool or pool group name)"
-        required: False
-    bw_rate_limit_duration:
-        description:
-        - "Duration in seconds the observed rate needs to honor"
-        required: False
-    bw_rate_limit_resume:
-        description:
-        - "Resume server selection after bandwidth drops below this threshold (in Kbps)
-          (Bandwidth rate limit resume threshold (in Kbps))"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    times:
-        description:
-        - "Slow start connection limit multiply by a number every interval (default 2)
-          (Multiply by this number every interval)"
+        type: bool
         required: False
     request_rate_no_logging:
         description:
         - "Do not log connection over limit event"
+        type: bool
         required: False
-    down_timer:
+    dest_nat:
         description:
-        - "The timer to bring the marked down server/port to up (default is 0, never bring
-          up) (The timer to bring up server (in second, default is 0))"
+        - "Destination NAT"
+        type: bool
         required: False
-    conn_rate_limit:
+    down_grace_period:
         description:
-        - "Connection rate limit"
+        - "Port down grace period (Down grace period in seconds)"
+        type: int
         required: False
-    source_nat:
+    del_session_on_server_down:
         description:
-        - "Source NAT (IP NAT Pool or pool group name)"
+        - "Delete session if the server/port goes down (either disabled/hm down)"
+        type: bool
+        required: False
+    dscp:
+        description:
+        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
+        type: int
+        required: False
+    dynamic_member_priority:
+        description:
+        - "Set dynamic member's priority (Initial priority (default is 16))"
+        type: int
+        required: False
+    decrement:
+        description:
+        - "Decrease after every round of DNS query (default is 0)"
+        type: int
+        required: False
+    extended_stats:
+        description:
+        - "Enable extended statistics on real server port"
+        type: bool
+        required: False
+    no_ssl:
+        description:
+        - "No SSL"
+        type: bool
+        required: False
+    stats_data_action:
+        description:
+        - "'stats-data-enable'= Enable statistical data collection for real server port;
+          'stats-data-disable'= Disable statistical data collection for real server port;"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check Monitor (Health monitor name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable configured health check configuration"
+        type: bool
+        required: False
+    inband_health_check:
+        description:
+        - "Use inband traffic to detect port's health status"
+        type: bool
+        required: False
+    retry:
+        description:
+        - "Maximum retry times before reassign this connection to another server/port
+          (default is 2) (The maximum retry number)"
+        type: int
         required: False
     reassign:
         description:
         - "Maximum reassign times before declear the server/port down (default is 25) (The
           maximum reassign number)"
+        type: int
         required: False
-    health_check:
+    down_timer:
         description:
-        - "Health Check Monitor (Health monitor name)"
+        - "The timer to bring the marked down server/port to up (default is 0, never bring
+          up) (The timer to bring up server (in second, default is 0))"
+        type: int
+        required: False
+    resel_on_reset:
+        description:
+        - "When receiving reset from server, do the server/port reselection (default is 0,
+          don't do reselection)"
+        type: bool
+        required: False
+    source_nat:
+        description:
+        - "Source NAT (IP NAT Pool or pool group name)"
+        type: str
+        required: False
+    shared_partition_pool:
+        description:
+        - "Reference a NAT pool or pool-group from shared partition"
+        type: bool
+        required: False
+    template_port_pool_shared:
+        description:
+        - "Source NAT (IP NAT Pool or pool group name)"
+        type: str
+        required: False
+    weight:
+        description:
+        - "Weight (port weight)"
+        type: int
+        required: False
+    dampening_flaps:
+        description:
+        - "service dampening flaps count (max-flaps allowed in flap period)"
+        type: int
+        required: False
+    flap_period:
+        description:
+        - "take service out of rotation if max-flaps exceeded within time in seconds"
+        type: int
+        required: False
+    restore_svc_time:
+        description:
+        - "put the service back to the rotation after time in seconds"
+        type: int
+        required: False
+    sub_group:
+        description:
+        - "Divide service group members into different sub groups (Sub group ID (default
+          is 0))"
+        type: int
+        required: False
+    slow_start:
+        description:
+        - "Slowly ramp up the connection number after port is up"
+        type: bool
+        required: False
+    initial_slow_start:
+        description:
+        - "Initial slow start connection limit (default 128)"
+        type: int
+        required: False
+    add:
+        description:
+        - "Slow start connection limit add by a number every interval (Add by this number
+          every interval)"
+        type: int
+        required: False
+    times:
+        description:
+        - "Slow start connection limit multiply by a number every interval (default 2)
+          (Multiply by this number every interval)"
+        type: int
+        required: False
+    every:
+        description:
+        - "Slow start connection limit increment interval (default 10)"
+        type: int
+        required: False
+    till:
+        description:
+        - "Slow start ends when slow start connection limit reaches a number (default
+          4096) (Slow start ends when connection limit reaches this number)"
+        type: int
+        required: False
+    bw_rate_limit:
+        description:
+        - "Configure bandwidth rate limit on real server port (Bandwidth rate limit in
+          Kbps)"
+        type: int
+        required: False
+    bw_rate_limit_resume:
+        description:
+        - "Resume server selection after bandwidth drops below this threshold (in Kbps)
+          (Bandwidth rate limit resume threshold (in Kbps))"
+        type: int
+        required: False
+    bw_rate_limit_duration:
+        description:
+        - "Duration in seconds the observed rate needs to honor"
+        type: int
+        required: False
+    bw_rate_limit_no_logging:
+        description:
+        - "Do not log bandwidth rate limit related state transitions"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -350,149 +402,149 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'health_check_disable': {
-            'type': 'bool',
-        },
-        'stats_data_action': {
+        'name': {
             'type': 'str',
-            'choices': ['stats-data-enable', 'stats-data-disable']
-        },
-        'resel_on_reset': {
-            'type': 'bool',
-        },
-        'dest_nat': {
-            'type': 'bool',
-        },
-        'restore_svc_time': {
-            'type': 'int',
-        },
-        'request_rate_limit': {
-            'type': 'int',
-        },
-        'dynamic_member_priority': {
-            'type': 'int',
-        },
-        'bw_rate_limit': {
-            'type': 'int',
-        },
-        'slow_start': {
-            'type': 'bool',
-        },
-        'decrement': {
-            'type': 'int',
+            'required': True,
         },
         'conn_limit': {
             'type': 'int',
         },
-        'retry': {
+        'resume': {
             'type': 'int',
         },
-        'weight': {
-            'type': 'int',
-        },
-        'inband_health_check': {
+        'conn_limit_no_logging': {
             'type': 'bool',
         },
-        'resume': {
+        'conn_rate_limit': {
             'type': 'int',
         },
         'rate_interval': {
             'type': 'str',
             'choices': ['100ms', 'second']
         },
-        'no_ssl': {
+        'conn_rate_limit_no_logging': {
             'type': 'bool',
         },
-        'till': {
-            'type': 'int',
-        },
-        'flap_period': {
-            'type': 'int',
-        },
-        'sub_group': {
-            'type': 'int',
-        },
-        'dampening_flaps': {
-            'type': 'int',
-        },
-        'bw_rate_limit_no_logging': {
-            'type': 'bool',
-        },
-        'down_grace_period': {
-            'type': 'int',
-        },
-        'initial_slow_start': {
-            'type': 'int',
-        },
-        'dscp': {
+        'request_rate_limit': {
             'type': 'int',
         },
         'request_rate_interval': {
             'type': 'str',
             'choices': ['100ms', 'second']
         },
+        'reset': {
+            'type': 'bool',
+        },
+        'request_rate_no_logging': {
+            'type': 'bool',
+        },
+        'dest_nat': {
+            'type': 'bool',
+        },
+        'down_grace_period': {
+            'type': 'int',
+        },
+        'del_session_on_server_down': {
+            'type': 'bool',
+        },
+        'dscp': {
+            'type': 'int',
+        },
+        'dynamic_member_priority': {
+            'type': 'int',
+        },
+        'decrement': {
+            'type': 'int',
+        },
+        'extended_stats': {
+            'type': 'bool',
+        },
+        'no_ssl': {
+            'type': 'bool',
+        },
+        'stats_data_action': {
+            'type': 'str',
+            'choices': ['stats-data-enable', 'stats-data-disable']
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'inband_health_check': {
+            'type': 'bool',
+        },
+        'retry': {
+            'type': 'int',
+        },
+        'reassign': {
+            'type': 'int',
+        },
+        'down_timer': {
+            'type': 'int',
+        },
+        'resel_on_reset': {
+            'type': 'bool',
+        },
+        'source_nat': {
+            'type': 'str',
+        },
+        'shared_partition_pool': {
+            'type': 'bool',
+        },
+        'template_port_pool_shared': {
+            'type': 'str',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'dampening_flaps': {
+            'type': 'int',
+        },
+        'flap_period': {
+            'type': 'int',
+        },
+        'restore_svc_time': {
+            'type': 'int',
+        },
+        'sub_group': {
+            'type': 'int',
+        },
+        'slow_start': {
+            'type': 'bool',
+        },
+        'initial_slow_start': {
+            'type': 'int',
+        },
         'add': {
+            'type': 'int',
+        },
+        'times': {
             'type': 'int',
         },
         'every': {
             'type': 'int',
         },
-        'shared_partition_pool': {
-            'type': 'bool',
+        'till': {
+            'type': 'int',
         },
-        'conn_limit_no_logging': {
-            'type': 'bool',
-        },
-        'extended_stats': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'reset': {
-            'type': 'bool',
-        },
-        'del_session_on_server_down': {
-            'type': 'bool',
-        },
-        'conn_rate_limit_no_logging': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'template_port_pool_shared': {
-            'type': 'str',
-        },
-        'bw_rate_limit_duration': {
+        'bw_rate_limit': {
             'type': 'int',
         },
         'bw_rate_limit_resume': {
             'type': 'int',
         },
-        'user_tag': {
-            'type': 'str',
-        },
-        'times': {
+        'bw_rate_limit_duration': {
             'type': 'int',
         },
-        'request_rate_no_logging': {
+        'bw_rate_limit_no_logging': {
             'type': 'bool',
         },
-        'down_timer': {
-            'type': 'int',
-        },
-        'conn_rate_limit': {
-            'type': 'int',
-        },
-        'source_nat': {
+        'uuid': {
             'type': 'str',
         },
-        'reassign': {
-            'type': 'int',
-        },
-        'health_check': {
+        'user_tag': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_pptp
 description:
     - Change LSN PPTP ALG Settings
-short_description: Configures A10 cgnv6.lsn.alg.pptp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,65 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     pptp_value:
         description:
         - "'enable'= Enable PPTP ALG for LSN;"
+        type: str
         required: False
-    stats:
+    uuid:
         description:
-        - "Field stats"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            gre_sessions_created:
-                description:
-                - "GRE Sessions Created"
-            mismatched_pns_call_id:
-                description:
-                - "Mismatched PNS Call ID"
-            call_reply_pns_call_id_mismatch:
-                description:
-                - "Call ID Mismatch on Call Reply"
-            calls_established:
-                description:
-                - "Calls Established"
-            no_gre_session_match:
-                description:
-                - "No Matching GRE Session"
-            call_req_pns_call_id_mismatch:
-                description:
-                - "Call ID Mismatch on Call Request"
-            gre_sessions_freed:
-                description:
-                - "GRE Sessions Freed"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -118,10 +104,41 @@ options:
           Freed; 'control-free-no-ext'= Control Free No Ext; 'control-free-no-smp'=
           Control Free No SMP; 'control-free-smp-app-type-mismatch'= Control Free SMP App
           Type Mismatch;"
-    uuid:
+                type: str
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            calls_established:
+                description:
+                - "Calls Established"
+                type: str
+            mismatched_pns_call_id:
+                description:
+                - "Mismatched PNS Call ID"
+                type: str
+            gre_sessions_created:
+                description:
+                - "GRE Sessions Created"
+                type: str
+            gre_sessions_freed:
+                description:
+                - "GRE Sessions Freed"
+                type: str
+            no_gre_session_match:
+                description:
+                - "No Matching GRE Session"
+                type: str
+            call_req_pns_call_id_mismatch:
+                description:
+                - "Call ID Mismatch on Call Request"
+                type: str
+            call_reply_pns_call_id_mismatch:
+                description:
+                - "Call ID Mismatch on Call Reply"
+                type: str
 
 '''
 
@@ -181,29 +198,8 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable']
         },
-        'stats': {
-            'type': 'dict',
-            'gre_sessions_created': {
-                'type': 'str',
-            },
-            'mismatched_pns_call_id': {
-                'type': 'str',
-            },
-            'call_reply_pns_call_id_mismatch': {
-                'type': 'str',
-            },
-            'calls_established': {
-                'type': 'str',
-            },
-            'no_gre_session_match': {
-                'type': 'str',
-            },
-            'call_req_pns_call_id_mismatch': {
-                'type': 'str',
-            },
-            'gre_sessions_freed': {
-                'type': 'str',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -238,8 +234,29 @@ def get_argspec():
                 ]
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'calls_established': {
+                'type': 'str',
+            },
+            'mismatched_pns_call_id': {
+                'type': 'str',
+            },
+            'gre_sessions_created': {
+                'type': 'str',
+            },
+            'gre_sessions_freed': {
+                'type': 'str',
+            },
+            'no_gre_session_match': {
+                'type': 'str',
+            },
+            'call_req_pns_call_id_mismatch': {
+                'type': 'str',
+            },
+            'call_reply_pns_call_id_mismatch': {
+                'type': 'str',
+            }
         }
     })
     return rv

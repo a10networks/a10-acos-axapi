@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipsec_sa_by_gw
 description:
     - Get IPsec SAs by IKE Gateway
-short_description: Configures A10 ipsec_sa_by_gw
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,66 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            local_ip:
-                description:
-                - "Field local_ip"
             ike_gateway_name:
                 description:
                 - "Field ike_gateway_name"
-            ipsec_sa_list:
+                type: str
+            local_ip:
                 description:
-                - "Field ipsec_sa_list"
+                - "Field local_ip"
+                type: str
             peer_ip:
                 description:
                 - "Field peer_ip"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ipsec_sa_list:
+                description:
+                - "Field ipsec_sa_list"
+                type: list
 
 '''
 
@@ -124,35 +135,38 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'ike_gateway_name': {
+                'type': 'str',
+            },
             'local_ip': {
                 'type': 'str',
             },
-            'ike_gateway_name': {
+            'peer_ip': {
                 'type': 'str',
             },
             'ipsec_sa_list': {
                 'type': 'list',
-                'lifebytes': {
-                    'type': 'str',
-                },
-                'protocol': {
-                    'type': 'str',
-                },
-                'remote_ts': {
-                    'type': 'str',
-                },
-                'out_spi': {
+                'ipsec_sa_name': {
                     'type': 'str',
                 },
                 'local_ts': {
                     'type': 'str',
                 },
-                'ipsec_sa_name': {
+                'remote_ts': {
                     'type': 'str',
                 },
                 'in_spi': {
+                    'type': 'str',
+                },
+                'out_spi': {
+                    'type': 'str',
+                },
+                'protocol': {
                     'type': 'str',
                 },
                 'mode': {
@@ -161,19 +175,16 @@ def get_argspec():
                 'encryption': {
                     'type': 'str',
                 },
+                'hash': {
+                    'type': 'str',
+                },
                 'lifetime': {
                     'type': 'int',
                 },
-                'hash': {
+                'lifebytes': {
                     'type': 'str',
                 }
-            },
-            'peer_ip': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

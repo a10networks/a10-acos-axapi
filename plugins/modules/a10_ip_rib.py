@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_rib
 description:
     - Establish static routes
-short_description: Configures A10 ip.rib
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            Total:
-                description:
-                - "Field Total"
-            Limit:
-                description:
-                - "Field Limit"
             Description:
                 description:
                 - "Field Description"
-            IPv4_routes:
+                type: str
+            Total:
                 description:
-                - "Field IPv4_routes"
+                - "Field Total"
+                type: int
             Total Paths:
                 description:
                 - "Field Total Paths"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            Limit:
+                description:
+                - "Field Limit"
+                type: int
+            IPv4_routes:
+                description:
+                - "Field IPv4_routes"
+                type: list
 
 '''
 
@@ -127,30 +139,39 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'Description': {
+                'type': 'str',
+            },
             'Total': {
+                'type': 'int',
+            },
+            'Total_Paths': {
                 'type': 'int',
             },
             'Limit': {
                 'type': 'int',
             },
-            'Description': {
-                'type': 'str',
-            },
             'IPv4_routes': {
                 'type': 'list',
-                'Distance': {
-                    'type': 'int',
-                },
-                'Metric': {
-                    'type': 'int',
-                },
-                'Nexthop': {
+                'Prefix': {
                     'type': 'str',
                 },
                 'PrefixLen': {
                     'type': 'int',
+                },
+                'Type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'kernel', 'connected', 'static', 'rip', 'ospf', 'bgp',
+                        'isis', 'vip', 'selected-vip', 'ip-nat-list', 'ip-nat',
+                        'floating-ip', 'static-nat', 'a10'
+                    ]
                 },
                 'Subtype': {
                     'type':
@@ -161,28 +182,19 @@ def get_argspec():
                         'level-2'
                     ]
                 },
-                'Prefix': {
+                'Distance': {
+                    'type': 'int',
+                },
+                'Metric': {
+                    'type': 'int',
+                },
+                'Nexthop': {
                     'type': 'str',
                 },
                 'Interface': {
                     'type': 'str',
-                },
-                'Type': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'kernel', 'connected', 'static', 'rip', 'ospf', 'bgp',
-                        'isis', 'vip', 'selected-vip', 'ip-nat-list', 'ip-nat',
-                        'floating-ip', 'a10'
-                    ]
                 }
-            },
-            'Total_Paths': {
-                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

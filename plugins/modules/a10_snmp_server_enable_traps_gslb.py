@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_gslb
 description:
     - Enable GSLB group traps
-short_description: Configures A10 snmp.server.enable.traps.gslb
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Enable all GSLB traps"
-        required: False
-    group:
-        description:
-        - "Enable GSLB group related traps"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     zone:
         description:
         - "Enable GSLB zone related traps"
+        type: bool
         required: False
     site:
         description:
         - "Enable GSLB site related traps"
+        type: bool
+        required: False
+    group:
+        description:
+        - "Enable GSLB group related traps"
+        type: bool
         required: False
     service_ip:
         description:
         - "Enable GSLB service-ip related traps"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -134,20 +145,20 @@ def get_argspec():
         'all': {
             'type': 'bool',
         },
-        'group': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'zone': {
             'type': 'bool',
         },
         'site': {
             'type': 'bool',
         },
+        'group': {
+            'type': 'bool',
+        },
         'service_ip': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

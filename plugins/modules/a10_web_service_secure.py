@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_service_secure
 description:
     - Web-service secure operation
-short_description: Configures A10 web.service.secure
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,96 +21,121 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    restart:
+        description:
+        - "Restart WEB service"
+        type: bool
+        required: False
+    wipe:
+        description:
+        - "Wipe WEB private-key and certificate"
+        type: bool
+        required: False
+    generate:
+        description:
+        - "Field generate"
+        type: dict
+        required: False
+        suboptions:
+            domain_name:
+                description:
+                - "The domain name"
+                type: str
+            country:
+                description:
+                - "The country name"
+                type: str
+            state:
+                description:
+                - "The location"
+                type: str
+    regenerate:
+        description:
+        - "Field regenerate"
+        type: dict
+        required: False
+        suboptions:
+            domain_name:
+                description:
+                - "The domain name"
+                type: str
+            country:
+                description:
+                - "The country name"
+                type: str
+            state:
+                description:
+                - "The location"
+                type: str
     certificate:
         description:
         - "Field certificate"
+        type: dict
         required: False
         suboptions:
             load:
                 description:
                 - "Load WEB certificate"
+                type: bool
             use_mgmt_port:
                 description:
                 - "Use management port as source port"
+                type: bool
             file_url:
                 description:
                 - "File URL"
-    regenerate:
-        description:
-        - "Field regenerate"
-        required: False
-        suboptions:
-            country:
-                description:
-                - "The country name"
-            state:
-                description:
-                - "The location"
-            domain_name:
-                description:
-                - "The domain name"
-    wipe:
-        description:
-        - "Wipe WEB private-key and certificate"
-        required: False
+                type: str
     private_key:
         description:
         - "Field private_key"
+        type: dict
         required: False
         suboptions:
             load:
                 description:
                 - "Load WEB private-key"
+                type: bool
             use_mgmt_port:
                 description:
                 - "Use management port as source port"
+                type: bool
             file_url:
                 description:
                 - "File URL"
-    generate:
-        description:
-        - "Field generate"
-        required: False
-        suboptions:
-            country:
-                description:
-                - "The country name"
-            state:
-                description:
-                - "The location"
-            domain_name:
-                description:
-                - "The domain name"
-    restart:
-        description:
-        - "Restart WEB service"
-        required: False
+                type: str
 
 '''
 
@@ -168,6 +191,36 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'restart': {
+            'type': 'bool',
+        },
+        'wipe': {
+            'type': 'bool',
+        },
+        'generate': {
+            'type': 'dict',
+            'domain_name': {
+                'type': 'str',
+            },
+            'country': {
+                'type': 'str',
+            },
+            'state': {
+                'type': 'str',
+            }
+        },
+        'regenerate': {
+            'type': 'dict',
+            'domain_name': {
+                'type': 'str',
+            },
+            'country': {
+                'type': 'str',
+            },
+            'state': {
+                'type': 'str',
+            }
+        },
         'certificate': {
             'type': 'dict',
             'load': {
@@ -180,21 +233,6 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'regenerate': {
-            'type': 'dict',
-            'country': {
-                'type': 'str',
-            },
-            'state': {
-                'type': 'str',
-            },
-            'domain_name': {
-                'type': 'str',
-            }
-        },
-        'wipe': {
-            'type': 'bool',
-        },
         'private_key': {
             'type': 'dict',
             'load': {
@@ -206,21 +244,6 @@ def get_argspec():
             'file_url': {
                 'type': 'str',
             }
-        },
-        'generate': {
-            'type': 'dict',
-            'country': {
-                'type': 'str',
-            },
-            'state': {
-                'type': 'str',
-            },
-            'domain_name': {
-                'type': 'str',
-            }
-        },
-        'restart': {
-            'type': 'bool',
         }
     })
     return rv

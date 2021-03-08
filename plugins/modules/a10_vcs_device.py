@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_device
 description:
     - VCS Device
-short_description: Configures A10 vcs.device
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,88 +22,109 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    enable:
+    device:
         description:
-        - "Enable"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ethernet_cfg:
-        description:
-        - "Field ethernet_cfg"
-        required: False
-        suboptions:
-            ethernet:
-                description:
-                - "Ethernet (Ethernet interface number)"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+        - "Device ID"
+        type: int
+        required: True
     priority:
         description:
         - "Device priority"
+        type: int
+        required: False
+    unicast_port:
+        description:
+        - "Port used in unicast communication (Port number)"
+        type: int
         required: False
     management:
         description:
         - "Management interface"
+        type: bool
         required: False
     ve_cfg:
         description:
         - "Field ve_cfg"
+        type: list
         required: False
         suboptions:
             ve:
                 description:
                 - "VE interface (VE interface number)"
-    device:
-        description:
-        - "Device ID"
-        required: True
-    affinity_vrrp_a_vrid:
-        description:
-        - "vrid-group"
-        required: False
-    unicast_port:
-        description:
-        - "Port used in unicast communication (Port number)"
-        required: False
+                type: int
     trunk_cfg:
         description:
         - "Field trunk_cfg"
+        type: list
         required: False
         suboptions:
             trunk:
                 description:
                 - "Trunk interface (Trunk interface number)"
+                type: int
+    ethernet_cfg:
+        description:
+        - "Field ethernet_cfg"
+        type: list
+        required: False
+        suboptions:
+            ethernet:
+                description:
+                - "Ethernet (Ethernet interface number)"
+                type: str
+    affinity_vrrp_a_vrid:
+        description:
+        - "vrid-group"
+        type: int
+        required: False
+    enable:
+        description:
+        - "Enable"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -168,22 +187,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'enable': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'ethernet_cfg': {
-            'type': 'list',
-            'ethernet': {
-                'type': 'str',
-            }
-        },
-        'user_tag': {
-            'type': 'str',
+        'device': {
+            'type': 'int',
+            'required': True,
         },
         'priority': {
+            'type': 'int',
+        },
+        'unicast_port': {
             'type': 'int',
         },
         'management': {
@@ -195,21 +206,29 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'device': {
-            'type': 'int',
-            'required': True,
-        },
-        'affinity_vrrp_a_vrid': {
-            'type': 'int',
-        },
-        'unicast_port': {
-            'type': 'int',
-        },
         'trunk_cfg': {
             'type': 'list',
             'trunk': {
                 'type': 'int',
             }
+        },
+        'ethernet_cfg': {
+            'type': 'list',
+            'ethernet': {
+                'type': 'str',
+            }
+        },
+        'affinity_vrrp_a_vrid': {
+            'type': 'int',
+        },
+        'enable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

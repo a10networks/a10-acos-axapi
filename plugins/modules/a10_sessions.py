@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sessions
 description:
     - Field sessions
-short_description: Configures A10 sessions
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,171 +22,240 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            ext:
-                description:
-                - "Field ext"
-            sport_rate_limit_exceed:
-                description:
-                - "Field sport_rate_limit_exceed"
-            app:
-                description:
-                - "Field app"
-            fw_dest_zone:
-                description:
-                - "Field fw_dest_zone"
-            src_port:
-                description:
-                - "Field src_port"
-            fw_dest_vserver:
-                description:
-                - "Field fw_dest_vserver"
-            nat_port:
-                description:
-                - "Field nat_port"
-            fw_src_obj_grp:
-                description:
-                - "Field fw_src_obj_grp"
-            dst_ipv4_addr:
-                description:
-                - "Field dst_ipv4_addr"
-            app_sessions:
-                description:
-                - "Field app_sessions"
-            name_str:
-                description:
-                - "Field name_str"
-            app_category:
-                description:
-                - "Field app_category"
-            fw_src_rserver:
-                description:
-                - "Field fw_src_rserver"
-            smp:
-                description:
-                - "Field smp"
-            application:
-                description:
-                - "Field application"
-            nat_ipv4_addr:
-                description:
-                - "Field nat_ipv4_addr"
-            session_list:
-                description:
-                - "Field session_list"
-            fw_dest_obj_grp:
-                description:
-                - "Field fw_dest_obj_grp"
-            src_ipv6_prefix:
-                description:
-                - "Field src_ipv6_prefix"
-            total_sessions:
-                description:
-                - "Field total_sessions"
-            session_id:
-                description:
-                - "Field session_id"
-            check_inside_user:
-                description:
-                - "Field check_inside_user"
-            sport_rate_limit_curr:
-                description:
-                - "Field sport_rate_limit_curr"
-            fw_rule:
-                description:
-                - "Field fw_rule"
-            l4_protocol:
-                description:
-                - "Field l4_protocol"
-            zone_name:
-                description:
-                - "Field zone_name"
-            fw_dest_rserver:
-                description:
-                - "Field fw_dest_rserver"
-            fw_helper_sessions:
-                description:
-                - "Field fw_helper_sessions"
-            fw_ip_type:
-                description:
-                - "Field fw_ip_type"
-            fw_dest_obj:
-                description:
-                - "Field fw_dest_obj"
-            filter_type:
-                description:
-                - "Field filter_type"
-            dst_ipv6_prefix:
-                description:
-                - "Field dst_ipv6_prefix"
-            src_ipv6_addr:
-                description:
-                - "Field src_ipv6_addr"
-            dst_ipv6_addr:
-                description:
-                - "Field dst_ipv6_addr"
-            fw_src_zone:
-                description:
-                - "Field fw_src_zone"
-            src_ipv4_addr:
-                description:
-                - "Field src_ipv4_addr"
-            fw_src_obj:
-                description:
-                - "Field fw_src_obj"
-            dest_port:
-                description:
-                - "Field dest_port"
-    ext:
-        description:
-        - "Field ext"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    smp:
+    ext:
         description:
-        - "Field smp"
+        - "Field ext"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    smp:
+        description:
+        - "Field smp"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    smp_table:
+        description:
+        - "Field smp_table"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            session_list:
+                description:
+                - "Field session_list"
+                type: list
+            total_sessions:
+                description:
+                - "Field total_sessions"
+                type: int
+            app_sessions:
+                description:
+                - "Field app_sessions"
+                type: int
+            filter_type:
+                description:
+                - "Field filter_type"
+                type: str
+            src_ipv4_addr:
+                description:
+                - "Field src_ipv4_addr"
+                type: str
+            dst_ipv4_addr:
+                description:
+                - "Field dst_ipv4_addr"
+                type: str
+            nat_ipv4_addr:
+                description:
+                - "Field nat_ipv4_addr"
+                type: str
+            src_ipv6_addr:
+                description:
+                - "Field src_ipv6_addr"
+                type: str
+            dst_ipv6_addr:
+                description:
+                - "Field dst_ipv6_addr"
+                type: str
+            name_str:
+                description:
+                - "Field name_str"
+                type: str
+            dest_port:
+                description:
+                - "Field dest_port"
+                type: int
+            src_port:
+                description:
+                - "Field src_port"
+                type: int
+            nat_port:
+                description:
+                - "Field nat_port"
+                type: int
+            app_category:
+                description:
+                - "Field app_category"
+                type: str
+            app:
+                description:
+                - "Field app"
+                type: str
+            l4_protocol:
+                description:
+                - "Field l4_protocol"
+                type: str
+            fw_helper_sessions:
+                description:
+                - "Field fw_helper_sessions"
+                type: bool
+            fw_ip_type:
+                description:
+                - "Field fw_ip_type"
+                type: str
+            fw_rule:
+                description:
+                - "Field fw_rule"
+                type: str
+            fw_dest_zone:
+                description:
+                - "Field fw_dest_zone"
+                type: str
+            fw_src_zone:
+                description:
+                - "Field fw_src_zone"
+                type: str
+            fw_dest_obj:
+                description:
+                - "Field fw_dest_obj"
+                type: str
+            fw_src_obj:
+                description:
+                - "Field fw_src_obj"
+                type: str
+            fw_dest_obj_grp:
+                description:
+                - "Field fw_dest_obj_grp"
+                type: str
+            fw_src_obj_grp:
+                description:
+                - "Field fw_src_obj_grp"
+                type: str
+            fw_dest_rserver:
+                description:
+                - "Field fw_dest_rserver"
+                type: str
+            fw_src_rserver:
+                description:
+                - "Field fw_src_rserver"
+                type: str
+            fw_dest_vserver:
+                description:
+                - "Field fw_dest_vserver"
+                type: str
+            application:
+                description:
+                - "Field application"
+                type: str
+            session_id:
+                description:
+                - "Field session_id"
+                type: str
+            zone_name:
+                description:
+                - "Field zone_name"
+                type: str
+            sport_rate_limit_exceed:
+                description:
+                - "Field sport_rate_limit_exceed"
+                type: bool
+            sport_rate_limit_curr:
+                description:
+                - "Field sport_rate_limit_curr"
+                type: bool
+            src_ipv6_prefix:
+                description:
+                - "Field src_ipv6_prefix"
+                type: str
+            dst_ipv6_prefix:
+                description:
+                - "Field dst_ipv6_prefix"
+                type: str
+            check_inside_user:
+                description:
+                - "Field check_inside_user"
+                type: bool
+            full_width:
+                description:
+                - "Field full_width"
+                type: bool
+            ext:
+                description:
+                - "Field ext"
+                type: dict
+            smp:
+                description:
+                - "Field smp"
+                type: dict
+            smp_table:
+                description:
+                - "Field smp_table"
+                type: dict
 
 '''
 
@@ -206,6 +273,7 @@ AVAILABLE_PROPERTIES = [
     "ext",
     "oper",
     "smp",
+    "smp_table",
     "uuid",
 ]
 
@@ -244,114 +312,39 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'ext': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'smp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'smp_table': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
-            'ext': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'session_ext_list': {
-                        'type': 'list',
-                        'fail': {
-                            'type': 'int',
-                        },
-                        'alloc': {
-                            'type': 'int',
-                        },
-                        'ntype': {
-                            'type': 'str',
-                        },
-                        'free': {
-                            'type': 'int',
-                        },
-                        'cpu_round_robin_fail': {
-                            'type': 'int',
-                        }
-                    }
-                }
-            },
-            'sport_rate_limit_exceed': {
-                'type': 'bool',
-            },
-            'app': {
-                'type': 'str',
-            },
-            'fw_dest_zone': {
-                'type': 'str',
-            },
-            'src_port': {
-                'type': 'int',
-            },
-            'fw_dest_vserver': {
-                'type': 'str',
-            },
-            'nat_port': {
-                'type': 'int',
-            },
-            'fw_src_obj_grp': {
-                'type': 'str',
-            },
-            'dst_ipv4_addr': {
-                'type': 'str',
-            },
-            'app_sessions': {
-                'type': 'int',
-            },
-            'name_str': {
-                'type': 'str',
-            },
-            'app_category': {
-                'type': 'str',
-            },
-            'fw_src_rserver': {
-                'type': 'str',
-            },
-            'smp': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'session_smp_list': {
-                        'type': 'list',
-                        'alloc': {
-                            'type': 'int',
-                        },
-                        'ntype': {
-                            'type': 'str',
-                        },
-                        'free': {
-                            'type': 'int',
-                        },
-                        'alloc_fail': {
-                            'type': 'int',
-                        }
-                    }
-                }
-            },
-            'application': {
-                'type': 'str',
-            },
-            'nat_ipv4_addr': {
-                'type': 'str',
-            },
             'session_list': {
                 'type': 'list',
-                '100ms': {
+                'protocol': {
                     'type': 'str',
                 },
-                'conn_idx': {
-                    'type': 'int',
-                },
-                'rate': {
-                    'type': 'int',
-                },
-                'service_name': {
+                'forward_source': {
                     'type': 'str',
                 },
-                'duration': {
-                    'type': 'int',
-                },
-                'limit': {
-                    'type': 'int',
+                'forward_dest': {
+                    'type': 'str',
                 },
                 'reverse_source': {
                     'type': 'str',
@@ -359,14 +352,56 @@ def get_argspec():
                 'reverse_dest': {
                     'type': 'str',
                 },
+                'rate': {
+                    'type': 'int',
+                },
+                'limit': {
+                    'type': 'int',
+                },
+                'drop': {
+                    'type': 'int',
+                },
+                'peak_rate': {
+                    'type': 'int',
+                },
+                'age': {
+                    'type': 'int',
+                },
+                'hash': {
+                    'type': 'int',
+                },
+                'flags': {
+                    'type': 'str',
+                },
                 'app_type': {
                     'type': 'str',
                 },
-                'protocol': {
+                '100ms': {
+                    'type': 'str',
+                },
+                'sip_call_id': {
+                    'type': 'str',
+                },
+                'app_name': {
+                    'type': 'str',
+                },
+                'service_name': {
                     'type': 'str',
                 },
                 'rserver_name': {
                     'type': 'str',
+                },
+                'category_name': {
+                    'type': 'str',
+                },
+                'bytes': {
+                    'type': 'int',
+                },
+                'duration': {
+                    'type': 'int',
+                },
+                'conn_idx': {
+                    'type': 'int',
                 },
                 'extension_fields_list': {
                     'type': 'list',
@@ -376,81 +411,13 @@ def get_argspec():
                     'ext_field_val': {
                         'type': 'str',
                     }
-                },
-                'hash': {
-                    'type': 'int',
-                },
-                'sip_call_id': {
-                    'type': 'str',
-                },
-                'app_name': {
-                    'type': 'str',
-                },
-                'forward_dest': {
-                    'type': 'str',
-                },
-                'peak_rate': {
-                    'type': 'int',
-                },
-                'forward_source': {
-                    'type': 'str',
-                },
-                'age': {
-                    'type': 'int',
-                },
-                'drop': {
-                    'type': 'int',
-                },
-                'bytes': {
-                    'type': 'int',
-                },
-                'flags': {
-                    'type': 'str',
-                },
-                'category_name': {
-                    'type': 'str',
                 }
-            },
-            'fw_dest_obj_grp': {
-                'type': 'str',
-            },
-            'src_ipv6_prefix': {
-                'type': 'str',
             },
             'total_sessions': {
                 'type': 'int',
             },
-            'session_id': {
-                'type': 'str',
-            },
-            'check_inside_user': {
-                'type': 'bool',
-            },
-            'sport_rate_limit_curr': {
-                'type': 'bool',
-            },
-            'fw_rule': {
-                'type': 'str',
-            },
-            'l4_protocol': {
-                'type': 'str',
-                'choices': ['udp', 'tcp', 'icmp', 'icmpv6']
-            },
-            'zone_name': {
-                'type': 'str',
-            },
-            'fw_dest_rserver': {
-                'type': 'str',
-            },
-            'fw_helper_sessions': {
-                'type': 'bool',
-            },
-            'fw_ip_type': {
-                'type': 'str',
-                'choices': ['ipv4', 'ipv6']
-            },
-            'fw_dest_obj': {
-                'type': 'str',
+            'app_sessions': {
+                'type': 'int',
             },
             'filter_type': {
                 'type':
@@ -467,7 +434,13 @@ def get_argspec():
                     'source-port-rate-limitv6'
                 ]
             },
-            'dst_ipv6_prefix': {
+            'src_ipv4_addr': {
+                'type': 'str',
+            },
+            'dst_ipv4_addr': {
+                'type': 'str',
+            },
+            'nat_ipv4_addr': {
                 'type': 'str',
             },
             'src_ipv6_addr': {
@@ -476,32 +449,172 @@ def get_argspec():
             'dst_ipv6_addr': {
                 'type': 'str',
             },
+            'name_str': {
+                'type': 'str',
+            },
+            'dest_port': {
+                'type': 'int',
+            },
+            'src_port': {
+                'type': 'int',
+            },
+            'nat_port': {
+                'type': 'int',
+            },
+            'app_category': {
+                'type': 'str',
+            },
+            'app': {
+                'type': 'str',
+            },
+            'l4_protocol': {
+                'type': 'str',
+                'choices': ['udp', 'tcp', 'icmp', 'icmpv6']
+            },
+            'fw_helper_sessions': {
+                'type': 'bool',
+            },
+            'fw_ip_type': {
+                'type': 'str',
+                'choices': ['ipv4', 'ipv6']
+            },
+            'fw_rule': {
+                'type': 'str',
+            },
+            'fw_dest_zone': {
+                'type': 'str',
+            },
             'fw_src_zone': {
                 'type': 'str',
             },
-            'src_ipv4_addr': {
+            'fw_dest_obj': {
                 'type': 'str',
             },
             'fw_src_obj': {
                 'type': 'str',
             },
-            'dest_port': {
-                'type': 'int',
-            }
-        },
-        'ext': {
-            'type': 'dict',
-            'uuid': {
+            'fw_dest_obj_grp': {
                 'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'smp': {
-            'type': 'dict',
-            'uuid': {
+            },
+            'fw_src_obj_grp': {
                 'type': 'str',
+            },
+            'fw_dest_rserver': {
+                'type': 'str',
+            },
+            'fw_src_rserver': {
+                'type': 'str',
+            },
+            'fw_dest_vserver': {
+                'type': 'str',
+            },
+            'application': {
+                'type': 'str',
+            },
+            'session_id': {
+                'type': 'str',
+            },
+            'zone_name': {
+                'type': 'str',
+            },
+            'sport_rate_limit_exceed': {
+                'type': 'bool',
+            },
+            'sport_rate_limit_curr': {
+                'type': 'bool',
+            },
+            'src_ipv6_prefix': {
+                'type': 'str',
+            },
+            'dst_ipv6_prefix': {
+                'type': 'str',
+            },
+            'check_inside_user': {
+                'type': 'bool',
+            },
+            'full_width': {
+                'type': 'bool',
+            },
+            'ext': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'session_ext_list': {
+                        'type': 'list',
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'alloc': {
+                            'type': 'int',
+                        },
+                        'free': {
+                            'type': 'int',
+                        },
+                        'fail': {
+                            'type': 'int',
+                        },
+                        'cpu_round_robin_fail': {
+                            'type': 'int',
+                        }
+                    }
+                }
+            },
+            'smp': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'session_smp_list': {
+                        'type': 'list',
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'alloc': {
+                            'type': 'int',
+                        },
+                        'free': {
+                            'type': 'int',
+                        },
+                        'alloc_fail': {
+                            'type': 'int',
+                        }
+                    }
+                }
+            },
+            'smp_table': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'entry_list': {
+                        'type': 'list',
+                        'src4': {
+                            'type': 'str',
+                        },
+                        'src6': {
+                            'type': 'str',
+                        },
+                        'dst4': {
+                            'type': 'str',
+                        },
+                        'dst6': {
+                            'type': 'str',
+                        },
+                        'srcport': {
+                            'type': 'int',
+                        },
+                        'dstport': {
+                            'type': 'int',
+                        },
+                        'ttl': {
+                            'type': 'int',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'payload': {
+                            'type': 'str',
+                        }
+                    }
+                }
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ospf_default_information
 description:
     - Control distribution of default information
-short_description: Configures A10 router.ospf.default-information
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ospf_process_id:
         description:
-        - Key to identify parent object    originate:
+        - Key to identify parent object
+        type: str
+        required: True
+    originate:
         description:
         - "Distribute a default route"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     always:
         description:
         - "Always advertise default route"
+        type: bool
         required: False
     metric:
         description:
         - "OSPF default metric (OSPF metric)"
-        required: False
-    route_map:
-        description:
-        - "Route map reference (Pointer to route-map entries)"
+        type: int
         required: False
     metric_type:
         description:
         - "OSPF metric type for default routes"
+        type: int
+        required: False
+    route_map:
+        description:
+        - "Route map reference (Pointer to route-map entries)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -136,20 +150,20 @@ def get_argspec():
         'originate': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
         'always': {
             'type': 'bool',
         },
         'metric': {
             'type': 'int',
         },
+        'metric_type': {
+            'type': 'int',
+        },
         'route_map': {
             'type': 'str',
         },
-        'metric_type': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

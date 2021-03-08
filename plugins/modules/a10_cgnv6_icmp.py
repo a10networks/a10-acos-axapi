@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_icmp
 description:
     - CGNV6 ICMP Statistics
-short_description: Configures A10 cgnv6.icmp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -63,10 +74,10 @@ options:
           Info Not Included; 'icmpv6-no-session-drop'= ICMPv6 No Matching Session Drop;
           'icmp-to-icmp'= ICMP to ICMP Conversion; 'icmp-to-icmpv6'= ICMP to ICMPv6
           Conversion; 'icmpv6-to-icmp'= ICMPv6 to ICMP Conversion; 'icmpv6-to-icmpv6'=
-          ICMPv6 to ICMPv6 Conversion; 'icmp-bad-type'= Bad Embedded ICMP Type; 'icmpv6
-          -bad-type'= Bad Embedded ICMPv6 Type; '64-known-drop'= NAT64 Forward Known
-          ICMPv6 Drop; '64-unknown-drop'= NAT64 Forward Unknown ICMPv6 Drop; '64
-          -midpoint-hop'= NAT64 Forward Unknown Source Drop; '46-known-drop'= NAT64
+          ICMPv6 to ICMPv6 Conversion; 'icmp-bad-type'= Bad Embedded ICMP Type;
+          'icmpv6-bad-type'= Bad Embedded ICMPv6 Type; '64-known-drop'= NAT64 Forward
+          Known ICMPv6 Drop; '64-unknown-drop'= NAT64 Forward Unknown ICMPv6 Drop;
+          '64-midpoint-hop'= NAT64 Forward Unknown Source Drop; '46-known-drop'= NAT64
           Reverse Known ICMP Drop; '46-unknown-drop'= NAT64 Reverse Known ICMPv6 Drop;
           '46-no-prefix-for-ipv4'= NAT64 Reverse No Prefix Match for IPv4; '46-bad-encap-
           ip-header-len'= 4to6 Bad Encapsulated IP Header Length; 'icmp-to-icmp-err'=
@@ -83,69 +94,85 @@ options:
           pool-drop'= Error to Pool Drop; 'echo-to-pool-reply-v6'= Ping6 to Pool Reply;
           'echo-to-pool-drop-v6'= Ping6 to Pool Drop; 'error-to-pool-drop-v6'= Error to
           IPv6 Pool Drop; 'error-ip-mismatch'= ICMP IP address mismatch;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            46_no_prefix_for_ipv4:
-                description:
-                - "NAT64 Reverse No Prefix Match for IPv4"
-            icmp_bad_type:
-                description:
-                - "Bad Embedded ICMP Type"
-            icmpv6_unknown_type:
-                description:
-                - "ICMPv6 Unknown Type"
-            icmp_to_icmp:
-                description:
-                - "ICMP to ICMP Conversion"
-            icmpv6_bad_type:
-                description:
-                - "Bad Embedded ICMPv6 Type"
-            64_known_drop:
-                description:
-                - "NAT64 Forward Known ICMPv6 Drop"
-            icmp_to_icmpv6:
-                description:
-                - "ICMP to ICMPv6 Conversion"
-            icmpv6_to_icmp:
-                description:
-                - "ICMPv6 to ICMP Conversion"
-            icmp_no_session_drop:
-                description:
-                - "ICMP No Matching Session Drop"
-            icmpv6_no_port_info:
-                description:
-                - "ICMPv6 Port Info Not Included"
-            64_unknown_drop:
-                description:
-                - "NAT64 Forward Unknown ICMPv6 Drop"
-            64_midpoint_hop:
-                description:
-                - "NAT64 Forward Unknown Source Drop"
-            46_unknown_drop:
-                description:
-                - "NAT64 Reverse Known ICMPv6 Drop"
-            icmp_no_port_info:
-                description:
-                - "ICMP Port Info Not Included"
-            icmpv6_no_session_drop:
-                description:
-                - "ICMPv6 No Matching Session Drop"
-            46_known_drop:
-                description:
-                - "NAT64 Reverse Known ICMP Drop"
-            icmpv6_to_icmpv6:
-                description:
-                - "ICMPv6 to ICMPv6 Conversion"
             icmp_unknown_type:
                 description:
                 - "ICMP Unknown Type"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            icmp_no_port_info:
+                description:
+                - "ICMP Port Info Not Included"
+                type: str
+            icmp_no_session_drop:
+                description:
+                - "ICMP No Matching Session Drop"
+                type: str
+            icmpv6_unknown_type:
+                description:
+                - "ICMPv6 Unknown Type"
+                type: str
+            icmpv6_no_port_info:
+                description:
+                - "ICMPv6 Port Info Not Included"
+                type: str
+            icmpv6_no_session_drop:
+                description:
+                - "ICMPv6 No Matching Session Drop"
+                type: str
+            icmp_to_icmp:
+                description:
+                - "ICMP to ICMP Conversion"
+                type: str
+            icmp_to_icmpv6:
+                description:
+                - "ICMP to ICMPv6 Conversion"
+                type: str
+            icmpv6_to_icmp:
+                description:
+                - "ICMPv6 to ICMP Conversion"
+                type: str
+            icmpv6_to_icmpv6:
+                description:
+                - "ICMPv6 to ICMPv6 Conversion"
+                type: str
+            icmp_bad_type:
+                description:
+                - "Bad Embedded ICMP Type"
+                type: str
+            icmpv6_bad_type:
+                description:
+                - "Bad Embedded ICMPv6 Type"
+                type: str
+            64_known_drop:
+                description:
+                - "NAT64 Forward Known ICMPv6 Drop"
+                type: str
+            64_unknown_drop:
+                description:
+                - "NAT64 Forward Unknown ICMPv6 Drop"
+                type: str
+            64_midpoint_hop:
+                description:
+                - "NAT64 Forward Unknown Source Drop"
+                type: str
+            46_known_drop:
+                description:
+                - "NAT64 Reverse Known ICMP Drop"
+                type: str
+            46_unknown_drop:
+                description:
+                - "NAT64 Reverse Known ICMPv6 Drop"
+                type: str
+            46_no_prefix_for_ipv4:
+                description:
+                - "NAT64 Reverse No Prefix Match for IPv4"
+                type: str
 
 '''
 
@@ -200,6 +227,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -229,22 +259,25 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            '46_no_prefix_for_ipv4': {
+            'icmp_unknown_type': {
                 'type': 'str',
             },
-            'icmp_bad_type': {
+            'icmp_no_port_info': {
+                'type': 'str',
+            },
+            'icmp_no_session_drop': {
                 'type': 'str',
             },
             'icmpv6_unknown_type': {
                 'type': 'str',
             },
+            'icmpv6_no_port_info': {
+                'type': 'str',
+            },
+            'icmpv6_no_session_drop': {
+                'type': 'str',
+            },
             'icmp_to_icmp': {
-                'type': 'str',
-            },
-            'icmpv6_bad_type': {
-                'type': 'str',
-            },
-            '64_known_drop': {
                 'type': 'str',
             },
             'icmp_to_icmpv6': {
@@ -253,10 +286,16 @@ def get_argspec():
             'icmpv6_to_icmp': {
                 'type': 'str',
             },
-            'icmp_no_session_drop': {
+            'icmpv6_to_icmpv6': {
                 'type': 'str',
             },
-            'icmpv6_no_port_info': {
+            'icmp_bad_type': {
+                'type': 'str',
+            },
+            'icmpv6_bad_type': {
+                'type': 'str',
+            },
+            '64_known_drop': {
                 'type': 'str',
             },
             '64_unknown_drop': {
@@ -265,27 +304,15 @@ def get_argspec():
             '64_midpoint_hop': {
                 'type': 'str',
             },
-            '46_unknown_drop': {
-                'type': 'str',
-            },
-            'icmp_no_port_info': {
-                'type': 'str',
-            },
-            'icmpv6_no_session_drop': {
-                'type': 'str',
-            },
             '46_known_drop': {
                 'type': 'str',
             },
-            'icmpv6_to_icmpv6': {
+            '46_unknown_drop': {
                 'type': 'str',
             },
-            'icmp_unknown_type': {
+            '46_no_prefix_for_ipv4': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

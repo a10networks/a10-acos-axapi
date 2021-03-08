@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_logging
 description:
     - CGNV6 Logging Statistics
-short_description: Configures A10 cgnv6.logging
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,213 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    tcp_svr_status:
-        description:
-        - "Field tcp_svr_status"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            tcp_port_overloading_allocated:
-                description:
-                - "TCP Port Overloading Allocated"
-            tcp_session_deleted:
-                description:
-                - "TCP Session Deleted"
-            gre_session_created:
-                description:
-                - "GRE Session Created"
-            icmpv6_resource_freed:
-                description:
-                - "ICMPV6 Resource Freed"
-            icmpv6_session_created:
-                description:
-                - "ICMPV6 Session Created"
-            tcp_port_allocated:
-                description:
-                - "TCP Port Allocated"
-            udp_port_overloading_freed:
-                description:
-                - "UDP Port Overloading Freed"
-            tcp_session_created:
-                description:
-                - "TCP Session Created"
-            log_sent:
-                description:
-                - "Log Packets Sent"
-            udp_port_allocated:
-                description:
-                - "UDP Port Allocated"
-            fixed_nat_periodic_config_logged:
-                description:
-                - "Fixed NAT Disabled Config Logs Sent"
-            udp_session_created:
-                description:
-                - "UDP Session Created"
-            gre_resource_allocated:
-                description:
-                - "GRE Resource Allocated"
-            udp_port_batch_freed:
-                description:
-                - "UDP Port Batch Freed"
-            esp_session_deleted:
-                description:
-                - "ESP Session Deleted"
-            fixed_nat_disable_config_logged:
-                description:
-                - "Fixed NAT Periodic Configs Logged"
-            esp_resource_allocated:
-                description:
-                - "ESP Resource Allocated"
-            fixed_nat_periodic_config_logs_sent:
-                description:
-                - "Fixed NAT Disabled Configs Logged"
-            http_request_logged:
-                description:
-                - "HTTP Request Logged"
-            enhanced_user_log:
-                description:
-                - "Enhanced User Log"
-            icmp_resource_allocated:
-                description:
-                - "ICMP Resource Allocated"
-            esp_session_created:
-                description:
-                - "ESP Session Created"
-            icmp_resource_freed:
-                description:
-                - "ICMP Resource Freed"
-            fixed_nat_interim_updated:
-                description:
-                - "Fixed NAT Interim Updated"
-            icmpv6_session_deleted:
-                description:
-                - "ICMPV6 Session Deleted"
-            udp_port_batch_interim_updated:
-                description:
-                - "UDP Port Batch Interim Updated"
-            tcp_port_overloading_freed:
-                description:
-                - "TCP Port Overloading Freed"
-            icmp_session_deleted:
-                description:
-                - "ICMP Session Deleted"
-            gre_resource_freed:
-                description:
-                - "GRE Resource Freed"
-            gre_session_deleted:
-                description:
-                - "GRE Session Deleted"
-            udp_port_overloading_allocated:
-                description:
-                - "UDP Port Overloading Allocated"
-            fixed_nat_user_ports:
-                description:
-                - "Fixed NAT Inside User Port Mapping"
-            tcp_port_freed:
-                description:
-                - "TCP Port Freed"
-            esp_resource_freed:
-                description:
-                - "ESP Resource Freed"
-            reduced_logs_by_destination:
-                description:
-                - "Reduced Logs by Destination Protocol and Port"
-            icmp_session_created:
-                description:
-                - "ICMP Session Created"
-            conn_tcp_established:
-                description:
-                - "TCP Connection Established"
-            fixed_nat_disable_config_logs_sent:
-                description:
-                - "Fixed NAT Periodic Config Logs Sent"
-            udp_port_batch_allocated:
-                description:
-                - "UDP Port Batch Allocated"
-            udp_port_freed:
-                description:
-                - "UDP Port Freed"
-            conn_tcp_dropped:
-                description:
-                - "TCP Connection Lost"
-            tcp_port_batch_freed:
-                description:
-                - "TCP Port Batch Freed"
-            log_dropped:
-                description:
-                - "Log Packets Dropped"
-            icmpv6_resource_allocated:
-                description:
-                - "ICMPV6 Resource Allocated"
-            tcp_port_batch_interim_updated:
-                description:
-                - "TCP Port Batch Interim Updated"
-            udp_session_deleted:
-                description:
-                - "UDP Session Deleted"
-            tcp_port_batch_allocated:
-                description:
-                - "TCP Port Batch Allocated"
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    source_address:
-        description:
-        - "Field source_address"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    nat_quota_exceeded:
-        description:
-        - "Field nat_quota_exceeded"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            level:
-                description:
-                - "'warning'= Log level Warning (Default); 'critical'= Log level Critical;
-          'notice'= Log level Notice;"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -246,62 +79,295 @@ options:
           deleted'= ICMP Session Deleted; 'icmp-resource-allocated'= ICMP Resource
           Allocated; 'icmp-resource-freed'= ICMP Resource Freed; 'icmpv6-session-
           created'= ICMPV6 Session Created; 'icmpv6-session-deleted'= ICMPV6 Session
-          Deleted; 'icmpv6-resource-allocated'= ICMPV6 Resource Allocated; 'icmpv6
-          -resource-freed'= ICMPV6 Resource Freed; 'gre-session-created'= GRE Session
-          Created; 'gre-session-deleted'= GRE Session Deleted; 'gre-resource-allocated'=
-          GRE Resource Allocated; 'gre-resource-freed'= GRE Resource Freed; 'esp-session-
-          created'= ESP Session Created; 'esp-session-deleted'= ESP Session Deleted;
-          'esp-resource-allocated'= ESP Resource Allocated; 'esp-resource-freed'= ESP
-          Resource Freed; 'fixed-nat-user-ports'= Fixed NAT Inside User Port Mapping;
-          'fixed-nat-disable-config-logged'= Fixed NAT Periodic Configs Logged; 'fixed-
-          nat-disable-config-logs-sent'= Fixed NAT Periodic Config Logs Sent; 'fixed-nat-
-          periodic-config-logs-sent'= Fixed NAT Disabled Configs Logged; 'fixed-nat-
-          periodic-config-logged'= Fixed NAT Disabled Config Logs Sent; 'fixed-nat-
-          interim-updated'= Fixed NAT Interim Updated; 'enhanced-user-log'= Enhanced User
-          Log; 'log-sent'= Log Packets Sent; 'log-dropped'= Log Packets Dropped; 'conn-
-          tcp-established'= TCP Connection Established; 'conn-tcp-dropped'= TCP
-          Connection Lost; 'tcp-port-overloading-allocated'= TCP Port Overloading
-          Allocated; 'tcp-port-overloading-freed'= TCP Port Overloading Freed; 'udp-port-
-          overloading-allocated'= UDP Port Overloading Allocated; 'udp-port-overloading-
-          freed'= UDP Port Overloading Freed; 'http-request-logged'= HTTP Request Logged;
-          'reduced-logs-by-destination'= Reduced Logs by Destination Protocol and Port;
-          'out-of-buffers'= Out of Buffers; 'add-msg-failed'= Add Message to Buffer
-          Failed; 'rtsp-port-allocated'= RTSP UDP Port Allocated; 'rtsp-port-freed'= RTSP
-          UDP Port Freed; 'conn-tcp-create-failed'= TCP Connection Failed; 'ipv4-frag-
-          applied'= IPv4 Fragmentation Applied; 'ipv4-frag-failed'= IPv4 Fragmentation
-          Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied; 'ipv6-frag-failed'=
-          IPv6 Fragmentation Failed; 'interim-update-scheduled'= Port Allocation Interim
-          Update Scheduled; 'interim-update-schedule-failed'= Port Allocation Interim
-          Update Failed; 'interim-update-terminated'= Port Allocation Interim Update
-          Terminated; 'interim-update-memory-freed'= Port Allocation Interim Update
-          Memory Freed; 'interim-update-no-buff-retried'= Port Allocation Interim Update
-          Memory Freed; 'tcp-port-batch-interim-updated'= TCP Port Batch Interim Updated;
-          'udp-port-batch-interim-updated'= UDP Port Batch Interim Updated; 'port-block-
-          accounting-freed'= Port Allocation Accounting Freed; 'port-block-accounting-
-          allocated'= Port Allocation Accounting Allocated; 'log-message-too-long'= Log
-          message too long; 'http-out-of-order-dropped'= HTTP out-of-order dropped;
-          'http-alloc-failed'= HTTP Request Info Allocation Failed; 'http-frag-merge-
-          failed-dropped'= HTTP frag merge failed dropped; 'http-malloc'= HTTP mem
-          allocate; 'http-mfree'= HTTP mem free; 'http-spm-alloc-type0'= HTTP Conn SPM
-          Type 0 allocate; 'http-spm-alloc-type1'= HTTP Conn SPM Type 1 allocate; 'http-
-          spm-alloc-type2'= HTTP Conn SPM Type 2 allocate; 'http-spm-alloc-type3'= HTTP
-          Conn SPM Type 3 allocate; 'http-spm-alloc-type4'= HTTP Conn SPM Type 4
-          allocate; 'http-spm-free-type0'= HTTP Conn SPM Type 0 free; 'http-spm-free-
-          type1'= HTTP Conn SPM Type 1 free; 'http-spm-free-type2'= HTTP Conn SPM Type 2
-          free; 'http-spm-free-type3'= HTTP Conn SPM Type 3 free; 'http-spm-free-type4'=
-          HTTP Conn SPM Type 4 free;"
-    nat_resource_exhausted:
+          Deleted; 'icmpv6-resource-allocated'= ICMPV6 Resource Allocated;
+          'icmpv6-resource-freed'= ICMPV6 Resource Freed; 'gre-session-created'= GRE
+          Session Created; 'gre-session-deleted'= GRE Session Deleted; 'gre-resource-
+          allocated'= GRE Resource Allocated; 'gre-resource-freed'= GRE Resource Freed;
+          'esp-session-created'= ESP Session Created; 'esp-session-deleted'= ESP Session
+          Deleted; 'esp-resource-allocated'= ESP Resource Allocated; 'esp-resource-
+          freed'= ESP Resource Freed; 'fixed-nat-user-ports'= Fixed NAT Inside User Port
+          Mapping; 'fixed-nat-disable-config-logged'= Fixed NAT Periodic Configs Logged;
+          'fixed-nat-disable-config-logs-sent'= Fixed NAT Periodic Config Logs Sent;
+          'fixed-nat-periodic-config-logs-sent'= Fixed NAT Disabled Configs Logged;
+          'fixed-nat-periodic-config-logged'= Fixed NAT Disabled Config Logs Sent;
+          'fixed-nat-interim-updated'= Fixed NAT Interim Updated; 'enhanced-user-log'=
+          Enhanced User Log; 'log-sent'= Log Packets Sent; 'log-dropped'= Log Packets
+          Dropped; 'conn-tcp-established'= TCP Connection Established; 'conn-tcp-
+          dropped'= TCP Connection Lost; 'tcp-port-overloading-allocated'= TCP Port
+          Overloading Allocated; 'tcp-port-overloading-freed'= TCP Port Overloading
+          Freed; 'udp-port-overloading-allocated'= UDP Port Overloading Allocated; 'udp-
+          port-overloading-freed'= UDP Port Overloading Freed; 'http-request-logged'=
+          HTTP Request Logged; 'reduced-logs-by-destination'= Reduced Logs by Destination
+          Protocol and Port; 'out-of-buffers'= Out of Buffers; 'add-msg-failed'= Add
+          Message to Buffer Failed; 'rtsp-port-allocated'= RTSP UDP Port Allocated;
+          'rtsp-port-freed'= RTSP UDP Port Freed; 'conn-tcp-create-failed'= TCP
+          Connection Failed; 'ipv4-frag-applied'= IPv4 Fragmentation Applied; 'ipv4-frag-
+          failed'= IPv4 Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation
+          Applied; 'ipv6-frag-failed'= IPv6 Fragmentation Failed; 'interim-update-
+          scheduled'= Port Allocation Interim Update Scheduled; 'interim-update-schedule-
+          failed'= Port Allocation Interim Update Failed; 'interim-update-terminated'=
+          Port Allocation Interim Update Terminated; 'interim-update-memory-freed'= Port
+          Allocation Interim Update Memory Freed; 'interim-update-no-buff-retried'= Port
+          Allocation Interim Update Memory Freed; 'tcp-port-batch-interim-updated'= TCP
+          Port Batch Interim Updated; 'udp-port-batch-interim-updated'= UDP Port Batch
+          Interim Updated; 'port-block-accounting-freed'= Port Allocation Accounting
+          Freed; 'port-block-accounting-allocated'= Port Allocation Accounting Allocated;
+          'log-message-too-long'= Log message too long; 'http-out-of-order-dropped'= HTTP
+          out-of-order dropped; 'http-alloc-failed'= HTTP Request Info Allocation Failed;
+          'http-frag-merge-failed-dropped'= HTTP frag merge failed dropped; 'http-
+          malloc'= HTTP mem allocate; 'http-mfree'= HTTP mem free; 'http-spm-alloc-
+          type0'= HTTP Conn SPM Type 0 allocate; 'http-spm-alloc-type1'= HTTP Conn SPM
+          Type 1 allocate; 'http-spm-alloc-type2'= HTTP Conn SPM Type 2 allocate; 'http-
+          spm-alloc-type3'= HTTP Conn SPM Type 3 allocate; 'http-spm-alloc-type4'= HTTP
+          Conn SPM Type 4 allocate; 'http-spm-free-type0'= HTTP Conn SPM Type 0 free;
+          'http-spm-free-type1'= HTTP Conn SPM Type 1 free; 'http-spm-free-type2'= HTTP
+          Conn SPM Type 2 free; 'http-spm-free-type3'= HTTP Conn SPM Type 3 free; 'http-
+          spm-free-type4'= HTTP Conn SPM Type 4 free;"
+                type: str
+    source_address:
         description:
-        - "Field nat_resource_exhausted"
+        - "Field source_address"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    tcp_svr_status:
+        description:
+        - "Field tcp_svr_status"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    nat_resource_exhausted:
+        description:
+        - "Field nat_resource_exhausted"
+        type: dict
+        required: False
+        suboptions:
             level:
                 description:
                 - "'warning'= Log level Warning; 'critical'= Log level Critical (Default);
           'notice'= Log level Notice;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    nat_quota_exceeded:
+        description:
+        - "Field nat_quota_exceeded"
+        type: dict
+        required: False
+        suboptions:
+            level:
+                description:
+                - "'warning'= Log level Warning (Default); 'critical'= Log level Critical;
+          'notice'= Log level Notice;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            tcp_session_created:
+                description:
+                - "TCP Session Created"
+                type: str
+            tcp_session_deleted:
+                description:
+                - "TCP Session Deleted"
+                type: str
+            tcp_port_allocated:
+                description:
+                - "TCP Port Allocated"
+                type: str
+            tcp_port_freed:
+                description:
+                - "TCP Port Freed"
+                type: str
+            tcp_port_batch_allocated:
+                description:
+                - "TCP Port Batch Allocated"
+                type: str
+            tcp_port_batch_freed:
+                description:
+                - "TCP Port Batch Freed"
+                type: str
+            udp_session_created:
+                description:
+                - "UDP Session Created"
+                type: str
+            udp_session_deleted:
+                description:
+                - "UDP Session Deleted"
+                type: str
+            udp_port_allocated:
+                description:
+                - "UDP Port Allocated"
+                type: str
+            udp_port_freed:
+                description:
+                - "UDP Port Freed"
+                type: str
+            udp_port_batch_allocated:
+                description:
+                - "UDP Port Batch Allocated"
+                type: str
+            udp_port_batch_freed:
+                description:
+                - "UDP Port Batch Freed"
+                type: str
+            icmp_session_created:
+                description:
+                - "ICMP Session Created"
+                type: str
+            icmp_session_deleted:
+                description:
+                - "ICMP Session Deleted"
+                type: str
+            icmp_resource_allocated:
+                description:
+                - "ICMP Resource Allocated"
+                type: str
+            icmp_resource_freed:
+                description:
+                - "ICMP Resource Freed"
+                type: str
+            icmpv6_session_created:
+                description:
+                - "ICMPV6 Session Created"
+                type: str
+            icmpv6_session_deleted:
+                description:
+                - "ICMPV6 Session Deleted"
+                type: str
+            icmpv6_resource_allocated:
+                description:
+                - "ICMPV6 Resource Allocated"
+                type: str
+            icmpv6_resource_freed:
+                description:
+                - "ICMPV6 Resource Freed"
+                type: str
+            gre_session_created:
+                description:
+                - "GRE Session Created"
+                type: str
+            gre_session_deleted:
+                description:
+                - "GRE Session Deleted"
+                type: str
+            gre_resource_allocated:
+                description:
+                - "GRE Resource Allocated"
+                type: str
+            gre_resource_freed:
+                description:
+                - "GRE Resource Freed"
+                type: str
+            esp_session_created:
+                description:
+                - "ESP Session Created"
+                type: str
+            esp_session_deleted:
+                description:
+                - "ESP Session Deleted"
+                type: str
+            esp_resource_allocated:
+                description:
+                - "ESP Resource Allocated"
+                type: str
+            esp_resource_freed:
+                description:
+                - "ESP Resource Freed"
+                type: str
+            fixed_nat_user_ports:
+                description:
+                - "Fixed NAT Inside User Port Mapping"
+                type: str
+            fixed_nat_disable_config_logged:
+                description:
+                - "Fixed NAT Periodic Configs Logged"
+                type: str
+            fixed_nat_disable_config_logs_sent:
+                description:
+                - "Fixed NAT Periodic Config Logs Sent"
+                type: str
+            fixed_nat_periodic_config_logs_sent:
+                description:
+                - "Fixed NAT Disabled Configs Logged"
+                type: str
+            fixed_nat_periodic_config_logged:
+                description:
+                - "Fixed NAT Disabled Config Logs Sent"
+                type: str
+            fixed_nat_interim_updated:
+                description:
+                - "Fixed NAT Interim Updated"
+                type: str
+            enhanced_user_log:
+                description:
+                - "Enhanced User Log"
+                type: str
+            log_sent:
+                description:
+                - "Log Packets Sent"
+                type: str
+            log_dropped:
+                description:
+                - "Log Packets Dropped"
+                type: str
+            conn_tcp_established:
+                description:
+                - "TCP Connection Established"
+                type: str
+            conn_tcp_dropped:
+                description:
+                - "TCP Connection Lost"
+                type: str
+            tcp_port_overloading_allocated:
+                description:
+                - "TCP Port Overloading Allocated"
+                type: str
+            tcp_port_overloading_freed:
+                description:
+                - "TCP Port Overloading Freed"
+                type: str
+            udp_port_overloading_allocated:
+                description:
+                - "UDP Port Overloading Allocated"
+                type: str
+            udp_port_overloading_freed:
+                description:
+                - "UDP Port Overloading Freed"
+                type: str
+            http_request_logged:
+                description:
+                - "HTTP Request Logged"
+                type: str
+            reduced_logs_by_destination:
+                description:
+                - "Reduced Logs by Destination Protocol and Port"
+                type: str
+            tcp_port_batch_interim_updated:
+                description:
+                - "TCP Port Batch Interim Updated"
+                type: str
+            udp_port_batch_interim_updated:
+                description:
+                - "UDP Port Batch Interim Updated"
+                type: str
 
 '''
 
@@ -360,174 +426,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'tcp_svr_status': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'tcp_port_overloading_allocated': {
-                'type': 'str',
-            },
-            'tcp_session_deleted': {
-                'type': 'str',
-            },
-            'gre_session_created': {
-                'type': 'str',
-            },
-            'icmpv6_resource_freed': {
-                'type': 'str',
-            },
-            'icmpv6_session_created': {
-                'type': 'str',
-            },
-            'tcp_port_allocated': {
-                'type': 'str',
-            },
-            'udp_port_overloading_freed': {
-                'type': 'str',
-            },
-            'tcp_session_created': {
-                'type': 'str',
-            },
-            'log_sent': {
-                'type': 'str',
-            },
-            'udp_port_allocated': {
-                'type': 'str',
-            },
-            'fixed_nat_periodic_config_logged': {
-                'type': 'str',
-            },
-            'udp_session_created': {
-                'type': 'str',
-            },
-            'gre_resource_allocated': {
-                'type': 'str',
-            },
-            'udp_port_batch_freed': {
-                'type': 'str',
-            },
-            'esp_session_deleted': {
-                'type': 'str',
-            },
-            'fixed_nat_disable_config_logged': {
-                'type': 'str',
-            },
-            'esp_resource_allocated': {
-                'type': 'str',
-            },
-            'fixed_nat_periodic_config_logs_sent': {
-                'type': 'str',
-            },
-            'http_request_logged': {
-                'type': 'str',
-            },
-            'enhanced_user_log': {
-                'type': 'str',
-            },
-            'icmp_resource_allocated': {
-                'type': 'str',
-            },
-            'esp_session_created': {
-                'type': 'str',
-            },
-            'icmp_resource_freed': {
-                'type': 'str',
-            },
-            'fixed_nat_interim_updated': {
-                'type': 'str',
-            },
-            'icmpv6_session_deleted': {
-                'type': 'str',
-            },
-            'udp_port_batch_interim_updated': {
-                'type': 'str',
-            },
-            'tcp_port_overloading_freed': {
-                'type': 'str',
-            },
-            'icmp_session_deleted': {
-                'type': 'str',
-            },
-            'gre_resource_freed': {
-                'type': 'str',
-            },
-            'gre_session_deleted': {
-                'type': 'str',
-            },
-            'udp_port_overloading_allocated': {
-                'type': 'str',
-            },
-            'fixed_nat_user_ports': {
-                'type': 'str',
-            },
-            'tcp_port_freed': {
-                'type': 'str',
-            },
-            'esp_resource_freed': {
-                'type': 'str',
-            },
-            'reduced_logs_by_destination': {
-                'type': 'str',
-            },
-            'icmp_session_created': {
-                'type': 'str',
-            },
-            'conn_tcp_established': {
-                'type': 'str',
-            },
-            'fixed_nat_disable_config_logs_sent': {
-                'type': 'str',
-            },
-            'udp_port_batch_allocated': {
-                'type': 'str',
-            },
-            'udp_port_freed': {
-                'type': 'str',
-            },
-            'conn_tcp_dropped': {
-                'type': 'str',
-            },
-            'tcp_port_batch_freed': {
-                'type': 'str',
-            },
-            'log_dropped': {
-                'type': 'str',
-            },
-            'icmpv6_resource_allocated': {
-                'type': 'str',
-            },
-            'tcp_port_batch_interim_updated': {
-                'type': 'str',
-            },
-            'udp_session_deleted': {
-                'type': 'str',
-            },
-            'tcp_port_batch_allocated': {
-                'type': 'str',
-            }
-        },
         'uuid': {
             'type': 'str',
-        },
-        'source_address': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'nat_quota_exceeded': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'level': {
-                'type': 'str',
-                'choices': ['warning', 'critical', 'notice']
-            }
         },
         'sampling_enable': {
             'type': 'list',
@@ -582,14 +482,180 @@ def get_argspec():
                 ]
             }
         },
-        'nat_resource_exhausted': {
+        'source_address': {
             'type': 'dict',
             'uuid': {
                 'type': 'str',
-            },
+            }
+        },
+        'tcp_svr_status': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'nat_resource_exhausted': {
+            'type': 'dict',
             'level': {
                 'type': 'str',
                 'choices': ['warning', 'critical', 'notice']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'nat_quota_exceeded': {
+            'type': 'dict',
+            'level': {
+                'type': 'str',
+                'choices': ['warning', 'critical', 'notice']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'tcp_session_created': {
+                'type': 'str',
+            },
+            'tcp_session_deleted': {
+                'type': 'str',
+            },
+            'tcp_port_allocated': {
+                'type': 'str',
+            },
+            'tcp_port_freed': {
+                'type': 'str',
+            },
+            'tcp_port_batch_allocated': {
+                'type': 'str',
+            },
+            'tcp_port_batch_freed': {
+                'type': 'str',
+            },
+            'udp_session_created': {
+                'type': 'str',
+            },
+            'udp_session_deleted': {
+                'type': 'str',
+            },
+            'udp_port_allocated': {
+                'type': 'str',
+            },
+            'udp_port_freed': {
+                'type': 'str',
+            },
+            'udp_port_batch_allocated': {
+                'type': 'str',
+            },
+            'udp_port_batch_freed': {
+                'type': 'str',
+            },
+            'icmp_session_created': {
+                'type': 'str',
+            },
+            'icmp_session_deleted': {
+                'type': 'str',
+            },
+            'icmp_resource_allocated': {
+                'type': 'str',
+            },
+            'icmp_resource_freed': {
+                'type': 'str',
+            },
+            'icmpv6_session_created': {
+                'type': 'str',
+            },
+            'icmpv6_session_deleted': {
+                'type': 'str',
+            },
+            'icmpv6_resource_allocated': {
+                'type': 'str',
+            },
+            'icmpv6_resource_freed': {
+                'type': 'str',
+            },
+            'gre_session_created': {
+                'type': 'str',
+            },
+            'gre_session_deleted': {
+                'type': 'str',
+            },
+            'gre_resource_allocated': {
+                'type': 'str',
+            },
+            'gre_resource_freed': {
+                'type': 'str',
+            },
+            'esp_session_created': {
+                'type': 'str',
+            },
+            'esp_session_deleted': {
+                'type': 'str',
+            },
+            'esp_resource_allocated': {
+                'type': 'str',
+            },
+            'esp_resource_freed': {
+                'type': 'str',
+            },
+            'fixed_nat_user_ports': {
+                'type': 'str',
+            },
+            'fixed_nat_disable_config_logged': {
+                'type': 'str',
+            },
+            'fixed_nat_disable_config_logs_sent': {
+                'type': 'str',
+            },
+            'fixed_nat_periodic_config_logs_sent': {
+                'type': 'str',
+            },
+            'fixed_nat_periodic_config_logged': {
+                'type': 'str',
+            },
+            'fixed_nat_interim_updated': {
+                'type': 'str',
+            },
+            'enhanced_user_log': {
+                'type': 'str',
+            },
+            'log_sent': {
+                'type': 'str',
+            },
+            'log_dropped': {
+                'type': 'str',
+            },
+            'conn_tcp_established': {
+                'type': 'str',
+            },
+            'conn_tcp_dropped': {
+                'type': 'str',
+            },
+            'tcp_port_overloading_allocated': {
+                'type': 'str',
+            },
+            'tcp_port_overloading_freed': {
+                'type': 'str',
+            },
+            'udp_port_overloading_allocated': {
+                'type': 'str',
+            },
+            'udp_port_overloading_freed': {
+                'type': 'str',
+            },
+            'http_request_logged': {
+                'type': 'str',
+            },
+            'reduced_logs_by_destination': {
+                'type': 'str',
+            },
+            'tcp_port_batch_interim_updated': {
+                'type': 'str',
+            },
+            'udp_port_batch_interim_updated': {
+                'type': 'str',
             }
         }
     })

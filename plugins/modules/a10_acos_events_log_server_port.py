@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_log_server_port
 description:
     - Logging Server Port
-short_description: Configures A10 acos-events.log.server.port
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,84 +22,107 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     log_server_name:
         description:
-        - Key to identify parent object    health_check_disable:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - "Disable health check"
-        required: False
+        - "Port Number"
+        type: int
+        required: True
     protocol:
         description:
         - "'tcp'= TCP Port; 'udp'= UDP Port;"
+        type: str
         required: True
+    action:
+        description:
+        - "'enable'= enable; 'disable'= disable;"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check (Monitor Name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable health check"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'msgs_sent'= Number of log messages sent;"
-    port_number:
-        description:
-        - "Port Number"
-        required: True
-    action:
-        description:
-        - "'enable'= enable; 'disable'= disable;"
-        required: False
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            protocol:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            port_number:
-                description:
-                - "Port Number"
             msgs_sent:
                 description:
                 - "Number of log messages sent"
-    health_check:
-        description:
-        - "Health Check (Monitor Name)"
-        required: False
+                type: str
+            port_number:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
 
 '''
 
@@ -162,13 +183,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'health_check_disable': {
-            'type': 'bool',
+        'port_number': {
+            'type': 'int',
+            'required': True,
         },
         'protocol': {
             'type': 'str',
             'required': True,
             'choices': ['tcp', 'udp']
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'health_check_disable': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',
@@ -183,31 +215,20 @@ def get_argspec():
                 'choices': ['all', 'msgs_sent']
             }
         },
-        'port_number': {
-            'type': 'int',
-            'required': True,
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
         'stats': {
             'type': 'dict',
-            'protocol': {
+            'msgs_sent': {
                 'type': 'str',
-                'required': True,
-                'choices': ['tcp', 'udp']
             },
             'port_number': {
                 'type': 'int',
                 'required': True,
             },
-            'msgs_sent': {
+            'protocol': {
                 'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp']
             }
-        },
-        'health_check': {
-            'type': 'str',
         }
     })
     # Parent keys

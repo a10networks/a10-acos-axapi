@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_authentication
 description:
     - Configure authentication feature
-short_description: Configures A10 authentication
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,77 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    console:
+    type_cfg:
         description:
-        - "Field console"
+        - "Field type_cfg"
+        type: dict
         required: False
         suboptions:
-            type_cfg:
+            ntype:
                 description:
-                - "Field type_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
+                - "The login authentication type"
+                type: str
+    enable_cfg:
         description:
-        - "uuid of the object"
+        - "Field enable_cfg"
+        type: dict
         required: False
+        suboptions:
+            enable_auth_type:
+                description:
+                - "The enable-password authentication type"
+                type: str
+    login_cfg:
+        description:
+        - "Field login_cfg"
+        type: dict
+        required: False
+        suboptions:
+            privilege_mode:
+                description:
+                - "Configure to enter privilege-mode"
+                type: bool
+            local:
+                description:
+                - "Configure local user to enter privilege-mode"
+                type: bool
     mode_cfg:
         description:
         - "Field mode_cfg"
+        type: dict
         required: False
         suboptions:
             mode:
@@ -75,37 +100,31 @@ options:
                 - "'multiple'= Multiple authentication mode. If an authentication method rejected,
           try next one; 'single'= Single authentication mode. If an authentication method
           rejected, don't try next one;"
-    type_cfg:
-        description:
-        - "Field type_cfg"
-        required: False
-        suboptions:
-            ntype:
-                description:
-                - "The login authentication type"
+                type: str
     multiple_auth_reject:
         description:
         - "Multiple same user login reject"
+        type: bool
         required: False
-    login_cfg:
+    uuid:
         description:
-        - "Field login_cfg"
+        - "uuid of the object"
+        type: str
+        required: False
+    console:
+        description:
+        - "Field console"
+        type: dict
         required: False
         suboptions:
-            local:
+            type_cfg:
                 description:
-                - "Configure local user to enter privilege-mode"
-            privilege_mode:
+                - "Field type_cfg"
+                type: dict
+            uuid:
                 description:
-                - "Configure to enter privilege-mode"
-    enable_cfg:
-        description:
-        - "Field enable_cfg"
-        required: False
-        suboptions:
-            enable_auth_type:
-                description:
-                - "The enable-password authentication type"
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -164,24 +183,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'console': {
+        'type_cfg': {
             'type': 'dict',
-            'type_cfg': {
-                'type': 'dict',
-                'console_type': {
-                    'type': 'str',
-                    'choices': ['ldap', 'local', 'radius', 'tacplus']
-                },
-                'ntype': {
-                    'type': 'bool',
-                }
-            },
-            'uuid': {
+            'ntype': {
                 'type': 'str',
+                'choices': ['ldap', 'local', 'radius', 'tacplus']
             }
         },
-        'uuid': {
-            'type': 'str',
+        'enable_cfg': {
+            'type': 'dict',
+            'enable_auth_type': {
+                'type': 'str',
+                'choices': ['local', 'tacplus']
+            }
+        },
+        'login_cfg': {
+            'type': 'dict',
+            'privilege_mode': {
+                'type': 'bool',
+            },
+            'local': {
+                'type': 'bool',
+            }
         },
         'mode_cfg': {
             'type': 'dict',
@@ -190,30 +213,26 @@ def get_argspec():
                 'choices': ['multiple', 'single']
             }
         },
-        'type_cfg': {
-            'type': 'dict',
-            'ntype': {
-                'type': 'str',
-                'choices': ['ldap', 'local', 'radius', 'tacplus']
-            }
-        },
         'multiple_auth_reject': {
             'type': 'bool',
         },
-        'login_cfg': {
-            'type': 'dict',
-            'local': {
-                'type': 'bool',
-            },
-            'privilege_mode': {
-                'type': 'bool',
-            }
+        'uuid': {
+            'type': 'str',
         },
-        'enable_cfg': {
+        'console': {
             'type': 'dict',
-            'enable_auth_type': {
+            'type_cfg': {
+                'type': 'dict',
+                'ntype': {
+                    'type': 'bool',
+                },
+                'console_type': {
+                    'type': 'str',
+                    'choices': ['ldap', 'local', 'radius', 'tacplus']
+                }
+            },
+            'uuid': {
                 'type': 'str',
-                'choices': ['local', 'tacplus']
             }
         }
     })

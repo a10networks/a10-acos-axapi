@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_perf
 description:
     - SLB performance stats
-short_description: Configures A10 slb.perf
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,41 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'total-throughput-bits-per-sec'= Total Throughput in bits/sec; 'l4
-          -conns-per-sec'= L4 Connections/sec; 'l7-conns-per-sec'= L7 Connections/sec;
+                - "'all'= all; 'total-throughput-bits-per-sec'= Total Throughput in bits/sec;
+          'l4-conns-per-sec'= L4 Connections/sec; 'l7-conns-per-sec'= L7 Connections/sec;
           'l7-trans-per-sec'= L7 Transactions/sec; 'ssl-conns-per-sec'= SSL
           Connections/sec; 'ip-nat-conns-per-sec'= IP NAT Connections/sec; 'total-new-
           conns-per-sec'= Total New Connections Established/sec; 'total-curr-conns'=
@@ -67,60 +78,73 @@ options:
           Server SSL Connections/sec; 'fw-conns-per-sec'= FW Connections/sec; 'gifw-
           conns-per-sec'= GiFW Connections/sec; 'l7-proxy-conns-per-sec'= L7 Proxy
           Connections/sec; 'l7-proxy-trans-per-sec'= L7 Proxy Transactions/sec;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            l7_trans_per_sec:
-                description:
-                - "L7 Transactions/sec"
-            l7_conns_per_sec:
-                description:
-                - "L7 Connections/sec"
-            total_curr_conns:
-                description:
-                - "Total Current Established Connections"
-            ssl_conns_per_sec:
-                description:
-                - "SSL Connections/sec"
-            l4_bandwidth:
-                description:
-                - "L4 Bandwidth in bits/sec"
-            serv_ssl_conns_per_sec:
-                description:
-                - "Server SSL Connections/sec"
-            gifw_conns_per_sec:
-                description:
-                - "GiFW Connections/sec"
-            total_new_conns_per_sec:
-                description:
-                - "Total New Connections Established/sec"
             total_throughput_bits_per_sec:
                 description:
                 - "Total Throughput in bits/sec"
-            l7_proxy_trans_per_sec:
-                description:
-                - "L7 Proxy Transactions/sec"
+                type: str
             l4_conns_per_sec:
                 description:
                 - "L4 Connections/sec"
-            l7_bandwidth:
+                type: str
+            l7_conns_per_sec:
                 description:
-                - "L7 Bandwidth in bits/sec"
-            l7_proxy_conns_per_sec:
+                - "L7 Connections/sec"
+                type: str
+            l7_trans_per_sec:
                 description:
-                - "L7 Proxy Connections/sec"
+                - "L7 Transactions/sec"
+                type: str
+            ssl_conns_per_sec:
+                description:
+                - "SSL Connections/sec"
+                type: str
             ip_nat_conns_per_sec:
                 description:
                 - "IP NAT Connections/sec"
+                type: str
+            total_new_conns_per_sec:
+                description:
+                - "Total New Connections Established/sec"
+                type: str
+            total_curr_conns:
+                description:
+                - "Total Current Established Connections"
+                type: str
+            l4_bandwidth:
+                description:
+                - "L4 Bandwidth in bits/sec"
+                type: str
+            l7_bandwidth:
+                description:
+                - "L7 Bandwidth in bits/sec"
+                type: str
+            serv_ssl_conns_per_sec:
+                description:
+                - "Server SSL Connections/sec"
+                type: str
             fw_conns_per_sec:
                 description:
                 - "FW Connections/sec"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            gifw_conns_per_sec:
+                description:
+                - "GiFW Connections/sec"
+                type: str
+            l7_proxy_conns_per_sec:
+                description:
+                - "L7 Proxy Connections/sec"
+                type: str
+            l7_proxy_trans_per_sec:
+                description:
+                - "L7 Proxy Transactions/sec"
+                type: str
 
 '''
 
@@ -175,6 +199,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -193,54 +220,51 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'l7_trans_per_sec': {
-                'type': 'str',
-            },
-            'l7_conns_per_sec': {
-                'type': 'str',
-            },
-            'total_curr_conns': {
-                'type': 'str',
-            },
-            'ssl_conns_per_sec': {
-                'type': 'str',
-            },
-            'l4_bandwidth': {
-                'type': 'str',
-            },
-            'serv_ssl_conns_per_sec': {
-                'type': 'str',
-            },
-            'gifw_conns_per_sec': {
-                'type': 'str',
-            },
-            'total_new_conns_per_sec': {
-                'type': 'str',
-            },
             'total_throughput_bits_per_sec': {
-                'type': 'str',
-            },
-            'l7_proxy_trans_per_sec': {
                 'type': 'str',
             },
             'l4_conns_per_sec': {
                 'type': 'str',
             },
-            'l7_bandwidth': {
+            'l7_conns_per_sec': {
                 'type': 'str',
             },
-            'l7_proxy_conns_per_sec': {
+            'l7_trans_per_sec': {
+                'type': 'str',
+            },
+            'ssl_conns_per_sec': {
                 'type': 'str',
             },
             'ip_nat_conns_per_sec': {
                 'type': 'str',
             },
+            'total_new_conns_per_sec': {
+                'type': 'str',
+            },
+            'total_curr_conns': {
+                'type': 'str',
+            },
+            'l4_bandwidth': {
+                'type': 'str',
+            },
+            'l7_bandwidth': {
+                'type': 'str',
+            },
+            'serv_ssl_conns_per_sec': {
+                'type': 'str',
+            },
             'fw_conns_per_sec': {
                 'type': 'str',
+            },
+            'gifw_conns_per_sec': {
+                'type': 'str',
+            },
+            'l7_proxy_conns_per_sec': {
+                'type': 'str',
+            },
+            'l7_proxy_trans_per_sec': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

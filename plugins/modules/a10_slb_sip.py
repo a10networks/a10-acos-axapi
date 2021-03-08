@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_sip
 description:
     - Configure SIP
-short_description: Configures A10 slb.sip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            sip_cpu_list:
-                description:
-                - "Field sip_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            filter_type:
-                description:
-                - "Field filter_type"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -185,69 +182,103 @@ options:
           'smp_call_id_rtp_session_match'= smp_call_id_rtp_session_match;
           'smp_call_id_rtp_session_not_match'= smp_call_id_rtp_session_not_match;
           'process_error_when_message_switch'= process_error_when_message_switch;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            sip_cpu_list:
+                description:
+                - "Field sip_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
+            filter_type:
+                description:
+                - "Field filter_type"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            msg_proxy_client_incomplete:
-                description:
-                - "Number of packet which contains incomplete message"
-            msg_proxy_server_drop:
-                description:
-                - "Number of AX drop"
-            msg_proxy_create_server_conn:
-                description:
-                - "Number of server connection system tries to create"
-            msg_proxy_start_server_conn:
-                description:
-                - "Number of server connection created successfully"
-            msg_proxy_server_send_success:
-                description:
-                - "Number of SIP messages received from server and forwarded to client"
-            msg_proxy_server_incomplete:
-                description:
-                - "Number of packet which contains incomplete message"
-            session_freed:
-                description:
-                - "SIP Session freed"
-            msg_proxy_fail_start_server_conn:
-                description:
-                - "Number of server connection create failed"
-            msg_proxy_client_send_success:
-                description:
-                - "Number of SIP messages received from client and forwarded to server"
-            session_created:
-                description:
-                - "SIP Session created"
-            msg_proxy_client_drop:
-                description:
-                - "Number of AX drop"
-            msg_proxy_total:
-                description:
-                - "Total number of sip proxy connections"
-            msg_proxy_client_recv:
-                description:
-                - "Number of SIP messages received from client"
-            msg_proxy_server_fail:
-                description:
-                - "Number of SIP messages received from server but failed to forward to client"
-            msg_proxy_client_connection:
-                description:
-                - "Connecting server"
-            msg_proxy_server_recv:
-                description:
-                - "Number of SIP messages received from server"
-            msg_proxy_client_fail:
-                description:
-                - "Number of SIP messages received from client but failed to forward to server"
             msg_proxy_current:
                 description:
                 - "Number of current sip proxy connections"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            msg_proxy_total:
+                description:
+                - "Total number of sip proxy connections"
+                type: str
+            msg_proxy_client_recv:
+                description:
+                - "Number of SIP messages received from client"
+                type: str
+            msg_proxy_client_send_success:
+                description:
+                - "Number of SIP messages received from client and forwarded to server"
+                type: str
+            msg_proxy_client_incomplete:
+                description:
+                - "Number of packet which contains incomplete message"
+                type: str
+            msg_proxy_client_drop:
+                description:
+                - "Number of AX drop"
+                type: str
+            msg_proxy_client_connection:
+                description:
+                - "Connecting server"
+                type: str
+            msg_proxy_client_fail:
+                description:
+                - "Number of SIP messages received from client but failed to forward to server"
+                type: str
+            msg_proxy_server_recv:
+                description:
+                - "Number of SIP messages received from server"
+                type: str
+            msg_proxy_server_send_success:
+                description:
+                - "Number of SIP messages received from server and forwarded to client"
+                type: str
+            msg_proxy_server_incomplete:
+                description:
+                - "Number of packet which contains incomplete message"
+                type: str
+            msg_proxy_server_drop:
+                description:
+                - "Number of AX drop"
+                type: str
+            msg_proxy_server_fail:
+                description:
+                - "Number of SIP messages received from server but failed to forward to client"
+                type: str
+            msg_proxy_create_server_conn:
+                description:
+                - "Number of server connection system tries to create"
+                type: str
+            msg_proxy_start_server_conn:
+                description:
+                - "Number of server connection created successfully"
+                type: str
+            msg_proxy_fail_start_server_conn:
+                description:
+                - "Number of server connection create failed"
+                type: str
+            session_created:
+                description:
+                - "SIP Session created"
+                type: str
+            session_freed:
+                description:
+                - "SIP Session freed"
+                type: str
 
 '''
 
@@ -303,501 +334,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'sip_cpu_list': {
-                'type': 'list',
-                'line_mem_allocd': {
-                    'type': 'int',
-                },
-                'request_publish': {
-                    'type': 'int',
-                },
-                'fail_insert_header': {
-                    'type': 'int',
-                },
-                'conn_freed': {
-                    'type': 'int',
-                },
-                'concatenate_msg': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_send_success': {
-                    'type': 'int',
-                },
-                'cmsg_no_uri_session': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_selec_connt': {
-                    'type': 'int',
-                },
-                'client_keepalive_received': {
-                    'type': 'int',
-                },
-                'msg_proxy_l7_cpu_failed': {
-                    'type': 'int',
-                },
-                'assemble_frag_failed': {
-                    'type': 'int',
-                },
-                'fail_parse_start_line': {
-                    'type': 'int',
-                },
-                'msg_proxy_hold_msg': {
-                    'type': 'int',
-                },
-                'save_call_id': {
-                    'type': 'int',
-                },
-                'client_request': {
-                    'type': 'int',
-                },
-                'msg_proxy_l4_to_l7': {
-                    'type': 'int',
-                },
-                'msg_proxy_mem_freed': {
-                    'type': 'int',
-                },
-                'server_keepalive_received': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_conn_fail_snat': {
-                    'type': 'int',
-                },
-                'request_notify': {
-                    'type': 'int',
-                },
-                'acl_denied': {
-                    'type': 'int',
-                },
-                'invalid_start_line': {
-                    'type': 'int',
-                },
-                'msg_proxy_current': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_exceed_tmp_buff': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_parse': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_incomplete': {
-                    'type': 'int',
-                },
-                'body_too_big': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_conn_already_exists': {
-                    'type': 'int',
-                },
-                'response_unknown_version': {
-                    'type': 'int',
-                },
-                'uri_select_client': {
-                    'type': 'int',
-                },
-                'msg_trans_body': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_reserve_pconn': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_incomplete': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_send_pkt': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_start_server_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_pipline_msg': {
-                    'type': 'int',
-                },
-                'identify_dir_failed': {
-                    'type': 'int',
-                },
-                'select_server_conn': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_recv': {
-                    'type': 'int',
-                },
-                'ha_send_sip_session_ok': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_recv': {
-                    'type': 'int',
-                },
-                'save_uri': {
-                    'type': 'int',
-                },
-                'select_server_conn_by_rev_tuple': {
-                    'type': 'int',
-                },
-                'request_message': {
-                    'type': 'int',
-                },
-                'request_ack': {
-                    'type': 'int',
-                },
-                'save_uri_ok': {
-                    'type': 'int',
-                },
-                'select_server_conn_by_callid': {
-                    'type': 'int',
-                },
-                'ax_health_check_received': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_select_server': {
-                    'type': 'int',
-                },
-                'msg_proxy_no_vport': {
-                    'type': 'int',
-                },
-                'session_invalid': {
-                    'type': 'int',
-                },
-                'msg_no_call_id': {
-                    'type': 'int',
-                },
-                'response_2XX': {
-                    'type': 'int',
-                },
-                'table_mem_allocd': {
-                    'type': 'int',
-                },
-                'msg_proxy_deprecated_conn': {
-                    'type': 'int',
-                },
-                'ha_fail_alloc_call_id': {
-                    'type': 'int',
-                },
-                'msg_proxy_mag_back': {
-                    'type': 'int',
-                },
-                'client_keepalive_send': {
-                    'type': 'int',
-                },
-                'line_mem_freed': {
-                    'type': 'int',
-                },
-                'ha_update_sip_session_ok': {
-                    'type': 'int',
-                },
-                'ha_fail_alloc_sip_session': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_drop': {
-                    'type': 'int',
-                },
-                'session_callid_freed': {
-                    'type': 'int',
-                },
-                'msg_proxy_l4_from_l4_send': {
-                    'type': 'int',
-                },
-                'update_smp_call_id_rtp': {
-                    'type': 'int',
-                },
-                'ha_insert_sip_session_ok': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_reset': {
-                    'type': 'int',
-                },
-                'fail_parse_headers': {
-                    'type': 'int',
-                },
-                'smsg_no_uri_session': {
-                    'type': 'int',
-                },
-                'ha_recv_sip_session': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_drop': {
-                    'type': 'int',
-                },
-                'request_prack': {
-                    'type': 'int',
-                },
-                'msg_proxy_mem_allocd': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_alloc_mem': {
-                    'type': 'int',
-                },
-                'request_info': {
-                    'type': 'int',
-                },
-                'fail_insert_uri_session': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_snat': {
-                    'type': 'int',
-                },
-                'response_3XX': {
-                    'type': 'int',
-                },
-                'fail_get_counter': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_reset': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_connection': {
-                    'type': 'int',
-                },
-                'cmsg_no_uri_header': {
-                    'type': 'int',
-                },
-                'server_keepalive_send': {
-                    'type': 'int',
-                },
-                'msg_proxy_parse_msg_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_mem_cached': {
-                    'type': 'int',
-                },
-                'process_error_when_message_switch': {
-                    'type': 'int',
-                },
-                'request_unknown_version': {
-                    'type': 'int',
-                },
-                'too_many_headers': {
-                    'type': 'int',
-                },
-                'session_freed': {
-                    'type': 'int',
-                },
-                'ha_send_sip_session': {
-                    'type': 'int',
-                },
-                'request_register': {
-                    'type': 'int',
-                },
-                'request_cancel': {
-                    'type': 'int',
-                },
-                'request_bye': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_start_server_Conn': {
-                    'type': 'int',
-                },
-                'request_update': {
-                    'type': 'int',
-                },
-                'client_request_ok': {
-                    'type': 'int',
-                },
-                'request_unknown': {
-                    'type': 'int',
-                },
-                'fail_split_fragment': {
-                    'type': 'int',
-                },
-                'msg_translation_fail': {
-                    'type': 'int',
-                },
-                'request_refer': {
-                    'type': 'int',
-                },
-                'fail_read_start_line': {
-                    'type': 'int',
-                },
-                'msg_proxy_total': {
-                    'type': 'int',
-                },
-                'client_select_failed': {
-                    'type': 'int',
-                },
-                'sg_no_uri_header': {
-                    'type': 'int',
-                },
-                'msg_proxy_to_l4_send_pkt': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_snat': {
-                    'type': 'int',
-                },
-                'save_call_id_ok': {
-                    'type': 'int',
-                },
-                'response_unknown': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_fail_process': {
-                    'type': 'int',
-                },
-                'ha_fail_get_msg_header': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_process': {
-                    'type': 'int',
-                },
-                'call_id_select_client': {
-                    'type': 'int',
-                },
-                'msg_proxy_l7_to_L4': {
-                    'type': 'int',
-                },
-                'smp_call_id_rtp_session_not_match': {
-                    'type': 'int',
-                },
-                'request_invite': {
-                    'type': 'int',
-                },
-                'msg_proxy_start_server_conn': {
-                    'type': 'int',
-                },
-                'no_sip_request': {
-                    'type': 'int',
-                },
-                'deprecated_msg': {
-                    'type': 'int',
-                },
-                'wrong_ip_version': {
-                    'type': 'int',
-                },
-                'msg_proxy_server_exceed_tmp_buff': {
-                    'type': 'int',
-                },
-                'smp_call_id_rtp_session_match': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_parse': {
-                    'type': 'int',
-                },
-                'select_client_conn': {
-                    'type': 'int',
-                },
-                'table_mem_freed': {
-                    'type': 'int',
-                },
-                'conn_allocd': {
-                    'type': 'int',
-                },
-                'msg_proxy_split_pkt': {
-                    'type': 'int',
-                },
-                'ha_fail_clone_sip_session': {
-                    'type': 'int',
-                },
-                'select_server_conn_failed': {
-                    'type': 'int',
-                },
-                'msg_proxy_start_server_conn_failed': {
-                    'type': 'int',
-                },
-                'select_server_conn_by_uri': {
-                    'type': 'int',
-                },
-                'response_1XX': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_fail_send_pkt': {
-                    'type': 'int',
-                },
-                'fail_insert_callid_session': {
-                    'type': 'int',
-                },
-                'header_name_too_long': {
-                    'type': 'int',
-                },
-                'response_6XX': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_construct_server_conn': {
-                    'type': 'int',
-                },
-                'X_forward_for_select_client': {
-                    'type': 'int',
-                },
-                'request_subscribe': {
-                    'type': 'int',
-                },
-                'msg_proxy_l4_from_l7': {
-                    'type': 'int',
-                },
-                'invalid_header': {
-                    'type': 'int',
-                },
-                'msg_proxy_client_send_success': {
-                    'type': 'int',
-                },
-                'msg_proxy_process_msg_fail': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_insert_server_conn': {
-                    'type': 'int',
-                },
-                'save_smp_call_id_rtp': {
-                    'type': 'int',
-                },
-                'request_options': {
-                    'type': 'int',
-                },
-                'msg_trans_start_headers': {
-                    'type': 'int',
-                },
-                'msg_proxy_create_server_conn': {
-                    'type': 'int',
-                },
-                'msg_translation': {
-                    'type': 'int',
-                },
-                'ha_invalid_pkt': {
-                    'type': 'int',
-                },
-                'msg_proxy_fail_dcmsg': {
-                    'type': 'int',
-                },
-                'msg_proxy_unexpected_err': {
-                    'type': 'int',
-                },
-                'response_5XX': {
-                    'type': 'int',
-                },
-                'line_too_long': {
-                    'type': 'int',
-                },
-                'session_created': {
-                    'type': 'int',
-                },
-                'size_too_large': {
-                    'type': 'int',
-                },
-                'msg_trans_start_line': {
-                    'type': 'int',
-                },
-                'session_callid_allocd': {
-                    'type': 'int',
-                },
-                'response_4XX': {
-                    'type': 'int',
-                },
-                'session_in_rml': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            },
-            'filter_type': {
-                'type': 'str',
-                'choices': ['detail', 'debug']
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -893,39 +431,505 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'sip_cpu_list': {
+                'type': 'list',
+                'msg_proxy_current': {
+                    'type': 'int',
+                },
+                'msg_proxy_total': {
+                    'type': 'int',
+                },
+                'msg_proxy_mem_allocd': {
+                    'type': 'int',
+                },
+                'msg_proxy_mem_cached': {
+                    'type': 'int',
+                },
+                'msg_proxy_mem_freed': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_recv': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_send_success': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_incomplete': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_drop': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_connection': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_parse': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_process': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_snat': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_exceed_tmp_buff': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_send_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_fail_start_server_Conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_recv': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_send_success': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_incomplete': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_drop': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_parse': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_process': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_selec_connt': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_snat': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_exceed_tmp_buff': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_fail_send_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_create_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_start_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_start_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_conn_fail_snat': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_construct_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_reserve_pconn': {
+                    'type': 'int',
+                },
+                'msg_proxy_start_server_conn_failed': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_conn_already_exists': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_insert_server_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_parse_msg_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_process_msg_fail': {
+                    'type': 'int',
+                },
+                'msg_proxy_no_vport': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_select_server': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_alloc_mem': {
+                    'type': 'int',
+                },
+                'msg_proxy_unexpected_err': {
+                    'type': 'int',
+                },
+                'msg_proxy_l7_cpu_failed': {
+                    'type': 'int',
+                },
+                'msg_proxy_l4_to_l7': {
+                    'type': 'int',
+                },
+                'msg_proxy_l4_from_l7': {
+                    'type': 'int',
+                },
+                'msg_proxy_to_l4_send_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_l4_from_l4_send': {
+                    'type': 'int',
+                },
+                'msg_proxy_l7_to_L4': {
+                    'type': 'int',
+                },
+                'msg_proxy_mag_back': {
+                    'type': 'int',
+                },
+                'msg_proxy_fail_dcmsg': {
+                    'type': 'int',
+                },
+                'msg_proxy_deprecated_conn': {
+                    'type': 'int',
+                },
+                'msg_proxy_hold_msg': {
+                    'type': 'int',
+                },
+                'msg_proxy_split_pkt': {
+                    'type': 'int',
+                },
+                'msg_proxy_pipline_msg': {
+                    'type': 'int',
+                },
+                'msg_proxy_client_reset': {
+                    'type': 'int',
+                },
+                'msg_proxy_server_reset': {
+                    'type': 'int',
+                },
+                'session_created': {
+                    'type': 'int',
+                },
+                'session_freed': {
+                    'type': 'int',
+                },
+                'session_in_rml': {
+                    'type': 'int',
+                },
+                'session_invalid': {
+                    'type': 'int',
+                },
+                'conn_allocd': {
+                    'type': 'int',
+                },
+                'conn_freed': {
+                    'type': 'int',
+                },
+                'session_callid_allocd': {
+                    'type': 'int',
+                },
+                'session_callid_freed': {
+                    'type': 'int',
+                },
+                'line_mem_allocd': {
+                    'type': 'int',
+                },
+                'line_mem_freed': {
+                    'type': 'int',
+                },
+                'table_mem_allocd': {
+                    'type': 'int',
+                },
+                'table_mem_freed': {
+                    'type': 'int',
+                },
+                'cmsg_no_uri_header': {
+                    'type': 'int',
+                },
+                'cmsg_no_uri_session': {
+                    'type': 'int',
+                },
+                'sg_no_uri_header': {
+                    'type': 'int',
+                },
+                'smsg_no_uri_session': {
+                    'type': 'int',
+                },
+                'line_too_long': {
+                    'type': 'int',
+                },
+                'fail_read_start_line': {
+                    'type': 'int',
+                },
+                'fail_parse_start_line': {
+                    'type': 'int',
+                },
+                'invalid_start_line': {
+                    'type': 'int',
+                },
+                'request_unknown_version': {
+                    'type': 'int',
+                },
+                'response_unknown_version': {
+                    'type': 'int',
+                },
+                'request_unknown': {
+                    'type': 'int',
+                },
+                'fail_parse_headers': {
+                    'type': 'int',
+                },
+                'too_many_headers': {
+                    'type': 'int',
+                },
+                'invalid_header': {
+                    'type': 'int',
+                },
+                'header_name_too_long': {
+                    'type': 'int',
+                },
+                'body_too_big': {
+                    'type': 'int',
+                },
+                'fail_get_counter': {
+                    'type': 'int',
+                },
+                'msg_no_call_id': {
+                    'type': 'int',
+                },
+                'identify_dir_failed': {
+                    'type': 'int',
+                },
+                'no_sip_request': {
+                    'type': 'int',
+                },
+                'deprecated_msg': {
+                    'type': 'int',
+                },
+                'fail_insert_callid_session': {
+                    'type': 'int',
+                },
+                'fail_insert_uri_session': {
+                    'type': 'int',
+                },
+                'fail_insert_header': {
+                    'type': 'int',
+                },
+                'select_server_conn': {
+                    'type': 'int',
+                },
+                'select_server_conn_by_callid': {
+                    'type': 'int',
+                },
+                'select_server_conn_by_uri': {
+                    'type': 'int',
+                },
+                'select_server_conn_by_rev_tuple': {
+                    'type': 'int',
+                },
+                'select_server_conn_failed': {
+                    'type': 'int',
+                },
+                'select_client_conn': {
+                    'type': 'int',
+                },
+                'X_forward_for_select_client': {
+                    'type': 'int',
+                },
+                'call_id_select_client': {
+                    'type': 'int',
+                },
+                'uri_select_client': {
+                    'type': 'int',
+                },
+                'client_select_failed': {
+                    'type': 'int',
+                },
+                'acl_denied': {
+                    'type': 'int',
+                },
+                'assemble_frag_failed': {
+                    'type': 'int',
+                },
+                'wrong_ip_version': {
+                    'type': 'int',
+                },
+                'size_too_large': {
+                    'type': 'int',
+                },
+                'fail_split_fragment': {
+                    'type': 'int',
+                },
+                'client_keepalive_received': {
+                    'type': 'int',
+                },
+                'server_keepalive_received': {
+                    'type': 'int',
+                },
+                'client_keepalive_send': {
+                    'type': 'int',
+                },
+                'server_keepalive_send': {
+                    'type': 'int',
+                },
+                'ax_health_check_received': {
+                    'type': 'int',
+                },
+                'client_request': {
+                    'type': 'int',
+                },
+                'client_request_ok': {
+                    'type': 'int',
+                },
+                'concatenate_msg': {
+                    'type': 'int',
+                },
+                'save_uri': {
+                    'type': 'int',
+                },
+                'save_uri_ok': {
+                    'type': 'int',
+                },
+                'save_call_id': {
+                    'type': 'int',
+                },
+                'save_call_id_ok': {
+                    'type': 'int',
+                },
+                'msg_translation': {
+                    'type': 'int',
+                },
+                'msg_translation_fail': {
+                    'type': 'int',
+                },
+                'msg_trans_start_line': {
+                    'type': 'int',
+                },
+                'msg_trans_start_headers': {
+                    'type': 'int',
+                },
+                'msg_trans_body': {
+                    'type': 'int',
+                },
+                'request_register': {
+                    'type': 'int',
+                },
+                'request_invite': {
+                    'type': 'int',
+                },
+                'request_ack': {
+                    'type': 'int',
+                },
+                'request_cancel': {
+                    'type': 'int',
+                },
+                'request_bye': {
+                    'type': 'int',
+                },
+                'request_options': {
+                    'type': 'int',
+                },
+                'request_prack': {
+                    'type': 'int',
+                },
+                'request_subscribe': {
+                    'type': 'int',
+                },
+                'request_notify': {
+                    'type': 'int',
+                },
+                'request_publish': {
+                    'type': 'int',
+                },
+                'request_info': {
+                    'type': 'int',
+                },
+                'request_refer': {
+                    'type': 'int',
+                },
+                'request_message': {
+                    'type': 'int',
+                },
+                'request_update': {
+                    'type': 'int',
+                },
+                'response_unknown': {
+                    'type': 'int',
+                },
+                'response_1XX': {
+                    'type': 'int',
+                },
+                'response_2XX': {
+                    'type': 'int',
+                },
+                'response_3XX': {
+                    'type': 'int',
+                },
+                'response_4XX': {
+                    'type': 'int',
+                },
+                'response_5XX': {
+                    'type': 'int',
+                },
+                'response_6XX': {
+                    'type': 'int',
+                },
+                'ha_send_sip_session': {
+                    'type': 'int',
+                },
+                'ha_send_sip_session_ok': {
+                    'type': 'int',
+                },
+                'ha_fail_get_msg_header': {
+                    'type': 'int',
+                },
+                'ha_recv_sip_session': {
+                    'type': 'int',
+                },
+                'ha_insert_sip_session_ok': {
+                    'type': 'int',
+                },
+                'ha_update_sip_session_ok': {
+                    'type': 'int',
+                },
+                'ha_invalid_pkt': {
+                    'type': 'int',
+                },
+                'ha_fail_alloc_sip_session': {
+                    'type': 'int',
+                },
+                'ha_fail_alloc_call_id': {
+                    'type': 'int',
+                },
+                'ha_fail_clone_sip_session': {
+                    'type': 'int',
+                },
+                'save_smp_call_id_rtp': {
+                    'type': 'int',
+                },
+                'update_smp_call_id_rtp': {
+                    'type': 'int',
+                },
+                'smp_call_id_rtp_session_match': {
+                    'type': 'int',
+                },
+                'smp_call_id_rtp_session_not_match': {
+                    'type': 'int',
+                },
+                'process_error_when_message_switch': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            },
+            'filter_type': {
+                'type': 'str',
+                'choices': ['detail', 'debug']
+            }
+        },
         'stats': {
             'type': 'dict',
-            'msg_proxy_client_incomplete': {
-                'type': 'str',
-            },
-            'msg_proxy_server_drop': {
-                'type': 'str',
-            },
-            'msg_proxy_create_server_conn': {
-                'type': 'str',
-            },
-            'msg_proxy_start_server_conn': {
-                'type': 'str',
-            },
-            'msg_proxy_server_send_success': {
-                'type': 'str',
-            },
-            'msg_proxy_server_incomplete': {
-                'type': 'str',
-            },
-            'session_freed': {
-                'type': 'str',
-            },
-            'msg_proxy_fail_start_server_conn': {
-                'type': 'str',
-            },
-            'msg_proxy_client_send_success': {
-                'type': 'str',
-            },
-            'session_created': {
-                'type': 'str',
-            },
-            'msg_proxy_client_drop': {
+            'msg_proxy_current': {
                 'type': 'str',
             },
             'msg_proxy_total': {
@@ -934,24 +938,51 @@ def get_argspec():
             'msg_proxy_client_recv': {
                 'type': 'str',
             },
-            'msg_proxy_server_fail': {
+            'msg_proxy_client_send_success': {
+                'type': 'str',
+            },
+            'msg_proxy_client_incomplete': {
+                'type': 'str',
+            },
+            'msg_proxy_client_drop': {
                 'type': 'str',
             },
             'msg_proxy_client_connection': {
                 'type': 'str',
             },
-            'msg_proxy_server_recv': {
-                'type': 'str',
-            },
             'msg_proxy_client_fail': {
                 'type': 'str',
             },
-            'msg_proxy_current': {
+            'msg_proxy_server_recv': {
+                'type': 'str',
+            },
+            'msg_proxy_server_send_success': {
+                'type': 'str',
+            },
+            'msg_proxy_server_incomplete': {
+                'type': 'str',
+            },
+            'msg_proxy_server_drop': {
+                'type': 'str',
+            },
+            'msg_proxy_server_fail': {
+                'type': 'str',
+            },
+            'msg_proxy_create_server_conn': {
+                'type': 'str',
+            },
+            'msg_proxy_start_server_conn': {
+                'type': 'str',
+            },
+            'msg_proxy_fail_start_server_conn': {
+                'type': 'str',
+            },
+            'session_created': {
+                'type': 'str',
+            },
+            'session_freed': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

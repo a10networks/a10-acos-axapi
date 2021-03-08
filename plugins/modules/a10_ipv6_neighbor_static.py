@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_neighbor_static
 description:
     - static IPv6 Neighbor commands
-short_description: Configures A10 ipv6.neighbor.static
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    tunnel:
-        description:
-        - "Tunnel interface"
-        required: False
-    vlan:
-        description:
-        - "VLAN ID"
-        required: True
     ipv6_addr:
         description:
         - "IPV6 address"
+        type: str
         required: True
     mac:
         description:
         - "MAC Address"
-        required: False
-    trunk:
-        description:
-        - "Trunk group"
+        type: str
         required: False
     ethernet:
         description:
         - "Ethernet port (Port Value)"
+        type: str
+        required: False
+    trunk:
+        description:
+        - "Trunk group"
+        type: int
+        required: False
+    tunnel:
+        description:
+        - "Tunnel interface"
+        type: int
+        required: False
+    vlan:
+        description:
+        - "VLAN ID"
+        type: int
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -136,8 +148,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
+        'ipv6_addr': {
             'type': 'str',
+            'required': True,
+        },
+        'mac': {
+            'type': 'str',
+        },
+        'ethernet': {
+            'type': 'str',
+        },
+        'trunk': {
+            'type': 'int',
         },
         'tunnel': {
             'type': 'int',
@@ -146,17 +168,7 @@ def get_argspec():
             'type': 'int',
             'required': True,
         },
-        'ipv6_addr': {
-            'type': 'str',
-            'required': True,
-        },
-        'mac': {
-            'type': 'str',
-        },
-        'trunk': {
-            'type': 'int',
-        },
-        'ethernet': {
+        'uuid': {
             'type': 'str',
         }
     })

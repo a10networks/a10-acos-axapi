@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting
 description:
     - Create resource accounting template
-short_description: Configures A10 system.resource-accounting
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,70 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    template_list:
+        description:
+        - "Field template_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Enter template name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            app_resources:
+                description:
+                - "Field app_resources"
+                type: dict
+            network_resources:
+                description:
+                - "Field network_resources"
+                type: dict
+            system_resources:
+                description:
+                - "Field system_resources"
+                type: dict
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             scope:
                 description:
                 - "Field scope"
+                type: str
             partition_resource:
                 description:
                 - "Field partition_resource"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    template_list:
-        description:
-        - "Field template_list"
-        required: False
-        suboptions:
-            app_resources:
-                description:
-                - "Field app_resources"
-            name:
-                description:
-                - "Enter template name"
-            system_resources:
-                description:
-                - "Field system_resources"
-            user_tag:
-                description:
-                - "Customized tag"
-            network_resources:
-                description:
-                - "Field network_resources"
-            uuid:
-                description:
-                - "uuid of the object"
+                type: list
 
 '''
 
@@ -142,6 +158,337 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'template_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'app_resources': {
+                'type': 'dict',
+                'gslb_device_cfg': {
+                    'type': 'dict',
+                    'gslb_device_max': {
+                        'type': 'int',
+                    },
+                    'gslb_device_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_geo_location_cfg': {
+                    'type': 'dict',
+                    'gslb_geo_location_max': {
+                        'type': 'int',
+                    },
+                    'gslb_geo_location_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_ip_list_cfg': {
+                    'type': 'dict',
+                    'gslb_ip_list_max': {
+                        'type': 'int',
+                    },
+                    'gslb_ip_list_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_policy_cfg': {
+                    'type': 'dict',
+                    'gslb_policy_max': {
+                        'type': 'int',
+                    },
+                    'gslb_policy_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_service_cfg': {
+                    'type': 'dict',
+                    'gslb_service_max': {
+                        'type': 'int',
+                    },
+                    'gslb_service_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_service_ip_cfg': {
+                    'type': 'dict',
+                    'gslb_service_ip_max': {
+                        'type': 'int',
+                    },
+                    'gslb_service_ip_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_service_port_cfg': {
+                    'type': 'dict',
+                    'gslb_service_port_max': {
+                        'type': 'int',
+                    },
+                    'gslb_service_port_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_site_cfg': {
+                    'type': 'dict',
+                    'gslb_site_max': {
+                        'type': 'int',
+                    },
+                    'gslb_site_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_svc_group_cfg': {
+                    'type': 'dict',
+                    'gslb_svc_group_max': {
+                        'type': 'int',
+                    },
+                    'gslb_svc_group_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_template_cfg': {
+                    'type': 'dict',
+                    'gslb_template_max': {
+                        'type': 'int',
+                    },
+                    'gslb_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_zone_cfg': {
+                    'type': 'dict',
+                    'gslb_zone_max': {
+                        'type': 'int',
+                    },
+                    'gslb_zone_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'health_monitor_cfg': {
+                    'type': 'dict',
+                    'health_monitor_max': {
+                        'type': 'int',
+                    },
+                    'health_monitor_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'real_port_cfg': {
+                    'type': 'dict',
+                    'real_port_max': {
+                        'type': 'int',
+                    },
+                    'real_port_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'real_server_cfg': {
+                    'type': 'dict',
+                    'real_server_max': {
+                        'type': 'int',
+                    },
+                    'real_server_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'service_group_cfg': {
+                    'type': 'dict',
+                    'service_group_max': {
+                        'type': 'int',
+                    },
+                    'service_group_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'virtual_server_cfg': {
+                    'type': 'dict',
+                    'virtual_server_max': {
+                        'type': 'int',
+                    },
+                    'virtual_server_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'network_resources': {
+                'type': 'dict',
+                'static_ipv4_route_cfg': {
+                    'type': 'dict',
+                    'static_ipv4_route_max': {
+                        'type': 'int',
+                    },
+                    'static_ipv4_route_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_ipv6_route_cfg': {
+                    'type': 'dict',
+                    'static_ipv6_route_max': {
+                        'type': 'int',
+                    },
+                    'static_ipv6_route_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'ipv4_acl_line_cfg': {
+                    'type': 'dict',
+                    'ipv4_acl_line_max': {
+                        'type': 'int',
+                    },
+                    'ipv4_acl_line_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'ipv6_acl_line_cfg': {
+                    'type': 'dict',
+                    'ipv6_acl_line_max': {
+                        'type': 'int',
+                    },
+                    'ipv6_acl_line_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_arp_cfg': {
+                    'type': 'dict',
+                    'static_arp_max': {
+                        'type': 'int',
+                    },
+                    'static_arp_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_neighbor_cfg': {
+                    'type': 'dict',
+                    'static_neighbor_max': {
+                        'type': 'int',
+                    },
+                    'static_neighbor_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_mac_cfg': {
+                    'type': 'dict',
+                    'static_mac_max': {
+                        'type': 'int',
+                    },
+                    'static_mac_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'object_group_cfg': {
+                    'type': 'dict',
+                    'object_group_max': {
+                        'type': 'int',
+                    },
+                    'object_group_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'object_group_clause_cfg': {
+                    'type': 'dict',
+                    'object_group_clause_max': {
+                        'type': 'int',
+                    },
+                    'object_group_clause_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'system_resources': {
+                'type': 'dict',
+                'bw_limit_cfg': {
+                    'type': 'dict',
+                    'bw_limit_max': {
+                        'type': 'int',
+                    },
+                    'bw_limit_watermark_disable': {
+                        'type': 'bool',
+                    }
+                },
+                'concurrent_session_limit_cfg': {
+                    'type': 'dict',
+                    'concurrent_session_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'l4_session_limit_cfg': {
+                    'type': 'dict',
+                    'l4_session_limit_max': {
+                        'type': 'str',
+                    },
+                    'l4_session_limit_min_guarantee': {
+                        'type': 'str',
+                    }
+                },
+                'l4cps_limit_cfg': {
+                    'type': 'dict',
+                    'l4cps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'l7cps_limit_cfg': {
+                    'type': 'dict',
+                    'l7cps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'natcps_limit_cfg': {
+                    'type': 'dict',
+                    'natcps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'fwcps_limit_cfg': {
+                    'type': 'dict',
+                    'fwcps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'ssl_throughput_limit_cfg': {
+                    'type': 'dict',
+                    'ssl_throughput_limit_max': {
+                        'type': 'int',
+                    },
+                    'ssl_throughput_limit_watermark_disable': {
+                        'type': 'bool',
+                    }
+                },
+                'sslcps_limit_cfg': {
+                    'type': 'dict',
+                    'sslcps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
         'oper': {
             'type': 'dict',
             'scope': {
@@ -159,372 +506,41 @@ def get_argspec():
                     },
                     'resources': {
                         'type': 'list',
-                        'threshold_exceed': {
-                            'type': 'str',
-                        },
-                        'utilization': {
-                            'type': 'str',
-                        },
-                        'average': {
-                            'type': 'str',
-                        },
-                        'cap': {
-                            'type': 'str',
-                        },
-                        'maximum': {
-                            'type': 'str',
-                        },
                         'resource_name': {
                             'type': 'str',
                         },
                         'current': {
                             'type': 'str',
                         },
-                        'max_exceed': {
-                            'type': 'str',
-                        },
                         'minimum': {
                             'type': 'str',
                         },
-                        'cap_utilization': {
+                        'maximum': {
+                            'type': 'str',
+                        },
+                        'utilization': {
+                            'type': 'str',
+                        },
+                        'max_exceed': {
+                            'type': 'str',
+                        },
+                        'threshold_exceed': {
+                            'type': 'str',
+                        },
+                        'average': {
                             'type': 'str',
                         },
                         'peak': {
                             'type': 'str',
+                        },
+                        'cap': {
+                            'type': 'str',
+                        },
+                        'cap_utilization': {
+                            'type': 'str',
                         }
                     }
                 }
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'template_list': {
-            'type': 'list',
-            'app_resources': {
-                'type': 'dict',
-                'gslb_site_cfg': {
-                    'type': 'dict',
-                    'gslb_site_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'gslb_site_max': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_policy_cfg': {
-                    'type': 'dict',
-                    'gslb_policy_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'gslb_policy_max': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_service_cfg': {
-                    'type': 'dict',
-                    'gslb_service_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'gslb_service_max': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_geo_location_cfg': {
-                    'type': 'dict',
-                    'gslb_geo_location_max': {
-                        'type': 'int',
-                    },
-                    'gslb_geo_location_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'real_server_cfg': {
-                    'type': 'dict',
-                    'real_server_max': {
-                        'type': 'int',
-                    },
-                    'real_server_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_ip_list_cfg': {
-                    'type': 'dict',
-                    'gslb_ip_list_max': {
-                        'type': 'int',
-                    },
-                    'gslb_ip_list_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_template_cfg': {
-                    'type': 'dict',
-                    'gslb_template_max': {
-                        'type': 'int',
-                    },
-                    'gslb_template_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_zone_cfg': {
-                    'type': 'dict',
-                    'gslb_zone_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'gslb_zone_max': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_device_cfg': {
-                    'type': 'dict',
-                    'gslb_device_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'gslb_device_max': {
-                        'type': 'int',
-                    }
-                },
-                'virtual_server_cfg': {
-                    'type': 'dict',
-                    'virtual_server_max': {
-                        'type': 'int',
-                    },
-                    'virtual_server_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'real_port_cfg': {
-                    'type': 'dict',
-                    'real_port_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'real_port_max': {
-                        'type': 'int',
-                    }
-                },
-                'health_monitor_cfg': {
-                    'type': 'dict',
-                    'health_monitor_max': {
-                        'type': 'int',
-                    },
-                    'health_monitor_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'threshold': {
-                    'type': 'int',
-                },
-                'gslb_svc_group_cfg': {
-                    'type': 'dict',
-                    'gslb_svc_group_max': {
-                        'type': 'int',
-                    },
-                    'gslb_svc_group_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'service_group_cfg': {
-                    'type': 'dict',
-                    'service_group_max': {
-                        'type': 'int',
-                    },
-                    'service_group_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_service_port_cfg': {
-                    'type': 'dict',
-                    'gslb_service_port_max': {
-                        'type': 'int',
-                    },
-                    'gslb_service_port_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'gslb_service_ip_cfg': {
-                    'type': 'dict',
-                    'gslb_service_ip_max': {
-                        'type': 'int',
-                    },
-                    'gslb_service_ip_min_guarantee': {
-                        'type': 'int',
-                    }
-                }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'system_resources': {
-                'type': 'dict',
-                'l4_session_limit_cfg': {
-                    'type': 'dict',
-                    'l4_session_limit_max': {
-                        'type': 'str',
-                    },
-                    'l4_session_limit_min_guarantee': {
-                        'type': 'str',
-                    }
-                },
-                'l7cps_limit_cfg': {
-                    'type': 'dict',
-                    'l7cps_limit_max': {
-                        'type': 'int',
-                    }
-                },
-                'l4cps_limit_cfg': {
-                    'type': 'dict',
-                    'l4cps_limit_max': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'natcps_limit_cfg': {
-                    'type': 'dict',
-                    'natcps_limit_max': {
-                        'type': 'int',
-                    }
-                },
-                'sslcps_limit_cfg': {
-                    'type': 'dict',
-                    'sslcps_limit_max': {
-                        'type': 'int',
-                    }
-                },
-                'fwcps_limit_cfg': {
-                    'type': 'dict',
-                    'fwcps_limit_max': {
-                        'type': 'int',
-                    }
-                },
-                'ssl_throughput_limit_cfg': {
-                    'type': 'dict',
-                    'ssl_throughput_limit_watermark_disable': {
-                        'type': 'bool',
-                    },
-                    'ssl_throughput_limit_max': {
-                        'type': 'int',
-                    }
-                },
-                'threshold': {
-                    'type': 'int',
-                },
-                'bw_limit_cfg': {
-                    'type': 'dict',
-                    'bw_limit_max': {
-                        'type': 'int',
-                    },
-                    'bw_limit_watermark_disable': {
-                        'type': 'bool',
-                    }
-                },
-                'concurrent_session_limit_cfg': {
-                    'type': 'dict',
-                    'concurrent_session_limit_max': {
-                        'type': 'int',
-                    }
-                }
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'network_resources': {
-                'type': 'dict',
-                'static_ipv6_route_cfg': {
-                    'type': 'dict',
-                    'static_ipv6_route_max': {
-                        'type': 'int',
-                    },
-                    'static_ipv6_route_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'ipv4_acl_line_cfg': {
-                    'type': 'dict',
-                    'ipv4_acl_line_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'ipv4_acl_line_max': {
-                        'type': 'int',
-                    }
-                },
-                'static_ipv4_route_cfg': {
-                    'type': 'dict',
-                    'static_ipv4_route_max': {
-                        'type': 'int',
-                    },
-                    'static_ipv4_route_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'static_arp_cfg': {
-                    'type': 'dict',
-                    'static_arp_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'static_arp_max': {
-                        'type': 'int',
-                    }
-                },
-                'object_group_clause_cfg': {
-                    'type': 'dict',
-                    'object_group_clause_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'object_group_clause_max': {
-                        'type': 'int',
-                    }
-                },
-                'static_mac_cfg': {
-                    'type': 'dict',
-                    'static_mac_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'static_mac_max': {
-                        'type': 'int',
-                    }
-                },
-                'object_group_cfg': {
-                    'type': 'dict',
-                    'object_group_min_guarantee': {
-                        'type': 'int',
-                    },
-                    'object_group_max': {
-                        'type': 'int',
-                    }
-                },
-                'static_neighbor_cfg': {
-                    'type': 'dict',
-                    'static_neighbor_max': {
-                        'type': 'int',
-                    },
-                    'static_neighbor_min_guarantee': {
-                        'type': 'int',
-                    }
-                },
-                'threshold': {
-                    'type': 'int',
-                },
-                'ipv6_acl_line_cfg': {
-                    'type': 'dict',
-                    'ipv6_acl_line_max': {
-                        'type': 'int',
-                    },
-                    'ipv6_acl_line_min_guarantee': {
-                        'type': 'int',
-                    }
-                }
-            },
-            'uuid': {
-                'type': 'str',
             }
         }
     })

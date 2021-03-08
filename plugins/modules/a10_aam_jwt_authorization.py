@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_jwt_authorization
 description:
     - AAM JWT authorization related configuration
-short_description: Configures A10 aam.jwt-authorization
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,94 +22,107 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Specify JWT authorization template name"
+        type: str
+        required: True
+    verification_cert:
+        description:
+        - "Specify the certificate to verify JWT token signature"
+        type: str
         required: False
     verification_jwks:
         description:
         - "Specify the jwks file to verify JWT token signature"
+        type: str
         required: False
     verification_secret:
         description:
         - "Specify secret for verify JWT token signature"
+        type: str
         required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            jwt_request:
-                description:
-                - "JWT Request"
-            jwt_authorize_success:
-                description:
-                - "JWT Authorize Success"
-            jwt_token_expired:
-                description:
-                - "JWT Token Expired"
-            jwt_authorize_failure:
-                description:
-                - "JWT Authorize Failure"
-            jwt_missing_claim:
-                description:
-                - "JWT Missing Claim"
-            jwt_signature_failure:
-                description:
-                - "JWT Signature Failure"
-            name:
-                description:
-                - "Specify JWT authorization template name"
-            jwt_other_error:
-                description:
-                - "JWT Other Error"
-            jwt_missing_token:
-                description:
-                - "JWT Missing Token"
-    name:
-        description:
-        - "Specify JWT authorization template name"
-        required: True
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
     jwt_cache_enable:
         description:
         - "Enable caching authorized JWT token and skip verification and authorization for
           cached tokens"
+        type: bool
         required: False
     log_level:
         description:
         - "'0'= log disable; '1'= only log authorzation fail (default); '2'= only log
           authorization success; '3'= log all;"
+        type: str
+        required: False
+    exp_claim_requried:
+        description:
+        - "Specify the exp claim is required for JWT authorization"
+        type: bool
+        required: False
+    jwt_exp_default:
+        description:
+        - "Specify the default token expiration if exp claim is not available (default
+          1800)"
+        type: int
+        required: False
+    jwt_forwarding:
+        description:
+        - "Specify JWT token will not be stripped while forwarding client request"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -121,31 +132,49 @@ options:
           JWT Missing Token; 'jwt-missing-claim'= JWT Missing Claim; 'jwt-token-expired'=
           JWT Token Expired; 'jwt-signature-failure'= JWT Signature Failure; 'jwt-other-
           error'= JWT Other Error;"
-    user_tag:
+                type: str
+    stats:
         description:
-        - "Customized tag"
+        - "Field stats"
+        type: dict
         required: False
-    jwt_exp_default:
-        description:
-        - "Specify the default token expiration if exp claim is not available (default
-          1800)"
-        required: False
-    verification_cert:
-        description:
-        - "Specify the certificate to verify JWT token signature"
-        required: False
-    jwt_forwarding:
-        description:
-        - "Specify JWT token will not be stripped while forwarding client request"
-        required: False
-    exp_claim_requried:
-        description:
-        - "Specify the exp claim is required for JWT authorization"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            jwt_request:
+                description:
+                - "JWT Request"
+                type: str
+            jwt_authorize_success:
+                description:
+                - "JWT Authorize Success"
+                type: str
+            jwt_authorize_failure:
+                description:
+                - "JWT Authorize Failure"
+                type: str
+            jwt_missing_token:
+                description:
+                - "JWT Missing Token"
+                type: str
+            jwt_missing_claim:
+                description:
+                - "JWT Missing Claim"
+                type: str
+            jwt_token_expired:
+                description:
+                - "JWT Token Expired"
+                type: str
+            jwt_signature_failure:
+                description:
+                - "JWT Signature Failure"
+                type: str
+            jwt_other_error:
+                description:
+                - "JWT Other Error"
+                type: str
+            name:
+                description:
+                - "Specify JWT authorization template name"
+                type: str
 
 '''
 
@@ -211,46 +240,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'verification_cert': {
+            'type': 'str',
+        },
         'verification_jwks': {
             'type': 'str',
         },
         'verification_secret': {
             'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'jwt_request': {
-                'type': 'str',
-            },
-            'jwt_authorize_success': {
-                'type': 'str',
-            },
-            'jwt_token_expired': {
-                'type': 'str',
-            },
-            'jwt_authorize_failure': {
-                'type': 'str',
-            },
-            'jwt_missing_claim': {
-                'type': 'str',
-            },
-            'jwt_signature_failure': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'jwt_other_error': {
-                'type': 'str',
-            },
-            'jwt_missing_token': {
-                'type': 'str',
-            }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         },
         'encrypted': {
             'type': 'str',
@@ -261,6 +262,21 @@ def get_argspec():
         'log_level': {
             'type': 'str',
             'choices': ['0', '1', '2', '3']
+        },
+        'exp_claim_requried': {
+            'type': 'bool',
+        },
+        'jwt_exp_default': {
+            'type': 'int',
+        },
+        'jwt_forwarding': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -275,23 +291,36 @@ def get_argspec():
                 ]
             }
         },
-        'user_tag': {
-            'type': 'str',
-        },
-        'jwt_exp_default': {
-            'type': 'int',
-        },
-        'verification_cert': {
-            'type': 'str',
-        },
-        'jwt_forwarding': {
-            'type': 'bool',
-        },
-        'exp_claim_requried': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'jwt_request': {
+                'type': 'str',
+            },
+            'jwt_authorize_success': {
+                'type': 'str',
+            },
+            'jwt_authorize_failure': {
+                'type': 'str',
+            },
+            'jwt_missing_token': {
+                'type': 'str',
+            },
+            'jwt_missing_claim': {
+                'type': 'str',
+            },
+            'jwt_token_expired': {
+                'type': 'str',
+            },
+            'jwt_signature_failure': {
+                'type': 'str',
+            },
+            'jwt_other_error': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

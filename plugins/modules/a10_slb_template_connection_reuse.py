@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_connection_reuse
 description:
     - Connection Reuse
-short_description: Configures A10 slb.template.connection-reuse
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    preopen:
-        description:
-        - "Preopen server connection"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    keep_alive_conn:
-        description:
-        - "Keep a number of server connections open"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    limit_per_server:
-        description:
-        - "Max Server Connections allowed (Connections per Server Port (default 1000))"
-        required: False
-    timeout:
-        description:
-        - "Timeout in seconds. Multiple of 60 (default 2400)"
-        required: False
-    num_conn_per_port:
-        description:
-        - "Connections per Server Port (default 100)"
+        type: str
         required: False
     name:
         description:
         - "Connection Reuse Template Name"
+        type: str
         required: True
+    limit_per_server:
+        description:
+        - "Max Server Connections allowed (Connections per Server Port (default 1000))"
+        type: int
+        required: False
+    timeout:
+        description:
+        - "Timeout in seconds. Multiple of 60 (default 2400)"
+        type: int
+        required: False
+    keep_alive_conn:
+        description:
+        - "Keep a number of server connections open"
+        type: bool
+        required: False
+    preopen:
+        description:
+        - "Preopen server connection"
+        type: bool
+        required: False
+    num_conn_per_port:
+        description:
+        - "Connections per Server Port (default 100)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -141,17 +154,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'preopen': {
-            'type': 'bool',
-        },
-        'uuid': {
+        'name': {
             'type': 'str',
-        },
-        'keep_alive_conn': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
+            'required': True,
         },
         'limit_per_server': {
             'type': 'int',
@@ -159,12 +164,20 @@ def get_argspec():
         'timeout': {
             'type': 'int',
         },
+        'keep_alive_conn': {
+            'type': 'bool',
+        },
+        'preopen': {
+            'type': 'bool',
+        },
         'num_conn_per_port': {
             'type': 'int',
         },
-        'name': {
+        'uuid': {
             'type': 'str',
-            'required': True,
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_event_action_udp
 description:
     - UDP header
-short_description: Configures A10 sys.ut.event.action.udp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,63 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     action_direction:
         description:
-        - Key to identify parent object    event_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    event_number:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    checksum:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    nat_pool:
-        description:
-        - "Nat pool port"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     src_port:
         description:
         - "Source port value"
-        required: False
-    length:
-        description:
-        - "Total packet length starting at UDP header"
+        type: int
         required: False
     dest_port:
         description:
         - "Dest port"
+        type: bool
         required: False
     dest_port_value:
         description:
         - "Dest port value"
+        type: int
+        required: False
+    nat_pool:
+        description:
+        - "Nat pool port"
+        type: str
+        required: False
+    length:
+        description:
+        - "Total packet length starting at UDP header"
+        type: int
+        required: False
+    checksum:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -140,20 +158,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'checksum': {
-            'type': 'str',
-            'choices': ['valid', 'invalid']
-        },
-        'nat_pool': {
-            'type': 'str',
-        },
         'src_port': {
-            'type': 'int',
-        },
-        'length': {
             'type': 'int',
         },
         'dest_port': {
@@ -161,6 +166,19 @@ def get_argspec():
         },
         'dest_port_value': {
             'type': 'int',
+        },
+        'nat_pool': {
+            'type': 'str',
+        },
+        'length': {
+            'type': 'int',
+        },
+        'checksum': {
+            'type': 'str',
+            'choices': ['valid', 'invalid']
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

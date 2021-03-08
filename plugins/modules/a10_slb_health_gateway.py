@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_health_gateway
 description:
     - Configure gateway health-check
-short_description: Configures A10 slb.health-gateway
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            interval:
-                description:
-                - "Field interval"
-            enabled:
-                description:
-                - "Field enabled"
-            timeout:
-                description:
-                - "Field timeout"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -74,24 +71,43 @@ options:
                 - "'all'= all; 'total_sent'= Number of Total health-check sent;
           'total_retry_sent'= Number of Total health-check retry sent; 'total_timeout'=
           Number of Total health-check timeout;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            enabled:
+                description:
+                - "Field enabled"
+                type: int
+            interval:
+                description:
+                - "Field interval"
+                type: int
+            timeout:
+                description:
+                - "Field timeout"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             total_sent:
                 description:
                 - "Number of Total health-check sent"
+                type: str
             total_retry_sent:
                 description:
                 - "Number of Total health-check retry sent"
+                type: str
             total_timeout:
                 description:
                 - "Number of Total health-check timeout"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -147,17 +163,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'interval': {
-                'type': 'int',
-            },
-            'enabled': {
-                'type': 'int',
-            },
-            'timeout': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -166,6 +173,18 @@ def get_argspec():
                 'str',
                 'choices':
                 ['all', 'total_sent', 'total_retry_sent', 'total_timeout']
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'enabled': {
+                'type': 'int',
+            },
+            'interval': {
+                'type': 'int',
+            },
+            'timeout': {
+                'type': 'int',
             }
         },
         'stats': {
@@ -179,9 +198,6 @@ def get_argspec():
             'total_timeout': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

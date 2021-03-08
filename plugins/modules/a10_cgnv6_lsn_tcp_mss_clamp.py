@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_tcp_mss_clamp
 description:
     - LSN TCP MSS Clamping
-short_description: Configures A10 cgnv6.lsn.tcp.mss-clamp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,65 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    mss_subtract:
-        description:
-        - "Specify the value to subtract from the TCP MSS (default= not configured)"
-        required: False
-    mss_value:
-        description:
-        - "The max value allowed for the TCP MSS (default= not configured)},"
+        type: str
         required: False
     mss_clamp_type:
         description:
         - "'fixed'= Specify a fixed max value for the TCP MSS; 'subtract'= Specify the
           value to subtract from the TCP MSS; 'none'= No TCP MSS clamping (default);"
+        type: str
         required: False
-    uuid:
+    mss_value:
         description:
-        - "uuid of the object"
+        - "The max value allowed for the TCP MSS (default= not configured)},"
+        type: int
+        required: False
+    mss_subtract:
+        description:
+        - "Specify the value to subtract from the TCP MSS (default= not configured)"
+        type: int
         required: False
     min:
         description:
         - "Specify the min value allowed for the TCP MSS (Specify the min value allowed
           for the TCP MSS (default= ((576 - 60 - 60))))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -128,21 +138,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'mss_subtract': {
-            'type': 'int',
-        },
-        'mss_value': {
-            'type': 'int',
-        },
         'mss_clamp_type': {
             'type': 'str',
             'choices': ['fixed', 'subtract', 'none']
         },
-        'uuid': {
-            'type': 'str',
+        'mss_value': {
+            'type': 'int',
+        },
+        'mss_subtract': {
+            'type': 'int',
         },
         'min': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

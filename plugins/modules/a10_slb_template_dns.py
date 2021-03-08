@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dns
 description:
     - DNS template
-short_description: Configures A10 slb.template.dns
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,136 +22,170 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    dnssec_service_group:
-        description:
-        - "Use different service group if DNSSEC DO bit set (Service Group Name)"
+        type: str
         required: False
     name:
         description:
         - "DNS Template Name"
+        type: str
         required: True
+    default_policy:
+        description:
+        - "'nocache'= Cache disable; 'cache'= Cache enable;"
+        type: str
+        required: False
+    disable_dns_template:
+        description:
+        - "Disable DNS template"
+        type: bool
+        required: False
+    period:
+        description:
+        - "Period in minutes"
+        type: int
+        required: False
+    drop:
+        description:
+        - "Drop the malformed query"
+        type: bool
+        required: False
+    forward:
+        description:
+        - "Forward to service group (Service group name)"
+        type: str
+        required: False
+    max_query_length:
+        description:
+        - "Define Maximum DNS Query Length, default is unlimited (Specify Maximum Length)"
+        type: int
+        required: False
+    max_cache_entry_size:
+        description:
+        - "Define maximum cache entry size (Maximum cache entry size per VIP)"
+        type: int
+        required: False
+    max_cache_size:
+        description:
+        - "Define maximum cache size (Maximum cache entry per VIP)"
+        type: int
+        required: False
+    enable_cache_sharing:
+        description:
+        - "Enable DNS cache sharing"
+        type: bool
+        required: False
+    redirect_to_tcp_port:
+        description:
+        - "Direct the client to retry with TCP for DNS UDP request"
+        type: bool
+        required: False
+    query_id_switch:
+        description:
+        - "Use DNS query ID to create sesion"
+        type: bool
+        required: False
+    dnssec_service_group:
+        description:
+        - "Use different service group if DNSSEC DO bit set (Service Group Name)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     class_list:
         description:
         - "Field class_list"
+        type: dict
         required: False
         suboptions:
-            lid_list:
-                description:
-                - "Field lid_list"
             name:
                 description:
                 - "Specify a class list name"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            lid_list:
+                description:
+                - "Field lid_list"
+                type: list
     response_rate_limiting:
         description:
         - "Field response_rate_limiting"
+        type: dict
         required: False
         suboptions:
-            filter_response_rate:
-                description:
-                - "Maximum allowed request rate for the filter. This should match average traffic.
-          (default 20 per two seconds)"
-            slip_rate:
-                description:
-                - "Every n'th response that would be rate-limited will be let through instead"
             response_rate:
                 description:
                 - "Responses exceeding this rate within the window will be dropped (default 5 per
           second)"
+                type: int
+            filter_response_rate:
+                description:
+                - "Maximum allowed request rate for the filter. This should match average traffic.
+          (default 20 per two seconds)"
+                type: int
+            slip_rate:
+                description:
+                - "Every n'th response that would be rate-limited will be let through instead"
+                type: int
             window:
                 description:
                 - "Rate-Limiting Interval in Seconds (default is one)"
+                type: int
+            enable_log:
+                description:
+                - "Enable logging"
+                type: bool
             action:
                 description:
                 - "'log-only'= Only log rate-limiting, do not actually rate limit. Requires
           enable-log configuration; 'rate-limit'= Rate-Limit based on configuration
           (Default); 'whitelist'= Whitelist, disable rate-limiting;"
-            enable_log:
-                description:
-                - "Enable logging"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-    drop:
-        description:
-        - "Drop the malformed query"
-        required: False
-    period:
-        description:
-        - "Period in minutes"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    query_id_switch:
-        description:
-        - "Use DNS query ID to create sesion"
-        required: False
-    enable_cache_sharing:
-        description:
-        - "Enable DNS cache sharing"
-        required: False
-    redirect_to_tcp_port:
-        description:
-        - "Direct the client to retry with TCP for DNS UDP request"
-        required: False
-    max_query_length:
-        description:
-        - "Define Maximum DNS Query Length, default is unlimited (Specify Maximum Length)"
-        required: False
-    disable_dns_template:
-        description:
-        - "Disable DNS template"
-        required: False
-    forward:
-        description:
-        - "Forward to service group (Service group name)"
-        required: False
-    max_cache_size:
-        description:
-        - "Define maximum cache size (Maximum cache entry per VIP)"
-        required: False
-    default_policy:
-        description:
-        - "'nocache'= Cache disable; 'cache'= Cache enable;"
-        required: False
-    max_cache_entry_size:
-        description:
-        - "Define maximum cache entry size (Maximum cache entry size per VIP)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -222,110 +254,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dnssec_service_group': {
-            'type': 'str',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'class_list': {
-            'type': 'dict',
-            'lid_list': {
-                'type': 'list',
-                'action_value': {
-                    'type': 'str',
-                    'choices':
-                    ['dns-cache-disable', 'dns-cache-enable', 'forward']
-                },
-                'log': {
-                    'type': 'bool',
-                },
-                'lidnum': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'over_limit_action': {
-                    'type': 'bool',
-                },
-                'per': {
-                    'type': 'int',
-                },
-                'lockout': {
-                    'type': 'int',
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'dns': {
-                    'type': 'dict',
-                    'cache_action': {
-                        'type': 'str',
-                        'choices': ['cache-disable', 'cache-enable']
-                    },
-                    'honor_server_response_ttl': {
-                        'type': 'bool',
-                    },
-                    'weight': {
-                        'type': 'int',
-                    },
-                    'ttl': {
-                        'type': 'int',
-                    }
-                },
-                'conn_rate_limit': {
-                    'type': 'int',
-                },
-                'log_interval': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'name': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
+        'default_policy': {
+            'type': 'str',
+            'choices': ['nocache', 'cache']
         },
-        'response_rate_limiting': {
-            'type': 'dict',
-            'filter_response_rate': {
-                'type': 'int',
-            },
-            'slip_rate': {
-                'type': 'int',
-            },
-            'response_rate': {
-                'type': 'int',
-            },
-            'window': {
-                'type': 'int',
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['log-only', 'rate-limit', 'whitelist']
-            },
-            'enable_log': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'drop': {
+        'disable_dns_template': {
             'type': 'bool',
         },
         'period': {
             'type': 'int',
         },
-        'user_tag': {
+        'drop': {
+            'type': 'bool',
+        },
+        'forward': {
             'type': 'str',
         },
-        'query_id_switch': {
-            'type': 'bool',
+        'max_query_length': {
+            'type': 'int',
+        },
+        'max_cache_entry_size': {
+            'type': 'int',
+        },
+        'max_cache_size': {
+            'type': 'int',
         },
         'enable_cache_sharing': {
             'type': 'bool',
@@ -333,27 +289,103 @@ def get_argspec():
         'redirect_to_tcp_port': {
             'type': 'bool',
         },
-        'max_query_length': {
-            'type': 'int',
-        },
-        'disable_dns_template': {
+        'query_id_switch': {
             'type': 'bool',
         },
-        'forward': {
+        'dnssec_service_group': {
             'type': 'str',
-        },
-        'max_cache_size': {
-            'type': 'int',
-        },
-        'default_policy': {
-            'type': 'str',
-            'choices': ['nocache', 'cache']
-        },
-        'max_cache_entry_size': {
-            'type': 'int',
         },
         'uuid': {
             'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'class_list': {
+            'type': 'dict',
+            'name': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'lid_list': {
+                'type': 'list',
+                'lidnum': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'conn_rate_limit': {
+                    'type': 'int',
+                },
+                'per': {
+                    'type': 'int',
+                },
+                'over_limit_action': {
+                    'type': 'bool',
+                },
+                'action_value': {
+                    'type': 'str',
+                    'choices':
+                    ['dns-cache-disable', 'dns-cache-enable', 'forward']
+                },
+                'lockout': {
+                    'type': 'int',
+                },
+                'log': {
+                    'type': 'bool',
+                },
+                'log_interval': {
+                    'type': 'int',
+                },
+                'dns': {
+                    'type': 'dict',
+                    'cache_action': {
+                        'type': 'str',
+                        'choices': ['cache-disable', 'cache-enable']
+                    },
+                    'ttl': {
+                        'type': 'int',
+                    },
+                    'weight': {
+                        'type': 'int',
+                    },
+                    'honor_server_response_ttl': {
+                        'type': 'bool',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            }
+        },
+        'response_rate_limiting': {
+            'type': 'dict',
+            'response_rate': {
+                'type': 'int',
+            },
+            'filter_response_rate': {
+                'type': 'int',
+            },
+            'slip_rate': {
+                'type': 'int',
+            },
+            'window': {
+                'type': 'int',
+            },
+            'enable_log': {
+                'type': 'bool',
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['log-only', 'rate-limit', 'whitelist']
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

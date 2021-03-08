@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_player_id_global
 description:
     - Player-id global commands
-short_description: Configures A10 slb.player-id-global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,98 +22,82 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    enable_64bit_player_id:
+        description:
+        - "Enable 64 bit player id check. Default is 32 bit"
+        type: bool
+        required: False
+    force_passive:
+        description:
+        - "Forces the device to be in passive mode (Only stats and no packet drops)"
+        type: bool
+        required: False
+    enforcement_timer:
+        description:
+        - "Time to playerid enforcement after bootup (default 480 seconds) (Time to
+          playerid enforcement in seconds, default 480)"
+        type: int
         required: False
     min_expiration:
         description:
         - "Minimum record expiration value (default 1 min) (Min record expiration time in
           minutes, default 1)"
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            time_to_active:
-                description:
-                - "Field time_to_active"
-            state:
-                description:
-                - "Field state"
-            table_count:
-                description:
-                - "Field table_count"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            total_playerids_deleted:
-                description:
-                - "Playerid records deleted"
-            total_invalid_playerid_drops:
-                description:
-                - "Invalid playerid packet drops"
-            total_playerids_created:
-                description:
-                - "Playerid records created"
-            total_pkt_activity_age_outs:
-                description:
-                - "Playerid records idle timeout"
-            total_abs_max_age_outs:
-                description:
-                - "Playerid records max time aged out"
-            total_valid_playerid_pkts:
-                description:
-                - "Valid playerid packets"
-            total_invalid_playerid_pkts:
-                description:
-                - "Invalid playerid packets"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: int
         required: False
     pkt_activity_expiration:
         description:
         - "Packet activity record expiration value (default 5 minutes) (Packet activity
           record expiration time in minutes, default 5)"
-        required: False
-    force_passive:
-        description:
-        - "Forces the device to be in passive mode (Only stats and no packet drops)"
+        type: int
         required: False
     abs_max_expiration:
         description:
         - "Absolute max record expiration value (default 10 minutes) (Absolute max record
           expiration time in minutes, default 10)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -126,15 +108,59 @@ options:
           records idle timeout; 'total_invalid_playerid_pkts'= Invalid playerid packets;
           'total_invalid_playerid_drops'= Invalid playerid packet drops;
           'total_valid_playerid_pkts'= Valid playerid packets;"
-    enforcement_timer:
+                type: str
+    oper:
         description:
-        - "Time to playerid enforcement after bootup (default 480 seconds) (Time to
-          playerid enforcement in seconds, default 480)"
+        - "Field oper"
+        type: dict
         required: False
-    enable_64bit_player_id:
+        suboptions:
+            state:
+                description:
+                - "Field state"
+                type: str
+            time_to_active:
+                description:
+                - "Field time_to_active"
+                type: int
+            table_count:
+                description:
+                - "Field table_count"
+                type: int
+    stats:
         description:
-        - "Enable 64 bit player id check. Default is 32 bit"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            total_playerids_created:
+                description:
+                - "Playerid records created"
+                type: str
+            total_playerids_deleted:
+                description:
+                - "Playerid records deleted"
+                type: str
+            total_abs_max_age_outs:
+                description:
+                - "Playerid records max time aged out"
+                type: str
+            total_pkt_activity_age_outs:
+                description:
+                - "Playerid records idle timeout"
+                type: str
+            total_invalid_playerid_pkts:
+                description:
+                - "Invalid playerid packets"
+                type: str
+            total_invalid_playerid_drops:
+                description:
+                - "Invalid playerid packet drops"
+                type: str
+            total_valid_playerid_pkts:
+                description:
+                - "Valid playerid packets"
+                type: str
 
 '''
 
@@ -196,57 +222,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'min_expiration': {
-            'type': 'int',
-        },
-        'oper': {
-            'type': 'dict',
-            'time_to_active': {
-                'type': 'int',
-            },
-            'state': {
-                'type': 'str',
-                'choices': ['Active', 'Passive', 'Forced Passive']
-            },
-            'table_count': {
-                'type': 'int',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'total_playerids_deleted': {
-                'type': 'str',
-            },
-            'total_invalid_playerid_drops': {
-                'type': 'str',
-            },
-            'total_playerids_created': {
-                'type': 'str',
-            },
-            'total_pkt_activity_age_outs': {
-                'type': 'str',
-            },
-            'total_abs_max_age_outs': {
-                'type': 'str',
-            },
-            'total_valid_playerid_pkts': {
-                'type': 'str',
-            },
-            'total_invalid_playerid_pkts': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'pkt_activity_expiration': {
-            'type': 'int',
+        'enable_64bit_player_id': {
+            'type': 'bool',
         },
         'force_passive': {
             'type': 'bool',
         },
+        'enforcement_timer': {
+            'type': 'int',
+        },
+        'min_expiration': {
+            'type': 'int',
+        },
+        'pkt_activity_expiration': {
+            'type': 'int',
+        },
         'abs_max_expiration': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -262,11 +257,42 @@ def get_argspec():
                 ]
             }
         },
-        'enforcement_timer': {
-            'type': 'int',
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+                'choices': ['Active', 'Passive', 'Forced Passive']
+            },
+            'time_to_active': {
+                'type': 'int',
+            },
+            'table_count': {
+                'type': 'int',
+            }
         },
-        'enable_64bit_player_id': {
-            'type': 'bool',
+        'stats': {
+            'type': 'dict',
+            'total_playerids_created': {
+                'type': 'str',
+            },
+            'total_playerids_deleted': {
+                'type': 'str',
+            },
+            'total_abs_max_age_outs': {
+                'type': 'str',
+            },
+            'total_pkt_activity_age_outs': {
+                'type': 'str',
+            },
+            'total_invalid_playerid_pkts': {
+                'type': 'str',
+            },
+            'total_invalid_playerid_drops': {
+                'type': 'str',
+            },
+            'total_valid_playerid_pkts': {
+                'type': 'str',
+            }
         }
     })
     return rv

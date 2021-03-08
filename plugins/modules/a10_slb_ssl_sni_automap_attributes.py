@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_sni_automap_attributes
 description:
     - Server Name Automap global settings
-short_description: Configures A10 slb.ssl.sni-automap-attributes
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,47 +22,58 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     sni_lower_limit:
         description:
         - "Lower limit for free SNI contexts count. Default is 500"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: int
         required: False
     sni_upper_limit:
         description:
         - "Upper limit for free SNI contexts count. Default is 2000"
+        type: int
         required: False
     sni_delete_factor:
         description:
         - "Contexts are deleted in groups of this value. Default is 50"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -124,14 +133,14 @@ def get_argspec():
         'sni_lower_limit': {
             'type': 'int',
         },
-        'uuid': {
-            'type': 'str',
-        },
         'sni_upper_limit': {
             'type': 'int',
         },
         'sni_delete_factor': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

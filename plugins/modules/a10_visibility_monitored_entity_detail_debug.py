@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitored_entity_detail_debug
 description:
     - Display Monitoring entity detail
-short_description: Configures A10 visibility.monitored.entity.detail.debug
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,62 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            all_keys:
-                description:
-                - "Field all_keys"
-            mon_entity_list:
-                description:
-                - "Field mon_entity_list"
             primary_keys:
                 description:
                 - "Field primary_keys"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: bool
+            all_keys:
+                description:
+                - "Field all_keys"
+                type: bool
+            mon_entity_list:
+                description:
+                - "Field mon_entity_list"
+                type: list
 
 '''
 
@@ -121,21 +131,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'primary_keys': {
+                'type': 'bool',
+            },
             'all_keys': {
                 'type': 'bool',
             },
             'mon_entity_list': {
                 'type': 'list',
+                'entity_key': {
+                    'type': 'str',
+                },
                 'uuid': {
                     'type': 'str',
                 },
-                'l4_port': {
+                'flat_oid': {
                     'type': 'int',
-                },
-                'entity_key': {
-                    'type': 'str',
                 },
                 'ipv4_addr': {
                     'type': 'str',
@@ -143,9 +159,24 @@ def get_argspec():
                 'ipv6_addr': {
                     'type': 'str',
                 },
+                'l4_proto': {
+                    'type': 'str',
+                },
+                'l4_port': {
+                    'type': 'int',
+                },
+                'mode': {
+                    'type': 'str',
+                },
+                'ha_state': {
+                    'type': 'str',
+                },
                 'entity_metric_list': {
                     'type': 'list',
-                    'std_dev': {
+                    'metric_name': {
+                        'type': 'str',
+                    },
+                    'current': {
                         'type': 'str',
                     },
                     'min': {
@@ -154,41 +185,29 @@ def get_argspec():
                     'max': {
                         'type': 'str',
                     },
-                    'metric_name': {
-                        'type': 'str',
-                    },
-                    'current': {
+                    'mean': {
                         'type': 'str',
                     },
                     'threshold': {
                         'type': 'str',
                     },
-                    'anomaly': {
+                    'std_dev': {
                         'type': 'str',
                     },
-                    'mean': {
+                    'anomaly': {
                         'type': 'str',
                     }
                 },
-                'mode': {
-                    'type': 'str',
-                },
-                'l4_proto': {
-                    'type': 'str',
-                },
-                'flat_oid': {
-                    'type': 'int',
-                },
                 'sec_entity_list': {
                     'type': 'list',
+                    'entity_key': {
+                        'type': 'str',
+                    },
                     'uuid': {
                         'type': 'str',
                     },
-                    'l4_port': {
+                    'flat_oid': {
                         'type': 'int',
-                    },
-                    'entity_key': {
-                        'type': 'str',
                     },
                     'ipv4_addr': {
                         'type': 'str',
@@ -196,9 +215,24 @@ def get_argspec():
                     'ipv6_addr': {
                         'type': 'str',
                     },
+                    'l4_proto': {
+                        'type': 'str',
+                    },
+                    'l4_port': {
+                        'type': 'int',
+                    },
+                    'mode': {
+                        'type': 'str',
+                    },
+                    'ha_state': {
+                        'type': 'str',
+                    },
                     'entity_metric_list': {
                         'type': 'list',
-                        'std_dev': {
+                        'metric_name': {
+                            'type': 'str',
+                        },
+                        'current': {
                             'type': 'str',
                         },
                         'min': {
@@ -207,45 +241,21 @@ def get_argspec():
                         'max': {
                             'type': 'str',
                         },
-                        'metric_name': {
-                            'type': 'str',
-                        },
-                        'current': {
+                        'mean': {
                             'type': 'str',
                         },
                         'threshold': {
                             'type': 'str',
                         },
-                        'anomaly': {
+                        'std_dev': {
                             'type': 'str',
                         },
-                        'mean': {
+                        'anomaly': {
                             'type': 'str',
                         }
-                    },
-                    'mode': {
-                        'type': 'str',
-                    },
-                    'l4_proto': {
-                        'type': 'str',
-                    },
-                    'flat_oid': {
-                        'type': 'int',
-                    },
-                    'ha_state': {
-                        'type': 'str',
                     }
-                },
-                'ha_state': {
-                    'type': 'str',
                 }
-            },
-            'primary_keys': {
-                'type': 'bool',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

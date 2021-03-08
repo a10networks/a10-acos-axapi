@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_alg_sip
 description:
     - Configure SIP ALG for NAT stateful firewall (default= enabled)
-short_description: Configures A10 cgnv6.stateful.firewall.alg.sip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    sip_value:
+        description:
+        - "'disable'= Disable ALG;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -73,70 +89,81 @@ options:
           'contact-new'= Contact Alloc; 'contact-alloc-failure'= Contact Alloc Failure;
           'contact-eim'= Contact EIM; 'contact-eim-set'= Contact EIM Set; 'rtp-new'= RTP
           Alloc; 'rtp-alloc-failure'= RTP Alloc Failure; 'rtp-eim'= RTP EIM;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             stat_request:
                 description:
                 - "Request Received"
-            method_info:
-                description:
-                - "Method INFO"
-            method_cancel:
-                description:
-                - "Method CANCEL"
-            method_unknown:
-                description:
-                - "Method Unknown"
-            method_update:
-                description:
-                - "Method UPDATE"
-            method_subscribe:
-                description:
-                - "Method SUBSCRIBE"
-            method_invite:
-                description:
-                - "Method INVITE"
-            method_notify:
-                description:
-                - "Method NOTIFY"
-            method_register:
-                description:
-                - "Method REGISTER"
-            method_prack:
-                description:
-                - "Method PRACK"
-            method_port_config:
-                description:
-                - "Method OPTIONS"
-            method_publish:
-                description:
-                - "Method PUBLISH"
-            method_ack:
-                description:
-                - "Method ACK"
-            method_refer:
-                description:
-                - "Method REFER"
+                type: str
             stat_response:
                 description:
                 - "Response Received"
+                type: str
+            method_register:
+                description:
+                - "Method REGISTER"
+                type: str
+            method_invite:
+                description:
+                - "Method INVITE"
+                type: str
+            method_ack:
+                description:
+                - "Method ACK"
+                type: str
+            method_cancel:
+                description:
+                - "Method CANCEL"
+                type: str
             method_bye:
                 description:
                 - "Method BYE"
+                type: str
+            method_port_config:
+                description:
+                - "Method OPTIONS"
+                type: str
+            method_prack:
+                description:
+                - "Method PRACK"
+                type: str
+            method_subscribe:
+                description:
+                - "Method SUBSCRIBE"
+                type: str
+            method_notify:
+                description:
+                - "Method NOTIFY"
+                type: str
+            method_publish:
+                description:
+                - "Method PUBLISH"
+                type: str
+            method_info:
+                description:
+                - "Method INFO"
+                type: str
+            method_refer:
+                description:
+                - "Method REFER"
+                type: str
             method_message:
                 description:
                 - "Method MESSAGE"
-    sip_value:
-        description:
-        - "'disable'= Disable ALG;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            method_update:
+                description:
+                - "Method UPDATE"
+                type: str
+            method_unknown:
+                description:
+                - "Method Unknown"
+                type: str
 
 '''
 
@@ -192,6 +219,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'sip_value': {
+            'type': 'str',
+            'choices': ['disable']
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -219,61 +253,54 @@ def get_argspec():
             'stat_request': {
                 'type': 'str',
             },
-            'method_info': {
-                'type': 'str',
-            },
-            'method_cancel': {
-                'type': 'str',
-            },
-            'method_unknown': {
-                'type': 'str',
-            },
-            'method_update': {
-                'type': 'str',
-            },
-            'method_subscribe': {
-                'type': 'str',
-            },
-            'method_invite': {
-                'type': 'str',
-            },
-            'method_notify': {
+            'stat_response': {
                 'type': 'str',
             },
             'method_register': {
                 'type': 'str',
             },
-            'method_prack': {
-                'type': 'str',
-            },
-            'method_port_config': {
-                'type': 'str',
-            },
-            'method_publish': {
+            'method_invite': {
                 'type': 'str',
             },
             'method_ack': {
                 'type': 'str',
             },
-            'method_refer': {
-                'type': 'str',
-            },
-            'stat_response': {
+            'method_cancel': {
                 'type': 'str',
             },
             'method_bye': {
                 'type': 'str',
             },
+            'method_port_config': {
+                'type': 'str',
+            },
+            'method_prack': {
+                'type': 'str',
+            },
+            'method_subscribe': {
+                'type': 'str',
+            },
+            'method_notify': {
+                'type': 'str',
+            },
+            'method_publish': {
+                'type': 'str',
+            },
+            'method_info': {
+                'type': 'str',
+            },
+            'method_refer': {
+                'type': 'str',
+            },
             'method_message': {
                 'type': 'str',
+            },
+            'method_update': {
+                'type': 'str',
+            },
+            'method_unknown': {
+                'type': 'str',
             }
-        },
-        'sip_value': {
-            'type': 'str',
-            'choices': ['disable']
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

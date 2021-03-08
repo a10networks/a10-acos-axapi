@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_metadata_monitor
 description:
     - Configure SAML metadata out-of-sync detection and recovery options
-short_description: Configures A10 aam.authentication.saml.metadata-monitor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,67 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     status:
         description:
         - "'enable'= Enable SAML metadata out-of-sync detection; 'disable'= Disable SAML
           metadata out-of-sync detection;"
+        type: str
         required: False
     acs_continuous_fail_threshold:
         description:
         - "Specify how many ACS continuous fails will trigger metadata reload (ACS
           continuous fail threshold (default= 10))"
-        required: False
-    acs_missing_period:
-        description:
-        - "Specify how long no acs request will trigger metadata reload (in seconds
-          (default= 60))"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: int
         required: False
     acs_missing_threshold:
         description:
         - "Specify how many ACS request missing in the period will trigger metadata reload
           (ACS request missing threshold (default= 100))"
+        type: int
+        required: False
+    acs_missing_period:
+        description:
+        - "Specify how long no acs request will trigger metadata reload (in seconds
+          (default= 60))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -137,14 +147,14 @@ def get_argspec():
         'acs_continuous_fail_threshold': {
             'type': 'int',
         },
+        'acs_missing_threshold': {
+            'type': 'int',
+        },
         'acs_missing_period': {
             'type': 'int',
         },
         'uuid': {
             'type': 'str',
-        },
-        'acs_missing_threshold': {
-            'type': 'int',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_threat_intel_threat_feed
 description:
     - Configure vendor specific module control options
-short_description: Configures A10 threat-intel.threat-feed
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,110 +22,136 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    domain:
+    ntype:
         description:
-        - "Realm for NTLM authentication"
+        - "'webroot'= Configure Webroot module options;"
+        type: str
+        required: True
+    server:
+        description:
+        - "Server IP or Hostname"
+        type: str
         required: False
-    enable:
+    port:
         description:
-        - "Enable module"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management interface for all communication with threat-intel server"
-        required: False
-    update_interval:
-        description:
-        - "Interval to check for database or RTU updates(default 120 mins)"
+        - "Port to query server(default 443)"
+        type: int
         required: False
     server_timeout:
         description:
         - "Server Timeout in seconds (default= 15s)"
+        type: int
         required: False
-    proxy_port:
+    rtu_update_disable:
         description:
-        - "Port to connect on proxy server"
+        - "Disables real time updates(default enable)"
+        type: bool
         required: False
-    proxy_username:
+    update_interval:
         description:
-        - "Username for proxy authentication"
+        - "Interval to check for database or RTU updates(default 120 mins)"
+        type: int
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management interface for all communication with threat-intel server"
+        type: bool
         required: False
     log_level:
         description:
         - "'disable'= Disable all logging; 'error'= Log error events; 'warning'= Log
           warning events and above; 'info'= Log info events and above; 'debug'= Log debug
           events and above; 'trace'= enable all logs;"
-        required: False
-    server:
-        description:
-        - "Server IP or Hostname"
+        type: str
         required: False
     proxy_host:
         description:
         - "Proxy server hostname or IP address"
+        type: str
+        required: False
+    proxy_port:
+        description:
+        - "Port to connect on proxy server"
+        type: int
+        required: False
+    proxy_auth_type:
+        description:
+        - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
+        type: str
+        required: False
+    domain:
+        description:
+        - "Realm for NTLM authentication"
+        type: str
+        required: False
+    proxy_username:
+        description:
+        - "Username for proxy authentication"
+        type: str
         required: False
     proxy_password:
         description:
         - "Password for proxy authentication"
+        type: bool
         required: False
-    user_tag:
+    secret_string:
         description:
-        - "Customized tag"
-        required: False
-    rtu_update_disable:
-        description:
-        - "Disables real time updates(default enable)"
+        - "password value"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
-    proxy_auth_type:
+    enable:
         description:
-        - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
+        - "Enable module"
+        type: bool
         required: False
-    ntype:
+    uuid:
         description:
-        - "'webroot'= Configure Webroot module options;"
-        required: True
-    port:
-        description:
-        - "Port to query server(default 443)"
+        - "uuid of the object"
+        type: str
         required: False
-    secret_string:
+    user_tag:
         description:
-        - "password value"
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -199,7 +223,57 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ntype': {
+            'type': 'str',
+            'required': True,
+            'choices': ['webroot']
+        },
+        'server': {
+            'type': 'str',
+        },
+        'port': {
+            'type': 'int',
+        },
+        'server_timeout': {
+            'type': 'int',
+        },
+        'rtu_update_disable': {
+            'type': 'bool',
+        },
+        'update_interval': {
+            'type': 'int',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'log_level': {
+            'type': 'str',
+            'choices':
+            ['disable', 'error', 'warning', 'info', 'debug', 'trace']
+        },
+        'proxy_host': {
+            'type': 'str',
+        },
+        'proxy_port': {
+            'type': 'int',
+        },
+        'proxy_auth_type': {
+            'type': 'str',
+            'choices': ['ntlm', 'basic']
+        },
         'domain': {
+            'type': 'str',
+        },
+        'proxy_username': {
+            'type': 'str',
+        },
+        'proxy_password': {
+            'type': 'bool',
+        },
+        'secret_string': {
+            'type': 'str',
+        },
+        'encrypted': {
             'type': 'str',
         },
         'enable': {
@@ -208,57 +282,7 @@ def get_argspec():
         'uuid': {
             'type': 'str',
         },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
-        'update_interval': {
-            'type': 'int',
-        },
-        'server_timeout': {
-            'type': 'int',
-        },
-        'proxy_port': {
-            'type': 'int',
-        },
-        'proxy_username': {
-            'type': 'str',
-        },
-        'log_level': {
-            'type': 'str',
-            'choices':
-            ['disable', 'error', 'warning', 'info', 'debug', 'trace']
-        },
-        'server': {
-            'type': 'str',
-        },
-        'proxy_host': {
-            'type': 'str',
-        },
-        'proxy_password': {
-            'type': 'bool',
-        },
         'user_tag': {
-            'type': 'str',
-        },
-        'rtu_update_disable': {
-            'type': 'bool',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'proxy_auth_type': {
-            'type': 'str',
-            'choices': ['ntlm', 'basic']
-        },
-        'ntype': {
-            'type': 'str',
-            'required': True,
-            'choices': ['webroot']
-        },
-        'port': {
-            'type': 'int',
-        },
-        'secret_string': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_tacplus
 description:
     - TACACS+ type
-short_description: Configures A10 health.monitor.method.tacplus
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,78 +22,99 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    tacplus_encrypted:
+        - Key to identify parent object
+        type: str
+        required: True
+    tacplus:
         description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
-    secret_encrypted:
-        description:
-        - "Field secret_encrypted"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    tacplus_password_string:
-        description:
-        - "Configure password, '' means empty password"
-        required: False
-    tacplus_secret:
-        description:
-        - "Specify the shared secret of TACACS+ server"
+        - "TACACS+ type"
+        type: bool
         required: False
     tacplus_username:
         description:
         - "Specify the username"
-        required: False
-    tacplus:
-        description:
-        - "TACACS+ type"
-        required: False
-    tacplus_secret_string:
-        description:
-        - "Shared Crypto Key"
-        required: False
-    tacplus_type:
-        description:
-        - "'inbound-ascii-login'= Specify Inbound ASCII Login type;"
+        type: str
         required: False
     tacplus_password:
         description:
         - "Specify the user password"
+        type: bool
+        required: False
+    tacplus_password_string:
+        description:
+        - "Configure password, '' means empty password"
+        type: str
+        required: False
+    tacplus_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    tacplus_secret:
+        description:
+        - "Specify the shared secret of TACACS+ server"
+        type: bool
+        required: False
+    tacplus_secret_string:
+        description:
+        - "Shared Crypto Key"
+        type: str
+        required: False
+    secret_encrypted:
+        description:
+        - "Field secret_encrypted"
+        type: str
         required: False
     tacplus_port:
         description:
         - "Specify the TACACS+ port, default 49 (Port number (default 49))"
+        type: int
+        required: False
+    tacplus_type:
+        description:
+        - "'inbound-ascii-login'= Specify Inbound ASCII Login type;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -159,39 +178,39 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'tacplus_encrypted': {
-            'type': 'str',
-        },
-        'secret_encrypted': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'tacplus_password_string': {
-            'type': 'str',
-        },
-        'tacplus_secret': {
+        'tacplus': {
             'type': 'bool',
         },
         'tacplus_username': {
             'type': 'str',
         },
-        'tacplus': {
+        'tacplus_password': {
+            'type': 'bool',
+        },
+        'tacplus_password_string': {
+            'type': 'str',
+        },
+        'tacplus_encrypted': {
+            'type': 'str',
+        },
+        'tacplus_secret': {
             'type': 'bool',
         },
         'tacplus_secret_string': {
             'type': 'str',
         },
+        'secret_encrypted': {
+            'type': 'str',
+        },
+        'tacplus_port': {
+            'type': 'int',
+        },
         'tacplus_type': {
             'type': 'str',
             'choices': ['inbound-ascii-login']
         },
-        'tacplus_password': {
-            'type': 'bool',
-        },
-        'tacplus_port': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

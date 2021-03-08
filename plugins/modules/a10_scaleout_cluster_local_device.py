@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device
 description:
     - Local device configuration
-short_description: Configures A10 scaleout.cluster.local-device
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,99 +22,127 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     cluster_id:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    session_sync_interface:
-        description:
-        - "Field session_sync_interface"
-        required: False
-        suboptions:
-            ve_cfg:
-                description:
-                - "Field ve_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-            trunk_cfg:
-                description:
-                - "Field trunk_cfg"
-            eth_cfg:
-                description:
-                - "Field eth_cfg"
-    id:
-        description:
-        - "Field id"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     priority:
         description:
         - "Field priority"
+        type: int
+        required: False
+    id:
+        description:
+        - "Field id"
+        type: int
         required: False
     action:
         description:
         - "'enable'= enable; 'disable'= disable;"
+        type: str
+        required: False
+    start_delay:
+        description:
+        - "Field start_delay"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     l2_redirect:
         description:
         - "Field l2_redirect"
+        type: dict
         required: False
         suboptions:
-            ethernet_vlan:
-                description:
-                - "VLAN ID"
             redirect_eth:
                 description:
                 - "Ethernet port (Port Value)"
+                type: str
+            ethernet_vlan:
+                description:
+                - "VLAN ID"
+                type: int
             redirect_trunk:
                 description:
                 - "L2 Trunk group"
+                type: int
             trunk_vlan:
                 description:
                 - "VLAN ID"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    session_sync_interface:
+        description:
+        - "Field session_sync_interface"
+        type: dict
+        required: False
+        suboptions:
+            eth_cfg:
+                description:
+                - "Field eth_cfg"
+                type: list
+            trunk_cfg:
+                description:
+                - "Field trunk_cfg"
+                type: list
+            ve_cfg:
+                description:
+                - "Field ve_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     tracking_template:
         description:
         - "Field tracking_template"
+        type: dict
         required: False
         suboptions:
             template_list:
                 description:
                 - "Field template_list"
-    start_delay:
-        description:
-        - "Field start_delay"
-        required: False
+                type: list
 
 '''
 
@@ -176,50 +202,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'session_sync_interface': {
-            'type': 'dict',
-            've_cfg': {
-                'type': 'list',
-                've': {
-                    'type': 'int',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'trunk_cfg': {
-                'type': 'list',
-                'trunk': {
-                    'type': 'int',
-                }
-            },
-            'eth_cfg': {
-                'type': 'list',
-                'ethernet': {
-                    'type': 'str',
-                }
-            }
-        },
-        'id': {
+        'priority': {
             'type': 'int',
         },
-        'priority': {
+        'id': {
             'type': 'int',
         },
         'action': {
             'type': 'str',
             'choices': ['enable', 'disable']
         },
+        'start_delay': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'l2_redirect': {
             'type': 'dict',
-            'ethernet_vlan': {
-                'type': 'int',
-            },
             'redirect_eth': {
                 'type': 'str',
+            },
+            'ethernet_vlan': {
+                'type': 'int',
             },
             'redirect_trunk': {
                 'type': 'int',
@@ -231,12 +236,37 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'session_sync_interface': {
+            'type': 'dict',
+            'eth_cfg': {
+                'type': 'list',
+                'ethernet': {
+                    'type': 'str',
+                }
+            },
+            'trunk_cfg': {
+                'type': 'list',
+                'trunk': {
+                    'type': 'int',
+                }
+            },
+            've_cfg': {
+                'type': 'list',
+                've': {
+                    'type': 'int',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'tracking_template': {
             'type': 'dict',
             'template_list': {
                 'type': 'list',
-                'uuid': {
+                'template': {
                     'type': 'str',
+                    'required': True,
                 },
                 'threshold_cfg': {
                     'type': 'list',
@@ -248,17 +278,13 @@ def get_argspec():
                         'choices': ['down', 'exit-cluster']
                     }
                 },
-                'user_tag': {
+                'uuid': {
                     'type': 'str',
                 },
-                'template': {
+                'user_tag': {
                     'type': 'str',
-                    'required': True,
                 }
             }
-        },
-        'start_delay': {
-            'type': 'int',
         }
     })
     # Parent keys

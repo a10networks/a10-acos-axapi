@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_service_group_member
 description:
     - Service Group Member
-short_description: Configures A10 cgnv6.service.group.member
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     service_group_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
         description:
-        - "Field oper"
+        - "Member name"
+        type: str
+        required: True
+    port:
+        description:
+        - "Port number"
+        type: int
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            hm_key:
-                description:
-                - "Field hm_key"
-            state:
-                description:
-                - "Field state"
-            name:
-                description:
-                - "Member name"
-            hm_index:
-                description:
-                - "Field hm_index"
-            port:
-                description:
-                - "Port number"
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -91,87 +100,119 @@ options:
           'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response
           time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL
           connections;"
-    stats:
+                type: str
+    oper:
         description:
-        - "Field stats"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            curr_req:
+            state:
                 description:
-                - "Current requests"
-            total_rev_bytes:
+                - "Field state"
+                type: str
+            hm_key:
                 description:
-                - "Total reverse bytes"
+                - "Field hm_key"
+                type: int
+            hm_index:
+                description:
+                - "Field hm_index"
+                type: int
             name:
                 description:
                 - "Member name"
-            peak_conn:
-                description:
-                - "Peak connections"
-            total_ssl_conn:
-                description:
-                - "Total SSL connections"
-            total_conn:
-                description:
-                - "Total connections"
-            fastest_rsp_time:
-                description:
-                - "Fastest response time"
-            total_fwd_pkts:
-                description:
-                - "Total forward packets"
-            total_req:
-                description:
-                - "Total requests"
-            total_rev_pkts:
-                description:
-                - "Total reverse packets"
+                type: str
             port:
                 description:
                 - "Port number"
-            curr_ssl_conn:
-                description:
-                - "Current SSL connections"
-            total_req_succ:
-                description:
-                - "Total requests success"
+                type: int
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
             curr_conn:
                 description:
                 - "Current connections"
-            total_rev_pkts_inspected_status_code_non_5xx:
-                description:
-                - "Total reverse packets inspected status code non 5xx"
-            total_rev_pkts_inspected_status_code_2xx:
-                description:
-                - "Total reverse packets inspected status code 2xx"
+                type: str
             total_fwd_bytes:
                 description:
                 - "Total forward bytes"
-            slowest_rsp_time:
+                type: str
+            total_fwd_pkts:
                 description:
-                - "Slowest response time"
-            response_time:
+                - "Total forward packets"
+                type: str
+            total_rev_bytes:
                 description:
-                - "Response time"
+                - "Total reverse bytes"
+                type: str
+            total_rev_pkts:
+                description:
+                - "Total reverse packets"
+                type: str
+            total_conn:
+                description:
+                - "Total connections"
+                type: str
             total_rev_pkts_inspected:
                 description:
                 - "Total reverse packets inspected"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    port:
-        description:
-        - "Port number"
-        required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    name:
-        description:
-        - "Member name"
-        required: True
+                type: str
+            total_rev_pkts_inspected_status_code_2xx:
+                description:
+                - "Total reverse packets inspected status code 2xx"
+                type: str
+            total_rev_pkts_inspected_status_code_non_5xx:
+                description:
+                - "Total reverse packets inspected status code non 5xx"
+                type: str
+            curr_req:
+                description:
+                - "Current requests"
+                type: str
+            total_req:
+                description:
+                - "Total requests"
+                type: str
+            total_req_succ:
+                description:
+                - "Total requests success"
+                type: str
+            peak_conn:
+                description:
+                - "Peak connections"
+                type: str
+            response_time:
+                description:
+                - "Response time"
+                type: str
+            fastest_rsp_time:
+                description:
+                - "Fastest response time"
+                type: str
+            slowest_rsp_time:
+                description:
+                - "Slowest response time"
+                type: str
+            curr_ssl_conn:
+                description:
+                - "Current SSL connections"
+                type: str
+            total_ssl_conn:
+                description:
+                - "Total SSL connections"
+                type: str
+            name:
+                description:
+                - "Member name"
+                type: str
+            port:
+                description:
+                - "Port number"
+                type: int
 
 '''
 
@@ -230,30 +271,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'hm_key': {
-                'type': 'int',
-            },
-            'state': {
-                'type':
-                'str',
-                'choices': [
-                    'UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN',
-                    'DIS-MAINTENANCE', 'DIS-DAMP'
-                ]
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'hm_index': {
-                'type': 'int',
-            },
-            'port': {
-                'type': 'int',
-                'required': True,
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'port': {
+            'type': 'int',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -272,84 +302,95 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type':
+                'str',
+                'choices': [
+                    'UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN',
+                    'DIS-MAINTENANCE', 'DIS-DAMP'
+                ]
+            },
+            'hm_key': {
+                'type': 'int',
+            },
+            'hm_index': {
+                'type': 'int',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port': {
+                'type': 'int',
+                'required': True,
+            }
+        },
         'stats': {
             'type': 'dict',
-            'curr_req': {
+            'curr_conn': {
+                'type': 'str',
+            },
+            'total_fwd_bytes': {
+                'type': 'str',
+            },
+            'total_fwd_pkts': {
                 'type': 'str',
             },
             'total_rev_bytes': {
+                'type': 'str',
+            },
+            'total_rev_pkts': {
+                'type': 'str',
+            },
+            'total_conn': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected_status_code_2xx': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected_status_code_non_5xx': {
+                'type': 'str',
+            },
+            'curr_req': {
+                'type': 'str',
+            },
+            'total_req': {
+                'type': 'str',
+            },
+            'total_req_succ': {
+                'type': 'str',
+            },
+            'peak_conn': {
+                'type': 'str',
+            },
+            'response_time': {
+                'type': 'str',
+            },
+            'fastest_rsp_time': {
+                'type': 'str',
+            },
+            'slowest_rsp_time': {
+                'type': 'str',
+            },
+            'curr_ssl_conn': {
+                'type': 'str',
+            },
+            'total_ssl_conn': {
                 'type': 'str',
             },
             'name': {
                 'type': 'str',
                 'required': True,
             },
-            'peak_conn': {
-                'type': 'str',
-            },
-            'total_ssl_conn': {
-                'type': 'str',
-            },
-            'total_conn': {
-                'type': 'str',
-            },
-            'fastest_rsp_time': {
-                'type': 'str',
-            },
-            'total_fwd_pkts': {
-                'type': 'str',
-            },
-            'total_req': {
-                'type': 'str',
-            },
-            'total_rev_pkts': {
-                'type': 'str',
-            },
             'port': {
                 'type': 'int',
                 'required': True,
-            },
-            'curr_ssl_conn': {
-                'type': 'str',
-            },
-            'total_req_succ': {
-                'type': 'str',
-            },
-            'curr_conn': {
-                'type': 'str',
-            },
-            'total_rev_pkts_inspected_status_code_non_5xx': {
-                'type': 'str',
-            },
-            'total_rev_pkts_inspected_status_code_2xx': {
-                'type': 'str',
-            },
-            'total_fwd_bytes': {
-                'type': 'str',
-            },
-            'slowest_rsp_time': {
-                'type': 'str',
-            },
-            'response_time': {
-                'type': 'str',
-            },
-            'total_rev_pkts_inspected': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'port': {
-            'type': 'int',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     # Parent keys

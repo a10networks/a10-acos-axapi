@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_lldp_management_address_ipv4_addr
 description:
     - Configure lldp management-address ipv4 address
-short_description: Configures A10 network.lldp.management.address.ipv4-addr
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    ipv4:
+        description:
+        - "Configure lldp management-address, subtype is ipv4 (lldp management-address
+          ipv4 address)"
+        type: str
+        required: True
     interface_ipv4:
         description:
         - "Field interface_ipv4"
+        type: dict
         required: False
         suboptions:
             ipv4_eth:
                 description:
                 - "configure lldp management-address interface ethernet (lldp management-address
           interface port number)"
-            ipv4_mgmt:
-                description:
-                - "configure lldp management-address interface management"
+                type: str
             ipv4_ve:
                 description:
                 - "configure lldp management-address interface ve (lldp management-address
           interface port number)"
+                type: int
+            ipv4_mgmt:
+                description:
+                - "configure lldp management-address interface management"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    ipv4:
-        description:
-        - "Configure lldp management-address, subtype is ipv4 (lldp management-address
-          ipv4 address)"
-        required: True
 
 '''
 
@@ -129,24 +140,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ipv4': {
+            'type': 'str',
+            'required': True,
+        },
         'interface_ipv4': {
             'type': 'dict',
             'ipv4_eth': {
                 'type': 'str',
             },
-            'ipv4_mgmt': {
-                'type': 'bool',
-            },
             'ipv4_ve': {
                 'type': 'int',
+            },
+            'ipv4_mgmt': {
+                'type': 'bool',
             }
         },
         'uuid': {
             'type': 'str',
-        },
-        'ipv4': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

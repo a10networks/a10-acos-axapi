@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_reboot
 description:
     - Reboot the System
-short_description: Configures A10 reboot
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,60 +21,74 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    device:
+        description:
+        - "Reboot a specific device when VCS is enabled (device id)"
+        type: int
         required: False
     all:
         description:
         - "Reboot all devices when VCS is enabled, or only this device itself if VCS is
           not enabled"
+        type: bool
         required: False
-    day_of_month:
+    at:
         description:
-        - "Day of the Month"
-        required: False
-    reason_3:
-        description:
-        - "Reason for Reboot"
-        required: False
-    reason_2:
-        description:
-        - "Reason for Reboot"
+        - "Reboot at a Specific time/date"
+        type: bool
         required: False
     nin:
         description:
         - "Reboot after a time interval (Time in hours and minutes)"
+        type: str
         required: False
-    month_2:
+    cancel:
         description:
-        - "'January'= Month of the year; 'February'= Month of the year; 'March'= Month of
-          the year; 'April'= Month of the year; 'May'= Month of the year; 'June'= Month
-          of the year; 'July'= Month of the r; 'August'= Month of the year; 'September'=
-          Month of the year; 'October'= Month of the year; 'November'= Month of the year;
-          'December'= Month of the year;"
+        - "Cancel Pending Reboot"
+        type: bool
+        required: False
+    reason:
+        description:
+        - "Reason for Reboot"
+        type: str
+        required: False
+    time:
+        description:
+        - "Time to Reboot (hh=mm)"
+        type: str
         required: False
     month:
         description:
@@ -85,30 +97,36 @@ options:
           of the year; 'July'= Month of the year; 'August'= Month of the year;
           'September'= Month of the year; 'October'= Month of the year; 'November'= Month
           of the year; 'December'= Month of the year;"
+        type: str
         required: False
-    device:
+    day_of_month:
         description:
-        - "Reboot a specific device when VCS is enabled (device id)"
+        - "Day of the Month"
+        type: int
         required: False
-    reason:
+    reason_2:
         description:
         - "Reason for Reboot"
+        type: str
         required: False
-    at:
+    month_2:
         description:
-        - "Reboot at a Specific time/date"
+        - "'January'= Month of the year; 'February'= Month of the year; 'March'= Month of
+          the year; 'April'= Month of the year; 'May'= Month of the year; 'June'= Month
+          of the year; 'July'= Month of the r; 'August'= Month of the year; 'September'=
+          Month of the year; 'October'= Month of the year; 'November'= Month of the year;
+          'December'= Month of the year;"
+        type: str
         required: False
-    time:
+    reason_3:
         description:
-        - "Time to Reboot (hh=mm)"
-        required: False
-    cancel:
-        description:
-        - "Cancel Pending Reboot"
+        - "Reason for Reboot"
+        type: str
         required: False
     day_of_month_2:
         description:
         - "Day of the Month"
+        type: int
         required: False
 
 '''
@@ -172,19 +190,39 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'device': {
+            'type': 'int',
+        },
         'all': {
             'type': 'bool',
+        },
+        'at': {
+            'type': 'bool',
+        },
+        'nin': {
+            'type': 'str',
+        },
+        'cancel': {
+            'type': 'bool',
+        },
+        'reason': {
+            'type': 'str',
+        },
+        'time': {
+            'type': 'str',
+        },
+        'month': {
+            'type':
+            'str',
+            'choices': [
+                'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                'August', 'September', 'October', 'November', 'December'
+            ]
         },
         'day_of_month': {
             'type': 'int',
         },
-        'reason_3': {
-            'type': 'str',
-        },
         'reason_2': {
-            'type': 'str',
-        },
-        'nin': {
             'type': 'str',
         },
         'month_2': {
@@ -195,28 +233,8 @@ def get_argspec():
                 'August', 'September', 'October', 'November', 'December'
             ]
         },
-        'month': {
-            'type':
-            'str',
-            'choices': [
-                'January', 'February', 'March', 'April', 'May', 'June', 'July',
-                'August', 'September', 'October', 'November', 'December'
-            ]
-        },
-        'device': {
-            'type': 'int',
-        },
-        'reason': {
+        'reason_3': {
             'type': 'str',
-        },
-        'at': {
-            'type': 'bool',
-        },
-        'time': {
-            'type': 'str',
-        },
-        'cancel': {
-            'type': 'bool',
         },
         'day_of_month_2': {
             'type': 'int',

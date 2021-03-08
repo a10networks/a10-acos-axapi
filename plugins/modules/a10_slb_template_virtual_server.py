@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_virtual_server
 description:
     - Virtual server template
-short_description: Configures A10 slb.template.virtual-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,119 +22,146 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    conn_limit:
-        description:
-        - "Connection limit"
-        required: False
-    conn_rate_limit_no_logging:
-        description:
-        - "Do not log connection over limit event"
+        type: str
         required: False
     name:
         description:
         - "Virtual server template name"
+        type: str
         required: True
-    icmp_lockup_period:
+    conn_limit:
         description:
-        - "Lockup period (second)"
+        - "Connection limit"
+        type: int
         required: False
     conn_limit_reset:
         description:
         - "Send client reset when connection over limit"
+        type: bool
+        required: False
+    conn_limit_no_logging:
+        description:
+        - "Do not log connection over limit event"
+        type: bool
+        required: False
+    conn_rate_limit:
+        description:
+        - "Connection rate limit"
+        type: int
         required: False
     rate_interval:
         description:
         - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling
           interval;"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    icmpv6_rate_limit:
-        description:
-        - "ICMPv6 rate limit (Normal rate limit. If exceeds this limit, drop the ICMP
-          packet that goes over the limit)"
-        required: False
-    subnet_gratuitous_arp:
-        description:
-        - "Send gratuitous ARP for every IP in the subnet virtual server"
-        required: False
-    icmpv6_lockup:
-        description:
-        - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate
-          limit. If exceeds this limit, drop all ICMP packet for a time period)"
+        type: str
         required: False
     conn_rate_limit_reset:
         description:
         - "Send client reset when connection rate over limit"
+        type: bool
         required: False
-    tcp_stack_tfo_backoff_time:
-        description:
-        - "The time tcp stack will wait before allowing new fast-open requests after
-          security condition, default 600 seconds (number)"
-        required: False
-    tcp_stack_tfo_cookie_time_limit:
-        description:
-        - "The time limit (in seconds) that a layer 7 tcp fast-open cookie is valid,
-          default is 60 seconds (number)"
-        required: False
-    conn_limit_no_logging:
+    conn_rate_limit_no_logging:
         description:
         - "Do not log connection over limit event"
-        required: False
-    icmpv6_lockup_period:
-        description:
-        - "Lockup period (second)"
-        required: False
-    conn_rate_limit:
-        description:
-        - "Connection rate limit"
-        required: False
-    tcp_stack_tfo_active_conn_limit:
-        description:
-        - "The allowed active layer 7 tcp fast-open connection limit, default is zero
-          (number)"
-        required: False
-    icmp_lockup:
-        description:
-        - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate
-          limit. If exceeds this limit, drop all ICMP packet for a time period)"
+        type: bool
         required: False
     icmp_rate_limit:
         description:
         - "ICMP rate limit (Normal rate limit. If exceeds this limit, drop the ICMP packet
           that goes over the limit)"
+        type: int
+        required: False
+    icmp_lockup:
+        description:
+        - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate
+          limit. If exceeds this limit, drop all ICMP packet for a time period)"
+        type: int
+        required: False
+    icmp_lockup_period:
+        description:
+        - "Lockup period (second)"
+        type: int
+        required: False
+    icmpv6_rate_limit:
+        description:
+        - "ICMPv6 rate limit (Normal rate limit. If exceeds this limit, drop the ICMP
+          packet that goes over the limit)"
+        type: int
+        required: False
+    icmpv6_lockup:
+        description:
+        - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate
+          limit. If exceeds this limit, drop all ICMP packet for a time period)"
+        type: int
+        required: False
+    icmpv6_lockup_period:
+        description:
+        - "Lockup period (second)"
+        type: int
+        required: False
+    tcp_stack_tfo_active_conn_limit:
+        description:
+        - "The allowed active layer 7 tcp fast-open connection limit, default is zero
+          (number)"
+        type: int
+        required: False
+    tcp_stack_tfo_cookie_time_limit:
+        description:
+        - "The time limit (in seconds) that a layer 7 tcp fast-open cookie is valid,
+          default is 60 seconds (number)"
+        type: int
+        required: False
+    tcp_stack_tfo_backoff_time:
+        description:
+        - "The time tcp stack will wait before allowing new fast-open requests after
+          security condition, default 600 seconds (number)"
+        type: int
+        required: False
+    subnet_gratuitous_arp:
+        description:
+        - "Send gratuitous ARP for every IP in the subnet virtual server"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -209,66 +234,66 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'conn_limit': {
-            'type': 'int',
-        },
-        'conn_rate_limit_no_logging': {
-            'type': 'bool',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'icmp_lockup_period': {
+        'conn_limit': {
             'type': 'int',
         },
         'conn_limit_reset': {
             'type': 'bool',
         },
-        'rate_interval': {
-            'type': 'str',
-            'choices': ['100ms', 'second']
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'icmpv6_rate_limit': {
-            'type': 'int',
-        },
-        'subnet_gratuitous_arp': {
-            'type': 'bool',
-        },
-        'icmpv6_lockup': {
-            'type': 'int',
-        },
-        'conn_rate_limit_reset': {
-            'type': 'bool',
-        },
-        'tcp_stack_tfo_backoff_time': {
-            'type': 'int',
-        },
-        'tcp_stack_tfo_cookie_time_limit': {
-            'type': 'int',
-        },
         'conn_limit_no_logging': {
             'type': 'bool',
-        },
-        'icmpv6_lockup_period': {
-            'type': 'int',
         },
         'conn_rate_limit': {
             'type': 'int',
         },
-        'tcp_stack_tfo_active_conn_limit': {
+        'rate_interval': {
+            'type': 'str',
+            'choices': ['100ms', 'second']
+        },
+        'conn_rate_limit_reset': {
+            'type': 'bool',
+        },
+        'conn_rate_limit_no_logging': {
+            'type': 'bool',
+        },
+        'icmp_rate_limit': {
             'type': 'int',
         },
         'icmp_lockup': {
             'type': 'int',
         },
-        'icmp_rate_limit': {
+        'icmp_lockup_period': {
             'type': 'int',
         },
+        'icmpv6_rate_limit': {
+            'type': 'int',
+        },
+        'icmpv6_lockup': {
+            'type': 'int',
+        },
+        'icmpv6_lockup_period': {
+            'type': 'int',
+        },
+        'tcp_stack_tfo_active_conn_limit': {
+            'type': 'int',
+        },
+        'tcp_stack_tfo_cookie_time_limit': {
+            'type': 'int',
+        },
+        'tcp_stack_tfo_backoff_time': {
+            'type': 'int',
+        },
+        'subnet_gratuitous_arp': {
+            'type': 'bool',
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_route_rib
 description:
     - Establish static routes
-short_description: Configures A10 ip.route.rib
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,103 +22,130 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    ip_dest_addr:
+        description:
+        - "Destination prefix"
+        type: str
+        required: True
+    ip_mask:
+        description:
+        - "Destination prefix mask"
+        type: str
+        required: True
+    ip_nexthop_ipv4:
+        description:
+        - "Field ip_nexthop_ipv4"
+        type: list
+        required: False
+        suboptions:
+            ip_next_hop:
+                description:
+                - "Forwarding router's address"
+                type: str
+            distance_nexthop_ip:
+                description:
+                - "Distance value for this route"
+                type: int
+            description_nexthop_ip:
+                description:
+                - "Description for static route"
+                type: str
     ip_nexthop_lif:
         description:
         - "Field ip_nexthop_lif"
+        type: list
         required: False
         suboptions:
             lif:
                 description:
                 - "LIF Interface (Logical tunnel interface number)"
+                type: int
             description_nexthop_lif:
                 description:
                 - "Description for static route"
-    ip_nexthop_ipv4:
-        description:
-        - "Field ip_nexthop_ipv4"
-        required: False
-        suboptions:
-            description_nexthop_ip:
-                description:
-                - "Description for static route"
-            ip_next_hop:
-                description:
-                - "Forwarding router's address"
-            distance_nexthop_ip:
-                description:
-                - "Distance value for this route"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ip_dest_addr:
-        description:
-        - "Destination prefix"
-        required: True
+                type: str
     ip_nexthop_tunnel:
         description:
         - "Field ip_nexthop_tunnel"
+        type: list
         required: False
         suboptions:
             tunnel:
                 description:
                 - "Tunnel interface (Tunnel interface number)"
+                type: int
             ip_next_hop_tunnel:
                 description:
                 - "Forwarding router's address"
+                type: str
             distance_nexthop_tunnel:
                 description:
                 - "Distance value for this route"
+                type: int
             description_nexthop_tunnel:
                 description:
                 - "Description for static route"
+                type: str
     ip_nexthop_partition:
         description:
         - "Field ip_nexthop_partition"
+        type: list
         required: False
         suboptions:
             partition_name:
                 description:
                 - "Name of network partition"
+                type: str
             vrid_num_in_partition:
                 description:
                 - "Specify ha VRRP-A vrid"
+                type: int
             description_nexthop_partition:
                 description:
                 - "Description for static route"
+                type: str
             description_partition_vrid:
                 description:
                 - "Description for static route"
-    ip_mask:
+                type: str
+    uuid:
         description:
-        - "Destination prefix mask"
-        required: True
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -179,6 +204,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ip_dest_addr': {
+            'type': 'str',
+            'required': True,
+        },
+        'ip_mask': {
+            'type': 'str',
+            'required': True,
+        },
+        'ip_nexthop_ipv4': {
+            'type': 'list',
+            'ip_next_hop': {
+                'type': 'str',
+            },
+            'distance_nexthop_ip': {
+                'type': 'int',
+            },
+            'description_nexthop_ip': {
+                'type': 'str',
+            }
+        },
         'ip_nexthop_lif': {
             'type': 'list',
             'lif': {
@@ -187,25 +232,6 @@ def get_argspec():
             'description_nexthop_lif': {
                 'type': 'str',
             }
-        },
-        'ip_nexthop_ipv4': {
-            'type': 'list',
-            'description_nexthop_ip': {
-                'type': 'str',
-            },
-            'ip_next_hop': {
-                'type': 'str',
-            },
-            'distance_nexthop_ip': {
-                'type': 'int',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'ip_dest_addr': {
-            'type': 'str',
-            'required': True,
         },
         'ip_nexthop_tunnel': {
             'type': 'list',
@@ -237,9 +263,8 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'ip_mask': {
+        'uuid': {
             'type': 'str',
-            'required': True,
         }
     })
     return rv

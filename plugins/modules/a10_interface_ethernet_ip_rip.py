@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ethernet_ip_rip
 description:
     - RIP
-short_description: Configures A10 interface.ethernet.ip.rip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,116 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ethernet_ifnum:
         description:
-        - Key to identify parent object    receive_cfg:
+        - Key to identify parent object
+        type: str
+        required: True
+    authentication:
+        description:
+        - "Field authentication"
+        type: dict
+        required: False
+        suboptions:
+            str:
+                description:
+                - "Field str"
+                type: dict
+            mode:
+                description:
+                - "Field mode"
+                type: dict
+            key_chain:
+                description:
+                - "Field key_chain"
+                type: dict
+    send_packet:
+        description:
+        - "Enable sending packets through the specified interface"
+        type: bool
+        required: False
+    receive_packet:
+        description:
+        - "Enable receiving packet through the specified interface"
+        type: bool
+        required: False
+    send_cfg:
+        description:
+        - "Field send_cfg"
+        type: dict
+        required: False
+        suboptions:
+            send:
+                description:
+                - "Advertisement transmission"
+                type: bool
+            version:
+                description:
+                - "'1'= RIP version 1; '2'= RIP version 2; '1-compatible'= RIPv1-compatible;
+          '1-2'= RIP version 1 & 2;"
+                type: str
+    receive_cfg:
         description:
         - "Field receive_cfg"
+        type: dict
         required: False
         suboptions:
             receive:
                 description:
                 - "Advertisement reception"
+                type: bool
             version:
                 description:
                 - "'1'= RIP version 1; '2'= RIP version 2; '1-2'= RIP version 1 & 2;"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    receive_packet:
-        description:
-        - "Enable receiving packet through the specified interface"
-        required: False
+                type: str
     split_horizon_cfg:
         description:
         - "Field split_horizon_cfg"
+        type: dict
         required: False
         suboptions:
             state:
                 description:
                 - "'poisoned'= Perform split horizon with poisoned reverse; 'disable'= Disable
           split horizon; 'enable'= Perform split horizon without poisoned reverse;"
-    authentication:
+                type: str
+    uuid:
         description:
-        - "Field authentication"
-        required: False
-        suboptions:
-            key_chain:
-                description:
-                - "Field key_chain"
-            mode:
-                description:
-                - "Field mode"
-            str:
-                description:
-                - "Field str"
-    send_cfg:
-        description:
-        - "Field send_cfg"
-        required: False
-        suboptions:
-            version:
-                description:
-                - "'1'= RIP version 1; '2'= RIP version 2; '1-compatible'= RIPv1-compatible;
-          '1-2'= RIP version 1 & 2;"
-            send:
-                description:
-                - "Advertisement transmission"
-    send_packet:
-        description:
-        - "Enable sending packets through the specified interface"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -168,34 +191,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'receive_cfg': {
-            'type': 'dict',
-            'receive': {
-                'type': 'bool',
-            },
-            'version': {
-                'type': 'str',
-                'choices': ['1', '2', '1-2']
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'receive_packet': {
-            'type': 'bool',
-        },
-        'split_horizon_cfg': {
-            'type': 'dict',
-            'state': {
-                'type': 'str',
-                'choices': ['poisoned', 'disable', 'enable']
-            }
-        },
         'authentication': {
             'type': 'dict',
-            'key_chain': {
+            'str': {
                 'type': 'dict',
-                'key_chain': {
+                'string': {
                     'type': 'str',
                 }
             },
@@ -206,25 +206,48 @@ def get_argspec():
                     'choices': ['md5', 'text']
                 }
             },
-            'str': {
+            'key_chain': {
                 'type': 'dict',
-                'string': {
+                'key_chain': {
                     'type': 'str',
                 }
             }
         },
+        'send_packet': {
+            'type': 'bool',
+        },
+        'receive_packet': {
+            'type': 'bool',
+        },
         'send_cfg': {
             'type': 'dict',
+            'send': {
+                'type': 'bool',
+            },
             'version': {
                 'type': 'str',
                 'choices': ['1', '2', '1-compatible', '1-2']
-            },
-            'send': {
-                'type': 'bool',
             }
         },
-        'send_packet': {
-            'type': 'bool',
+        'receive_cfg': {
+            'type': 'dict',
+            'receive': {
+                'type': 'bool',
+            },
+            'version': {
+                'type': 'str',
+                'choices': ['1', '2', '1-2']
+            }
+        },
+        'split_horizon_cfg': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+                'choices': ['poisoned', 'disable', 'enable']
+            }
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

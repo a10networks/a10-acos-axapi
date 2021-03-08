@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_smpp
 description:
     - SMPP template
-short_description: Configures A10 slb.template.smpp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,69 +22,85 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
         - "SMPP Template Name"
+        type: str
         required: True
+    client_enquire_link:
+        description:
+        - "Respond client ENQUIRE_LINK packet directly instead of forwarding to server"
+        type: bool
+        required: False
     server_enquire_link:
         description:
         - "Send server ENQUIRE_LINK packet for every persist connection when enable conn-
           reuse"
-        required: False
-    server_selection_per_request:
-        description:
-        - "Force server selection on every SMPP request when enable conn-reuse"
-        required: False
-    client_enquire_link:
-        description:
-        - "Respond client ENQUIRE_LINK packet directly instead of forwarding to server"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        type: bool
         required: False
     server_enquire_link_val:
         description:
         - "Set interval of keep-alive packet for each persistent connection (second,
           default is 30)"
+        type: int
         required: False
     user:
         description:
         - "Configure the user to bind (The name used to bind)"
+        type: str
         required: False
     password:
         description:
         - "Configure the password used to bind"
+        type: str
+        required: False
+    server_selection_per_request:
+        description:
+        - "Force server selection on every SMPP request when enable conn-reuse"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -152,17 +166,11 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'server_enquire_link': {
-            'type': 'bool',
-        },
-        'server_selection_per_request': {
-            'type': 'bool',
-        },
         'client_enquire_link': {
             'type': 'bool',
         },
-        'user_tag': {
-            'type': 'str',
+        'server_enquire_link': {
+            'type': 'bool',
         },
         'server_enquire_link_val': {
             'type': 'int',
@@ -173,7 +181,13 @@ def get_argspec():
         'password': {
             'type': 'str',
         },
+        'server_selection_per_request': {
+            'type': 'bool',
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

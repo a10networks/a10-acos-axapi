@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ddos_protection
 description:
     - Configure CGNV6 DDoS Protection
-short_description: Configures A10 cgnv6.ddos-protection
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,73 +22,106 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    toggle:
+        description:
+        - "'enable'= Enable CGNV6 NAT pool DDoS protection (default); 'disable'= Disable
+          CGNV6 NAT pool DDoS protection;"
+        type: str
         required: False
     logging:
         description:
         - "Field logging"
+        type: dict
         required: False
         suboptions:
             logging_toggle:
                 description:
                 - "'enable'= Enable CGNV6 NAT pool DDoS protection logging (default); 'disable'=
           Disable CGNV6 NAT pool DDoS protection logging;"
-    uuid:
+                type: str
+    packets_per_second:
         description:
-        - "uuid of the object"
+        - "Field packets_per_second"
+        type: dict
+        required: False
+        suboptions:
+            ip:
+                description:
+                - "Configure packets-per-second threshold per IP(default 3000000)"
+                type: int
+            action:
+                description:
+                - "Field action"
+                type: dict
+            tcp:
+                description:
+                - "Configure packets-per-second threshold per TCP port (default= 3000)"
+                type: int
+            udp:
+                description:
+                - "Configure packets-per-second threshold per UDP port (default= 3000)"
+                type: int
+            other:
+                description:
+                - "Configure packets-per-second threshold for other L4 protocols(default 10000)"
+                type: int
+            include_existing_session:
+                description:
+                - "Count traffic associated with existing session into the packets-per-second
+          (Default= Disabled)"
+                type: bool
+    max_hw_entries:
+        description:
+        - "Configure maximum HW entries"
+        type: int
         required: False
     zone:
         description:
         - "Disable NAT IP based on DDoS zone name set in BGP"
+        type: str
         required: False
-    toggle:
+    uuid:
         description:
-        - "'enable'= Enable CGNV6 NAT pool DDoS protection (default); 'disable'= Disable
-          CGNV6 NAT pool DDoS protection;"
+        - "uuid of the object"
+        type: str
         required: False
-    ip_entries:
-        description:
-        - "Field ip_entries"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    disable_nat_ip_by_bgp:
-        description:
-        - "Field disable_nat_ip_by_bgp"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -119,152 +150,183 @@ options:
           invalidated; 'l3_entry_add_to_bgp_failure'= L3 Entry BGP add failures;
           'l3_entry_remove_from_bgp_failure'= L3 entry BGP remove failures;
           'l3_entry_add_to_hw_failure'= L3 entry HW add failure;"
-    max_hw_entries:
-        description:
-        - "Configure maximum HW entries"
-        required: False
-    packets_per_second:
-        description:
-        - "Field packets_per_second"
-        required: False
-        suboptions:
-            udp:
-                description:
-                - "Configure packets-per-second threshold per UDP port (default= 3000)"
-            ip:
-                description:
-                - "Configure packets-per-second threshold per IP(default 3000000)"
-            tcp:
-                description:
-                - "Configure packets-per-second threshold per TCP port (default= 3000)"
-            other:
-                description:
-                - "Configure packets-per-second threshold for other L4 protocols(default 10000)"
-            action:
-                description:
-                - "Field action"
-            include_existing_session:
-                description:
-                - "Count traffic associated with existing session into the packets-per-second
-          (Default= Disabled)"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            ip_other_block_alloc:
-                description:
-                - "Other block alloc"
-            l4_entry_list_alloc:
-                description:
-                - "L4 Entry list alloc"
-            entry_added_shadow:
-                description:
-                - "Entry added shadow"
-            ip_node_free:
-                description:
-                - "Node free"
-            l4_entry_added:
-                description:
-                - "L4 Entry added"
-            l4_hw_out_of_entries:
-                description:
-                - "HW out of L4 entries"
-            l4_entry_list_free:
-                description:
-                - "L4 Entry list free"
-            l4_entry_added_to_hw:
-                description:
-                - "L4 Entry added to HW"
-            ip_node_alloc:
-                description:
-                - "Node alloc"
-            l3_entry_match_drop_hw:
-                description:
-                - "L3 HW entry match drop"
-            l4_entry_deleted:
-                description:
-                - "L4 Entry deleted"
-            l3_entry_remove_from_bgp_failure:
-                description:
-                - "L3 entry BGP remove failures"
-            l3_entry_removed_from_hw:
-                description:
-                - "L3 Entry removed from HW"
-            l3_entry_deleted:
-                description:
-                - "L3 Entry Deleted"
-            l3_entry_added_to_hw:
-                description:
-                - "L3 Entry added to HW"
-            l3_entry_too_many:
-                description:
-                - "L3 Too many entries"
-            l3_entry_match_drop:
-                description:
-                - "L3 Entry match drop"
-            l3_entry_drop_max_hw_exceeded:
-                description:
-                - "L3 Entry Drop due to HW Limit Exceeded"
-            l4_entry_match_drop:
-                description:
-                - "L4 Entry match drop"
-            ip_port_block_free:
-                description:
-                - "Port block free"
-            entry_invalidated:
-                description:
-                - "Entry invalidated"
-            l4_entry_drop_max_hw_exceeded:
-                description:
-                - "L4 Entry Drop due to HW Limit Exceeded"
-            l3_entry_add_to_hw_failure:
-                description:
-                - "L3 entry HW add failure"
-            ip_other_block_alloc_failure:
-                description:
-                - "Other block alloc failure"
-            ip_port_block_alloc:
-                description:
-                - "Port block alloc"
-            l3_entry_removed_from_bgp:
-                description:
-                - "Entry removed from BGP"
-            l4_entry_list_alloc_failure:
-                description:
-                - "L4 Entry list alloc failures"
-            ip_other_block_free:
-                description:
-                - "Other block free"
-            l4_entry_match_drop_hw:
-                description:
-                - "L4 HW Entry match drop"
-            l3_entry_added:
-                description:
-                - "L3 Entry Added"
-            l3_entry_add_to_bgp_failure:
-                description:
-                - "L3 Entry BGP add failures"
-            l4_entry_removed_from_hw:
-                description:
-                - "L4 Entry removed from HW"
-            l3_entry_added_to_bgp:
-                description:
-                - "L3 Entry added to BGP"
-            ip_port_block_alloc_failure:
-                description:
-                - "Port block alloc failure"
-            ip_node_alloc_failure:
-                description:
-                - "Node alloc failures"
+                type: str
     l4_entries:
         description:
         - "Field l4_entries"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    ip_entries:
+        description:
+        - "Field ip_entries"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    disable_nat_ip_by_bgp:
+        description:
+        - "Field disable_nat_ip_by_bgp"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            l3_entry_added:
+                description:
+                - "L3 Entry Added"
+                type: str
+            l3_entry_deleted:
+                description:
+                - "L3 Entry Deleted"
+                type: str
+            l3_entry_added_to_bgp:
+                description:
+                - "L3 Entry added to BGP"
+                type: str
+            l3_entry_removed_from_bgp:
+                description:
+                - "Entry removed from BGP"
+                type: str
+            l3_entry_added_to_hw:
+                description:
+                - "L3 Entry added to HW"
+                type: str
+            l3_entry_removed_from_hw:
+                description:
+                - "L3 Entry removed from HW"
+                type: str
+            l3_entry_too_many:
+                description:
+                - "L3 Too many entries"
+                type: str
+            l3_entry_match_drop:
+                description:
+                - "L3 Entry match drop"
+                type: str
+            l3_entry_match_drop_hw:
+                description:
+                - "L3 HW entry match drop"
+                type: str
+            l3_entry_drop_max_hw_exceeded:
+                description:
+                - "L3 Entry Drop due to HW Limit Exceeded"
+                type: str
+            l4_entry_added:
+                description:
+                - "L4 Entry added"
+                type: str
+            l4_entry_deleted:
+                description:
+                - "L4 Entry deleted"
+                type: str
+            l4_entry_added_to_hw:
+                description:
+                - "L4 Entry added to HW"
+                type: str
+            l4_entry_removed_from_hw:
+                description:
+                - "L4 Entry removed from HW"
+                type: str
+            l4_hw_out_of_entries:
+                description:
+                - "HW out of L4 entries"
+                type: str
+            l4_entry_match_drop:
+                description:
+                - "L4 Entry match drop"
+                type: str
+            l4_entry_match_drop_hw:
+                description:
+                - "L4 HW Entry match drop"
+                type: str
+            l4_entry_drop_max_hw_exceeded:
+                description:
+                - "L4 Entry Drop due to HW Limit Exceeded"
+                type: str
+            l4_entry_list_alloc:
+                description:
+                - "L4 Entry list alloc"
+                type: str
+            l4_entry_list_free:
+                description:
+                - "L4 Entry list free"
+                type: str
+            l4_entry_list_alloc_failure:
+                description:
+                - "L4 Entry list alloc failures"
+                type: str
+            ip_node_alloc:
+                description:
+                - "Node alloc"
+                type: str
+            ip_node_free:
+                description:
+                - "Node free"
+                type: str
+            ip_node_alloc_failure:
+                description:
+                - "Node alloc failures"
+                type: str
+            ip_port_block_alloc:
+                description:
+                - "Port block alloc"
+                type: str
+            ip_port_block_free:
+                description:
+                - "Port block free"
+                type: str
+            ip_port_block_alloc_failure:
+                description:
+                - "Port block alloc failure"
+                type: str
+            ip_other_block_alloc:
+                description:
+                - "Other block alloc"
+                type: str
+            ip_other_block_free:
+                description:
+                - "Other block free"
+                type: str
+            ip_other_block_alloc_failure:
+                description:
+                - "Other block alloc failure"
+                type: str
+            entry_added_shadow:
+                description:
+                - "Entry added shadow"
+                type: str
+            entry_invalidated:
+                description:
+                - "Entry invalidated"
+                type: str
+            l3_entry_add_to_bgp_failure:
+                description:
+                - "L3 Entry BGP add failures"
+                type: str
+            l3_entry_remove_from_bgp_failure:
+                description:
+                - "L3 entry BGP remove failures"
+                type: str
+            l3_entry_add_to_hw_failure:
+                description:
+                - "L3 entry HW add failure"
+                type: str
 
 '''
 
@@ -327,6 +389,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'toggle': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
         'logging': {
             'type': 'dict',
             'logging_toggle': {
@@ -334,27 +400,51 @@ def get_argspec():
                 'choices': ['enable', 'disable']
             }
         },
-        'uuid': {
-            'type': 'str',
+        'packets_per_second': {
+            'type': 'dict',
+            'ip': {
+                'type': 'int',
+            },
+            'action': {
+                'type': 'dict',
+                'action_type': {
+                    'type': 'str',
+                    'choices': ['log', 'drop', 'redistribute-route']
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'expiration': {
+                    'type': 'int',
+                },
+                'timer_multiply_max': {
+                    'type': 'int',
+                },
+                'remove_wait_timer': {
+                    'type': 'int',
+                }
+            },
+            'tcp': {
+                'type': 'int',
+            },
+            'udp': {
+                'type': 'int',
+            },
+            'other': {
+                'type': 'int',
+            },
+            'include_existing_session': {
+                'type': 'bool',
+            }
+        },
+        'max_hw_entries': {
+            'type': 'int',
         },
         'zone': {
             'type': 'str',
         },
-        'toggle': {
+        'uuid': {
             'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'ip_entries': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'disable_nat_ip_by_bgp': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
         },
         'sampling_enable': {
             'type': 'list',
@@ -384,88 +474,42 @@ def get_argspec():
                 ]
             }
         },
-        'max_hw_entries': {
-            'type': 'int',
-        },
-        'packets_per_second': {
+        'l4_entries': {
             'type': 'dict',
-            'udp': {
-                'type': 'int',
-            },
-            'ip': {
-                'type': 'int',
-            },
-            'tcp': {
-                'type': 'int',
-            },
-            'other': {
-                'type': 'int',
-            },
-            'action': {
-                'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
-                'timer_multiply_max': {
-                    'type': 'int',
-                },
-                'action_type': {
-                    'type': 'str',
-                    'choices': ['log', 'drop', 'redistribute-route']
-                },
-                'expiration': {
-                    'type': 'int',
-                }
-            },
-            'include_existing_session': {
-                'type': 'bool',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'ip_entries': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'disable_nat_ip_by_bgp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
             }
         },
         'stats': {
             'type': 'dict',
-            'ip_other_block_alloc': {
-                'type': 'str',
-            },
-            'l4_entry_list_alloc': {
-                'type': 'str',
-            },
-            'entry_added_shadow': {
-                'type': 'str',
-            },
-            'ip_node_free': {
-                'type': 'str',
-            },
-            'l4_entry_added': {
-                'type': 'str',
-            },
-            'l4_hw_out_of_entries': {
-                'type': 'str',
-            },
-            'l4_entry_list_free': {
-                'type': 'str',
-            },
-            'l4_entry_added_to_hw': {
-                'type': 'str',
-            },
-            'ip_node_alloc': {
-                'type': 'str',
-            },
-            'l3_entry_match_drop_hw': {
-                'type': 'str',
-            },
-            'l4_entry_deleted': {
-                'type': 'str',
-            },
-            'l3_entry_remove_from_bgp_failure': {
-                'type': 'str',
-            },
-            'l3_entry_removed_from_hw': {
+            'l3_entry_added': {
                 'type': 'str',
             },
             'l3_entry_deleted': {
                 'type': 'str',
             },
+            'l3_entry_added_to_bgp': {
+                'type': 'str',
+            },
+            'l3_entry_removed_from_bgp': {
+                'type': 'str',
+            },
             'l3_entry_added_to_hw': {
+                'type': 'str',
+            },
+            'l3_entry_removed_from_hw': {
                 'type': 'str',
             },
             'l3_entry_too_many': {
@@ -474,64 +518,85 @@ def get_argspec():
             'l3_entry_match_drop': {
                 'type': 'str',
             },
+            'l3_entry_match_drop_hw': {
+                'type': 'str',
+            },
             'l3_entry_drop_max_hw_exceeded': {
                 'type': 'str',
             },
-            'l4_entry_match_drop': {
+            'l4_entry_added': {
                 'type': 'str',
             },
-            'ip_port_block_free': {
+            'l4_entry_deleted': {
                 'type': 'str',
             },
-            'entry_invalidated': {
-                'type': 'str',
-            },
-            'l4_entry_drop_max_hw_exceeded': {
-                'type': 'str',
-            },
-            'l3_entry_add_to_hw_failure': {
-                'type': 'str',
-            },
-            'ip_other_block_alloc_failure': {
-                'type': 'str',
-            },
-            'ip_port_block_alloc': {
-                'type': 'str',
-            },
-            'l3_entry_removed_from_bgp': {
-                'type': 'str',
-            },
-            'l4_entry_list_alloc_failure': {
-                'type': 'str',
-            },
-            'ip_other_block_free': {
-                'type': 'str',
-            },
-            'l4_entry_match_drop_hw': {
-                'type': 'str',
-            },
-            'l3_entry_added': {
-                'type': 'str',
-            },
-            'l3_entry_add_to_bgp_failure': {
+            'l4_entry_added_to_hw': {
                 'type': 'str',
             },
             'l4_entry_removed_from_hw': {
                 'type': 'str',
             },
-            'l3_entry_added_to_bgp': {
+            'l4_hw_out_of_entries': {
+                'type': 'str',
+            },
+            'l4_entry_match_drop': {
+                'type': 'str',
+            },
+            'l4_entry_match_drop_hw': {
+                'type': 'str',
+            },
+            'l4_entry_drop_max_hw_exceeded': {
+                'type': 'str',
+            },
+            'l4_entry_list_alloc': {
+                'type': 'str',
+            },
+            'l4_entry_list_free': {
+                'type': 'str',
+            },
+            'l4_entry_list_alloc_failure': {
+                'type': 'str',
+            },
+            'ip_node_alloc': {
+                'type': 'str',
+            },
+            'ip_node_free': {
+                'type': 'str',
+            },
+            'ip_node_alloc_failure': {
+                'type': 'str',
+            },
+            'ip_port_block_alloc': {
+                'type': 'str',
+            },
+            'ip_port_block_free': {
                 'type': 'str',
             },
             'ip_port_block_alloc_failure': {
                 'type': 'str',
             },
-            'ip_node_alloc_failure': {
+            'ip_other_block_alloc': {
                 'type': 'str',
-            }
-        },
-        'l4_entries': {
-            'type': 'dict',
-            'uuid': {
+            },
+            'ip_other_block_free': {
+                'type': 'str',
+            },
+            'ip_other_block_alloc_failure': {
+                'type': 'str',
+            },
+            'entry_added_shadow': {
+                'type': 'str',
+            },
+            'entry_invalidated': {
+                'type': 'str',
+            },
+            'l3_entry_add_to_bgp_failure': {
+                'type': 'str',
+            },
+            'l3_entry_remove_from_bgp_failure': {
+                'type': 'str',
+            },
+            'l3_entry_add_to_hw_failure': {
                 'type': 'str',
             }
         }

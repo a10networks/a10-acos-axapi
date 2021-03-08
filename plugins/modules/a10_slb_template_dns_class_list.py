@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dns_class_list
 description:
     - Classification list
-short_description: Configures A10 slb.template.dns.class-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,82 +22,106 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     dns_name:
         description:
-        - Key to identify parent object    lid_list:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
+        description:
+        - "Specify a class list name"
+        type: str
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    lid_list:
         description:
         - "Field lid_list"
+        type: list
         required: False
         suboptions:
+            lidnum:
+                description:
+                - "Specify a limit ID"
+                type: int
+            conn_rate_limit:
+                description:
+                - "Connection rate limit"
+                type: int
+            per:
+                description:
+                - "Per (Number of 100ms)"
+                type: int
+            over_limit_action:
+                description:
+                - "Action when exceeds limit"
+                type: bool
             action_value:
                 description:
                 - "'dns-cache-disable'= Disable DNS cache when it exceeds limit; 'dns-cache-
           enable'= Enable DNS cache when it exceeds limit; 'forward'= Forward the traffic
           even it exceeds limit;"
-            log:
-                description:
-                - "Log a message"
-            lidnum:
-                description:
-                - "Specify a limit ID"
-            over_limit_action:
-                description:
-                - "Action when exceeds limit"
-            per:
-                description:
-                - "Per (Number of 100ms)"
+                type: str
             lockout:
                 description:
                 - "Don't accept any new connection for certain time (Lockout duration in minutes)"
-            user_tag:
+                type: int
+            log:
                 description:
-                - "Customized tag"
-            dns:
-                description:
-                - "Field dns"
-            conn_rate_limit:
-                description:
-                - "Connection rate limit"
+                - "Log a message"
+                type: bool
             log_interval:
                 description:
                 - "Log interval (minute, by default system will log every over limit instance)"
+                type: int
+            dns:
+                description:
+                - "Field dns"
+                type: dict
             uuid:
                 description:
                 - "uuid of the object"
-    name:
-        description:
-        - "Specify a class list name"
-        required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -154,31 +176,41 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'lid_list': {
             'type': 'list',
+            'lidnum': {
+                'type': 'int',
+                'required': True,
+            },
+            'conn_rate_limit': {
+                'type': 'int',
+            },
+            'per': {
+                'type': 'int',
+            },
+            'over_limit_action': {
+                'type': 'bool',
+            },
             'action_value': {
                 'type': 'str',
                 'choices':
                 ['dns-cache-disable', 'dns-cache-enable', 'forward']
             },
-            'log': {
-                'type': 'bool',
-            },
-            'lidnum': {
-                'type': 'int',
-                'required': True,
-            },
-            'over_limit_action': {
-                'type': 'bool',
-            },
-            'per': {
-                'type': 'int',
-            },
             'lockout': {
                 'type': 'int',
             },
-            'user_tag': {
-                'type': 'str',
+            'log': {
+                'type': 'bool',
+            },
+            'log_interval': {
+                'type': 'int',
             },
             'dns': {
                 'type': 'dict',
@@ -186,32 +218,22 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['cache-disable', 'cache-enable']
                 },
-                'honor_server_response_ttl': {
-                    'type': 'bool',
+                'ttl': {
+                    'type': 'int',
                 },
                 'weight': {
                     'type': 'int',
                 },
-                'ttl': {
-                    'type': 'int',
+                'honor_server_response_ttl': {
+                    'type': 'bool',
                 }
-            },
-            'conn_rate_limit': {
-                'type': 'int',
-            },
-            'log_interval': {
-                'type': 'int',
             },
             'uuid': {
                 'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

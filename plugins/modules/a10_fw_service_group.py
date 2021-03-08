@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_service_group
 description:
     - Service Group
-short_description: Configures A10 fw.service-group
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,92 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    name:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            name:
-                description:
-                - "FW Service Name"
-            stateless_current_rate:
-                description:
-                - "Field stateless_current_rate"
-            servers_down:
-                description:
-                - "Field servers_down"
-            stateless_state:
-                description:
-                - "Field stateless_state"
-            servers_disable:
-                description:
-                - "Field servers_disable"
-            stateless_type:
-                description:
-                - "Field stateless_type"
-            servers_total:
-                description:
-                - "Field servers_total"
-            state:
-                description:
-                - "Field state"
-            member_list:
-                description:
-                - "Field member_list"
-            servers_up:
-                description:
-                - "Field servers_up"
-            stateless_current_usage:
-                description:
-                - "Field stateless_current_usage"
-            hm_dsr_enable_all_vip:
-                description:
-                - "Field hm_dsr_enable_all_vip"
+        - "FW Service Name"
+        type: str
+        required: True
     protocol:
         description:
         - "'tcp'= TCP LB service; 'udp'= UDP LB service;"
+        type: str
         required: False
-    uuid:
+    health_check:
         description:
-        - "uuid of the object"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        - "Health Check (Monitor Name)"
+        type: str
         required: False
     traffic_replication_mirror_ip_repl:
         description:
         - "Replaces IP with server-IP"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -117,54 +96,125 @@ options:
                 - "'all'= all; 'server_selection_fail_drop'= Service selection fail drop;
           'server_selection_fail_reset'= Service selection fail reset;
           'service_peak_conn'= Service peak connection;"
+                type: str
     member_list:
         description:
         - "Field member_list"
+        type: list
         required: False
         suboptions:
-            port:
-                description:
-                - "Port number"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
             name:
                 description:
                 - "Member name"
-    stats:
+                type: str
+            port:
+                description:
+                - "Port number"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    oper:
         description:
-        - "Field stats"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            member_list:
+            state:
                 description:
-                - "Field member_list"
-            server_selection_fail_drop:
+                - "Field state"
+                type: str
+            servers_up:
                 description:
-                - "Service selection fail drop"
-            server_selection_fail_reset:
+                - "Field servers_up"
+                type: int
+            servers_down:
                 description:
-                - "Service selection fail reset"
-            service_peak_conn:
+                - "Field servers_down"
+                type: int
+            servers_disable:
                 description:
-                - "Service peak connection"
+                - "Field servers_disable"
+                type: int
+            servers_total:
+                description:
+                - "Field servers_total"
+                type: int
+            stateless_current_rate:
+                description:
+                - "Field stateless_current_rate"
+                type: int
+            stateless_current_usage:
+                description:
+                - "Field stateless_current_usage"
+                type: int
+            stateless_state:
+                description:
+                - "Field stateless_state"
+                type: int
+            stateless_type:
+                description:
+                - "Field stateless_type"
+                type: int
+            hm_dsr_enable_all_vip:
+                description:
+                - "Field hm_dsr_enable_all_vip"
+                type: int
+            pri_affinity_priority:
+                description:
+                - "Field pri_affinity_priority"
+                type: int
+            filter:
+                description:
+                - "Field filter"
+                type: str
+            sgm_list:
+                description:
+                - "Field sgm_list"
+                type: list
             name:
                 description:
                 - "FW Service Name"
-    health_check:
+                type: str
+            member_list:
+                description:
+                - "Field member_list"
+                type: list
+    stats:
         description:
-        - "Health Check (Monitor Name)"
+        - "Field stats"
+        type: dict
         required: False
-    name:
-        description:
-        - "FW Service Name"
-        required: True
+        suboptions:
+            server_selection_fail_drop:
+                description:
+                - "Service selection fail drop"
+                type: str
+            server_selection_fail_reset:
+                description:
+                - "Service selection fail reset"
+                type: str
+            service_peak_conn:
+                description:
+                - "Service peak connection"
+                type: str
+            name:
+                description:
+                - "FW Service Name"
+                type: str
+            member_list:
+                description:
+                - "Field member_list"
+                type: list
 
 '''
 
@@ -226,78 +276,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'stateless_current_rate': {
-                'type': 'int',
-            },
-            'servers_down': {
-                'type': 'int',
-            },
-            'stateless_state': {
-                'type': 'int',
-            },
-            'servers_disable': {
-                'type': 'int',
-            },
-            'stateless_type': {
-                'type': 'int',
-            },
-            'servers_total': {
-                'type': 'int',
-            },
-            'state': {
-                'type':
-                'str',
-                'choices': [
-                    'All Up', 'Functional Up', 'Partial Up', 'Down',
-                    'Disabled', 'Unknown'
-                ]
-            },
-            'member_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'state': {
-                        'type': 'str',
-                        'choices': ['UP', 'DOWN', 'MAINTENANCE']
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'port': {
-                    'type': 'int',
-                    'required': True,
-                }
-            },
-            'servers_up': {
-                'type': 'int',
-            },
-            'stateless_current_usage': {
-                'type': 'int',
-            },
-            'hm_dsr_enable_all_vip': {
-                'type': 'int',
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
         },
         'protocol': {
             'type': 'str',
             'choices': ['tcp', 'udp']
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'traffic_replication_mirror_ip_repl': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',
         },
         'user_tag': {
             'type': 'str',
-        },
-        'traffic_replication_mirror_ip_repl': {
-            'type': 'bool',
         },
         'sampling_enable': {
             'type': 'list',
@@ -312,9 +309,19 @@ def get_argspec():
         },
         'member_list': {
             'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
             'port': {
                 'type': 'int',
                 'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -331,73 +338,67 @@ def get_argspec():
                         'response_time', 'fastest_rsp_time', 'slowest_rsp_time'
                     ]
                 }
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type':
+                'str',
+                'choices': [
+                    'All Up', 'Functional Up', 'Partial Up', 'Down',
+                    'Disabled', 'Unknown'
+                ]
             },
-            'uuid': {
-                'type': 'str',
+            'servers_up': {
+                'type': 'int',
             },
-            'user_tag': {
+            'servers_down': {
+                'type': 'int',
+            },
+            'servers_disable': {
+                'type': 'int',
+            },
+            'servers_total': {
+                'type': 'int',
+            },
+            'stateless_current_rate': {
+                'type': 'int',
+            },
+            'stateless_current_usage': {
+                'type': 'int',
+            },
+            'stateless_state': {
+                'type': 'int',
+            },
+            'stateless_type': {
+                'type': 'int',
+            },
+            'hm_dsr_enable_all_vip': {
+                'type': 'int',
+            },
+            'pri_affinity_priority': {
+                'type': 'int',
+            },
+            'filter': {
                 'type': 'str',
+                'choices': ['sgm-sort-config']
+            },
+            'sgm_list': {
+                'type': 'list',
+                'sgm_name': {
+                    'type': 'str',
+                },
+                'sgm_port': {
+                    'type': 'int',
+                }
             },
             'name': {
                 'type': 'str',
                 'required': True,
-            }
-        },
-        'stats': {
-            'type': 'dict',
+            },
             'member_list': {
                 'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'curr_req': {
-                        'type': 'str',
-                    },
-                    'total_rev_bytes': {
-                        'type': 'str',
-                    },
-                    'peak_conn': {
-                        'type': 'str',
-                    },
-                    'total_conn': {
-                        'type': 'str',
-                    },
-                    'fastest_rsp_time': {
-                        'type': 'str',
-                    },
-                    'total_fwd_pkts': {
-                        'type': 'str',
-                    },
-                    'total_req': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected_status_code_2xx': {
-                        'type': 'str',
-                    },
-                    'total_req_succ': {
-                        'type': 'str',
-                    },
-                    'curr_conn': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected_status_code_non_5xx': {
-                        'type': 'str',
-                    },
-                    'total_fwd_bytes': {
-                        'type': 'str',
-                    },
-                    'slowest_rsp_time': {
-                        'type': 'str',
-                    },
-                    'response_time': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected': {
-                        'type': 'str',
-                    }
-                },
                 'name': {
                     'type': 'str',
                     'required': True,
@@ -405,8 +406,18 @@ def get_argspec():
                 'port': {
                     'type': 'int',
                     'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'state': {
+                        'type': 'str',
+                        'choices': ['UP', 'DOWN', 'MAINTENANCE']
+                    }
                 }
-            },
+            }
+        },
+        'stats': {
+            'type': 'dict',
             'server_selection_fail_drop': {
                 'type': 'str',
             },
@@ -419,14 +430,69 @@ def get_argspec():
             'name': {
                 'type': 'str',
                 'required': True,
+            },
+            'member_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'port': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'curr_conn': {
+                        'type': 'str',
+                    },
+                    'total_fwd_bytes': {
+                        'type': 'str',
+                    },
+                    'total_fwd_pkts': {
+                        'type': 'str',
+                    },
+                    'total_rev_bytes': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts': {
+                        'type': 'str',
+                    },
+                    'total_conn': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_status_code_2xx': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_status_code_non_5xx': {
+                        'type': 'str',
+                    },
+                    'curr_req': {
+                        'type': 'str',
+                    },
+                    'total_req': {
+                        'type': 'str',
+                    },
+                    'total_req_succ': {
+                        'type': 'str',
+                    },
+                    'peak_conn': {
+                        'type': 'str',
+                    },
+                    'response_time': {
+                        'type': 'str',
+                    },
+                    'fastest_rsp_time': {
+                        'type': 'str',
+                    },
+                    'slowest_rsp_time': {
+                        'type': 'str',
+                    }
+                }
             }
-        },
-        'health_check': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

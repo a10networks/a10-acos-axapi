@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn
 description:
     - VPN Commands
-short_description: Configures A10 vpn
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,165 +22,219 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    asymmetric_flow_support:
         description:
-        - "Field oper"
+        - "Support asymmetric flows pass through IPsec tunnel"
+        type: bool
         required: False
-        suboptions:
-            ipsec_sa_by_gw:
-                description:
-                - "Field ipsec_sa_by_gw"
-            ipsec_list:
-                description:
-                - "Field ipsec_list"
-            all_partitions:
-                description:
-                - "Field all_partitions"
-            Num_hardware_devices:
-                description:
-                - "Field Num_hardware_devices"
-            IPsec_mode:
-                description:
-                - "Field IPsec_mode"
-            specific_partition:
-                description:
-                - "Field specific_partition"
-            IKE_Gateway_total:
-                description:
-                - "Field IKE_Gateway_total"
-            ike_gateway_list:
-                description:
-                - "Field ike_gateway_list"
-            all_partition_list:
-                description:
-                - "Field all_partition_list"
-            IPsec_SA_total:
-                description:
-                - "Field IPsec_SA_total"
-            default:
-                description:
-                - "Field default"
-            Crypto_cores_assigned_to_IPsec:
-                description:
-                - "Field Crypto_cores_assigned_to_IPsec"
-            IKE_SA_total:
-                description:
-                - "Field IKE_SA_total"
-            errordump:
-                description:
-                - "Field errordump"
-            Crypto_cores_total:
-                description:
-                - "Field Crypto_cores_total"
-            IPsec_total:
-                description:
-                - "Field IPsec_total"
-            shared:
-                description:
-                - "Field shared"
-            ocsp:
-                description:
-                - "Field ocsp"
-            Crypto_mem:
-                description:
-                - "Field Crypto_mem"
-            crl:
-                description:
-                - "Field crl"
-            log:
-                description:
-                - "Field log"
+    stateful_mode:
+        description:
+        - "VPN module will work in stateful mode and create sessions"
+        type: bool
+        required: False
+    fragment_after_encap:
+        description:
+        - "Fragment after adding IPsec headers"
+        type: bool
+        required: False
+    nat_traversal_flow_affinity:
+        description:
+        - "Choose IPsec UDP source port based on port of inner flow (only for A10 to A10)"
+        type: bool
+        required: False
     tcp_mss_adjust_disable:
         description:
         - "Disable TCP MSS adjustment in SYN packet"
+        type: bool
         required: False
-    ike_gateway_list:
+    jumbo_fragment:
         description:
-        - "Field ike_gateway_list"
+        - "Support IKE jumbo fragment packet"
+        type: bool
+        required: False
+    ike_sa_timeout:
+        description:
+        - "Timeout IKE-SA in connecting state in seconds (default 600s)"
+        type: int
+        required: False
+    ipsec_error_dump:
+        description:
+        - "Support record the error ipsec cavium information in dump file"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
-            ike_version:
+            counters1:
                 description:
-                - "'v1'= IKEv1 key exchange; 'v2'= IKEv2 key exchange;"
-            key_passphrase_encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED key string)"
-            local_cert:
-                description:
-                - "Field local_cert"
-            lifetime:
-                description:
-                - "IKE SA age in seconds"
-            local_id:
-                description:
-                - "Local Gateway Identity"
-            enc_cfg:
-                description:
-                - "Field enc_cfg"
+                - "'all'= all; 'passthrough'= passthrough; 'ha-standby-drop'= ha-standby-drop;"
+                type: str
+    error:
+        description:
+        - "Field error"
+        type: dict
+        required: False
+        suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-            nat_traversal:
+                type: str
+    errordump:
+        description:
+        - "Field errordump"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
                 description:
-                - "Field nat_traversal"
-            vrid:
+                - "uuid of the object"
+                type: str
+    default:
+        description:
+        - "Field default"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
                 description:
-                - "Field vrid"
-            preshare_key_value:
+                - "uuid of the object"
+                type: str
+    log:
+        description:
+        - "Field log"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
                 description:
-                - "pre-shared key"
-            key_passphrase:
+                - "uuid of the object"
+                type: str
+    ike_stats_global:
+        description:
+        - "Field ike_stats_global"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
                 description:
-                - "Private Key Pass Phrase"
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    ike_gateway_list:
+        description:
+        - "Field ike_gateway_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "IKE-gateway name"
+                type: str
+            ike_version:
+                description:
+                - "'v1'= IKEv1 key exchange; 'v2'= IKEv2 key exchange;"
+                type: str
             mode:
                 description:
                 - "'main'= Negotiate Main mode (Default); 'aggressive'= Negotiate Aggressive mode;"
-            local_address:
+                type: str
+            auth_method:
                 description:
-                - "Field local_address"
-            key:
+                - "'preshare-key'= Authenticate the remote gateway using a pre-shared key
+          (Default); 'rsa-signature'= Authenticate the remote gateway using an RSA
+          certificate; 'ecdsa-signature'= Authenticate the remote gateway using an ECDSA
+          certificate;"
+                type: str
+            preshare_key_value:
                 description:
-                - "Private Key"
+                - "pre-shared key"
+                type: str
             preshare_key_encrypted:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED pre-shared key string)"
-            remote_address:
+                type: str
+            key:
                 description:
-                - "Field remote_address"
+                - "Private Key"
+                type: str
+            key_passphrase:
+                description:
+                - "Private Key Pass Phrase"
+                type: str
+            key_passphrase_encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED key string)"
+                type: str
+            vrid:
+                description:
+                - "Field vrid"
+                type: dict
+            local_cert:
+                description:
+                - "Field local_cert"
+                type: dict
             remote_ca_cert:
                 description:
                 - "Field remote_ca_cert"
-            name:
+                type: dict
+            local_id:
                 description:
-                - "IKE-gateway name"
+                - "Local Gateway Identity"
+                type: str
+            remote_id:
+                description:
+                - "Remote Gateway Identity"
+                type: str
+            enc_cfg:
+                description:
+                - "Field enc_cfg"
+                type: list
             dh_group:
                 description:
                 - "'1'= Diffie-Hellman group 1 - 768-bit(Default); '2'= Diffie-Hellman group 2 -
@@ -191,182 +243,61 @@ options:
           group 16 - 4096-bit; '18'= Diffie-Hellman group 18 - 8192-bit; '19'= Diffie-
           Hellman group 19 - 256-bit Elliptic Curve; '20'= Diffie-Hellman group 20 -
           384-bit Elliptic Curve;"
-            user_tag:
+                type: str
+            local_address:
                 description:
-                - "Customized tag"
-            sampling_enable:
+                - "Field local_address"
+                type: dict
+            remote_address:
                 description:
-                - "Field sampling_enable"
+                - "Field remote_address"
+                type: dict
+            lifetime:
+                description:
+                - "IKE SA age in seconds"
+                type: int
+            nat_traversal:
+                description:
+                - "Field nat_traversal"
+                type: bool
             dpd:
                 description:
                 - "Field dpd"
-            remote_id:
-                description:
-                - "Remote Gateway Identity"
-            auth_method:
-                description:
-                - "'preshare-key'= Authenticate the remote gateway using a pre-shared key
-          (Default); 'rsa-signature'= Authenticate the remote gateway using an RSA
-          certificate; 'ecdsa-signature'= Authenticate the remote gateway using an ECDSA
-          certificate;"
-    fragment_after_encap:
-        description:
-        - "Fragment after adding IPsec headers"
-        required: False
-    ipsec_error_dump:
-        description:
-        - "Support record the error ipsec cavium information in dump file"
-        required: False
-    nat_traversal_flow_affinity:
-        description:
-        - "Choose IPsec UDP source port based on port of inner flow (only for A10 to A10)"
-        required: False
-    asymmetric_flow_support:
-        description:
-        - "Support asymmetric flows pass through IPsec tunnel"
-        required: False
-    ocsp:
-        description:
-        - "Field ocsp"
-        required: False
-        suboptions:
+                type: dict
             uuid:
                 description:
                 - "uuid of the object"
-    ike_stats_global:
-        description:
-        - "Field ike_stats_global"
-        required: False
-        suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            ike_gateway_list:
-                description:
-                - "Field ike_gateway_list"
-            ha_standby_drop:
-                description:
-                - "Field ha_standby_drop"
-            error:
-                description:
-                - "Field error"
-            passthrough:
-                description:
-                - "Field passthrough"
-            ike_stats_global:
-                description:
-                - "Field ike_stats_global"
-            ipsec_list:
-                description:
-                - "Field ipsec_list"
-    jumbo_fragment:
-        description:
-        - "Support IKE jumbo fragment packet"
-        required: False
-    log:
-        description:
-        - "Field log"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    default:
-        description:
-        - "Field default"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    crl:
-        description:
-        - "Field crl"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    revocation_list:
-        description:
-        - "Field revocation_list"
-        required: False
-        suboptions:
-            name:
-                description:
-                - "Revocation name"
-            ca:
-                description:
-                - "Certificate Authority file name"
+                type: str
             user_tag:
                 description:
                 - "Customized tag"
-            ocsp:
+                type: str
+            sampling_enable:
                 description:
-                - "Field ocsp"
-            crl:
-                description:
-                - "Field crl"
-            uuid:
-                description:
-                - "uuid of the object"
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'passthrough'= passthrough; 'ha-standby-drop'= ha-standby-drop;"
-    errordump:
-        description:
-        - "Field errordump"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    ike_sa_timeout:
-        description:
-        - "Timeout IKE-SA in connecting state in seconds (default 600s)"
-        required: False
-    error:
-        description:
-        - "Field error"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
+                - "Field sampling_enable"
+                type: list
     ipsec_list:
         description:
         - "Field ipsec_list"
+        type: list
         required: False
         suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            lifebytes:
-                description:
-                - "IPsec SA age in megabytes (0 indicates unlimited bytes)"
-            bind_tunnel:
-                description:
-                - "Field bind_tunnel"
             name:
                 description:
                 - "IPsec name"
+                type: str
+            ike_gateway:
+                description:
+                - "Gateway to use for IPsec SA"
+                type: str
+            mode:
+                description:
+                - "'tunnel'= Encapsulating the packet in IPsec tunnel mode (Default);"
+                type: str
+            proto:
+                description:
+                - "'esp'= Encapsulating security protocol (Default);"
+                type: str
             dh_group:
                 description:
                 - "'0'= Diffie-Hellman group 0 (Default); '1'= Diffie-Hellman group 1 - 768-bits;
@@ -375,53 +306,233 @@ options:
           group 15 - 3072-bits; '16'= Diffie-Hellman group 16 - 4096-bits; '18'= Diffie-
           Hellman group 18 - 8192-bits; '19'= Diffie-Hellman group 19 - 256-bit Elliptic
           Curve; '20'= Diffie-Hellman group 20 - 384-bit Elliptic Curve;"
-            proto:
+                type: str
+            enc_cfg:
                 description:
-                - "'esp'= Encapsulating security protocol (Default);"
-            up:
+                - "Field enc_cfg"
+                type: list
+            lifetime:
                 description:
-                - "Initiates SA negotiation to bring the IPsec connection up"
-            user_tag:
+                - "IPsec SA age in seconds"
+                type: int
+            lifebytes:
                 description:
-                - "Customized tag"
+                - "IPsec SA age in megabytes (0 indicates unlimited bytes)"
+                type: int
             anti_replay_window:
                 description:
                 - "'0'= Disable Anti-Replay Window Check; '32'= Window size of 32; '64'= Window
           size of 64; '128'= Window size of 128; '256'= Window size of 256; '512'= Window
           size of 512; '1024'= Window size of 1024;"
-            sampling_enable:
+                type: str
+            up:
                 description:
-                - "Field sampling_enable"
-            ike_gateway:
-                description:
-                - "Gateway to use for IPsec SA"
-            mode:
-                description:
-                - "'tunnel'= Encapsulating the packet in IPsec tunnel mode (Default);"
+                - "Initiates SA negotiation to bring the IPsec connection up"
+                type: bool
             sequence_number_disable:
                 description:
                 - "Do not use incremental sequence number in the ESP header"
-            lifetime:
-                description:
-                - "IPsec SA age in seconds"
-            enc_cfg:
-                description:
-                - "Field enc_cfg"
+                type: bool
             traffic_selector:
                 description:
                 - "Field traffic_selector"
-    ipsec_sa_by_gw:
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+            bind_tunnel:
+                description:
+                - "Field bind_tunnel"
+                type: dict
+    revocation_list:
         description:
-        - "Field ipsec_sa_by_gw"
+        - "Field revocation_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Revocation name"
+                type: str
+            ca:
+                description:
+                - "Certificate Authority file name"
+                type: str
+            crl:
+                description:
+                - "Field crl"
+                type: dict
+            ocsp:
+                description:
+                - "Field ocsp"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    crl:
+        description:
+        - "Field crl"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-    stateful_mode:
+                type: str
+    ocsp:
         description:
-        - "VPN module will work in stateful mode and create sessions"
+        - "Field ocsp"
+        type: dict
         required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    ipsec_sa_by_gw:
+        description:
+        - "Field ipsec_sa_by_gw"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            IKE_Gateway_total:
+                description:
+                - "Field IKE_Gateway_total"
+                type: int
+            IPsec_total:
+                description:
+                - "Field IPsec_total"
+                type: int
+            IKE_SA_total:
+                description:
+                - "Field IKE_SA_total"
+                type: int
+            IPsec_SA_total:
+                description:
+                - "Field IPsec_SA_total"
+                type: int
+            IPsec_mode:
+                description:
+                - "Field IPsec_mode"
+                type: str
+            Num_hardware_devices:
+                description:
+                - "Field Num_hardware_devices"
+                type: int
+            Crypto_cores_total:
+                description:
+                - "Field Crypto_cores_total"
+                type: int
+            Crypto_cores_assigned_to_IPsec:
+                description:
+                - "Field Crypto_cores_assigned_to_IPsec"
+                type: int
+            Crypto_mem:
+                description:
+                - "Field Crypto_mem"
+                type: int
+            all_partition_list:
+                description:
+                - "Field all_partition_list"
+                type: list
+            all_partitions:
+                description:
+                - "Field all_partitions"
+                type: bool
+            shared:
+                description:
+                - "Field shared"
+                type: bool
+            specific_partition:
+                description:
+                - "Field specific_partition"
+                type: str
+            errordump:
+                description:
+                - "Field errordump"
+                type: dict
+            default:
+                description:
+                - "Field default"
+                type: dict
+            log:
+                description:
+                - "Field log"
+                type: dict
+            ike_gateway_list:
+                description:
+                - "Field ike_gateway_list"
+                type: list
+            ipsec_list:
+                description:
+                - "Field ipsec_list"
+                type: list
+            crl:
+                description:
+                - "Field crl"
+                type: dict
+            ocsp:
+                description:
+                - "Field ocsp"
+                type: dict
+            ipsec_sa_by_gw:
+                description:
+                - "Field ipsec_sa_by_gw"
+                type: dict
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            passthrough:
+                description:
+                - "Field passthrough"
+                type: str
+            ha_standby_drop:
+                description:
+                - "Field ha_standby_drop"
+                type: str
+            error:
+                description:
+                - "Field error"
+                type: dict
+            ike_stats_global:
+                description:
+                - "Field ike_stats_global"
+                type: dict
+            ike_gateway_list:
+                description:
+                - "Field ike_gateway_list"
+                type: list
+            ipsec_list:
+                description:
+                - "Field ipsec_list"
+                type: list
 
 '''
 
@@ -496,500 +607,136 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'ipsec_sa_by_gw': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'local_ip': {
-                        'type': 'str',
-                    },
-                    'ike_gateway_name': {
-                        'type': 'str',
-                    },
-                    'ipsec_sa_list': {
-                        'type': 'list',
-                        'lifebytes': {
-                            'type': 'str',
-                        },
-                        'protocol': {
-                            'type': 'str',
-                        },
-                        'remote_ts': {
-                            'type': 'str',
-                        },
-                        'out_spi': {
-                            'type': 'str',
-                        },
-                        'local_ts': {
-                            'type': 'str',
-                        },
-                        'ipsec_sa_name': {
-                            'type': 'str',
-                        },
-                        'in_spi': {
-                            'type': 'str',
-                        },
-                        'mode': {
-                            'type': 'str',
-                        },
-                        'encryption': {
-                            'type': 'str',
-                        },
-                        'lifetime': {
-                            'type': 'int',
-                        },
-                        'hash': {
-                            'type': 'str',
-                        }
-                    },
-                    'peer_ip': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'ipsec_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'Status': {
-                        'type': 'str',
-                    },
-                    'Hash_Algorithm': {
-                        'type': 'str',
-                    },
-                    'Protocol': {
-                        'type': 'str',
-                    },
-                    'DH_Group': {
-                        'type': 'int',
-                    },
-                    'Remote_SPI': {
-                        'type': 'str',
-                    },
-                    'Local_IP': {
-                        'type': 'str',
-                    },
-                    'Anti_Replay': {
-                        'type': 'str',
-                    },
-                    'Lifebytes': {
-                        'type': 'str',
-                    },
-                    'SA_Index': {
-                        'type': 'int',
-                    },
-                    'Peer_IP': {
-                        'type': 'str',
-                    },
-                    'Mode': {
-                        'type': 'str',
-                    },
-                    'NAT_Traversal': {
-                        'type': 'int',
-                    },
-                    'Local_SPI': {
-                        'type': 'str',
-                    },
-                    'Encryption_Algorithm': {
-                        'type': 'str',
-                    },
-                    'Lifetime': {
-                        'type': 'int',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'all_partitions': {
-                'type': 'bool',
-            },
-            'Num_hardware_devices': {
-                'type': 'int',
-            },
-            'IPsec_mode': {
-                'type': 'str',
-            },
-            'specific_partition': {
-                'type': 'str',
-            },
-            'IKE_Gateway_total': {
-                'type': 'int',
-            },
-            'ike_gateway_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'Status': {
-                        'type': 'str',
-                    },
-                    'Remote_IP': {
-                        'type': 'str',
-                    },
-                    'Hash': {
-                        'type': 'str',
-                    },
-                    'NAT_Traversal': {
-                        'type': 'int',
-                    },
-                    'Local_IP': {
-                        'type': 'str',
-                    },
-                    'Responder_SPI': {
-                        'type': 'str',
-                    },
-                    'Encryption': {
-                        'type': 'str',
-                    },
-                    'Lifetime': {
-                        'type': 'int',
-                    },
-                    'Initiator_SPI': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'all_partition_list': {
-                'type': 'list',
-                'standby_drop': {
-                    'type': 'int',
-                },
-                'IPsec_mode': {
-                    'type': 'str',
-                },
-                'IKE_Gateway_total': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_req_alloc_fail': {
-                    'type': 'int',
-                },
-                'Crypto_mem': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_req_error': {
-                    'type': 'int',
-                },
-                'IPsec_SA_total': {
-                    'type': 'int',
-                },
-                'IPsec_stateless': {
-                    'type': 'int',
-                },
-                'Crypto_cores_total': {
-                    'type': 'int',
-                },
-                'IPsec_total': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_bad_pointer': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_bad_ctx_pointer': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_enqueue_fail': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_time_out_state': {
-                    'type': 'int',
-                },
-                'vpn_list': {
-                    'type': 'list',
-                    'passthrough': {
-                        'type': 'int',
-                    },
-                    'cpu_id': {
-                        'type': 'int',
-                    }
-                },
-                'Num_hardware_devices': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_state': {
-                    'type': 'str',
-                },
-                'Crypto_cores_assigned_to_IPsec': {
-                    'type': 'int',
-                },
-                'IKE_SA_total': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err': {
-                    'type': 'int',
-                },
-                'passthrough_total': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_sg_buff_alloc_fail': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_buff_alloc_error': {
-                    'type': 'int',
-                },
-                'partition_name': {
-                    'type': 'str',
-                },
-                'Crypto_hw_err_state_error': {
-                    'type': 'int',
-                },
-                'Crypto_hw_err_time_out': {
-                    'type': 'int',
-                }
-            },
-            'IPsec_SA_total': {
-                'type': 'int',
-            },
-            'default': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'ike_local_address': {
-                        'type': 'str',
-                    },
-                    'ike_version': {
-                        'type': 'str',
-                    },
-                    'IPsec_remote_subnet': {
-                        'type': 'str',
-                    },
-                    'IPsec_mode': {
-                        'type': 'str',
-                    },
-                    'ike_nat_traversal': {
-                        'type': 'str',
-                    },
-                    'ike_dpd_interval': {
-                        'type': 'int',
-                    },
-                    'IPsec_priority': {
-                        'type': 'int',
-                    },
-                    'IPsec_traffic_selector': {
-                        'type': 'str',
-                    },
-                    'ike_encryption': {
-                        'type': 'str',
-                    },
-                    'IPsec_remote_port': {
-                        'type': 'int',
-                    },
-                    'IPsec_hash': {
-                        'type': 'str',
-                    },
-                    'IPsec_protocol': {
-                        'type': 'str',
-                    },
-                    'ike_priority': {
-                        'type': 'int',
-                    },
-                    'ike_hash': {
-                        'type': 'str',
-                    },
-                    'IPsec_remote_protocol': {
-                        'type': 'int',
-                    },
-                    'ike_remote_address': {
-                        'type': 'str',
-                    },
-                    'ike_dh_group': {
-                        'type': 'str',
-                    },
-                    'ike_auth_method': {
-                        'type': 'str',
-                    },
-                    'IPsec_anti_replay_window': {
-                        'type': 'int',
-                    },
-                    'ike_lifetime': {
-                        'type': 'int',
-                    },
-                    'IPsec_lifetime': {
-                        'type': 'int',
-                    },
-                    'IPsec_local_protocol': {
-                        'type': 'int',
-                    },
-                    'IPsec_local_port': {
-                        'type': 'int',
-                    },
-                    'IPsec_lifebytes': {
-                        'type': 'int',
-                    },
-                    'IPsec_encryption': {
-                        'type': 'str',
-                    },
-                    'IPsec_local_subnet': {
-                        'type': 'str',
-                    },
-                    'IPsec_dh_group': {
-                        'type': 'str',
-                    },
-                    'ike_mode': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'Crypto_cores_assigned_to_IPsec': {
-                'type': 'int',
-            },
-            'IKE_SA_total': {
-                'type': 'int',
-            },
-            'errordump': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'IPsec_error_dump_path': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'Crypto_cores_total': {
-                'type': 'int',
-            },
-            'IPsec_total': {
-                'type': 'int',
-            },
-            'shared': {
-                'type': 'bool',
-            },
-            'ocsp': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'total_ocsps': {
-                        'type': 'int',
-                    },
-                    'ocsp_list': {
-                        'type': 'list',
-                        'certificate_status': {
-                            'type': 'str',
-                        },
-                        'subject': {
-                            'type': 'str',
-                        },
-                        'validity': {
-                            'type': 'str',
-                        },
-                        'issuer': {
-                            'type': 'str',
-                        }
-                    }
-                }
-            },
-            'Crypto_mem': {
-                'type': 'int',
-            },
-            'crl': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'total_crls': {
-                        'type': 'int',
-                    },
-                    'crl_list': {
-                        'type': 'list',
-                        'revoked': {
-                            'type': 'str',
-                        },
-                        'storage_type': {
-                            'type': 'str',
-                        },
-                        'updates': {
-                            'type': 'str',
-                        },
-                        'serial': {
-                            'type': 'str',
-                        },
-                        'subject': {
-                            'type': 'str',
-                        },
-                        'issuer': {
-                            'type': 'str',
-                        }
-                    }
-                }
-            },
-            'log': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'vpn_log_offset': {
-                        'type': 'int',
-                    },
-                    'vpn_log_over': {
-                        'type': 'int',
-                    },
-                    'vpn_log_list': {
-                        'type': 'list',
-                        'vpn_log_data': {
-                            'type': 'str',
-                        }
-                    },
-                    'from_start': {
-                        'type': 'bool',
-                    },
-                    'follow': {
-                        'type': 'bool',
-                    },
-                    'num_lines': {
-                        'type': 'int',
-                    }
-                }
-            }
+        'asymmetric_flow_support': {
+            'type': 'bool',
+        },
+        'stateful_mode': {
+            'type': 'bool',
+        },
+        'fragment_after_encap': {
+            'type': 'bool',
+        },
+        'nat_traversal_flow_affinity': {
+            'type': 'bool',
         },
         'tcp_mss_adjust_disable': {
             'type': 'bool',
         },
+        'jumbo_fragment': {
+            'type': 'bool',
+        },
+        'ike_sa_timeout': {
+            'type': 'int',
+        },
+        'ipsec_error_dump': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'passthrough', 'ha-standby-drop']
+            }
+        },
+        'error': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'errordump': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'default': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'log': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'ike_stats_global': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'v2-init-rekey', 'v2-rsp-rekey',
+                        'v2-child-sa-rekey', 'v2-in-invalid',
+                        'v2-in-invalid-spi', 'v2-in-init-req',
+                        'v2-in-init-rsp', 'v2-out-init-req', 'v2-out-init-rsp',
+                        'v2-in-auth-req', 'v2-in-auth-rsp', 'v2-out-auth-req',
+                        'v2-out-auth-rsp', 'v2-in-create-child-req',
+                        'v2-in-create-child-rsp', 'v2-out-create-child-req',
+                        'v2-out-create-child-rsp', 'v2-in-info-req',
+                        'v2-in-info-rsp', 'v2-out-info-req', 'v2-out-info-rsp',
+                        'v1-in-id-prot-req', 'v1-in-id-prot-rsp',
+                        'v1-out-id-prot-req', 'v1-out-id-prot-rsp',
+                        'v1-in-auth-only-req', 'v1-in-auth-only-rsp',
+                        'v1-out-auth-only-req', 'v1-out-auth-only-rsp',
+                        'v1-in-aggressive-req', 'v1-in-aggressive-rsp',
+                        'v1-out-aggressive-req', 'v1-out-aggressive-rsp',
+                        'v1-in-info-v1-req', 'v1-in-info-v1-rsp',
+                        'v1-out-info-v1-req', 'v1-out-info-v1-rsp',
+                        'v1-in-transaction-req', 'v1-in-transaction-rsp',
+                        'v1-out-transaction-req', 'v1-out-transaction-rsp',
+                        'v1-in-quick-mode-req', 'v1-in-quick-mode-rsp',
+                        'v1-out-quick-mode-req', 'v1-out-quick-mode-rsp',
+                        'v1-in-new-group-mode-req', 'v1-in-new-group-mode-rsp',
+                        'v1-out-new-group-mode-req',
+                        'v1-out-new-group-mode-rsp'
+                    ]
+                }
+            }
+        },
         'ike_gateway_list': {
             'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
             'ike_version': {
                 'type': 'str',
                 'choices': ['v1', 'v2']
             },
+            'mode': {
+                'type': 'str',
+                'choices': ['main', 'aggressive']
+            },
+            'auth_method': {
+                'type': 'str',
+                'choices':
+                ['preshare-key', 'rsa-signature', 'ecdsa-signature']
+            },
+            'preshare_key_value': {
+                'type': 'str',
+            },
+            'preshare_key_encrypted': {
+                'type': 'str',
+            },
+            'key': {
+                'type': 'str',
+            },
+            'key_passphrase': {
+                'type': 'str',
+            },
             'key_passphrase_encrypted': {
                 'type': 'str',
-            },
-            'local_cert': {
-                'type': 'dict',
-                'local_cert_name': {
-                    'type': 'str',
-                }
-            },
-            'lifetime': {
-                'type': 'int',
-            },
-            'local_id': {
-                'type': 'str',
-            },
-            'enc_cfg': {
-                'type': 'list',
-                'priority': {
-                    'type': 'int',
-                },
-                'encryption': {
-                    'type':
-                    'str',
-                    'choices':
-                    ['des', '3des', 'aes-128', 'aes-192', 'aes-256', 'null']
-                },
-                'hash': {
-                    'type': 'str',
-                    'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512']
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'nat_traversal': {
-                'type': 'bool',
             },
             'vrid': {
                 'type': 'dict',
@@ -997,15 +744,52 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'preshare_key_value': {
+            'local_cert': {
+                'type': 'dict',
+                'local_cert_name': {
+                    'type': 'str',
+                }
+            },
+            'remote_ca_cert': {
+                'type': 'dict',
+                'remote_cert_name': {
+                    'type': 'str',
+                }
+            },
+            'local_id': {
                 'type': 'str',
             },
-            'key_passphrase': {
+            'remote_id': {
                 'type': 'str',
             },
-            'mode': {
+            'enc_cfg': {
+                'type': 'list',
+                'encryption': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'des', '3des', 'aes-128', 'aes-192', 'aes-256',
+                        'aes-gcm-128', 'aes-gcm-192', 'aes-gcm-256', 'null'
+                    ]
+                },
+                'hash': {
+                    'type': 'str',
+                    'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512']
+                },
+                'prf': {
+                    'type': 'str',
+                    'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512']
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'gcm_priority': {
+                    'type': 'int',
+                }
+            },
+            'dh_group': {
                 'type': 'str',
-                'choices': ['main', 'aggressive']
+                'choices': ['1', '2', '5', '14', '15', '16', '18', '19', '20']
             },
             'local_address': {
                 'type': 'dict',
@@ -1015,12 +799,6 @@ def get_argspec():
                 'local_ipv6': {
                     'type': 'str',
                 }
-            },
-            'key': {
-                'type': 'str',
-            },
-            'preshare_key_encrypted': {
-                'type': 'str',
             },
             'remote_address': {
                 'type': 'dict',
@@ -1034,19 +812,23 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'remote_ca_cert': {
+            'lifetime': {
+                'type': 'int',
+            },
+            'nat_traversal': {
+                'type': 'bool',
+            },
+            'dpd': {
                 'type': 'dict',
-                'remote_cert_name': {
-                    'type': 'str',
+                'interval': {
+                    'type': 'int',
+                },
+                'retry': {
+                    'type': 'int',
                 }
             },
-            'name': {
+            'uuid': {
                 'type': 'str',
-                'required': True,
-            },
-            'dh_group': {
-                'type': 'str',
-                'choices': ['1', '2', '5', '14', '15', '16', '18', '19', '20']
             },
             'user_tag': {
                 'type': 'str',
@@ -1084,752 +866,119 @@ def get_argspec():
                         'v2-child-sa-invalid-spi', 'ike-current-version'
                     ]
                 }
-            },
-            'dpd': {
-                'type': 'dict',
-                'interval': {
-                    'type': 'int',
-                },
-                'retry': {
-                    'type': 'int',
-                }
-            },
-            'remote_id': {
-                'type': 'str',
-            },
-            'auth_method': {
-                'type': 'str',
-                'choices':
-                ['preshare-key', 'rsa-signature', 'ecdsa-signature']
-            }
-        },
-        'fragment_after_encap': {
-            'type': 'bool',
-        },
-        'ipsec_error_dump': {
-            'type': 'bool',
-        },
-        'nat_traversal_flow_affinity': {
-            'type': 'bool',
-        },
-        'asymmetric_flow_support': {
-            'type': 'bool',
-        },
-        'ocsp': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'ike_stats_global': {
-            'type': 'dict',
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'v2-init-rekey', 'v2-rsp-rekey',
-                        'v2-child-sa-rekey', 'v2-in-invalid',
-                        'v2-in-invalid-spi', 'v2-in-init-req',
-                        'v2-in-init-rsp', 'v2-out-init-req', 'v2-out-init-rsp',
-                        'v2-in-auth-req', 'v2-in-auth-rsp', 'v2-out-auth-req',
-                        'v2-out-auth-rsp', 'v2-in-create-child-req',
-                        'v2-in-create-child-rsp', 'v2-out-create-child-req',
-                        'v2-out-create-child-rsp', 'v2-in-info-req',
-                        'v2-in-info-rsp', 'v2-out-info-req', 'v2-out-info-rsp',
-                        'v1-in-id-prot-req', 'v1-in-id-prot-rsp',
-                        'v1-out-id-prot-req', 'v1-out-id-prot-rsp',
-                        'v1-in-auth-only-req', 'v1-in-auth-only-rsp',
-                        'v1-out-auth-only-req', 'v1-out-auth-only-rsp',
-                        'v1-in-aggressive-req', 'v1-in-aggressive-rsp',
-                        'v1-out-aggressive-req', 'v1-out-aggressive-rsp',
-                        'v1-in-info-v1-req', 'v1-in-info-v1-rsp',
-                        'v1-out-info-v1-req', 'v1-out-info-v1-rsp',
-                        'v1-in-transaction-req', 'v1-in-transaction-rsp',
-                        'v1-out-transaction-req', 'v1-out-transaction-rsp',
-                        'v1-in-quick-mode-req', 'v1-in-quick-mode-rsp',
-                        'v1-out-quick-mode-req', 'v1-out-quick-mode-rsp',
-                        'v1-in-new-group-mode-req', 'v1-in-new-group-mode-rsp',
-                        'v1-out-new-group-mode-req',
-                        'v1-out-new-group-mode-rsp'
-                    ]
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'ike_gateway_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'v1_in_id_prot_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_auth_only_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_quick_mode_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_aggressive_req': {
-                        'type': 'str',
-                    },
-                    'v2_child_sa_rekey': {
-                        'type': 'str',
-                    },
-                    'ike_current_version': {
-                        'type': 'str',
-                    },
-                    'v2_out_auth_req': {
-                        'type': 'str',
-                    },
-                    'v2_rsp_rekey': {
-                        'type': 'str',
-                    },
-                    'v2_out_info_req': {
-                        'type': 'str',
-                    },
-                    'v2_out_init_req': {
-                        'type': 'str',
-                    },
-                    'v1_in_info_v1_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_id_prot_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_invalid': {
-                        'type': 'str',
-                    },
-                    'v1_in_aggressive_req': {
-                        'type': 'str',
-                    },
-                    'v1_child_sa_invalid_spi': {
-                        'type': 'str',
-                    },
-                    'v2_in_info_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_new_group_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_out_auth_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_auth_only_req': {
-                        'type': 'str',
-                    },
-                    'v1_in_info_v1_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_create_child_req': {
-                        'type': 'str',
-                    },
-                    'v2_out_info_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_out_create_child_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_auth_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_init_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_info_v1_req': {
-                        'type': 'str',
-                    },
-                    'v2_init_rekey': {
-                        'type': 'str',
-                    },
-                    'v1_in_id_prot_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_transaction_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_quick_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_auth_only_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_quick_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_new_group_mode_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_id_prot_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_transaction_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_aggressive_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_transaction_req': {
-                        'type': 'str',
-                    },
-                    'v1_in_quick_mode_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_invalid_spi': {
-                        'type': 'str',
-                    },
-                    'v1_out_auth_only_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_transaction_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_new_group_mode_req': {
-                        'type': 'str',
-                    },
-                    'v2_child_sa_invalid_spi': {
-                        'type': 'str',
-                    },
-                    'v1_out_info_v1_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_init_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_create_child_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_auth_req': {
-                        'type': 'str',
-                    },
-                    'v2_out_init_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_new_group_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_out_create_child_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_aggressive_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_info_req': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'ha_standby_drop': {
-                'type': 'str',
-            },
-            'error': {
-                'type': 'dict',
-                'stats': {
-                    'type': 'dict',
-                    'bad_opcode': {
-                        'type': 'str',
-                    },
-                    'bad_sg_write_len': {
-                        'type': 'str',
-                    },
-                    'ipv6_rh_length_error': {
-                        'type': 'str',
-                    },
-                    'ah_not_supported_with_gcm_gmac_sha2': {
-                        'type': 'str',
-                    },
-                    'bad_auth_type': {
-                        'type': 'str',
-                    },
-                    'bad_gre_protocol': {
-                        'type': 'str',
-                    },
-                    'ipv6_outbound_rh_copy_addr_error': {
-                        'type': 'str',
-                    },
-                    'bad_ip_payload_type': {
-                        'type': 'str',
-                    },
-                    'ipv6_extension_headers_too_big': {
-                        'type': 'str',
-                    },
-                    'bad_encrypt_type': {
-                        'type': 'str',
-                    },
-                    'bad_checksum': {
-                        'type': 'str',
-                    },
-                    'bad_gre_header': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_context': {
-                        'type': 'str',
-                    },
-                    'bad_min_frag_size_auth_sha384_512': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_padding': {
-                        'type': 'str',
-                    },
-                    'bad_inline_data': {
-                        'type': 'str',
-                    },
-                    'dummy_payload': {
-                        'type': 'str',
-                    },
-                    'bad_ip_version': {
-                        'type': 'str',
-                    },
-                    'bad_encrypt_type_ctr_gcm': {
-                        'type': 'str',
-                    },
-                    'bad_fragment_size': {
-                        'type': 'str',
-                    },
-                    'bad_esp_next_header': {
-                        'type': 'str',
-                    },
-                    'ipv6_hop_by_hop_error': {
-                        'type': 'str',
-                    },
-                    'error_ipv6_decrypt_rh_segs_left_error': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_spi': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_context_flag_mismatch': {
-                        'type': 'str',
-                    },
-                    'error_IPv6_extension_header_bad': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_protocol': {
-                        'type': 'str',
-                    },
-                    'bad_frag_size_configuration': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_auth': {
-                        'type': 'str',
-                    },
-                    'bad_ipcomp_configuration': {
-                        'type': 'str',
-                    },
-                    'bad_len': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_context_direction': {
-                        'type': 'str',
-                    },
-                    'bad_ipsec_unknown': {
-                        'type': 'str',
-                    },
-                    'ipcomp_payload': {
-                        'type': 'str',
-                    },
-                    'bad_srtp_auth_tag': {
-                        'type': 'str',
-                    },
-                    'tfc_padding_with_prefrag_not_supported': {
-                        'type': 'str',
-                    },
-                    'dsiv_incorrect_param': {
-                        'type': 'str',
-                    },
-                    'bad_selector_match': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'passthrough': {
-                'type': 'str',
-            },
-            'ike_stats_global': {
-                'type': 'dict',
-                'stats': {
-                    'type': 'dict',
-                    'v1_in_id_prot_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_auth_only_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_quick_mode_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_aggressive_req': {
-                        'type': 'str',
-                    },
-                    'v2_child_sa_rekey': {
-                        'type': 'str',
-                    },
-                    'v2_out_auth_req': {
-                        'type': 'str',
-                    },
-                    'v2_rsp_rekey': {
-                        'type': 'str',
-                    },
-                    'v2_out_info_req': {
-                        'type': 'str',
-                    },
-                    'v2_out_init_req': {
-                        'type': 'str',
-                    },
-                    'v1_in_info_v1_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_id_prot_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_invalid': {
-                        'type': 'str',
-                    },
-                    'v1_in_aggressive_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_info_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_new_group_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_out_auth_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_auth_only_req': {
-                        'type': 'str',
-                    },
-                    'v1_in_info_v1_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_create_child_req': {
-                        'type': 'str',
-                    },
-                    'v2_out_info_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_out_create_child_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_auth_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_init_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_info_v1_req': {
-                        'type': 'str',
-                    },
-                    'v2_init_rekey': {
-                        'type': 'str',
-                    },
-                    'v1_in_id_prot_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_transaction_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_quick_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_auth_only_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_quick_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_new_group_mode_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_id_prot_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_transaction_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_aggressive_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_transaction_req': {
-                        'type': 'str',
-                    },
-                    'v1_in_quick_mode_req': {
-                        'type': 'str',
-                    },
-                    'v2_in_invalid_spi': {
-                        'type': 'str',
-                    },
-                    'v1_out_auth_only_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_transaction_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_new_group_mode_req': {
-                        'type': 'str',
-                    },
-                    'v1_out_info_v1_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_init_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_create_child_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_auth_req': {
-                        'type': 'str',
-                    },
-                    'v2_out_init_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_in_new_group_mode_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_out_create_child_rsp': {
-                        'type': 'str',
-                    },
-                    'v1_out_aggressive_rsp': {
-                        'type': 'str',
-                    },
-                    'v2_in_info_req': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'ipsec_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'anti_replay_num': {
-                        'type': 'str',
-                    },
-                    'packets_decrypted': {
-                        'type': 'str',
-                    },
-                    'tunnel_intf_down': {
-                        'type': 'str',
-                    },
-                    'pkt_fail_to_send': {
-                        'type': 'str',
-                    },
-                    'packets_encrypted': {
-                        'type': 'str',
-                    },
-                    'bytes_encrypted': {
-                        'type': 'str',
-                    },
-                    'packets_err_nh_check': {
-                        'type': 'str',
-                    },
-                    'no_tunnel_found': {
-                        'type': 'str',
-                    },
-                    'cavium_packets_decrypted': {
-                        'type': 'str',
-                    },
-                    'prefrag_error': {
-                        'type': 'str',
-                    },
-                    'bytes_decrypted': {
-                        'type': 'str',
-                    },
-                    'invalid_tunnel_id': {
-                        'type': 'str',
-                    },
-                    'pkt_fail_prep_to_send': {
-                        'type': 'str',
-                    },
-                    'cavium_packets_encrypted': {
-                        'type': 'str',
-                    },
-                    'packets_err_icv_check': {
-                        'type': 'str',
-                    },
-                    'packets_err_inactive': {
-                        'type': 'str',
-                    },
-                    'cavium_bytes_decrypted': {
-                        'type': 'str',
-                    },
-                    'sequence_num_rollover': {
-                        'type': 'str',
-                    },
-                    'packets_err_pkt_sanity': {
-                        'type': 'str',
-                    },
-                    'frag_after_encap_frag_packets': {
-                        'type': 'str',
-                    },
-                    'cavium_bytes_encrypted': {
-                        'type': 'str',
-                    },
-                    'sequence_num': {
-                        'type': 'str',
-                    },
-                    'packets_err_lifetime_lifebytes': {
-                        'type': 'str',
-                    },
-                    'packets_err_encryption': {
-                        'type': 'str',
-                    },
-                    'rekey_num': {
-                        'type': 'str',
-                    },
-                    'prefrag_success': {
-                        'type': 'str',
-                    },
-                    'packets_err_pad_check': {
-                        'type': 'str',
-                    },
-                    'no_next_hop': {
-                        'type': 'str',
-                    },
-                    'frag_received': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            }
-        },
-        'jumbo_fragment': {
-            'type': 'bool',
-        },
-        'log': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'default': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'crl': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'revocation_list': {
-            'type': 'list',
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'ca': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'ocsp': {
-                'type': 'dict',
-                'ocsp_pri': {
-                    'type': 'str',
-                },
-                'ocsp_sec': {
-                    'type': 'str',
-                }
-            },
-            'crl': {
-                'type': 'dict',
-                'crl_sec': {
-                    'type': 'str',
-                },
-                'crl_pri': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'passthrough', 'ha-standby-drop']
-            }
-        },
-        'errordump': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'ike_sa_timeout': {
-            'type': 'int',
-        },
-        'error': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
             }
         },
         'ipsec_list': {
             'type': 'list',
-            'uuid': {
-                'type': 'str',
-            },
-            'lifebytes': {
-                'type': 'int',
-            },
-            'bind_tunnel': {
-                'type': 'dict',
-                'tunnel': {
-                    'type': 'int',
-                },
-                'next_hop': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'next_hop_v6': {
-                    'type': 'str',
-                }
-            },
             'name': {
                 'type': 'str',
                 'required': True,
+            },
+            'ike_gateway': {
+                'type': 'str',
+            },
+            'mode': {
+                'type': 'str',
+                'choices': ['tunnel']
+            },
+            'proto': {
+                'type': 'str',
+                'choices': ['esp']
             },
             'dh_group': {
                 'type': 'str',
                 'choices':
                 ['0', '1', '2', '5', '14', '15', '16', '18', '19', '20']
             },
-            'proto': {
-                'type': 'str',
-                'choices': ['esp']
+            'enc_cfg': {
+                'type': 'list',
+                'encryption': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'des', '3des', 'aes-128', 'aes-192', 'aes-256',
+                        'aes-gcm-128', 'aes-gcm-192', 'aes-gcm-256', 'null'
+                    ]
+                },
+                'hash': {
+                    'type':
+                    'str',
+                    'choices':
+                    ['md5', 'sha1', 'sha256', 'sha384', 'sha512', 'null']
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'gcm_priority': {
+                    'type': 'int',
+                }
             },
-            'up': {
-                'type': 'bool',
+            'lifetime': {
+                'type': 'int',
             },
-            'user_tag': {
-                'type': 'str',
+            'lifebytes': {
+                'type': 'int',
             },
             'anti_replay_window': {
                 'type': 'str',
                 'choices': ['0', '32', '64', '128', '256', '512', '1024']
+            },
+            'up': {
+                'type': 'bool',
+            },
+            'sequence_number_disable': {
+                'type': 'bool',
+            },
+            'traffic_selector': {
+                'type': 'dict',
+                'ipv4': {
+                    'type': 'dict',
+                    'local': {
+                        'type': 'str',
+                    },
+                    'local_netmask': {
+                        'type': 'str',
+                    },
+                    'local_port': {
+                        'type': 'int',
+                    },
+                    'remote': {
+                        'type': 'str',
+                    },
+                    'remote_netmask': {
+                        'type': 'str',
+                    },
+                    'remote_port': {
+                        'type': 'int',
+                    },
+                    'protocol': {
+                        'type': 'int',
+                    }
+                },
+                'ipv6': {
+                    'type': 'dict',
+                    'localv6': {
+                        'type': 'str',
+                    },
+                    'local_portv6': {
+                        'type': 'int',
+                    },
+                    'remotev6': {
+                        'type': 'str',
+                    },
+                    'remote_portv6': {
+                        'type': 'int',
+                    },
+                    'protocolv6': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -1853,86 +1002,66 @@ def get_argspec():
                     ]
                 }
             },
-            'ike_gateway': {
-                'type': 'str',
-            },
-            'mode': {
-                'type': 'str',
-                'choices': ['tunnel']
-            },
-            'sequence_number_disable': {
-                'type': 'bool',
-            },
-            'lifetime': {
-                'type': 'int',
-            },
-            'enc_cfg': {
-                'type': 'list',
-                'priority': {
-                    'type': 'int',
-                },
-                'encryption': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'des', '3des', 'aes-128', 'aes-192', 'aes-256',
-                        'aes-gcm-128', 'aes-gcm-192', 'aes-gcm-256', 'null'
-                    ]
-                },
-                'gcm_priority': {
-                    'type': 'int',
-                },
-                'hash': {
-                    'type':
-                    'str',
-                    'choices':
-                    ['md5', 'sha1', 'sha256', 'sha384', 'sha512', 'null']
-                }
-            },
-            'traffic_selector': {
+            'bind_tunnel': {
                 'type': 'dict',
-                'ipv4': {
-                    'type': 'dict',
-                    'remote': {
-                        'type': 'str',
-                    },
-                    'local_port': {
-                        'type': 'int',
-                    },
-                    'remote_port': {
-                        'type': 'int',
-                    },
-                    'local_netmask': {
-                        'type': 'str',
-                    },
-                    'remote_netmask': {
-                        'type': 'str',
-                    },
-                    'protocol': {
-                        'type': 'int',
-                    },
-                    'local': {
-                        'type': 'str',
-                    }
+                'tunnel': {
+                    'type': 'int',
                 },
-                'ipv6': {
-                    'type': 'dict',
-                    'local_portv6': {
-                        'type': 'int',
-                    },
-                    'protocolv6': {
-                        'type': 'int',
-                    },
-                    'localv6': {
-                        'type': 'str',
-                    },
-                    'remotev6': {
-                        'type': 'str',
-                    },
-                    'remote_portv6': {
-                        'type': 'int',
-                    }
+                'next_hop': {
+                    'type': 'str',
+                },
+                'next_hop_v6': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
                 }
+            }
+        },
+        'revocation_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'ca': {
+                'type': 'str',
+            },
+            'crl': {
+                'type': 'dict',
+                'crl_pri': {
+                    'type': 'str',
+                },
+                'crl_sec': {
+                    'type': 'str',
+                }
+            },
+            'ocsp': {
+                'type': 'dict',
+                'ocsp_pri': {
+                    'type': 'str',
+                },
+                'ocsp_sec': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'crl': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'ocsp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
             }
         },
         'ipsec_sa_by_gw': {
@@ -1941,8 +1070,999 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'stateful_mode': {
-            'type': 'bool',
+        'oper': {
+            'type': 'dict',
+            'IKE_Gateway_total': {
+                'type': 'int',
+            },
+            'IPsec_total': {
+                'type': 'int',
+            },
+            'IKE_SA_total': {
+                'type': 'int',
+            },
+            'IPsec_SA_total': {
+                'type': 'int',
+            },
+            'IPsec_mode': {
+                'type': 'str',
+            },
+            'Num_hardware_devices': {
+                'type': 'int',
+            },
+            'Crypto_cores_total': {
+                'type': 'int',
+            },
+            'Crypto_cores_assigned_to_IPsec': {
+                'type': 'int',
+            },
+            'Crypto_mem': {
+                'type': 'int',
+            },
+            'all_partition_list': {
+                'type': 'list',
+                'IKE_Gateway_total': {
+                    'type': 'int',
+                },
+                'IPsec_total': {
+                    'type': 'int',
+                },
+                'IKE_SA_total': {
+                    'type': 'int',
+                },
+                'IPsec_SA_total': {
+                    'type': 'int',
+                },
+                'IPsec_stateless': {
+                    'type': 'int',
+                },
+                'IPsec_mode': {
+                    'type': 'str',
+                },
+                'Num_hardware_devices': {
+                    'type': 'int',
+                },
+                'Crypto_cores_total': {
+                    'type': 'int',
+                },
+                'Crypto_cores_assigned_to_IPsec': {
+                    'type': 'int',
+                },
+                'Crypto_mem': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_req_alloc_fail': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_enqueue_fail': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_sg_buff_alloc_fail': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_bad_pointer': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_bad_ctx_pointer': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_req_error': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_state_error': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_state': {
+                    'type': 'str',
+                },
+                'Crypto_hw_err_time_out': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_time_out_state': {
+                    'type': 'int',
+                },
+                'Crypto_hw_err_buff_alloc_error': {
+                    'type': 'int',
+                },
+                'passthrough_total': {
+                    'type': 'int',
+                },
+                'vpn_list': {
+                    'type': 'list',
+                    'passthrough': {
+                        'type': 'int',
+                    },
+                    'cpu_id': {
+                        'type': 'int',
+                    }
+                },
+                'standby_drop': {
+                    'type': 'int',
+                },
+                'partition_name': {
+                    'type': 'str',
+                }
+            },
+            'all_partitions': {
+                'type': 'bool',
+            },
+            'shared': {
+                'type': 'bool',
+            },
+            'specific_partition': {
+                'type': 'str',
+            },
+            'errordump': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'IPsec_error_dump_path': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'default': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'ike_version': {
+                        'type': 'str',
+                    },
+                    'ike_mode': {
+                        'type': 'str',
+                    },
+                    'ike_dh_group': {
+                        'type': 'str',
+                    },
+                    'ike_auth_method': {
+                        'type': 'str',
+                    },
+                    'ike_encryption': {
+                        'type': 'str',
+                    },
+                    'ike_hash': {
+                        'type': 'str',
+                    },
+                    'ike_priority': {
+                        'type': 'int',
+                    },
+                    'ike_lifetime': {
+                        'type': 'int',
+                    },
+                    'ike_nat_traversal': {
+                        'type': 'str',
+                    },
+                    'ike_local_address': {
+                        'type': 'str',
+                    },
+                    'ike_remote_address': {
+                        'type': 'str',
+                    },
+                    'ike_dpd_interval': {
+                        'type': 'int',
+                    },
+                    'IPsec_mode': {
+                        'type': 'str',
+                    },
+                    'IPsec_protocol': {
+                        'type': 'str',
+                    },
+                    'IPsec_dh_group': {
+                        'type': 'str',
+                    },
+                    'IPsec_encryption': {
+                        'type': 'str',
+                    },
+                    'IPsec_hash': {
+                        'type': 'str',
+                    },
+                    'IPsec_priority': {
+                        'type': 'int',
+                    },
+                    'IPsec_lifetime': {
+                        'type': 'int',
+                    },
+                    'IPsec_lifebytes': {
+                        'type': 'int',
+                    },
+                    'IPsec_traffic_selector': {
+                        'type': 'str',
+                    },
+                    'IPsec_local_subnet': {
+                        'type': 'str',
+                    },
+                    'IPsec_local_port': {
+                        'type': 'int',
+                    },
+                    'IPsec_local_protocol': {
+                        'type': 'int',
+                    },
+                    'IPsec_remote_subnet': {
+                        'type': 'str',
+                    },
+                    'IPsec_remote_port': {
+                        'type': 'int',
+                    },
+                    'IPsec_remote_protocol': {
+                        'type': 'int',
+                    },
+                    'IPsec_anti_replay_window': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'log': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'vpn_log_list': {
+                        'type': 'list',
+                        'vpn_log_data': {
+                            'type': 'str',
+                        }
+                    },
+                    'vpn_log_offset': {
+                        'type': 'int',
+                    },
+                    'vpn_log_over': {
+                        'type': 'int',
+                    },
+                    'follow': {
+                        'type': 'bool',
+                    },
+                    'from_start': {
+                        'type': 'bool',
+                    },
+                    'num_lines': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'ike_gateway_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'Initiator_SPI': {
+                        'type': 'str',
+                    },
+                    'Responder_SPI': {
+                        'type': 'str',
+                    },
+                    'Local_IP': {
+                        'type': 'str',
+                    },
+                    'Remote_IP': {
+                        'type': 'str',
+                    },
+                    'Encryption': {
+                        'type': 'str',
+                    },
+                    'Hash': {
+                        'type': 'str',
+                    },
+                    'Lifetime': {
+                        'type': 'int',
+                    },
+                    'Status': {
+                        'type': 'str',
+                    },
+                    'NAT_Traversal': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'ipsec_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'Status': {
+                        'type': 'str',
+                    },
+                    'SA_Index': {
+                        'type': 'int',
+                    },
+                    'Local_IP': {
+                        'type': 'str',
+                    },
+                    'Peer_IP': {
+                        'type': 'str',
+                    },
+                    'Local_SPI': {
+                        'type': 'str',
+                    },
+                    'Remote_SPI': {
+                        'type': 'str',
+                    },
+                    'Protocol': {
+                        'type': 'str',
+                    },
+                    'Mode': {
+                        'type': 'str',
+                    },
+                    'Encryption_Algorithm': {
+                        'type': 'str',
+                    },
+                    'Hash_Algorithm': {
+                        'type': 'str',
+                    },
+                    'DH_Group': {
+                        'type': 'int',
+                    },
+                    'NAT_Traversal': {
+                        'type': 'int',
+                    },
+                    'Anti_Replay': {
+                        'type': 'str',
+                    },
+                    'Lifetime': {
+                        'type': 'int',
+                    },
+                    'Lifebytes': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'crl': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'crl_list': {
+                        'type': 'list',
+                        'subject': {
+                            'type': 'str',
+                        },
+                        'issuer': {
+                            'type': 'str',
+                        },
+                        'updates': {
+                            'type': 'str',
+                        },
+                        'serial': {
+                            'type': 'str',
+                        },
+                        'revoked': {
+                            'type': 'str',
+                        },
+                        'storage_type': {
+                            'type': 'str',
+                        }
+                    },
+                    'total_crls': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'ocsp': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'ocsp_list': {
+                        'type': 'list',
+                        'subject': {
+                            'type': 'str',
+                        },
+                        'issuer': {
+                            'type': 'str',
+                        },
+                        'validity': {
+                            'type': 'str',
+                        },
+                        'certificate_status': {
+                            'type': 'str',
+                        }
+                    },
+                    'total_ocsps': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'ipsec_sa_by_gw': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'ike_gateway_name': {
+                        'type': 'str',
+                    },
+                    'local_ip': {
+                        'type': 'str',
+                    },
+                    'peer_ip': {
+                        'type': 'str',
+                    },
+                    'ipsec_sa_list': {
+                        'type': 'list',
+                        'ipsec_sa_name': {
+                            'type': 'str',
+                        },
+                        'local_ts': {
+                            'type': 'str',
+                        },
+                        'remote_ts': {
+                            'type': 'str',
+                        },
+                        'in_spi': {
+                            'type': 'str',
+                        },
+                        'out_spi': {
+                            'type': 'str',
+                        },
+                        'protocol': {
+                            'type': 'str',
+                        },
+                        'mode': {
+                            'type': 'str',
+                        },
+                        'encryption': {
+                            'type': 'str',
+                        },
+                        'hash': {
+                            'type': 'str',
+                        },
+                        'lifetime': {
+                            'type': 'int',
+                        },
+                        'lifebytes': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'passthrough': {
+                'type': 'str',
+            },
+            'ha_standby_drop': {
+                'type': 'str',
+            },
+            'error': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'bad_opcode': {
+                        'type': 'str',
+                    },
+                    'bad_sg_write_len': {
+                        'type': 'str',
+                    },
+                    'bad_len': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_protocol': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_auth': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_padding': {
+                        'type': 'str',
+                    },
+                    'bad_ip_version': {
+                        'type': 'str',
+                    },
+                    'bad_auth_type': {
+                        'type': 'str',
+                    },
+                    'bad_encrypt_type': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_spi': {
+                        'type': 'str',
+                    },
+                    'bad_checksum': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_context': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_context_direction': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_context_flag_mismatch': {
+                        'type': 'str',
+                    },
+                    'ipcomp_payload': {
+                        'type': 'str',
+                    },
+                    'bad_selector_match': {
+                        'type': 'str',
+                    },
+                    'bad_fragment_size': {
+                        'type': 'str',
+                    },
+                    'bad_inline_data': {
+                        'type': 'str',
+                    },
+                    'bad_frag_size_configuration': {
+                        'type': 'str',
+                    },
+                    'dummy_payload': {
+                        'type': 'str',
+                    },
+                    'bad_ip_payload_type': {
+                        'type': 'str',
+                    },
+                    'bad_min_frag_size_auth_sha384_512': {
+                        'type': 'str',
+                    },
+                    'bad_esp_next_header': {
+                        'type': 'str',
+                    },
+                    'bad_gre_header': {
+                        'type': 'str',
+                    },
+                    'bad_gre_protocol': {
+                        'type': 'str',
+                    },
+                    'ipv6_extension_headers_too_big': {
+                        'type': 'str',
+                    },
+                    'ipv6_hop_by_hop_error': {
+                        'type': 'str',
+                    },
+                    'error_ipv6_decrypt_rh_segs_left_error': {
+                        'type': 'str',
+                    },
+                    'ipv6_rh_length_error': {
+                        'type': 'str',
+                    },
+                    'ipv6_outbound_rh_copy_addr_error': {
+                        'type': 'str',
+                    },
+                    'error_IPv6_extension_header_bad': {
+                        'type': 'str',
+                    },
+                    'bad_encrypt_type_ctr_gcm': {
+                        'type': 'str',
+                    },
+                    'ah_not_supported_with_gcm_gmac_sha2': {
+                        'type': 'str',
+                    },
+                    'tfc_padding_with_prefrag_not_supported': {
+                        'type': 'str',
+                    },
+                    'bad_srtp_auth_tag': {
+                        'type': 'str',
+                    },
+                    'bad_ipcomp_configuration': {
+                        'type': 'str',
+                    },
+                    'dsiv_incorrect_param': {
+                        'type': 'str',
+                    },
+                    'bad_ipsec_unknown': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'ike_stats_global': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'v2_init_rekey': {
+                        'type': 'str',
+                    },
+                    'v2_rsp_rekey': {
+                        'type': 'str',
+                    },
+                    'v2_child_sa_rekey': {
+                        'type': 'str',
+                    },
+                    'v2_in_invalid': {
+                        'type': 'str',
+                    },
+                    'v2_in_invalid_spi': {
+                        'type': 'str',
+                    },
+                    'v2_in_init_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_init_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_init_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_init_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_in_auth_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_auth_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_auth_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_auth_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_in_create_child_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_create_child_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_create_child_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_create_child_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_in_info_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_info_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_info_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_info_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_id_prot_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_id_prot_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_id_prot_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_id_prot_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_auth_only_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_auth_only_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_auth_only_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_auth_only_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_aggressive_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_aggressive_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_aggressive_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_aggressive_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_info_v1_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_info_v1_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_info_v1_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_info_v1_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_transaction_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_transaction_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_transaction_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_transaction_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_quick_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_quick_mode_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_quick_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_quick_mode_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_new_group_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_new_group_mode_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_new_group_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_new_group_mode_rsp': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'ike_gateway_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'v2_init_rekey': {
+                        'type': 'str',
+                    },
+                    'v2_rsp_rekey': {
+                        'type': 'str',
+                    },
+                    'v2_child_sa_rekey': {
+                        'type': 'str',
+                    },
+                    'v2_in_invalid': {
+                        'type': 'str',
+                    },
+                    'v2_in_invalid_spi': {
+                        'type': 'str',
+                    },
+                    'v2_in_init_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_init_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_init_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_init_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_in_auth_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_auth_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_auth_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_auth_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_in_create_child_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_create_child_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_create_child_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_create_child_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_in_info_req': {
+                        'type': 'str',
+                    },
+                    'v2_in_info_rsp': {
+                        'type': 'str',
+                    },
+                    'v2_out_info_req': {
+                        'type': 'str',
+                    },
+                    'v2_out_info_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_id_prot_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_id_prot_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_id_prot_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_id_prot_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_auth_only_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_auth_only_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_auth_only_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_auth_only_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_aggressive_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_aggressive_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_aggressive_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_aggressive_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_info_v1_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_info_v1_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_info_v1_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_info_v1_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_transaction_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_transaction_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_transaction_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_transaction_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_quick_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_quick_mode_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_quick_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_quick_mode_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_in_new_group_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_in_new_group_mode_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_out_new_group_mode_req': {
+                        'type': 'str',
+                    },
+                    'v1_out_new_group_mode_rsp': {
+                        'type': 'str',
+                    },
+                    'v1_child_sa_invalid_spi': {
+                        'type': 'str',
+                    },
+                    'v2_child_sa_invalid_spi': {
+                        'type': 'str',
+                    },
+                    'ike_current_version': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'ipsec_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'packets_encrypted': {
+                        'type': 'str',
+                    },
+                    'packets_decrypted': {
+                        'type': 'str',
+                    },
+                    'anti_replay_num': {
+                        'type': 'str',
+                    },
+                    'rekey_num': {
+                        'type': 'str',
+                    },
+                    'packets_err_inactive': {
+                        'type': 'str',
+                    },
+                    'packets_err_encryption': {
+                        'type': 'str',
+                    },
+                    'packets_err_pad_check': {
+                        'type': 'str',
+                    },
+                    'packets_err_pkt_sanity': {
+                        'type': 'str',
+                    },
+                    'packets_err_icv_check': {
+                        'type': 'str',
+                    },
+                    'packets_err_lifetime_lifebytes': {
+                        'type': 'str',
+                    },
+                    'bytes_encrypted': {
+                        'type': 'str',
+                    },
+                    'bytes_decrypted': {
+                        'type': 'str',
+                    },
+                    'prefrag_success': {
+                        'type': 'str',
+                    },
+                    'prefrag_error': {
+                        'type': 'str',
+                    },
+                    'cavium_bytes_encrypted': {
+                        'type': 'str',
+                    },
+                    'cavium_bytes_decrypted': {
+                        'type': 'str',
+                    },
+                    'cavium_packets_encrypted': {
+                        'type': 'str',
+                    },
+                    'cavium_packets_decrypted': {
+                        'type': 'str',
+                    },
+                    'tunnel_intf_down': {
+                        'type': 'str',
+                    },
+                    'pkt_fail_prep_to_send': {
+                        'type': 'str',
+                    },
+                    'no_next_hop': {
+                        'type': 'str',
+                    },
+                    'invalid_tunnel_id': {
+                        'type': 'str',
+                    },
+                    'no_tunnel_found': {
+                        'type': 'str',
+                    },
+                    'pkt_fail_to_send': {
+                        'type': 'str',
+                    },
+                    'frag_after_encap_frag_packets': {
+                        'type': 'str',
+                    },
+                    'frag_received': {
+                        'type': 'str',
+                    },
+                    'sequence_num': {
+                        'type': 'str',
+                    },
+                    'sequence_num_rollover': {
+                        'type': 'str',
+                    },
+                    'packets_err_nh_check': {
+                        'type': 'str',
+                    }
+                }
+            }
         }
     })
     return rv

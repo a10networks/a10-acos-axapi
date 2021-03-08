@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor_record
 description:
     - Configure record types to be exported
-short_description: Configures A10 netflow.monitor.record
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,127 +22,157 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    nat44:
+        - Key to identify parent object
+        type: str
+        required: True
+    netflow_v5:
         description:
-        - "NAT44 Flow Record Template"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    sesn_event_nat64:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
-        required: False
-    nat64:
-        description:
-        - "NAT64 Flow Record Template"
-        required: False
-    port_batch_v2_nat64:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
-        required: False
-    dslite:
-        description:
-        - "DS-Lite Flow Record Template"
-        required: False
-    port_batch_v2_dslite:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
-        required: False
-    sesn_event_fw6:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
+        - "NetFlow V5 Flow Record Template"
+        type: bool
         required: False
     netflow_v5_ext:
         description:
         - "Extended NetFlow V5 Flow Record Template, supports ipv6"
+        type: bool
         required: False
-    port_mapping_nat64:
+    nat44:
         description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
+        - "NAT44 Flow Record Template"
+        type: bool
         required: False
-    sesn_event_dslite:
+    nat64:
         description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
+        - "NAT64 Flow Record Template"
+        type: bool
+        required: False
+    dslite:
+        description:
+        - "DS-Lite Flow Record Template"
+        type: bool
         required: False
     sesn_event_nat44:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only
           creation events; 'deletion'= Export only deletion events;"
+        type: str
         required: False
-    port_batch_v2_nat44:
+    sesn_event_nat64:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only
           creation events; 'deletion'= Export only deletion events;"
+        type: str
         required: False
-    netflow_v5:
-        description:
-        - "NetFlow V5 Flow Record Template"
-        required: False
-    port_batch_dslite:
+    sesn_event_dslite:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only
           creation events; 'deletion'= Export only deletion events;"
-        required: False
-    port_mapping_dslite:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
-        required: False
-    port_mapping_nat44:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only
-          creation events; 'deletion'= Export only deletion events;"
+        type: str
         required: False
     sesn_event_fw4:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only
           creation events; 'deletion'= Export only deletion events;"
+        type: str
         required: False
-    port_batch_nat64:
+    sesn_event_fw6:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only
           creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_mapping_nat44:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_mapping_nat64:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_mapping_dslite:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
         required: False
     port_batch_nat44:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only
           creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_batch_nat64:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_batch_dslite:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_batch_v2_nat44:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_batch_v2_nat64:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    port_batch_v2_dslite:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only
+          creation events; 'deletion'= Export only deletion events;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -217,38 +245,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'nat44': {
+        'netflow_v5': {
             'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'sesn_event_nat64': {
-            'type': 'str',
-            'choices': ['both', 'creation', 'deletion']
-        },
-        'nat64': {
-            'type': 'bool',
-        },
-        'port_batch_v2_nat64': {
-            'type': 'str',
-            'choices': ['both', 'creation', 'deletion']
-        },
-        'dslite': {
-            'type': 'bool',
-        },
-        'port_batch_v2_dslite': {
-            'type': 'str',
-            'choices': ['both', 'creation', 'deletion']
-        },
-        'sesn_event_fw6': {
-            'type': 'str',
-            'choices': ['both', 'creation', 'deletion']
         },
         'netflow_v5_ext': {
             'type': 'bool',
         },
-        'port_mapping_nat64': {
+        'nat44': {
+            'type': 'bool',
+        },
+        'nat64': {
+            'type': 'bool',
+        },
+        'dslite': {
+            'type': 'bool',
+        },
+        'sesn_event_nat44': {
+            'type': 'str',
+            'choices': ['both', 'creation', 'deletion']
+        },
+        'sesn_event_nat64': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
         },
@@ -256,22 +272,11 @@ def get_argspec():
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
         },
-        'sesn_event_nat44': {
+        'sesn_event_fw4': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
         },
-        'port_batch_v2_nat44': {
-            'type': 'str',
-            'choices': ['both', 'creation', 'deletion']
-        },
-        'netflow_v5': {
-            'type': 'bool',
-        },
-        'port_batch_dslite': {
-            'type': 'str',
-            'choices': ['both', 'creation', 'deletion']
-        },
-        'port_mapping_dslite': {
+        'sesn_event_fw6': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
         },
@@ -279,7 +284,15 @@ def get_argspec():
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
         },
-        'sesn_event_fw4': {
+        'port_mapping_nat64': {
+            'type': 'str',
+            'choices': ['both', 'creation', 'deletion']
+        },
+        'port_mapping_dslite': {
+            'type': 'str',
+            'choices': ['both', 'creation', 'deletion']
+        },
+        'port_batch_nat44': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
         },
@@ -287,9 +300,24 @@ def get_argspec():
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
         },
-        'port_batch_nat44': {
+        'port_batch_dslite': {
             'type': 'str',
             'choices': ['both', 'creation', 'deletion']
+        },
+        'port_batch_v2_nat44': {
+            'type': 'str',
+            'choices': ['both', 'creation', 'deletion']
+        },
+        'port_batch_v2_nat64': {
+            'type': 'str',
+            'choices': ['both', 'creation', 'deletion']
+        },
+        'port_batch_v2_dslite': {
+            'type': 'str',
+            'choices': ['both', 'creation', 'deletion']
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

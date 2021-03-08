@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ve_ipv6
 description:
     - Global IPv6 configuration subcommands
-short_description: Configures A10 interface.ve.ipv6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,233 +22,300 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ve_ifnum:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    inbound:
-        description:
-        - "ACL applied on incoming packets to this interface"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     address_list:
         description:
         - "Field address_list"
+        type: list
         required: False
         suboptions:
+            ipv6_addr:
+                description:
+                - "Set the IPv6 address of an interface"
+                type: str
             address_type:
                 description:
                 - "'anycast'= Configure an IPv6 anycast address; 'link-local'= Configure an IPv6
           link local address;"
-            ipv6_addr:
-                description:
-                - "Set the IPv6 address of an interface"
-    inside:
-        description:
-        - "Configure interface as NAT inside"
-        required: False
+                type: str
     ipv6_enable:
         description:
         - "Enable IPv6 processing"
+        type: bool
         required: False
-    rip:
-        description:
-        - "Field rip"
-        required: False
-        suboptions:
-            split_horizon_cfg:
-                description:
-                - "Field split_horizon_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-    outside:
-        description:
-        - "Configure interface as NAT outside"
-        required: False
-    stateful_firewall:
-        description:
-        - "Field stateful_firewall"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            class_list:
-                description:
-                - "Class List (Class List Name)"
-            acl_name:
-                description:
-                - "Access-list Name"
-            inside:
-                description:
-                - "Inside (private) interface for stateful firewall"
-            outside:
-                description:
-                - "Outside (public) interface for stateful firewall"
-            access_list:
-                description:
-                - "Access-list for traffic from the outside"
     v6_acl_name:
         description:
         - "Apply ACL rules to incoming packets on this interface (Named Access List)"
+        type: str
+        required: False
+    inbound:
+        description:
+        - "ACL applied on incoming packets to this interface"
+        type: bool
+        required: False
+    inside:
+        description:
+        - "Configure interface as NAT inside"
+        type: bool
+        required: False
+    outside:
+        description:
+        - "Configure interface as NAT outside"
+        type: bool
         required: False
     ttl_ignore:
         description:
         - "Ignore TTL decrement for a received packet"
+        type: bool
         required: False
+    router_adver:
+        description:
+        - "Field router_adver"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "'enable'= Enable Router Advertisements on this interface; 'disable'= Disable
+          Router Advertisements on this interface;"
+                type: str
+            default_lifetime:
+                description:
+                - "Set Router Advertisement Default Lifetime (default= 1800) (Default Lifetime
+          (seconds))"
+                type: int
+            hop_limit:
+                description:
+                - "Set Router Advertisement Hop Limit (default= 255)"
+                type: int
+            max_interval:
+                description:
+                - "Set Router Advertisement Max Interval (default= 600) (Max Router Advertisement
+          Interval (seconds))"
+                type: int
+            min_interval:
+                description:
+                - "Set Router Advertisement Min Interval (default= 200) (Min Router Advertisement
+          Interval (seconds))"
+                type: int
+            rate_limit:
+                description:
+                - "Rate Limit the processing of incoming Router Solicitations (Max Number of
+          Router Solicitations to process per second)"
+                type: int
+            reachable_time:
+                description:
+                - "Set Router Advertisement Reachable ime (default= 0) (Reachable Time
+          (milliseconds))"
+                type: int
+            retransmit_timer:
+                description:
+                - "Set Router Advertisement Retransmit Timer (default= 0)"
+                type: int
+            adver_mtu_disable:
+                description:
+                - "Disable Router Advertisement MTU Option"
+                type: bool
+            adver_mtu:
+                description:
+                - "Set Router Advertisement MTU Option"
+                type: int
+            prefix_list:
+                description:
+                - "Field prefix_list"
+                type: list
+            managed_config_action:
+                description:
+                - "'enable'= Enable the Managed Address Configuration flag; 'disable'= Disable the
+          Managed Address Configuration flag (default);"
+                type: str
+            other_config_action:
+                description:
+                - "'enable'= Enable the Other Stateful Configuration flag; 'disable'= Disable the
+          Other Stateful Configuration flag (default);"
+                type: str
+            adver_vrid:
+                description:
+                - "Vrid"
+                type: int
+            use_floating_ip:
+                description:
+                - "Use a floating IP as the source address for Router advertisements"
+                type: bool
+            floating_ip:
+                description:
+                - "Use a floating IP as the source address for Router advertisements"
+                type: str
+            adver_vrid_default:
+                description:
+                - "Default VRRP-A vrid"
+                type: bool
+            use_floating_ip_default_vrid:
+                description:
+                - "Use a floating IP as the source address for Router advertisements"
+                type: bool
+            floating_ip_default_vrid:
+                description:
+                - "Use a floating IP as the source address for Router advertisements"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    stateful_firewall:
+        description:
+        - "Field stateful_firewall"
+        type: dict
+        required: False
+        suboptions:
+            inside:
+                description:
+                - "Inside (private) interface for stateful firewall"
+                type: bool
+            class_list:
+                description:
+                - "Class List (Class List Name)"
+                type: str
+            outside:
+                description:
+                - "Outside (public) interface for stateful firewall"
+                type: bool
+            access_list:
+                description:
+                - "Access-list for traffic from the outside"
+                type: bool
+            acl_name:
+                description:
+                - "Access-list Name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     router:
         description:
         - "Field router"
+        type: dict
         required: False
         suboptions:
             ripng:
                 description:
                 - "Field ripng"
+                type: dict
             ospf:
                 description:
                 - "Field ospf"
+                type: dict
             isis:
                 description:
                 - "Field isis"
-    ospf:
+                type: dict
+    rip:
         description:
-        - "Field ospf"
+        - "Field rip"
+        type: dict
         required: False
         suboptions:
+            split_horizon_cfg:
+                description:
+                - "Field split_horizon_cfg"
+                type: dict
             uuid:
                 description:
                 - "uuid of the object"
-            bfd:
-                description:
-                - "Bidirectional Forwarding Detection (BFD)"
-            cost_cfg:
-                description:
-                - "Field cost_cfg"
-            priority_cfg:
-                description:
-                - "Field priority_cfg"
-            hello_interval_cfg:
-                description:
-                - "Field hello_interval_cfg"
-            mtu_ignore_cfg:
-                description:
-                - "Field mtu_ignore_cfg"
-            retransmit_interval_cfg:
-                description:
-                - "Field retransmit_interval_cfg"
-            disable:
-                description:
-                - "Disable BFD"
-            transmit_delay_cfg:
-                description:
-                - "Field transmit_delay_cfg"
-            neighbor_cfg:
-                description:
-                - "Field neighbor_cfg"
+                type: str
+    ospf:
+        description:
+        - "Field ospf"
+        type: dict
+        required: False
+        suboptions:
             network_list:
                 description:
                 - "Field network_list"
+                type: list
+            bfd:
+                description:
+                - "Bidirectional Forwarding Detection (BFD)"
+                type: bool
+            disable:
+                description:
+                - "Disable BFD"
+                type: bool
+            cost_cfg:
+                description:
+                - "Field cost_cfg"
+                type: list
             dead_interval_cfg:
                 description:
                 - "Field dead_interval_cfg"
-    router_adver:
-        description:
-        - "Field router_adver"
-        required: False
-        suboptions:
-            max_interval:
+                type: list
+            hello_interval_cfg:
                 description:
-                - "Set Router Advertisement Max Interval (default= 600) (Max Router Advertisement
-          Interval (seconds))"
-            default_lifetime:
+                - "Field hello_interval_cfg"
+                type: list
+            mtu_ignore_cfg:
                 description:
-                - "Set Router Advertisement Default Lifetime (default= 1800) (Default Lifetime
-          (seconds))"
-            reachable_time:
+                - "Field mtu_ignore_cfg"
+                type: list
+            neighbor_cfg:
                 description:
-                - "Set Router Advertisement Reachable ime (default= 0) (Reachable Time
-          (milliseconds))"
-            other_config_action:
+                - "Field neighbor_cfg"
+                type: list
+            priority_cfg:
                 description:
-                - "'enable'= Enable the Other Stateful Configuration flag; 'disable'= Disable the
-          Other Stateful Configuration flag (default);"
-            floating_ip_default_vrid:
+                - "Field priority_cfg"
+                type: list
+            retransmit_interval_cfg:
                 description:
-                - "Use a floating IP as the source address for Router advertisements"
-            managed_config_action:
+                - "Field retransmit_interval_cfg"
+                type: list
+            transmit_delay_cfg:
                 description:
-                - "'enable'= Enable the Managed Address Configuration flag; 'disable'= Disable the
-          Managed Address Configuration flag (default);"
-            min_interval:
+                - "Field transmit_delay_cfg"
+                type: list
+            uuid:
                 description:
-                - "Set Router Advertisement Min Interval (default= 200) (Min Router Advertisement
-          Interval (seconds))"
-            rate_limit:
-                description:
-                - "Rate Limit the processing of incoming Router Solicitations (Max Number of
-          Router Solicitations to process per second)"
-            adver_mtu_disable:
-                description:
-                - "Disable Router Advertisement MTU Option"
-            prefix_list:
-                description:
-                - "Field prefix_list"
-            floating_ip:
-                description:
-                - "Use a floating IP as the source address for Router advertisements"
-            adver_vrid:
-                description:
-                - "Vrid"
-            use_floating_ip_default_vrid:
-                description:
-                - "Use a floating IP as the source address for Router advertisements"
-            action:
-                description:
-                - "'enable'= Enable Router Advertisements on this interface; 'disable'= Disable
-          Router Advertisements on this interface;"
-            adver_vrid_default:
-                description:
-                - "Default VRRP-A vrid"
-            adver_mtu:
-                description:
-                - "Set Router Advertisement MTU Option"
-            retransmit_timer:
-                description:
-                - "Set Router Advertisement Retransmit Timer (default= 0)"
-            hop_limit:
-                description:
-                - "Set Router Advertisement Hop Limit (default= 255)"
-            use_floating_ip:
-                description:
-                - "Use a floating IP as the source address for Router advertisements"
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -315,86 +380,154 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
+        'address_list': {
+            'type': 'list',
+            'ipv6_addr': {
+                'type': 'str',
+            },
+            'address_type': {
+                'type': 'str',
+                'choices': ['anycast', 'link-local']
+            }
+        },
+        'ipv6_enable': {
+            'type': 'bool',
+        },
+        'v6_acl_name': {
             'type': 'str',
         },
         'inbound': {
             'type': 'bool',
         },
-        'address_list': {
-            'type': 'list',
-            'address_type': {
-                'type': 'str',
-                'choices': ['anycast', 'link-local']
-            },
-            'ipv6_addr': {
-                'type': 'str',
-            }
-        },
         'inside': {
             'type': 'bool',
-        },
-        'ipv6_enable': {
-            'type': 'bool',
-        },
-        'rip': {
-            'type': 'dict',
-            'split_horizon_cfg': {
-                'type': 'dict',
-                'state': {
-                    'type': 'str',
-                    'choices': ['poisoned', 'disable', 'enable']
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
         },
         'outside': {
             'type': 'bool',
         },
+        'ttl_ignore': {
+            'type': 'bool',
+        },
+        'router_adver': {
+            'type': 'dict',
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'default_lifetime': {
+                'type': 'int',
+            },
+            'hop_limit': {
+                'type': 'int',
+            },
+            'max_interval': {
+                'type': 'int',
+            },
+            'min_interval': {
+                'type': 'int',
+            },
+            'rate_limit': {
+                'type': 'int',
+            },
+            'reachable_time': {
+                'type': 'int',
+            },
+            'retransmit_timer': {
+                'type': 'int',
+            },
+            'adver_mtu_disable': {
+                'type': 'bool',
+            },
+            'adver_mtu': {
+                'type': 'int',
+            },
+            'prefix_list': {
+                'type': 'list',
+                'prefix': {
+                    'type': 'str',
+                },
+                'not_autonomous': {
+                    'type': 'bool',
+                },
+                'not_on_link': {
+                    'type': 'bool',
+                },
+                'preferred_lifetime': {
+                    'type': 'int',
+                },
+                'valid_lifetime': {
+                    'type': 'int',
+                }
+            },
+            'managed_config_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'other_config_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'adver_vrid': {
+                'type': 'int',
+            },
+            'use_floating_ip': {
+                'type': 'bool',
+            },
+            'floating_ip': {
+                'type': 'str',
+            },
+            'adver_vrid_default': {
+                'type': 'bool',
+            },
+            'use_floating_ip_default_vrid': {
+                'type': 'bool',
+            },
+            'floating_ip_default_vrid': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'stateful_firewall': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
+            'inside': {
+                'type': 'bool',
             },
             'class_list': {
                 'type': 'str',
-            },
-            'acl_name': {
-                'type': 'str',
-            },
-            'inside': {
-                'type': 'bool',
             },
             'outside': {
                 'type': 'bool',
             },
             'access_list': {
                 'type': 'bool',
+            },
+            'acl_name': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'v6_acl_name': {
-            'type': 'str',
-        },
-        'ttl_ignore': {
-            'type': 'bool',
         },
         'router': {
             'type': 'dict',
             'ripng': {
                 'type': 'dict',
-                'uuid': {
-                    'type': 'str',
-                },
                 'rip': {
                     'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
                 }
             },
             'ospf': {
                 'type': 'dict',
                 'area_list': {
                     'type': 'list',
+                    'area_id_num': {
+                        'type': 'int',
+                    },
                     'area_id_addr': {
                         'type': 'str',
                     },
@@ -402,9 +535,6 @@ def get_argspec():
                         'type': 'str',
                     },
                     'instance_id': {
-                        'type': 'int',
-                    },
-                    'area_id_num': {
                         'type': 'int',
                     }
                 },
@@ -422,12 +552,42 @@ def get_argspec():
                 }
             }
         },
-        'ospf': {
+        'rip': {
             'type': 'dict',
+            'split_horizon_cfg': {
+                'type': 'dict',
+                'state': {
+                    'type': 'str',
+                    'choices': ['poisoned', 'disable', 'enable']
+                }
+            },
             'uuid': {
                 'type': 'str',
+            }
+        },
+        'ospf': {
+            'type': 'dict',
+            'network_list': {
+                'type': 'list',
+                'broadcast_type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'broadcast', 'non-broadcast', 'point-to-point',
+                        'point-to-multipoint'
+                    ]
+                },
+                'p2mp_nbma': {
+                    'type': 'bool',
+                },
+                'network_instance_id': {
+                    'type': 'int',
+                }
             },
             'bfd': {
+                'type': 'bool',
+            },
+            'disable': {
                 'type': 'bool',
             },
             'cost_cfg': {
@@ -439,9 +599,9 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'priority_cfg': {
+            'dead_interval_cfg': {
                 'type': 'list',
-                'priority': {
+                'dead_interval': {
                     'type': 'int',
                 },
                 'instance_id': {
@@ -466,6 +626,33 @@ def get_argspec():
                     'type': 'int',
                 }
             },
+            'neighbor_cfg': {
+                'type': 'list',
+                'neighbor': {
+                    'type': 'str',
+                },
+                'neig_inst': {
+                    'type': 'int',
+                },
+                'neighbor_cost': {
+                    'type': 'int',
+                },
+                'neighbor_poll_interval': {
+                    'type': 'int',
+                },
+                'neighbor_priority': {
+                    'type': 'int',
+                }
+            },
+            'priority_cfg': {
+                'type': 'list',
+                'priority': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
             'retransmit_interval_cfg': {
                 'type': 'list',
                 'retransmit_interval': {
@@ -474,9 +661,6 @@ def get_argspec():
                 'instance_id': {
                     'type': 'int',
                 }
-            },
-            'disable': {
-                'type': 'bool',
             },
             'transmit_delay_cfg': {
                 'type': 'list',
@@ -487,127 +671,8 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'neighbor_cfg': {
-                'type': 'list',
-                'neighbor_priority': {
-                    'type': 'int',
-                },
-                'neighbor_poll_interval': {
-                    'type': 'int',
-                },
-                'neig_inst': {
-                    'type': 'int',
-                },
-                'neighbor': {
-                    'type': 'str',
-                },
-                'neighbor_cost': {
-                    'type': 'int',
-                }
-            },
-            'network_list': {
-                'type': 'list',
-                'broadcast_type': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'broadcast', 'non-broadcast', 'point-to-point',
-                        'point-to-multipoint'
-                    ]
-                },
-                'p2mp_nbma': {
-                    'type': 'bool',
-                },
-                'network_instance_id': {
-                    'type': 'int',
-                }
-            },
-            'dead_interval_cfg': {
-                'type': 'list',
-                'dead_interval': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            }
-        },
-        'router_adver': {
-            'type': 'dict',
-            'max_interval': {
-                'type': 'int',
-            },
-            'default_lifetime': {
-                'type': 'int',
-            },
-            'reachable_time': {
-                'type': 'int',
-            },
-            'other_config_action': {
+            'uuid': {
                 'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'floating_ip_default_vrid': {
-                'type': 'str',
-            },
-            'managed_config_action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'min_interval': {
-                'type': 'int',
-            },
-            'rate_limit': {
-                'type': 'int',
-            },
-            'adver_mtu_disable': {
-                'type': 'bool',
-            },
-            'prefix_list': {
-                'type': 'list',
-                'not_autonomous': {
-                    'type': 'bool',
-                },
-                'not_on_link': {
-                    'type': 'bool',
-                },
-                'valid_lifetime': {
-                    'type': 'int',
-                },
-                'prefix': {
-                    'type': 'str',
-                },
-                'preferred_lifetime': {
-                    'type': 'int',
-                }
-            },
-            'floating_ip': {
-                'type': 'str',
-            },
-            'adver_vrid': {
-                'type': 'int',
-            },
-            'use_floating_ip_default_vrid': {
-                'type': 'bool',
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'adver_vrid_default': {
-                'type': 'bool',
-            },
-            'adver_mtu': {
-                'type': 'int',
-            },
-            'retransmit_timer': {
-                'type': 'int',
-            },
-            'hop_limit': {
-                'type': 'int',
-            },
-            'use_floating_ip': {
-                'type': 'bool',
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_message_info
 description:
     - Get information about log message
-short_description: Configures A10 acos.events.message-info
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             msg_info_list:
                 description:
                 - "Field msg_info_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -115,44 +123,44 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'msg_info_list': {
                 'type': 'list',
-                'descriptive_name': {
-                    'type': 'str',
-                },
                 'message_id': {
-                    'type': 'str',
-                },
-                'description': {
-                    'type': 'str',
-                },
-                'cef_importance': {
-                    'type': 'int',
-                },
-                'signature': {
-                    'type': 'str',
-                },
-                'rate_limit_support': {
-                    'type': 'str',
-                },
-                'configured_severity': {
-                    'type': 'int',
-                },
-                'supported_formats': {
                     'type': 'str',
                 },
                 'message_number': {
                     'type': 'int',
                 },
+                'descriptive_name': {
+                    'type': 'str',
+                },
+                'signature': {
+                    'type': 'str',
+                },
+                'description': {
+                    'type': 'str',
+                },
                 'defined_severity': {
                     'type': 'int',
+                },
+                'configured_severity': {
+                    'type': 'int',
+                },
+                'cef_importance': {
+                    'type': 'int',
+                },
+                'rate_limit_support': {
+                    'type': 'str',
+                },
+                'supported_formats': {
+                    'type': 'str',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_route_map
 description:
     - Configure route-map
-short_description: Configures A10 route-map
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,162 +22,209 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    set:
-        description:
-        - "Field set"
-        required: False
-        suboptions:
-            extcommunity:
-                description:
-                - "Field extcommunity"
-            origin:
-                description:
-                - "Field origin"
-            originator_id:
-                description:
-                - "Field originator_id"
-            weight:
-                description:
-                - "Field weight"
-            level:
-                description:
-                - "Field level"
-            ip:
-                description:
-                - "Field ip"
-            metric:
-                description:
-                - "Field metric"
-            as_path:
-                description:
-                - "Field as_path"
-            comm_list:
-                description:
-                - "Field comm_list"
-            atomic_aggregate:
-                description:
-                - "BGP atomic aggregate attribute"
-            community:
-                description:
-                - "BGP community attribute"
-            local_preference:
-                description:
-                - "Field local_preference"
-            ddos:
-                description:
-                - "Field ddos"
-            tag:
-                description:
-                - "Field tag"
-            aggregator:
-                description:
-                - "Field aggregator"
-            dampening_cfg:
-                description:
-                - "Field dampening_cfg"
-            ipv6:
-                description:
-                - "Field ipv6"
-            metric_type:
-                description:
-                - "Field metric_type"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    sequence:
-        description:
-        - "Sequence to insert to/delete from existing route-map entry"
-        required: True
-    user_tag:
-        description:
-        - "Customized tag"
+        type: str
         required: False
     tag:
         description:
         - "Route map tag"
+        type: str
         required: True
     action:
         description:
         - "'permit'= Route map permits set operations; 'deny'= Route map denies set
           operations;"
+        type: str
         required: True
+    sequence:
+        description:
+        - "Sequence to insert to/delete from existing route-map entry"
+        type: int
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     match:
         description:
         - "Field match"
+        type: dict
         required: False
         suboptions:
-            extcommunity:
-                description:
-                - "Field extcommunity"
-            origin:
-                description:
-                - "Field origin"
-            group:
-                description:
-                - "Field group"
-            uuid:
-                description:
-                - "uuid of the object"
-            ip:
-                description:
-                - "Field ip"
-            metric:
-                description:
-                - "Field metric"
             as_path:
                 description:
                 - "Field as_path"
+                type: dict
             community:
                 description:
                 - "Field community"
-            local_preference:
+                type: dict
+            extcommunity:
                 description:
-                - "Field local_preference"
-            route_type:
+                - "Field extcommunity"
+                type: dict
+            group:
                 description:
-                - "Field route_type"
-            tag:
-                description:
-                - "Field tag"
-            ipv6:
-                description:
-                - "Field ipv6"
-            interface:
-                description:
-                - "Field interface"
+                - "Field group"
+                type: dict
             scaleout:
                 description:
                 - "Field scaleout"
+                type: dict
+            interface:
+                description:
+                - "Field interface"
+                type: dict
+            local_preference:
+                description:
+                - "Field local_preference"
+                type: dict
+            origin:
+                description:
+                - "Field origin"
+                type: dict
+            ip:
+                description:
+                - "Field ip"
+                type: dict
+            ipv6:
+                description:
+                - "Field ipv6"
+                type: dict
+            metric:
+                description:
+                - "Field metric"
+                type: dict
+            route_type:
+                description:
+                - "Field route_type"
+                type: dict
+            tag:
+                description:
+                - "Field tag"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    set:
+        description:
+        - "Field set"
+        type: dict
+        required: False
+        suboptions:
+            ip:
+                description:
+                - "Field ip"
+                type: dict
+            ddos:
+                description:
+                - "Field ddos"
+                type: dict
+            ipv6:
+                description:
+                - "Field ipv6"
+                type: dict
+            level:
+                description:
+                - "Field level"
+                type: dict
+            metric:
+                description:
+                - "Field metric"
+                type: dict
+            metric_type:
+                description:
+                - "Field metric_type"
+                type: dict
+            tag:
+                description:
+                - "Field tag"
+                type: dict
+            aggregator:
+                description:
+                - "Field aggregator"
+                type: dict
+            as_path:
+                description:
+                - "Field as_path"
+                type: dict
+            atomic_aggregate:
+                description:
+                - "BGP atomic aggregate attribute"
+                type: bool
+            comm_list:
+                description:
+                - "Field comm_list"
+                type: dict
+            community:
+                description:
+                - "BGP community attribute"
+                type: str
+            dampening_cfg:
+                description:
+                - "Field dampening_cfg"
+                type: dict
+            extcommunity:
+                description:
+                - "Field extcommunity"
+                type: dict
+            local_preference:
+                description:
+                - "Field local_preference"
+                type: dict
+            originator_id:
+                description:
+                - "Field originator_id"
+                type: dict
+            weight:
+                description:
+                - "Field weight"
+                type: dict
+            origin:
+                description:
+                - "Field origin"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -238,201 +283,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'set': {
-            'type': 'dict',
-            'extcommunity': {
-                'type': 'dict',
-                'rt': {
-                    'type': 'dict',
-                    'value': {
-                        'type': 'str',
-                    }
-                },
-                'soo': {
-                    'type': 'dict',
-                    'value': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'origin': {
-                'type': 'dict',
-                'egp': {
-                    'type': 'bool',
-                },
-                'incomplete': {
-                    'type': 'bool',
-                },
-                'igp': {
-                    'type': 'bool',
-                }
-            },
-            'originator_id': {
-                'type': 'dict',
-                'originator_ip': {
-                    'type': 'str',
-                }
-            },
-            'weight': {
-                'type': 'dict',
-                'weight_val': {
-                    'type': 'int',
-                }
-            },
-            'level': {
-                'type': 'dict',
-                'value': {
-                    'type': 'str',
-                    'choices': ['level-1', 'level-1-2', 'level-2']
-                }
-            },
-            'ip': {
-                'type': 'dict',
-                'next_hop': {
-                    'type': 'dict',
-                    'address': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'metric': {
-                'type': 'dict',
-                'value': {
-                    'type': 'str',
-                }
-            },
-            'as_path': {
-                'type': 'dict',
-                'num': {
-                    'type': 'int',
-                },
-                'num2': {
-                    'type': 'int',
-                },
-                'prepend': {
-                    'type': 'str',
-                }
-            },
-            'comm_list': {
-                'type': 'dict',
-                'name': {
-                    'type': 'str',
-                },
-                'v_std': {
-                    'type': 'int',
-                },
-                'v_exp_delete': {
-                    'type': 'bool',
-                },
-                'v_exp': {
-                    'type': 'int',
-                },
-                'name_delete': {
-                    'type': 'bool',
-                },
-                'delete': {
-                    'type': 'bool',
-                }
-            },
-            'atomic_aggregate': {
-                'type': 'bool',
-            },
-            'community': {
-                'type': 'str',
-            },
-            'local_preference': {
-                'type': 'dict',
-                'val': {
-                    'type': 'int',
-                }
-            },
-            'ddos': {
-                'type': 'dict',
-                'class_list_name': {
-                    'type': 'str',
-                },
-                'class_list_cid': {
-                    'type': 'int',
-                },
-                'zone': {
-                    'type': 'str',
-                }
-            },
-            'tag': {
-                'type': 'dict',
-                'value': {
-                    'type': 'int',
-                }
-            },
-            'aggregator': {
-                'type': 'dict',
-                'aggregator_as': {
-                    'type': 'dict',
-                    'ip': {
-                        'type': 'str',
-                    },
-                    'asn': {
-                        'type': 'int',
-                    }
-                }
-            },
-            'dampening_cfg': {
-                'type': 'dict',
-                'dampening_max_supress': {
-                    'type': 'int',
-                },
-                'dampening': {
-                    'type': 'bool',
-                },
-                'dampening_penalty': {
-                    'type': 'int',
-                },
-                'dampening_half_time': {
-                    'type': 'int',
-                },
-                'dampening_supress': {
-                    'type': 'int',
-                },
-                'dampening_reuse': {
-                    'type': 'int',
-                }
-            },
-            'ipv6': {
-                'type': 'dict',
-                'next_hop_1': {
-                    'type': 'dict',
-                    'local': {
-                        'type': 'dict',
-                        'address': {
-                            'type': 'str',
-                        }
-                    },
-                    'address': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'metric_type': {
-                'type': 'dict',
-                'value': {
-                    'type': 'str',
-                    'choices': ['external', 'internal', 'type-1', 'type-2']
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'sequence': {
-            'type': 'int',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
         'tag': {
             'type': 'str',
             'required': True,
@@ -442,30 +292,46 @@ def get_argspec():
             'required': True,
             'choices': ['permit', 'deny']
         },
+        'sequence': {
+            'type': 'int',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'match': {
             'type': 'dict',
+            'as_path': {
+                'type': 'dict',
+                'name': {
+                    'type': 'str',
+                }
+            },
+            'community': {
+                'type': 'dict',
+                'name_cfg': {
+                    'type': 'dict',
+                    'name': {
+                        'type': 'str',
+                    },
+                    'exact_match': {
+                        'type': 'bool',
+                    }
+                }
+            },
             'extcommunity': {
                 'type': 'dict',
                 'extcommunity_l_name': {
                     'type': 'dict',
-                    'exact_match': {
-                        'type': 'bool',
-                    },
                     'name': {
                         'type': 'str',
+                    },
+                    'exact_match': {
+                        'type': 'bool',
                     }
-                }
-            },
-            'origin': {
-                'type': 'dict',
-                'egp': {
-                    'type': 'bool',
-                },
-                'incomplete': {
-                    'type': 'bool',
-                },
-                'igp': {
-                    'type': 'bool',
                 }
             },
             'group': {
@@ -478,12 +344,55 @@ def get_argspec():
                     'choices': ['active', 'standby']
                 }
             },
-            'uuid': {
-                'type': 'str',
+            'scaleout': {
+                'type': 'dict',
+                'cluster_id': {
+                    'type': 'int',
+                },
+                'operational_state': {
+                    'type': 'str',
+                    'choices': ['up', 'down']
+                }
+            },
+            'interface': {
+                'type': 'dict',
+                'ethernet': {
+                    'type': 'str',
+                },
+                'loopback': {
+                    'type': 'int',
+                },
+                'trunk': {
+                    'type': 'int',
+                },
+                've': {
+                    'type': 'int',
+                },
+                'tunnel': {
+                    'type': 'str',
+                }
+            },
+            'local_preference': {
+                'type': 'dict',
+                'val': {
+                    'type': 'int',
+                }
+            },
+            'origin': {
+                'type': 'dict',
+                'egp': {
+                    'type': 'bool',
+                },
+                'igp': {
+                    'type': 'bool',
+                },
+                'incomplete': {
+                    'type': 'bool',
+                }
             },
             'ip': {
                 'type': 'dict',
-                'peer': {
+                'address': {
                     'type': 'dict',
                     'acl1': {
                         'type': 'int',
@@ -493,6 +402,12 @@ def get_argspec():
                     },
                     'name': {
                         'type': 'str',
+                    },
+                    'prefix_list': {
+                        'type': 'dict',
+                        'name': {
+                            'type': 'str',
+                        }
                     }
                 },
                 'next_hop': {
@@ -513,7 +428,7 @@ def get_argspec():
                         }
                     }
                 },
-                'address': {
+                'peer': {
                     'type': 'dict',
                     'acl1': {
                         'type': 'int',
@@ -521,11 +436,44 @@ def get_argspec():
                     'acl2': {
                         'type': 'int',
                     },
-                    'prefix_list': {
+                    'name': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'ipv6': {
+                'type': 'dict',
+                'address_1': {
+                    'type': 'dict',
+                    'name': {
+                        'type': 'str',
+                    },
+                    'prefix_list_2': {
                         'type': 'dict',
                         'name': {
                             'type': 'str',
                         }
+                    }
+                },
+                'next_hop_1': {
+                    'type': 'dict',
+                    'next_hop_acl_name': {
+                        'type': 'str',
+                    },
+                    'v6_addr': {
+                        'type': 'str',
+                    },
+                    'prefix_list_name': {
+                        'type': 'str',
+                    }
+                },
+                'peer_1': {
+                    'type': 'dict',
+                    'acl1': {
+                        'type': 'int',
+                    },
+                    'acl2': {
+                        'type': 'int',
                     },
                     'name': {
                         'type': 'str',
@@ -535,30 +483,6 @@ def get_argspec():
             'metric': {
                 'type': 'dict',
                 'value': {
-                    'type': 'int',
-                }
-            },
-            'as_path': {
-                'type': 'dict',
-                'name': {
-                    'type': 'str',
-                }
-            },
-            'community': {
-                'type': 'dict',
-                'name_cfg': {
-                    'type': 'dict',
-                    'exact_match': {
-                        'type': 'bool',
-                    },
-                    'name': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'local_preference': {
-                'type': 'dict',
-                'val': {
                     'type': 'int',
                 }
             },
@@ -578,72 +502,193 @@ def get_argspec():
                     'type': 'int',
                 }
             },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'set': {
+            'type': 'dict',
+            'ip': {
+                'type': 'dict',
+                'next_hop': {
+                    'type': 'dict',
+                    'address': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'ddos': {
+                'type': 'dict',
+                'class_list_name': {
+                    'type': 'str',
+                },
+                'class_list_cid': {
+                    'type': 'int',
+                },
+                'zone': {
+                    'type': 'str',
+                }
+            },
             'ipv6': {
                 'type': 'dict',
                 'next_hop_1': {
                     'type': 'dict',
-                    'prefix_list_name': {
+                    'address': {
                         'type': 'str',
                     },
-                    'v6_addr': {
-                        'type': 'str',
-                    },
-                    'next_hop_acl_name': {
-                        'type': 'str',
-                    }
-                },
-                'peer_1': {
-                    'type': 'dict',
-                    'acl1': {
-                        'type': 'int',
-                    },
-                    'acl2': {
-                        'type': 'int',
-                    },
-                    'name': {
-                        'type': 'str',
-                    }
-                },
-                'address_1': {
-                    'type': 'dict',
-                    'name': {
-                        'type': 'str',
-                    },
-                    'prefix_list_2': {
+                    'local': {
                         'type': 'dict',
-                        'name': {
+                        'address': {
                             'type': 'str',
                         }
                     }
                 }
             },
-            'interface': {
+            'level': {
                 'type': 'dict',
-                'tunnel': {
+                'value': {
                     'type': 'str',
-                },
-                'ethernet': {
+                    'choices': ['level-1', 'level-1-2', 'level-2']
+                }
+            },
+            'metric': {
+                'type': 'dict',
+                'value': {
                     'type': 'str',
-                },
-                'loopback': {
-                    'type': 'int',
-                },
-                've': {
-                    'type': 'int',
-                },
-                'trunk': {
+                }
+            },
+            'metric_type': {
+                'type': 'dict',
+                'value': {
+                    'type': 'str',
+                    'choices': ['external', 'internal', 'type-1', 'type-2']
+                }
+            },
+            'tag': {
+                'type': 'dict',
+                'value': {
                     'type': 'int',
                 }
             },
-            'scaleout': {
+            'aggregator': {
                 'type': 'dict',
-                'cluster_id': {
+                'aggregator_as': {
+                    'type': 'dict',
+                    'asn': {
+                        'type': 'int',
+                    },
+                    'ip': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'as_path': {
+                'type': 'dict',
+                'prepend': {
+                    'type': 'str',
+                },
+                'num': {
                     'type': 'int',
                 },
-                'operational_state': {
-                    'type': 'str',
-                    'choices': ['up', 'down']
+                'num2': {
+                    'type': 'int',
                 }
+            },
+            'atomic_aggregate': {
+                'type': 'bool',
+            },
+            'comm_list': {
+                'type': 'dict',
+                'v_std': {
+                    'type': 'int',
+                },
+                'delete': {
+                    'type': 'bool',
+                },
+                'v_exp': {
+                    'type': 'int',
+                },
+                'v_exp_delete': {
+                    'type': 'bool',
+                },
+                'name': {
+                    'type': 'str',
+                },
+                'name_delete': {
+                    'type': 'bool',
+                }
+            },
+            'community': {
+                'type': 'str',
+            },
+            'dampening_cfg': {
+                'type': 'dict',
+                'dampening': {
+                    'type': 'bool',
+                },
+                'dampening_half_time': {
+                    'type': 'int',
+                },
+                'dampening_reuse': {
+                    'type': 'int',
+                },
+                'dampening_supress': {
+                    'type': 'int',
+                },
+                'dampening_max_supress': {
+                    'type': 'int',
+                },
+                'dampening_penalty': {
+                    'type': 'int',
+                }
+            },
+            'extcommunity': {
+                'type': 'dict',
+                'rt': {
+                    'type': 'dict',
+                    'value': {
+                        'type': 'str',
+                    }
+                },
+                'soo': {
+                    'type': 'dict',
+                    'value': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'local_preference': {
+                'type': 'dict',
+                'val': {
+                    'type': 'int',
+                }
+            },
+            'originator_id': {
+                'type': 'dict',
+                'originator_ip': {
+                    'type': 'str',
+                }
+            },
+            'weight': {
+                'type': 'dict',
+                'weight_val': {
+                    'type': 'int',
+                }
+            },
+            'origin': {
+                'type': 'dict',
+                'egp': {
+                    'type': 'bool',
+                },
+                'igp': {
+                    'type': 'bool',
+                },
+                'incomplete': {
+                    'type': 'bool',
+                }
+            },
+            'uuid': {
+                'type': 'str',
             }
         }
     })

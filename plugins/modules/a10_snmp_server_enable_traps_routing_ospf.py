@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_routing_ospf
 description:
     - Enable OSPFv2 traps
-short_description: Configures A10 snmp.server.enable.traps.routing.ospf
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,99 +22,123 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    ospfLsdbOverflow:
-        description:
-        - "Enable ospfLsdbOverflow traps"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ospfNbrStateChange:
-        description:
-        - "Enable ospfNbrStateChange traps"
-        required: False
-    ospfIfStateChange:
-        description:
-        - "Enable ospfIfStateChange traps"
-        required: False
-    ospfVirtNbrStateChange:
-        description:
-        - "Enable ospfVirtNbrStateChange traps"
-        required: False
-    ospfLsdbApproachingOverflow:
-        description:
-        - "Enable ospfLsdbApproachingOverflow traps"
+        type: str
         required: False
     ospfIfAuthFailure:
         description:
         - "Enable ospfIfAuthFailure traps"
-        required: False
-    ospfVirtIfAuthFailure:
-        description:
-        - "Enable ospfVirtIfAuthFailure traps"
-        required: False
-    ospfVirtIfConfigError:
-        description:
-        - "Enable ospfVirtIfConfigError traps"
-        required: False
-    ospfVirtIfRxBadPacket:
-        description:
-        - "Enable ospfVirtIfRxBadPacket traps"
-        required: False
-    ospfTxRetransmit:
-        description:
-        - "Enable ospfTxRetransmit traps"
-        required: False
-    ospfVirtIfStateChange:
-        description:
-        - "Enable ospfVirtIfStateChange traps"
+        type: bool
         required: False
     ospfIfConfigError:
         description:
         - "Enable ospfIfConfigError traps"
-        required: False
-    ospfMaxAgeLsa:
-        description:
-        - "Enable ospfMaxAgeLsa traps"
+        type: bool
         required: False
     ospfIfRxBadPacket:
         description:
         - "Enable ospfIfRxBadPacket traps"
+        type: bool
         required: False
-    ospfVirtIfTxRetransmit:
+    ospfIfStateChange:
         description:
-        - "Enable ospfVirtIfTxRetransmit traps"
+        - "Enable ospfIfStateChange traps"
+        type: bool
+        required: False
+    ospfLsdbApproachingOverflow:
+        description:
+        - "Enable ospfLsdbApproachingOverflow traps"
+        type: bool
+        required: False
+    ospfLsdbOverflow:
+        description:
+        - "Enable ospfLsdbOverflow traps"
+        type: bool
+        required: False
+    ospfMaxAgeLsa:
+        description:
+        - "Enable ospfMaxAgeLsa traps"
+        type: bool
+        required: False
+    ospfNbrStateChange:
+        description:
+        - "Enable ospfNbrStateChange traps"
+        type: bool
         required: False
     ospfOriginateLsa:
         description:
         - "Enable ospfOriginateLsa traps"
+        type: bool
+        required: False
+    ospfTxRetransmit:
+        description:
+        - "Enable ospfTxRetransmit traps"
+        type: bool
+        required: False
+    ospfVirtIfAuthFailure:
+        description:
+        - "Enable ospfVirtIfAuthFailure traps"
+        type: bool
+        required: False
+    ospfVirtIfConfigError:
+        description:
+        - "Enable ospfVirtIfConfigError traps"
+        type: bool
+        required: False
+    ospfVirtIfRxBadPacket:
+        description:
+        - "Enable ospfVirtIfRxBadPacket traps"
+        type: bool
+        required: False
+    ospfVirtIfStateChange:
+        description:
+        - "Enable ospfVirtIfStateChange traps"
+        type: bool
+        required: False
+    ospfVirtIfTxRetransmit:
+        description:
+        - "Enable ospfVirtIfTxRetransmit traps"
+        type: bool
+        required: False
+    ospfVirtNbrStateChange:
+        description:
+        - "Enable ospfVirtNbrStateChange traps"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -186,25 +208,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ospfLsdbOverflow': {
+        'ospfIfAuthFailure': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
+        'ospfIfConfigError': {
+            'type': 'bool',
         },
-        'ospfNbrStateChange': {
+        'ospfIfRxBadPacket': {
             'type': 'bool',
         },
         'ospfIfStateChange': {
             'type': 'bool',
         },
-        'ospfVirtNbrStateChange': {
-            'type': 'bool',
-        },
         'ospfLsdbApproachingOverflow': {
             'type': 'bool',
         },
-        'ospfIfAuthFailure': {
+        'ospfLsdbOverflow': {
+            'type': 'bool',
+        },
+        'ospfMaxAgeLsa': {
+            'type': 'bool',
+        },
+        'ospfNbrStateChange': {
+            'type': 'bool',
+        },
+        'ospfOriginateLsa': {
+            'type': 'bool',
+        },
+        'ospfTxRetransmit': {
             'type': 'bool',
         },
         'ospfVirtIfAuthFailure': {
@@ -216,26 +247,17 @@ def get_argspec():
         'ospfVirtIfRxBadPacket': {
             'type': 'bool',
         },
-        'ospfTxRetransmit': {
-            'type': 'bool',
-        },
         'ospfVirtIfStateChange': {
-            'type': 'bool',
-        },
-        'ospfIfConfigError': {
-            'type': 'bool',
-        },
-        'ospfMaxAgeLsa': {
-            'type': 'bool',
-        },
-        'ospfIfRxBadPacket': {
             'type': 'bool',
         },
         'ospfVirtIfTxRetransmit': {
             'type': 'bool',
         },
-        'ospfOriginateLsa': {
+        'ospfVirtNbrStateChange': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

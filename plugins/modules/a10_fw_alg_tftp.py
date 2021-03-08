@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg_tftp
 description:
     - Change Firewall TFTP ALG Settings
-short_description: Configures A10 fw.alg.tftp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,47 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     default_port_disable:
         description:
         - "'default-port-disable'= Disable TFTP ALG default port 69;"
+        type: str
         required: False
-    stats:
+    uuid:
         description:
-        - "Field stats"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            session_created:
-                description:
-                - "TFTP Client Sessions Created"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -74,10 +78,17 @@ options:
           'helper-freed-used'= TFTP Helper Sessions freed used; 'helper-freed-unused'=
           TFTP Helper Sessions freed unused; 'helper-already-used'= TFTP Helper Session
           already used; 'helper-in-rml'= TFTP Helper Session in Remove List;"
-    uuid:
+                type: str
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            session_created:
+                description:
+                - "TFTP Client Sessions Created"
+                type: str
 
 '''
 
@@ -137,11 +148,8 @@ def get_argspec():
             'type': 'str',
             'choices': ['default-port-disable']
         },
-        'stats': {
-            'type': 'dict',
-            'session_created': {
-                'type': 'str',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -155,8 +163,11 @@ def get_argspec():
                 ]
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'session_created': {
+                'type': 'str',
+            }
         }
     })
     return rv

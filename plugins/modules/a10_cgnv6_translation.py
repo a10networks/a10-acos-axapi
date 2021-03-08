@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_translation
 description:
     - Configure CGN translation timeout values
-short_description: Configures A10 cgnv6.translation
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,80 +22,100 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    tcp_timeout:
-        description:
-        - "TCP protocol extended translations (Timeout in seconds (Interval of 60
-          seconds), default is 300 seconds (5 minutes))"
-        required: False
-    udp_timeout:
-        description:
-        - "UDP protocol extended translations (Timeout in seconds (Interval of 60
-          seconds), default is 300 seconds (5 minutes))"
-        required: False
-    service_timeout_list:
-        description:
-        - "Field service_timeout_list"
-        required: False
-        suboptions:
-            service_type:
-                description:
-                - "'tcp'= TCP Protocol; 'udp'= UDP Protocol;"
-            uuid:
-                description:
-                - "uuid of the object"
-            timeout_val:
-                description:
-                - "Timeout in seconds (Interval of 60 seconds)"
-            port_end:
-                description:
-                - "End Port Number"
-            fast:
-                description:
-                - "Use Fast Aging"
-            port:
-                description:
-                - "Port Number"
     icmp_timeout:
         description:
         - "Field icmp_timeout"
+        type: dict
         required: False
         suboptions:
             icmp_timeout_val:
                 description:
                 - "Timeout in seconds (Interval of 60 seconds)"
+                type: int
             fast:
                 description:
                 - "Use Fast Aging"
+                type: bool
+    tcp_timeout:
+        description:
+        - "TCP protocol extended translations (Timeout in seconds (Interval of 60
+          seconds), default is 300 seconds (5 minutes))"
+        type: int
+        required: False
+    udp_timeout:
+        description:
+        - "UDP protocol extended translations (Timeout in seconds (Interval of 60
+          seconds), default is 300 seconds (5 minutes))"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    service_timeout_list:
+        description:
+        - "Field service_timeout_list"
+        type: list
+        required: False
+        suboptions:
+            service_type:
+                description:
+                - "'tcp'= TCP Protocol; 'udp'= UDP Protocol;"
+                type: str
+            port:
+                description:
+                - "Port Number"
+                type: int
+            port_end:
+                description:
+                - "End Port Number"
+                type: int
+            timeout_val:
+                description:
+                - "Timeout in seconds (Interval of 60 seconds)"
+                type: int
+            fast:
+                description:
+                - "Use Fast Aging"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -154,36 +172,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'tcp_timeout': {
-            'type': 'int',
-        },
-        'udp_timeout': {
-            'type': 'int',
-        },
-        'service_timeout_list': {
-            'type': 'list',
-            'service_type': {
-                'type': 'str',
-                'required': True,
-                'choices': ['tcp', 'udp']
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'timeout_val': {
-                'type': 'int',
-            },
-            'port_end': {
-                'type': 'int',
-            },
-            'fast': {
-                'type': 'bool',
-            },
-            'port': {
-                'type': 'int',
-                'required': True,
-            }
-        },
         'icmp_timeout': {
             'type': 'dict',
             'icmp_timeout_val': {
@@ -193,8 +181,38 @@ def get_argspec():
                 'type': 'bool',
             }
         },
+        'tcp_timeout': {
+            'type': 'int',
+        },
+        'udp_timeout': {
+            'type': 'int',
+        },
         'uuid': {
             'type': 'str',
+        },
+        'service_timeout_list': {
+            'type': 'list',
+            'service_type': {
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp']
+            },
+            'port': {
+                'type': 'int',
+                'required': True,
+            },
+            'port_end': {
+                'type': 'int',
+            },
+            'timeout_val': {
+                'type': 'int',
+            },
+            'fast': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

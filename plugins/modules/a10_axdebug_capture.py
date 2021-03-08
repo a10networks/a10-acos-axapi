@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_axdebug_capture
 description:
     - Dump packets
-short_description: Configures A10 axdebug.capture
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,68 +22,58 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    current_slot:
-        description:
-        - "Only for current-slot of chassis"
-        required: False
-    outgoing:
-        description:
-        - "Outgoing interface"
-        required: False
-    non_display:
-        description:
-        - "Do not print to screen"
-        required: False
-    incoming:
-        description:
-        - "Incoming interface"
-        required: False
-    port_num:
-        description:
-        - "Port Numbers separated by commas(,) and hyphens(-) without spaces (ex=
-          4,5,10-30), or separated by spaces and double-quoted(')"
+        type: str
         required: False
     brief:
         description:
         - "Print basic packet information"
+        type: bool
         required: False
     detail:
         description:
         - "Include packet payload"
+        type: bool
         required: False
     save:
         description:
         - "Save packets into file (Specify filename to save packets)"
+        type: str
         required: False
-    max_packets:
+    current_slot:
         description:
-        - "Maximum packets to capture for each data cpu."
+        - "Only for current-slot of chassis"
+        type: bool
         required: False
 
 '''
@@ -104,11 +92,6 @@ AVAILABLE_PROPERTIES = [
     "brief",
     "current_slot",
     "detail",
-    "incoming",
-    "max_packets",
-    "non_display",
-    "outgoing",
-    "port_num",
     "save",
 ]
 
@@ -147,21 +130,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'current_slot': {
-            'type': 'bool',
-        },
-        'outgoing': {
-            'type': 'bool',
-        },
-        'non_display': {
-            'type': 'bool',
-        },
-        'incoming': {
-            'type': 'bool',
-        },
-        'port_num': {
-            'type': 'str',
-        },
         'brief': {
             'type': 'bool',
         },
@@ -171,8 +139,8 @@ def get_argspec():
         'save': {
             'type': 'str',
         },
-        'max_packets': {
-            'type': 'int',
+        'current_slot': {
+            'type': 'bool',
         }
     })
     return rv

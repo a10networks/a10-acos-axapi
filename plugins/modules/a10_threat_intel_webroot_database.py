@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_threat_intel_webroot_database
 description:
     - webroot database information
-short_description: Configures A10 threat.intel.webroot-database
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,104 +22,134 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            status:
-                description:
-                - "Field status"
-            web_attacks:
-                description:
-                - "Field web_attacks"
-            botnets:
-                description:
-                - "Field botnets"
             name:
                 description:
                 - "Field name"
-            spam_sources:
+                type: str
+            status:
                 description:
-                - "Field spam_sources"
-            windows_exploits:
-                description:
-                - "Field windows_exploits"
-            last_update_time:
-                description:
-                - "Field last_update_time"
-            dos_attacks:
-                description:
-                - "Field dos_attacks"
-            next_update_time:
-                description:
-                - "Field next_update_time"
-            connection_status:
-                description:
-                - "Field connection_status"
-            mobile_threats:
-                description:
-                - "Field mobile_threats"
-            phishing:
-                description:
-                - "Field phishing"
-            last_successful_connection:
-                description:
-                - "Field last_successful_connection"
-            version:
-                description:
-                - "Field version"
-            reputation:
-                description:
-                - "Field reputation"
-            proxy:
-                description:
-                - "Field proxy"
-            tor_proxy:
-                description:
-                - "Field tor_proxy"
+                - "Field status"
+                type: str
             size:
                 description:
                 - "Field size"
-            total_entries:
+                type: str
+            version:
                 description:
-                - "Field total_entries"
-            scanners:
+                - "Field version"
+                type: int
+            last_update_time:
                 description:
-                - "Field scanners"
+                - "Field last_update_time"
+                type: str
+            next_update_time:
+                description:
+                - "Field next_update_time"
+                type: str
+            connection_status:
+                description:
+                - "Field connection_status"
+                type: str
             failure_reason:
                 description:
                 - "Field failure_reason"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            last_successful_connection:
+                description:
+                - "Field last_successful_connection"
+                type: str
+            spam_sources:
+                description:
+                - "Field spam_sources"
+                type: int
+            windows_exploits:
+                description:
+                - "Field windows_exploits"
+                type: int
+            web_attacks:
+                description:
+                - "Field web_attacks"
+                type: int
+            botnets:
+                description:
+                - "Field botnets"
+                type: int
+            scanners:
+                description:
+                - "Field scanners"
+                type: int
+            dos_attacks:
+                description:
+                - "Field dos_attacks"
+                type: int
+            reputation:
+                description:
+                - "Field reputation"
+                type: int
+            phishing:
+                description:
+                - "Field phishing"
+                type: int
+            proxy:
+                description:
+                - "Field proxy"
+                type: int
+            mobile_threats:
+                description:
+                - "Field mobile_threats"
+                type: int
+            tor_proxy:
+                description:
+                - "Field tor_proxy"
+                type: int
+            total_entries:
+                description:
+                - "Field total_entries"
+                type: int
 
 '''
 
@@ -175,18 +203,36 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'name': {
+                'type': 'str',
+            },
             'status': {
                 'type': 'str',
             },
-            'web_attacks': {
+            'size': {
+                'type': 'str',
+            },
+            'version': {
                 'type': 'int',
             },
-            'botnets': {
-                'type': 'int',
+            'last_update_time': {
+                'type': 'str',
             },
-            'name': {
+            'next_update_time': {
+                'type': 'str',
+            },
+            'connection_status': {
+                'type': 'str',
+            },
+            'failure_reason': {
+                'type': 'str',
+            },
+            'last_successful_connection': {
                 'type': 'str',
             },
             'spam_sources': {
@@ -195,54 +241,36 @@ def get_argspec():
             'windows_exploits': {
                 'type': 'int',
             },
-            'last_update_time': {
-                'type': 'str',
-            },
-            'dos_attacks': {
+            'web_attacks': {
                 'type': 'int',
             },
-            'next_update_time': {
-                'type': 'str',
-            },
-            'connection_status': {
-                'type': 'str',
-            },
-            'mobile_threats': {
-                'type': 'int',
-            },
-            'phishing': {
-                'type': 'int',
-            },
-            'last_successful_connection': {
-                'type': 'str',
-            },
-            'version': {
-                'type': 'int',
-            },
-            'reputation': {
-                'type': 'int',
-            },
-            'proxy': {
-                'type': 'int',
-            },
-            'tor_proxy': {
-                'type': 'int',
-            },
-            'size': {
-                'type': 'str',
-            },
-            'total_entries': {
+            'botnets': {
                 'type': 'int',
             },
             'scanners': {
                 'type': 'int',
             },
-            'failure_reason': {
-                'type': 'str',
+            'dos_attacks': {
+                'type': 'int',
+            },
+            'reputation': {
+                'type': 'int',
+            },
+            'phishing': {
+                'type': 'int',
+            },
+            'proxy': {
+                'type': 'int',
+            },
+            'mobile_threats': {
+                'type': 'int',
+            },
+            'tor_proxy': {
+                'type': 'int',
+            },
+            'total_entries': {
+                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

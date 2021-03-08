@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_tcp_proxy
 description:
     - TCP Proxy
-short_description: Configures A10 slb.template.tcp-proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,221 +22,287 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    qos:
+    name:
         description:
-        - "QOS level (number)"
+        - "TCP Proxy Template Name"
+        type: str
+        required: True
+    ack_aggressiveness:
+        description:
+        - "'low'= Delayed ACK; 'medium'= Delayed ACK, with ACK on each packet with PUSH
+          flag; 'high'= ACK on each packet;"
+        type: str
         required: False
-    init_cwnd:
+    backend_wscale:
         description:
-        - "The initial congestion control window size (packets), default is 10 (init-cwnd
-          in packets, default 10)"
-        required: False
-    idle_timeout:
-        description:
-        - "Idle Timeout (Interval of 60 seconds), default is 600 (idle timeout in second,
-          default 600)"
-        required: False
-    fin_timeout:
-        description:
-        - "FIN timeout (sec), default is disabled (number)"
-        required: False
-    half_open_idle_timeout:
-        description:
-        - "TCP Half Open Idle Timeout (sec), default is off (number)"
-        required: False
-    reno:
-        description:
-        - "Enable Reno Congestion Control Algorithm"
-        required: False
-    down:
-        description:
-        - "send reset to client when server is down"
-        required: False
-    early_retransmit:
-        description:
-        - "Configure the Early-Retransmit Algorithm (RFC 5827) (Early-Retransmit is
-          disabled by default)"
-        required: False
-    server_down_action:
-        description:
-        - "'FIN'= FIN Connection; 'RST'= Reset Connection;"
-        required: False
-    timewait:
-        description:
-        - "Timewait Threshold (sec), default 5 (number)"
-        required: False
-    min_rto:
-        description:
-        - "The minmum retransmission timeout, default is 200ms (number)"
+        - "The TCP window scale used for the server side, default is off (number)"
+        type: int
         required: False
     dynamic_buffer_allocation:
         description:
         - "Optimally adjust the transmit and receive buffer sizes of TCP proxy while
           keeping their sum constant"
+        type: bool
         required: False
-    limited_slowstart:
+    fin_timeout:
         description:
-        - "RFC 3742 Limited Slow-Start for TCP with Large Congestion Windows (number)"
-        required: False
-    disable_sack:
-        description:
-        - "disable Selective Ack Option"
-        required: False
-    disable_window_scale:
-        description:
-        - "disable TCP Window-Scale Option"
-        required: False
-    alive_if_active:
-        description:
-        - "keep connection alive if active traffic"
-        required: False
-    mss:
-        description:
-        - "Responding MSS to use if client MSS is large, default is off (number)"
-        required: False
-    keepalive_interval:
-        description:
-        - "Interval between keepalive probes (sec), default is off (number (seconds))"
-        required: False
-    retransmit_retries:
-        description:
-        - "Number of Retries for Retransmit, default is 5"
-        required: False
-    insert_client_ip:
-        description:
-        - "Insert client ip into TCP option"
-        required: False
-    transmit_buffer:
-        description:
-        - "TCP Transmit Buffer (default 200k) (number default 200000 bytes)"
-        required: False
-    nagle:
-        description:
-        - "Enable Nagle Algorithm"
-        required: False
-    force_delete_timeout_100ms:
-        description:
-        - "The maximum time that a session can stay in the system before being deleted,
-          default is off (number in 100ms)"
-        required: False
-    initial_window_size:
-        description:
-        - "Set the initial window size, default is off (number)"
-        required: False
-    keepalive_probes:
-        description:
-        - "Number of keepalive probes sent, default is off"
-        required: False
-    psh_flag_optimization:
-        description:
-        - "Enable Optimized PSH Flag Use"
-        required: False
-    ack_aggressiveness:
-        description:
-        - "'low'= Delayed ACK; 'medium'= Delayed ACK, with ACK on each packet with PUSH
-          flag; 'high'= ACK on each packet;"
-        required: False
-    backend_wscale:
-        description:
-        - "The TCP window scale used for the server side, default is off (number)"
-        required: False
-    disable:
-        description:
-        - "send reset to client when server is disabled"
-        required: False
-    reset_rev:
-        description:
-        - "send reset to client if error happens"
-        required: False
-    maxburst:
-        description:
-        - "The max packet count sent per transmission event (number)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    receive_buffer:
-        description:
-        - "TCP Receive Buffer (default 200k) (number default 200000 bytes)"
-        required: False
-    del_session_on_server_down:
-        description:
-        - "Delete session if the server/port goes down (either disabled/hm down)"
-        required: False
-    name:
-        description:
-        - "TCP Proxy Template Name"
-        required: True
-    reassembly_timeout:
-        description:
-        - "The reassembly timeout, default is 30sec (number)"
-        required: False
-    reset_fwd:
-        description:
-        - "send reset to server if error happens"
-        required: False
-    disable_tcp_timestamps:
-        description:
-        - "disable TCP Timestamps Option"
-        required: False
-    syn_retries:
-        description:
-        - "SYN Retry Numbers, default is 5"
+        - "FIN timeout (sec), default is disabled (number)"
+        type: int
         required: False
     force_delete_timeout:
         description:
         - "The maximum time that a session can stay in the system before being deleted,
           default is off (number (second))"
+        type: int
         required: False
-    user_tag:
+    force_delete_timeout_100ms:
         description:
-        - "Customized tag"
+        - "The maximum time that a session can stay in the system before being deleted,
+          default is off (number in 100ms)"
+        type: int
         required: False
-    reassembly_limit:
+    alive_if_active:
         description:
-        - "The reassembly queuing limit, default is 25 segments (number)"
+        - "keep connection alive if active traffic"
+        type: bool
         required: False
-    invalid_rate_limit:
+    idle_timeout:
         description:
-        - "Invalid Packet Response Rate Limit (ms), default is 500 (number default 500
-          challenges)"
+        - "Idle Timeout (Interval of 60 seconds), default is 600 (idle timeout in second,
+          default 600)"
+        type: int
         required: False
-    disable_abc:
+    server_down_action:
         description:
-        - "Appropriate Byte Counting RFC 3465 Disabled, default is enabled (Appropriate
-          Byte Counting (ABC) is enabled by default)"
+        - "'FIN'= FIN Connection; 'RST'= Reset Connection;"
+        type: str
+        required: False
+    half_open_idle_timeout:
+        description:
+        - "TCP Half Open Idle Timeout (sec), default is off (number)"
+        type: int
         required: False
     half_close_idle_timeout:
         description:
         - "TCP Half Close Idle Timeout (sec), default is off (cmd is deprecated, use fin-
           timeout instead) (number)"
+        type: int
+        required: False
+    init_cwnd:
+        description:
+        - "The initial congestion control window size (packets), default is 10 (init-cwnd
+          in packets, default 10)"
+        type: int
+        required: False
+    initial_window_size:
+        description:
+        - "Set the initial window size, default is off (number)"
+        type: int
+        required: False
+    keepalive_interval:
+        description:
+        - "Interval between keepalive probes (sec), default is off (number (seconds))"
+        type: int
+        required: False
+    keepalive_probes:
+        description:
+        - "Number of keepalive probes sent, default is off"
+        type: int
+        required: False
+    mss:
+        description:
+        - "Responding MSS to use if client MSS is large, default is off (number)"
+        type: int
+        required: False
+    psh_flag_optimization:
+        description:
+        - "Enable Optimized PSH Flag Use"
+        type: bool
+        required: False
+    nagle:
+        description:
+        - "Enable Nagle Algorithm"
+        type: bool
+        required: False
+    qos:
+        description:
+        - "QOS level (number)"
+        type: int
+        required: False
+    receive_buffer:
+        description:
+        - "TCP Receive Buffer (default 200k) (number default 200000 bytes)"
+        type: int
+        required: False
+    reno:
+        description:
+        - "Enable Reno Congestion Control Algorithm"
+        type: bool
+        required: False
+    transmit_buffer:
+        description:
+        - "TCP Transmit Buffer (default 200k) (number default 200000 bytes)"
+        type: int
+        required: False
+    reset_fwd:
+        description:
+        - "send reset to server if error happens"
+        type: bool
+        required: False
+    reset_rev:
+        description:
+        - "send reset to client if error happens"
+        type: bool
+        required: False
+    disable:
+        description:
+        - "send reset to client when server is disabled"
+        type: bool
+        required: False
+    down:
+        description:
+        - "send reset to client when server is down"
+        type: bool
+        required: False
+    del_session_on_server_down:
+        description:
+        - "Delete session if the server/port goes down (either disabled/hm down)"
+        type: bool
+        required: False
+    retransmit_retries:
+        description:
+        - "Number of Retries for Retransmit, default is 5"
+        type: int
+        required: False
+    insert_client_ip:
+        description:
+        - "Insert client ip into TCP option"
+        type: bool
+        required: False
+    syn_retries:
+        description:
+        - "SYN Retry Numbers, default is 5"
+        type: int
+        required: False
+    timewait:
+        description:
+        - "Timewait Threshold (sec), default 5 (number)"
+        type: int
+        required: False
+    disable_tcp_timestamps:
+        description:
+        - "disable TCP Timestamps Option"
+        type: bool
+        required: False
+    disable_window_scale:
+        description:
+        - "disable TCP Window-Scale Option"
+        type: bool
+        required: False
+    disable_sack:
+        description:
+        - "disable Selective Ack Option"
+        type: bool
+        required: False
+    invalid_rate_limit:
+        description:
+        - "Invalid Packet Response Rate Limit (ms), default is 500 (number default 500
+          challenges)"
+        type: int
+        required: False
+    disable_abc:
+        description:
+        - "Appropriate Byte Counting RFC 3465 Disabled, default is enabled (Appropriate
+          Byte Counting (ABC) is enabled by default)"
+        type: bool
+        required: False
+    reassembly_timeout:
+        description:
+        - "The reassembly timeout, default is 30sec (number)"
+        type: int
+        required: False
+    reassembly_limit:
+        description:
+        - "The reassembly queuing limit, default is 25 segments (number)"
+        type: int
+        required: False
+    min_rto:
+        description:
+        - "The minmum retransmission timeout, default is 200ms (number)"
+        type: int
+        required: False
+    limited_slowstart:
+        description:
+        - "RFC 3742 Limited Slow-Start for TCP with Large Congestion Windows (number)"
+        type: int
+        required: False
+    early_retransmit:
+        description:
+        - "Configure the Early-Retransmit Algorithm (RFC 5827) (Early-Retransmit is
+          disabled by default)"
+        type: bool
+        required: False
+    maxburst:
+        description:
+        - "The max packet count sent per transmission event (number)"
+        type: int
+        required: False
+    proxy_header:
+        description:
+        - "Field proxy_header"
+        type: dict
+        required: False
+        suboptions:
+            proxy_header_action:
+                description:
+                - "'insert'= Insert proxy header;"
+                type: str
+            version:
+                description:
+                - "'v1'= version 1; 'v2'= version 2;"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -284,6 +348,7 @@ AVAILABLE_PROPERTIES = [
     "mss",
     "nagle",
     "name",
+    "proxy_header",
     "psh_flag_optimization",
     "qos",
     "reassembly_limit",
@@ -336,84 +401,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'qos': {
-            'type': 'int',
-        },
-        'init_cwnd': {
-            'type': 'int',
-        },
-        'idle_timeout': {
-            'type': 'int',
-        },
-        'fin_timeout': {
-            'type': 'int',
-        },
-        'half_open_idle_timeout': {
-            'type': 'int',
-        },
-        'reno': {
-            'type': 'bool',
-        },
-        'down': {
-            'type': 'bool',
-        },
-        'early_retransmit': {
-            'type': 'bool',
-        },
-        'server_down_action': {
+        'name': {
             'type': 'str',
-            'choices': ['FIN', 'RST']
-        },
-        'timewait': {
-            'type': 'int',
-        },
-        'min_rto': {
-            'type': 'int',
-        },
-        'dynamic_buffer_allocation': {
-            'type': 'bool',
-        },
-        'limited_slowstart': {
-            'type': 'int',
-        },
-        'disable_sack': {
-            'type': 'bool',
-        },
-        'disable_window_scale': {
-            'type': 'bool',
-        },
-        'alive_if_active': {
-            'type': 'bool',
-        },
-        'mss': {
-            'type': 'int',
-        },
-        'keepalive_interval': {
-            'type': 'int',
-        },
-        'retransmit_retries': {
-            'type': 'int',
-        },
-        'insert_client_ip': {
-            'type': 'bool',
-        },
-        'transmit_buffer': {
-            'type': 'int',
-        },
-        'nagle': {
-            'type': 'bool',
-        },
-        'force_delete_timeout_100ms': {
-            'type': 'int',
-        },
-        'initial_window_size': {
-            'type': 'int',
-        },
-        'keepalive_probes': {
-            'type': 'int',
-        },
-        'psh_flag_optimization': {
-            'type': 'bool',
+            'required': True,
         },
         'ack_aggressiveness': {
             'type': 'str',
@@ -422,48 +412,102 @@ def get_argspec():
         'backend_wscale': {
             'type': 'int',
         },
-        'disable': {
+        'dynamic_buffer_allocation': {
             'type': 'bool',
         },
-        'reset_rev': {
-            'type': 'bool',
-        },
-        'maxburst': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'receive_buffer': {
-            'type': 'int',
-        },
-        'del_session_on_server_down': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'reassembly_timeout': {
-            'type': 'int',
-        },
-        'reset_fwd': {
-            'type': 'bool',
-        },
-        'disable_tcp_timestamps': {
-            'type': 'bool',
-        },
-        'syn_retries': {
+        'fin_timeout': {
             'type': 'int',
         },
         'force_delete_timeout': {
             'type': 'int',
         },
-        'user_tag': {
-            'type': 'str',
-        },
-        'reassembly_limit': {
+        'force_delete_timeout_100ms': {
             'type': 'int',
+        },
+        'alive_if_active': {
+            'type': 'bool',
+        },
+        'idle_timeout': {
+            'type': 'int',
+        },
+        'server_down_action': {
+            'type': 'str',
+            'choices': ['FIN', 'RST']
+        },
+        'half_open_idle_timeout': {
+            'type': 'int',
+        },
+        'half_close_idle_timeout': {
+            'type': 'int',
+        },
+        'init_cwnd': {
+            'type': 'int',
+        },
+        'initial_window_size': {
+            'type': 'int',
+        },
+        'keepalive_interval': {
+            'type': 'int',
+        },
+        'keepalive_probes': {
+            'type': 'int',
+        },
+        'mss': {
+            'type': 'int',
+        },
+        'psh_flag_optimization': {
+            'type': 'bool',
+        },
+        'nagle': {
+            'type': 'bool',
+        },
+        'qos': {
+            'type': 'int',
+        },
+        'receive_buffer': {
+            'type': 'int',
+        },
+        'reno': {
+            'type': 'bool',
+        },
+        'transmit_buffer': {
+            'type': 'int',
+        },
+        'reset_fwd': {
+            'type': 'bool',
+        },
+        'reset_rev': {
+            'type': 'bool',
+        },
+        'disable': {
+            'type': 'bool',
+        },
+        'down': {
+            'type': 'bool',
+        },
+        'del_session_on_server_down': {
+            'type': 'bool',
+        },
+        'retransmit_retries': {
+            'type': 'int',
+        },
+        'insert_client_ip': {
+            'type': 'bool',
+        },
+        'syn_retries': {
+            'type': 'int',
+        },
+        'timewait': {
+            'type': 'int',
+        },
+        'disable_tcp_timestamps': {
+            'type': 'bool',
+        },
+        'disable_window_scale': {
+            'type': 'bool',
+        },
+        'disable_sack': {
+            'type': 'bool',
         },
         'invalid_rate_limit': {
             'type': 'int',
@@ -471,8 +515,40 @@ def get_argspec():
         'disable_abc': {
             'type': 'bool',
         },
-        'half_close_idle_timeout': {
+        'reassembly_timeout': {
             'type': 'int',
+        },
+        'reassembly_limit': {
+            'type': 'int',
+        },
+        'min_rto': {
+            'type': 'int',
+        },
+        'limited_slowstart': {
+            'type': 'int',
+        },
+        'early_retransmit': {
+            'type': 'bool',
+        },
+        'maxburst': {
+            'type': 'int',
+        },
+        'proxy_header': {
+            'type': 'dict',
+            'proxy_header_action': {
+                'type': 'str',
+                'choices': ['insert']
+            },
+            'version': {
+                'type': 'str',
+                'choices': ['v1', 'v2']
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

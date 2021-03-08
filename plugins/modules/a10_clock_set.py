@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_clock_set
 description:
     - Set the Time and Date
-short_description: Configures A10 clock.set
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,49 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     time_cfg:
         description:
         - "Field time_cfg"
+        type: dict
         required: False
         suboptions:
-            day_of_month:
-                description:
-                - "Day of the Month"
             time:
                 description:
                 - "Current Time"
-            month_2:
-                description:
-                - "'January'= Month of the year; 'February'= Month of the year; 'March'= Month of
-          the year; 'April'= Month of the year; 'May'= Month of the year; 'June'= Month
-          of the year; 'July'= Month of the year; 'August'= Month of the year;
-          'September'= Month of the year; 'October'= Month of the year; 'November'= Month
-          of the year; 'December'= Month of the year;"
+                type: str
             month:
                 description:
                 - "'January'= Month of the year; 'February'= Month of the year; 'March'= Month of
@@ -75,12 +72,27 @@ options:
           of the year; 'July'= Month of the year; 'August'= Month of the year;
           'September'= Month of the year; 'October'= Month of the year; 'November'= Month
           of the year; 'December'= Month of the year;"
-            year:
-                description:
-                - "Year"
+                type: str
             day_of_month_2:
                 description:
                 - "Day of the Month"
+                type: int
+            month_2:
+                description:
+                - "'January'= Month of the year; 'February'= Month of the year; 'March'= Month of
+          the year; 'April'= Month of the year; 'May'= Month of the year; 'June'= Month
+          of the year; 'July'= Month of the year; 'August'= Month of the year;
+          'September'= Month of the year; 'October'= Month of the year; 'November'= Month
+          of the year; 'December'= Month of the year;"
+                type: str
+            day_of_month:
+                description:
+                - "Day of the Month"
+                type: int
+            year:
+                description:
+                - "Year"
+                type: int
 
 '''
 
@@ -135,20 +147,8 @@ def get_argspec():
     rv.update({
         'time_cfg': {
             'type': 'dict',
-            'day_of_month': {
-                'type': 'int',
-            },
             'time': {
                 'type': 'str',
-            },
-            'month_2': {
-                'type':
-                'str',
-                'choices': [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November',
-                    'December'
-                ]
             },
             'month': {
                 'type':
@@ -159,10 +159,22 @@ def get_argspec():
                     'December'
                 ]
             },
-            'year': {
+            'day_of_month_2': {
                 'type': 'int',
             },
-            'day_of_month_2': {
+            'month_2': {
+                'type':
+                'str',
+                'choices': [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November',
+                    'December'
+                ]
+            },
+            'day_of_month': {
+                'type': 'int',
+            },
+            'year': {
                 'type': 'int',
             }
         }

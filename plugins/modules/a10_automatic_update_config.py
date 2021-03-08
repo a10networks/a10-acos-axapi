@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_automatic_update_config
 description:
     - Configure software update schedule
-short_description: Configures A10 automatic-update.config
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    day_time:
-        description:
-        - "Time of day to update (hh=mm) in 24 hour local time"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    schedule:
-        description:
-        - "Field schedule"
+        type: str
         required: False
     feature_name:
         description:
         - "'app-fw'= Application Firewall Configuration;"
+        type: str
         required: True
-    week_day:
+    schedule:
         description:
-        - "'Monday'= Monday; 'Tuesday'= Tuesday; 'Wednesday'= Wednesday; 'Thursday'=
-          Thursday; 'Friday'= Friday; 'Saturday'= Saturday; 'Sunday'= Sunday;"
-        required: False
-    daily:
-        description:
-        - "Every day"
-        required: False
-    week_time:
-        description:
-        - "Time of day to update (hh=mm) in 24 hour local time"
+        - "Field schedule"
+        type: bool
         required: False
     weekly:
         description:
         - "Every week"
+        type: bool
+        required: False
+    week_day:
+        description:
+        - "'Monday'= Monday; 'Tuesday'= Tuesday; 'Wednesday'= Wednesday; 'Thursday'=
+          Thursday; 'Friday'= Friday; 'Saturday'= Saturday; 'Sunday'= Sunday;"
+        type: str
+        required: False
+    week_time:
+        description:
+        - "Time of day to update (hh=mm) in 24 hour local time"
+        type: str
+        required: False
+    daily:
+        description:
+        - "Every day"
+        type: bool
+        required: False
+    day_time:
+        description:
+        - "Time of day to update (hh=mm) in 24 hour local time"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -142,19 +155,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'day_time': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'schedule': {
-            'type': 'bool',
-        },
         'feature_name': {
             'type': 'str',
             'required': True,
             'choices': ['app-fw']
+        },
+        'schedule': {
+            'type': 'bool',
+        },
+        'weekly': {
+            'type': 'bool',
         },
         'week_day': {
             'type':
@@ -164,14 +174,17 @@ def get_argspec():
                 'Saturday', 'Sunday'
             ]
         },
-        'daily': {
-            'type': 'bool',
-        },
         'week_time': {
             'type': 'str',
         },
-        'weekly': {
+        'daily': {
             'type': 'bool',
+        },
+        'day_time': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

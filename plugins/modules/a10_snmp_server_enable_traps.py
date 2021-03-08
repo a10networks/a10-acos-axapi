@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps
 description:
     - Enable SNMP traps
-short_description: Configures A10 snmp.server.enable.traps
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,376 +22,489 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    lldp:
-        description:
-        - "Enable lldp traps"
+        type: str
         required: False
     all:
         description:
         - "Enable all SNMP traps"
+        type: bool
         required: False
-    slb_change:
+    lldp:
         description:
-        - "Field slb_change"
+        - "Enable lldp traps"
+        type: bool
         required: False
-        suboptions:
-            all:
-                description:
-                - "Enable all system group traps"
-            resource_usage_warning:
-                description:
-                - "Enable partition resource usage warning trap"
-            uuid:
-                description:
-                - "uuid of the object"
-            ssl_cert_change:
-                description:
-                - "Enable SSL certificate change trap"
-            ssl_cert_expire:
-                description:
-                - "Enable SSL certificate expiring trap"
-            system_threshold:
-                description:
-                - "Enable slb system threshold trap"
-            server:
-                description:
-                - "Enable slb server create/delete trap"
-            vip:
-                description:
-                - "Enable slb vip create/delete trap"
-            connection_resource_event:
-                description:
-                - "Enable system connection resource event trap"
-            server_port:
-                description:
-                - "Enable slb server port create/delete trap"
-            vip_port:
-                description:
-                - "Enable slb vip-port create/delete trap"
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    lsn:
-        description:
-        - "Field lsn"
-        required: False
-        suboptions:
-            all:
-                description:
-                - "Enable all LSN group traps"
-            fixed_nat_port_mapping_file_change:
-                description:
-                - "Enable LSN trap when fixed nat port mapping file change"
-            per_ip_port_usage_threshold:
-                description:
-                - "Enable LSN trap when IP total port usage reaches the threshold (default 64512)"
-            uuid:
-                description:
-                - "uuid of the object"
-            total_port_usage_threshold:
-                description:
-                - "Enable LSN trap when NAT total port usage reaches the threshold (default
-          655350000)"
-            max_port_threshold:
-                description:
-                - "Maximum threshold"
-            max_ipport_threshold:
-                description:
-                - "Maximum threshold"
-            traffic_exceeded:
-                description:
-                - "Enable LSN trap when NAT pool reaches the threshold"
-    vrrp_a:
-        description:
-        - "Field vrrp_a"
-        required: False
-        suboptions:
-            active:
-                description:
-                - "Enable VRRP-A active trap"
-            standby:
-                description:
-                - "Enable VRRP-A standby trap"
-            all:
-                description:
-                - "Enable all VRRP-A group traps"
-            uuid:
-                description:
-                - "uuid of the object"
-    snmp:
-        description:
-        - "Field snmp"
-        required: False
-        suboptions:
-            linkup:
-                description:
-                - "Enable SNMP link-up trap"
-            all:
-                description:
-                - "Enable all SNMP group traps"
-            linkdown:
-                description:
-                - "Enable SNMP link-down trap"
-            uuid:
-                description:
-                - "uuid of the object"
-    system:
-        description:
-        - "Field system"
-        required: False
-        suboptions:
-            all:
-                description:
-                - "Enable all system group traps"
-            data_cpu_high:
-                description:
-                - "Enable data CPU usage high trap"
-            uuid:
-                description:
-                - "uuid of the object"
-            power:
-                description:
-                - "Enable system power supply trap"
-            high_disk_use:
-                description:
-                - "Enable system high disk usage trap"
-            high_memory_use:
-                description:
-                - "Enable system high memory usage trap"
-            control_cpu_high:
-                description:
-                - "Enable control CPU usage high trap"
-            file_sys_read_only:
-                description:
-                - "Enable file system read-only trap"
-            low_temp:
-                description:
-                - "Enable system low temperature trap"
-            high_temp:
-                description:
-                - "Enable system high temperature trap"
-            sec_disk:
-                description:
-                - "Enable system secondary hard disk trap"
-            license_management:
-                description:
-                - "Enable system license management traps"
-            start:
-                description:
-                - "Enable system start trap"
-            fan:
-                description:
-                - "Enable system fan trap"
-            shutdown:
-                description:
-                - "Enable system shutdown trap"
-            pri_disk:
-                description:
-                - "Enable system primary hard disk trap"
-            syslog_severity_one:
-                description:
-                - "Enable system syslog severity one messages trap"
-            tacacs_server_up_down:
-                description:
-                - "Enable system TACACS monitor server up/down trap"
-            smp_resource_event:
-                description:
-                - "Enable system smp resource event trap"
-            restart:
-                description:
-                - "Enable system restart trap"
-            packet_drop:
-                description:
-                - "Enable system packet dropped trap"
-    ssl:
-        description:
-        - "Field ssl"
-        required: False
-        suboptions:
-            server_certificate_error:
-                description:
-                - "Enable SSL server certificate error trap"
-            uuid:
-                description:
-                - "uuid of the object"
-    vcs:
-        description:
-        - "Field vcs"
-        required: False
-        suboptions:
-            state_change:
-                description:
-                - "Enable VCS state change trap"
-            uuid:
-                description:
-                - "uuid of the object"
     routing:
         description:
         - "Field routing"
+        type: dict
         required: False
         suboptions:
             bgp:
                 description:
                 - "Field bgp"
+                type: dict
             isis:
                 description:
                 - "Field isis"
+                type: dict
             ospf:
                 description:
                 - "Field ospf"
+                type: dict
     gslb:
         description:
         - "Field gslb"
+        type: dict
         required: False
         suboptions:
             all:
                 description:
                 - "Enable all GSLB traps"
-            group:
-                description:
-                - "Enable GSLB group related traps"
-            uuid:
-                description:
-                - "uuid of the object"
+                type: bool
             zone:
                 description:
                 - "Enable GSLB zone related traps"
+                type: bool
             site:
                 description:
                 - "Enable GSLB site related traps"
+                type: bool
+            group:
+                description:
+                - "Enable GSLB group related traps"
+                type: bool
             service_ip:
                 description:
                 - "Enable GSLB service-ip related traps"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     slb:
         description:
         - "Field slb"
+        type: dict
         required: False
         suboptions:
             all:
                 description:
                 - "Enable all SLB traps"
-            server_down:
-                description:
-                - "Enable SLB server-down trap"
-            vip_port_connratelimit:
-                description:
-                - "Enable the virtual port reach conn-rate-limit trap"
-            server_selection_failure:
-                description:
-                - "Enable SLB server selection failure trap"
-            service_group_down:
-                description:
-                - "Enable SLB service-group-down trap"
-            server_conn_limit:
-                description:
-                - "Enable SLB server connection limit trap"
-            service_group_member_up:
-                description:
-                - "Enable SLB service-group-member-up trap"
-            uuid:
-                description:
-                - "uuid of the object"
-            server_conn_resume:
-                description:
-                - "Enable SLB server connection resume trap"
-            service_up:
-                description:
-                - "Enable SLB service-up trap"
-            service_conn_limit:
-                description:
-                - "Enable SLB service connection limit trap"
-            gateway_up:
-                description:
-                - "Enable SLB server gateway up trap"
-            service_group_up:
-                description:
-                - "Enable SLB service-group-up trap"
+                type: bool
             application_buffer_limit:
                 description:
                 - "Enable application buffer reach limit trap"
-            vip_connratelimit:
+                type: bool
+            gateway_up:
                 description:
-                - "Enable the virtual server reach conn-rate-limit trap"
-            vip_connlimit:
-                description:
-                - "Enable the virtual server reach conn-limit trap"
-            service_group_member_down:
-                description:
-                - "Enable SLB service-group-member-down trap"
-            service_down:
-                description:
-                - "Enable SLB service-down trap"
-            bw_rate_limit_exceed:
-                description:
-                - "Enable SLB server/port bandwidth rate limit exceed trap"
-            server_disabled:
-                description:
-                - "Enable SLB server-disabled trap"
-            server_up:
-                description:
-                - "Enable slb server up trap"
-            vip_port_connlimit:
-                description:
-                - "Enable the virtual port reach conn-limit trap"
-            vip_port_down:
-                description:
-                - "Enable SLB virtual port down trap"
-            bw_rate_limit_resume:
-                description:
-                - "Enable SLB server/port bandwidth rate limit resume trap"
+                - "Enable SLB server gateway up trap"
+                type: bool
             gateway_down:
                 description:
                 - "Enable SLB server gateway down trap"
-            vip_up:
+                type: bool
+            server_conn_limit:
                 description:
-                - "Enable SLB virtual server up trap"
-            vip_port_up:
+                - "Enable SLB server connection limit trap"
+                type: bool
+            server_conn_resume:
                 description:
-                - "Enable SLB virtual port up trap"
-            vip_down:
+                - "Enable SLB server connection resume trap"
+                type: bool
+            server_up:
                 description:
-                - "Enable SLB virtual server down trap"
+                - "Enable slb server up trap"
+                type: bool
+            server_down:
+                description:
+                - "Enable SLB server-down trap"
+                type: bool
+            server_disabled:
+                description:
+                - "Enable SLB server-disabled trap"
+                type: bool
+            server_selection_failure:
+                description:
+                - "Enable SLB server selection failure trap"
+                type: bool
+            service_conn_limit:
+                description:
+                - "Enable SLB service connection limit trap"
+                type: bool
             service_conn_resume:
                 description:
                 - "Enable SLB service connection resume trap"
+                type: bool
+            service_down:
+                description:
+                - "Enable SLB service-down trap"
+                type: bool
+            service_up:
+                description:
+                - "Enable SLB service-up trap"
+                type: bool
+            service_group_up:
+                description:
+                - "Enable SLB service-group-up trap"
+                type: bool
+            service_group_down:
+                description:
+                - "Enable SLB service-group-down trap"
+                type: bool
+            service_group_member_up:
+                description:
+                - "Enable SLB service-group-member-up trap"
+                type: bool
+            service_group_member_down:
+                description:
+                - "Enable SLB service-group-member-down trap"
+                type: bool
+            vip_connlimit:
+                description:
+                - "Enable the virtual server reach conn-limit trap"
+                type: bool
+            vip_connratelimit:
+                description:
+                - "Enable the virtual server reach conn-rate-limit trap"
+                type: bool
+            vip_down:
+                description:
+                - "Enable SLB virtual server down trap"
+                type: bool
+            vip_port_connlimit:
+                description:
+                - "Enable the virtual port reach conn-limit trap"
+                type: bool
+            vip_port_connratelimit:
+                description:
+                - "Enable the virtual port reach conn-rate-limit trap"
+                type: bool
+            vip_port_down:
+                description:
+                - "Enable SLB virtual port down trap"
+                type: bool
+            vip_port_up:
+                description:
+                - "Enable SLB virtual port up trap"
+                type: bool
+            vip_up:
+                description:
+                - "Enable SLB virtual server up trap"
+                type: bool
+            bw_rate_limit_exceed:
+                description:
+                - "Enable SLB server/port bandwidth rate limit exceed trap"
+                type: bool
+            bw_rate_limit_resume:
+                description:
+                - "Enable SLB server/port bandwidth rate limit resume trap"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    snmp:
+        description:
+        - "Field snmp"
+        type: dict
+        required: False
+        suboptions:
+            all:
+                description:
+                - "Enable all SNMP group traps"
+                type: bool
+            linkdown:
+                description:
+                - "Enable SNMP link-down trap"
+                type: bool
+            linkup:
+                description:
+                - "Enable SNMP link-up trap"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    vrrp_a:
+        description:
+        - "Field vrrp_a"
+        type: dict
+        required: False
+        suboptions:
+            all:
+                description:
+                - "Enable all VRRP-A group traps"
+                type: bool
+            active:
+                description:
+                - "Enable VRRP-A active trap"
+                type: bool
+            standby:
+                description:
+                - "Enable VRRP-A standby trap"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    vcs:
+        description:
+        - "Field vcs"
+        type: dict
+        required: False
+        suboptions:
+            state_change:
+                description:
+                - "Enable VCS state change trap"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    system:
+        description:
+        - "Field system"
+        type: dict
+        required: False
+        suboptions:
+            all:
+                description:
+                - "Enable all system group traps"
+                type: bool
+            control_cpu_high:
+                description:
+                - "Enable control CPU usage high trap"
+                type: bool
+            data_cpu_high:
+                description:
+                - "Enable data CPU usage high trap"
+                type: bool
+            fan:
+                description:
+                - "Enable system fan trap"
+                type: bool
+            file_sys_read_only:
+                description:
+                - "Enable file system read-only trap"
+                type: bool
+            high_disk_use:
+                description:
+                - "Enable system high disk usage trap"
+                type: bool
+            high_memory_use:
+                description:
+                - "Enable system high memory usage trap"
+                type: bool
+            high_temp:
+                description:
+                - "Enable system high temperature trap"
+                type: bool
+            low_temp:
+                description:
+                - "Enable system low temperature trap"
+                type: bool
+            license_management:
+                description:
+                - "Enable system license management traps"
+                type: bool
+            packet_drop:
+                description:
+                - "Enable system packet dropped trap"
+                type: bool
+            power:
+                description:
+                - "Enable system power supply trap"
+                type: bool
+            pri_disk:
+                description:
+                - "Enable system primary hard disk trap"
+                type: bool
+            restart:
+                description:
+                - "Enable system restart trap"
+                type: bool
+            sec_disk:
+                description:
+                - "Enable system secondary hard disk trap"
+                type: bool
+            shutdown:
+                description:
+                - "Enable system shutdown trap"
+                type: bool
+            smp_resource_event:
+                description:
+                - "Enable system smp resource event trap"
+                type: bool
+            syslog_severity_one:
+                description:
+                - "Enable system syslog severity one messages trap"
+                type: bool
+            tacacs_server_up_down:
+                description:
+                - "Enable system TACACS monitor server up/down trap"
+                type: bool
+            start:
+                description:
+                - "Enable system start trap"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    slb_change:
+        description:
+        - "Field slb_change"
+        type: dict
+        required: False
+        suboptions:
+            all:
+                description:
+                - "Enable all system group traps"
+                type: bool
+            resource_usage_warning:
+                description:
+                - "Enable partition resource usage warning trap"
+                type: bool
+            connection_resource_event:
+                description:
+                - "Enable system connection resource event trap"
+                type: bool
+            server:
+                description:
+                - "Enable slb server create/delete trap"
+                type: bool
+            server_port:
+                description:
+                - "Enable slb server port create/delete trap"
+                type: bool
+            ssl_cert_change:
+                description:
+                - "Enable SSL certificate change trap"
+                type: bool
+            ssl_cert_expire:
+                description:
+                - "Enable SSL certificate expiring trap"
+                type: bool
+            vip:
+                description:
+                - "Enable slb vip create/delete trap"
+                type: bool
+            vip_port:
+                description:
+                - "Enable slb vip-port create/delete trap"
+                type: bool
+            system_threshold:
+                description:
+                - "Enable slb system threshold trap"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    lsn:
+        description:
+        - "Field lsn"
+        type: dict
+        required: False
+        suboptions:
+            all:
+                description:
+                - "Enable all LSN group traps"
+                type: bool
+            total_port_usage_threshold:
+                description:
+                - "Enable LSN trap when NAT total port usage reaches the threshold (default
+          655350000)"
+                type: bool
+            per_ip_port_usage_threshold:
+                description:
+                - "Enable LSN trap when IP total port usage reaches the threshold (default 64512)"
+                type: bool
+            max_port_threshold:
+                description:
+                - "Maximum threshold"
+                type: int
+            max_ipport_threshold:
+                description:
+                - "Maximum threshold"
+                type: int
+            fixed_nat_port_mapping_file_change:
+                description:
+                - "Enable LSN trap when fixed nat port mapping file change"
+                type: bool
+            traffic_exceeded:
+                description:
+                - "Enable LSN trap when NAT pool reaches the threshold"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     network:
         description:
         - "Field network"
+        type: dict
         required: False
         suboptions:
             trunk_port_threshold:
                 description:
                 - "Enable network trunk-port-threshold trap"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    ssl:
+        description:
+        - "Field ssl"
+        type: dict
+        required: False
+        suboptions:
+            server_certificate_error:
+                description:
+                - "Enable SSL server certificate error trap"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -459,87 +570,246 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'lldp': {
-            'type': 'bool',
-        },
         'all': {
             'type': 'bool',
         },
-        'slb_change': {
-            'type': 'dict',
-            'all': {
-                'type': 'bool',
-            },
-            'resource_usage_warning': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ssl_cert_change': {
-                'type': 'bool',
-            },
-            'ssl_cert_expire': {
-                'type': 'bool',
-            },
-            'system_threshold': {
-                'type': 'bool',
-            },
-            'server': {
-                'type': 'bool',
-            },
-            'vip': {
-                'type': 'bool',
-            },
-            'connection_resource_event': {
-                'type': 'bool',
-            },
-            'server_port': {
-                'type': 'bool',
-            },
-            'vip_port': {
-                'type': 'bool',
-            }
+        'lldp': {
+            'type': 'bool',
         },
         'uuid': {
             'type': 'str',
         },
-        'lsn': {
+        'routing': {
+            'type': 'dict',
+            'bgp': {
+                'type': 'dict',
+                'bgpEstablishedNotification': {
+                    'type': 'bool',
+                },
+                'bgpBackwardTransNotification': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'isis': {
+                'type': 'dict',
+                'isisAdjacencyChange': {
+                    'type': 'bool',
+                },
+                'isisAreaMismatch': {
+                    'type': 'bool',
+                },
+                'isisAttemptToExceedMaxSequence': {
+                    'type': 'bool',
+                },
+                'isisAuthenticationFailure': {
+                    'type': 'bool',
+                },
+                'isisAuthenticationTypeFailure': {
+                    'type': 'bool',
+                },
+                'isisCorruptedLSPDetected': {
+                    'type': 'bool',
+                },
+                'isisDatabaseOverload': {
+                    'type': 'bool',
+                },
+                'isisIDLenMismatch': {
+                    'type': 'bool',
+                },
+                'isisLSPTooLargeToPropagate': {
+                    'type': 'bool',
+                },
+                'isisManualAddressDrops': {
+                    'type': 'bool',
+                },
+                'isisMaxAreaAddressesMismatch': {
+                    'type': 'bool',
+                },
+                'isisOriginatingLSPBufferSizeMismatch': {
+                    'type': 'bool',
+                },
+                'isisOwnLSPPurge': {
+                    'type': 'bool',
+                },
+                'isisProtocolsSupportedMismatch': {
+                    'type': 'bool',
+                },
+                'isisRejectedAdjacency': {
+                    'type': 'bool',
+                },
+                'isisSequenceNumberSkip': {
+                    'type': 'bool',
+                },
+                'isisVersionSkew': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ospf': {
+                'type': 'dict',
+                'ospfIfAuthFailure': {
+                    'type': 'bool',
+                },
+                'ospfIfConfigError': {
+                    'type': 'bool',
+                },
+                'ospfIfRxBadPacket': {
+                    'type': 'bool',
+                },
+                'ospfIfStateChange': {
+                    'type': 'bool',
+                },
+                'ospfLsdbApproachingOverflow': {
+                    'type': 'bool',
+                },
+                'ospfLsdbOverflow': {
+                    'type': 'bool',
+                },
+                'ospfMaxAgeLsa': {
+                    'type': 'bool',
+                },
+                'ospfNbrStateChange': {
+                    'type': 'bool',
+                },
+                'ospfOriginateLsa': {
+                    'type': 'bool',
+                },
+                'ospfTxRetransmit': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfAuthFailure': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfConfigError': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfRxBadPacket': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfStateChange': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfTxRetransmit': {
+                    'type': 'bool',
+                },
+                'ospfVirtNbrStateChange': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'gslb': {
             'type': 'dict',
             'all': {
                 'type': 'bool',
             },
-            'fixed_nat_port_mapping_file_change': {
+            'zone': {
                 'type': 'bool',
             },
-            'per_ip_port_usage_threshold': {
+            'site': {
+                'type': 'bool',
+            },
+            'group': {
+                'type': 'bool',
+            },
+            'service_ip': {
                 'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
-            },
-            'total_port_usage_threshold': {
-                'type': 'bool',
-            },
-            'max_port_threshold': {
-                'type': 'int',
-            },
-            'max_ipport_threshold': {
-                'type': 'int',
-            },
-            'traffic_exceeded': {
-                'type': 'bool',
             }
         },
-        'vrrp_a': {
+        'slb': {
             'type': 'dict',
-            'active': {
-                'type': 'bool',
-            },
-            'standby': {
-                'type': 'bool',
-            },
             'all': {
+                'type': 'bool',
+            },
+            'application_buffer_limit': {
+                'type': 'bool',
+            },
+            'gateway_up': {
+                'type': 'bool',
+            },
+            'gateway_down': {
+                'type': 'bool',
+            },
+            'server_conn_limit': {
+                'type': 'bool',
+            },
+            'server_conn_resume': {
+                'type': 'bool',
+            },
+            'server_up': {
+                'type': 'bool',
+            },
+            'server_down': {
+                'type': 'bool',
+            },
+            'server_disabled': {
+                'type': 'bool',
+            },
+            'server_selection_failure': {
+                'type': 'bool',
+            },
+            'service_conn_limit': {
+                'type': 'bool',
+            },
+            'service_conn_resume': {
+                'type': 'bool',
+            },
+            'service_down': {
+                'type': 'bool',
+            },
+            'service_up': {
+                'type': 'bool',
+            },
+            'service_group_up': {
+                'type': 'bool',
+            },
+            'service_group_down': {
+                'type': 'bool',
+            },
+            'service_group_member_up': {
+                'type': 'bool',
+            },
+            'service_group_member_down': {
+                'type': 'bool',
+            },
+            'vip_connlimit': {
+                'type': 'bool',
+            },
+            'vip_connratelimit': {
+                'type': 'bool',
+            },
+            'vip_down': {
+                'type': 'bool',
+            },
+            'vip_port_connlimit': {
+                'type': 'bool',
+            },
+            'vip_port_connratelimit': {
+                'type': 'bool',
+            },
+            'vip_port_down': {
+                'type': 'bool',
+            },
+            'vip_port_up': {
+                'type': 'bool',
+            },
+            'vip_up': {
+                'type': 'bool',
+            },
+            'bw_rate_limit_exceed': {
+                'type': 'bool',
+            },
+            'bw_rate_limit_resume': {
                 'type': 'bool',
             },
             'uuid': {
@@ -548,88 +818,28 @@ def get_argspec():
         },
         'snmp': {
             'type': 'dict',
-            'linkup': {
-                'type': 'bool',
-            },
             'all': {
                 'type': 'bool',
             },
             'linkdown': {
                 'type': 'bool',
             },
+            'linkup': {
+                'type': 'bool',
+            },
             'uuid': {
                 'type': 'str',
             }
         },
-        'system': {
+        'vrrp_a': {
             'type': 'dict',
             'all': {
                 'type': 'bool',
             },
-            'data_cpu_high': {
+            'active': {
                 'type': 'bool',
             },
-            'uuid': {
-                'type': 'str',
-            },
-            'power': {
-                'type': 'bool',
-            },
-            'high_disk_use': {
-                'type': 'bool',
-            },
-            'high_memory_use': {
-                'type': 'bool',
-            },
-            'control_cpu_high': {
-                'type': 'bool',
-            },
-            'file_sys_read_only': {
-                'type': 'bool',
-            },
-            'low_temp': {
-                'type': 'bool',
-            },
-            'high_temp': {
-                'type': 'bool',
-            },
-            'sec_disk': {
-                'type': 'bool',
-            },
-            'license_management': {
-                'type': 'bool',
-            },
-            'start': {
-                'type': 'bool',
-            },
-            'fan': {
-                'type': 'bool',
-            },
-            'shutdown': {
-                'type': 'bool',
-            },
-            'pri_disk': {
-                'type': 'bool',
-            },
-            'syslog_severity_one': {
-                'type': 'bool',
-            },
-            'tacacs_server_up_down': {
-                'type': 'bool',
-            },
-            'smp_resource_event': {
-                'type': 'bool',
-            },
-            'restart': {
-                'type': 'bool',
-            },
-            'packet_drop': {
-                'type': 'bool',
-            }
-        },
-        'ssl': {
-            'type': 'dict',
-            'server_certificate_error': {
+            'standby': {
                 'type': 'bool',
             },
             'uuid': {
@@ -645,246 +855,147 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'routing': {
-            'type': 'dict',
-            'bgp': {
-                'type': 'dict',
-                'bgpEstablishedNotification': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'bgpBackwardTransNotification': {
-                    'type': 'bool',
-                }
-            },
-            'isis': {
-                'type': 'dict',
-                'isisAuthenticationFailure': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'isisProtocolsSupportedMismatch': {
-                    'type': 'bool',
-                },
-                'isisRejectedAdjacency': {
-                    'type': 'bool',
-                },
-                'isisMaxAreaAddressesMismatch': {
-                    'type': 'bool',
-                },
-                'isisCorruptedLSPDetected': {
-                    'type': 'bool',
-                },
-                'isisOriginatingLSPBufferSizeMismatch': {
-                    'type': 'bool',
-                },
-                'isisAreaMismatch': {
-                    'type': 'bool',
-                },
-                'isisLSPTooLargeToPropagate': {
-                    'type': 'bool',
-                },
-                'isisOwnLSPPurge': {
-                    'type': 'bool',
-                },
-                'isisSequenceNumberSkip': {
-                    'type': 'bool',
-                },
-                'isisDatabaseOverload': {
-                    'type': 'bool',
-                },
-                'isisAttemptToExceedMaxSequence': {
-                    'type': 'bool',
-                },
-                'isisIDLenMismatch': {
-                    'type': 'bool',
-                },
-                'isisAuthenticationTypeFailure': {
-                    'type': 'bool',
-                },
-                'isisVersionSkew': {
-                    'type': 'bool',
-                },
-                'isisManualAddressDrops': {
-                    'type': 'bool',
-                },
-                'isisAdjacencyChange': {
-                    'type': 'bool',
-                }
-            },
-            'ospf': {
-                'type': 'dict',
-                'ospfLsdbOverflow': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'ospfNbrStateChange': {
-                    'type': 'bool',
-                },
-                'ospfIfStateChange': {
-                    'type': 'bool',
-                },
-                'ospfVirtNbrStateChange': {
-                    'type': 'bool',
-                },
-                'ospfLsdbApproachingOverflow': {
-                    'type': 'bool',
-                },
-                'ospfIfAuthFailure': {
-                    'type': 'bool',
-                },
-                'ospfVirtIfAuthFailure': {
-                    'type': 'bool',
-                },
-                'ospfVirtIfConfigError': {
-                    'type': 'bool',
-                },
-                'ospfVirtIfRxBadPacket': {
-                    'type': 'bool',
-                },
-                'ospfTxRetransmit': {
-                    'type': 'bool',
-                },
-                'ospfVirtIfStateChange': {
-                    'type': 'bool',
-                },
-                'ospfIfConfigError': {
-                    'type': 'bool',
-                },
-                'ospfMaxAgeLsa': {
-                    'type': 'bool',
-                },
-                'ospfIfRxBadPacket': {
-                    'type': 'bool',
-                },
-                'ospfVirtIfTxRetransmit': {
-                    'type': 'bool',
-                },
-                'ospfOriginateLsa': {
-                    'type': 'bool',
-                }
-            }
-        },
-        'gslb': {
+        'system': {
             'type': 'dict',
             'all': {
                 'type': 'bool',
             },
-            'group': {
+            'control_cpu_high': {
+                'type': 'bool',
+            },
+            'data_cpu_high': {
+                'type': 'bool',
+            },
+            'fan': {
+                'type': 'bool',
+            },
+            'file_sys_read_only': {
+                'type': 'bool',
+            },
+            'high_disk_use': {
+                'type': 'bool',
+            },
+            'high_memory_use': {
+                'type': 'bool',
+            },
+            'high_temp': {
+                'type': 'bool',
+            },
+            'low_temp': {
+                'type': 'bool',
+            },
+            'license_management': {
+                'type': 'bool',
+            },
+            'packet_drop': {
+                'type': 'bool',
+            },
+            'power': {
+                'type': 'bool',
+            },
+            'pri_disk': {
+                'type': 'bool',
+            },
+            'restart': {
+                'type': 'bool',
+            },
+            'sec_disk': {
+                'type': 'bool',
+            },
+            'shutdown': {
+                'type': 'bool',
+            },
+            'smp_resource_event': {
+                'type': 'bool',
+            },
+            'syslog_severity_one': {
+                'type': 'bool',
+            },
+            'tacacs_server_up_down': {
+                'type': 'bool',
+            },
+            'start': {
                 'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
-            },
-            'zone': {
-                'type': 'bool',
-            },
-            'site': {
-                'type': 'bool',
-            },
-            'service_ip': {
-                'type': 'bool',
             }
         },
-        'slb': {
+        'slb_change': {
             'type': 'dict',
             'all': {
                 'type': 'bool',
             },
-            'server_down': {
+            'resource_usage_warning': {
                 'type': 'bool',
             },
-            'vip_port_connratelimit': {
+            'connection_resource_event': {
                 'type': 'bool',
             },
-            'server_selection_failure': {
+            'server': {
                 'type': 'bool',
             },
-            'service_group_down': {
+            'server_port': {
                 'type': 'bool',
             },
-            'server_conn_limit': {
+            'ssl_cert_change': {
                 'type': 'bool',
             },
-            'service_group_member_up': {
+            'ssl_cert_expire': {
+                'type': 'bool',
+            },
+            'vip': {
+                'type': 'bool',
+            },
+            'vip_port': {
+                'type': 'bool',
+            },
+            'system_threshold': {
                 'type': 'bool',
             },
             'uuid': {
                 'type': 'str',
-            },
-            'server_conn_resume': {
+            }
+        },
+        'lsn': {
+            'type': 'dict',
+            'all': {
                 'type': 'bool',
             },
-            'service_up': {
+            'total_port_usage_threshold': {
                 'type': 'bool',
             },
-            'service_conn_limit': {
+            'per_ip_port_usage_threshold': {
                 'type': 'bool',
             },
-            'gateway_up': {
+            'max_port_threshold': {
+                'type': 'int',
+            },
+            'max_ipport_threshold': {
+                'type': 'int',
+            },
+            'fixed_nat_port_mapping_file_change': {
                 'type': 'bool',
             },
-            'service_group_up': {
+            'traffic_exceeded': {
                 'type': 'bool',
             },
-            'application_buffer_limit': {
-                'type': 'bool',
-            },
-            'vip_connratelimit': {
-                'type': 'bool',
-            },
-            'vip_connlimit': {
-                'type': 'bool',
-            },
-            'service_group_member_down': {
-                'type': 'bool',
-            },
-            'service_down': {
-                'type': 'bool',
-            },
-            'bw_rate_limit_exceed': {
-                'type': 'bool',
-            },
-            'server_disabled': {
-                'type': 'bool',
-            },
-            'server_up': {
-                'type': 'bool',
-            },
-            'vip_port_connlimit': {
-                'type': 'bool',
-            },
-            'vip_port_down': {
-                'type': 'bool',
-            },
-            'bw_rate_limit_resume': {
-                'type': 'bool',
-            },
-            'gateway_down': {
-                'type': 'bool',
-            },
-            'vip_up': {
-                'type': 'bool',
-            },
-            'vip_port_up': {
-                'type': 'bool',
-            },
-            'vip_down': {
-                'type': 'bool',
-            },
-            'service_conn_resume': {
-                'type': 'bool',
+            'uuid': {
+                'type': 'str',
             }
         },
         'network': {
             'type': 'dict',
             'trunk_port_threshold': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'ssl': {
+            'type': 'dict',
+            'server_certificate_error': {
                 'type': 'bool',
             },
             'uuid': {

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_app
 description:
     - Show application firewall supported protocols
-short_description: Configures A10 fw.app
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,69 +21,86 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            category:
-                description:
-                - "Field category"
-            group_list:
-                description:
-                - "Field group_list"
-            contains:
-                description:
-                - "Field contains"
-            related:
-                description:
-                - "Field related"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'dummy'= Entry for a10countergen;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            category:
+                description:
+                - "Field category"
+                type: str
+            contains:
+                description:
+                - "Field contains"
+                type: str
+            related:
+                description:
+                - "Field related"
+                type: str
+            group_list:
+                description:
+                - "Field group_list"
+                type: list
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             dummy:
                 description:
                 - "Entry for a10countergen"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -139,9 +154,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'dummy']
+            }
+        },
         'oper': {
             'type': 'dict',
             'category': {
+                'type': 'str',
+            },
+            'contains': {
+                'type': 'str',
+            },
+            'related': {
                 'type': 'str',
             },
             'group_list': {
@@ -155,19 +186,6 @@ def get_argspec():
                 'app_desc': {
                     'type': 'str',
                 }
-            },
-            'contains': {
-                'type': 'str',
-            },
-            'related': {
-                'type': 'str',
-            }
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'dummy']
             }
         },
         'stats': {
@@ -175,9 +193,6 @@ def get_argspec():
             'dummy': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

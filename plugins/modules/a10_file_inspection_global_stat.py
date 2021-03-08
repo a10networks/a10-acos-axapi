@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_inspection_global_stat
 description:
     - global stats
-short_description: Configures A10 file.inspection.global-stat
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,41 +22,55 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -113,222 +125,289 @@ options:
           'bad_file_size_1_5m'= Bad Files Between 1-5Mb; 'bad_file_size_5_8m'= Bad Files
           Between 5-8Mb; 'bad_file_size_8_32m'= Bad Files Between 8-32Mb;
           'bad_file_size_over_32m'= Bad Files over 32Mb;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            icap_200:
-                description:
-                - "Receive icap status 200"
-            bypass_service_down:
-                description:
-                - "Bypassed - Internal service down"
-            upload_good_ext_inspect:
-                description:
-                - "Upload safe external inspect"
-            upload_bad_blocked:
-                description:
-                - "Upload malware blocked"
-            bad_file_size_less_1m:
-                description:
-                - "Bad Files Less than 1Mb"
-            suspect_file_size_1_5m:
-                description:
-                - "Suspect Files Between 1-5Mb"
-            orig_conn_bytes_bypassed:
-                description:
-                - "Original connection bytes bypassed"
-            upload_suspect_allowed:
-                description:
-                - "Upload suspect allowed"
-            suspect_file_size_5_8m:
-                description:
-                - "Suspect Files Between 5-8Mb"
-            total_file_size_less_1m:
-                description:
-                - "Total Files Less than 1Mb"
-            upload_bad_ext_inspect:
-                description:
-                - "Upload malware extrnal inspect"
-            orig_conn_bytes_sent:
-                description:
-                - "Original connection bytes sent"
-            total_file_size_1_5m:
-                description:
-                - "Total Files Between 1-5Mb"
-            download_suspect_allowed:
-                description:
-                - "Download suspect allowed"
-            non_supported_file:
-                description:
-                - "Non supported file type"
-            icap_204:
-                description:
-                - "Receive icap status 204"
-            suspect_file_size_8_32m:
-                description:
-                - "Suspect Files Between 8-32Mb"
-            total_file_size_5_8m:
-                description:
-                - "Total Files Between 5-8Mb"
-            icap_connect_fail:
-                description:
-                - "Icap connect fail"
-            upload_good_blocked:
-                description:
-                - "Upload safe blocked"
-            icap_other_status_code:
-                description:
-                - "Receive icap other status code"
-            bypass_aflex:
-                description:
-                - "Bypassed by aflex"
-            good_file_size_over_32m:
-                description:
-                - "Good Files over 32Mb"
-            total_suspect_bandwidth:
-                description:
-                - "Total Suspected Files Bytes"
-            orig_conn_bytes_received:
-                description:
-                - "Original connection bytes received"
-            download_suspect_ext_inspect:
-                description:
-                - "Download suspect extrnal inspect"
-            good_file_size_8_32m:
-                description:
-                - "Good Files Between 8-32Mb"
-            reset_service_down:
-                description:
-                - "Reset - Internal service down"
-            icap_500:
-                description:
-                - "Receive icap status 500"
-            bad_file_size_5_8m:
-                description:
-                - "Bad Files Between 5-8Mb"
-            upload_suspect_ext_inspect:
-                description:
-                - "Upload suspect extrnal inspect"
-            bypass_large_file:
-                description:
-                - "Bypassed - large file size"
-            icap_bytes_sent:
-                description:
-                - "Icap bytes sent"
-            download_good_allowed:
-                description:
-                - "Download safe external inspect"
             download_bad_blocked:
                 description:
                 - "Download malware blocked"
-            total_bad_bandwidth:
-                description:
-                - "Total Bad Files Bytes"
-            bad_file_size_over_32m:
-                description:
-                - "Bad Files over 32Mb"
-            download_bad_ext_inspect:
-                description:
-                - "Download malware extrnal inspect"
-            transactions_aborted:
-                description:
-                - "Total transactions aborted"
-            total_good_bandwidth:
-                description:
-                - "Total Good Files Bytes"
-            bypass_non_inspection:
-                description:
-                - "Bypassed non inspection data"
-            download_good_blocked:
-                description:
-                - "Download safe blocked"
-            total_bandwidth:
-                description:
-                - "Total File Bytes"
+                type: str
             download_bad_allowed:
                 description:
                 - "Download malware allowed"
-            bypass_buffered_overlimit:
+                type: str
+            download_bad_ext_inspect:
                 description:
-                - "Total Bytes Buffered Overlimit"
-            download_good_ext_inspect:
-                description:
-                - "Download safe allowed"
+                - "Download malware extrnal inspect"
+                type: str
             download_suspect_blocked:
                 description:
                 - "Download suspect blocked"
-            upload_suspect_blocked:
+                type: str
+            download_suspect_ext_inspect:
                 description:
-                - "Upload suspect blocked"
-            good_file_size_less_1m:
+                - "Download suspect extrnal inspect"
+                type: str
+            download_suspect_allowed:
                 description:
-                - "Good Files Less than 1Mb"
-            bad_file_size_8_32m:
+                - "Download suspect allowed"
+                type: str
+            download_good_blocked:
                 description:
-                - "Bad Files Between 8-32Mb"
-            icap_connection_rst:
+                - "Download safe blocked"
+                type: str
+            download_good_allowed:
                 description:
-                - "Icap connection rst"
-            total_file_size_over_32m:
+                - "Download safe external inspect"
+                type: str
+            download_good_ext_inspect:
                 description:
-                - "Total Files over 32Mb"
-            good_file_size_1_5m:
+                - "Download safe allowed"
+                type: str
+            upload_bad_blocked:
                 description:
-                - "Good Files Between 1-5Mb"
-            suspect_file_size_less_1m:
-                description:
-                - "Suspect Files Less than 1Mb"
-            icap_bytes_received:
-                description:
-                - "Icap bytes received"
-            icap_connection_established:
-                description:
-                - "Icap connection established"
-            icap_connection_closed:
-                description:
-                - "Icap connection closed"
-            good_file_size_5_8m:
-                description:
-                - "Good Files Between 5-8Mb"
-            transactions_alloc:
-                description:
-                - "Total transactions allocated"
+                - "Upload malware blocked"
+                type: str
             upload_bad_allowed:
                 description:
                 - "Upload malware allowed"
-            icap_connection_created:
+                type: str
+            upload_bad_ext_inspect:
                 description:
-                - "Icap connection created"
-            bypass_max_concurrent_files_reached:
+                - "Upload malware extrnal inspect"
+                type: str
+            upload_suspect_blocked:
                 description:
-                - "Bypassed - max concurrent files on server reached"
-            total_file_size_8_32m:
+                - "Upload suspect blocked"
+                type: str
+            upload_suspect_ext_inspect:
                 description:
-                - "Total Files Between 8-32Mb"
-            transactions_free:
+                - "Upload suspect extrnal inspect"
+                type: str
+            upload_suspect_allowed:
                 description:
-                - "Total transactions freed"
-            bypass_service_disabled:
+                - "Upload suspect allowed"
+                type: str
+            upload_good_blocked:
                 description:
-                - "Bypassed - Internal service disabled"
+                - "Upload safe blocked"
+                type: str
+            upload_good_ext_inspect:
+                description:
+                - "Upload safe external inspect"
+                type: str
             upload_good_allowed:
                 description:
                 - "Upload safe allowed"
+                type: str
+            icap_200:
+                description:
+                - "Receive icap status 200"
+                type: str
+            icap_204:
+                description:
+                - "Receive icap status 204"
+                type: str
+            icap_500:
+                description:
+                - "Receive icap status 500"
+                type: str
+            icap_other_status_code:
+                description:
+                - "Receive icap other status code"
+                type: str
+            icap_connect_fail:
+                description:
+                - "Icap connect fail"
+                type: str
+            icap_connection_created:
+                description:
+                - "Icap connection created"
+                type: str
+            icap_connection_established:
+                description:
+                - "Icap connection established"
+                type: str
+            icap_connection_closed:
+                description:
+                - "Icap connection closed"
+                type: str
+            icap_connection_rst:
+                description:
+                - "Icap connection rst"
+                type: str
+            icap_bytes_sent:
+                description:
+                - "Icap bytes sent"
+                type: str
+            icap_bytes_received:
+                description:
+                - "Icap bytes received"
+                type: str
+            bypass_aflex:
+                description:
+                - "Bypassed by aflex"
+                type: str
+            bypass_large_file:
+                description:
+                - "Bypassed - large file size"
+                type: str
+            bypass_service_disabled:
+                description:
+                - "Bypassed - Internal service disabled"
+                type: str
+            bypass_service_down:
+                description:
+                - "Bypassed - Internal service down"
+                type: str
+            reset_service_down:
+                description:
+                - "Reset - Internal service down"
+                type: str
+            bypass_max_concurrent_files_reached:
+                description:
+                - "Bypassed - max concurrent files on server reached"
+                type: str
+            bypass_non_inspection:
+                description:
+                - "Bypassed non inspection data"
+                type: str
+            non_supported_file:
+                description:
+                - "Non supported file type"
+                type: str
+            transactions_alloc:
+                description:
+                - "Total transactions allocated"
+                type: str
+            transactions_free:
+                description:
+                - "Total transactions freed"
+                type: str
             transactions_failure:
                 description:
                 - "Total transactions failure"
+                type: str
+            transactions_aborted:
+                description:
+                - "Total transactions aborted"
+                type: str
+            orig_conn_bytes_received:
+                description:
+                - "Original connection bytes received"
+                type: str
+            orig_conn_bytes_sent:
+                description:
+                - "Original connection bytes sent"
+                type: str
+            orig_conn_bytes_bypassed:
+                description:
+                - "Original connection bytes bypassed"
+                type: str
+            bypass_buffered_overlimit:
+                description:
+                - "Total Bytes Buffered Overlimit"
+                type: str
+            total_bandwidth:
+                description:
+                - "Total File Bytes"
+                type: str
+            total_suspect_bandwidth:
+                description:
+                - "Total Suspected Files Bytes"
+                type: str
+            total_bad_bandwidth:
+                description:
+                - "Total Bad Files Bytes"
+                type: str
+            total_good_bandwidth:
+                description:
+                - "Total Good Files Bytes"
+                type: str
+            total_file_size_less_1m:
+                description:
+                - "Total Files Less than 1Mb"
+                type: str
+            total_file_size_1_5m:
+                description:
+                - "Total Files Between 1-5Mb"
+                type: str
+            total_file_size_5_8m:
+                description:
+                - "Total Files Between 5-8Mb"
+                type: str
+            total_file_size_8_32m:
+                description:
+                - "Total Files Between 8-32Mb"
+                type: str
+            total_file_size_over_32m:
+                description:
+                - "Total Files over 32Mb"
+                type: str
+            suspect_file_size_less_1m:
+                description:
+                - "Suspect Files Less than 1Mb"
+                type: str
+            suspect_file_size_1_5m:
+                description:
+                - "Suspect Files Between 1-5Mb"
+                type: str
+            suspect_file_size_5_8m:
+                description:
+                - "Suspect Files Between 5-8Mb"
+                type: str
+            suspect_file_size_8_32m:
+                description:
+                - "Suspect Files Between 8-32Mb"
+                type: str
             suspect_file_size_over_32m:
                 description:
                 - "Suspect Files over 32Mb"
+                type: str
+            good_file_size_less_1m:
+                description:
+                - "Good Files Less than 1Mb"
+                type: str
+            good_file_size_1_5m:
+                description:
+                - "Good Files Between 1-5Mb"
+                type: str
+            good_file_size_5_8m:
+                description:
+                - "Good Files Between 5-8Mb"
+                type: str
+            good_file_size_8_32m:
+                description:
+                - "Good Files Between 8-32Mb"
+                type: str
+            good_file_size_over_32m:
+                description:
+                - "Good Files over 32Mb"
+                type: str
+            bad_file_size_less_1m:
+                description:
+                - "Bad Files Less than 1Mb"
+                type: str
             bad_file_size_1_5m:
                 description:
                 - "Bad Files Between 1-5Mb"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            bad_file_size_5_8m:
+                description:
+                - "Bad Files Between 5-8Mb"
+                type: str
+            bad_file_size_8_32m:
+                description:
+                - "Bad Files Between 8-32Mb"
+                type: str
+            bad_file_size_over_32m:
+                description:
+                - "Bad Files over 32Mb"
+                type: str
 
 '''
 
@@ -386,6 +465,9 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -431,169 +513,76 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'icap_200': {
-                'type': 'str',
-            },
-            'bypass_service_down': {
-                'type': 'str',
-            },
-            'upload_good_ext_inspect': {
-                'type': 'str',
-            },
-            'upload_bad_blocked': {
-                'type': 'str',
-            },
-            'bad_file_size_less_1m': {
-                'type': 'str',
-            },
-            'suspect_file_size_1_5m': {
-                'type': 'str',
-            },
-            'orig_conn_bytes_bypassed': {
-                'type': 'str',
-            },
-            'upload_suspect_allowed': {
-                'type': 'str',
-            },
-            'suspect_file_size_5_8m': {
-                'type': 'str',
-            },
-            'total_file_size_less_1m': {
-                'type': 'str',
-            },
-            'upload_bad_ext_inspect': {
-                'type': 'str',
-            },
-            'orig_conn_bytes_sent': {
-                'type': 'str',
-            },
-            'total_file_size_1_5m': {
-                'type': 'str',
-            },
-            'download_suspect_allowed': {
-                'type': 'str',
-            },
-            'non_supported_file': {
-                'type': 'str',
-            },
-            'icap_204': {
-                'type': 'str',
-            },
-            'suspect_file_size_8_32m': {
-                'type': 'str',
-            },
-            'total_file_size_5_8m': {
-                'type': 'str',
-            },
-            'icap_connect_fail': {
-                'type': 'str',
-            },
-            'upload_good_blocked': {
-                'type': 'str',
-            },
-            'icap_other_status_code': {
-                'type': 'str',
-            },
-            'bypass_aflex': {
-                'type': 'str',
-            },
-            'good_file_size_over_32m': {
-                'type': 'str',
-            },
-            'total_suspect_bandwidth': {
-                'type': 'str',
-            },
-            'orig_conn_bytes_received': {
-                'type': 'str',
-            },
-            'download_suspect_ext_inspect': {
-                'type': 'str',
-            },
-            'good_file_size_8_32m': {
-                'type': 'str',
-            },
-            'reset_service_down': {
-                'type': 'str',
-            },
-            'icap_500': {
-                'type': 'str',
-            },
-            'bad_file_size_5_8m': {
-                'type': 'str',
-            },
-            'upload_suspect_ext_inspect': {
-                'type': 'str',
-            },
-            'bypass_large_file': {
-                'type': 'str',
-            },
-            'icap_bytes_sent': {
-                'type': 'str',
-            },
-            'download_good_allowed': {
-                'type': 'str',
-            },
             'download_bad_blocked': {
-                'type': 'str',
-            },
-            'total_bad_bandwidth': {
-                'type': 'str',
-            },
-            'bad_file_size_over_32m': {
-                'type': 'str',
-            },
-            'download_bad_ext_inspect': {
-                'type': 'str',
-            },
-            'transactions_aborted': {
-                'type': 'str',
-            },
-            'total_good_bandwidth': {
-                'type': 'str',
-            },
-            'bypass_non_inspection': {
-                'type': 'str',
-            },
-            'download_good_blocked': {
-                'type': 'str',
-            },
-            'total_bandwidth': {
                 'type': 'str',
             },
             'download_bad_allowed': {
                 'type': 'str',
             },
-            'bypass_buffered_overlimit': {
-                'type': 'str',
-            },
-            'download_good_ext_inspect': {
+            'download_bad_ext_inspect': {
                 'type': 'str',
             },
             'download_suspect_blocked': {
                 'type': 'str',
             },
+            'download_suspect_ext_inspect': {
+                'type': 'str',
+            },
+            'download_suspect_allowed': {
+                'type': 'str',
+            },
+            'download_good_blocked': {
+                'type': 'str',
+            },
+            'download_good_allowed': {
+                'type': 'str',
+            },
+            'download_good_ext_inspect': {
+                'type': 'str',
+            },
+            'upload_bad_blocked': {
+                'type': 'str',
+            },
+            'upload_bad_allowed': {
+                'type': 'str',
+            },
+            'upload_bad_ext_inspect': {
+                'type': 'str',
+            },
             'upload_suspect_blocked': {
                 'type': 'str',
             },
-            'good_file_size_less_1m': {
+            'upload_suspect_ext_inspect': {
                 'type': 'str',
             },
-            'bad_file_size_8_32m': {
+            'upload_suspect_allowed': {
                 'type': 'str',
             },
-            'icap_connection_rst': {
+            'upload_good_blocked': {
                 'type': 'str',
             },
-            'total_file_size_over_32m': {
+            'upload_good_ext_inspect': {
                 'type': 'str',
             },
-            'good_file_size_1_5m': {
+            'upload_good_allowed': {
                 'type': 'str',
             },
-            'suspect_file_size_less_1m': {
+            'icap_200': {
                 'type': 'str',
             },
-            'icap_bytes_received': {
+            'icap_204': {
+                'type': 'str',
+            },
+            'icap_500': {
+                'type': 'str',
+            },
+            'icap_other_status_code': {
+                'type': 'str',
+            },
+            'icap_connect_fail': {
+                'type': 'str',
+            },
+            'icap_connection_created': {
                 'type': 'str',
             },
             'icap_connection_established': {
@@ -602,45 +591,135 @@ def get_argspec():
             'icap_connection_closed': {
                 'type': 'str',
             },
-            'good_file_size_5_8m': {
+            'icap_connection_rst': {
                 'type': 'str',
             },
-            'transactions_alloc': {
+            'icap_bytes_sent': {
                 'type': 'str',
             },
-            'upload_bad_allowed': {
+            'icap_bytes_received': {
                 'type': 'str',
             },
-            'icap_connection_created': {
+            'bypass_aflex': {
                 'type': 'str',
             },
-            'bypass_max_concurrent_files_reached': {
-                'type': 'str',
-            },
-            'total_file_size_8_32m': {
-                'type': 'str',
-            },
-            'transactions_free': {
+            'bypass_large_file': {
                 'type': 'str',
             },
             'bypass_service_disabled': {
                 'type': 'str',
             },
-            'upload_good_allowed': {
+            'bypass_service_down': {
+                'type': 'str',
+            },
+            'reset_service_down': {
+                'type': 'str',
+            },
+            'bypass_max_concurrent_files_reached': {
+                'type': 'str',
+            },
+            'bypass_non_inspection': {
+                'type': 'str',
+            },
+            'non_supported_file': {
+                'type': 'str',
+            },
+            'transactions_alloc': {
+                'type': 'str',
+            },
+            'transactions_free': {
                 'type': 'str',
             },
             'transactions_failure': {
                 'type': 'str',
             },
+            'transactions_aborted': {
+                'type': 'str',
+            },
+            'orig_conn_bytes_received': {
+                'type': 'str',
+            },
+            'orig_conn_bytes_sent': {
+                'type': 'str',
+            },
+            'orig_conn_bytes_bypassed': {
+                'type': 'str',
+            },
+            'bypass_buffered_overlimit': {
+                'type': 'str',
+            },
+            'total_bandwidth': {
+                'type': 'str',
+            },
+            'total_suspect_bandwidth': {
+                'type': 'str',
+            },
+            'total_bad_bandwidth': {
+                'type': 'str',
+            },
+            'total_good_bandwidth': {
+                'type': 'str',
+            },
+            'total_file_size_less_1m': {
+                'type': 'str',
+            },
+            'total_file_size_1_5m': {
+                'type': 'str',
+            },
+            'total_file_size_5_8m': {
+                'type': 'str',
+            },
+            'total_file_size_8_32m': {
+                'type': 'str',
+            },
+            'total_file_size_over_32m': {
+                'type': 'str',
+            },
+            'suspect_file_size_less_1m': {
+                'type': 'str',
+            },
+            'suspect_file_size_1_5m': {
+                'type': 'str',
+            },
+            'suspect_file_size_5_8m': {
+                'type': 'str',
+            },
+            'suspect_file_size_8_32m': {
+                'type': 'str',
+            },
             'suspect_file_size_over_32m': {
+                'type': 'str',
+            },
+            'good_file_size_less_1m': {
+                'type': 'str',
+            },
+            'good_file_size_1_5m': {
+                'type': 'str',
+            },
+            'good_file_size_5_8m': {
+                'type': 'str',
+            },
+            'good_file_size_8_32m': {
+                'type': 'str',
+            },
+            'good_file_size_over_32m': {
+                'type': 'str',
+            },
+            'bad_file_size_less_1m': {
                 'type': 'str',
             },
             'bad_file_size_1_5m': {
                 'type': 'str',
+            },
+            'bad_file_size_5_8m': {
+                'type': 'str',
+            },
+            'bad_file_size_8_32m': {
+                'type': 'str',
+            },
+            'bad_file_size_over_32m': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

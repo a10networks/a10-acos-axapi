@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_geo_location
 description:
     - Geo location settings
-short_description: Configures A10 gslb.zone.service.geo-location
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,77 +22,102 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    service-name:
+    service_name:
         description:
-        - Key to identify parent object    service_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_port:
         description:
-        - Key to identify parent object    zone_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    zone_name:
         description:
-        - Key to identify parent object    action_type:
+        - Key to identify parent object
+        type: str
+        required: True
+    geo_name:
         description:
-        - "'allow'= Allow query from this geo-location; 'drop'= Drop query from this geo-
-          location; 'forward'= Forward packet for this geo-location; 'ignore'= Send empty
-          response to this geo-location; 'reject'= Send refuse response to this geo-
-          location;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+        - "Specify the geo-location"
+        type: str
+        required: True
     alias:
         description:
         - "Field alias"
+        type: list
         required: False
         suboptions:
             alias:
                 description:
                 - "Send CNAME response for this geo-location (Specify a CNAME record)"
-    geo_name:
+                type: str
+    action:
         description:
-        - "Specify the geo-location"
-        required: True
-    policy:
+        - "Action for this geo-location"
+        type: bool
+        required: False
+    action_type:
         description:
-        - "Policy for this geo-location (Specify the policy name)"
+        - "'allow'= Allow query from this geo-location; 'drop'= Drop query from this geo-
+          location; 'forward'= Forward packet for this geo-location; 'ignore'= Send empty
+          response to this geo-location; 'reject'= Send refuse response to this geo-
+          location;"
+        type: str
         required: False
     forward_type:
         description:
         - "'both'= Forward both query and response; 'query'= Forward query from this geo-
           location; 'response'= Forward response to this geo-location;"
+        type: str
         required: False
-    action:
+    policy:
         description:
-        - "Action for this geo-location"
+        - "Policy for this geo-location (Specify the policy name)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -155,15 +178,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'action_type': {
+        'geo_name': {
             'type': 'str',
-            'choices': ['allow', 'drop', 'forward', 'ignore', 'reject']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
+            'required': True,
         },
         'alias': {
             'type': 'list',
@@ -171,25 +188,31 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'geo_name': {
-            'type': 'str',
-            'required': True,
+        'action': {
+            'type': 'bool',
         },
-        'policy': {
+        'action_type': {
             'type': 'str',
+            'choices': ['allow', 'drop', 'forward', 'ignore', 'reject']
         },
         'forward_type': {
             'type': 'str',
             'choices': ['both', 'query', 'response']
         },
-        'action': {
-            'type': 'bool',
+        'policy': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     # Parent keys
     rv.update(
         dict(
-            service - name=dict(type='str', required=True),
+            service_name=dict(type='str', required=True),
             service_port=dict(type='str', required=True),
             zone_name=dict(type='str', required=True),
         ))
@@ -203,7 +226,7 @@ def existing_url(module):
 
     f_dict = {}
     f_dict["geo-name"] = module.params["geo_name"]
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 
@@ -263,7 +286,7 @@ def new_url(module):
 
     f_dict = {}
     f_dict["geo-name"] = ""
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 

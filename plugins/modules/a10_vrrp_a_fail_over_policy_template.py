@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_fail_over_policy_template
 description:
     - Define a VRRP-A failover policy template
-short_description: Configures A10 vrrp-a.fail-over-policy-template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,115 +22,145 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    vlan_cfg:
-        description:
-        - "Field vlan_cfg"
-        required: False
-        suboptions:
-            vlan:
-                description:
-                - "VLAN tracking (VLAN id)"
-            timeout:
-                description:
-                - "Field timeout"
-            weight:
-                description:
-                - "The failover event weight"
     name:
         description:
         - "VRRP-A fail over policy template name"
+        type: str
         required: True
-    route:
-        description:
-        - "Field route"
-        required: False
-        suboptions:
-            ipv6_destination_cfg:
-                description:
-                - "Field ipv6_destination_cfg"
-            ip_destination_cfg:
-                description:
-                - "Field ip_destination_cfg"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    bgp:
-        description:
-        - "Field bgp"
-        required: False
-        suboptions:
-            bgp_ipv4_address_cfg:
-                description:
-                - "Field bgp_ipv4_address_cfg"
-            bgp_ipv6_address_cfg:
-                description:
-                - "Field bgp_ipv6_address_cfg"
     interface:
         description:
         - "Field interface"
+        type: list
         required: False
         suboptions:
             ethernet:
                 description:
                 - "Ethernet Interface (Ethernet interface number)"
+                type: str
             weight:
                 description:
                 - "The failover event weight"
+                type: int
     gateway:
         description:
         - "Field gateway"
+        type: dict
         required: False
         suboptions:
             gw_ipv4_address_cfg:
                 description:
                 - "Field gw_ipv4_address_cfg"
+                type: list
             gw_ipv6_address_cfg:
                 description:
                 - "Field gw_ipv6_address_cfg"
+                type: list
+    bgp:
+        description:
+        - "Field bgp"
+        type: dict
+        required: False
+        suboptions:
+            bgp_ipv4_address_cfg:
+                description:
+                - "Field bgp_ipv4_address_cfg"
+                type: list
+            bgp_ipv6_address_cfg:
+                description:
+                - "Field bgp_ipv6_address_cfg"
+                type: list
     trunk_cfg:
         description:
         - "Field trunk_cfg"
+        type: list
         required: False
         suboptions:
-            per_port_weight:
-                description:
-                - "Per port failover weight"
-            weight:
-                description:
-                - "failover event weight"
             trunk:
                 description:
                 - "trunk tracking (trunk id)"
+                type: int
+            weight:
+                description:
+                - "failover event weight"
+                type: int
+            per_port_weight:
+                description:
+                - "Per port failover weight"
+                type: int
+    route:
+        description:
+        - "Field route"
+        type: dict
+        required: False
+        suboptions:
+            ip_destination_cfg:
+                description:
+                - "Field ip_destination_cfg"
+                type: list
+            ipv6_destination_cfg:
+                description:
+                - "Field ipv6_destination_cfg"
+                type: list
+    vlan_cfg:
+        description:
+        - "Field vlan_cfg"
+        type: list
+        required: False
+        suboptions:
+            vlan:
+                description:
+                - "VLAN tracking (VLAN id)"
+                type: int
+            timeout:
+                description:
+                - "Field timeout"
+                type: int
+            weight:
+                description:
+                - "The failover event weight"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -194,89 +222,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'vlan_cfg': {
-            'type': 'list',
-            'vlan': {
-                'type': 'int',
-            },
-            'timeout': {
-                'type': 'int',
-            },
-            'weight': {
-                'type': 'int',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
-        },
-        'route': {
-            'type': 'dict',
-            'ipv6_destination_cfg': {
-                'type': 'list',
-                'ipv6_destination': {
-                    'type': 'str',
-                },
-                'distance': {
-                    'type': 'int',
-                },
-                'protocol': {
-                    'type': 'str',
-                    'choices': ['any', 'static', 'dynamic']
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'gatewayv6': {
-                    'type': 'str',
-                }
-            },
-            'ip_destination_cfg': {
-                'type': 'list',
-                'distance': {
-                    'type': 'int',
-                },
-                'protocol': {
-                    'type': 'str',
-                    'choices': ['any', 'static', 'dynamic']
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'mask': {
-                    'type': 'str',
-                },
-                'ip_destination': {
-                    'type': 'str',
-                },
-                'gateway': {
-                    'type': 'str',
-                }
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'bgp': {
-            'type': 'dict',
-            'bgp_ipv4_address_cfg': {
-                'type': 'list',
-                'bgp_ipv4_address': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                }
-            },
-            'bgp_ipv6_address_cfg': {
-                'type': 'list',
-                'bgp_ipv6_address': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                }
-            }
         },
         'interface': {
             'type': 'list',
@@ -308,19 +256,99 @@ def get_argspec():
                 }
             }
         },
+        'bgp': {
+            'type': 'dict',
+            'bgp_ipv4_address_cfg': {
+                'type': 'list',
+                'bgp_ipv4_address': {
+                    'type': 'str',
+                },
+                'weight': {
+                    'type': 'int',
+                }
+            },
+            'bgp_ipv6_address_cfg': {
+                'type': 'list',
+                'bgp_ipv6_address': {
+                    'type': 'str',
+                },
+                'weight': {
+                    'type': 'int',
+                }
+            }
+        },
         'trunk_cfg': {
             'type': 'list',
-            'per_port_weight': {
+            'trunk': {
                 'type': 'int',
             },
             'weight': {
                 'type': 'int',
             },
-            'trunk': {
+            'per_port_weight': {
+                'type': 'int',
+            }
+        },
+        'route': {
+            'type': 'dict',
+            'ip_destination_cfg': {
+                'type': 'list',
+                'ip_destination': {
+                    'type': 'str',
+                },
+                'mask': {
+                    'type': 'str',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'gateway': {
+                    'type': 'str',
+                },
+                'distance': {
+                    'type': 'int',
+                },
+                'protocol': {
+                    'type': 'str',
+                    'choices': ['any', 'static', 'dynamic']
+                }
+            },
+            'ipv6_destination_cfg': {
+                'type': 'list',
+                'ipv6_destination': {
+                    'type': 'str',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'gatewayv6': {
+                    'type': 'str',
+                },
+                'distance': {
+                    'type': 'int',
+                },
+                'protocol': {
+                    'type': 'str',
+                    'choices': ['any', 'static', 'dynamic']
+                }
+            }
+        },
+        'vlan_cfg': {
+            'type': 'list',
+            'vlan': {
+                'type': 'int',
+            },
+            'timeout': {
+                'type': 'int',
+            },
+            'weight': {
                 'type': 'int',
             }
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

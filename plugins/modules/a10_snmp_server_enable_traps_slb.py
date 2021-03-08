@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_slb
 description:
     - Enable SLB group traps
-short_description: Configures A10 snmp.server.enable.traps.slb
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,147 +22,183 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Enable all SLB traps"
-        required: False
-    server_down:
-        description:
-        - "Enable SLB server-down trap"
-        required: False
-    vip_port_connratelimit:
-        description:
-        - "Enable the virtual port reach conn-rate-limit trap"
-        required: False
-    server_selection_failure:
-        description:
-        - "Enable SLB server selection failure trap"
-        required: False
-    service_group_down:
-        description:
-        - "Enable SLB service-group-down trap"
-        required: False
-    server_conn_limit:
-        description:
-        - "Enable SLB server connection limit trap"
-        required: False
-    service_group_member_up:
-        description:
-        - "Enable SLB service-group-member-up trap"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    server_conn_resume:
-        description:
-        - "Enable SLB server connection resume trap"
-        required: False
-    service_up:
-        description:
-        - "Enable SLB service-up trap"
-        required: False
-    service_conn_limit:
-        description:
-        - "Enable SLB service connection limit trap"
-        required: False
-    gateway_up:
-        description:
-        - "Enable SLB server gateway up trap"
-        required: False
-    service_group_up:
-        description:
-        - "Enable SLB service-group-up trap"
+        type: bool
         required: False
     application_buffer_limit:
         description:
         - "Enable application buffer reach limit trap"
+        type: bool
         required: False
-    vip_connratelimit:
+    gateway_up:
         description:
-        - "Enable the virtual server reach conn-rate-limit trap"
-        required: False
-    vip_connlimit:
-        description:
-        - "Enable the virtual server reach conn-limit trap"
-        required: False
-    service_group_member_down:
-        description:
-        - "Enable SLB service-group-member-down trap"
-        required: False
-    service_down:
-        description:
-        - "Enable SLB service-down trap"
-        required: False
-    bw_rate_limit_exceed:
-        description:
-        - "Enable SLB server/port bandwidth rate limit exceed trap"
-        required: False
-    server_disabled:
-        description:
-        - "Enable SLB server-disabled trap"
-        required: False
-    server_up:
-        description:
-        - "Enable slb server up trap"
-        required: False
-    vip_port_connlimit:
-        description:
-        - "Enable the virtual port reach conn-limit trap"
-        required: False
-    vip_port_down:
-        description:
-        - "Enable SLB virtual port down trap"
-        required: False
-    bw_rate_limit_resume:
-        description:
-        - "Enable SLB server/port bandwidth rate limit resume trap"
+        - "Enable SLB server gateway up trap"
+        type: bool
         required: False
     gateway_down:
         description:
         - "Enable SLB server gateway down trap"
+        type: bool
         required: False
-    vip_up:
+    server_conn_limit:
         description:
-        - "Enable SLB virtual server up trap"
+        - "Enable SLB server connection limit trap"
+        type: bool
         required: False
-    vip_port_up:
+    server_conn_resume:
         description:
-        - "Enable SLB virtual port up trap"
+        - "Enable SLB server connection resume trap"
+        type: bool
         required: False
-    vip_down:
+    server_up:
         description:
-        - "Enable SLB virtual server down trap"
+        - "Enable slb server up trap"
+        type: bool
+        required: False
+    server_down:
+        description:
+        - "Enable SLB server-down trap"
+        type: bool
+        required: False
+    server_disabled:
+        description:
+        - "Enable SLB server-disabled trap"
+        type: bool
+        required: False
+    server_selection_failure:
+        description:
+        - "Enable SLB server selection failure trap"
+        type: bool
+        required: False
+    service_conn_limit:
+        description:
+        - "Enable SLB service connection limit trap"
+        type: bool
         required: False
     service_conn_resume:
         description:
         - "Enable SLB service connection resume trap"
+        type: bool
+        required: False
+    service_down:
+        description:
+        - "Enable SLB service-down trap"
+        type: bool
+        required: False
+    service_up:
+        description:
+        - "Enable SLB service-up trap"
+        type: bool
+        required: False
+    service_group_up:
+        description:
+        - "Enable SLB service-group-up trap"
+        type: bool
+        required: False
+    service_group_down:
+        description:
+        - "Enable SLB service-group-down trap"
+        type: bool
+        required: False
+    service_group_member_up:
+        description:
+        - "Enable SLB service-group-member-up trap"
+        type: bool
+        required: False
+    service_group_member_down:
+        description:
+        - "Enable SLB service-group-member-down trap"
+        type: bool
+        required: False
+    vip_connlimit:
+        description:
+        - "Enable the virtual server reach conn-limit trap"
+        type: bool
+        required: False
+    vip_connratelimit:
+        description:
+        - "Enable the virtual server reach conn-rate-limit trap"
+        type: bool
+        required: False
+    vip_down:
+        description:
+        - "Enable SLB virtual server down trap"
+        type: bool
+        required: False
+    vip_port_connlimit:
+        description:
+        - "Enable the virtual port reach conn-limit trap"
+        type: bool
+        required: False
+    vip_port_connratelimit:
+        description:
+        - "Enable the virtual port reach conn-rate-limit trap"
+        type: bool
+        required: False
+    vip_port_down:
+        description:
+        - "Enable SLB virtual port down trap"
+        type: bool
+        required: False
+    vip_port_up:
+        description:
+        - "Enable SLB virtual port up trap"
+        type: bool
+        required: False
+    vip_up:
+        description:
+        - "Enable SLB virtual server up trap"
+        type: bool
+        required: False
+    bw_rate_limit_exceed:
+        description:
+        - "Enable SLB server/port bandwidth rate limit exceed trap"
+        type: bool
+        required: False
+    bw_rate_limit_resume:
+        description:
+        - "Enable SLB server/port bandwidth rate limit resume trap"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -249,89 +283,89 @@ def get_argspec():
         'all': {
             'type': 'bool',
         },
-        'server_down': {
-            'type': 'bool',
-        },
-        'vip_port_connratelimit': {
-            'type': 'bool',
-        },
-        'server_selection_failure': {
-            'type': 'bool',
-        },
-        'service_group_down': {
-            'type': 'bool',
-        },
-        'server_conn_limit': {
-            'type': 'bool',
-        },
-        'service_group_member_up': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'server_conn_resume': {
-            'type': 'bool',
-        },
-        'service_up': {
-            'type': 'bool',
-        },
-        'service_conn_limit': {
+        'application_buffer_limit': {
             'type': 'bool',
         },
         'gateway_up': {
             'type': 'bool',
         },
-        'service_group_up': {
+        'gateway_down': {
             'type': 'bool',
         },
-        'application_buffer_limit': {
+        'server_conn_limit': {
             'type': 'bool',
         },
-        'vip_connratelimit': {
-            'type': 'bool',
-        },
-        'vip_connlimit': {
-            'type': 'bool',
-        },
-        'service_group_member_down': {
-            'type': 'bool',
-        },
-        'service_down': {
-            'type': 'bool',
-        },
-        'bw_rate_limit_exceed': {
-            'type': 'bool',
-        },
-        'server_disabled': {
+        'server_conn_resume': {
             'type': 'bool',
         },
         'server_up': {
             'type': 'bool',
         },
-        'vip_port_connlimit': {
+        'server_down': {
             'type': 'bool',
         },
-        'vip_port_down': {
+        'server_disabled': {
             'type': 'bool',
         },
-        'bw_rate_limit_resume': {
+        'server_selection_failure': {
             'type': 'bool',
         },
-        'gateway_down': {
+        'service_conn_limit': {
             'type': 'bool',
         },
-        'vip_up': {
+        'service_conn_resume': {
             'type': 'bool',
         },
-        'vip_port_up': {
+        'service_down': {
+            'type': 'bool',
+        },
+        'service_up': {
+            'type': 'bool',
+        },
+        'service_group_up': {
+            'type': 'bool',
+        },
+        'service_group_down': {
+            'type': 'bool',
+        },
+        'service_group_member_up': {
+            'type': 'bool',
+        },
+        'service_group_member_down': {
+            'type': 'bool',
+        },
+        'vip_connlimit': {
+            'type': 'bool',
+        },
+        'vip_connratelimit': {
             'type': 'bool',
         },
         'vip_down': {
             'type': 'bool',
         },
-        'service_conn_resume': {
+        'vip_port_connlimit': {
             'type': 'bool',
+        },
+        'vip_port_connratelimit': {
+            'type': 'bool',
+        },
+        'vip_port_down': {
+            'type': 'bool',
+        },
+        'vip_port_up': {
+            'type': 'bool',
+        },
+        'vip_up': {
+            'type': 'bool',
+        },
+        'bw_rate_limit_exceed': {
+            'type': 'bool',
+        },
+        'bw_rate_limit_resume': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

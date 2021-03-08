@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_netflow_monitor_destination
 description:
     - Configure destination where netflow records will be sent
-short_description: Configures A10 netflow.monitor.destination
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,82 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    ip_cfg:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_group:
+        description:
+        - "Service-group for load balancing between multiple collector servers"
+        type: str
+        required: False
+    ip_cfg:
         description:
         - "Field ip_cfg"
+        type: dict
         required: False
         suboptions:
             ip:
                 description:
                 - "IP address of netflow collector"
+                type: str
             port4:
                 description:
                 - "Port number, default is 9996"
-    service_group:
-        description:
-        - "Service-group for load balancing between multiple collector servers"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
     ipv6_cfg:
         description:
         - "Field ipv6_cfg"
+        type: dict
         required: False
         suboptions:
-            port6:
-                description:
-                - "Port number, default is 9996"
             ipv6:
                 description:
                 - "IPv6 address of netflow collector"
+                type: str
+            port6:
+                description:
+                - "Port number, default is 9996"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -137,6 +153,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'service_group': {
+            'type': 'str',
+        },
         'ip_cfg': {
             'type': 'dict',
             'ip': {
@@ -146,20 +165,17 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'service_group': {
-            'type': 'str',
+        'ipv6_cfg': {
+            'type': 'dict',
+            'ipv6': {
+                'type': 'str',
+            },
+            'port6': {
+                'type': 'int',
+            }
         },
         'uuid': {
             'type': 'str',
-        },
-        'ipv6_cfg': {
-            'type': 'dict',
-            'port6': {
-                'type': 'int',
-            },
-            'ipv6': {
-                'type': 'str',
-            }
         }
     })
     # Parent keys

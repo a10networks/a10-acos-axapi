@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_radius_profile
 description:
     - Configure LSN RADIUS Profile
-short_description: Configures A10 cgnv6.lsn-radius-profile
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,69 +22,86 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     lid_profile_index:
         description:
         - "LSN RADIUS Profile Index"
+        type: int
         required: True
     radius:
         description:
         - "Field radius"
+        type: list
         required: False
         suboptions:
-            exact_value_lsn_lid:
-                description:
-                - "LSN Limit ID (LID index)"
             attribute:
                 description:
                 - "'custom1'= Configure RADIUS Attribute Custom 1; 'custom2'= Configure RADIUS
           Attribute Custom 2; 'custom3'= Configure RADIUS Attribute Custom 3; 'imei'=
           Configure RADIUS Attribute IMEI; 'imsi'= Configure RADIUS Attribute IMSI;
           'msisdn'= Configure RADIUS Attribute MSISDN; 'default'= Configure default;"
-            starts_with_lsn_lid:
-                description:
-                - "LSN Limit ID (LID index)"
-            exact_value:
-                description:
-                - "Value of the attribute"
+                type: str
             starts_with:
                 description:
                 - "Value of the attribute"
+                type: str
+            starts_with_lsn_lid:
+                description:
+                - "LSN Limit ID (LID index)"
+                type: int
+            exact_value:
+                description:
+                - "Value of the attribute"
+                type: str
+            exact_value_lsn_lid:
+                description:
+                - "LSN Limit ID (LID index)"
+                type: int
             default_lsn_lid:
                 description:
                 - "LSN Limit ID (LID index)"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -149,9 +164,6 @@ def get_argspec():
         },
         'radius': {
             'type': 'list',
-            'exact_value_lsn_lid': {
-                'type': 'int',
-            },
             'attribute': {
                 'type':
                 'str',
@@ -160,14 +172,17 @@ def get_argspec():
                     'default'
                 ]
             },
+            'starts_with': {
+                'type': 'str',
+            },
             'starts_with_lsn_lid': {
                 'type': 'int',
             },
             'exact_value': {
                 'type': 'str',
             },
-            'starts_with': {
-                'type': 'str',
+            'exact_value_lsn_lid': {
+                'type': 'int',
             },
             'default_lsn_lid': {
                 'type': 'int',

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_icap_http
 description:
     - Configure ICAP
-short_description: Configures A10 icap_http
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -94,204 +94,279 @@ options:
           'status_2xx'= status code 2XX; 'status_3xx'= status code 3XX; 'status_4xx'=
           status code 4XX; 'status_5xx'= status code 5XX; 'status_6xx'= status code 6XX;
           'status_unknown'= Status code unknown;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            status_503:
-                description:
-                - "Status code 503"
-            status_306:
-                description:
-                - "Status code 306"
-            status_500:
-                description:
-                - "Status code 500"
-            status_307:
-                description:
-                - "Status code 307"
-            status_1xx:
-                description:
-                - "status code 1XX"
-            status_450:
-                description:
-                - "Status code 450"
-            status_412:
-                description:
-                - "Status code 412"
-            status_413:
-                description:
-                - "Status code 413"
-            status_410:
-                description:
-                - "Status code 410"
-            status_411:
-                description:
-                - "Status code 411"
-            status_416:
-                description:
-                - "Status code 416"
-            status_417:
-                description:
-                - "Status code 417"
-            status_414:
-                description:
-                - "Status code 414"
-            status_415:
-                description:
-                - "Status code 415"
-            status_418:
-                description:
-                - "Status code 418"
-            status_unknown:
-                description:
-                - "Status code unknown"
-            status_100:
-                description:
-                - "Status code 100"
-            status_101:
-                description:
-                - "Status code 101"
-            status_102:
-                description:
-                - "Status code 102"
-            status_510:
-                description:
-                - "Status code 510"
-            status_303:
-                description:
-                - "Status code 303"
-            status_300:
-                description:
-                - "Status code 300"
-            status_301:
-                description:
-                - "Status code 301"
-            status_401:
-                description:
-                - "Status code 401"
-            status_400:
-                description:
-                - "Status code 400"
-            status_207:
-                description:
-                - "Status code 207"
-            status_206:
-                description:
-                - "Status code 206"
-            status_205:
-                description:
-                - "Status code 205"
-            status_204:
-                description:
-                - "Status code 204"
-            status_203:
-                description:
-                - "Status code 203"
-            status_202:
-                description:
-                - "Status code 202"
-            status_201:
-                description:
-                - "Status code 201"
             status_200:
                 description:
                 - "Status code 200"
-            status_423:
+                type: str
+            status_201:
                 description:
-                - "Status code 423"
-            status_422:
+                - "Status code 201"
+                type: str
+            status_202:
                 description:
-                - "Status code 422"
-            status_304:
+                - "Status code 202"
+                type: str
+            status_203:
                 description:
-                - "Status code 304"
-            status_305:
+                - "Status code 203"
+                type: str
+            status_204:
                 description:
-                - "Status code 305"
+                - "Status code 204"
+                type: str
+            status_205:
+                description:
+                - "Status code 205"
+                type: str
+            status_206:
+                description:
+                - "Status code 206"
+                type: str
+            status_207:
+                description:
+                - "Status code 207"
+                type: str
+            status_100:
+                description:
+                - "Status code 100"
+                type: str
+            status_101:
+                description:
+                - "Status code 101"
+                type: str
+            status_102:
+                description:
+                - "Status code 102"
+                type: str
+            status_300:
+                description:
+                - "Status code 300"
+                type: str
+            status_301:
+                description:
+                - "Status code 301"
+                type: str
             status_302:
                 description:
                 - "Status code 302"
-            status_426:
+                type: str
+            status_303:
                 description:
-                - "Status code 426"
-            status_425:
+                - "Status code 303"
+                type: str
+            status_304:
                 description:
-                - "Status code 425"
-            status_424:
+                - "Status code 304"
+                type: str
+            status_305:
                 description:
-                - "Status code 424"
-            status_508:
+                - "Status code 305"
+                type: str
+            status_306:
                 description:
-                - "Status code 508"
-            status_509:
+                - "Status code 306"
+                type: str
+            status_307:
                 description:
-                - "Status code 509"
-            status_403:
+                - "Status code 307"
+                type: str
+            status_400:
                 description:
-                - "Status code 403"
+                - "Status code 400"
+                type: str
+            status_401:
+                description:
+                - "Status code 401"
+                type: str
             status_402:
                 description:
                 - "Status code 402"
-            status_405:
+                type: str
+            status_403:
                 description:
-                - "Status code 405"
+                - "Status code 403"
+                type: str
             status_404:
                 description:
                 - "Status code 404"
-            status_407:
+                type: str
+            status_405:
                 description:
-                - "Status code 407"
-            status_2xx:
-                description:
-                - "status code 2XX"
-            status_409:
-                description:
-                - "Status code 409"
-            status_408:
-                description:
-                - "Status code 408"
-            status_502:
-                description:
-                - "Status code 502"
+                - "Status code 405"
+                type: str
             status_406:
                 description:
                 - "Status code 406"
-            status_504:
+                type: str
+            status_407:
                 description:
-                - "Status code 504"
-            status_505:
+                - "Status code 407"
+                type: str
+            status_408:
                 description:
-                - "Status code 505"
-            status_506:
+                - "Status code 408"
+                type: str
+            status_409:
                 description:
-                - "Status code 506"
-            status_507:
+                - "Status code 409"
+                type: str
+            status_410:
                 description:
-                - "Status code 507"
-            status_4xx:
+                - "Status code 410"
+                type: str
+            status_411:
                 description:
-                - "status code 4XX"
-            status_6xx:
+                - "Status code 411"
+                type: str
+            status_412:
                 description:
-                - "status code 6XX"
-            status_501:
+                - "Status code 412"
+                type: str
+            status_413:
                 description:
-                - "Status code 501"
+                - "Status code 413"
+                type: str
+            status_414:
+                description:
+                - "Status code 414"
+                type: str
+            status_415:
+                description:
+                - "Status code 415"
+                type: str
+            status_416:
+                description:
+                - "Status code 416"
+                type: str
+            status_417:
+                description:
+                - "Status code 417"
+                type: str
+            status_418:
+                description:
+                - "Status code 418"
+                type: str
+            status_422:
+                description:
+                - "Status code 422"
+                type: str
+            status_423:
+                description:
+                - "Status code 423"
+                type: str
+            status_424:
+                description:
+                - "Status code 424"
+                type: str
+            status_425:
+                description:
+                - "Status code 425"
+                type: str
+            status_426:
+                description:
+                - "Status code 426"
+                type: str
             status_449:
                 description:
                 - "Status code 449"
-            status_5xx:
+                type: str
+            status_450:
                 description:
-                - "status code 5XX"
+                - "Status code 450"
+                type: str
+            status_500:
+                description:
+                - "Status code 500"
+                type: str
+            status_501:
+                description:
+                - "Status code 501"
+                type: str
+            status_502:
+                description:
+                - "Status code 502"
+                type: str
+            status_503:
+                description:
+                - "Status code 503"
+                type: str
+            status_504:
+                description:
+                - "Status code 504"
+                type: str
+            status_505:
+                description:
+                - "Status code 505"
+                type: str
+            status_506:
+                description:
+                - "Status code 506"
+                type: str
+            status_507:
+                description:
+                - "Status code 507"
+                type: str
+            status_508:
+                description:
+                - "Status code 508"
+                type: str
+            status_509:
+                description:
+                - "Status code 509"
+                type: str
+            status_510:
+                description:
+                - "Status code 510"
+                type: str
+            status_1xx:
+                description:
+                - "status code 1XX"
+                type: str
+            status_2xx:
+                description:
+                - "status code 2XX"
+                type: str
             status_3xx:
                 description:
                 - "status code 3XX"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            status_4xx:
+                description:
+                - "status code 4XX"
+                type: str
+            status_5xx:
+                description:
+                - "status code 5XX"
+                type: str
+            status_6xx:
+                description:
+                - "status code 6XX"
+                type: str
+            status_unknown:
+                description:
+                - "Status code unknown"
+                type: str
 
 '''
 
@@ -347,200 +422,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'status_306': {
-                    'type': 'int',
-                },
-                'status_307': {
-                    'type': 'int',
-                },
-                'status_1xx': {
-                    'type': 'int',
-                },
-                'status_450': {
-                    'type': 'int',
-                },
-                'status_412': {
-                    'type': 'int',
-                },
-                'status_413': {
-                    'type': 'int',
-                },
-                'status_410': {
-                    'type': 'int',
-                },
-                'status_411': {
-                    'type': 'int',
-                },
-                'status_416': {
-                    'type': 'int',
-                },
-                'status_417': {
-                    'type': 'int',
-                },
-                'status_414': {
-                    'type': 'int',
-                },
-                'status_415': {
-                    'type': 'int',
-                },
-                'status_418': {
-                    'type': 'int',
-                },
-                'status_6xx': {
-                    'type': 'int',
-                },
-                'status_100': {
-                    'type': 'int',
-                },
-                'status_101': {
-                    'type': 'int',
-                },
-                'status_102': {
-                    'type': 'int',
-                },
-                'status_510': {
-                    'type': 'int',
-                },
-                'status_303': {
-                    'type': 'int',
-                },
-                'status_300': {
-                    'type': 'int',
-                },
-                'status_301': {
-                    'type': 'int',
-                },
-                'status_401': {
-                    'type': 'int',
-                },
-                'status_400': {
-                    'type': 'int',
-                },
-                'status_4xx': {
-                    'type': 'int',
-                },
-                'status_207': {
-                    'type': 'int',
-                },
-                'status_206': {
-                    'type': 'int',
-                },
-                'status_205': {
-                    'type': 'int',
-                },
-                'status_204': {
-                    'type': 'int',
-                },
-                'status_203': {
-                    'type': 'int',
-                },
-                'status_202': {
-                    'type': 'int',
-                },
-                'status_201': {
-                    'type': 'int',
-                },
-                'status_200': {
-                    'type': 'int',
-                },
-                'status_423': {
-                    'type': 'int',
-                },
-                'status_422': {
-                    'type': 'int',
-                },
-                'status_304': {
-                    'type': 'int',
-                },
-                'status_305': {
-                    'type': 'int',
-                },
-                'status_302': {
-                    'type': 'int',
-                },
-                'status_426': {
-                    'type': 'int',
-                },
-                'status_425': {
-                    'type': 'int',
-                },
-                'status_424': {
-                    'type': 'int',
-                },
-                'status_508': {
-                    'type': 'int',
-                },
-                'status_509': {
-                    'type': 'int',
-                },
-                'status_403': {
-                    'type': 'int',
-                },
-                'status_402': {
-                    'type': 'int',
-                },
-                'status_405': {
-                    'type': 'int',
-                },
-                'status_404': {
-                    'type': 'int',
-                },
-                'status_407': {
-                    'type': 'int',
-                },
-                'status_2xx': {
-                    'type': 'int',
-                },
-                'status_500': {
-                    'type': 'int',
-                },
-                'status_408': {
-                    'type': 'int',
-                },
-                'status_502': {
-                    'type': 'int',
-                },
-                'status_503': {
-                    'type': 'int',
-                },
-                'status_504': {
-                    'type': 'int',
-                },
-                'status_505': {
-                    'type': 'int',
-                },
-                'status_506': {
-                    'type': 'int',
-                },
-                'status_507': {
-                    'type': 'int',
-                },
-                'status_409': {
-                    'type': 'int',
-                },
-                'status_406': {
-                    'type': 'int',
-                },
-                'status_501': {
-                    'type': 'int',
-                },
-                'status_449': {
-                    'type': 'int',
-                },
-                'status_5xx': {
-                    'type': 'int',
-                },
-                'status_3xx': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -567,54 +450,225 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'status_2xx': {
+                    'type': 'int',
+                },
+                'status_200': {
+                    'type': 'int',
+                },
+                'status_201': {
+                    'type': 'int',
+                },
+                'status_202': {
+                    'type': 'int',
+                },
+                'status_203': {
+                    'type': 'int',
+                },
+                'status_204': {
+                    'type': 'int',
+                },
+                'status_205': {
+                    'type': 'int',
+                },
+                'status_206': {
+                    'type': 'int',
+                },
+                'status_207': {
+                    'type': 'int',
+                },
+                'status_1xx': {
+                    'type': 'int',
+                },
+                'status_100': {
+                    'type': 'int',
+                },
+                'status_101': {
+                    'type': 'int',
+                },
+                'status_102': {
+                    'type': 'int',
+                },
+                'status_3xx': {
+                    'type': 'int',
+                },
+                'status_300': {
+                    'type': 'int',
+                },
+                'status_301': {
+                    'type': 'int',
+                },
+                'status_302': {
+                    'type': 'int',
+                },
+                'status_303': {
+                    'type': 'int',
+                },
+                'status_304': {
+                    'type': 'int',
+                },
+                'status_305': {
+                    'type': 'int',
+                },
+                'status_306': {
+                    'type': 'int',
+                },
+                'status_307': {
+                    'type': 'int',
+                },
+                'status_4xx': {
+                    'type': 'int',
+                },
+                'status_400': {
+                    'type': 'int',
+                },
+                'status_401': {
+                    'type': 'int',
+                },
+                'status_402': {
+                    'type': 'int',
+                },
+                'status_403': {
+                    'type': 'int',
+                },
+                'status_404': {
+                    'type': 'int',
+                },
+                'status_405': {
+                    'type': 'int',
+                },
+                'status_406': {
+                    'type': 'int',
+                },
+                'status_407': {
+                    'type': 'int',
+                },
+                'status_408': {
+                    'type': 'int',
+                },
+                'status_409': {
+                    'type': 'int',
+                },
+                'status_410': {
+                    'type': 'int',
+                },
+                'status_411': {
+                    'type': 'int',
+                },
+                'status_412': {
+                    'type': 'int',
+                },
+                'status_413': {
+                    'type': 'int',
+                },
+                'status_414': {
+                    'type': 'int',
+                },
+                'status_415': {
+                    'type': 'int',
+                },
+                'status_416': {
+                    'type': 'int',
+                },
+                'status_417': {
+                    'type': 'int',
+                },
+                'status_418': {
+                    'type': 'int',
+                },
+                'status_422': {
+                    'type': 'int',
+                },
+                'status_423': {
+                    'type': 'int',
+                },
+                'status_424': {
+                    'type': 'int',
+                },
+                'status_425': {
+                    'type': 'int',
+                },
+                'status_426': {
+                    'type': 'int',
+                },
+                'status_449': {
+                    'type': 'int',
+                },
+                'status_450': {
+                    'type': 'int',
+                },
+                'status_5xx': {
+                    'type': 'int',
+                },
+                'status_500': {
+                    'type': 'int',
+                },
+                'status_501': {
+                    'type': 'int',
+                },
+                'status_502': {
+                    'type': 'int',
+                },
+                'status_503': {
+                    'type': 'int',
+                },
+                'status_504': {
+                    'type': 'int',
+                },
+                'status_505': {
+                    'type': 'int',
+                },
+                'status_506': {
+                    'type': 'int',
+                },
+                'status_507': {
+                    'type': 'int',
+                },
+                'status_508': {
+                    'type': 'int',
+                },
+                'status_509': {
+                    'type': 'int',
+                },
+                'status_510': {
+                    'type': 'int',
+                },
+                'status_6xx': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'status_503': {
+            'status_200': {
                 'type': 'str',
             },
-            'status_306': {
+            'status_201': {
                 'type': 'str',
             },
-            'status_500': {
+            'status_202': {
                 'type': 'str',
             },
-            'status_307': {
+            'status_203': {
                 'type': 'str',
             },
-            'status_1xx': {
+            'status_204': {
                 'type': 'str',
             },
-            'status_450': {
+            'status_205': {
                 'type': 'str',
             },
-            'status_412': {
+            'status_206': {
                 'type': 'str',
             },
-            'status_413': {
-                'type': 'str',
-            },
-            'status_410': {
-                'type': 'str',
-            },
-            'status_411': {
-                'type': 'str',
-            },
-            'status_416': {
-                'type': 'str',
-            },
-            'status_417': {
-                'type': 'str',
-            },
-            'status_414': {
-                'type': 'str',
-            },
-            'status_415': {
-                'type': 'str',
-            },
-            'status_418': {
-                'type': 'str',
-            },
-            'status_unknown': {
+            'status_207': {
                 'type': 'str',
             },
             'status_100': {
@@ -626,52 +680,16 @@ def get_argspec():
             'status_102': {
                 'type': 'str',
             },
-            'status_510': {
-                'type': 'str',
-            },
-            'status_303': {
-                'type': 'str',
-            },
             'status_300': {
                 'type': 'str',
             },
             'status_301': {
                 'type': 'str',
             },
-            'status_401': {
+            'status_302': {
                 'type': 'str',
             },
-            'status_400': {
-                'type': 'str',
-            },
-            'status_207': {
-                'type': 'str',
-            },
-            'status_206': {
-                'type': 'str',
-            },
-            'status_205': {
-                'type': 'str',
-            },
-            'status_204': {
-                'type': 'str',
-            },
-            'status_203': {
-                'type': 'str',
-            },
-            'status_202': {
-                'type': 'str',
-            },
-            'status_201': {
-                'type': 'str',
-            },
-            'status_200': {
-                'type': 'str',
-            },
-            'status_423': {
-                'type': 'str',
-            },
-            'status_422': {
+            'status_303': {
                 'type': 'str',
             },
             'status_304': {
@@ -680,52 +698,100 @@ def get_argspec():
             'status_305': {
                 'type': 'str',
             },
-            'status_302': {
+            'status_306': {
                 'type': 'str',
             },
-            'status_426': {
+            'status_307': {
                 'type': 'str',
             },
-            'status_425': {
+            'status_400': {
                 'type': 'str',
             },
-            'status_424': {
-                'type': 'str',
-            },
-            'status_508': {
-                'type': 'str',
-            },
-            'status_509': {
-                'type': 'str',
-            },
-            'status_403': {
+            'status_401': {
                 'type': 'str',
             },
             'status_402': {
                 'type': 'str',
             },
-            'status_405': {
+            'status_403': {
                 'type': 'str',
             },
             'status_404': {
                 'type': 'str',
             },
+            'status_405': {
+                'type': 'str',
+            },
+            'status_406': {
+                'type': 'str',
+            },
             'status_407': {
-                'type': 'str',
-            },
-            'status_2xx': {
-                'type': 'str',
-            },
-            'status_409': {
                 'type': 'str',
             },
             'status_408': {
                 'type': 'str',
             },
+            'status_409': {
+                'type': 'str',
+            },
+            'status_410': {
+                'type': 'str',
+            },
+            'status_411': {
+                'type': 'str',
+            },
+            'status_412': {
+                'type': 'str',
+            },
+            'status_413': {
+                'type': 'str',
+            },
+            'status_414': {
+                'type': 'str',
+            },
+            'status_415': {
+                'type': 'str',
+            },
+            'status_416': {
+                'type': 'str',
+            },
+            'status_417': {
+                'type': 'str',
+            },
+            'status_418': {
+                'type': 'str',
+            },
+            'status_422': {
+                'type': 'str',
+            },
+            'status_423': {
+                'type': 'str',
+            },
+            'status_424': {
+                'type': 'str',
+            },
+            'status_425': {
+                'type': 'str',
+            },
+            'status_426': {
+                'type': 'str',
+            },
+            'status_449': {
+                'type': 'str',
+            },
+            'status_450': {
+                'type': 'str',
+            },
+            'status_500': {
+                'type': 'str',
+            },
+            'status_501': {
+                'type': 'str',
+            },
             'status_502': {
                 'type': 'str',
             },
-            'status_406': {
+            'status_503': {
                 'type': 'str',
             },
             'status_504': {
@@ -740,27 +806,36 @@ def get_argspec():
             'status_507': {
                 'type': 'str',
             },
+            'status_508': {
+                'type': 'str',
+            },
+            'status_509': {
+                'type': 'str',
+            },
+            'status_510': {
+                'type': 'str',
+            },
+            'status_1xx': {
+                'type': 'str',
+            },
+            'status_2xx': {
+                'type': 'str',
+            },
+            'status_3xx': {
+                'type': 'str',
+            },
             'status_4xx': {
-                'type': 'str',
-            },
-            'status_6xx': {
-                'type': 'str',
-            },
-            'status_501': {
-                'type': 'str',
-            },
-            'status_449': {
                 'type': 'str',
             },
             'status_5xx': {
                 'type': 'str',
             },
-            'status_3xx': {
+            'status_6xx': {
+                'type': 'str',
+            },
+            'status_unknown': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_pki_scep_cert
 description:
     - SCEP Certificate enrollment object
-short_description: Configures A10 pki.scep-cert
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,134 +22,165 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    renew_every_type:
+    name:
         description:
-        - "'hour'= Periodic interval in hours; 'day'= Periodic interval in days; 'week'=
-          Periodic interval in weeks; 'month'= Periodic interval in months(1 month=30
-          days);"
-        required: False
-    encrypted:
+        - "Specify Certificate name to be enrolled"
+        type: str
+        required: True
+    url:
         description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-        required: False
-    log_level:
-        description:
-        - "level for logging output of scepclient commands(default 1 and detailed 4)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    renew_before_type:
-        description:
-        - "'hour'= Number of hours before cert expiry; 'day'= Number of days before cert
-          expiry; 'week'= Number of weeks before cert expiry; 'month'= Number of months
-          before cert expiry(1 month=30 days);"
-        required: False
-    renew_every:
-        description:
-        - "Specify periodic interval in which to renew the certificate"
-        required: False
-    key_length:
-        description:
-        - "'1024'= Key size 1024 bits; '2048'= Key size 2048 bits(default); '4096'= Key
-          size 4096 bits; '8192'= Key size 8192 bits;"
-        required: False
-    method:
-        description:
-        - "'GET'= GET request; 'POST'= POST request;"
+        - "Specify the Enrollment Agent's absolute URL (Format= http=//host/path)"
+        type: str
         required: False
     dn:
         description:
         - "Specify the Distinguished-Name to use while enrolling the certificate (Format=
           'cn=user, dc=example, dc=com')"
+        type: str
         required: False
     subject_alternate_name:
         description:
         - "Field subject_alternate_name"
+        type: dict
         required: False
         suboptions:
             san_type:
                 description:
                 - "'email'= Enter e-mail address of the subject; 'dns'= Enter hostname of the
           subject; 'ip'= Enter IP address of the subject;"
+                type: str
             san_value:
                 description:
                 - "Value of subject-alternate-name"
-    renew_every_value:
+                type: str
+    enroll:
         description:
-        - "Value of renewal period"
+        - "Initiates enrollment of device with the CA"
+        type: bool
         required: False
-    max_polltime:
+    log_level:
         description:
-        - "Maximum time in seconds to poll when SCEP response is PENDING (default 180)"
+        - "level for logging output of scepclient commands(default 1 and detailed 4)"
+        type: int
         required: False
     password:
         description:
         - "Specify the password used to enroll the device's certificate"
-        required: False
-    minute:
-        description:
-        - "Periodic interval in minutes"
+        type: bool
         required: False
     secret_string:
         description:
         - "secret password"
+        type: str
         required: False
-    enroll:
+    encrypted:
         description:
-        - "Initiates enrollment of device with the CA"
-        required: False
-    renew_before_value:
-        description:
-        - "Value of renewal period"
-        required: False
-    name:
-        description:
-        - "Specify Certificate name to be enrolled"
-        required: True
-    url:
-        description:
-        - "Specify the Enrollment Agent's absolute URL (Format= http=//host/path)"
-        required: False
-    interval:
-        description:
-        - "Interval time in seconds to poll when SCEP response is PENDING (default 5)"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+        type: str
         required: False
     renew_before:
         description:
         - "Specify interval before certificate expiry to renew the certificate"
+        type: bool
+        required: False
+    renew_before_type:
+        description:
+        - "'hour'= Number of hours before cert expiry; 'day'= Number of days before cert
+          expiry; 'week'= Number of weeks before cert expiry; 'month'= Number of months
+          before cert expiry(1 month=30 days);"
+        type: str
+        required: False
+    renew_before_value:
+        description:
+        - "Value of renewal period"
+        type: int
+        required: False
+    renew_every:
+        description:
+        - "Specify periodic interval in which to renew the certificate"
+        type: bool
+        required: False
+    minute:
+        description:
+        - "Periodic interval in minutes"
+        type: int
+        required: False
+    renew_every_type:
+        description:
+        - "'hour'= Periodic interval in hours; 'day'= Periodic interval in days; 'week'=
+          Periodic interval in weeks; 'month'= Periodic interval in months(1 month=30
+          days);"
+        type: str
+        required: False
+    renew_every_value:
+        description:
+        - "Value of renewal period"
+        type: int
+        required: False
+    key_length:
+        description:
+        - "'1024'= Key size 1024 bits; '2048'= Key size 2048 bits(default); '4096'= Key
+          size 4096 bits; '8192'= Key size 8192 bits;"
+        type: str
+        required: False
+    method:
+        description:
+        - "'GET'= GET request; 'POST'= POST request;"
+        type: str
+        required: False
+    interval:
+        description:
+        - "Interval time in seconds to poll when SCEP response is PENDING (default 5)"
+        type: int
+        required: False
+    max_polltime:
+        description:
+        - "Maximum time in seconds to poll when SCEP response is PENDING (default 180)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -226,33 +255,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'renew_every_type': {
+        'name': {
             'type': 'str',
-            'choices': ['hour', 'day', 'week', 'month']
+            'required': True,
         },
-        'encrypted': {
+        'url': {
             'type': 'str',
-        },
-        'log_level': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'renew_before_type': {
-            'type': 'str',
-            'choices': ['hour', 'day', 'week', 'month']
-        },
-        'renew_every': {
-            'type': 'bool',
-        },
-        'key_length': {
-            'type': 'str',
-            'choices': ['1024', '2048', '4096', '8192']
-        },
-        'method': {
-            'type': 'str',
-            'choices': ['GET', 'POST']
         },
         'dn': {
             'type': 'str',
@@ -267,42 +275,63 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'renew_every_value': {
-            'type': 'int',
+        'enroll': {
+            'type': 'bool',
         },
-        'max_polltime': {
+        'log_level': {
             'type': 'int',
         },
         'password': {
             'type': 'bool',
         },
-        'minute': {
-            'type': 'int',
-        },
         'secret_string': {
             'type': 'str',
         },
-        'enroll': {
-            'type': 'bool',
-        },
-        'renew_before_value': {
-            'type': 'int',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'url': {
-            'type': 'str',
-        },
-        'interval': {
-            'type': 'int',
-        },
-        'user_tag': {
+        'encrypted': {
             'type': 'str',
         },
         'renew_before': {
             'type': 'bool',
+        },
+        'renew_before_type': {
+            'type': 'str',
+            'choices': ['hour', 'day', 'week', 'month']
+        },
+        'renew_before_value': {
+            'type': 'int',
+        },
+        'renew_every': {
+            'type': 'bool',
+        },
+        'minute': {
+            'type': 'int',
+        },
+        'renew_every_type': {
+            'type': 'str',
+            'choices': ['hour', 'day', 'week', 'month']
+        },
+        'renew_every_value': {
+            'type': 'int',
+        },
+        'key_length': {
+            'type': 'str',
+            'choices': ['1024', '2048', '4096', '8192']
+        },
+        'method': {
+            'type': 'str',
+            'choices': ['GET', 'POST']
+        },
+        'interval': {
+            'type': 'int',
+        },
+        'max_polltime': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

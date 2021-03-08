@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_ocsp
 description:
     - OCSP Authentication Server
-short_description: Configures A10 aam.authentication.server.ocsp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -73,120 +84,152 @@ options:
           Timeout Response; 'response-other'= Total OCSP Other Response; 'job-start-
           error'= Total OCSP Job Start Error; 'polling-control-error'= Total OCSP Polling
           Control Error;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            stapling_request_normal:
-                description:
-                - "Total OSCP Stapling Normal Request"
-            request_normal:
-                description:
-                - "Total OSCP Normal Request"
-            stapling_request_dropped:
-                description:
-                - "Total OCSP Stapling Dropped Request"
-            response_success:
-                description:
-                - "Total OCSP Success Response"
-            instance_list:
-                description:
-                - "Field instance_list"
-            stapling_response_other:
-                description:
-                - "Total OCSP Stapling Other Response"
-            stapling_certificate_revoked:
-                description:
-                - "Total OCSP Stapling Revoked Certificate Response"
-            stapling_response_failure:
-                description:
-                - "Total OCSP Stapling Failure Response"
-            stapling_response_timeout:
-                description:
-                - "Total OCSP Stapling Timeout Response"
-            stapling_response_error:
-                description:
-                - "Total OCSP Stapling Error Response"
-            stapling_certificate_unknown:
-                description:
-                - "Total OCSP Stapling Unknown Certificate Response"
-            response_other:
-                description:
-                - "Total OCSP Other Response"
-            stapling_certificate_good:
-                description:
-                - "Total OCSP Stapling Good Certificate Response"
-            response_failure:
-                description:
-                - "Total OCSP Failure Response"
-            polling_control_error:
-                description:
-                - "Total OCSP Polling Control Error"
-            request_dropped:
-                description:
-                - "Total OCSP Dropped Request"
-            response_timeout:
-                description:
-                - "Total OCSP Timeout Response"
-            job_start_error:
-                description:
-                - "Total OCSP Job Start Error"
-            response_error:
-                description:
-                - "Total OCSP Error Response"
-            stapling_response_success:
-                description:
-                - "Total OCSP Stapling Success Response"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
     instance_list:
         description:
         - "Field instance_list"
+        type: list
         required: False
         suboptions:
-            health_check_string:
-                description:
-                - "Health monitor name"
-            responder_ca:
-                description:
-                - "Specify the trusted OCSP responder's CA cert filename"
             name:
                 description:
                 - "Specify OCSP authentication server name"
+                type: str
             url:
                 description:
                 - "Specify the OCSP server's address (Format= http=//host[=port]/) (The OCSP
           server's address(Format= http=//host[=port]/))"
+                type: str
+            responder_ca:
+                description:
+                - "Specify the trusted OCSP responder's CA cert filename"
+                type: str
             responder_cert:
                 description:
                 - "Specify the trusted OCSP responder's cert filename"
-            health_check_disable:
-                description:
-                - "Disable configured health check configuration"
-            http_version:
-                description:
-                - "Set HTTP version (default 1.0)"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            version_type:
-                description:
-                - "'1.1'= HTTP version 1.1;"
-            port_health_check_disable:
-                description:
-                - "Disable configured port health check configuration"
-            port_health_check:
-                description:
-                - "Check port's health status"
+                type: str
             health_check:
                 description:
                 - "Check server's health status"
+                type: bool
+            health_check_string:
+                description:
+                - "Health monitor name"
+                type: str
+            health_check_disable:
+                description:
+                - "Disable configured health check configuration"
+                type: bool
+            port_health_check:
+                description:
+                - "Check port's health status"
+                type: str
+            port_health_check_disable:
+                description:
+                - "Disable configured port health check configuration"
+                type: bool
+            http_version:
+                description:
+                - "Set HTTP version (default 1.0)"
+                type: bool
+            version_type:
+                description:
+                - "'1.1'= HTTP version 1.1;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            stapling_certificate_good:
+                description:
+                - "Total OCSP Stapling Good Certificate Response"
+                type: str
+            stapling_certificate_revoked:
+                description:
+                - "Total OCSP Stapling Revoked Certificate Response"
+                type: str
+            stapling_certificate_unknown:
+                description:
+                - "Total OCSP Stapling Unknown Certificate Response"
+                type: str
+            stapling_request_normal:
+                description:
+                - "Total OSCP Stapling Normal Request"
+                type: str
+            stapling_request_dropped:
+                description:
+                - "Total OCSP Stapling Dropped Request"
+                type: str
+            stapling_response_success:
+                description:
+                - "Total OCSP Stapling Success Response"
+                type: str
+            stapling_response_failure:
+                description:
+                - "Total OCSP Stapling Failure Response"
+                type: str
+            stapling_response_error:
+                description:
+                - "Total OCSP Stapling Error Response"
+                type: str
+            stapling_response_timeout:
+                description:
+                - "Total OCSP Stapling Timeout Response"
+                type: str
+            stapling_response_other:
+                description:
+                - "Total OCSP Stapling Other Response"
+                type: str
+            request_normal:
+                description:
+                - "Total OSCP Normal Request"
+                type: str
+            request_dropped:
+                description:
+                - "Total OCSP Dropped Request"
+                type: str
+            response_success:
+                description:
+                - "Total OCSP Success Response"
+                type: str
+            response_failure:
+                description:
+                - "Total OCSP Failure Response"
+                type: str
+            response_error:
+                description:
+                - "Total OCSP Error Response"
+                type: str
+            response_timeout:
+                description:
+                - "Total OCSP Timeout Response"
+                type: str
+            response_other:
+                description:
+                - "Total OCSP Other Response"
+                type: str
+            job_start_error:
+                description:
+                - "Total OCSP Job Start Error"
+                type: str
+            polling_control_error:
+                description:
+                - "Total OCSP Polling Control Error"
+                type: str
+            instance_list:
+                description:
+                - "Field instance_list"
+                type: list
 
 '''
 
@@ -242,6 +285,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -261,123 +307,8 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'stapling_request_normal': {
-                'type': 'str',
-            },
-            'request_normal': {
-                'type': 'str',
-            },
-            'stapling_request_dropped': {
-                'type': 'str',
-            },
-            'response_success': {
-                'type': 'str',
-            },
-            'instance_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'stapling_timeout': {
-                        'type': 'str',
-                    },
-                    'stapling_fail': {
-                        'type': 'str',
-                    },
-                    'certificate_revoked': {
-                        'type': 'str',
-                    },
-                    'request': {
-                        'type': 'str',
-                    },
-                    'stapling_certificate_revoked': {
-                        'type': 'str',
-                    },
-                    'certificate_unknown': {
-                        'type': 'str',
-                    },
-                    'stapling_certificate_unknown': {
-                        'type': 'str',
-                    },
-                    'stapling_certificate_good': {
-                        'type': 'str',
-                    },
-                    'timeout': {
-                        'type': 'str',
-                    },
-                    'fail': {
-                        'type': 'str',
-                    },
-                    'certificate_good': {
-                        'type': 'str',
-                    },
-                    'stapling_request': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'stapling_response_other': {
-                'type': 'str',
-            },
-            'stapling_certificate_revoked': {
-                'type': 'str',
-            },
-            'stapling_response_failure': {
-                'type': 'str',
-            },
-            'stapling_response_timeout': {
-                'type': 'str',
-            },
-            'stapling_response_error': {
-                'type': 'str',
-            },
-            'stapling_certificate_unknown': {
-                'type': 'str',
-            },
-            'response_other': {
-                'type': 'str',
-            },
-            'stapling_certificate_good': {
-                'type': 'str',
-            },
-            'response_failure': {
-                'type': 'str',
-            },
-            'polling_control_error': {
-                'type': 'str',
-            },
-            'request_dropped': {
-                'type': 'str',
-            },
-            'response_timeout': {
-                'type': 'str',
-            },
-            'job_start_error': {
-                'type': 'str',
-            },
-            'response_error': {
-                'type': 'str',
-            },
-            'stapling_response_success': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'instance_list': {
             'type': 'list',
-            'health_check_string': {
-                'type': 'str',
-            },
-            'responder_ca': {
-                'type': 'str',
-            },
             'name': {
                 'type': 'str',
                 'required': True,
@@ -385,14 +316,36 @@ def get_argspec():
             'url': {
                 'type': 'str',
             },
+            'responder_ca': {
+                'type': 'str',
+            },
             'responder_cert': {
+                'type': 'str',
+            },
+            'health_check': {
+                'type': 'bool',
+            },
+            'health_check_string': {
                 'type': 'str',
             },
             'health_check_disable': {
                 'type': 'bool',
             },
+            'port_health_check': {
+                'type': 'str',
+            },
+            'port_health_check_disable': {
+                'type': 'bool',
+            },
             'http_version': {
                 'type': 'bool',
+            },
+            'version_type': {
+                'type': 'str',
+                'choices': ['1.1']
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -409,22 +362,112 @@ def get_argspec():
                         'stapling-fail'
                     ]
                 }
-            },
-            'version_type': {
-                'type': 'str',
-                'choices': ['1.1']
-            },
-            'port_health_check_disable': {
-                'type': 'bool',
-            },
-            'port_health_check': {
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'stapling_certificate_good': {
                 'type': 'str',
             },
-            'health_check': {
-                'type': 'bool',
-            },
-            'uuid': {
+            'stapling_certificate_revoked': {
                 'type': 'str',
+            },
+            'stapling_certificate_unknown': {
+                'type': 'str',
+            },
+            'stapling_request_normal': {
+                'type': 'str',
+            },
+            'stapling_request_dropped': {
+                'type': 'str',
+            },
+            'stapling_response_success': {
+                'type': 'str',
+            },
+            'stapling_response_failure': {
+                'type': 'str',
+            },
+            'stapling_response_error': {
+                'type': 'str',
+            },
+            'stapling_response_timeout': {
+                'type': 'str',
+            },
+            'stapling_response_other': {
+                'type': 'str',
+            },
+            'request_normal': {
+                'type': 'str',
+            },
+            'request_dropped': {
+                'type': 'str',
+            },
+            'response_success': {
+                'type': 'str',
+            },
+            'response_failure': {
+                'type': 'str',
+            },
+            'response_error': {
+                'type': 'str',
+            },
+            'response_timeout': {
+                'type': 'str',
+            },
+            'response_other': {
+                'type': 'str',
+            },
+            'job_start_error': {
+                'type': 'str',
+            },
+            'polling_control_error': {
+                'type': 'str',
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'request': {
+                        'type': 'str',
+                    },
+                    'certificate_good': {
+                        'type': 'str',
+                    },
+                    'certificate_revoked': {
+                        'type': 'str',
+                    },
+                    'certificate_unknown': {
+                        'type': 'str',
+                    },
+                    'timeout': {
+                        'type': 'str',
+                    },
+                    'fail': {
+                        'type': 'str',
+                    },
+                    'stapling_request': {
+                        'type': 'str',
+                    },
+                    'stapling_certificate_good': {
+                        'type': 'str',
+                    },
+                    'stapling_certificate_revoked': {
+                        'type': 'str',
+                    },
+                    'stapling_certificate_unknown': {
+                        'type': 'str',
+                    },
+                    'stapling_timeout': {
+                        'type': 'str',
+                    },
+                    'stapling_fail': {
+                        'type': 'str',
+                    }
+                }
             }
         }
     })

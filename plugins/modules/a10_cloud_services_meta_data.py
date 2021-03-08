@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cloud_services_meta_data
 description:
     - user-data Services configuration only works in shared partition
-short_description: Configures A10 cloud.services.meta-data
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,93 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    prevent_user_ops:
-        description:
-        - "Prevents user from being added command is in user-data"
-        required: False
-    prevent_webservice:
-        description:
-        - "Prevents a10_license configuration in YAML config"
-        required: False
-    prevent_license:
-        description:
-        - "Prevents a10_license configuration in YAML config"
-        required: False
-    prevent_admin_ssh_key:
-        description:
-        - "Prevents admin ssh-key from being added if in YAML config"
-        required: False
-    prevent_autofill:
-        description:
-        - "prevents use of meta-data to complete user_data configuration"
-        required: False
-    prevent_admin_passwd:
-        description:
-        - "Prevents admin password from being changed if in YAML config"
-        required: False
-    prevent_cloud_service:
-        description:
-        - "Prevents cloud-service configuration in YAML config"
-        required: False
-    provider:
-        description:
-        - "'aws'= AWS user-data services; 'openstack'= OpenStack user-data services;"
+        type: str
         required: False
     action:
         description:
         - "'enable'= enable; 'disable'= disable;"
+        type: str
+        required: False
+    provider:
+        description:
+        - "'aws'= AWS user-data services; 'openstack'= OpenStack user-data services;"
+        type: str
+        required: False
+    prevent_autofill:
+        description:
+        - "prevents use of meta-data to complete user_data configuration"
+        type: bool
+        required: False
+    prevent_admin_passwd:
+        description:
+        - "Prevents admin password from being changed if in YAML config"
+        type: bool
+        required: False
+    prevent_admin_ssh_key:
+        description:
+        - "Prevents admin ssh-key from being added if in YAML config"
+        type: bool
+        required: False
+    prevent_user_ops:
+        description:
+        - "Prevents user from being added command is in user-data"
+        type: bool
         required: False
     prevent_blob:
         description:
         - "Prevents a10_blob from loading in YAML config"
+        type: bool
+        required: False
+    prevent_license:
+        description:
+        - "Prevents a10_license configuration in YAML config"
+        type: bool
+        required: False
+    prevent_webservice:
+        description:
+        - "Prevents a10_license configuration in YAML config"
+        type: bool
+        required: False
+    prevent_cloud_service:
+        description:
+        - "Prevents cloud-service configuration in YAML config"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -156,20 +172,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
+        'action': {
             'type': 'str',
+            'choices': ['enable', 'disable']
         },
-        'prevent_user_ops': {
-            'type': 'bool',
-        },
-        'prevent_webservice': {
-            'type': 'bool',
-        },
-        'prevent_license': {
-            'type': 'bool',
-        },
-        'prevent_admin_ssh_key': {
-            'type': 'bool',
+        'provider': {
+            'type': 'str',
+            'choices': ['aws', 'openstack']
         },
         'prevent_autofill': {
             'type': 'bool',
@@ -177,19 +186,26 @@ def get_argspec():
         'prevent_admin_passwd': {
             'type': 'bool',
         },
-        'prevent_cloud_service': {
+        'prevent_admin_ssh_key': {
             'type': 'bool',
         },
-        'provider': {
-            'type': 'str',
-            'choices': ['aws', 'openstack']
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
+        'prevent_user_ops': {
+            'type': 'bool',
         },
         'prevent_blob': {
             'type': 'bool',
+        },
+        'prevent_license': {
+            'type': 'bool',
+        },
+        'prevent_webservice': {
+            'type': 'bool',
+        },
+        'prevent_cloud_service': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

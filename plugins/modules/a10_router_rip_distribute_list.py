@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_rip_distribute_list
 description:
     - Filter networks in routing updates
-short_description: Configures A10 router.rip.distribute-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,73 +22,92 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     acl_cfg:
         description:
         - "Field acl_cfg"
+        type: list
         required: False
         suboptions:
-            acl_direction:
-                description:
-                - "'in'= Filter incoming routing updates; 'out'= Filter outgoing routing updates;"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
             acl:
                 description:
                 - "Access-list name"
-            trunk:
+                type: str
+            acl_direction:
                 description:
-                - "Trunk interface (Trunk interface number)"
+                - "'in'= Filter incoming routing updates; 'out'= Filter outgoing routing updates;"
+                type: str
             ethernet:
                 description:
                 - "Ethernet interface (Port number)"
-    prefix:
-        description:
-        - "Field prefix"
-        required: False
-        suboptions:
-            uuid:
+                type: str
+            loopback:
                 description:
-                - "uuid of the object"
-            prefix_cfg:
+                - "Loopback interface (Port number)"
+                type: str
+            trunk:
                 description:
-                - "Field prefix_cfg"
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+                type: str
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    prefix:
+        description:
+        - "Field prefix"
+        type: dict
+        required: False
+        suboptions:
+            prefix_cfg:
+                description:
+                - "Field prefix_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -147,49 +164,37 @@ def get_argspec():
     rv.update({
         'acl_cfg': {
             'type': 'list',
+            'acl': {
+                'type': 'str',
+            },
             'acl_direction': {
                 'type': 'str',
                 'choices': ['in', 'out']
             },
-            've': {
+            'ethernet': {
                 'type': 'str',
             },
             'loopback': {
                 'type': 'str',
             },
-            'tunnel': {
-                'type': 'str',
-            },
-            'acl': {
-                'type': 'str',
-            },
             'trunk': {
                 'type': 'str',
             },
-            'ethernet': {
+            'tunnel': {
+                'type': 'str',
+            },
+            've': {
                 'type': 'str',
             }
         },
+        'uuid': {
+            'type': 'str',
+        },
         'prefix': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
             'prefix_cfg': {
                 'type': 'list',
-                've': {
-                    'type': 'str',
-                },
-                'loopback': {
-                    'type': 'str',
-                },
-                'tunnel': {
-                    'type': 'str',
-                },
                 'prefix_list': {
-                    'type': 'str',
-                },
-                'trunk': {
                     'type': 'str',
                 },
                 'prefix_list_direction': {
@@ -198,11 +203,23 @@ def get_argspec():
                 },
                 'ethernet': {
                     'type': 'str',
+                },
+                'loopback': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'tunnel': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
                 }
+            },
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

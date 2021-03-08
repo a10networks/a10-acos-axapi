@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_admin_lockout
 description:
     - Admin user lockout configuration
-short_description: Configures A10 admin-lockout
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,65 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     duration:
         description:
         - "Admin user lockout duration, in minutes, by default 10 (Admin user lockout
           duration in minutes, 0 means forever)"
-        required: False
-    threshold:
-        description:
-        - "Admin user lockout threshold, by default 5"
+        type: int
         required: False
     enable:
         description:
         - "Enable admin user lockout"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     reset_time:
         description:
         - "After how long to reset the lockout counter, in minutes, by default 10 (Time in
           minutes after which to reset the lockout counter)"
+        type: int
+        required: False
+    threshold:
+        description:
+        - "Admin user lockout threshold, by default 5"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -131,17 +141,17 @@ def get_argspec():
         'duration': {
             'type': 'int',
         },
-        'threshold': {
-            'type': 'int',
-        },
         'enable': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
         'reset_time': {
             'type': 'int',
+        },
+        'threshold': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

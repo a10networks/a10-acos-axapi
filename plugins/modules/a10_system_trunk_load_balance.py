@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_trunk_load_balance
 description:
     - Configure Trunk load balancing options
-short_description: Configures A10 system.trunk.load-balance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,43 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    use_l4:
-        description:
-        - "Layer-3/4 Header based load balancing"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     use_l3:
         description:
         - "Layer-3 Header based load balancing"
+        type: bool
+        required: False
+    use_l4:
+        description:
+        - "Layer-3/4 Header based load balancing"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -116,14 +124,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'use_l3': {
+            'type': 'bool',
+        },
         'use_l4': {
             'type': 'bool',
         },
         'uuid': {
             'type': 'str',
-        },
-        'use_l3': {
-            'type': 'bool',
         }
     })
     return rv

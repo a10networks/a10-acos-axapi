@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_crl_srcip
 description:
     - Configure connection rate limit
-short_description: Configures A10 slb.crl-srcip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            crl_srcip_lockedout_ips:
-                description:
-                - "Field crl_srcip_lockedout_ips"
-            lockedout_ips_count:
-                description:
-                - "Field lockedout_ips_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -73,42 +73,63 @@ options:
           sessions consumed; 'called'= Threshold check count; 'permitted'= Honor
           threshold  count; 'threshold_exceed'= Threshold exceeded count; 'lockout_drop'=
           Lockout drops; 'log_msg_sent'= Log messages sent;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            crl_srcip_lockedout_ips:
+                description:
+                - "Field crl_srcip_lockedout_ips"
+                type: list
+            lockedout_ips_count:
+                description:
+                - "Field lockedout_ips_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            threshold_exceed:
-                description:
-                - "Threshold exceeded count"
-            lockout_drop:
-                description:
-                - "Lockout drops"
-            called:
-                description:
-                - "Threshold check count"
-            sessions_freed:
-                description:
-                - "Sessions freed"
-            permitted:
-                description:
-                - "Honor threshold  count"
-            log_msg_sent:
-                description:
-                - "Log messages sent"
             sessions_alloc:
                 description:
                 - "Sessions allocated"
+                type: str
+            sessions_freed:
+                description:
+                - "Sessions freed"
+                type: str
             out_of_sessions:
                 description:
                 - "Out of sessions"
+                type: str
             too_many_sessions:
                 description:
                 - "Too many sessions consumed"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            called:
+                description:
+                - "Threshold check count"
+                type: str
+            permitted:
+                description:
+                - "Honor threshold  count"
+                type: str
+            threshold_exceed:
+                description:
+                - "Threshold exceeded count"
+                type: str
+            lockout_drop:
+                description:
+                - "Lockout drops"
+                type: str
+            log_msg_sent:
+                description:
+                - "Log messages sent"
+                type: str
 
 '''
 
@@ -164,29 +185,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'crl_srcip_lockedout_ips': {
-                'type': 'list',
-                'active': {
-                    'type': 'int',
-                },
-                'start': {
-                    'type': 'str',
-                },
-                'client_ip': {
-                    'type': 'str',
-                },
-                'drops': {
-                    'type': 'int',
-                },
-                'end': {
-                    'type': 'str',
-                }
-            },
-            'lockedout_ips_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -201,27 +201,36 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'crl_srcip_lockedout_ips': {
+                'type': 'list',
+                'client_ip': {
+                    'type': 'str',
+                },
+                'start': {
+                    'type': 'str',
+                },
+                'end': {
+                    'type': 'str',
+                },
+                'drops': {
+                    'type': 'int',
+                },
+                'active': {
+                    'type': 'int',
+                }
+            },
+            'lockedout_ips_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'threshold_exceed': {
-                'type': 'str',
-            },
-            'lockout_drop': {
-                'type': 'str',
-            },
-            'called': {
+            'sessions_alloc': {
                 'type': 'str',
             },
             'sessions_freed': {
-                'type': 'str',
-            },
-            'permitted': {
-                'type': 'str',
-            },
-            'log_msg_sent': {
-                'type': 'str',
-            },
-            'sessions_alloc': {
                 'type': 'str',
             },
             'out_of_sessions': {
@@ -229,10 +238,22 @@ def get_argspec():
             },
             'too_many_sessions': {
                 'type': 'str',
+            },
+            'called': {
+                'type': 'str',
+            },
+            'permitted': {
+                'type': 'str',
+            },
+            'threshold_exceed': {
+                'type': 'str',
+            },
+            'lockout_drop': {
+                'type': 'str',
+            },
+            'log_msg_sent': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

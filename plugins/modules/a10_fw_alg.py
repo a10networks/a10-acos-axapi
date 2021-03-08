@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg
 description:
     - Configure ALG
-short_description: Configures A10 fw.alg
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,128 +22,162 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     ftp:
         description:
         - "Field ftp"
+        type: dict
         required: False
         suboptions:
             default_port_disable:
                 description:
                 - "'default-port-disable'= Disable FTP ALG default port 21;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
             sampling_enable:
                 description:
                 - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    sip:
-        description:
-        - "Field sip"
-        required: False
-        suboptions:
-            default_port_disable:
-                description:
-                - "'default-port-disable'= Disable SIP ALG default port 5060;"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    pptp:
-        description:
-        - "Field pptp"
-        required: False
-        suboptions:
-            default_port_disable:
-                description:
-                - "'default-port-disable'= Disable PPTP ALG default port 1723;"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    rtsp:
-        description:
-        - "Field rtsp"
-        required: False
-        suboptions:
-            default_port_disable:
-                description:
-                - "'default-port-disable'= Disable RTSP ALG default port 554;"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    dns:
-        description:
-        - "Field dns"
-        required: False
-        suboptions:
-            default_port_disable:
-                description:
-                - "'default-port-disable'= Disable DNS ALG default port 53;"
-            uuid:
-                description:
-                - "uuid of the object"
+                type: list
     tftp:
         description:
         - "Field tftp"
+        type: dict
         required: False
         suboptions:
             default_port_disable:
                 description:
                 - "'default-port-disable'= Disable TFTP ALG default port 69;"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    rtsp:
+        description:
+        - "Field rtsp"
+        type: dict
+        required: False
+        suboptions:
+            default_port_disable:
+                description:
+                - "'default-port-disable'= Disable RTSP ALG default port 554;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    pptp:
+        description:
+        - "Field pptp"
+        type: dict
+        required: False
+        suboptions:
+            default_port_disable:
+                description:
+                - "'default-port-disable'= Disable PPTP ALG default port 1723;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    sip:
+        description:
+        - "Field sip"
+        type: dict
+        required: False
+        suboptions:
+            default_port_disable:
+                description:
+                - "'default-port-disable'= Disable SIP ALG default port 5060;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    dns:
+        description:
+        - "Field dns"
+        type: dict
+        required: False
+        suboptions:
+            default_port_disable:
+                description:
+                - "'default-port-disable'= Disable DNS ALG default port 53;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     icmp:
         description:
         - "Field icmp"
+        type: dict
         required: False
         suboptions:
             disable:
                 description:
                 - "'disable'= Disable ICMP ALG which allows ICMP errors to pass the firewall;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
 
 '''
 
@@ -205,11 +237,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'ftp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -231,16 +269,16 @@ def get_argspec():
                         'pasv-helper-freed-used', 'pasv-helper-freed-unused'
                     ]
                 }
-            },
-            'uuid': {
-                'type': 'str',
             }
         },
-        'sip': {
+        'tftp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -248,66 +286,12 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'stat-request', 'stat-response',
-                        'method-register', 'method-invite', 'method-ack',
-                        'method-cancel', 'method-bye', 'method-options',
-                        'method-prack', 'method-subscribe', 'method-notify',
-                        'method-publish', 'method-info', 'method-refer',
-                        'method-message', 'method-update', 'method-unknown',
-                        'parse-error', 'keep-alive', 'contact-error',
-                        'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success',
-                        'rtp-port-failure', 'rtcp-port-failure',
-                        'contact-port-no-op', 'contact-port-success',
-                        'contact-port-failure', 'contact-new',
-                        'contact-alloc-failure', 'contact-eim',
-                        'contact-eim-set', 'rtp-new', 'rtp-alloc-failure',
-                        'rtp-eim', 'helper-found', 'helper-created',
-                        'helper-deleted', 'helper-freed', 'helper-failure'
+                        'all', 'session-created', 'helper-created',
+                        'helper-freed', 'helper-freed-used',
+                        'helper-freed-unused', 'helper-already-used',
+                        'helper-in-rml'
                     ]
                 }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'pptp': {
-            'type': 'dict',
-            'default_port_disable': {
-                'type': 'str',
-                'choices': ['default-port-disable']
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'calls-established',
-                        'call-req-pns-call-id-mismatch',
-                        'call-reply-pns-call-id-mismatch',
-                        'gre-session-created', 'gre-session-freed',
-                        'call-req-retransmit', 'call-req-new',
-                        'call-req-ext-alloc-failure',
-                        'call-reply-call-id-unknown', 'call-reply-retransmit',
-                        'call-reply-ext-ext-alloc-failure',
-                        'smp-app-type-mismatch', 'smp-client-call-id-mismatch',
-                        'smp-sessions-created', 'smp-sessions-freed',
-                        'smp-alloc-failure', 'gre-conn-creation-failure',
-                        'gre-conn-ext-creation-failure', 'gre-no-fwd-route',
-                        'gre-no-rev-route', 'gre-no-control-conn',
-                        'gre-conn-already-exists', 'gre-free-no-ext',
-                        'gre-free-no-smp', 'gre-free-smp-app-type-mismatch',
-                        'control-freed', 'control-free-no-ext',
-                        'control-free-no-smp',
-                        'control-free-smp-app-type-mismatch'
-                    ]
-                }
-            },
-            'uuid': {
-                'type': 'str',
             }
         },
         'rtsp': {
@@ -315,6 +299,9 @@ def get_argspec():
             'default_port_disable': {
                 'type': 'str',
                 'choices': ['default-port-disable']
+            },
+            'uuid': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -351,12 +338,9 @@ def get_argspec():
                         'ha-control-session-created', 'ha-data-session-created'
                     ]
                 }
-            },
-            'uuid': {
-                'type': 'str',
             }
         },
-        'dns': {
+        'pptp': {
             'type': 'dict',
             'default_port_disable': {
                 'type': 'str',
@@ -364,13 +348,6 @@ def get_argspec():
             },
             'uuid': {
                 'type': 'str',
-            }
-        },
-        'tftp': {
-            'type': 'dict',
-            'default_port_disable': {
-                'type': 'str',
-                'choices': ['default-port-disable']
             },
             'sampling_enable': {
                 'type': 'list',
@@ -378,12 +355,67 @@ def get_argspec():
                     'type':
                     'str',
                     'choices': [
-                        'all', 'session-created', 'helper-created',
-                        'helper-freed', 'helper-freed-used',
-                        'helper-freed-unused', 'helper-already-used',
-                        'helper-in-rml'
+                        'all', 'calls-established',
+                        'call-req-pns-call-id-mismatch',
+                        'call-reply-pns-call-id-mismatch',
+                        'gre-session-created', 'gre-session-freed',
+                        'call-req-retransmit', 'call-req-new',
+                        'call-req-ext-alloc-failure',
+                        'call-reply-call-id-unknown', 'call-reply-retransmit',
+                        'call-reply-ext-ext-alloc-failure',
+                        'smp-app-type-mismatch', 'smp-client-call-id-mismatch',
+                        'smp-sessions-created', 'smp-sessions-freed',
+                        'smp-alloc-failure', 'gre-conn-creation-failure',
+                        'gre-conn-ext-creation-failure', 'gre-no-fwd-route',
+                        'gre-no-rev-route', 'gre-no-control-conn',
+                        'gre-conn-already-exists', 'gre-free-no-ext',
+                        'gre-free-no-smp', 'gre-free-smp-app-type-mismatch',
+                        'control-freed', 'control-free-no-ext',
+                        'control-free-no-smp',
+                        'control-free-smp-app-type-mismatch'
                     ]
                 }
+            }
+        },
+        'sip': {
+            'type': 'dict',
+            'default_port_disable': {
+                'type': 'str',
+                'choices': ['default-port-disable']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'stat-request', 'stat-response',
+                        'method-register', 'method-invite', 'method-ack',
+                        'method-cancel', 'method-bye', 'method-options',
+                        'method-prack', 'method-subscribe', 'method-notify',
+                        'method-publish', 'method-info', 'method-refer',
+                        'method-message', 'method-update', 'method-unknown',
+                        'parse-error', 'keep-alive', 'contact-error',
+                        'sdp-error', 'rtp-port-no-op', 'rtp-rtcp-port-success',
+                        'rtp-port-failure', 'rtcp-port-failure',
+                        'contact-port-no-op', 'contact-port-success',
+                        'contact-port-failure', 'contact-new',
+                        'contact-alloc-failure', 'contact-eim',
+                        'contact-eim-set', 'rtp-new', 'rtp-alloc-failure',
+                        'rtp-eim', 'helper-found', 'helper-created',
+                        'helper-deleted', 'helper-freed', 'helper-failure'
+                    ]
+                }
+            }
+        },
+        'dns': {
+            'type': 'dict',
+            'default_port_disable': {
+                'type': 'str',
+                'choices': ['default-port-disable']
             },
             'uuid': {
                 'type': 'str',

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_zone_interface
 description:
     - Interface
-short_description: Configures A10 zone.interface
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,92 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     zone_name:
         description:
-        - Key to identify parent object    tunnel_list:
+        - Key to identify parent object
+        type: str
+        required: True
+    ethernet_list:
         description:
-        - "Field tunnel_list"
+        - "Field ethernet_list"
+        type: list
         required: False
         suboptions:
-            interface_tunnel_end:
+            interface_ethernet_start:
                 description:
-                - "Field interface_tunnel_end"
-            interface_tunnel_start:
+                - "Field interface_ethernet_start"
+                type: str
+            interface_ethernet_end:
                 description:
-                - "Field interface_tunnel_start"
+                - "Field interface_ethernet_end"
+                type: str
     trunk_list:
         description:
         - "Field trunk_list"
+        type: list
         required: False
         suboptions:
             interface_trunk_start:
                 description:
                 - "Field interface_trunk_start"
+                type: int
             interface_trunk_end:
                 description:
                 - "Field interface_trunk_end"
+                type: int
     ve_list:
         description:
         - "Field ve_list"
+        type: list
         required: False
         suboptions:
             interface_ve_start:
                 description:
                 - "Field interface_ve_start"
+                type: int
             interface_ve_end:
                 description:
                 - "Field interface_ve_end"
-    ethernet_list:
-        description:
-        - "Field ethernet_list"
-        required: False
-        suboptions:
-            interface_ethernet_end:
-                description:
-                - "Field interface_ethernet_end"
-            interface_ethernet_start:
-                description:
-                - "Field interface_ethernet_start"
+                type: int
     lif_list:
         description:
         - "Field lif_list"
+        type: list
         required: False
         suboptions:
-            interface_lif_end:
-                description:
-                - "Field interface_lif_end"
             interface_lif_start:
                 description:
                 - "Field interface_lif_start"
+                type: int
+            interface_lif_end:
+                description:
+                - "Field interface_lif_end"
+                type: int
+    tunnel_list:
+        description:
+        - "Field tunnel_list"
+        type: list
+        required: False
+        suboptions:
+            interface_tunnel_start:
+                description:
+                - "Field interface_tunnel_start"
+                type: int
+            interface_tunnel_end:
+                description:
+                - "Field interface_tunnel_end"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -168,13 +192,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'tunnel_list': {
+        'ethernet_list': {
             'type': 'list',
-            'interface_tunnel_end': {
-                'type': 'int',
+            'interface_ethernet_start': {
+                'type': 'str',
             },
-            'interface_tunnel_start': {
-                'type': 'int',
+            'interface_ethernet_end': {
+                'type': 'str',
             }
         },
         'trunk_list': {
@@ -195,21 +219,21 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'ethernet_list': {
-            'type': 'list',
-            'interface_ethernet_end': {
-                'type': 'str',
-            },
-            'interface_ethernet_start': {
-                'type': 'str',
-            }
-        },
         'lif_list': {
             'type': 'list',
-            'interface_lif_end': {
+            'interface_lif_start': {
                 'type': 'int',
             },
-            'interface_lif_start': {
+            'interface_lif_end': {
+                'type': 'int',
+            }
+        },
+        'tunnel_list': {
+            'type': 'list',
+            'interface_tunnel_start': {
+                'type': 'int',
+            },
+            'interface_tunnel_end': {
                 'type': 'int',
             }
         },

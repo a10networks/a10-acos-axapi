@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_fix
 description:
     - Configure FIX Proxy
-short_description: Configures A10 slb.fix
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            fix_cpu_list:
-                description:
-                - "Field fix_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -74,48 +74,71 @@ options:
           Server fail; 'insert_clientip'= Insert client IP; 'default_switching'= Default
           switching; 'sender_switching'= Sender ID switching; 'target_switching'= Target
           ID switching;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            fix_cpu_list:
+                description:
+                - "Field fix_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            svrsel_fail:
-                description:
-                - "Server selection failure"
             curr_proxy:
                 description:
                 - "Current proxy conns"
-            default_switching:
-                description:
-                - "Default switching"
+                type: str
             total_proxy:
                 description:
                 - "Total proxy conns"
+                type: str
+            svrsel_fail:
+                description:
+                - "Server selection failure"
+                type: str
             noroute:
                 description:
                 - "No route failure"
-            sender_switching:
-                description:
-                - "Sender ID switching"
-            client_err:
-                description:
-                - "Client fail"
-            target_switching:
-                description:
-                - "Target ID switching"
-            server_err:
-                description:
-                - "Server fail"
+                type: str
             snat_fail:
                 description:
                 - "Source NAT failure"
+                type: str
+            client_err:
+                description:
+                - "Client fail"
+                type: str
+            server_err:
+                description:
+                - "Server fail"
+                type: str
             insert_clientip:
                 description:
                 - "Insert client IP"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            default_switching:
+                description:
+                - "Default switching"
+                type: str
+            sender_switching:
+                description:
+                - "Sender ID switching"
+                type: str
+            target_switching:
+                description:
+                - "Target ID switching"
+                type: str
 
 '''
 
@@ -171,47 +194,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'fix_cpu_list': {
-                'type': 'list',
-                'svrsel_fail': {
-                    'type': 'int',
-                },
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'default_switching': {
-                    'type': 'int',
-                },
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'noroute': {
-                    'type': 'int',
-                },
-                'sender_switching': {
-                    'type': 'int',
-                },
-                'client_err': {
-                    'type': 'int',
-                },
-                'target_switching': {
-                    'type': 'int',
-                },
-                'server_err': {
-                    'type': 'int',
-                },
-                'snat_fail': {
-                    'type': 'int',
-                },
-                'insert_clientip': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -226,44 +210,83 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'fix_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'svrsel_fail': {
+                    'type': 'int',
+                },
+                'noroute': {
+                    'type': 'int',
+                },
+                'snat_fail': {
+                    'type': 'int',
+                },
+                'client_err': {
+                    'type': 'int',
+                },
+                'server_err': {
+                    'type': 'int',
+                },
+                'insert_clientip': {
+                    'type': 'int',
+                },
+                'default_switching': {
+                    'type': 'int',
+                },
+                'sender_switching': {
+                    'type': 'int',
+                },
+                'target_switching': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'svrsel_fail': {
-                'type': 'str',
-            },
             'curr_proxy': {
-                'type': 'str',
-            },
-            'default_switching': {
                 'type': 'str',
             },
             'total_proxy': {
                 'type': 'str',
             },
+            'svrsel_fail': {
+                'type': 'str',
+            },
             'noroute': {
-                'type': 'str',
-            },
-            'sender_switching': {
-                'type': 'str',
-            },
-            'client_err': {
-                'type': 'str',
-            },
-            'target_switching': {
-                'type': 'str',
-            },
-            'server_err': {
                 'type': 'str',
             },
             'snat_fail': {
                 'type': 'str',
             },
+            'client_err': {
+                'type': 'str',
+            },
+            'server_err': {
+                'type': 'str',
+            },
             'insert_clientip': {
                 'type': 'str',
+            },
+            'default_switching': {
+                'type': 'str',
+            },
+            'sender_switching': {
+                'type': 'str',
+            },
+            'target_switching': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

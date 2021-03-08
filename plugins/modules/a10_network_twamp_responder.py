@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_twamp_responder
 description:
     - Configure TWAMP responder
-short_description: Configures A10 network.twamp.responder
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,68 +22,85 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    port:
-        description:
-        - "Port number"
+        type: str
         required: False
     ip:
         description:
         - "Field ip"
+        type: dict
         required: False
         suboptions:
-            acl_name:
-                description:
-                - "Apply a named access list (Access List name)"
             acl_id:
                 description:
                 - "ACL id"
+                type: int
+            acl_name:
+                description:
+                - "Apply a named access list (Access List name)"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
     ipv6:
         description:
         - "Field ipv6"
+        type: dict
         required: False
         suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
             v6_acl_name:
                 description:
                 - "Apply an access list (Named Access List)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     both:
         description:
         - "Enable both IP and IPv6 TWAMP packets"
+        type: bool
+        required: False
+    port:
+        description:
+        - "Port number"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -143,16 +158,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'port': {
-            'type': 'int',
-        },
         'ip': {
             'type': 'dict',
-            'acl_name': {
-                'type': 'str',
-            },
             'acl_id': {
                 'type': 'int',
+            },
+            'acl_name': {
+                'type': 'str',
             },
             'uuid': {
                 'type': 'str',
@@ -160,18 +172,21 @@ def get_argspec():
         },
         'ipv6': {
             'type': 'dict',
-            'uuid': {
+            'v6_acl_name': {
                 'type': 'str',
             },
-            'v6_acl_name': {
+            'uuid': {
                 'type': 'str',
             }
         },
-        'uuid': {
-            'type': 'str',
-        },
         'both': {
             'type': 'bool',
+        },
+        'port': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

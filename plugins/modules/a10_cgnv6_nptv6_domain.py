@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nptv6_domain
 description:
     - Configure NPTv6 translation domain
-short_description: Configures A10 cgnv6.nptv6.domain
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,77 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    outside_prefix:
-        description:
-        - "Configure outside network prefix (Outside IPv6 network prefix)"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            inbound_packets:
-                description:
-                - "Inbound Packets"
-            name:
-                description:
-                - "Name of NPTv6 domain"
-            hairpin_packets:
-                description:
-                - "Hairpin Packets"
-            inbound_packets_no_map:
-                description:
-                - "Inbound Packets No Map"
-            outbound_packets:
-                description:
-                - "Outbound Packets"
-            address_not_valid_for_translation:
-                description:
-                - "Address Not Valid For Translation"
-            packets_dest_unreachable:
-                description:
-                - "Packets Destination Unreachable"
     name:
         description:
         - "Name of NPTv6 domain"
+        type: str
         required: True
     inside_prefix:
         description:
         - "Configure inside network prefix (Inside IPv6 network prefix)"
+        type: str
+        required: False
+    outside_prefix:
+        description:
+        - "Configure outside network prefix (Outside IPv6 network prefix)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -104,10 +93,41 @@ options:
           translation'= Address Not Valid For Translation; 'inbound-packets-no-map'=
           Inbound Packets No Map; 'packets-dest-unreachable'= Packets Destination
           Unreachable;"
-    uuid:
+                type: str
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            outbound_packets:
+                description:
+                - "Outbound Packets"
+                type: str
+            inbound_packets:
+                description:
+                - "Inbound Packets"
+                type: str
+            hairpin_packets:
+                description:
+                - "Hairpin Packets"
+                type: str
+            address_not_valid_for_translation:
+                description:
+                - "Address Not Valid For Translation"
+                type: str
+            inbound_packets_no_map:
+                description:
+                - "Inbound Packets No Map"
+                type: str
+            packets_dest_unreachable:
+                description:
+                - "Packets Destination Unreachable"
+                type: str
+            name:
+                description:
+                - "Name of NPTv6 domain"
+                type: str
 
 '''
 
@@ -166,39 +186,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'outside_prefix': {
-            'type': 'str',
-        },
-        'stats': {
-            'type': 'dict',
-            'inbound_packets': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'hairpin_packets': {
-                'type': 'str',
-            },
-            'inbound_packets_no_map': {
-                'type': 'str',
-            },
-            'outbound_packets': {
-                'type': 'str',
-            },
-            'address_not_valid_for_translation': {
-                'type': 'str',
-            },
-            'packets_dest_unreachable': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
         'inside_prefix': {
+            'type': 'str',
+        },
+        'outside_prefix': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         },
         'user_tag': {
@@ -216,8 +214,30 @@ def get_argspec():
                 ]
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'outbound_packets': {
+                'type': 'str',
+            },
+            'inbound_packets': {
+                'type': 'str',
+            },
+            'hairpin_packets': {
+                'type': 'str',
+            },
+            'address_not_valid_for_translation': {
+                'type': 'str',
+            },
+            'inbound_packets_no_map': {
+                'type': 'str',
+            },
+            'packets_dest_unreachable': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

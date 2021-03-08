@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_one_to_one_mapping
 description:
     - One to One Mapping
-short_description: Configures A10 cgnv6.one.to.one.mapping
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,83 +22,106 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            shared_partition:
-                description:
-                - "Field shared_partition"
-            all_partitions:
-                description:
-                - "Field all_partitions"
-            inside_addr_end:
-                description:
-                - "Field inside_addr_end"
-            inside_addr_start:
-                description:
-                - "Field inside_addr_start"
-            partition_name:
-                description:
-                - "Field partition_name"
-            nat_addr_val:
-                description:
-                - "Field nat_addr_val"
-            nat_addr_start:
-                description:
-                - "Field nat_addr_start"
-            nat_addr_end:
-                description:
-                - "Field nat_addr_end"
-            inside_address_ipv6:
-                description:
-                - "Field inside_address_ipv6"
-            inside_address_ipv4:
-                description:
-                - "Field inside_address_ipv4"
-            shared_pool_name:
-                description:
-                - "Field shared_pool_name"
             session_mapping_list:
                 description:
                 - "Field session_mapping_list"
+                type: list
             total:
                 description:
                 - "Field total"
+                type: int
+            inside_address_ipv4:
+                description:
+                - "Field inside_address_ipv4"
+                type: str
+            inside_address_ipv6:
+                description:
+                - "Field inside_address_ipv6"
+                type: str
+            all_partitions:
+                description:
+                - "Field all_partitions"
+                type: bool
+            shared_partition:
+                description:
+                - "Field shared_partition"
+                type: bool
+            partition_name:
+                description:
+                - "Field partition_name"
+                type: str
+            inside_addr_start:
+                description:
+                - "Field inside_addr_start"
+                type: str
+            inside_addr_end:
+                description:
+                - "Field inside_addr_end"
+                type: str
+            nat_addr_val:
+                description:
+                - "Field nat_addr_val"
+                type: str
+            nat_addr_start:
+                description:
+                - "Field nat_addr_start"
+                type: str
+            nat_addr_end:
+                description:
+                - "Field nat_addr_end"
+                type: str
             pool_name:
                 description:
                 - "Field pool_name"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            shared_pool_name:
+                description:
+                - "Field shared_pool_name"
+                type: str
 
 '''
 
@@ -154,21 +175,54 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'shared_partition': {
-                'type': 'bool',
+            'session_mapping_list': {
+                'type': 'list',
+                'inside_ipv4_address': {
+                    'type': 'str',
+                },
+                'inside_ipv6_address': {
+                    'type': 'str',
+                },
+                'nat_address': {
+                    'type': 'str',
+                },
+                'sessions': {
+                    'type': 'int',
+                },
+                'age': {
+                    'type': 'str',
+                },
+                'pool': {
+                    'type': 'str',
+                }
+            },
+            'total': {
+                'type': 'int',
+            },
+            'inside_address_ipv4': {
+                'type': 'str',
+            },
+            'inside_address_ipv6': {
+                'type': 'str',
             },
             'all_partitions': {
                 'type': 'bool',
             },
-            'inside_addr_end': {
+            'shared_partition': {
+                'type': 'bool',
+            },
+            'partition_name': {
                 'type': 'str',
             },
             'inside_addr_start': {
                 'type': 'str',
             },
-            'partition_name': {
+            'inside_addr_end': {
                 'type': 'str',
             },
             'nat_addr_val': {
@@ -180,45 +234,12 @@ def get_argspec():
             'nat_addr_end': {
                 'type': 'str',
             },
-            'inside_address_ipv6': {
-                'type': 'str',
-            },
-            'inside_address_ipv4': {
+            'pool_name': {
                 'type': 'str',
             },
             'shared_pool_name': {
                 'type': 'str',
-            },
-            'session_mapping_list': {
-                'type': 'list',
-                'sessions': {
-                    'type': 'int',
-                },
-                'age': {
-                    'type': 'str',
-                },
-                'inside_ipv6_address': {
-                    'type': 'str',
-                },
-                'nat_address': {
-                    'type': 'str',
-                },
-                'inside_ipv4_address': {
-                    'type': 'str',
-                },
-                'pool': {
-                    'type': 'str',
-                }
-            },
-            'total': {
-                'type': 'int',
-            },
-            'pool_name': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

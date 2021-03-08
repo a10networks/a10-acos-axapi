@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_twamp_responder_ipv6
 description:
     - Configure TWAMP responder
-short_description: Configures A10 network.twamp.responder.ipv6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,66 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            no_route_err_v6:
-                description:
-                - "Tx IPv6 no route error drop"
-            twamp_hdr_len_err_v6:
-                description:
-                - "Rx IPv6 TWAMP hdr length error drop"
-            tx_pkts_v6:
-                description:
-                - "Tx IPv6 TWAMP test packets"
-            other_err_v6:
-                description:
-                - "IPv6 Other error drop"
-            rx_drop_not_enabled_v6:
-                description:
-                - "Rx IPv6 disabled drop"
-            rx_pkts_v6:
-                description:
-                - "Rx IPv6 TWAMP test packets"
-            rx_acl_drop_v6:
-                description:
-                - "Rx IPv6 client-list drop"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     v6_acl_name:
         description:
         - "Apply an access list (Named Access List)"
+        type: str
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            rx_pkts_v6:
+                description:
+                - "Rx IPv6 TWAMP test packets"
+                type: str
+            tx_pkts_v6:
+                description:
+                - "Tx IPv6 TWAMP test packets"
+                type: str
+            rx_drop_not_enabled_v6:
+                description:
+                - "Rx IPv6 disabled drop"
+                type: str
+            rx_acl_drop_v6:
+                description:
+                - "Rx IPv6 client-list drop"
+                type: str
+            twamp_hdr_len_err_v6:
+                description:
+                - "Rx IPv6 TWAMP hdr length error drop"
+                type: str
+            no_route_err_v6:
+                description:
+                - "Tx IPv6 no route error drop"
+                type: str
+            other_err_v6:
+                description:
+                - "IPv6 Other error drop"
+                type: str
 
 '''
 
@@ -138,35 +153,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'v6_acl_name': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'stats': {
             'type': 'dict',
-            'no_route_err_v6': {
-                'type': 'str',
-            },
-            'twamp_hdr_len_err_v6': {
+            'rx_pkts_v6': {
                 'type': 'str',
             },
             'tx_pkts_v6': {
                 'type': 'str',
             },
-            'other_err_v6': {
-                'type': 'str',
-            },
             'rx_drop_not_enabled_v6': {
-                'type': 'str',
-            },
-            'rx_pkts_v6': {
                 'type': 'str',
             },
             'rx_acl_drop_v6': {
                 'type': 'str',
+            },
+            'twamp_hdr_len_err_v6': {
+                'type': 'str',
+            },
+            'no_route_err_v6': {
+                'type': 'str',
+            },
+            'other_err_v6': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'v6_acl_name': {
-            'type': 'str',
         }
     })
     return rv

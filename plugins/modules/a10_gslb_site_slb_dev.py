@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev
 description:
     - Specify a SLB device for the GSLB site
-short_description: Configures A10 gslb.site.slb-dev
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,156 +22,199 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     site_name:
         description:
-        - Key to identify parent object    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            dev_gw_state:
-                description:
-                - "Field dev_gw_state"
-            vip_server:
-                description:
-                - "Field vip_server"
-            dev_name:
-                description:
-                - "Field dev_name"
-            dev_ip_cnt:
-                description:
-                - "Field dev_ip_cnt"
-            dev_attr:
-                description:
-                - "Field dev_attr"
-            dev_ip:
-                description:
-                - "Field dev_ip"
-            device_name:
-                description:
-                - "Specify SLB device name"
-            dev_state:
-                description:
-                - "Field dev_state"
-            dev_session_num:
-                description:
-                - "Field dev_session_num"
-            dev_admin_preference:
-                description:
-                - "Field dev_admin_preference"
-            client_ldns_list:
-                description:
-                - "Field client_ldns_list"
-            dev_session_util:
-                description:
-                - "Field dev_session_util"
-    health_check_action:
-        description:
-        - "'health-check'= Enable health Check; 'health-check-disable'= Disable health
-          check;"
-        required: False
-    client_ip:
-        description:
-        - "Specify client IP address"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    proto_aging_time:
-        description:
-        - "Specify GSLB Protocol aging time, default is 60"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     device_name:
         description:
         - "Specify SLB device name"
+        type: str
         required: True
-    proto_compatible:
-        description:
-        - "Run GSLB Protocol in compatible mode"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    auto_map:
-        description:
-        - "Enable DNS Auto Mapping"
-        required: False
-    msg_format_acos_2x:
-        description:
-        - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
-        required: False
-    rdt_value:
-        description:
-        - "Specify Round-delay-time"
-        required: False
-    gateway_ip_addr:
-        description:
-        - "IP address"
-        required: False
-    vip_server:
-        description:
-        - "Field vip_server"
-        required: False
-        suboptions:
-            vip_server_v4_list:
-                description:
-                - "Field vip_server_v4_list"
-            vip_server_v6_list:
-                description:
-                - "Field vip_server_v6_list"
-            vip_server_name_list:
-                description:
-                - "Field vip_server_name_list"
     ip_address:
         description:
         - "IP address"
-        required: False
-    proto_aging_fast:
-        description:
-        - "Fast GSLB Protocol aging"
-        required: False
-    auto_detect:
-        description:
-        - "'ip'= Service IP only; 'port'= Service Port only; 'ip-and-port'= Both service
-          IP and service port; 'disabled'= disable auto-detect;"
-        required: False
-    max_client:
-        description:
-        - "Specify maximum number of clients, default is 32768"
+        type: str
         required: False
     admin_preference:
         description:
         - "Specify administrative preference (Specify admin-preference value,default is
           100)"
+        type: int
         required: False
+    client_ip:
+        description:
+        - "Specify client IP address"
+        type: str
+        required: False
+    rdt_value:
+        description:
+        - "Specify Round-delay-time"
+        type: int
+        required: False
+    auto_detect:
+        description:
+        - "'ip'= Service IP only; 'port'= Service Port only; 'ip-and-port'= Both service
+          IP and service port; 'disabled'= disable auto-detect;"
+        type: str
+        required: False
+    auto_map:
+        description:
+        - "Enable DNS Auto Mapping"
+        type: bool
+        required: False
+    max_client:
+        description:
+        - "Specify maximum number of clients, default is 32768"
+        type: int
+        required: False
+    proto_aging_time:
+        description:
+        - "Specify GSLB Protocol aging time, default is 60"
+        type: int
+        required: False
+    proto_aging_fast:
+        description:
+        - "Fast GSLB Protocol aging"
+        type: bool
+        required: False
+    health_check_action:
+        description:
+        - "'health-check'= Enable health Check; 'health-check-disable'= Disable health
+          check;"
+        type: str
+        required: False
+    gateway_ip_addr:
+        description:
+        - "IP address"
+        type: str
+        required: False
+    proto_compatible:
+        description:
+        - "Run GSLB Protocol in compatible mode"
+        type: bool
+        required: False
+    msg_format_acos_2x:
+        description:
+        - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    vip_server:
+        description:
+        - "Field vip_server"
+        type: dict
+        required: False
+        suboptions:
+            vip_server_v4_list:
+                description:
+                - "Field vip_server_v4_list"
+                type: list
+            vip_server_v6_list:
+                description:
+                - "Field vip_server_v6_list"
+                type: list
+            vip_server_name_list:
+                description:
+                - "Field vip_server_name_list"
+                type: list
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            dev_name:
+                description:
+                - "Field dev_name"
+                type: str
+            dev_ip:
+                description:
+                - "Field dev_ip"
+                type: str
+            dev_attr:
+                description:
+                - "Field dev_attr"
+                type: str
+            dev_admin_preference:
+                description:
+                - "Field dev_admin_preference"
+                type: int
+            dev_session_num:
+                description:
+                - "Field dev_session_num"
+                type: int
+            dev_session_util:
+                description:
+                - "Field dev_session_util"
+                type: int
+            dev_gw_state:
+                description:
+                - "Field dev_gw_state"
+                type: str
+            dev_ip_cnt:
+                description:
+                - "Field dev_ip_cnt"
+                type: int
+            dev_state:
+                description:
+                - "Field dev_state"
+                type: str
+            client_ldns_list:
+                description:
+                - "Field client_ldns_list"
+                type: list
+            device_name:
+                description:
+                - "Specify SLB device name"
+                type: str
+            vip_server:
+                description:
+                - "Field vip_server"
+                type: dict
 
 '''
 
@@ -243,116 +284,139 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
+        'device_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'ip_address': {
+            'type': 'str',
+        },
+        'admin_preference': {
+            'type': 'int',
+        },
+        'client_ip': {
+            'type': 'str',
+        },
+        'rdt_value': {
+            'type': 'int',
+        },
+        'auto_detect': {
+            'type': 'str',
+            'choices': ['ip', 'port', 'ip-and-port', 'disabled']
+        },
+        'auto_map': {
+            'type': 'bool',
+        },
+        'max_client': {
+            'type': 'int',
+        },
+        'proto_aging_time': {
+            'type': 'int',
+        },
+        'proto_aging_fast': {
+            'type': 'bool',
+        },
+        'health_check_action': {
+            'type': 'str',
+            'choices': ['health-check', 'health-check-disable']
+        },
+        'gateway_ip_addr': {
+            'type': 'str',
+        },
+        'proto_compatible': {
+            'type': 'bool',
+        },
+        'msg_format_acos_2x': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'vip_server': {
             'type': 'dict',
-            'dev_gw_state': {
-                'type': 'str',
-            },
-            'vip_server': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
+            'vip_server_v4_list': {
+                'type': 'list',
+                'ipv4': {
+                    'type': 'str',
+                    'required': True,
                 },
-                'vip_server_v4_list': {
-                    'type': 'list',
-                    'oper': {
-                        'type': 'dict',
-                        'dev_vip_addr': {
-                            'type': 'str',
-                        },
-                        'dev_vip_state': {
-                            'type': 'str',
-                        },
-                        'dev_vip_port_list': {
-                            'type': 'list',
-                            'dev_vip_port_num': {
-                                'type': 'int',
-                            },
-                            'dev_vip_port_state': {
-                                'type': 'str',
-                            }
-                        }
-                    },
-                    'ipv4': {
-                        'type': 'str',
-                        'required': True,
-                    }
+                'uuid': {
+                    'type': 'str',
                 },
-                'vip_server_v6_list': {
+                'sampling_enable': {
                     'type': 'list',
-                    'oper': {
-                        'type': 'dict',
-                        'dev_vip_addr': {
-                            'type': 'str',
-                        },
-                        'dev_vip_state': {
-                            'type': 'str',
-                        },
-                        'dev_vip_port_list': {
-                            'type': 'list',
-                            'dev_vip_port_num': {
-                                'type': 'int',
-                            },
-                            'dev_vip_port_state': {
-                                'type': 'str',
-                            }
-                        }
-                    },
-                    'ipv6': {
+                    'counters1': {
                         'type': 'str',
-                        'required': True,
-                    }
-                },
-                'vip_server_name_list': {
-                    'type': 'list',
-                    'oper': {
-                        'type': 'dict',
-                        'dev_vip_addr': {
-                            'type': 'str',
-                        },
-                        'dev_vip_state': {
-                            'type': 'str',
-                        },
-                        'dev_vip_port_list': {
-                            'type': 'list',
-                            'dev_vip_port_num': {
-                                'type': 'int',
-                            },
-                            'dev_vip_port_state': {
-                                'type': 'str',
-                            }
-                        }
-                    },
-                    'vip_name': {
-                        'type': 'str',
-                        'required': True,
+                        'choices': ['all', 'dev_vip_hits']
                     }
                 }
             },
+            'vip_server_v6_list': {
+                'type': 'list',
+                'ipv6': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                }
+            },
+            'vip_server_name_list': {
+                'type': 'list',
+                'vip_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                }
+            }
+        },
+        'oper': {
+            'type': 'dict',
             'dev_name': {
-                'type': 'str',
-            },
-            'dev_ip_cnt': {
-                'type': 'int',
-            },
-            'dev_attr': {
                 'type': 'str',
             },
             'dev_ip': {
                 'type': 'str',
             },
-            'device_name': {
+            'dev_attr': {
                 'type': 'str',
-                'required': True,
             },
-            'dev_state': {
-                'type': 'str',
+            'dev_admin_preference': {
+                'type': 'int',
             },
             'dev_session_num': {
                 'type': 'int',
             },
-            'dev_admin_preference': {
+            'dev_session_util': {
                 'type': 'int',
+            },
+            'dev_gw_state': {
+                'type': 'str',
+            },
+            'dev_ip_cnt': {
+                'type': 'int',
+            },
+            'dev_state': {
+                'type': 'str',
             },
             'client_ldns_list': {
                 'type': 'list',
@@ -361,6 +425,9 @@ def get_argspec():
                 },
                 'age': {
                     'type': 'int',
+                },
+                'ntype': {
+                    'type': 'str',
                 },
                 'rdt_sample1': {
                     'type': 'int',
@@ -385,119 +452,93 @@ def get_argspec():
                 },
                 'rdt_sample8': {
                     'type': 'int',
-                },
-                'ntype': {
-                    'type': 'str',
                 }
             },
-            'dev_session_util': {
-                'type': 'int',
-            }
-        },
-        'health_check_action': {
-            'type': 'str',
-            'choices': ['health-check', 'health-check-disable']
-        },
-        'client_ip': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'proto_aging_time': {
-            'type': 'int',
-        },
-        'device_name': {
-            'type': 'str',
-            'required': True,
-        },
-        'proto_compatible': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'auto_map': {
-            'type': 'bool',
-        },
-        'msg_format_acos_2x': {
-            'type': 'bool',
-        },
-        'rdt_value': {
-            'type': 'int',
-        },
-        'gateway_ip_addr': {
-            'type': 'str',
-        },
-        'vip_server': {
-            'type': 'dict',
-            'vip_server_v4_list': {
-                'type': 'list',
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'dev_vip_hits']
-                    }
-                },
-                'ipv4': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
-                }
+            'device_name': {
+                'type': 'str',
+                'required': True,
             },
-            'vip_server_v6_list': {
-                'type': 'list',
-                'sampling_enable': {
+            'vip_server': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                },
+                'vip_server_v4_list': {
                     'type': 'list',
-                    'counters1': {
+                    'ipv4': {
                         'type': 'str',
-                        'choices': ['all', 'dev_vip_hits']
+                        'required': True,
+                    },
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
                     }
                 },
-                'uuid': {
-                    'type': 'str',
-                },
-                'ipv6': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'vip_server_name_list': {
-                'type': 'list',
-                'sampling_enable': {
+                'vip_server_v6_list': {
                     'type': 'list',
-                    'counters1': {
+                    'ipv6': {
                         'type': 'str',
-                        'choices': ['all', 'dev_vip_hits']
+                        'required': True,
+                    },
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
                     }
                 },
-                'vip_name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
+                'vip_server_name_list': {
+                    'type': 'list',
+                    'vip_name': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
+                    }
                 }
             }
-        },
-        'ip_address': {
-            'type': 'str',
-        },
-        'proto_aging_fast': {
-            'type': 'bool',
-        },
-        'auto_detect': {
-            'type': 'str',
-            'choices': ['ip', 'port', 'ip-and-port', 'disabled']
-        },
-        'max_client': {
-            'type': 'int',
-        },
-        'admin_preference': {
-            'type': 'int',
         }
     })
     # Parent keys

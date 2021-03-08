@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_alg_pptp
 description:
     - Change Fixed NAT PPTP ALG Settings
-short_description: Configures A10 cgnv6.fixed.nat.alg.pptp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -85,36 +96,41 @@ options:
           App Type Mismatch; 'control-freed'= Control Session Freed; 'control-free-no-
           ext'= Control Free No Ext; 'control-free-no-smp'= Control Free No SMP;
           'control-free-smp-app-type-mismatch'= Control Free SMP App Type Mismatch;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            gre_sessions_created:
-                description:
-                - "GRE Sessions Created"
-            mismatched_pns_call_id:
-                description:
-                - "Mismatched PNS Call ID"
-            call_reply_pns_call_id_mismatch:
-                description:
-                - "Call ID Mismatch on Call Reply"
             calls_established:
                 description:
                 - "Calls Established"
-            no_gre_session_match:
+                type: str
+            mismatched_pns_call_id:
                 description:
-                - "No Matching GRE Session"
-            call_req_pns_call_id_mismatch:
+                - "Mismatched PNS Call ID"
+                type: str
+            gre_sessions_created:
                 description:
-                - "Call ID Mismatch on Call Request"
+                - "GRE Sessions Created"
+                type: str
             gre_sessions_freed:
                 description:
                 - "GRE Sessions Freed"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            no_gre_session_match:
+                description:
+                - "No Matching GRE Session"
+                type: str
+            call_req_pns_call_id_mismatch:
+                description:
+                - "Call ID Mismatch on Call Request"
+                type: str
+            call_reply_pns_call_id_mismatch:
+                description:
+                - "Call ID Mismatch on Call Reply"
+                type: str
 
 '''
 
@@ -169,6 +185,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -202,16 +221,16 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'gre_sessions_created': {
+            'calls_established': {
                 'type': 'str',
             },
             'mismatched_pns_call_id': {
                 'type': 'str',
             },
-            'call_reply_pns_call_id_mismatch': {
+            'gre_sessions_created': {
                 'type': 'str',
             },
-            'calls_established': {
+            'gre_sessions_freed': {
                 'type': 'str',
             },
             'no_gre_session_match': {
@@ -220,12 +239,9 @@ def get_argspec():
             'call_req_pns_call_id_mismatch': {
                 'type': 'str',
             },
-            'gre_sessions_freed': {
+            'call_reply_pns_call_id_mismatch': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

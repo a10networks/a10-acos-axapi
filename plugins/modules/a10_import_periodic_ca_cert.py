@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_ca_cert
 description:
     - SSL CA Cert File(enter bulk when import an archive file)
-short_description: Configures A10 import-periodic.ca-cert
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,51 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ca_cert:
         description:
         - "SSL CA Cert File(enter bulk when import an archive file)"
+        type: str
         required: True
+    certificate_type:
+        description:
+        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b;"
+        type: str
+        required: False
+    pfx_password:
+        description:
+        - "The password for certificate file (pfx type only)"
+        type: str
+        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     remote_file:
         description:
         - "profile name for remote url"
+        type: str
         required: False
     period:
         description:
         - "Specify the period in second"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -85,7 +105,9 @@ ANSIBLE_METADATA = {
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "ca_cert",
+    "certificate_type",
     "period",
+    "pfx_password",
     "remote_file",
     "use_mgmt_port",
     "uuid",
@@ -130,17 +152,24 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
+        'certificate_type': {
+            'type': 'str',
+            'choices': ['pem', 'der', 'pfx', 'p7b']
+        },
+        'pfx_password': {
+            'type': 'str',
+        },
         'use_mgmt_port': {
             'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
         },
         'remote_file': {
             'type': 'str',
         },
         'period': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

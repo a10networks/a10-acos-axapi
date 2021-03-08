@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_apps
 description:
     - Enable Scaleout for apps
-short_description: Configures A10 scaleout.apps
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,40 +22,63 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     enable:
         description:
         - "Enable Scaleout for apps"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    skip_mac_overwrite:
+        description:
+        - "Field skip_mac_overwrite"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Skips overwriting dest MAC of flooded packets on Active node"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -73,6 +94,7 @@ ANSIBLE_METADATA = {
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "enable",
+    "skip_mac_overwrite",
     "uuid",
 ]
 
@@ -116,6 +138,15 @@ def get_argspec():
         },
         'uuid': {
             'type': 'str',
+        },
+        'skip_mac_overwrite': {
+            'type': 'dict',
+            'enable': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

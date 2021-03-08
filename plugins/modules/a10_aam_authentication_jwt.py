@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_jwt
 description:
     - JWT issuance configuration
-short_description: Configures A10 aam.authentication.jwt
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,69 +22,85 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Specify JWT issuer template name"
+        type: str
+        required: True
+    issuer:
+        description:
+        - "Specify JWT issuer claim value"
+        type: str
+        required: False
+    action:
+        description:
+        - "'redirect'= redirect JWT to specific URI; 'relay'= relay JWT to back-end;"
+        type: str
+        required: False
+    token_lifetime:
+        description:
+        - "Specify JWT token lifetime (Specify lifetime (in seconds), default is 300.)"
+        type: int
         required: False
     signature_secret:
         description:
         - "Specify the JWT signature secret"
+        type: bool
         required: False
-    uuid:
+    secret_string:
         description:
-        - "uuid of the object"
+        - "The JWT signature secret"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
-    token_lifetime:
-        description:
-        - "Specify JWT token lifetime (Specify lifetime (in seconds), default is 300.)"
-        required: False
-    action:
-        description:
-        - "'redirect'= redirect JWT to specific URI; 'relay'= relay JWT to back-end;"
-        required: False
-    issuer:
-        description:
-        - "Specify JWT issuer claim value"
-        required: False
-    secret_string:
-        description:
-        - "The JWT signature secret"
-        required: False
-    name:
-        description:
-        - "Specify JWT issuer template name"
-        required: True
 
 '''
 
@@ -147,34 +161,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'signature_secret': {
-            'type': 'bool',
-        },
-        'uuid': {
+        'name': {
             'type': 'str',
+            'required': True,
         },
-        'encrypted': {
+        'issuer': {
             'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'token_lifetime': {
-            'type': 'int',
         },
         'action': {
             'type': 'str',
             'choices': ['redirect', 'relay']
         },
-        'issuer': {
-            'type': 'str',
+        'token_lifetime': {
+            'type': 'int',
+        },
+        'signature_secret': {
+            'type': 'bool',
         },
         'secret_string': {
             'type': 'str',
         },
-        'name': {
+        'encrypted': {
             'type': 'str',
-            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

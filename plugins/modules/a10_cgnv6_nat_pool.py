@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat_pool
 description:
     - Configure CGNv6 NAT pool
-short_description: Configures A10 cgnv6.nat.pool
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,173 +22,102 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    pool_name:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            nat_ip_list:
-                description:
-                - "Field nat_ip_list"
-            pool_name:
-                description:
-                - "Specify pool name or pool group"
-    all:
-        description:
-        - "Share with all partitions"
-        required: False
-    tcp_time_wait_interval:
-        description:
-        - "Minutes before TCP NAT ports can be reused"
-        required: False
-    group:
-        description:
-        - "Share with a partition group (Partition Group Name)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - "Specify pool name or pool group"
+        type: str
+        required: True
     start_address:
         description:
         - "Configure start IP address of NAT pool"
+        type: str
         required: False
-    per_batch_port_usage_warning_threshold:
+    end_address:
         description:
-        - "Configure warning log threshold for per batch port usage (default= disabled)
-          (Number of ports)"
-        required: False
-    vrid:
-        description:
-        - "Configure VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    usable_nat_ports_start:
-        description:
-        - "Start Port of Usable NAT Ports (needs to be even)"
-        required: False
-    usable_nat_ports_end:
-        description:
-        - "End Port of Usable NAT Ports"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            udp_hit_full:
-                description:
-                - "UDP Hit Full"
-            ip_free:
-                description:
-                - "IP Free"
-            ip_used:
-                description:
-                - "IP Used"
-            tcp:
-                description:
-                - "TCP"
-            udp_rsvd:
-                description:
-                - "UDP Reserved"
-            icmp_freed:
-                description:
-                - "ICMP Freed"
-            icmp_hit_full:
-                description:
-                - "ICMP Hit Full"
-            icmp_total:
-                description:
-                - "ICMP Total"
-            tcp_peak:
-                description:
-                - "TCP Peak"
-            icmp_rsvd:
-                description:
-                - "ICMP Reserved"
-            udp_freed:
-                description:
-                - "UDP Freed"
-            pool_name:
-                description:
-                - "Specify pool name or pool group"
-            tcp_freed:
-                description:
-                - "TCP Freed"
-            udp:
-                description:
-                - "UDP"
-            users:
-                description:
-                - "Users"
-            tcp_hit_full:
-                description:
-                - "TCP Hit Full"
-            tcp_rsvd:
-                description:
-                - "TCP Reserved"
-            icmp:
-                description:
-                - "ICMP"
-            udp_peak:
-                description:
-                - "UDP Peak"
-            udp_total:
-                description:
-                - "UDP Total"
-            icmp_peak:
-                description:
-                - "ICMP Peak"
-            ip_total:
-                description:
-                - "IP Total"
-            tcp_total:
-                description:
-                - "TCP total"
-    partition:
-        description:
-        - "Share with a single partition (Partition Name)"
+        - "Configure end IP address of NAT pool"
+        type: str
         required: False
     netmask:
         description:
         - "Configure mask for pool"
+        type: str
+        required: False
+    exclude_ip:
+        description:
+        - "Field exclude_ip"
+        type: list
+        required: False
+        suboptions:
+            exclude_ip_start:
+                description:
+                - "Single IP address or IP address range start"
+                type: str
+            exclude_ip_end:
+                description:
+                - "Address range end"
+                type: str
+    vrid:
+        description:
+        - "Configure VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
         required: False
     max_users_per_ip:
         description:
         - "Number of users that can be assigned to a NAT IP"
-        required: False
-    simultaneous_batch_allocation:
-        description:
-        - "Allocate same TCP and UDP batches at once"
+        type: int
         required: False
     shared:
         description:
         - "Share this pool with other partitions (default= not shared)"
+        type: bool
+        required: False
+    group:
+        description:
+        - "Share with a partition group (Partition Group Name)"
+        type: str
+        required: False
+    partition:
+        description:
+        - "Share with a single partition (Partition Name)"
+        type: str
+        required: False
+    all:
+        description:
+        - "Share with all partitions"
+        type: bool
         required: False
     port_batch_v2_size:
         description:
@@ -198,30 +125,156 @@ options:
           Allocate 256 ports at a time; '512'= Allocate 512 ports at a time; '1024'=
           Allocate 1024 ports at a time; '2048'= Allocate 2048 ports at a time; '4096'=
           Allocate 4096 ports at a time;"
+        type: str
         required: False
-    end_address:
+    simultaneous_batch_allocation:
         description:
-        - "Configure end IP address of NAT pool"
+        - "Allocate same TCP and UDP batches at once"
+        type: bool
+        required: False
+    per_batch_port_usage_warning_threshold:
+        description:
+        - "Configure warning log threshold for per batch port usage (default= disabled)
+          (Number of ports)"
+        type: int
+        required: False
+    tcp_time_wait_interval:
+        description:
+        - "Minutes before TCP NAT ports can be reused"
+        type: int
         required: False
     usable_nat_ports:
         description:
         - "Configure usable NAT ports"
+        type: bool
         required: False
-    exclude_ip:
+    usable_nat_ports_start:
         description:
-        - "Field exclude_ip"
+        - "Start Port of Usable NAT Ports (needs to be even)"
+        type: int
+        required: False
+    usable_nat_ports_end:
+        description:
+        - "End Port of Usable NAT Ports"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            exclude_ip_start:
+            nat_ip_list:
                 description:
-                - "Single IP address or IP address range start"
-            exclude_ip_end:
+                - "Field nat_ip_list"
+                type: list
+            pool_name:
                 description:
-                - "Address range end"
-    pool_name:
+                - "Specify pool name or pool group"
+                type: str
+    stats:
         description:
-        - "Specify pool name or pool group"
-        required: True
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            users:
+                description:
+                - "Users"
+                type: str
+            icmp:
+                description:
+                - "ICMP"
+                type: str
+            icmp_freed:
+                description:
+                - "ICMP Freed"
+                type: str
+            icmp_total:
+                description:
+                - "ICMP Total"
+                type: str
+            icmp_rsvd:
+                description:
+                - "ICMP Reserved"
+                type: str
+            icmp_peak:
+                description:
+                - "ICMP Peak"
+                type: str
+            icmp_hit_full:
+                description:
+                - "ICMP Hit Full"
+                type: str
+            udp:
+                description:
+                - "UDP"
+                type: str
+            udp_freed:
+                description:
+                - "UDP Freed"
+                type: str
+            udp_total:
+                description:
+                - "UDP Total"
+                type: str
+            udp_rsvd:
+                description:
+                - "UDP Reserved"
+                type: str
+            udp_peak:
+                description:
+                - "UDP Peak"
+                type: str
+            udp_hit_full:
+                description:
+                - "UDP Hit Full"
+                type: str
+            tcp:
+                description:
+                - "TCP"
+                type: str
+            tcp_freed:
+                description:
+                - "TCP Freed"
+                type: str
+            tcp_total:
+                description:
+                - "TCP total"
+                type: str
+            tcp_rsvd:
+                description:
+                - "TCP Reserved"
+                type: str
+            tcp_peak:
+                description:
+                - "TCP Peak"
+                type: str
+            tcp_hit_full:
+                description:
+                - "TCP Hit Full"
+                type: str
+            ip_used:
+                description:
+                - "IP Used"
+                type: str
+            ip_free:
+                description:
+                - "IP Free"
+                type: str
+            ip_total:
+                description:
+                - "IP Total"
+                type: str
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
+                type: str
 
 '''
 
@@ -294,206 +347,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'nat_ip_list': {
-                'type': 'list',
-                'udp_used': {
-                    'type': 'int',
-                },
-                'udp_hit_full': {
-                    'type': 'int',
-                },
-                'rtsp_used': {
-                    'type': 'int',
-                },
-                'ip_address': {
-                    'type': 'str',
-                },
-                'icmp_freed': {
-                    'type': 'int',
-                },
-                'icmp_hit_full': {
-                    'type': 'int',
-                },
-                'icmp_total': {
-                    'type': 'int',
-                },
-                'tcp_peak': {
-                    'type': 'int',
-                },
-                'icmp_reserved': {
-                    'type': 'int',
-                },
-                'udp_freed': {
-                    'type': 'int',
-                },
-                'udp_reserved': {
-                    'type': 'int',
-                },
-                'tcp_freed': {
-                    'type': 'int',
-                },
-                'users': {
-                    'type': 'int',
-                },
-                'tcp_hit_full': {
-                    'type': 'int',
-                },
-                'obsoleted': {
-                    'type': 'int',
-                },
-                'udp_peak': {
-                    'type': 'int',
-                },
-                'udp_total': {
-                    'type': 'int',
-                },
-                'icmp_peak': {
-                    'type': 'int',
-                },
-                'tcp_reserved': {
-                    'type': 'int',
-                },
-                'tcp_used': {
-                    'type': 'int',
-                },
-                'tcp_total': {
-                    'type': 'int',
-                },
-                'icmp_used': {
-                    'type': 'int',
-                }
-            },
-            'pool_name': {
-                'type': 'str',
-                'required': True,
-            }
-        },
-        'all': {
-            'type': 'bool',
-        },
-        'tcp_time_wait_interval': {
-            'type': 'int',
-        },
-        'group': {
+        'pool_name': {
             'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
+            'required': True,
         },
         'start_address': {
             'type': 'str',
         },
-        'per_batch_port_usage_warning_threshold': {
-            'type': 'int',
-        },
-        'vrid': {
-            'type': 'int',
-        },
-        'usable_nat_ports_start': {
-            'type': 'int',
-        },
-        'usable_nat_ports_end': {
-            'type': 'int',
-        },
-        'stats': {
-            'type': 'dict',
-            'udp_hit_full': {
-                'type': 'str',
-            },
-            'ip_free': {
-                'type': 'str',
-            },
-            'ip_used': {
-                'type': 'str',
-            },
-            'tcp': {
-                'type': 'str',
-            },
-            'udp_rsvd': {
-                'type': 'str',
-            },
-            'icmp_freed': {
-                'type': 'str',
-            },
-            'icmp_hit_full': {
-                'type': 'str',
-            },
-            'icmp_total': {
-                'type': 'str',
-            },
-            'tcp_peak': {
-                'type': 'str',
-            },
-            'icmp_rsvd': {
-                'type': 'str',
-            },
-            'udp_freed': {
-                'type': 'str',
-            },
-            'pool_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'tcp_freed': {
-                'type': 'str',
-            },
-            'udp': {
-                'type': 'str',
-            },
-            'users': {
-                'type': 'str',
-            },
-            'tcp_hit_full': {
-                'type': 'str',
-            },
-            'tcp_rsvd': {
-                'type': 'str',
-            },
-            'icmp': {
-                'type': 'str',
-            },
-            'udp_peak': {
-                'type': 'str',
-            },
-            'udp_total': {
-                'type': 'str',
-            },
-            'icmp_peak': {
-                'type': 'str',
-            },
-            'ip_total': {
-                'type': 'str',
-            },
-            'tcp_total': {
-                'type': 'str',
-            }
-        },
-        'partition': {
+        'end_address': {
             'type': 'str',
         },
         'netmask': {
             'type': 'str',
-        },
-        'max_users_per_ip': {
-            'type': 'int',
-        },
-        'simultaneous_batch_allocation': {
-            'type': 'bool',
-        },
-        'shared': {
-            'type': 'bool',
-        },
-        'port_batch_v2_size': {
-            'type': 'str',
-            'choices': ['64', '128', '256', '512', '1024', '2048', '4096']
-        },
-        'end_address': {
-            'type': 'str',
-        },
-        'usable_nat_ports': {
-            'type': 'bool',
         },
         'exclude_ip': {
             'type': 'list',
@@ -504,9 +369,197 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'pool_name': {
+        'vrid': {
+            'type': 'int',
+        },
+        'max_users_per_ip': {
+            'type': 'int',
+        },
+        'shared': {
+            'type': 'bool',
+        },
+        'group': {
             'type': 'str',
-            'required': True,
+        },
+        'partition': {
+            'type': 'str',
+        },
+        'all': {
+            'type': 'bool',
+        },
+        'port_batch_v2_size': {
+            'type': 'str',
+            'choices': ['64', '128', '256', '512', '1024', '2048', '4096']
+        },
+        'simultaneous_batch_allocation': {
+            'type': 'bool',
+        },
+        'per_batch_port_usage_warning_threshold': {
+            'type': 'int',
+        },
+        'tcp_time_wait_interval': {
+            'type': 'int',
+        },
+        'usable_nat_ports': {
+            'type': 'bool',
+        },
+        'usable_nat_ports_start': {
+            'type': 'int',
+        },
+        'usable_nat_ports_end': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'oper': {
+            'type': 'dict',
+            'nat_ip_list': {
+                'type': 'list',
+                'ip_address': {
+                    'type': 'str',
+                },
+                'users': {
+                    'type': 'int',
+                },
+                'icmp_used': {
+                    'type': 'int',
+                },
+                'icmp_freed': {
+                    'type': 'int',
+                },
+                'icmp_total': {
+                    'type': 'int',
+                },
+                'icmp_reserved': {
+                    'type': 'int',
+                },
+                'icmp_peak': {
+                    'type': 'int',
+                },
+                'icmp_hit_full': {
+                    'type': 'int',
+                },
+                'udp_used': {
+                    'type': 'int',
+                },
+                'udp_freed': {
+                    'type': 'int',
+                },
+                'udp_total': {
+                    'type': 'int',
+                },
+                'udp_reserved': {
+                    'type': 'int',
+                },
+                'udp_peak': {
+                    'type': 'int',
+                },
+                'udp_hit_full': {
+                    'type': 'int',
+                },
+                'tcp_used': {
+                    'type': 'int',
+                },
+                'tcp_freed': {
+                    'type': 'int',
+                },
+                'tcp_total': {
+                    'type': 'int',
+                },
+                'tcp_reserved': {
+                    'type': 'int',
+                },
+                'tcp_peak': {
+                    'type': 'int',
+                },
+                'tcp_hit_full': {
+                    'type': 'int',
+                },
+                'rtsp_used': {
+                    'type': 'int',
+                },
+                'obsoleted': {
+                    'type': 'int',
+                }
+            },
+            'pool_name': {
+                'type': 'str',
+                'required': True,
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'users': {
+                'type': 'str',
+            },
+            'icmp': {
+                'type': 'str',
+            },
+            'icmp_freed': {
+                'type': 'str',
+            },
+            'icmp_total': {
+                'type': 'str',
+            },
+            'icmp_rsvd': {
+                'type': 'str',
+            },
+            'icmp_peak': {
+                'type': 'str',
+            },
+            'icmp_hit_full': {
+                'type': 'str',
+            },
+            'udp': {
+                'type': 'str',
+            },
+            'udp_freed': {
+                'type': 'str',
+            },
+            'udp_total': {
+                'type': 'str',
+            },
+            'udp_rsvd': {
+                'type': 'str',
+            },
+            'udp_peak': {
+                'type': 'str',
+            },
+            'udp_hit_full': {
+                'type': 'str',
+            },
+            'tcp': {
+                'type': 'str',
+            },
+            'tcp_freed': {
+                'type': 'str',
+            },
+            'tcp_total': {
+                'type': 'str',
+            },
+            'tcp_rsvd': {
+                'type': 'str',
+            },
+            'tcp_peak': {
+                'type': 'str',
+            },
+            'tcp_hit_full': {
+                'type': 'str',
+            },
+            'ip_used': {
+                'type': 'str',
+            },
+            'ip_free': {
+                'type': 'str',
+            },
+            'ip_total': {
+                'type': 'str',
+            },
+            'pool_name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_forward_proxy
 description:
     - SSL forward proxy stats info
-short_description: Configures A10 slb.ssl-forward-proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -78,105 +89,133 @@ options:
           Bypass AD-group sessions; 'cert_in_cache'= Certificates in cache;
           'tot_conn_in_buff'= Total buffered async connections; 'curr_conn_in_buff'=
           Current buffered async connections;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            bypass_username_sessions:
-                description:
-                - "Bypass Username sessions"
-            invalid_ocsp_stapling_response:
-                description:
-                - "Invalid OCSP Stapling Response"
-            failed_in_certificate_verification:
-                description:
-                - "Failed in Certificate verification"
-            revoked_ocsp_response:
-                description:
-                - "Revoked OCSP Response"
-            failed_in_tcp:
-                description:
-                - "Failed in TCP"
-            certificates_in_cache:
-                description:
-                - "Certificates in cache"
-            cert_in_cache:
-                description:
-                - "Certificates in cache"
-            failed_in_crypto_operations:
-                description:
-                - "Failed in crypto operations"
-            cert_hit:
-                description:
-                - "Certificate cache hits"
-            bypass_cert_subject_sessions:
-                description:
-                - "Bypass Cert Subject sessions"
-            cert_miss:
-                description:
-                - "Certificate cache miss"
-            unsupported_ssl_version:
-                description:
-                - "Unsupported SSL version"
-            aflex_bypass:
-                description:
-                - "Bypass triggered by aFleX"
-            curr_conn_in_buff:
-                description:
-                - "Current buffered async connections"
-            conn_inspect:
-                description:
-                - "Connections inspected"
-            cert_expr:
-                description:
-                - "Certificates expired"
-            bypass_cert_san_sessions:
-                description:
-                - "Bypass Cert SAN sessions"
-            bypass_client_auth_sessions:
-                description:
-                - "Bypass Client Auth sessions"
             cert_create:
                 description:
                 - "Certificates created"
-            bypass_sni_sessions:
+                type: str
+            cert_expr:
                 description:
-                - "Bypass SNI sessions"
-            connections_failed:
+                - "Certificates expired"
+                type: str
+            cert_hit:
                 description:
-                - "Connections failed"
-            failed_in_ssl_handshakes:
+                - "Certificate cache hits"
+                type: str
+            cert_miss:
                 description:
-                - "Failed in SSL handshakes"
-            reset_no_sni_sessions:
-                description:
-                - "Reset No SNI sessions"
-            bypass_no_sni_sessions:
-                description:
-                - "Bypass NO SNI sessions"
+                - "Certificate cache miss"
+                type: str
             conn_bypass:
                 description:
                 - "Connections bypassed"
-            tot_conn_in_buff:
+                type: str
+            conn_inspect:
                 description:
-                - "Total buffered async connections"
-            bypass_cert_issuer_sessions:
-                description:
-                - "Bypass Cert issuer sessions"
-            failed_in_certificate_signing:
-                description:
-                - "Failed in Certificate signing"
-            bypass_ad_group_sessions:
-                description:
-                - "Bypass AD-group sessions"
+                - "Connections inspected"
+                type: str
             bypass_failsafe_ssl_sessions:
                 description:
                 - "Bypass Failsafe SSL sessions"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            bypass_sni_sessions:
+                description:
+                - "Bypass SNI sessions"
+                type: str
+            bypass_client_auth_sessions:
+                description:
+                - "Bypass Client Auth sessions"
+                type: str
+            failed_in_ssl_handshakes:
+                description:
+                - "Failed in SSL handshakes"
+                type: str
+            failed_in_crypto_operations:
+                description:
+                - "Failed in crypto operations"
+                type: str
+            failed_in_tcp:
+                description:
+                - "Failed in TCP"
+                type: str
+            failed_in_certificate_verification:
+                description:
+                - "Failed in Certificate verification"
+                type: str
+            failed_in_certificate_signing:
+                description:
+                - "Failed in Certificate signing"
+                type: str
+            invalid_ocsp_stapling_response:
+                description:
+                - "Invalid OCSP Stapling Response"
+                type: str
+            revoked_ocsp_response:
+                description:
+                - "Revoked OCSP Response"
+                type: str
+            unsupported_ssl_version:
+                description:
+                - "Unsupported SSL version"
+                type: str
+            certificates_in_cache:
+                description:
+                - "Certificates in cache"
+                type: str
+            connections_failed:
+                description:
+                - "Connections failed"
+                type: str
+            aflex_bypass:
+                description:
+                - "Bypass triggered by aFleX"
+                type: str
+            bypass_cert_subject_sessions:
+                description:
+                - "Bypass Cert Subject sessions"
+                type: str
+            bypass_cert_issuer_sessions:
+                description:
+                - "Bypass Cert issuer sessions"
+                type: str
+            bypass_cert_san_sessions:
+                description:
+                - "Bypass Cert SAN sessions"
+                type: str
+            bypass_no_sni_sessions:
+                description:
+                - "Bypass NO SNI sessions"
+                type: str
+            reset_no_sni_sessions:
+                description:
+                - "Reset No SNI sessions"
+                type: str
+            bypass_username_sessions:
+                description:
+                - "Bypass Username sessions"
+                type: str
+            bypass_ad_group_sessions:
+                description:
+                - "Bypass AD-group sessions"
+                type: str
+            cert_in_cache:
+                description:
+                - "Certificates in cache"
+                type: str
+            tot_conn_in_buff:
+                description:
+                - "Total buffered async connections"
+                type: str
+            curr_conn_in_buff:
+                description:
+                - "Current buffered async connections"
+                type: str
 
 '''
 
@@ -231,6 +270,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -257,99 +299,96 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'bypass_username_sessions': {
-                'type': 'str',
-            },
-            'invalid_ocsp_stapling_response': {
-                'type': 'str',
-            },
-            'failed_in_certificate_verification': {
-                'type': 'str',
-            },
-            'revoked_ocsp_response': {
-                'type': 'str',
-            },
-            'failed_in_tcp': {
-                'type': 'str',
-            },
-            'certificates_in_cache': {
-                'type': 'str',
-            },
-            'cert_in_cache': {
-                'type': 'str',
-            },
-            'failed_in_crypto_operations': {
-                'type': 'str',
-            },
-            'cert_hit': {
-                'type': 'str',
-            },
-            'bypass_cert_subject_sessions': {
-                'type': 'str',
-            },
-            'cert_miss': {
-                'type': 'str',
-            },
-            'unsupported_ssl_version': {
-                'type': 'str',
-            },
-            'aflex_bypass': {
-                'type': 'str',
-            },
-            'curr_conn_in_buff': {
-                'type': 'str',
-            },
-            'conn_inspect': {
+            'cert_create': {
                 'type': 'str',
             },
             'cert_expr': {
                 'type': 'str',
             },
-            'bypass_cert_san_sessions': {
+            'cert_hit': {
                 'type': 'str',
             },
-            'bypass_client_auth_sessions': {
-                'type': 'str',
-            },
-            'cert_create': {
-                'type': 'str',
-            },
-            'bypass_sni_sessions': {
-                'type': 'str',
-            },
-            'connections_failed': {
-                'type': 'str',
-            },
-            'failed_in_ssl_handshakes': {
-                'type': 'str',
-            },
-            'reset_no_sni_sessions': {
-                'type': 'str',
-            },
-            'bypass_no_sni_sessions': {
+            'cert_miss': {
                 'type': 'str',
             },
             'conn_bypass': {
                 'type': 'str',
             },
-            'tot_conn_in_buff': {
+            'conn_inspect': {
                 'type': 'str',
             },
-            'bypass_cert_issuer_sessions': {
+            'bypass_failsafe_ssl_sessions': {
+                'type': 'str',
+            },
+            'bypass_sni_sessions': {
+                'type': 'str',
+            },
+            'bypass_client_auth_sessions': {
+                'type': 'str',
+            },
+            'failed_in_ssl_handshakes': {
+                'type': 'str',
+            },
+            'failed_in_crypto_operations': {
+                'type': 'str',
+            },
+            'failed_in_tcp': {
+                'type': 'str',
+            },
+            'failed_in_certificate_verification': {
                 'type': 'str',
             },
             'failed_in_certificate_signing': {
                 'type': 'str',
             },
+            'invalid_ocsp_stapling_response': {
+                'type': 'str',
+            },
+            'revoked_ocsp_response': {
+                'type': 'str',
+            },
+            'unsupported_ssl_version': {
+                'type': 'str',
+            },
+            'certificates_in_cache': {
+                'type': 'str',
+            },
+            'connections_failed': {
+                'type': 'str',
+            },
+            'aflex_bypass': {
+                'type': 'str',
+            },
+            'bypass_cert_subject_sessions': {
+                'type': 'str',
+            },
+            'bypass_cert_issuer_sessions': {
+                'type': 'str',
+            },
+            'bypass_cert_san_sessions': {
+                'type': 'str',
+            },
+            'bypass_no_sni_sessions': {
+                'type': 'str',
+            },
+            'reset_no_sni_sessions': {
+                'type': 'str',
+            },
+            'bypass_username_sessions': {
+                'type': 'str',
+            },
             'bypass_ad_group_sessions': {
                 'type': 'str',
             },
-            'bypass_failsafe_ssl_sessions': {
+            'cert_in_cache': {
+                'type': 'str',
+            },
+            'tot_conn_in_buff': {
+                'type': 'str',
+            },
+            'curr_conn_in_buff': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

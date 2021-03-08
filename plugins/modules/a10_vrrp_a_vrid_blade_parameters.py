@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_vrid_blade_parameters
 description:
     - blade parameters of VRRP-A vrid
-short_description: Configures A10 vrrp.a.vrid.blade-parameters
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,72 +22,93 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     vrid_val:
         description:
-        - Key to identify parent object    priority:
+        - Key to identify parent object
+        type: str
+        required: True
+    priority:
         description:
         - "VRRP-A priorty (Priority, default is 150)"
+        type: int
         required: False
     fail_over_policy_template:
         description:
         - "Apply a fail over policy template (VRRP-A fail over policy template name)"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     tracking_options:
         description:
         - "Field tracking_options"
+        type: dict
         required: False
         suboptions:
-            vlan_cfg:
-                description:
-                - "Field vlan_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-            route:
-                description:
-                - "Field route"
-            bgp:
-                description:
-                - "Field bgp"
             interface:
                 description:
                 - "Field interface"
-            gateway:
+                type: list
+            route:
                 description:
-                - "Field gateway"
+                - "Field route"
+                type: dict
             trunk_cfg:
                 description:
                 - "Field trunk_cfg"
+                type: list
+            bgp:
+                description:
+                - "Field bgp"
+                type: dict
+            vlan_cfg:
+                description:
+                - "Field vlan_cfg"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            gateway:
+                description:
+                - "Field gateway"
+                type: dict
 
 '''
 
@@ -156,50 +175,21 @@ def get_argspec():
         },
         'tracking_options': {
             'type': 'dict',
-            'vlan_cfg': {
+            'interface': {
                 'type': 'list',
-                'vlan': {
-                    'type': 'int',
-                },
-                'timeout': {
-                    'type': 'int',
+                'ethernet': {
+                    'type': 'str',
                 },
                 'priority_cost': {
                     'type': 'int',
                 }
             },
-            'uuid': {
-                'type': 'str',
-            },
             'route': {
                 'type': 'dict',
-                'ipv6_destination_cfg': {
-                    'type': 'list',
-                    'ipv6_destination': {
-                        'type': 'str',
-                    },
-                    'distance': {
-                        'type': 'int',
-                    },
-                    'gatewayv6': {
-                        'type': 'str',
-                    },
-                    'protocol': {
-                        'type': 'str',
-                        'choices': ['any', 'static', 'dynamic']
-                    },
-                    'priority_cost': {
-                        'type': 'int',
-                    }
-                },
                 'ip_destination_cfg': {
                     'type': 'list',
-                    'distance': {
-                        'type': 'int',
-                    },
-                    'protocol': {
+                    'ip_destination': {
                         'type': 'str',
-                        'choices': ['any', 'static', 'dynamic']
                     },
                     'mask': {
                         'type': 'str',
@@ -207,12 +197,47 @@ def get_argspec():
                     'priority_cost': {
                         'type': 'int',
                     },
-                    'ip_destination': {
-                        'type': 'str',
-                    },
                     'gateway': {
                         'type': 'str',
+                    },
+                    'distance': {
+                        'type': 'int',
+                    },
+                    'protocol': {
+                        'type': 'str',
+                        'choices': ['any', 'static', 'dynamic']
                     }
+                },
+                'ipv6_destination_cfg': {
+                    'type': 'list',
+                    'ipv6_destination': {
+                        'type': 'str',
+                    },
+                    'priority_cost': {
+                        'type': 'int',
+                    },
+                    'gatewayv6': {
+                        'type': 'str',
+                    },
+                    'distance': {
+                        'type': 'int',
+                    },
+                    'protocol': {
+                        'type': 'str',
+                        'choices': ['any', 'static', 'dynamic']
+                    }
+                }
+            },
+            'trunk_cfg': {
+                'type': 'list',
+                'trunk': {
+                    'type': 'int',
+                },
+                'priority_cost': {
+                    'type': 'int',
+                },
+                'per_port_pri': {
+                    'type': 'int',
                 }
             },
             'bgp': {
@@ -236,28 +261,34 @@ def get_argspec():
                     }
                 }
             },
-            'interface': {
+            'vlan_cfg': {
                 'type': 'list',
-                'ethernet': {
-                    'type': 'str',
+                'vlan': {
+                    'type': 'int',
+                },
+                'timeout': {
+                    'type': 'int',
                 },
                 'priority_cost': {
                     'type': 'int',
                 }
             },
+            'uuid': {
+                'type': 'str',
+            },
             'gateway': {
                 'type': 'dict',
                 'ipv4_gateway_list': {
                     'type': 'list',
-                    'uuid': {
-                        'type': 'str',
-                    },
                     'ip_address': {
                         'type': 'str',
                         'required': True,
                     },
                     'priority_cost': {
                         'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
                     }
                 },
                 'ipv6_gateway_list': {
@@ -266,24 +297,12 @@ def get_argspec():
                         'type': 'str',
                         'required': True,
                     },
-                    'uuid': {
-                        'type': 'str',
-                    },
                     'priority_cost': {
                         'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
                     }
-                }
-            },
-            'trunk_cfg': {
-                'type': 'list',
-                'priority_cost': {
-                    'type': 'int',
-                },
-                'trunk': {
-                    'type': 'int',
-                },
-                'per_port_pri': {
-                    'type': 'int',
                 }
             }
         }

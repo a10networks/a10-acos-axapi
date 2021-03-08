@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_options
 description:
     - Global overlay-tunnel configuration options
-short_description: Configures A10 overlay.tunnel.options
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    nvgre_key_mode_lower24:
-        description:
-        - "Use the lower 24-bits of the GRE key as the VSID"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    tcp_mss_adjust_disable:
-        description:
-        - "Disable TCP MSS adjustment in SYN packet for tunnels"
-        required: False
-    gateway_mac:
-        description:
-        - "MAC to be used with Gateway segment Id (MAC Address for the Gateway segment)"
+        type: str
         required: False
     ip_dscp_preserve:
         description:
         - "Copy DSCP bits from inner IP to outer IP header"
+        type: bool
         required: False
     nvgre_disable_flow_id:
         description:
         - "Disable Flow-ID computation for NVGRE"
+        type: bool
+        required: False
+    nvgre_key_mode_lower24:
+        description:
+        - "Use the lower 24-bits of the GRE key as the VSID"
+        type: bool
+        required: False
+    tcp_mss_adjust_disable:
+        description:
+        - "Disable TCP MSS adjustment in SYN packet for tunnels"
+        type: bool
+        required: False
+    gateway_mac:
+        description:
+        - "MAC to be used with Gateway segment Id (MAC Address for the Gateway segment)"
+        type: str
         required: False
     vxlan_dest_port:
         description:
         - "VXLAN UDP Destination Port (UDP Port Number (default 4789))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -136,11 +148,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'nvgre_key_mode_lower24': {
+        'ip_dscp_preserve': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
+        'nvgre_disable_flow_id': {
+            'type': 'bool',
+        },
+        'nvgre_key_mode_lower24': {
+            'type': 'bool',
         },
         'tcp_mss_adjust_disable': {
             'type': 'bool',
@@ -148,14 +163,11 @@ def get_argspec():
         'gateway_mac': {
             'type': 'str',
         },
-        'ip_dscp_preserve': {
-            'type': 'bool',
-        },
-        'nvgre_disable_flow_id': {
-            'type': 'bool',
-        },
         'vxlan_dest_port': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

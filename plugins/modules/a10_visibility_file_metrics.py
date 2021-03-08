@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_file_metrics
 description:
     - Persistent storage for metrics
-short_description: Configures A10 visibility.file.metrics
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,85 +22,108 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     action:
         description:
         - "'enable'= Enable persistent storage(default); 'disable'= Disable persistent
           storage;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            pri_type:
-                description:
-                - "Field pri_type"
-            sec_l4_port:
-                description:
-                - "Field sec_l4_port"
-            sec_l4_proto:
-                description:
-                - "Field sec_l4_proto"
-            file_name:
-                description:
-                - "Field file_name"
-            pri_ipv6_addr:
-                description:
-                - "Field pri_ipv6_addr"
-            pri_l4_port:
-                description:
-                - "Field pri_l4_port"
-            pri_l4_proto:
-                description:
-                - "Field pri_l4_proto"
-            pri_ipv4_addr:
-                description:
-                - "Field pri_ipv4_addr"
             monitor_type:
                 description:
                 - "Field monitor_type"
-            sec_ipv6_addr:
+                type: str
+            pri_type:
                 description:
-                - "Field sec_ipv6_addr"
-            proc_metric_list:
+                - "Field pri_type"
+                type: str
+            pri_ipv4_addr:
                 description:
-                - "Field proc_metric_list"
-            sec_ipv4_addr:
+                - "Field pri_ipv4_addr"
+                type: str
+            pri_ipv6_addr:
                 description:
-                - "Field sec_ipv4_addr"
+                - "Field pri_ipv6_addr"
+                type: str
+            pri_l4_proto:
+                description:
+                - "Field pri_l4_proto"
+                type: int
+            pri_l4_port:
+                description:
+                - "Field pri_l4_port"
+                type: int
             sec_type:
                 description:
                 - "Field sec_type"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            sec_ipv4_addr:
+                description:
+                - "Field sec_ipv4_addr"
+                type: str
+            sec_ipv6_addr:
+                description:
+                - "Field sec_ipv6_addr"
+                type: str
+            sec_l4_proto:
+                description:
+                - "Field sec_l4_proto"
+                type: int
+            sec_l4_port:
+                description:
+                - "Field sec_l4_port"
+                type: int
+            file_name:
+                description:
+                - "Field file_name"
+                type: str
+            proc_metric_list:
+                description:
+                - "Field proc_metric_list"
+                type: list
 
 '''
 
@@ -161,40 +182,52 @@ def get_argspec():
             'type': 'str',
             'choices': ['enable', 'disable']
         },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'monitor_type': {
+                'type': 'str',
+            },
             'pri_type': {
                 'type': 'str',
             },
-            'sec_l4_port': {
-                'type': 'int',
-            },
-            'sec_l4_proto': {
-                'type': 'int',
-            },
-            'file_name': {
+            'pri_ipv4_addr': {
                 'type': 'str',
             },
             'pri_ipv6_addr': {
                 'type': 'str',
             },
-            'pri_l4_port': {
-                'type': 'int',
-            },
             'pri_l4_proto': {
                 'type': 'int',
             },
-            'pri_ipv4_addr': {
+            'pri_l4_port': {
+                'type': 'int',
+            },
+            'sec_type': {
                 'type': 'str',
             },
-            'monitor_type': {
+            'sec_ipv4_addr': {
                 'type': 'str',
             },
             'sec_ipv6_addr': {
                 'type': 'str',
             },
+            'sec_l4_proto': {
+                'type': 'int',
+            },
+            'sec_l4_port': {
+                'type': 'int',
+            },
+            'file_name': {
+                'type': 'str',
+            },
             'proc_metric_list': {
                 'type': 'list',
+                'metric_name': {
+                    'type': 'str',
+                },
                 'metric_attr_list': {
                     'type': 'list',
                     'metric_attr_name': {
@@ -203,20 +236,8 @@ def get_argspec():
                     'metric_attr_value': {
                         'type': 'str',
                     }
-                },
-                'metric_name': {
-                    'type': 'str',
                 }
-            },
-            'sec_ipv4_addr': {
-                'type': 'str',
-            },
-            'sec_type': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rba_role
 description:
     - Role configuration for RBA support
-short_description: Configures A10 rba.role
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,62 +22,77 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    default_privilege:
-        description:
-        - "'no-access'= no-access; 'read'= read; 'write'= write;"
+        type: str
         required: False
     name:
         description:
         - "Name for the RBA role"
+        type: str
         required: True
-    user_tag:
+    default_privilege:
         description:
-        - "Customized tag"
+        - "'no-access'= no-access; 'read'= read; 'write'= write;"
+        type: str
+        required: False
+    partition_only:
+        description:
+        - "Partition RBA Role"
+        type: bool
         required: False
     rule_list:
         description:
         - "Field rule_list"
+        type: list
         required: False
         suboptions:
-            operation:
-                description:
-                - "'no-access'= no-access; 'read'= read; 'oper'= oper; 'write'= write;"
             object:
                 description:
                 - "Lineage of object class for permitted operation"
-    partition_only:
-        description:
-        - "Partition RBA Role"
-        required: False
+                type: str
+            operation:
+                description:
+                - "'no-access'= no-access; 'read'= read; 'oper'= oper; 'write'= write;"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -138,31 +151,31 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'default_privilege': {
-            'type': 'str',
-            'choices': ['no-access', 'read', 'write']
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'user_tag': {
+        'default_privilege': {
             'type': 'str',
-        },
-        'rule_list': {
-            'type': 'list',
-            'operation': {
-                'type': 'str',
-                'choices': ['no-access', 'read', 'oper', 'write']
-            },
-            'object': {
-                'type': 'str',
-            }
+            'choices': ['no-access', 'read', 'write']
         },
         'partition_only': {
             'type': 'bool',
         },
+        'rule_list': {
+            'type': 'list',
+            'object': {
+                'type': 'str',
+            },
+            'operation': {
+                'type': 'str',
+                'choices': ['no-access', 'read', 'oper', 'write']
+            }
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

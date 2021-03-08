@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_email_buffer
 description:
     - Logging via email buffering settings
-short_description: Configures A10 logging.email.buffer
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,45 +22,55 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    time:
-        description:
-        - "Number of minutes a log message can stay in buffer (Number of minutes a log
-          message can stay in buffer, default 10)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     number:
         description:
         - "Number of log messages that can be buffered (Number of log messages that can be
           buffered, default 50)"
+        type: int
+        required: False
+    time:
+        description:
+        - "Number of minutes a log message can stay in buffer (Number of minutes a log
+          message can stay in buffer, default 10)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -118,14 +126,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'number': {
+            'type': 'int',
+        },
         'time': {
             'type': 'int',
         },
         'uuid': {
             'type': 'str',
-        },
-        'number': {
-            'type': 'int',
         }
     })
     return rv

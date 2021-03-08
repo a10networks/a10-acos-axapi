@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_harmony_controller_profile
 description:
     - Harmony controller profile
-short_description: Configures A10 harmony.controller.profile
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,162 +22,237 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    host:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            heartbeat_status:
-                description:
-                - "Field heartbeat_status"
-            overall_status:
-                description:
-                - "Field overall_status"
-            Number_of_tenant_unmapped_partitions:
-                description:
-                - "Field Number_of_tenant_unmapped_partitions"
-            heartbeat_error_message:
-                description:
-                - "Field heartbeat_error_message"
-            deregistration_error_message:
-                description:
-                - "Field deregistration_error_message"
-            service_registry:
-                description:
-                - "Field service_registry"
-            broker_info:
-                description:
-                - "Field broker_info"
-            kafka_broker_state:
-                description:
-                - "Field kafka_broker_state"
-            deregistration_status:
-                description:
-                - "Field deregistration_status"
-            Number_of_tenant_mapped_partitions:
-                description:
-                - "Field Number_of_tenant_mapped_partitions"
-            registration_status:
-                description:
-                - "Field registration_status"
-            registration_status_code:
-                description:
-                - "Field registration_status_code"
-            schema_registry_status:
-                description:
-                - "Field schema_registry_status"
-            service_registry_error_message:
-                description:
-                - "Field service_registry_error_message"
-            deregistration_status_code:
-                description:
-                - "Field deregistration_status_code"
-            registration_error_message:
-                description:
-                - "Field registration_error_message"
-    user_name:
-        description:
-        - "user-name for the tenant"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        - "Set harmony controller host adddress"
+        type: str
         required: False
     use_mgmt_port:
         description:
         - "Use management port for connections"
+        type: bool
+        required: False
+    port:
+        description:
+        - "Set port for remote Harmony Controller, default is 8443"
+        type: int
+        required: False
+    provider:
+        description:
+        - "provider for the harmony-controller"
+        type: str
+        required: False
+    user_name:
+        description:
+        - "user-name for the tenant"
+        type: str
+        required: False
+    cluster_name:
+        description:
+        - "cluster name for the device"
+        type: str
+        required: False
+    cluster_id:
+        description:
+        - "cluster id for the device"
+        type: str
+        required: False
+    secret_value:
+        description:
+        - "Specify the password for the user"
+        type: str
+        required: False
+    password_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+        type: str
+        required: False
+    region:
+        description:
+        - "region of the thunder-device"
+        type: str
         required: False
     auto_restart_action:
         description:
         - "'enable'= enable auto analytics bus restart, default behavior is enable;
           'disable'= disable auto analytics bus restart;"
-        required: False
-    region:
-        description:
-        - "region of the thunder-device"
+        type: str
         required: False
     interval:
         description:
         - "auto analytics bus restart time interval in mins, default is 3 mins"
+        type: int
         required: False
-    host:
+    availability_zone:
         description:
-        - "Set harmony controller host adddress"
-        required: False
-    port:
-        description:
-        - "Set port for remote Harmony Controller, default is 8443"
-        required: False
-    thunder_mgmt_ip:
-        description:
-        - "Field thunder_mgmt_ip"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ip_address:
-                description:
-                - "IP address (IPv4 address)"
-    re_sync:
-        description:
-        - "Field re_sync"
-        required: False
-        suboptions:
-            analytics_bus:
-                description:
-                - "re-sync analtyics bus connections"
-            schema_registry:
-                description:
-                - "re-sync the schema registry"
-    password_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-        required: False
-    provider:
-        description:
-        - "provider for the harmony-controller"
+        - "availablity zone of the thunder-device"
+        type: str
         required: False
     action:
         description:
         - "'register'= Register the device to the controller; 'deregister'= Deregister the
           device from controller;"
+        type: str
         required: False
-    secret_value:
+    uuid:
         description:
-        - "Specify the password for the user"
+        - "uuid of the object"
+        type: str
         required: False
-    availability_zone:
+    re_sync:
         description:
-        - "availablity zone of the thunder-device"
+        - "Field re_sync"
+        type: dict
         required: False
+        suboptions:
+            schema_registry:
+                description:
+                - "re-sync the schema registry"
+                type: bool
+            analytics_bus:
+                description:
+                - "re-sync analtyics bus connections"
+                type: bool
+    thunder_mgmt_ip:
+        description:
+        - "Field thunder_mgmt_ip"
+        type: dict
+        required: False
+        suboptions:
+            ip_address:
+                description:
+                - "IP address (IPv4 address)"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    tunnel:
+        description:
+        - "Field tunnel"
+        type: dict
+        required: False
+        suboptions:
+            action:
+                description:
+                - "'enable'= Tunnel Enable; 'disable'= Tunnel Disable;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            overall_status:
+                description:
+                - "Field overall_status"
+                type: str
+            heartbeat_status:
+                description:
+                - "Field heartbeat_status"
+                type: str
+            heartbeat_error_message:
+                description:
+                - "Field heartbeat_error_message"
+                type: str
+            service_registry:
+                description:
+                - "Field service_registry"
+                type: str
+            service_registry_error_message:
+                description:
+                - "Field service_registry_error_message"
+                type: str
+            registration_status:
+                description:
+                - "Field registration_status"
+                type: str
+            registration_status_code:
+                description:
+                - "Field registration_status_code"
+                type: int
+            registration_error_message:
+                description:
+                - "Field registration_error_message"
+                type: str
+            deregistration_status:
+                description:
+                - "Field deregistration_status"
+                type: str
+            deregistration_status_code:
+                description:
+                - "Field deregistration_status_code"
+                type: int
+            deregistration_error_message:
+                description:
+                - "Field deregistration_error_message"
+                type: str
+            schema_registry_status:
+                description:
+                - "Field schema_registry_status"
+                type: str
+            broker_info:
+                description:
+                - "Field broker_info"
+                type: str
+            kafka_broker_state:
+                description:
+                - "Field kafka_broker_state"
+                type: str
+            Number_of_tenant_mapped_partitions:
+                description:
+                - "Field Number_of_tenant_mapped_partitions"
+                type: int
+            Number_of_tenant_unmapped_partitions:
+                description:
+                - "Field Number_of_tenant_unmapped_partitions"
+                type: int
+            tunnel_status:
+                description:
+                - "Field tunnel_status"
+                type: str
+            tunnel_error_message:
+                description:
+                - "Field tunnel_error_message"
+                type: str
 
 '''
 
@@ -197,6 +270,8 @@ AVAILABLE_PROPERTIES = [
     "action",
     "auto_restart_action",
     "availability_zone",
+    "cluster_id",
+    "cluster_name",
     "host",
     "interval",
     "oper",
@@ -207,6 +282,7 @@ AVAILABLE_PROPERTIES = [
     "region",
     "secret_value",
     "thunder_mgmt_ip",
+    "tunnel",
     "use_mgmt_port",
     "user_name",
     "uuid",
@@ -247,24 +323,117 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
+        'host': {
+            'type': 'str',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'port': {
+            'type': 'int',
+        },
+        'provider': {
+            'type': 'str',
+        },
+        'user_name': {
+            'type': 'str',
+        },
+        'cluster_name': {
+            'type': 'str',
+        },
+        'cluster_id': {
+            'type': 'str',
+        },
+        'secret_value': {
+            'type': 'str',
+        },
+        'password_encrypted': {
+            'type': 'str',
+        },
+        'region': {
+            'type': 'str',
+        },
+        'auto_restart_action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'interval': {
+            'type': 'int',
+        },
+        'availability_zone': {
+            'type': 'str',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['register', 'deregister']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        're_sync': {
             'type': 'dict',
-            'heartbeat_status': {
+            'schema_registry': {
+                'type': 'bool',
+            },
+            'analytics_bus': {
+                'type': 'bool',
+            }
+        },
+        'thunder_mgmt_ip': {
+            'type': 'dict',
+            'ip_address': {
                 'type': 'str',
             },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'tunnel': {
+            'type': 'dict',
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
             'overall_status': {
                 'type': 'str',
             },
-            'Number_of_tenant_unmapped_partitions': {
-                'type': 'int',
+            'heartbeat_status': {
+                'type': 'str',
             },
             'heartbeat_error_message': {
                 'type': 'str',
             },
+            'service_registry': {
+                'type': 'str',
+            },
+            'service_registry_error_message': {
+                'type': 'str',
+            },
+            'registration_status': {
+                'type': 'str',
+            },
+            'registration_status_code': {
+                'type': 'int',
+            },
+            'registration_error_message': {
+                'type': 'str',
+            },
+            'deregistration_status': {
+                'type': 'str',
+            },
+            'deregistration_status_code': {
+                'type': 'int',
+            },
             'deregistration_error_message': {
                 'type': 'str',
             },
-            'service_registry': {
+            'schema_registry_status': {
                 'type': 'str',
             },
             'broker_info': {
@@ -274,89 +443,18 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['Up', 'Down']
             },
-            'deregistration_status': {
-                'type': 'str',
-            },
             'Number_of_tenant_mapped_partitions': {
                 'type': 'int',
             },
-            'registration_status': {
-                'type': 'str',
-            },
-            'registration_status_code': {
+            'Number_of_tenant_unmapped_partitions': {
                 'type': 'int',
             },
-            'schema_registry_status': {
+            'tunnel_status': {
                 'type': 'str',
             },
-            'service_registry_error_message': {
-                'type': 'str',
-            },
-            'deregistration_status_code': {
-                'type': 'int',
-            },
-            'registration_error_message': {
+            'tunnel_error_message': {
                 'type': 'str',
             }
-        },
-        'user_name': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
-        'auto_restart_action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'region': {
-            'type': 'str',
-        },
-        'interval': {
-            'type': 'int',
-        },
-        'host': {
-            'type': 'str',
-        },
-        'port': {
-            'type': 'int',
-        },
-        'thunder_mgmt_ip': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'ip_address': {
-                'type': 'str',
-            }
-        },
-        're_sync': {
-            'type': 'dict',
-            'analytics_bus': {
-                'type': 'bool',
-            },
-            'schema_registry': {
-                'type': 'bool',
-            }
-        },
-        'password_encrypted': {
-            'type': 'str',
-        },
-        'provider': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['register', 'deregister']
-        },
-        'secret_value': {
-            'type': 'str',
-        },
-        'availability_zone': {
-            'type': 'str',
         }
     })
     return rv

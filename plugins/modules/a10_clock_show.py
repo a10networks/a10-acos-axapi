@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_clock_show
 description:
     - Configure time-of-day Clock
-short_description: Configures A10 clock.show
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            time:
-                description:
-                - "Field time"
-            offset:
-                description:
-                - "Field offset"
-            date:
-                description:
-                - "Field date"
-            timezone:
-                description:
-                - "Field timezone"
             source_type:
                 description:
                 - "Field source_type"
+                type: int
+            time:
+                description:
+                - "Field time"
+                type: str
+            timezone:
+                description:
+                - "Field timezone"
+                type: str
+            offset:
+                description:
+                - "Field offset"
+                type: str
             day:
                 description:
                 - "Field day"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            date:
+                description:
+                - "Field date"
+                type: str
 
 '''
 
@@ -130,29 +143,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'source_type': {
+                'type': 'int',
+            },
             'time': {
-                'type': 'str',
-            },
-            'offset': {
-                'type': 'str',
-            },
-            'date': {
                 'type': 'str',
             },
             'timezone': {
                 'type': 'str',
             },
-            'source_type': {
-                'type': 'int',
+            'offset': {
+                'type': 'str',
             },
             'day': {
                 'type': 'str',
+            },
+            'date': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

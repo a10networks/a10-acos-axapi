@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_imap
 description:
     - IMAP type
-short_description: Configures A10 health.monitor.method.imap
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,78 +22,99 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    imap_cram_md5:
+        - Key to identify parent object
+        type: str
+        required: True
+    imap:
         description:
-        - "Challenge-response authentication mechanism"
+        - "IMAP type"
+        type: bool
         required: False
     imap_port:
         description:
         - "Specify the IMAP port, default is 143 (Port Number (default 143))"
-        required: False
-    imap_login:
-        description:
-        - "Simple login"
-        required: False
-    imap_password:
-        description:
-        - "Specify the user password"
-        required: False
-    imap_password_string:
-        description:
-        - "Configure password, '' means empty password"
+        type: int
         required: False
     imap_username:
         description:
         - "Specify the username"
+        type: str
+        required: False
+    imap_password:
+        description:
+        - "Specify the user password"
+        type: bool
+        required: False
+    imap_password_string:
+        description:
+        - "Configure password, '' means empty password"
+        type: str
         required: False
     imap_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        type: str
         required: False
     pwd_auth:
         description:
         - "Specify the Authentication method"
+        type: bool
         required: False
     imap_plain:
         description:
         - "Plain text"
+        type: bool
         required: False
-    imap:
+    imap_cram_md5:
         description:
-        - "IMAP type"
+        - "Challenge-response authentication mechanism"
+        type: bool
+        required: False
+    imap_login:
+        description:
+        - "Simple login"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -159,22 +178,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'imap_cram_md5': {
+        'imap': {
             'type': 'bool',
         },
         'imap_port': {
             'type': 'int',
         },
-        'imap_login': {
-            'type': 'bool',
+        'imap_username': {
+            'type': 'str',
         },
         'imap_password': {
             'type': 'bool',
         },
         'imap_password_string': {
-            'type': 'str',
-        },
-        'imap_username': {
             'type': 'str',
         },
         'imap_encrypted': {
@@ -186,7 +202,10 @@ def get_argspec():
         'imap_plain': {
             'type': 'bool',
         },
-        'imap': {
+        'imap_cram_md5': {
+            'type': 'bool',
+        },
+        'imap_login': {
             'type': 'bool',
         },
         'uuid': {

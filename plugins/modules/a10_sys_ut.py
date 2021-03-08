@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut
 description:
     - System unit test
-short_description: Configures A10 sys-ut
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,133 +22,169 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    event_list:
-        description:
-        - "Field event_list"
-        required: False
-        suboptions:
-            action_list:
-                description:
-                - "Field action_list"
-            event_number:
-                description:
-                - "Event number"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
-    common:
-        description:
-        - "Field common"
-        required: False
-        suboptions:
-            delay:
-                description:
-                - "wait time in seconds after each run"
-            proceed_on_error:
-                description:
-                - "Run test even in case of event failure"
-            uuid:
-                description:
-                - "uuid of the object"
-    template_list:
-        description:
-        - "Field template_list"
-        required: False
-        suboptions:
-            udp:
-                description:
-                - "Field udp"
-            name:
-                description:
-                - "template name"
-            ignore_validation:
-                description:
-                - "Field ignore_validation"
-            user_tag:
-                description:
-                - "Customized tag"
-            l2:
-                description:
-                - "Field l2"
-            l3:
-                description:
-                - "Field l3"
-            l1:
-                description:
-                - "Field l1"
-            tcp:
-                description:
-                - "Field tcp"
-            uuid:
-                description:
-                - "uuid of the object"
     action:
         description:
         - "'enable'= Set device to SUT mode; 'disable'= Set device to normal mode;"
+        type: str
         required: False
     test_name:
         description:
         - "Name for this test case"
+        type: str
         required: False
-    state_list:
+    uuid:
         description:
-        - "Field state_list"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            next_state_list:
-                description:
-                - "Field next_state_list"
-            name:
-                description:
-                - "Node name"
-            user_tag:
-                description:
-                - "Customized tag"
-            uuid:
-                description:
-                - "uuid of the object"
     run_test:
         description:
         - "Field run_test"
+        type: dict
         required: False
         suboptions:
             mode:
                 description:
                 - "'basic'= Run Basic mode; 'fault-injection'= Run FI mode. This will also run
           Basic mode to gather data; 'cpu-rr'= Run CPU RR mode; 'frag'= Run IP frag mode;"
+                type: str
+    common:
+        description:
+        - "Field common"
+        type: dict
+        required: False
+        suboptions:
+            proceed_on_error:
+                description:
+                - "Run test even in case of event failure"
+                type: bool
+            delay:
+                description:
+                - "wait time in seconds after each run"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    template_list:
+        description:
+        - "Field template_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "template name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            ignore_validation:
+                description:
+                - "Field ignore_validation"
+                type: dict
+            l1:
+                description:
+                - "Field l1"
+                type: dict
+            l2:
+                description:
+                - "Field l2"
+                type: dict
+            l3:
+                description:
+                - "Field l3"
+                type: dict
+            tcp:
+                description:
+                - "Field tcp"
+                type: dict
+            udp:
+                description:
+                - "Field udp"
+                type: dict
+    event_list:
+        description:
+        - "Field event_list"
+        type: list
+        required: False
+        suboptions:
+            event_number:
+                description:
+                - "Event number"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            action_list:
+                description:
+                - "Field action_list"
+                type: list
+    state_list:
+        description:
+        - "Field state_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Node name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            next_state_list:
+                description:
+                - "Field next_state_list"
+                type: list
 
 '''
 
@@ -210,325 +244,30 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'test_name': {
+            'type': 'str',
+        },
         'uuid': {
             'type': 'str',
         },
-        'event_list': {
-            'type': 'list',
-            'action_list': {
-                'type': 'list',
-                'direction': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['send', 'expect', 'wait']
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'drop': {
-                    'type': 'bool',
-                },
-                'udp': {
-                    'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'checksum': {
-                        'type': 'str',
-                        'choices': ['valid', 'invalid']
-                    },
-                    'nat_pool': {
-                        'type': 'str',
-                    },
-                    'src_port': {
-                        'type': 'int',
-                    },
-                    'length': {
-                        'type': 'int',
-                    },
-                    'dest_port': {
-                        'type': 'bool',
-                    },
-                    'dest_port_value': {
-                        'type': 'int',
-                    }
-                },
-                'tcp': {
-                    'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'checksum': {
-                        'type': 'str',
-                        'choices': ['valid', 'invalid']
-                    },
-                    'seq_number': {
-                        'type': 'str',
-                        'choices': ['valid', 'invalid']
-                    },
-                    'nat_pool': {
-                        'type': 'str',
-                    },
-                    'src_port': {
-                        'type': 'int',
-                    },
-                    'urgent': {
-                        'type': 'str',
-                        'choices': ['valid', 'invalid']
-                    },
-                    'window': {
-                        'type': 'str',
-                        'choices': ['valid', 'invalid']
-                    },
-                    'ack_seq_number': {
-                        'type': 'str',
-                        'choices': ['valid', 'invalid']
-                    },
-                    'flags': {
-                        'type': 'dict',
-                        'ece': {
-                            'type': 'bool',
-                        },
-                        'urg': {
-                            'type': 'bool',
-                        },
-                        'uuid': {
-                            'type': 'str',
-                        },
-                        'ack': {
-                            'type': 'bool',
-                        },
-                        'cwr': {
-                            'type': 'bool',
-                        },
-                        'psh': {
-                            'type': 'bool',
-                        },
-                        'syn': {
-                            'type': 'bool',
-                        },
-                        'rst': {
-                            'type': 'bool',
-                        },
-                        'fin': {
-                            'type': 'bool',
-                        }
-                    },
-                    'dest_port': {
-                        'type': 'bool',
-                    },
-                    'dest_port_value': {
-                        'type': 'int',
-                    },
-                    'options': {
-                        'type': 'dict',
-                        'uuid': {
-                            'type': 'str',
-                        },
-                        'mss': {
-                            'type': 'int',
-                        },
-                        'sack_type': {
-                            'type': 'str',
-                            'choices': ['permitted', 'block']
-                        },
-                        'time_stamp_enable': {
-                            'type': 'bool',
-                        },
-                        'nop': {
-                            'type': 'bool',
-                        },
-                        'wscale': {
-                            'type': 'int',
-                        }
-                    }
-                },
-                'delay': {
-                    'type': 'int',
-                },
-                'l2': {
-                    'type': 'dict',
-                    'protocol': {
-                        'type': 'str',
-                        'choices': ['arp', 'ipv4', 'ipv6']
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'ethertype': {
-                        'type': 'bool',
-                    },
-                    'mac_list': {
-                        'type': 'list',
-                        'ethernet': {
-                            'type': 'str',
-                        },
-                        've': {
-                            'type': 'str',
-                        },
-                        'src_dst': {
-                            'type': 'str',
-                            'required': True,
-                            'choices': ['dest', 'src']
-                        },
-                        'address_type': {
-                            'type': 'str',
-                            'choices': ['broadcast', 'multicast']
-                        },
-                        'nat_pool': {
-                            'type': 'str',
-                        },
-                        'value': {
-                            'type': 'str',
-                        },
-                        'trunk': {
-                            'type': 'str',
-                        },
-                        'virtual_server': {
-                            'type': 'str',
-                        },
-                        'uuid': {
-                            'type': 'str',
-                        }
-                    },
-                    'vlan': {
-                        'type': 'int',
-                    },
-                    'value': {
-                        'type': 'int',
-                    }
-                },
-                'l3': {
-                    'type': 'dict',
-                    'protocol': {
-                        'type': 'bool',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'checksum': {
-                        'type': 'str',
-                        'choices': ['valid', 'invalid']
-                    },
-                    'value': {
-                        'type': 'int',
-                    },
-                    'ip_list': {
-                        'type': 'list',
-                        've': {
-                            'type': 'str',
-                        },
-                        'virtual_server': {
-                            'type': 'str',
-                        },
-                        'src_dst': {
-                            'type': 'str',
-                            'required': True,
-                            'choices': ['dest', 'src']
-                        },
-                        'nat_pool': {
-                            'type': 'str',
-                        },
-                        'trunk': {
-                            'type': 'str',
-                        },
-                        'ipv6_address': {
-                            'type': 'str',
-                        },
-                        'ethernet': {
-                            'type': 'str',
-                        },
-                        'ipv4_address': {
-                            'type': 'str',
-                        },
-                        'uuid': {
-                            'type': 'str',
-                        }
-                    },
-                    'ttl': {
-                        'type': 'int',
-                    },
-                    'ntype': {
-                        'type': 'str',
-                        'choices': ['tcp', 'udp', 'icmp']
-                    }
-                },
-                'template': {
-                    'type': 'str',
-                },
-                'ignore_validation': {
-                    'type': 'dict',
-                    'all': {
-                        'type': 'bool',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'l4': {
-                        'type': 'bool',
-                    },
-                    'l2': {
-                        'type': 'bool',
-                    },
-                    'l3': {
-                        'type': 'bool',
-                    },
-                    'l1': {
-                        'type': 'bool',
-                    }
-                },
-                'l1': {
-                    'type': 'dict',
-                    'eth_list': {
-                        'type': 'list',
-                        'ethernet_start': {
-                            'type': 'str',
-                        },
-                        'ethernet_end': {
-                            'type': 'str',
-                        }
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'auto': {
-                        'type': 'bool',
-                    },
-                    'value': {
-                        'type': 'int',
-                    },
-                    'length': {
-                        'type': 'bool',
-                    },
-                    'trunk_list': {
-                        'type': 'list',
-                        'trunk_start': {
-                            'type': 'int',
-                        },
-                        'trunk_end': {
-                            'type': 'int',
-                        }
-                    }
-                }
-            },
-            'event_number': {
-                'type': 'int',
-                'required': True,
-            },
-            'uuid': {
+        'run_test': {
+            'type': 'dict',
+            'mode': {
                 'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
+                'choices': ['basic', 'fault-injection', 'cpu-rr', 'frag']
             }
         },
         'common': {
             'type': 'dict',
-            'delay': {
-                'type': 'int',
-            },
             'proceed_on_error': {
                 'type': 'bool',
+            },
+            'delay': {
+                'type': 'int',
             },
             'uuid': {
                 'type': 'str',
@@ -536,50 +275,19 @@ def get_argspec():
         },
         'template_list': {
             'type': 'list',
-            'udp': {
-                'type': 'dict',
-                'src_port_range': {
-                    'type': 'list',
-                    'src_port_end': {
-                        'type': 'int',
-                    },
-                    'src_port_start': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'checksum': {
-                    'type': 'str',
-                    'choices': ['valid', 'invalid']
-                },
-                'nat_pool': {
-                    'type': 'str',
-                },
-                'length': {
-                    'type': 'int',
-                },
-                'dest_port': {
-                    'type': 'bool',
-                },
-                'dest_port_value': {
-                    'type': 'int',
-                }
-            },
             'name': {
                 'type': 'str',
                 'required': True,
             },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
             'ignore_validation': {
                 'type': 'dict',
-                'all': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'l4': {
+                'l1': {
                     'type': 'bool',
                 },
                 'l2': {
@@ -588,124 +296,14 @@ def get_argspec():
                 'l3': {
                     'type': 'bool',
                 },
-                'l1': {
-                    'type': 'bool',
-                }
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'l2': {
-                'type': 'dict',
-                'protocol': {
-                    'type': 'str',
-                    'choices': ['arp', 'ipv4', 'ipv6']
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'ethertype': {
+                'l4': {
                     'type': 'bool',
                 },
-                'mac_list': {
-                    'type': 'list',
-                    'ethernet': {
-                        'type': 'str',
-                    },
-                    've': {
-                        'type': 'str',
-                    },
-                    'src_dst': {
-                        'type': 'str',
-                        'required': True,
-                        'choices': ['dest', 'src']
-                    },
-                    'address_type': {
-                        'type': 'str',
-                        'choices': ['broadcast', 'multicast']
-                    },
-                    'nat_pool': {
-                        'type': 'str',
-                    },
-                    'value': {
-                        'type': 'str',
-                    },
-                    'trunk': {
-                        'type': 'str',
-                    },
-                    'virtual_server': {
-                        'type': 'str',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'vlan': {
-                    'type': 'int',
-                },
-                'value': {
-                    'type': 'int',
-                }
-            },
-            'l3': {
-                'type': 'dict',
-                'protocol': {
+                'all': {
                     'type': 'bool',
                 },
                 'uuid': {
                     'type': 'str',
-                },
-                'checksum': {
-                    'type': 'str',
-                    'choices': ['valid', 'invalid']
-                },
-                'value': {
-                    'type': 'int',
-                },
-                'ip_list': {
-                    'type': 'list',
-                    'ipv4_end_address': {
-                        'type': 'str',
-                    },
-                    'ipv6_start_address': {
-                        'type': 'str',
-                    },
-                    'src_dst': {
-                        'type': 'str',
-                        'required': True,
-                        'choices': ['dest', 'src']
-                    },
-                    've': {
-                        'type': 'str',
-                    },
-                    'nat_pool': {
-                        'type': 'str',
-                    },
-                    'ipv4_start_address': {
-                        'type': 'str',
-                    },
-                    'ipv6_end_address': {
-                        'type': 'str',
-                    },
-                    'virtual_server': {
-                        'type': 'str',
-                    },
-                    'ethernet': {
-                        'type': 'str',
-                    },
-                    'trunk': {
-                        'type': 'str',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    }
-                },
-                'ttl': {
-                    'type': 'int',
-                },
-                'ntype': {
-                    'type': 'str',
-                    'choices': ['tcp', 'udp', 'icmp']
                 }
             },
             'l1': {
@@ -719,21 +317,6 @@ def get_argspec():
                         'type': 'str',
                     }
                 },
-                'uuid': {
-                    'type': 'str',
-                },
-                'auto': {
-                    'type': 'bool',
-                },
-                'drop': {
-                    'type': 'bool',
-                },
-                'value': {
-                    'type': 'int',
-                },
-                'length': {
-                    'type': 'bool',
-                },
                 'trunk_list': {
                     'type': 'list',
                     'trunk_start': {
@@ -742,32 +325,167 @@ def get_argspec():
                     'trunk_end': {
                         'type': 'int',
                     }
+                },
+                'drop': {
+                    'type': 'bool',
+                },
+                'length': {
+                    'type': 'bool',
+                },
+                'value': {
+                    'type': 'int',
+                },
+                'auto': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'l2': {
+                'type': 'dict',
+                'ethertype': {
+                    'type': 'bool',
+                },
+                'protocol': {
+                    'type': 'str',
+                    'choices': ['arp', 'ipv4', 'ipv6']
+                },
+                'value': {
+                    'type': 'int',
+                },
+                'vlan': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'mac_list': {
+                    'type': 'list',
+                    'src_dst': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['dest', 'src']
+                    },
+                    'address_type': {
+                        'type': 'str',
+                        'choices': ['broadcast', 'multicast']
+                    },
+                    'virtual_server': {
+                        'type': 'str',
+                    },
+                    'nat_pool': {
+                        'type': 'str',
+                    },
+                    'ethernet': {
+                        'type': 'str',
+                    },
+                    've': {
+                        'type': 'str',
+                    },
+                    'trunk': {
+                        'type': 'str',
+                    },
+                    'value': {
+                        'type': 'str',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'l3': {
+                'type': 'dict',
+                'protocol': {
+                    'type': 'bool',
+                },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['tcp', 'udp', 'icmp']
+                },
+                'value': {
+                    'type': 'int',
+                },
+                'checksum': {
+                    'type': 'str',
+                    'choices': ['valid', 'invalid']
+                },
+                'ttl': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'ip_list': {
+                    'type': 'list',
+                    'src_dst': {
+                        'type': 'str',
+                        'required': True,
+                        'choices': ['dest', 'src']
+                    },
+                    'ipv4_start_address': {
+                        'type': 'str',
+                    },
+                    'ipv4_end_address': {
+                        'type': 'str',
+                    },
+                    'ipv6_start_address': {
+                        'type': 'str',
+                    },
+                    'ipv6_end_address': {
+                        'type': 'str',
+                    },
+                    'virtual_server': {
+                        'type': 'str',
+                    },
+                    'nat_pool': {
+                        'type': 'str',
+                    },
+                    'ethernet': {
+                        'type': 'str',
+                    },
+                    've': {
+                        'type': 'str',
+                    },
+                    'trunk': {
+                        'type': 'str',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
                 }
             },
             'tcp': {
                 'type': 'dict',
                 'src_port_range': {
                     'type': 'list',
-                    'src_port_end': {
+                    'src_port_start': {
                         'type': 'int',
                     },
-                    'src_port_start': {
+                    'src_port_end': {
                         'type': 'int',
                     }
                 },
-                'uuid': {
-                    'type': 'str',
+                'dest_port': {
+                    'type': 'bool',
                 },
-                'checksum': {
+                'dest_port_value': {
+                    'type': 'int',
+                },
+                'nat_pool': {
                     'type': 'str',
-                    'choices': ['valid', 'invalid']
                 },
                 'seq_number': {
                     'type': 'str',
                     'choices': ['valid', 'invalid']
                 },
-                'nat_pool': {
+                'ack_seq_number': {
                     'type': 'str',
+                    'choices': ['valid', 'invalid']
+                },
+                'checksum': {
+                    'type': 'str',
+                    'choices': ['valid', 'invalid']
                 },
                 'urgent': {
                     'type': 'str',
@@ -777,52 +495,45 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['valid', 'invalid']
                 },
-                'ack_seq_number': {
+                'uuid': {
                     'type': 'str',
-                    'choices': ['valid', 'invalid']
                 },
                 'flags': {
                     'type': 'dict',
+                    'syn': {
+                        'type': 'bool',
+                    },
+                    'ack': {
+                        'type': 'bool',
+                    },
+                    'fin': {
+                        'type': 'bool',
+                    },
+                    'rst': {
+                        'type': 'bool',
+                    },
+                    'psh': {
+                        'type': 'bool',
+                    },
                     'ece': {
                         'type': 'bool',
                     },
                     'urg': {
                         'type': 'bool',
                     },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'ack': {
-                        'type': 'bool',
-                    },
                     'cwr': {
                         'type': 'bool',
                     },
-                    'psh': {
-                        'type': 'bool',
-                    },
-                    'syn': {
-                        'type': 'bool',
-                    },
-                    'rst': {
-                        'type': 'bool',
-                    },
-                    'fin': {
-                        'type': 'bool',
+                    'uuid': {
+                        'type': 'str',
                     }
-                },
-                'dest_port': {
-                    'type': 'bool',
-                },
-                'dest_port_value': {
-                    'type': 'int',
                 },
                 'options': {
                     'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    },
                     'mss': {
+                        'type': 'int',
+                    },
+                    'wscale': {
                         'type': 'int',
                     },
                     'sack_type': {
@@ -835,28 +546,391 @@ def get_argspec():
                     'nop': {
                         'type': 'bool',
                     },
-                    'wscale': {
-                        'type': 'int',
+                    'uuid': {
+                        'type': 'str',
                     }
                 }
             },
-            'uuid': {
-                'type': 'str',
+            'udp': {
+                'type': 'dict',
+                'src_port_range': {
+                    'type': 'list',
+                    'src_port_start': {
+                        'type': 'int',
+                    },
+                    'src_port_end': {
+                        'type': 'int',
+                    }
+                },
+                'dest_port': {
+                    'type': 'bool',
+                },
+                'dest_port_value': {
+                    'type': 'int',
+                },
+                'nat_pool': {
+                    'type': 'str',
+                },
+                'length': {
+                    'type': 'int',
+                },
+                'checksum': {
+                    'type': 'str',
+                    'choices': ['valid', 'invalid']
+                },
+                'uuid': {
+                    'type': 'str',
+                }
             }
         },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'test_name': {
-            'type': 'str',
+        'event_list': {
+            'type': 'list',
+            'event_number': {
+                'type': 'int',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'action_list': {
+                'type': 'list',
+                'direction': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['send', 'expect', 'wait']
+                },
+                'template': {
+                    'type': 'str',
+                },
+                'drop': {
+                    'type': 'bool',
+                },
+                'delay': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'l1': {
+                    'type': 'dict',
+                    'eth_list': {
+                        'type': 'list',
+                        'ethernet_start': {
+                            'type': 'str',
+                        },
+                        'ethernet_end': {
+                            'type': 'str',
+                        }
+                    },
+                    'trunk_list': {
+                        'type': 'list',
+                        'trunk_start': {
+                            'type': 'int',
+                        },
+                        'trunk_end': {
+                            'type': 'int',
+                        }
+                    },
+                    'length': {
+                        'type': 'bool',
+                    },
+                    'value': {
+                        'type': 'int',
+                    },
+                    'auto': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'l2': {
+                    'type': 'dict',
+                    'ethertype': {
+                        'type': 'bool',
+                    },
+                    'protocol': {
+                        'type': 'str',
+                        'choices': ['arp', 'ipv4', 'ipv6']
+                    },
+                    'value': {
+                        'type': 'int',
+                    },
+                    'vlan': {
+                        'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'mac_list': {
+                        'type': 'list',
+                        'src_dst': {
+                            'type': 'str',
+                            'required': True,
+                            'choices': ['dest', 'src']
+                        },
+                        'address_type': {
+                            'type': 'str',
+                            'choices': ['broadcast', 'multicast']
+                        },
+                        'virtual_server': {
+                            'type': 'str',
+                        },
+                        'nat_pool': {
+                            'type': 'str',
+                        },
+                        'ethernet': {
+                            'type': 'str',
+                        },
+                        've': {
+                            'type': 'str',
+                        },
+                        'trunk': {
+                            'type': 'str',
+                        },
+                        'value': {
+                            'type': 'str',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'l3': {
+                    'type': 'dict',
+                    'protocol': {
+                        'type': 'bool',
+                    },
+                    'ntype': {
+                        'type': 'str',
+                        'choices': ['tcp', 'udp', 'icmp']
+                    },
+                    'value': {
+                        'type': 'int',
+                    },
+                    'checksum': {
+                        'type': 'str',
+                        'choices': ['valid', 'invalid']
+                    },
+                    'ttl': {
+                        'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'ip_list': {
+                        'type': 'list',
+                        'src_dst': {
+                            'type': 'str',
+                            'required': True,
+                            'choices': ['dest', 'src']
+                        },
+                        'ipv4_address': {
+                            'type': 'str',
+                        },
+                        'ipv6_address': {
+                            'type': 'str',
+                        },
+                        'nat_pool': {
+                            'type': 'str',
+                        },
+                        'virtual_server': {
+                            'type': 'str',
+                        },
+                        'ethernet': {
+                            'type': 'str',
+                        },
+                        've': {
+                            'type': 'str',
+                        },
+                        'trunk': {
+                            'type': 'str',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'tcp': {
+                    'type': 'dict',
+                    'src_port': {
+                        'type': 'int',
+                    },
+                    'dest_port': {
+                        'type': 'bool',
+                    },
+                    'dest_port_value': {
+                        'type': 'int',
+                    },
+                    'nat_pool': {
+                        'type': 'str',
+                    },
+                    'seq_number': {
+                        'type': 'str',
+                        'choices': ['valid', 'invalid']
+                    },
+                    'ack_seq_number': {
+                        'type': 'str',
+                        'choices': ['valid', 'invalid']
+                    },
+                    'checksum': {
+                        'type': 'str',
+                        'choices': ['valid', 'invalid']
+                    },
+                    'urgent': {
+                        'type': 'str',
+                        'choices': ['valid', 'invalid']
+                    },
+                    'window': {
+                        'type': 'str',
+                        'choices': ['valid', 'invalid']
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'flags': {
+                        'type': 'dict',
+                        'syn': {
+                            'type': 'bool',
+                        },
+                        'ack': {
+                            'type': 'bool',
+                        },
+                        'fin': {
+                            'type': 'bool',
+                        },
+                        'rst': {
+                            'type': 'bool',
+                        },
+                        'psh': {
+                            'type': 'bool',
+                        },
+                        'ece': {
+                            'type': 'bool',
+                        },
+                        'urg': {
+                            'type': 'bool',
+                        },
+                        'cwr': {
+                            'type': 'bool',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    },
+                    'options': {
+                        'type': 'dict',
+                        'mss': {
+                            'type': 'int',
+                        },
+                        'wscale': {
+                            'type': 'int',
+                        },
+                        'sack_type': {
+                            'type': 'str',
+                            'choices': ['permitted', 'block']
+                        },
+                        'time_stamp_enable': {
+                            'type': 'bool',
+                        },
+                        'nop': {
+                            'type': 'bool',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        }
+                    }
+                },
+                'udp': {
+                    'type': 'dict',
+                    'src_port': {
+                        'type': 'int',
+                    },
+                    'dest_port': {
+                        'type': 'bool',
+                    },
+                    'dest_port_value': {
+                        'type': 'int',
+                    },
+                    'nat_pool': {
+                        'type': 'str',
+                    },
+                    'length': {
+                        'type': 'int',
+                    },
+                    'checksum': {
+                        'type': 'str',
+                        'choices': ['valid', 'invalid']
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'ignore_validation': {
+                    'type': 'dict',
+                    'l1': {
+                        'type': 'bool',
+                    },
+                    'l2': {
+                        'type': 'bool',
+                    },
+                    'l3': {
+                        'type': 'bool',
+                    },
+                    'l4': {
+                        'type': 'bool',
+                    },
+                    'all': {
+                        'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                }
+            }
         },
         'state_list': {
             'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
             'next_state_list': {
                 'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                },
                 'case_list': {
                     'type': 'list',
+                    'case_number': {
+                        'type': 'int',
+                        'required': True,
+                    },
+                    'repeat': {
+                        'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'user_tag': {
+                        'type': 'str',
+                    },
                     'action_list': {
                         'type': 'list',
                         'direction': {
@@ -864,238 +938,16 @@ def get_argspec():
                             'required': True,
                             'choices': ['send', 'expect', 'wait']
                         },
-                        'uuid': {
+                        'template': {
                             'type': 'str',
                         },
                         'drop': {
                             'type': 'bool',
                         },
-                        'udp': {
-                            'type': 'dict',
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'checksum': {
-                                'type': 'str',
-                                'choices': ['valid', 'invalid']
-                            },
-                            'nat_pool': {
-                                'type': 'str',
-                            },
-                            'src_port': {
-                                'type': 'int',
-                            },
-                            'length': {
-                                'type': 'int',
-                            },
-                            'dest_port': {
-                                'type': 'bool',
-                            },
-                            'dest_port_value': {
-                                'type': 'int',
-                            }
-                        },
-                        'tcp': {
-                            'type': 'dict',
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'checksum': {
-                                'type': 'str',
-                                'choices': ['valid', 'invalid']
-                            },
-                            'seq_number': {
-                                'type': 'str',
-                                'choices': ['valid', 'invalid']
-                            },
-                            'nat_pool': {
-                                'type': 'str',
-                            },
-                            'src_port': {
-                                'type': 'int',
-                            },
-                            'urgent': {
-                                'type': 'str',
-                                'choices': ['valid', 'invalid']
-                            },
-                            'window': {
-                                'type': 'str',
-                                'choices': ['valid', 'invalid']
-                            },
-                            'ack_seq_number': {
-                                'type': 'str',
-                                'choices': ['valid', 'invalid']
-                            },
-                            'flags': {
-                                'type': 'dict',
-                                'ece': {
-                                    'type': 'bool',
-                                },
-                                'urg': {
-                                    'type': 'bool',
-                                },
-                                'uuid': {
-                                    'type': 'str',
-                                },
-                                'ack': {
-                                    'type': 'bool',
-                                },
-                                'cwr': {
-                                    'type': 'bool',
-                                },
-                                'psh': {
-                                    'type': 'bool',
-                                },
-                                'syn': {
-                                    'type': 'bool',
-                                },
-                                'rst': {
-                                    'type': 'bool',
-                                },
-                                'fin': {
-                                    'type': 'bool',
-                                }
-                            },
-                            'dest_port': {
-                                'type': 'bool',
-                            },
-                            'dest_port_value': {
-                                'type': 'int',
-                            },
-                            'options': {
-                                'type': 'dict',
-                                'uuid': {
-                                    'type': 'str',
-                                },
-                                'mss': {
-                                    'type': 'int',
-                                },
-                                'sack_type': {
-                                    'type': 'str',
-                                    'choices': ['permitted', 'block']
-                                },
-                                'time_stamp_enable': {
-                                    'type': 'bool',
-                                },
-                                'nop': {
-                                    'type': 'bool',
-                                },
-                                'wscale': {
-                                    'type': 'int',
-                                }
-                            }
-                        },
                         'delay': {
                             'type': 'int',
                         },
-                        'l2': {
-                            'type': 'dict',
-                            'protocol': {
-                                'type': 'str',
-                                'choices': ['arp', 'ipv4', 'ipv6']
-                            },
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'ethertype': {
-                                'type': 'bool',
-                            },
-                            'mac_list': {
-                                'type': 'list',
-                                'ethernet': {
-                                    'type': 'str',
-                                },
-                                've': {
-                                    'type': 'str',
-                                },
-                                'src_dst': {
-                                    'type': 'str',
-                                    'required': True,
-                                    'choices': ['dest', 'src']
-                                },
-                                'address_type': {
-                                    'type': 'str',
-                                    'choices': ['broadcast', 'multicast']
-                                },
-                                'nat_pool': {
-                                    'type': 'str',
-                                },
-                                'value': {
-                                    'type': 'str',
-                                },
-                                'trunk': {
-                                    'type': 'str',
-                                },
-                                'virtual_server': {
-                                    'type': 'str',
-                                },
-                                'uuid': {
-                                    'type': 'str',
-                                }
-                            },
-                            'vlan': {
-                                'type': 'int',
-                            },
-                            'value': {
-                                'type': 'int',
-                            }
-                        },
-                        'l3': {
-                            'type': 'dict',
-                            'protocol': {
-                                'type': 'bool',
-                            },
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'checksum': {
-                                'type': 'str',
-                                'choices': ['valid', 'invalid']
-                            },
-                            'value': {
-                                'type': 'int',
-                            },
-                            'ip_list': {
-                                'type': 'list',
-                                've': {
-                                    'type': 'str',
-                                },
-                                'virtual_server': {
-                                    'type': 'str',
-                                },
-                                'src_dst': {
-                                    'type': 'str',
-                                    'required': True,
-                                    'choices': ['dest', 'src']
-                                },
-                                'nat_pool': {
-                                    'type': 'str',
-                                },
-                                'trunk': {
-                                    'type': 'str',
-                                },
-                                'ipv6_address': {
-                                    'type': 'str',
-                                },
-                                'ethernet': {
-                                    'type': 'str',
-                                },
-                                'ipv4_address': {
-                                    'type': 'str',
-                                },
-                                'uuid': {
-                                    'type': 'str',
-                                }
-                            },
-                            'ttl': {
-                                'type': 'int',
-                            },
-                            'ntype': {
-                                'type': 'str',
-                                'choices': ['tcp', 'udp', 'icmp']
-                            }
-                        },
-                        'template': {
+                        'uuid': {
                             'type': 'str',
                         },
                         'l1': {
@@ -1109,18 +961,6 @@ def get_argspec():
                                     'type': 'str',
                                 }
                             },
-                            'uuid': {
-                                'type': 'str',
-                            },
-                            'auto': {
-                                'type': 'bool',
-                            },
-                            'value': {
-                                'type': 'int',
-                            },
-                            'length': {
-                                'type': 'bool',
-                            },
                             'trunk_list': {
                                 'type': 'list',
                                 'trunk_start': {
@@ -1129,50 +969,244 @@ def get_argspec():
                                 'trunk_end': {
                                     'type': 'int',
                                 }
+                            },
+                            'length': {
+                                'type': 'bool',
+                            },
+                            'value': {
+                                'type': 'int',
+                            },
+                            'auto': {
+                                'type': 'bool',
+                            },
+                            'uuid': {
+                                'type': 'str',
+                            }
+                        },
+                        'l2': {
+                            'type': 'dict',
+                            'ethertype': {
+                                'type': 'bool',
+                            },
+                            'protocol': {
+                                'type': 'str',
+                                'choices': ['arp', 'ipv4', 'ipv6']
+                            },
+                            'value': {
+                                'type': 'int',
+                            },
+                            'vlan': {
+                                'type': 'int',
+                            },
+                            'uuid': {
+                                'type': 'str',
+                            },
+                            'mac_list': {
+                                'type': 'list',
+                                'src_dst': {
+                                    'type': 'str',
+                                    'required': True,
+                                    'choices': ['dest', 'src']
+                                },
+                                'address_type': {
+                                    'type': 'str',
+                                    'choices': ['broadcast', 'multicast']
+                                },
+                                'virtual_server': {
+                                    'type': 'str',
+                                },
+                                'nat_pool': {
+                                    'type': 'str',
+                                },
+                                'ethernet': {
+                                    'type': 'str',
+                                },
+                                've': {
+                                    'type': 'str',
+                                },
+                                'trunk': {
+                                    'type': 'str',
+                                },
+                                'value': {
+                                    'type': 'str',
+                                },
+                                'uuid': {
+                                    'type': 'str',
+                                }
+                            }
+                        },
+                        'l3': {
+                            'type': 'dict',
+                            'protocol': {
+                                'type': 'bool',
+                            },
+                            'ntype': {
+                                'type': 'str',
+                                'choices': ['tcp', 'udp', 'icmp']
+                            },
+                            'value': {
+                                'type': 'int',
+                            },
+                            'checksum': {
+                                'type': 'str',
+                                'choices': ['valid', 'invalid']
+                            },
+                            'ttl': {
+                                'type': 'int',
+                            },
+                            'uuid': {
+                                'type': 'str',
+                            },
+                            'ip_list': {
+                                'type': 'list',
+                                'src_dst': {
+                                    'type': 'str',
+                                    'required': True,
+                                    'choices': ['dest', 'src']
+                                },
+                                'ipv4_address': {
+                                    'type': 'str',
+                                },
+                                'ipv6_address': {
+                                    'type': 'str',
+                                },
+                                'virtual_server': {
+                                    'type': 'str',
+                                },
+                                'nat_pool': {
+                                    'type': 'str',
+                                },
+                                'ethernet': {
+                                    'type': 'str',
+                                },
+                                've': {
+                                    'type': 'str',
+                                },
+                                'trunk': {
+                                    'type': 'str',
+                                },
+                                'uuid': {
+                                    'type': 'str',
+                                }
+                            }
+                        },
+                        'tcp': {
+                            'type': 'dict',
+                            'src_port': {
+                                'type': 'int',
+                            },
+                            'dest_port': {
+                                'type': 'bool',
+                            },
+                            'dest_port_value': {
+                                'type': 'int',
+                            },
+                            'nat_pool': {
+                                'type': 'str',
+                            },
+                            'seq_number': {
+                                'type': 'str',
+                                'choices': ['valid', 'invalid']
+                            },
+                            'ack_seq_number': {
+                                'type': 'str',
+                                'choices': ['valid', 'invalid']
+                            },
+                            'checksum': {
+                                'type': 'str',
+                                'choices': ['valid', 'invalid']
+                            },
+                            'urgent': {
+                                'type': 'str',
+                                'choices': ['valid', 'invalid']
+                            },
+                            'window': {
+                                'type': 'str',
+                                'choices': ['valid', 'invalid']
+                            },
+                            'uuid': {
+                                'type': 'str',
+                            },
+                            'flags': {
+                                'type': 'dict',
+                                'syn': {
+                                    'type': 'bool',
+                                },
+                                'ack': {
+                                    'type': 'bool',
+                                },
+                                'fin': {
+                                    'type': 'bool',
+                                },
+                                'rst': {
+                                    'type': 'bool',
+                                },
+                                'psh': {
+                                    'type': 'bool',
+                                },
+                                'ece': {
+                                    'type': 'bool',
+                                },
+                                'urg': {
+                                    'type': 'bool',
+                                },
+                                'cwr': {
+                                    'type': 'bool',
+                                },
+                                'uuid': {
+                                    'type': 'str',
+                                }
+                            },
+                            'options': {
+                                'type': 'dict',
+                                'mss': {
+                                    'type': 'int',
+                                },
+                                'wscale': {
+                                    'type': 'int',
+                                },
+                                'sack_type': {
+                                    'type': 'str',
+                                    'choices': ['permitted', 'block']
+                                },
+                                'time_stamp_enable': {
+                                    'type': 'bool',
+                                },
+                                'nop': {
+                                    'type': 'bool',
+                                },
+                                'uuid': {
+                                    'type': 'str',
+                                }
+                            }
+                        },
+                        'udp': {
+                            'type': 'dict',
+                            'src_port': {
+                                'type': 'int',
+                            },
+                            'dest_port': {
+                                'type': 'bool',
+                            },
+                            'dest_port_value': {
+                                'type': 'int',
+                            },
+                            'nat_pool': {
+                                'type': 'str',
+                            },
+                            'length': {
+                                'type': 'int',
+                            },
+                            'checksum': {
+                                'type': 'str',
+                                'choices': ['valid', 'invalid']
+                            },
+                            'uuid': {
+                                'type': 'str',
                             }
                         }
-                    },
-                    'repeat': {
-                        'type': 'int',
-                    },
-                    'case_number': {
-                        'type': 'int',
-                        'required': True,
-                    },
-                    'user_tag': {
-                        'type': 'str',
-                    },
-                    'uuid': {
-                        'type': 'str',
                     }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
                 }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'run_test': {
-            'type': 'dict',
-            'mode': {
-                'type': 'str',
-                'choices': ['basic', 'fault-injection', 'cpu-rr', 'frag']
             }
         }
     })

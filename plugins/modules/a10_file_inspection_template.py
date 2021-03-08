@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_inspection_template
 description:
     - Manage File Inspection template configuration
-short_description: Configures A10 file-inspection.template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,119 +22,148 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    bad_uploads_action:
-        description:
-        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File;"
-        required: False
-    suspect_uploads_action:
-        description:
-        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File;"
-        required: False
-    downloads_bad_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
-        required: False
-    uploads_bad_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
-        required: False
-    uploads_suspect_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
-        required: False
-    good_uploads_action:
-        description:
-        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File;"
-        required: False
-    inspect:
-        description:
-        - "Field inspect"
-        required: False
-        suboptions:
-            download_icap:
-                description:
-                - "respmod icap template (respmod icap Config name)"
-            inspect_downloads:
-                description:
-                - "Inspect file downloads"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    suspect_downloads_action:
-        description:
-        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File (default);"
-        required: False
-    downloads_good_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
-        required: False
-    uploads_external_inspect:
-        description:
-        - "reqmod template for external icap inspection"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    downloads_external_inspect:
-        description:
-        - "respmod template for external icap inspection"
-        required: False
-    downloads_external_suspect_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
-        required: False
-    downloads_suspect_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
-        required: False
-    good_downloads_action:
-        description:
-        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File (default);"
-        required: False
-    bad_downloads_action:
-        description:
-        - "'reset'= Reset Connection; 'drop'= Drop File (default); 'allow'= Allow File;"
-        required: False
-    uploads_good_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
-        required: False
-    uploads_external_suspect_log:
-        description:
-        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
         required: False
     name:
         description:
         - "file-inspection template name"
+        type: str
         required: True
+    inspect:
+        description:
+        - "Field inspect"
+        type: dict
+        required: False
+        suboptions:
+            inspect_downloads:
+                description:
+                - "Inspect file downloads"
+                type: bool
+            download_icap:
+                description:
+                - "respmod icap template (respmod icap Config name)"
+                type: str
+    bad_uploads_action:
+        description:
+        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File;"
+        type: str
+        required: False
+    uploads_bad_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    good_uploads_action:
+        description:
+        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File;"
+        type: str
+        required: False
+    uploads_good_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    suspect_uploads_action:
+        description:
+        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File;"
+        type: str
+        required: False
+    uploads_suspect_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    uploads_external_inspect:
+        description:
+        - "reqmod template for external icap inspection"
+        type: str
+        required: False
+    uploads_external_suspect_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    bad_downloads_action:
+        description:
+        - "'reset'= Reset Connection; 'drop'= Drop File (default); 'allow'= Allow File;"
+        type: str
+        required: False
+    downloads_bad_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    good_downloads_action:
+        description:
+        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File (default);"
+        type: str
+        required: False
+    downloads_good_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    suspect_downloads_action:
+        description:
+        - "'reset'= Reset Connection; 'drop'= Drop File; 'allow'= Allow File (default);"
+        type: str
+        required: False
+    downloads_suspect_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    downloads_external_inspect:
+        description:
+        - "respmod template for external icap inspection"
+        type: str
+        required: False
+    downloads_external_suspect_log:
+        description:
+        - "'log'= Log event (default); 'no-log'= Do not Log event;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -208,23 +235,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'inspect': {
+            'type': 'dict',
+            'inspect_downloads': {
+                'type': 'bool',
+            },
+            'download_icap': {
+                'type': 'str',
+            }
+        },
         'bad_uploads_action': {
             'type': 'str',
             'choices': ['reset', 'drop', 'allow']
         },
-        'suspect_uploads_action': {
-            'type': 'str',
-            'choices': ['reset', 'drop', 'allow']
-        },
-        'downloads_bad_log': {
-            'type': 'str',
-            'choices': ['log', 'no-log']
-        },
         'uploads_bad_log': {
-            'type': 'str',
-            'choices': ['log', 'no-log']
-        },
-        'uploads_suspect_log': {
             'type': 'str',
             'choices': ['log', 'no-log']
         },
@@ -232,19 +260,34 @@ def get_argspec():
             'type': 'str',
             'choices': ['reset', 'drop', 'allow']
         },
-        'inspect': {
-            'type': 'dict',
-            'download_icap': {
-                'type': 'str',
-            },
-            'inspect_downloads': {
-                'type': 'bool',
-            }
+        'uploads_good_log': {
+            'type': 'str',
+            'choices': ['log', 'no-log']
         },
-        'uuid': {
+        'suspect_uploads_action': {
+            'type': 'str',
+            'choices': ['reset', 'drop', 'allow']
+        },
+        'uploads_suspect_log': {
+            'type': 'str',
+            'choices': ['log', 'no-log']
+        },
+        'uploads_external_inspect': {
             'type': 'str',
         },
-        'suspect_downloads_action': {
+        'uploads_external_suspect_log': {
+            'type': 'str',
+            'choices': ['log', 'no-log']
+        },
+        'bad_downloads_action': {
+            'type': 'str',
+            'choices': ['reset', 'drop', 'allow']
+        },
+        'downloads_bad_log': {
+            'type': 'str',
+            'choices': ['log', 'no-log']
+        },
+        'good_downloads_action': {
             'type': 'str',
             'choices': ['reset', 'drop', 'allow']
         },
@@ -252,11 +295,13 @@ def get_argspec():
             'type': 'str',
             'choices': ['log', 'no-log']
         },
-        'uploads_external_inspect': {
+        'suspect_downloads_action': {
             'type': 'str',
+            'choices': ['reset', 'drop', 'allow']
         },
-        'user_tag': {
+        'downloads_suspect_log': {
             'type': 'str',
+            'choices': ['log', 'no-log']
         },
         'downloads_external_inspect': {
             'type': 'str',
@@ -265,29 +310,11 @@ def get_argspec():
             'type': 'str',
             'choices': ['log', 'no-log']
         },
-        'downloads_suspect_log': {
+        'uuid': {
             'type': 'str',
-            'choices': ['log', 'no-log']
         },
-        'good_downloads_action': {
+        'user_tag': {
             'type': 'str',
-            'choices': ['reset', 'drop', 'allow']
-        },
-        'bad_downloads_action': {
-            'type': 'str',
-            'choices': ['reset', 'drop', 'allow']
-        },
-        'uploads_good_log': {
-            'type': 'str',
-            'choices': ['log', 'no-log']
-        },
-        'uploads_external_suspect_log': {
-            'type': 'str',
-            'choices': ['log', 'no-log']
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

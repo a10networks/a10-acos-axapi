@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_category_statistics
 description:
     - Statistics
-short_description: Configures A10 web.category.statistics
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,61 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            total_req_processed:
-                description:
-                - "Field total_req_processed"
-            num_dplane_threads:
-                description:
-                - "Field num_dplane_threads"
-            num_lookup_threads:
-                description:
-                - "Field num_lookup_threads"
-            total_req_dropped:
-                description:
-                - "Field total_req_dropped"
-            total_req_queue:
-                description:
-                - "Field total_req_queue"
-            per_cpu_list:
-                description:
-                - "Field per_cpu_list"
-            total_req_lookup_processed:
-                description:
-                - "Field total_req_lookup_processed"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -87,39 +72,79 @@ options:
           'cloud-lookup'= cloud-lookup; 'rtu-lookup'= rtu-lookup; 'lookup-latency'=
           lookup-latency; 'db-mem'= db-mem; 'rtu-cache-mem'= rtu-cache-mem; 'lookup-
           cache-mem'= lookup-cache-mem;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            num_dplane_threads:
+                description:
+                - "Field num_dplane_threads"
+                type: int
+            num_lookup_threads:
+                description:
+                - "Field num_lookup_threads"
+                type: int
+            per_cpu_list:
+                description:
+                - "Field per_cpu_list"
+                type: list
+            total_req_queue:
+                description:
+                - "Field total_req_queue"
+                type: int
+            total_req_dropped:
+                description:
+                - "Field total_req_dropped"
+                type: int
+            total_req_processed:
+                description:
+                - "Field total_req_processed"
+                type: int
+            total_req_lookup_processed:
+                description:
+                - "Field total_req_lookup_processed"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             db_lookup:
                 description:
                 - "Field db_lookup"
-            lookup_latency:
-                description:
-                - "Field lookup_latency"
-            rtu_cache_mem:
-                description:
-                - "Field rtu_cache_mem"
-            lookup_cache_mem:
-                description:
-                - "Field lookup_cache_mem"
+                type: str
             cloud_cache_lookup:
                 description:
                 - "Field cloud_cache_lookup"
-            db_mem:
-                description:
-                - "Field db_mem"
+                type: str
             cloud_lookup:
                 description:
                 - "Field cloud_lookup"
+                type: str
             rtu_lookup:
                 description:
                 - "Field rtu_lookup"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            lookup_latency:
+                description:
+                - "Field lookup_latency"
+                type: str
+            db_mem:
+                description:
+                - "Field db_mem"
+                type: str
+            rtu_cache_mem:
+                description:
+                - "Field rtu_cache_mem"
+                type: str
+            lookup_cache_mem:
+                description:
+                - "Field lookup_cache_mem"
+                type: str
 
 '''
 
@@ -175,41 +200,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'total_req_processed': {
-                'type': 'int',
-            },
-            'num_dplane_threads': {
-                'type': 'int',
-            },
-            'num_lookup_threads': {
-                'type': 'int',
-            },
-            'total_req_dropped': {
-                'type': 'int',
-            },
-            'total_req_queue': {
-                'type': 'int',
-            },
-            'per_cpu_list': {
-                'type': 'list',
-                'req_dropped': {
-                    'type': 'int',
-                },
-                'req_queue': {
-                    'type': 'int',
-                },
-                'req_lookup_processed': {
-                    'type': 'int',
-                },
-                'req_processed': {
-                    'type': 'int',
-                }
-            },
-            'total_req_lookup_processed': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -223,24 +215,48 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'num_dplane_threads': {
+                'type': 'int',
+            },
+            'num_lookup_threads': {
+                'type': 'int',
+            },
+            'per_cpu_list': {
+                'type': 'list',
+                'req_queue': {
+                    'type': 'int',
+                },
+                'req_dropped': {
+                    'type': 'int',
+                },
+                'req_processed': {
+                    'type': 'int',
+                },
+                'req_lookup_processed': {
+                    'type': 'int',
+                }
+            },
+            'total_req_queue': {
+                'type': 'int',
+            },
+            'total_req_dropped': {
+                'type': 'int',
+            },
+            'total_req_processed': {
+                'type': 'int',
+            },
+            'total_req_lookup_processed': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
             'db_lookup': {
                 'type': 'str',
             },
-            'lookup_latency': {
-                'type': 'str',
-            },
-            'rtu_cache_mem': {
-                'type': 'str',
-            },
-            'lookup_cache_mem': {
-                'type': 'str',
-            },
             'cloud_cache_lookup': {
-                'type': 'str',
-            },
-            'db_mem': {
                 'type': 'str',
             },
             'cloud_lookup': {
@@ -248,10 +264,19 @@ def get_argspec():
             },
             'rtu_lookup': {
                 'type': 'str',
+            },
+            'lookup_latency': {
+                'type': 'str',
+            },
+            'db_mem': {
+                'type': 'str',
+            },
+            'rtu_cache_mem': {
+                'type': 'str',
+            },
+            'lookup_cache_mem': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

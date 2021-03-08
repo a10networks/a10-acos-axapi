@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_reqmod_icap
 description:
     - REQMOD ICAP template
-short_description: Configures A10 slb.template.reqmod-icap
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,135 +22,168 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    min_payload_size:
+    name:
         description:
-        - "min-payload-size value 0 - 65535, default is 0"
-        required: False
-    shared_partition_persist_source_ip_template:
-        description:
-        - "Reference a persist source ip template from shared partition"
-        required: False
-    template_tcp_proxy_shared:
-        description:
-        - "TCP Proxy Template name"
-        required: False
+        - "Reqmod ICAP Template Name"
+        type: str
+        required: True
     allowed_http_methods:
         description:
         - "List of allowed HTTP methods. Default is 'Allow All'. (List of HTTP methods
           allowed (default 'Allow All'))"
+        type: str
         required: False
-    uuid:
+    include_protocol_in_uri:
         description:
-        - "uuid of the object"
-        required: False
-    source_ip:
-        description:
-        - "Source IP persistence template (Source IP persistence template name)"
-        required: False
-    shared_partition_tcp_proxy_template:
-        description:
-        - "Reference a TCP Proxy template from shared partition"
-        required: False
-    service_group:
-        description:
-        - "Bind a Service Group to the template (Service Group Name)"
-        required: False
-    tcp_proxy:
-        description:
-        - "TCP Proxy Template Name"
-        required: False
-    preview:
-        description:
-        - "Preview value 1 - 32768, default is 32768"
-        required: False
-    disable_http_server_reset:
-        description:
-        - "Don't reset http server"
-        required: False
-    server_ssl:
-        description:
-        - "Server SSL template (Server SSL template name)"
+        - "Include protocol and port in HTTP URI"
+        type: bool
         required: False
     fail_close:
         description:
         - "When template sg is down mark vport down"
+        type: bool
         required: False
     bypass_ip_cfg:
         description:
         - "Field bypass_ip_cfg"
+        type: list
         required: False
         suboptions:
             bypass_ip:
                 description:
                 - "ip address to bypass reqmod-icap service"
+                type: str
             mask:
                 description:
                 - "IP prefix mask"
-    template_persist_source_ip_shared:
-        description:
-        - "Source IP Persistence Template Name"
-        required: False
-    include_protocol_in_uri:
-        description:
-        - "Include protocol and port in HTTP URI"
-        required: False
-    logging:
-        description:
-        - "logging template (Logging template name)"
-        required: False
-    name:
-        description:
-        - "Reqmod ICAP Template Name"
-        required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    x_auth_url:
-        description:
-        - "Use URL format for authentication"
-        required: False
-    log_only_allowed_method:
-        description:
-        - "Only log allowed HTTP method"
-        required: False
+                type: str
     action:
         description:
         - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset;"
+        type: str
         required: False
-    cylance:
+    min_payload_size:
         description:
-        - "cylance external server"
+        - "min-payload-size value 0 - 65535, default is 0"
+        type: int
+        required: False
+    preview:
+        description:
+        - "Preview value 1 - 32768, default is 32768"
+        type: int
         required: False
     service_url:
         description:
         - "URL to send to ICAP server (Service URL Name)"
+        type: str
+        required: False
+    service_group:
+        description:
+        - "Bind a Service Group to the template (Service Group Name)"
+        type: str
+        required: False
+    tcp_proxy:
+        description:
+        - "TCP Proxy Template Name"
+        type: str
+        required: False
+    shared_partition_tcp_proxy_template:
+        description:
+        - "Reference a TCP Proxy template from shared partition"
+        type: bool
+        required: False
+    template_tcp_proxy_shared:
+        description:
+        - "TCP Proxy Template name"
+        type: str
+        required: False
+    logging:
+        description:
+        - "logging template (Logging template name)"
+        type: str
+        required: False
+    server_ssl:
+        description:
+        - "Server SSL template (Server SSL template name)"
+        type: str
+        required: False
+    source_ip:
+        description:
+        - "Source IP persistence template (Source IP persistence template name)"
+        type: str
+        required: False
+    shared_partition_persist_source_ip_template:
+        description:
+        - "Reference a persist source ip template from shared partition"
+        type: bool
+        required: False
+    template_persist_source_ip_shared:
+        description:
+        - "Source IP Persistence Template Name"
+        type: str
+        required: False
+    cylance:
+        description:
+        - "cylance external server"
+        type: bool
+        required: False
+    disable_http_server_reset:
+        description:
+        - "Don't reset http server"
+        type: bool
+        required: False
+    x_auth_url:
+        description:
+        - "Use URL format for authentication"
+        type: bool
+        required: False
+    log_only_allowed_method:
+        description:
+        - "Only log allowed HTTP method"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -229,41 +260,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'min_payload_size': {
-            'type': 'int',
-        },
-        'shared_partition_persist_source_ip_template': {
-            'type': 'bool',
-        },
-        'template_tcp_proxy_shared': {
+        'name': {
             'type': 'str',
+            'required': True,
         },
         'allowed_http_methods': {
             'type': 'str',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'source_ip': {
-            'type': 'str',
-        },
-        'shared_partition_tcp_proxy_template': {
+        'include_protocol_in_uri': {
             'type': 'bool',
-        },
-        'service_group': {
-            'type': 'str',
-        },
-        'tcp_proxy': {
-            'type': 'str',
-        },
-        'preview': {
-            'type': 'int',
-        },
-        'disable_http_server_reset': {
-            'type': 'bool',
-        },
-        'server_ssl': {
-            'type': 'str',
         },
         'fail_close': {
             'type': 'bool',
@@ -277,21 +282,51 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'template_persist_source_ip_shared': {
+        'action': {
+            'type': 'str',
+            'choices': ['continue', 'drop', 'reset']
+        },
+        'min_payload_size': {
+            'type': 'int',
+        },
+        'preview': {
+            'type': 'int',
+        },
+        'service_url': {
             'type': 'str',
         },
-        'include_protocol_in_uri': {
+        'service_group': {
+            'type': 'str',
+        },
+        'tcp_proxy': {
+            'type': 'str',
+        },
+        'shared_partition_tcp_proxy_template': {
             'type': 'bool',
+        },
+        'template_tcp_proxy_shared': {
+            'type': 'str',
         },
         'logging': {
             'type': 'str',
         },
-        'name': {
+        'server_ssl': {
             'type': 'str',
-            'required': True,
         },
-        'user_tag': {
+        'source_ip': {
             'type': 'str',
+        },
+        'shared_partition_persist_source_ip_template': {
+            'type': 'bool',
+        },
+        'template_persist_source_ip_shared': {
+            'type': 'str',
+        },
+        'cylance': {
+            'type': 'bool',
+        },
+        'disable_http_server_reset': {
+            'type': 'bool',
         },
         'x_auth_url': {
             'type': 'bool',
@@ -299,14 +334,10 @@ def get_argspec():
         'log_only_allowed_method': {
             'type': 'bool',
         },
-        'action': {
+        'uuid': {
             'type': 'str',
-            'choices': ['continue', 'drop', 'reset']
         },
-        'cylance': {
-            'type': 'bool',
-        },
-        'service_url': {
+        'user_tag': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_windows_instance
 description:
     - 'Windows Server, using Kerberos or NTLM for authentication'
-short_description: Configures A10 aam.authentication.server.windows.instance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,47 +22,139 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    health_check_string:
-        description:
-        - "Health monitor name"
-        required: False
-    realm:
-        description:
-        - "Specify realm of Windows server"
+        type: str
         required: False
     name:
         description:
         - "Specify Windows authentication server name"
+        type: str
         required: True
+    host:
+        description:
+        - "Field host"
+        type: dict
+        required: False
+        suboptions:
+            hostip:
+                description:
+                - "Specify the Windows server's hostname(Length 1-31) or IP address"
+                type: str
+            hostipv6:
+                description:
+                - "Specify the Windows server's IPV6 address"
+                type: str
+    timeout:
+        description:
+        - "Specify connection timeout to server, default is 10 seconds"
+        type: int
+        required: False
+    auth_protocol:
+        description:
+        - "Field auth_protocol"
+        type: dict
+        required: False
+        suboptions:
+            ntlm_disable:
+                description:
+                - "Disable NTLM authentication protocol"
+                type: bool
+            ntlm_version:
+                description:
+                - "Specify NTLM version, default is 2"
+                type: int
+            ntlm_health_check:
+                description:
+                - "Check NTLM port's health status"
+                type: str
+            ntlm_health_check_disable:
+                description:
+                - "Disable configured NTLM port health check configuration"
+                type: bool
+            kerberos_disable:
+                description:
+                - "Disable Kerberos authentication protocol"
+                type: bool
+            kerberos_port:
+                description:
+                - "Specify the Kerberos port, default is 88"
+                type: int
+            kport_hm:
+                description:
+                - "Check Kerberos port's health status"
+                type: str
+            kport_hm_disable:
+                description:
+                - "Disable configured Kerberos port health check configuration"
+                type: bool
+            kerberos_password_change_port:
+                description:
+                - "Specify the Kerbros password change port, default is 464"
+                type: int
+    realm:
+        description:
+        - "Specify realm of Windows server"
+        type: str
+        required: False
+    support_apacheds_kdc:
+        description:
+        - "Enable weak cipher (DES CRC/MD5/MD4) and merge AS-REQ in single packet"
+        type: bool
+        required: False
+    health_check:
+        description:
+        - "Check server's health status"
+        type: bool
+        required: False
+    health_check_string:
+        description:
+        - "Health monitor name"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable configured health check configuration"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -82,128 +172,85 @@ options:
           'ntlm_prepare_req_error'= NTLM Prepare Request Error; 'ntlm_auth_success'= NTLM
           Authentication Success; 'ntlm_auth_failure'= NTLM Authentication Failure;
           'ntlm_timeout_error'= NTLM Timeout; 'ntlm_other_error'= NTLM Other Error;"
-    host:
-        description:
-        - "Field host"
-        required: False
-        suboptions:
-            hostipv6:
-                description:
-                - "Specify the Windows server's IPV6 address"
-            hostip:
-                description:
-                - "Specify the Windows server's hostname(Length 1-31) or IP address"
-    timeout:
-        description:
-        - "Specify connection timeout to server, default is 10 seconds"
-        required: False
-    auth_protocol:
-        description:
-        - "Field auth_protocol"
-        required: False
-        suboptions:
-            ntlm_health_check:
-                description:
-                - "Check NTLM port's health status"
-            kport_hm_disable:
-                description:
-                - "Disable configured Kerberos port health check configuration"
-            ntlm_health_check_disable:
-                description:
-                - "Disable configured NTLM port health check configuration"
-            kerberos_port:
-                description:
-                - "Specify the Kerberos port, default is 88"
-            ntlm_version:
-                description:
-                - "Specify NTLM version, default is 2"
-            kerberos_disable:
-                description:
-                - "Disable Kerberos authentication protocol"
-            ntlm_disable:
-                description:
-                - "Disable NTLM authentication protocol"
-            kport_hm:
-                description:
-                - "Check Kerberos port's health status"
-            kerberos_password_change_port:
-                description:
-                - "Specify the Kerbros password change port, default is 464"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             krb_send_req_success:
                 description:
                 - "Kerberos Request"
-            ntlm_auth_success:
-                description:
-                - "NTLM Authentication Success"
-            ntlm_prepare_req_error:
-                description:
-                - "NTLM Prepare Request Error"
-            ntlm_proto_nego_failure:
-                description:
-                - "NTLM Protocol Negotiation Failure"
-            ntlm_other_error:
-                description:
-                - "NTLM Other Error"
-            ntlm_auth_failure:
-                description:
-                - "NTLM Authentication Failure"
-            name:
-                description:
-                - "Specify Windows authentication server name"
-            krb_timeout_error:
-                description:
-                - "Kerberos Timeout"
-            ntlm_session_setup_success:
-                description:
-                - "NTLM Session Setup Success"
-            krb_other_error:
-                description:
-                - "Kerberos Other Error"
-            ntlm_timeout_error:
-                description:
-                - "NTLM Timeout"
-            krb_pw_expiry:
-                description:
-                - "Kerberos password expiry"
-            ntlm_session_setup_failure:
-                description:
-                - "NTLM Session Setup Failure"
-            krb_pw_change_failure:
-                description:
-                - "Kerberos password change failure"
+                type: str
             krb_get_resp_success:
                 description:
                 - "Kerberos Response"
-            ntlm_proto_nego_success:
+                type: str
+            krb_timeout_error:
                 description:
-                - "NTLM Protocol Negotiation Success"
-            ntlm_prepare_req_success:
+                - "Kerberos Timeout"
+                type: str
+            krb_other_error:
                 description:
-                - "NTLM Prepare Request Success"
+                - "Kerberos Other Error"
+                type: str
+            krb_pw_expiry:
+                description:
+                - "Kerberos password expiry"
+                type: str
             krb_pw_change_success:
                 description:
                 - "Kerberos password change success"
-    health_check_disable:
-        description:
-        - "Disable configured health check configuration"
-        required: False
-    support_apacheds_kdc:
-        description:
-        - "Enable weak cipher (DES CRC/MD5/MD4) and merge AS-REQ in single packet"
-        required: False
-    health_check:
-        description:
-        - "Check server's health status"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            krb_pw_change_failure:
+                description:
+                - "Kerberos password change failure"
+                type: str
+            ntlm_proto_nego_success:
+                description:
+                - "NTLM Protocol Negotiation Success"
+                type: str
+            ntlm_proto_nego_failure:
+                description:
+                - "NTLM Protocol Negotiation Failure"
+                type: str
+            ntlm_session_setup_success:
+                description:
+                - "NTLM Session Setup Success"
+                type: str
+            ntlm_session_setup_failure:
+                description:
+                - "NTLM Session Setup Failure"
+                type: str
+            ntlm_prepare_req_success:
+                description:
+                - "NTLM Prepare Request Success"
+                type: str
+            ntlm_prepare_req_error:
+                description:
+                - "NTLM Prepare Request Error"
+                type: str
+            ntlm_auth_success:
+                description:
+                - "NTLM Authentication Success"
+                type: str
+            ntlm_auth_failure:
+                description:
+                - "NTLM Authentication Failure"
+                type: str
+            ntlm_timeout_error:
+                description:
+                - "NTLM Timeout"
+                type: str
+            ntlm_other_error:
+                description:
+                - "NTLM Other Error"
+                type: str
+            name:
+                description:
+                - "Specify Windows authentication server name"
+                type: str
 
 '''
 
@@ -267,15 +314,69 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'health_check_string': {
+        'name': {
             'type': 'str',
+            'required': True,
+        },
+        'host': {
+            'type': 'dict',
+            'hostip': {
+                'type': 'str',
+            },
+            'hostipv6': {
+                'type': 'str',
+            }
+        },
+        'timeout': {
+            'type': 'int',
+        },
+        'auth_protocol': {
+            'type': 'dict',
+            'ntlm_disable': {
+                'type': 'bool',
+            },
+            'ntlm_version': {
+                'type': 'int',
+            },
+            'ntlm_health_check': {
+                'type': 'str',
+            },
+            'ntlm_health_check_disable': {
+                'type': 'bool',
+            },
+            'kerberos_disable': {
+                'type': 'bool',
+            },
+            'kerberos_port': {
+                'type': 'int',
+            },
+            'kport_hm': {
+                'type': 'str',
+            },
+            'kport_hm_disable': {
+                'type': 'bool',
+            },
+            'kerberos_password_change_port': {
+                'type': 'int',
+            }
         },
         'realm': {
             'type': 'str',
         },
-        'name': {
+        'support_apacheds_kdc': {
+            'type': 'bool',
+        },
+        'health_check': {
+            'type': 'bool',
+        },
+        'health_check_string': {
             'type': 'str',
-            'required': True,
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -294,117 +395,63 @@ def get_argspec():
                 ]
             }
         },
-        'host': {
-            'type': 'dict',
-            'hostipv6': {
-                'type': 'str',
-            },
-            'hostip': {
-                'type': 'str',
-            }
-        },
-        'timeout': {
-            'type': 'int',
-        },
-        'auth_protocol': {
-            'type': 'dict',
-            'ntlm_health_check': {
-                'type': 'str',
-            },
-            'kport_hm_disable': {
-                'type': 'bool',
-            },
-            'ntlm_health_check_disable': {
-                'type': 'bool',
-            },
-            'kerberos_port': {
-                'type': 'int',
-            },
-            'ntlm_version': {
-                'type': 'int',
-            },
-            'kerberos_disable': {
-                'type': 'bool',
-            },
-            'ntlm_disable': {
-                'type': 'bool',
-            },
-            'kport_hm': {
-                'type': 'str',
-            },
-            'kerberos_password_change_port': {
-                'type': 'int',
-            }
-        },
         'stats': {
             'type': 'dict',
             'krb_send_req_success': {
                 'type': 'str',
             },
-            'ntlm_auth_success': {
+            'krb_get_resp_success': {
                 'type': 'str',
-            },
-            'ntlm_prepare_req_error': {
-                'type': 'str',
-            },
-            'ntlm_proto_nego_failure': {
-                'type': 'str',
-            },
-            'ntlm_other_error': {
-                'type': 'str',
-            },
-            'ntlm_auth_failure': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
             },
             'krb_timeout_error': {
-                'type': 'str',
-            },
-            'ntlm_session_setup_success': {
                 'type': 'str',
             },
             'krb_other_error': {
                 'type': 'str',
             },
-            'ntlm_timeout_error': {
-                'type': 'str',
-            },
             'krb_pw_expiry': {
                 'type': 'str',
             },
-            'ntlm_session_setup_failure': {
+            'krb_pw_change_success': {
                 'type': 'str',
             },
             'krb_pw_change_failure': {
                 'type': 'str',
             },
-            'krb_get_resp_success': {
+            'ntlm_proto_nego_success': {
                 'type': 'str',
             },
-            'ntlm_proto_nego_success': {
+            'ntlm_proto_nego_failure': {
+                'type': 'str',
+            },
+            'ntlm_session_setup_success': {
+                'type': 'str',
+            },
+            'ntlm_session_setup_failure': {
                 'type': 'str',
             },
             'ntlm_prepare_req_success': {
                 'type': 'str',
             },
-            'krb_pw_change_success': {
+            'ntlm_prepare_req_error': {
                 'type': 'str',
+            },
+            'ntlm_auth_success': {
+                'type': 'str',
+            },
+            'ntlm_auth_failure': {
+                'type': 'str',
+            },
+            'ntlm_timeout_error': {
+                'type': 'str',
+            },
+            'ntlm_other_error': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
-        },
-        'health_check_disable': {
-            'type': 'bool',
-        },
-        'support_apacheds_kdc': {
-            'type': 'bool',
-        },
-        'health_check': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

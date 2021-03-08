@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_spdy_proxy
 description:
     - Configure SPDY Proxy
-short_description: Configures A10 slb.spdy-proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -123,267 +123,363 @@ options:
           'http_hdr_stream_close'= HTTP header stream already closed;
           'http_data_stream_close'= HTTP data stream already closed; 'session_close'=
           Session close;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            name_value_total_len_ex:
-                description:
-                - "Name value total length exceeded"
-            data_cb_no_tuple:
-                description:
-                - "Data callback no tuple"
-            server_rst:
-                description:
-                - "Server RST sent"
-            server_fin:
-                description:
-                - "Server FIN"
-            total_proxy:
-                description:
-                - "Total Proxy Conns"
-            curr_http_proxy:
-                description:
-                - "Curr HTTP Proxy Conns"
-            total_v2_proxy:
-                description:
-                - "Version 2 Streams"
-            window_frame:
-                description:
-                - "Window update frame received"
-            close_stream_stream_not_found:
-                description:
-                - "Close stream stream not found"
-            client_rst:
-                description:
-                - "Field client_rst"
-            est_cb_no_tuple:
-                description:
-                - "Est callback no tuple"
-            stream_alloc_fail:
-                description:
-                - "Stream alloc fail"
-            max_concurrent_stream_limit:
-                description:
-                - "Max concurrent stream limit"
-            deflate_ctx:
-                description:
-                - "Deflate context"
-            client_goaway:
-                description:
-                - "Field client_goaway"
-            total_v3_proxy:
-                description:
-                - "Version 3 Streams"
-            compress_ctx_alloc_fail:
-                description:
-                - "Compression context allocation fail"
-            server_goaway:
-                description:
-                - "Server GOAWAY sent"
-            syn_after_goaway:
-                description:
-                - "SYN after goaway"
-            invalid_version:
-                description:
-                - "Invalid version"
-            total_http_proxy:
-                description:
-                - "Total HTTP Proxy Conns"
-            close_stream_session_close:
-                description:
-                - "Stream close session close"
-            decompress_fail:
-                description:
-                - "Decompress fail"
-            ping_frame:
-                description:
-                - "Ping frame received"
-            ping_sent:
-                description:
-                - "PING sent"
-            invalid_frame_size:
-                description:
-                - "Invalid frame size"
-            http_err_stream_closed:
-                description:
-                - "HTTP error stream already closed"
-            header_after_session_close:
-                description:
-                - "Header after session close"
-            http_data_stream_close:
-                description:
-                - "HTTP data stream already closed"
-            control_frame:
-                description:
-                - "Control frame received"
-            stream_not_found:
-                description:
-                - "STREAM not found"
-            fin_stream_closed:
-                description:
-                - "HTTP FIN stream already closed"
-            stream_close:
-                description:
-                - "Stream close"
-            total_stream:
-                description:
-                - "Total Streams"
-            inflate_ctx:
-                description:
-                - "Inflate context"
-            session_needs_requeue:
-                description:
-                - "Session needs requeue"
-            data_no_stream:
-                description:
-                - "Data no stream found"
-            data_no_stream_no_goaway:
-                description:
-                - "Data no stream and no goaway"
-            ctx_alloc_fail:
-                description:
-                - "Context alloc fail"
-            close_stream_session_not_found:
-                description:
-                - "Close stream session not found"
-            stream_found:
-                description:
-                - "Stream found"
-            syn_stream_exist_or_even:
-                description:
-                - "Stream already exists"
-            close_session_already_closed:
-                description:
-                - "Closing closed session"
-            headers_frame:
-                description:
-                - "Headers frame received"
-            syn_reply_alr_rcvd:
-                description:
-                - "SYN reply already received"
-            invalid_window_size:
-                description:
-                - "Invalid window size"
-            header_compress_fail:
-                description:
-                - "Header compress fail"
-            tcp_err:
-                description:
-                - "TCP sock error"
             curr_proxy:
                 description:
                 - "Curr Proxy Conns"
-            name_value_keepalive:
+                type: str
+            total_proxy:
                 description:
-                - "Name value keep alive"
-            settings_frame:
+                - "Total Proxy Conns"
+                type: str
+            curr_http_proxy:
                 description:
-                - "Setting frame received"
-            syn_frame:
+                - "Curr HTTP Proxy Conns"
+                type: str
+            total_http_proxy:
                 description:
-                - "SYN stream frame received"
-            window_no_stream:
+                - "Total HTTP Proxy Conns"
+                type: str
+            total_v2_proxy:
                 description:
-                - "Window update no stream found"
-            data_frame:
+                - "Version 2 Streams"
+                type: str
+            total_v3_proxy:
                 description:
-                - "Data frame received"
-            server_rst_close_stream:
-                description:
-                - "Server RST close stream"
-            new_stream_session_del:
-                description:
-                - "New Stream after Session delete"
-            request_header_alloc_fail:
-                description:
-                - "Request/Header allocation fail"
-            unknown_control_frame:
-                description:
-                - "Unknown control frame"
-            http_data_stream_not_found:
-                description:
-                - "HTTP data stream not found"
-            http_close_stream_closed:
-                description:
-                - "HTTP close stream already closed"
+                - "Version 3 Streams"
+                type: str
             curr_stream:
                 description:
                 - "Curr Streams"
-            close_stream_already_closed:
+                type: str
+            total_stream:
                 description:
-                - "Closing closed stream"
-            name_value_zero_len:
-                description:
-                - "Name value zero name length"
-            data_on_closed_stream:
-                description:
-                - "Data on closed stream"
-            name_value_trasnfer_encod:
-                description:
-                - "Name value transfer encoding"
-            http_conn_alloc_fail:
-                description:
-                - "HTTP connection allocation fail"
-            fin_close_session:
-                description:
-                - "FIN close session"
-            name_value_no_must_have:
-                description:
-                - "Name value no must have"
-            name_value_proxy_conn:
-                description:
-                - "Name value proxy-connection"
-            syn_reply_frame:
-                description:
-                - "SYN reply frame received"
-            name_value_invalid_http_ver:
-                description:
-                - "Name value invalid http version"
-            session_err:
-                description:
-                - "Session err"
-            client_rst_nostream:
-                description:
-                - "Close RST stream not found"
-            http_hdr_stream_close:
-                description:
-                - "HTTP header stream already closed"
-            name_value_connection:
-                description:
-                - "Name value connection"
-            client_fin:
-                description:
-                - "Client FIN"
-            data_no_stream_goaway_close:
-                description:
-                - "Data no stream and no goaway and close session"
+                - "Total Streams"
+                type: str
             total_stream_succ:
                 description:
                 - "Streams(succ)"
-            syn_unidir:
+                type: str
+            client_rst:
                 description:
-                - "Unidirectional SYN"
-            http_data_session_close:
+                - "Field client_rst"
+                type: str
+            server_rst:
                 description:
-                - "HTTP data session close"
-            stream_lt_prev:
+                - "Server RST sent"
+                type: str
+            client_goaway:
                 description:
-                - "Stream id less than previous"
-            close_stream_not_http_proxy:
+                - "Field client_goaway"
+                type: str
+            server_goaway:
                 description:
-                - "Close Stream not http-proxy"
+                - "Server GOAWAY sent"
+                type: str
+            tcp_err:
+                description:
+                - "TCP sock error"
+                type: str
+            inflate_ctx:
+                description:
+                - "Inflate context"
+                type: str
+            deflate_ctx:
+                description:
+                - "Deflate context"
+                type: str
+            ping_sent:
+                description:
+                - "PING sent"
+                type: str
+            stream_not_found:
+                description:
+                - "STREAM not found"
+                type: str
+            client_fin:
+                description:
+                - "Client FIN"
+                type: str
+            server_fin:
+                description:
+                - "Server FIN"
+                type: str
+            stream_close:
+                description:
+                - "Stream close"
+                type: str
             stream_err:
                 description:
                 - "Stream err"
+                type: str
+            session_err:
+                description:
+                - "Session err"
+                type: str
+            control_frame:
+                description:
+                - "Control frame received"
+                type: str
+            syn_frame:
+                description:
+                - "SYN stream frame received"
+                type: str
+            syn_reply_frame:
+                description:
+                - "SYN reply frame received"
+                type: str
+            headers_frame:
+                description:
+                - "Headers frame received"
+                type: str
+            settings_frame:
+                description:
+                - "Setting frame received"
+                type: str
+            window_frame:
+                description:
+                - "Window update frame received"
+                type: str
+            ping_frame:
+                description:
+                - "Ping frame received"
+                type: str
+            data_frame:
+                description:
+                - "Data frame received"
+                type: str
+            data_no_stream:
+                description:
+                - "Data no stream found"
+                type: str
+            data_no_stream_no_goaway:
+                description:
+                - "Data no stream and no goaway"
+                type: str
+            data_no_stream_goaway_close:
+                description:
+                - "Data no stream and no goaway and close session"
+                type: str
+            est_cb_no_tuple:
+                description:
+                - "Est callback no tuple"
+                type: str
+            data_cb_no_tuple:
+                description:
+                - "Data callback no tuple"
+                type: str
+            ctx_alloc_fail:
+                description:
+                - "Context alloc fail"
+                type: str
+            fin_close_session:
+                description:
+                - "FIN close session"
+                type: str
+            server_rst_close_stream:
+                description:
+                - "Server RST close stream"
+                type: str
+            stream_found:
+                description:
+                - "Stream found"
+                type: str
+            close_stream_session_not_found:
+                description:
+                - "Close stream session not found"
+                type: str
+            close_stream_stream_not_found:
+                description:
+                - "Close stream stream not found"
+                type: str
+            close_stream_already_closed:
+                description:
+                - "Closing closed stream"
+                type: str
+            close_stream_session_close:
+                description:
+                - "Stream close session close"
+                type: str
+            close_session_already_closed:
+                description:
+                - "Closing closed session"
+                type: str
+            max_concurrent_stream_limit:
+                description:
+                - "Max concurrent stream limit"
+                type: str
+            stream_alloc_fail:
+                description:
+                - "Stream alloc fail"
+                type: str
+            http_conn_alloc_fail:
+                description:
+                - "HTTP connection allocation fail"
+                type: str
+            request_header_alloc_fail:
+                description:
+                - "Request/Header allocation fail"
+                type: str
+            name_value_total_len_ex:
+                description:
+                - "Name value total length exceeded"
+                type: str
+            name_value_zero_len:
+                description:
+                - "Name value zero name length"
+                type: str
+            name_value_invalid_http_ver:
+                description:
+                - "Name value invalid http version"
+                type: str
+            name_value_connection:
+                description:
+                - "Name value connection"
+                type: str
+            name_value_keepalive:
+                description:
+                - "Name value keep alive"
+                type: str
+            name_value_proxy_conn:
+                description:
+                - "Name value proxy-connection"
+                type: str
+            name_value_trasnfer_encod:
+                description:
+                - "Name value transfer encoding"
+                type: str
+            name_value_no_must_have:
+                description:
+                - "Name value no must have"
+                type: str
+            decompress_fail:
+                description:
+                - "Decompress fail"
+                type: str
+            syn_after_goaway:
+                description:
+                - "SYN after goaway"
+                type: str
+            stream_lt_prev:
+                description:
+                - "Stream id less than previous"
+                type: str
+            syn_stream_exist_or_even:
+                description:
+                - "Stream already exists"
+                type: str
+            syn_unidir:
+                description:
+                - "Unidirectional SYN"
+                type: str
+            syn_reply_alr_rcvd:
+                description:
+                - "SYN reply already received"
+                type: str
+            client_rst_nostream:
+                description:
+                - "Close RST stream not found"
+                type: str
+            window_no_stream:
+                description:
+                - "Window update no stream found"
+                type: str
+            invalid_window_size:
+                description:
+                - "Invalid window size"
+                type: str
+            unknown_control_frame:
+                description:
+                - "Unknown control frame"
+                type: str
+            data_on_closed_stream:
+                description:
+                - "Data on closed stream"
+                type: str
+            invalid_frame_size:
+                description:
+                - "Invalid frame size"
+                type: str
+            invalid_version:
+                description:
+                - "Invalid version"
+                type: str
+            header_after_session_close:
+                description:
+                - "Header after session close"
+                type: str
+            compress_ctx_alloc_fail:
+                description:
+                - "Compression context allocation fail"
+                type: str
+            header_compress_fail:
+                description:
+                - "Header compress fail"
+                type: str
+            http_data_session_close:
+                description:
+                - "HTTP data session close"
+                type: str
+            http_data_stream_not_found:
+                description:
+                - "HTTP data stream not found"
+                type: str
+            close_stream_not_http_proxy:
+                description:
+                - "Close Stream not http-proxy"
+                type: str
+            session_needs_requeue:
+                description:
+                - "Session needs requeue"
+                type: str
+            new_stream_session_del:
+                description:
+                - "New Stream after Session delete"
+                type: str
+            fin_stream_closed:
+                description:
+                - "HTTP FIN stream already closed"
+                type: str
+            http_close_stream_closed:
+                description:
+                - "HTTP close stream already closed"
+                type: str
+            http_err_stream_closed:
+                description:
+                - "HTTP error stream already closed"
+                type: str
+            http_hdr_stream_close:
+                description:
+                - "HTTP header stream already closed"
+                type: str
+            http_data_stream_close:
+                description:
+                - "HTTP data stream already closed"
+                type: str
             session_close:
                 description:
                 - "Session close"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -439,266 +535,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'name_value_total_len_ex': {
-                    'type': 'int',
-                },
-                'data_cb_no_tuple': {
-                    'type': 'int',
-                },
-                'server_rst': {
-                    'type': 'int',
-                },
-                'server_fin': {
-                    'type': 'int',
-                },
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'curr_http_proxy': {
-                    'type': 'int',
-                },
-                'total_v2_proxy': {
-                    'type': 'int',
-                },
-                'window_frame': {
-                    'type': 'int',
-                },
-                'close_stream_stream_not_found': {
-                    'type': 'int',
-                },
-                'client_rst': {
-                    'type': 'int',
-                },
-                'est_cb_no_tuple': {
-                    'type': 'int',
-                },
-                'stream_alloc_fail': {
-                    'type': 'int',
-                },
-                'max_concurrent_stream_limit': {
-                    'type': 'int',
-                },
-                'deflate_ctx': {
-                    'type': 'int',
-                },
-                'client_goaway': {
-                    'type': 'int',
-                },
-                'total_v3_proxy': {
-                    'type': 'int',
-                },
-                'compress_ctx_alloc_fail': {
-                    'type': 'int',
-                },
-                'server_goaway': {
-                    'type': 'int',
-                },
-                'syn_after_goaway': {
-                    'type': 'int',
-                },
-                'invalid_version': {
-                    'type': 'int',
-                },
-                'total_http_proxy': {
-                    'type': 'int',
-                },
-                'close_stream_session_close': {
-                    'type': 'int',
-                },
-                'decompress_fail': {
-                    'type': 'int',
-                },
-                'ping_frame': {
-                    'type': 'int',
-                },
-                'ping_sent': {
-                    'type': 'int',
-                },
-                'invalid_frame_size': {
-                    'type': 'int',
-                },
-                'http_err_stream_closed': {
-                    'type': 'int',
-                },
-                'header_after_session_close': {
-                    'type': 'int',
-                },
-                'http_data_stream_close': {
-                    'type': 'int',
-                },
-                'control_frame': {
-                    'type': 'int',
-                },
-                'stream_not_found': {
-                    'type': 'int',
-                },
-                'fin_stream_closed': {
-                    'type': 'int',
-                },
-                'stream_close': {
-                    'type': 'int',
-                },
-                'total_stream': {
-                    'type': 'int',
-                },
-                'inflate_ctx': {
-                    'type': 'int',
-                },
-                'session_needs_requeue': {
-                    'type': 'int',
-                },
-                'data_no_stream': {
-                    'type': 'int',
-                },
-                'data_no_stream_no_goaway': {
-                    'type': 'int',
-                },
-                'ctx_alloc_fail': {
-                    'type': 'int',
-                },
-                'close_stream_session_not_found': {
-                    'type': 'int',
-                },
-                'stream_found': {
-                    'type': 'int',
-                },
-                'syn_stream_exist_or_even': {
-                    'type': 'int',
-                },
-                'close_session_already_closed': {
-                    'type': 'int',
-                },
-                'headers_frame': {
-                    'type': 'int',
-                },
-                'syn_reply_alr_rcvd': {
-                    'type': 'int',
-                },
-                'invalid_window_size': {
-                    'type': 'int',
-                },
-                'header_compress_fail': {
-                    'type': 'int',
-                },
-                'tcp_err': {
-                    'type': 'int',
-                },
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'name_value_keepalive': {
-                    'type': 'int',
-                },
-                'settings_frame': {
-                    'type': 'int',
-                },
-                'syn_frame': {
-                    'type': 'int',
-                },
-                'window_no_stream': {
-                    'type': 'int',
-                },
-                'data_frame': {
-                    'type': 'int',
-                },
-                'server_rst_close_stream': {
-                    'type': 'int',
-                },
-                'new_stream_session_del': {
-                    'type': 'int',
-                },
-                'request_header_alloc_fail': {
-                    'type': 'int',
-                },
-                'unknown_control_frame': {
-                    'type': 'int',
-                },
-                'http_data_stream_not_found': {
-                    'type': 'int',
-                },
-                'http_close_stream_closed': {
-                    'type': 'int',
-                },
-                'curr_stream': {
-                    'type': 'int',
-                },
-                'close_stream_already_closed': {
-                    'type': 'int',
-                },
-                'name_value_zero_len': {
-                    'type': 'int',
-                },
-                'data_on_closed_stream': {
-                    'type': 'int',
-                },
-                'name_value_trasnfer_encod': {
-                    'type': 'int',
-                },
-                'http_conn_alloc_fail': {
-                    'type': 'int',
-                },
-                'fin_close_session': {
-                    'type': 'int',
-                },
-                'name_value_no_must_have': {
-                    'type': 'int',
-                },
-                'name_value_proxy_conn': {
-                    'type': 'int',
-                },
-                'syn_reply_frame': {
-                    'type': 'int',
-                },
-                'name_value_invalid_http_ver': {
-                    'type': 'int',
-                },
-                'session_err': {
-                    'type': 'int',
-                },
-                'client_rst_nostream': {
-                    'type': 'int',
-                },
-                'http_hdr_stream_close': {
-                    'type': 'int',
-                },
-                'name_value_connection': {
-                    'type': 'int',
-                },
-                'client_fin': {
-                    'type': 'int',
-                },
-                'data_no_stream_goaway_close': {
-                    'type': 'int',
-                },
-                'total_stream_succ': {
-                    'type': 'int',
-                },
-                'syn_unidir': {
-                    'type': 'int',
-                },
-                'http_data_session_close': {
-                    'type': 'int',
-                },
-                'stream_lt_prev': {
-                    'type': 'int',
-                },
-                'close_stream_not_http_proxy': {
-                    'type': 'int',
-                },
-                'stream_err': {
-                    'type': 'int',
-                },
-                'session_close': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -747,18 +585,270 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'curr_http_proxy': {
+                    'type': 'int',
+                },
+                'total_http_proxy': {
+                    'type': 'int',
+                },
+                'total_v2_proxy': {
+                    'type': 'int',
+                },
+                'total_v3_proxy': {
+                    'type': 'int',
+                },
+                'curr_stream': {
+                    'type': 'int',
+                },
+                'total_stream': {
+                    'type': 'int',
+                },
+                'total_stream_succ': {
+                    'type': 'int',
+                },
+                'client_rst': {
+                    'type': 'int',
+                },
+                'server_rst': {
+                    'type': 'int',
+                },
+                'client_goaway': {
+                    'type': 'int',
+                },
+                'server_goaway': {
+                    'type': 'int',
+                },
+                'tcp_err': {
+                    'type': 'int',
+                },
+                'inflate_ctx': {
+                    'type': 'int',
+                },
+                'deflate_ctx': {
+                    'type': 'int',
+                },
+                'ping_sent': {
+                    'type': 'int',
+                },
+                'stream_not_found': {
+                    'type': 'int',
+                },
+                'client_fin': {
+                    'type': 'int',
+                },
+                'server_fin': {
+                    'type': 'int',
+                },
+                'stream_close': {
+                    'type': 'int',
+                },
+                'stream_err': {
+                    'type': 'int',
+                },
+                'session_err': {
+                    'type': 'int',
+                },
+                'control_frame': {
+                    'type': 'int',
+                },
+                'syn_frame': {
+                    'type': 'int',
+                },
+                'syn_reply_frame': {
+                    'type': 'int',
+                },
+                'headers_frame': {
+                    'type': 'int',
+                },
+                'settings_frame': {
+                    'type': 'int',
+                },
+                'window_frame': {
+                    'type': 'int',
+                },
+                'ping_frame': {
+                    'type': 'int',
+                },
+                'data_frame': {
+                    'type': 'int',
+                },
+                'data_no_stream': {
+                    'type': 'int',
+                },
+                'data_no_stream_no_goaway': {
+                    'type': 'int',
+                },
+                'data_no_stream_goaway_close': {
+                    'type': 'int',
+                },
+                'est_cb_no_tuple': {
+                    'type': 'int',
+                },
+                'data_cb_no_tuple': {
+                    'type': 'int',
+                },
+                'ctx_alloc_fail': {
+                    'type': 'int',
+                },
+                'fin_close_session': {
+                    'type': 'int',
+                },
+                'server_rst_close_stream': {
+                    'type': 'int',
+                },
+                'stream_found': {
+                    'type': 'int',
+                },
+                'close_stream_session_not_found': {
+                    'type': 'int',
+                },
+                'close_stream_stream_not_found': {
+                    'type': 'int',
+                },
+                'close_stream_already_closed': {
+                    'type': 'int',
+                },
+                'close_stream_session_close': {
+                    'type': 'int',
+                },
+                'close_session_already_closed': {
+                    'type': 'int',
+                },
+                'max_concurrent_stream_limit': {
+                    'type': 'int',
+                },
+                'stream_alloc_fail': {
+                    'type': 'int',
+                },
+                'http_conn_alloc_fail': {
+                    'type': 'int',
+                },
+                'request_header_alloc_fail': {
+                    'type': 'int',
+                },
+                'name_value_total_len_ex': {
+                    'type': 'int',
+                },
+                'name_value_zero_len': {
+                    'type': 'int',
+                },
+                'name_value_invalid_http_ver': {
+                    'type': 'int',
+                },
+                'name_value_connection': {
+                    'type': 'int',
+                },
+                'name_value_keepalive': {
+                    'type': 'int',
+                },
+                'name_value_proxy_conn': {
+                    'type': 'int',
+                },
+                'name_value_trasnfer_encod': {
+                    'type': 'int',
+                },
+                'name_value_no_must_have': {
+                    'type': 'int',
+                },
+                'decompress_fail': {
+                    'type': 'int',
+                },
+                'syn_after_goaway': {
+                    'type': 'int',
+                },
+                'stream_lt_prev': {
+                    'type': 'int',
+                },
+                'syn_stream_exist_or_even': {
+                    'type': 'int',
+                },
+                'syn_unidir': {
+                    'type': 'int',
+                },
+                'syn_reply_alr_rcvd': {
+                    'type': 'int',
+                },
+                'client_rst_nostream': {
+                    'type': 'int',
+                },
+                'window_no_stream': {
+                    'type': 'int',
+                },
+                'invalid_window_size': {
+                    'type': 'int',
+                },
+                'unknown_control_frame': {
+                    'type': 'int',
+                },
+                'data_on_closed_stream': {
+                    'type': 'int',
+                },
+                'invalid_frame_size': {
+                    'type': 'int',
+                },
+                'invalid_version': {
+                    'type': 'int',
+                },
+                'header_after_session_close': {
+                    'type': 'int',
+                },
+                'compress_ctx_alloc_fail': {
+                    'type': 'int',
+                },
+                'header_compress_fail': {
+                    'type': 'int',
+                },
+                'http_data_session_close': {
+                    'type': 'int',
+                },
+                'http_data_stream_not_found': {
+                    'type': 'int',
+                },
+                'close_stream_not_http_proxy': {
+                    'type': 'int',
+                },
+                'session_needs_requeue': {
+                    'type': 'int',
+                },
+                'new_stream_session_del': {
+                    'type': 'int',
+                },
+                'fin_stream_closed': {
+                    'type': 'int',
+                },
+                'http_close_stream_closed': {
+                    'type': 'int',
+                },
+                'http_err_stream_closed': {
+                    'type': 'int',
+                },
+                'http_hdr_stream_close': {
+                    'type': 'int',
+                },
+                'http_data_stream_close': {
+                    'type': 'int',
+                },
+                'session_close': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'name_value_total_len_ex': {
-                'type': 'str',
-            },
-            'data_cb_no_tuple': {
-                'type': 'str',
-            },
-            'server_rst': {
-                'type': 'str',
-            },
-            'server_fin': {
+            'curr_proxy': {
                 'type': 'str',
             },
             'total_proxy': {
@@ -767,94 +857,88 @@ def get_argspec():
             'curr_http_proxy': {
                 'type': 'str',
             },
+            'total_http_proxy': {
+                'type': 'str',
+            },
             'total_v2_proxy': {
-                'type': 'str',
-            },
-            'window_frame': {
-                'type': 'str',
-            },
-            'close_stream_stream_not_found': {
-                'type': 'str',
-            },
-            'client_rst': {
-                'type': 'str',
-            },
-            'est_cb_no_tuple': {
-                'type': 'str',
-            },
-            'stream_alloc_fail': {
-                'type': 'str',
-            },
-            'max_concurrent_stream_limit': {
-                'type': 'str',
-            },
-            'deflate_ctx': {
-                'type': 'str',
-            },
-            'client_goaway': {
                 'type': 'str',
             },
             'total_v3_proxy': {
                 'type': 'str',
             },
-            'compress_ctx_alloc_fail': {
-                'type': 'str',
-            },
-            'server_goaway': {
-                'type': 'str',
-            },
-            'syn_after_goaway': {
-                'type': 'str',
-            },
-            'invalid_version': {
-                'type': 'str',
-            },
-            'total_http_proxy': {
-                'type': 'str',
-            },
-            'close_stream_session_close': {
-                'type': 'str',
-            },
-            'decompress_fail': {
-                'type': 'str',
-            },
-            'ping_frame': {
-                'type': 'str',
-            },
-            'ping_sent': {
-                'type': 'str',
-            },
-            'invalid_frame_size': {
-                'type': 'str',
-            },
-            'http_err_stream_closed': {
-                'type': 'str',
-            },
-            'header_after_session_close': {
-                'type': 'str',
-            },
-            'http_data_stream_close': {
-                'type': 'str',
-            },
-            'control_frame': {
-                'type': 'str',
-            },
-            'stream_not_found': {
-                'type': 'str',
-            },
-            'fin_stream_closed': {
-                'type': 'str',
-            },
-            'stream_close': {
+            'curr_stream': {
                 'type': 'str',
             },
             'total_stream': {
                 'type': 'str',
             },
+            'total_stream_succ': {
+                'type': 'str',
+            },
+            'client_rst': {
+                'type': 'str',
+            },
+            'server_rst': {
+                'type': 'str',
+            },
+            'client_goaway': {
+                'type': 'str',
+            },
+            'server_goaway': {
+                'type': 'str',
+            },
+            'tcp_err': {
+                'type': 'str',
+            },
             'inflate_ctx': {
                 'type': 'str',
             },
-            'session_needs_requeue': {
+            'deflate_ctx': {
+                'type': 'str',
+            },
+            'ping_sent': {
+                'type': 'str',
+            },
+            'stream_not_found': {
+                'type': 'str',
+            },
+            'client_fin': {
+                'type': 'str',
+            },
+            'server_fin': {
+                'type': 'str',
+            },
+            'stream_close': {
+                'type': 'str',
+            },
+            'stream_err': {
+                'type': 'str',
+            },
+            'session_err': {
+                'type': 'str',
+            },
+            'control_frame': {
+                'type': 'str',
+            },
+            'syn_frame': {
+                'type': 'str',
+            },
+            'syn_reply_frame': {
+                'type': 'str',
+            },
+            'headers_frame': {
+                'type': 'str',
+            },
+            'settings_frame': {
+                'type': 'str',
+            },
+            'window_frame': {
+                'type': 'str',
+            },
+            'ping_frame': {
+                'type': 'str',
+            },
+            'data_frame': {
                 'type': 'str',
             },
             'data_no_stream': {
@@ -863,147 +947,159 @@ def get_argspec():
             'data_no_stream_no_goaway': {
                 'type': 'str',
             },
+            'data_no_stream_goaway_close': {
+                'type': 'str',
+            },
+            'est_cb_no_tuple': {
+                'type': 'str',
+            },
+            'data_cb_no_tuple': {
+                'type': 'str',
+            },
             'ctx_alloc_fail': {
-                'type': 'str',
-            },
-            'close_stream_session_not_found': {
-                'type': 'str',
-            },
-            'stream_found': {
-                'type': 'str',
-            },
-            'syn_stream_exist_or_even': {
-                'type': 'str',
-            },
-            'close_session_already_closed': {
-                'type': 'str',
-            },
-            'headers_frame': {
-                'type': 'str',
-            },
-            'syn_reply_alr_rcvd': {
-                'type': 'str',
-            },
-            'invalid_window_size': {
-                'type': 'str',
-            },
-            'header_compress_fail': {
-                'type': 'str',
-            },
-            'tcp_err': {
-                'type': 'str',
-            },
-            'curr_proxy': {
-                'type': 'str',
-            },
-            'name_value_keepalive': {
-                'type': 'str',
-            },
-            'settings_frame': {
-                'type': 'str',
-            },
-            'syn_frame': {
-                'type': 'str',
-            },
-            'window_no_stream': {
-                'type': 'str',
-            },
-            'data_frame': {
-                'type': 'str',
-            },
-            'server_rst_close_stream': {
-                'type': 'str',
-            },
-            'new_stream_session_del': {
-                'type': 'str',
-            },
-            'request_header_alloc_fail': {
-                'type': 'str',
-            },
-            'unknown_control_frame': {
-                'type': 'str',
-            },
-            'http_data_stream_not_found': {
-                'type': 'str',
-            },
-            'http_close_stream_closed': {
-                'type': 'str',
-            },
-            'curr_stream': {
-                'type': 'str',
-            },
-            'close_stream_already_closed': {
-                'type': 'str',
-            },
-            'name_value_zero_len': {
-                'type': 'str',
-            },
-            'data_on_closed_stream': {
-                'type': 'str',
-            },
-            'name_value_trasnfer_encod': {
-                'type': 'str',
-            },
-            'http_conn_alloc_fail': {
                 'type': 'str',
             },
             'fin_close_session': {
                 'type': 'str',
             },
-            'name_value_no_must_have': {
+            'server_rst_close_stream': {
                 'type': 'str',
             },
-            'name_value_proxy_conn': {
+            'stream_found': {
                 'type': 'str',
             },
-            'syn_reply_frame': {
+            'close_stream_session_not_found': {
+                'type': 'str',
+            },
+            'close_stream_stream_not_found': {
+                'type': 'str',
+            },
+            'close_stream_already_closed': {
+                'type': 'str',
+            },
+            'close_stream_session_close': {
+                'type': 'str',
+            },
+            'close_session_already_closed': {
+                'type': 'str',
+            },
+            'max_concurrent_stream_limit': {
+                'type': 'str',
+            },
+            'stream_alloc_fail': {
+                'type': 'str',
+            },
+            'http_conn_alloc_fail': {
+                'type': 'str',
+            },
+            'request_header_alloc_fail': {
+                'type': 'str',
+            },
+            'name_value_total_len_ex': {
+                'type': 'str',
+            },
+            'name_value_zero_len': {
                 'type': 'str',
             },
             'name_value_invalid_http_ver': {
                 'type': 'str',
             },
-            'session_err': {
-                'type': 'str',
-            },
-            'client_rst_nostream': {
-                'type': 'str',
-            },
-            'http_hdr_stream_close': {
-                'type': 'str',
-            },
             'name_value_connection': {
                 'type': 'str',
             },
-            'client_fin': {
+            'name_value_keepalive': {
                 'type': 'str',
             },
-            'data_no_stream_goaway_close': {
+            'name_value_proxy_conn': {
                 'type': 'str',
             },
-            'total_stream_succ': {
+            'name_value_trasnfer_encod': {
                 'type': 'str',
             },
-            'syn_unidir': {
+            'name_value_no_must_have': {
                 'type': 'str',
             },
-            'http_data_session_close': {
+            'decompress_fail': {
+                'type': 'str',
+            },
+            'syn_after_goaway': {
                 'type': 'str',
             },
             'stream_lt_prev': {
                 'type': 'str',
             },
+            'syn_stream_exist_or_even': {
+                'type': 'str',
+            },
+            'syn_unidir': {
+                'type': 'str',
+            },
+            'syn_reply_alr_rcvd': {
+                'type': 'str',
+            },
+            'client_rst_nostream': {
+                'type': 'str',
+            },
+            'window_no_stream': {
+                'type': 'str',
+            },
+            'invalid_window_size': {
+                'type': 'str',
+            },
+            'unknown_control_frame': {
+                'type': 'str',
+            },
+            'data_on_closed_stream': {
+                'type': 'str',
+            },
+            'invalid_frame_size': {
+                'type': 'str',
+            },
+            'invalid_version': {
+                'type': 'str',
+            },
+            'header_after_session_close': {
+                'type': 'str',
+            },
+            'compress_ctx_alloc_fail': {
+                'type': 'str',
+            },
+            'header_compress_fail': {
+                'type': 'str',
+            },
+            'http_data_session_close': {
+                'type': 'str',
+            },
+            'http_data_stream_not_found': {
+                'type': 'str',
+            },
             'close_stream_not_http_proxy': {
                 'type': 'str',
             },
-            'stream_err': {
+            'session_needs_requeue': {
+                'type': 'str',
+            },
+            'new_stream_session_del': {
+                'type': 'str',
+            },
+            'fin_stream_closed': {
+                'type': 'str',
+            },
+            'http_close_stream_closed': {
+                'type': 'str',
+            },
+            'http_err_stream_closed': {
+                'type': 'str',
+            },
+            'http_hdr_stream_close': {
+                'type': 'str',
+            },
+            'http_data_stream_close': {
                 'type': 'str',
             },
             'session_close': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

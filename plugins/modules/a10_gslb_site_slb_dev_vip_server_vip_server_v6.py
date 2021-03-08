@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev_vip_server_vip_server_v6
 description:
     - Specify a VIP for the SLB device
-short_description: Configures A10 gslb.site.slb.dev.vip.server.vip-server-v6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,80 +22,105 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     slb_dev_device_name:
         description:
-        - Key to identify parent object    site_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    site_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    ipv6:
         description:
-        - "Field oper"
+        - "Specify IP address (IPv6 address)"
+        type: str
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            dev_vip_addr:
-                description:
-                - "Field dev_vip_addr"
-            ipv6:
-                description:
-                - "Specify IP address (IPv6 address)"
-            dev_vip_state:
-                description:
-                - "Field dev_vip_state"
-            dev_vip_port_list:
-                description:
-                - "Field dev_vip_port_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'dev_vip_hits'= Number of times the service-ip was selected;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            dev_vip_addr:
+                description:
+                - "Field dev_vip_addr"
+                type: str
+            dev_vip_state:
+                description:
+                - "Field dev_vip_state"
+                type: str
+            dev_vip_port_list:
+                description:
+                - "Field dev_vip_port_list"
+                type: list
+            ipv6:
+                description:
+                - "Specify IP address (IPv6 address)"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             dev_vip_hits:
                 description:
                 - "Number of times the service-ip was selected"
+                type: str
             ipv6:
                 description:
                 - "Specify IP address (IPv6 address)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ipv6:
-        description:
-        - "Specify IP address (IPv6 address)"
-        required: True
+                type: str
 
 '''
 
@@ -154,14 +177,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ipv6': {
+            'type': 'str',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'dev_vip_hits']
+            }
+        },
         'oper': {
             'type': 'dict',
             'dev_vip_addr': {
                 'type': 'str',
-            },
-            'ipv6': {
-                'type': 'str',
-                'required': True,
             },
             'dev_vip_state': {
                 'type': 'str',
@@ -174,13 +207,10 @@ def get_argspec():
                 'dev_vip_port_state': {
                     'type': 'str',
                 }
-            }
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
+            },
+            'ipv6': {
                 'type': 'str',
-                'choices': ['all', 'dev_vip_hits']
+                'required': True,
             }
         },
         'stats': {
@@ -192,13 +222,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'ipv6': {
-            'type': 'str',
-            'required': True,
         }
     })
     # Parent keys

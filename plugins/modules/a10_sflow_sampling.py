@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_sampling
 description:
     - Configure sFlow sampling on specified interfaces
-short_description: Configures A10 sflow.sampling
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,58 +22,72 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     eth_list:
         description:
         - "Field eth_list"
+        type: list
         required: False
         suboptions:
-            eth_end:
-                description:
-                - "Ethernet interface to sample"
             eth_start:
                 description:
                 - "Ethernet interface to sample"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            eth_end:
+                description:
+                - "Ethernet interface to sample"
+                type: str
     ve_list:
         description:
         - "Field ve_list"
+        type: list
         required: False
         suboptions:
-            ve_end:
-                description:
-                - "VE interface to sample"
             ve_start:
                 description:
                 - "VE interface to sample"
+                type: int
+            ve_end:
+                description:
+                - "VE interface to sample"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -132,24 +144,24 @@ def get_argspec():
     rv.update({
         'eth_list': {
             'type': 'list',
-            'eth_end': {
-                'type': 'str',
-            },
             'eth_start': {
                 'type': 'str',
+            },
+            'eth_end': {
+                'type': 'str',
+            }
+        },
+        've_list': {
+            'type': 'list',
+            've_start': {
+                'type': 'int',
+            },
+            've_end': {
+                'type': 'int',
             }
         },
         'uuid': {
             'type': 'str',
-        },
-        've_list': {
-            'type': 'list',
-            've_end': {
-                'type': 'int',
-            },
-            've_start': {
-                'type': 'int',
-            }
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ntp_auth_key
 description:
     - authentication key
-short_description: Configures A10 ntp.auth-key
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,66 +22,81 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    uuid:
+    key:
         description:
-        - "uuid of the object"
+        - "authentication key"
+        type: int
+        required: True
+    alg_type:
+        description:
+        - "'M'= encryption using MD5; 'SHA'= encryption using SHA; 'SHA1'= encryption
+          using SHA1;"
+        type: str
+        required: False
+    key_type:
+        description:
+        - "'ascii'= key string in ASCII form; 'hex'= key string in hex form;"
+        type: str
+        required: False
+    asc_key:
+        description:
+        - "Field asc_key"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        type: str
         required: False
-    key_type:
+    hex_key:
         description:
-        - "'ascii'= key string in ASCII form; 'hex'= key string in hex form;"
+        - "Field hex_key"
+        type: str
         required: False
     hex_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        type: str
         required: False
-    hex_key:
+    uuid:
         description:
-        - "Field hex_key"
-        required: False
-    alg_type:
-        description:
-        - "'M'= encryption using MD5; 'SHA'= encryption using SHA; 'SHA1'= encryption
-          using SHA1;"
-        required: False
-    key:
-        description:
-        - "authentication key"
-        required: True
-    asc_key:
-        description:
-        - "Field asc_key"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -144,31 +157,31 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'key_type': {
-            'type': 'str',
-            'choices': ['ascii', 'hex']
-        },
-        'hex_encrypted': {
-            'type': 'str',
-        },
-        'hex_key': {
-            'type': 'str',
+        'key': {
+            'type': 'int',
+            'required': True,
         },
         'alg_type': {
             'type': 'str',
             'choices': ['M', 'SHA', 'SHA1']
         },
-        'key': {
-            'type': 'int',
-            'required': True,
+        'key_type': {
+            'type': 'str',
+            'choices': ['ascii', 'hex']
         },
         'asc_key': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'hex_key': {
+            'type': 'str',
+        },
+        'hex_encrypted': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         }
     })

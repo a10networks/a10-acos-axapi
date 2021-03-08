@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_smtp
 description:
     - SMTP
-short_description: Configures A10 slb.template.smtp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,105 +22,129 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
         - "SMTP Template Name"
+        type: str
         required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     server_domain:
         description:
         - "Config the domain of the email servers (Server's domain, default is 'mail-
           server-domain')"
+        type: str
         required: False
-    client_domain_switching:
+    service_ready_msg:
         description:
-        - "Field client_domain_switching"
+        - "Set SMTP service ready message (SMTP service ready message, default is 'ESMTP
+          mail service ready')"
+        type: str
         required: False
-        suboptions:
-            service_group:
-                description:
-                - "Select service group (Service group name)"
-            match_string:
-                description:
-                - "Domain name string"
-            switching_type:
-                description:
-                - "'contains'= Specify domain name string if domain contains another string;
-          'ends-with'= Specify domain name string if domain ends with another string;
-          'starts-with'= Specify domain string if domain starts with another string;"
     client_starttls_type:
         description:
         - "'optional'= STARTTLS is optional requirement; 'enforced'= Must issue STARTTLS
           command before mail transaction;"
+        type: str
         required: False
-    LF_to_CRLF:
+    server_starttls_type:
         description:
-        - "Change the LF to CRLF for smtp end of line"
+        - "'optional'= STARTTLS is optional requirement; 'enforced'= Must issue STARTTLS
+          command before mail transaction;"
+        type: str
         required: False
-    template:
-        description:
-        - "Field template"
-        required: False
-        suboptions:
-            logging:
-                description:
-                - "Logging template (Logging Config name)"
     command_disable:
         description:
         - "Field command_disable"
+        type: list
         required: False
         suboptions:
             disable_type:
                 description:
                 - "'expn'= Disable SMTP EXPN commands; 'turn'= Disable SMTP TURN commands; 'vrfy'=
           Disable SMTP VRFY commands;"
-    server_starttls_type:
+                type: str
+    LF_to_CRLF:
         description:
-        - "'optional'= STARTTLS is optional requirement; 'enforced'= Must issue STARTTLS
-          command before mail transaction;"
+        - "Change the LF to CRLF for smtp end of line"
+        type: bool
         required: False
     error_code_to_client:
         description:
         - "Would transfer error code(554) to client, when getting it from connection
           establishing with real-server"
+        type: bool
         required: False
-    service_ready_msg:
+    client_domain_switching:
         description:
-        - "Set SMTP service ready message (SMTP service ready message, default is 'ESMTP
-          mail service ready')"
+        - "Field client_domain_switching"
+        type: list
         required: False
+        suboptions:
+            switching_type:
+                description:
+                - "'contains'= Specify domain name string if domain contains another string;
+          'ends-with'= Specify domain name string if domain ends with another string;
+          'starts-with'= Specify domain string if domain starts with another string;"
+                type: str
+            match_string:
+                description:
+                - "Domain name string"
+                type: str
+            service_group:
+                description:
+                - "Select service group (Service group name)"
+                type: str
+    template:
+        description:
+        - "Field template"
+        type: dict
+        required: False
+        suboptions:
+            logging:
+                description:
+                - "Logging template (Logging Config name)"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -191,37 +213,19 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'user_tag': {
-            'type': 'str',
-        },
         'server_domain': {
             'type': 'str',
         },
-        'client_domain_switching': {
-            'type': 'list',
-            'service_group': {
-                'type': 'str',
-            },
-            'match_string': {
-                'type': 'str',
-            },
-            'switching_type': {
-                'type': 'str',
-                'choices': ['contains', 'ends-with', 'starts-with']
-            }
+        'service_ready_msg': {
+            'type': 'str',
         },
         'client_starttls_type': {
             'type': 'str',
             'choices': ['optional', 'enforced']
         },
-        'LF_to_CRLF': {
-            'type': 'bool',
-        },
-        'template': {
-            'type': 'dict',
-            'logging': {
-                'type': 'str',
-            }
+        'server_starttls_type': {
+            'type': 'str',
+            'choices': ['optional', 'enforced']
         },
         'command_disable': {
             'type': 'list',
@@ -230,17 +234,35 @@ def get_argspec():
                 'choices': ['expn', 'turn', 'vrfy']
             }
         },
-        'server_starttls_type': {
-            'type': 'str',
-            'choices': ['optional', 'enforced']
+        'LF_to_CRLF': {
+            'type': 'bool',
         },
         'error_code_to_client': {
             'type': 'bool',
         },
-        'service_ready_msg': {
-            'type': 'str',
+        'client_domain_switching': {
+            'type': 'list',
+            'switching_type': {
+                'type': 'str',
+                'choices': ['contains', 'ends-with', 'starts-with']
+            },
+            'match_string': {
+                'type': 'str',
+            },
+            'service_group': {
+                'type': 'str',
+            }
+        },
+        'template': {
+            'type': 'dict',
+            'logging': {
+                'type': 'str',
+            }
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

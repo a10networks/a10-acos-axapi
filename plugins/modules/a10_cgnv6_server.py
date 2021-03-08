@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_server
 description:
     - CGNV6 logging Server
-short_description: Configures A10 cgnv6.server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,161 +22,95 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    name:
         description:
-        - "Field oper"
+        - "Server Name"
+        type: str
+        required: True
+    server_ipv6_addr:
+        description:
+        - "IPV6 address"
+        type: str
         required: False
-        suboptions:
-            srv_gateway_arp:
-                description:
-                - "Field srv_gateway_arp"
-            port_list:
-                description:
-                - "Field port_list"
-            name:
-                description:
-                - "Server Name"
-            dns_update_time:
-                description:
-                - "Field dns_update_time"
-            state:
-                description:
-                - "Field state"
-            creation_type:
-                description:
-                - "Field creation_type"
-            server_ttl:
-                description:
-                - "Field server_ttl"
-            curr_observe_rate:
-                description:
-                - "Field curr_observe_rate"
-            curr_conn_rate:
-                description:
-                - "Field curr_conn_rate"
-            conn_rate_unit:
-                description:
-                - "Field conn_rate_unit"
-            disable:
-                description:
-                - "Field disable"
-            slow_start_conn_limit:
-                description:
-                - "Field slow_start_conn_limit"
-            is_autocreate:
-                description:
-                - "Field is_autocreate"
-            drs_list:
-                description:
-                - "Field drs_list"
-    health_check_disable:
+    host:
         description:
-        - "Disable configured health check configuration"
-        required: False
-    port_list:
-        description:
-        - "Field port_list"
-        required: False
-        suboptions:
-            health_check_disable:
-                description:
-                - "Disable health check"
-            protocol:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            uuid:
-                description:
-                - "uuid of the object"
-            follow_port_protocol:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            port_number:
-                description:
-                - "Port Number"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            user_tag:
-                description:
-                - "Customized tag"
-            action:
-                description:
-                - "'enable'= enable; 'disable'= disable;"
-            health_check_follow_port:
-                description:
-                - "Specify which port to follow for health status (Port Number)"
-            health_check:
-                description:
-                - "Health Check (Monitor Name)"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            peak_conn:
-                description:
-                - "Peak connections"
-            curr_conn:
-                description:
-                - "Current connections"
-            port_list:
-                description:
-                - "Field port_list"
-            name:
-                description:
-                - "Server Name"
-            fwd_pkt:
-                description:
-                - "Forward packets"
-            rev_pkt:
-                description:
-                - "Reverse Packets"
-            total_conn:
-                description:
-                - "Total connections"
-    uuid:
-        description:
-        - "uuid of the object"
+        - "IP Address"
+        type: str
         required: False
     fqdn_name:
         description:
         - "Server hostname"
+        type: str
         required: False
     resolve_as:
         description:
         - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use
           AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as
           AAAA Query to resolve FQDN;"
+        type: str
+        required: False
+    action:
+        description:
+        - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server;"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check Monitor (Health monitor name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable configured health check configuration"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -186,30 +118,149 @@ options:
                 - "'all'= all; 'curr-conn'= Current connections; 'total-conn'= Total connections;
           'fwd-pkt'= Forward packets; 'rev-pkt'= Reverse Packets; 'peak-conn'= Peak
           connections;"
-    user_tag:
+                type: str
+    port_list:
         description:
-        - "Customized tag"
+        - "Field port_list"
+        type: list
         required: False
-    host:
+        suboptions:
+            port_number:
+                description:
+                - "Port Number"
+                type: int
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            action:
+                description:
+                - "'enable'= enable; 'disable'= disable;"
+                type: str
+            health_check:
+                description:
+                - "Health Check (Monitor Name)"
+                type: str
+            health_check_follow_port:
+                description:
+                - "Specify which port to follow for health status (Port Number)"
+                type: int
+            follow_port_protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            health_check_disable:
+                description:
+                - "Disable health check"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    oper:
         description:
-        - "IP Address"
+        - "Field oper"
+        type: dict
         required: False
-    action:
+        suboptions:
+            state:
+                description:
+                - "Field state"
+                type: str
+            creation_type:
+                description:
+                - "Field creation_type"
+                type: str
+            dns_update_time:
+                description:
+                - "Field dns_update_time"
+                type: str
+            server_ttl:
+                description:
+                - "Field server_ttl"
+                type: int
+            srv_gateway_arp:
+                description:
+                - "Field srv_gateway_arp"
+                type: str
+            is_autocreate:
+                description:
+                - "Field is_autocreate"
+                type: int
+            slow_start_conn_limit:
+                description:
+                - "Field slow_start_conn_limit"
+                type: int
+            curr_conn_rate:
+                description:
+                - "Field curr_conn_rate"
+                type: int
+            conn_rate_unit:
+                description:
+                - "Field conn_rate_unit"
+                type: str
+            curr_observe_rate:
+                description:
+                - "Field curr_observe_rate"
+                type: int
+            disable:
+                description:
+                - "Field disable"
+                type: int
+            drs_list:
+                description:
+                - "Field drs_list"
+                type: list
+            name:
+                description:
+                - "Server Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
+    stats:
         description:
-        - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server;"
+        - "Field stats"
+        type: dict
         required: False
-    server_ipv6_addr:
-        description:
-        - "IPV6 address"
-        required: False
-    health_check:
-        description:
-        - "Health Check Monitor (Health monitor name)"
-        required: False
-    name:
-        description:
-        - "Server Name"
-        required: True
+        suboptions:
+            curr_conn:
+                description:
+                - "Current connections"
+                type: str
+            total_conn:
+                description:
+                - "Total connections"
+                type: str
+            fwd_pkt:
+                description:
+                - "Forward packets"
+                type: str
+            rev_pkt:
+                description:
+                - "Reverse Packets"
+                type: str
+            peak_conn:
+                description:
+                - "Peak connections"
+                type: str
+            name:
+                description:
+                - "Server Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
 
 '''
 
@@ -275,250 +326,85 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'srv_gateway_arp': {
-                'type': 'str',
-            },
-            'port_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'down_grace_period_allowed': {
-                        'type': 'int',
-                    },
-                    'ip': {
-                        'type': 'str',
-                    },
-                    'ports_freed_total': {
-                        'type': 'int',
-                    },
-                    'ports_consumed_total': {
-                        'type': 'int',
-                    },
-                    'aflow_queue_size': {
-                        'type': 'int',
-                    },
-                    'current_time': {
-                        'type': 'int',
-                    },
-                    'alloc_failed': {
-                        'type': 'int',
-                    },
-                    'vrid': {
-                        'type': 'int',
-                    },
-                    'state': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'Up', 'Down', 'Disabled', 'Maintenance', 'Unknown',
-                            'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE',
-                            'DIS-EXCEED-RATE', 'DIS-DAMP'
-                        ]
-                    },
-                    'ipv6': {
-                        'type': 'str',
-                    },
-                    'slow_start_conn_limit': {
-                        'type': 'int',
-                    },
-                    'resv_conn': {
-                        'type': 'int',
-                    },
-                    'hm_index': {
-                        'type': 'int',
-                    },
-                    'down_time_grace_period': {
-                        'type': 'int',
-                    },
-                    'inband_hm_reassign_num': {
-                        'type': 'int',
-                    },
-                    'ports_consumed': {
-                        'type': 'int',
-                    },
-                    'curr_observe_rate': {
-                        'type': 'int',
-                    },
-                    'curr_conn_rate': {
-                        'type': 'int',
-                    },
-                    'disable': {
-                        'type': 'int',
-                    },
-                    'aflow_conn_limit': {
-                        'type': 'int',
-                    },
-                    'diameter_enabled': {
-                        'type': 'int',
-                    },
-                    'soft_down_time': {
-                        'type': 'int',
-                    },
-                    'ha_group_id': {
-                        'type': 'int',
-                    },
-                    'hm_key': {
-                        'type': 'int',
-                    },
-                    'es_resp_time': {
-                        'type': 'int',
-                    },
-                    'conn_rate_unit': {
-                        'type': 'str',
-                    }
-                },
-                'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['tcp', 'udp']
-                },
-                'port_number': {
-                    'type': 'int',
-                    'required': True,
-                }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'dns_update_time': {
-                'type': 'str',
-            },
-            'state': {
-                'type': 'str',
-                'choices': ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
-            },
-            'creation_type': {
-                'type': 'str',
-            },
-            'server_ttl': {
-                'type': 'int',
-            },
-            'curr_observe_rate': {
-                'type': 'int',
-            },
-            'curr_conn_rate': {
-                'type': 'int',
-            },
-            'conn_rate_unit': {
-                'type': 'str',
-            },
-            'disable': {
-                'type': 'int',
-            },
-            'slow_start_conn_limit': {
-                'type': 'int',
-            },
-            'is_autocreate': {
-                'type': 'int',
-            },
-            'drs_list': {
-                'type': 'list',
-                'drs_server_ipv6_addr': {
-                    'type': 'str',
-                },
-                'drs_srv_gateway_arp': {
-                    'type': 'str',
-                },
-                'drs_creation_type': {
-                    'type': 'str',
-                },
-                'drs_dns_update_time': {
-                    'type': 'str',
-                },
-                'drs_tot_req_suc': {
-                    'type': 'int',
-                },
-                'drs_curr_conn': {
-                    'type': 'int',
-                },
-                'drs_tot_rev_pkts': {
-                    'type': 'int',
-                },
-                'drs_tot_rev_bytes': {
-                    'type': 'int',
-                },
-                'drs_name': {
-                    'type': 'str',
-                },
-                'drs_server_ttl': {
-                    'type': 'int',
-                },
-                'drs_state': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'Up', 'Down', 'Disabled', 'Maintenance', 'Unknown',
-                        'Functional Up', 'DIS-UP', 'DIS-DOWN',
-                        'DIS-MAINTENANCE', 'DIS-EXCEED-RATE', 'DIS-UNKNOWN'
-                    ]
-                },
-                'drs_disable': {
-                    'type': 'int',
-                },
-                'drs_tot_fwd_bytes': {
-                    'type': 'int',
-                },
-                'drs_curr_observe_rate': {
-                    'type': 'int',
-                },
-                'drs_host': {
-                    'type': 'str',
-                },
-                'drs_tot_conn': {
-                    'type': 'int',
-                },
-                'drs_curr_conn_rate': {
-                    'type': 'int',
-                },
-                'drs_tot_req': {
-                    'type': 'int',
-                },
-                'drs_conn_rate_unit': {
-                    'type': 'str',
-                },
-                'drs_peak_conn': {
-                    'type': 'int',
-                },
-                'drs_slow_start_conn_limit': {
-                    'type': 'int',
-                },
-                'drs_tot_fwd_pkts': {
-                    'type': 'int',
-                },
-                'drs_curr_req': {
-                    'type': 'int',
-                },
-                'drs_is_autocreate': {
-                    'type': 'int',
-                }
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'server_ipv6_addr': {
+            'type': 'str',
+        },
+        'host': {
+            'type': 'str',
+        },
+        'fqdn_name': {
+            'type': 'str',
+        },
+        'resolve_as': {
+            'type':
+            'str',
+            'choices':
+            ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'health_check': {
+            'type': 'str',
         },
         'health_check_disable': {
             'type': 'bool',
         },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'curr-conn', 'total-conn', 'fwd-pkt', 'rev-pkt',
+                    'peak-conn'
+                ]
+            }
+        },
         'port_list': {
             'type': 'list',
-            'health_check_disable': {
-                'type': 'bool',
+            'port_number': {
+                'type': 'int',
+                'required': True,
             },
             'protocol': {
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
             },
-            'uuid': {
+            'action': {
                 'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'health_check': {
+                'type': 'str',
+            },
+            'health_check_follow_port': {
+                'type': 'int',
             },
             'follow_port_protocol': {
                 'type': 'str',
                 'choices': ['tcp', 'udp']
             },
-            'port_number': {
-                'type': 'int',
-                'required': True,
+            'health_check_disable': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -537,119 +423,236 @@ def get_argspec():
                         'response_time', 'fastest_rsp_time', 'slowest_rsp_time'
                     ]
                 }
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'health_check_follow_port': {
-                'type': 'int',
-            },
-            'health_check': {
-                'type': 'str',
             }
         },
-        'stats': {
+        'oper': {
             'type': 'dict',
-            'peak_conn': {
+            'state': {
+                'type': 'str',
+                'choices': ['UP', 'DOWN', 'DELETE', 'DISABLED', 'MAINTENANCE']
+            },
+            'creation_type': {
                 'type': 'str',
             },
-            'curr_conn': {
+            'dns_update_time': {
                 'type': 'str',
             },
-            'port_list': {
+            'server_ttl': {
+                'type': 'int',
+            },
+            'srv_gateway_arp': {
+                'type': 'str',
+            },
+            'is_autocreate': {
+                'type': 'int',
+            },
+            'slow_start_conn_limit': {
+                'type': 'int',
+            },
+            'curr_conn_rate': {
+                'type': 'int',
+            },
+            'conn_rate_unit': {
+                'type': 'str',
+            },
+            'curr_observe_rate': {
+                'type': 'int',
+            },
+            'disable': {
+                'type': 'int',
+            },
+            'drs_list': {
                 'type': 'list',
-                'protocol': {
+                'drs_name': {
                     'type': 'str',
-                    'required': True,
-                    'choices': ['tcp', 'udp']
                 },
-                'stats': {
-                    'type': 'dict',
-                    'es_resp_invalid_http': {
-                        'type': 'str',
-                    },
-                    'curr_req': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected_good_status_code': {
-                        'type': 'str',
-                    },
-                    'es_resp_count': {
-                        'type': 'str',
-                    },
-                    'total_fwd_bytes': {
-                        'type': 'str',
-                    },
-                    'es_resp_other': {
-                        'type': 'str',
-                    },
-                    'fastest_rsp_time': {
-                        'type': 'str',
-                    },
-                    'total_fwd_pkts': {
-                        'type': 'str',
-                    },
-                    'es_req_count': {
-                        'type': 'str',
-                    },
-                    'es_resp_500': {
-                        'type': 'str',
-                    },
-                    'peak_conn': {
-                        'type': 'str',
-                    },
-                    'total_req': {
-                        'type': 'str',
-                    },
-                    'es_resp_400': {
-                        'type': 'str',
-                    },
-                    'es_resp_300': {
-                        'type': 'str',
-                    },
-                    'curr_conn': {
-                        'type': 'str',
-                    },
-                    'es_resp_200': {
-                        'type': 'str',
-                    },
-                    'total_rev_bytes': {
-                        'type': 'str',
-                    },
-                    'response_time': {
-                        'type': 'str',
-                    },
-                    'total_conn': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts': {
-                        'type': 'str',
-                    },
-                    'total_req_succ': {
-                        'type': 'str',
-                    },
-                    'last_total_conn': {
-                        'type': 'str',
-                    },
-                    'total_rev_pkts_inspected': {
-                        'type': 'str',
-                    },
-                    'slowest_rsp_time': {
-                        'type': 'str',
-                    }
+                'drs_host': {
+                    'type': 'str',
                 },
-                'port_number': {
+                'drs_server_ipv6_addr': {
+                    'type': 'str',
+                },
+                'drs_state': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Up', 'Down', 'Disabled', 'Maintenance', 'Unknown',
+                        'Functional Up', 'DIS-UP', 'DIS-DOWN',
+                        'DIS-MAINTENANCE', 'DIS-EXCEED-RATE', 'DIS-UNKNOWN'
+                    ]
+                },
+                'drs_creation_type': {
+                    'type': 'str',
+                },
+                'drs_dns_update_time': {
+                    'type': 'str',
+                },
+                'drs_server_ttl': {
                     'type': 'int',
-                    'required': True,
+                },
+                'drs_srv_gateway_arp': {
+                    'type': 'str',
+                },
+                'drs_is_autocreate': {
+                    'type': 'int',
+                },
+                'drs_slow_start_conn_limit': {
+                    'type': 'int',
+                },
+                'drs_curr_conn_rate': {
+                    'type': 'int',
+                },
+                'drs_conn_rate_unit': {
+                    'type': 'str',
+                },
+                'drs_curr_observe_rate': {
+                    'type': 'int',
+                },
+                'drs_disable': {
+                    'type': 'int',
+                },
+                'drs_curr_conn': {
+                    'type': 'int',
+                },
+                'drs_curr_req': {
+                    'type': 'int',
+                },
+                'drs_tot_conn': {
+                    'type': 'int',
+                },
+                'drs_tot_req': {
+                    'type': 'int',
+                },
+                'drs_tot_req_suc': {
+                    'type': 'int',
+                },
+                'drs_tot_fwd_bytes': {
+                    'type': 'int',
+                },
+                'drs_tot_fwd_pkts': {
+                    'type': 'int',
+                },
+                'drs_tot_rev_bytes': {
+                    'type': 'int',
+                },
+                'drs_tot_rev_pkts': {
+                    'type': 'int',
+                },
+                'drs_peak_conn': {
+                    'type': 'int',
                 }
             },
             'name': {
                 'type': 'str',
                 'required': True,
+            },
+            'port_list': {
+                'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                },
+                'oper': {
+                    'type': 'dict',
+                    'state': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'Up', 'Down', 'Disabled', 'Maintenance', 'Unknown',
+                            'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE',
+                            'DIS-EXCEED-RATE', 'DIS-DAMP'
+                        ]
+                    },
+                    'curr_conn_rate': {
+                        'type': 'int',
+                    },
+                    'conn_rate_unit': {
+                        'type': 'str',
+                    },
+                    'slow_start_conn_limit': {
+                        'type': 'int',
+                    },
+                    'curr_observe_rate': {
+                        'type': 'int',
+                    },
+                    'down_grace_period_allowed': {
+                        'type': 'int',
+                    },
+                    'current_time': {
+                        'type': 'int',
+                    },
+                    'down_time_grace_period': {
+                        'type': 'int',
+                    },
+                    'diameter_enabled': {
+                        'type': 'int',
+                    },
+                    'es_resp_time': {
+                        'type': 'int',
+                    },
+                    'inband_hm_reassign_num': {
+                        'type': 'int',
+                    },
+                    'disable': {
+                        'type': 'int',
+                    },
+                    'hm_key': {
+                        'type': 'int',
+                    },
+                    'hm_index': {
+                        'type': 'int',
+                    },
+                    'soft_down_time': {
+                        'type': 'int',
+                    },
+                    'aflow_conn_limit': {
+                        'type': 'int',
+                    },
+                    'aflow_queue_size': {
+                        'type': 'int',
+                    },
+                    'resv_conn': {
+                        'type': 'int',
+                    },
+                    'ip': {
+                        'type': 'str',
+                    },
+                    'ipv6': {
+                        'type': 'str',
+                    },
+                    'vrid': {
+                        'type': 'int',
+                    },
+                    'ha_group_id': {
+                        'type': 'int',
+                    },
+                    'ports_consumed': {
+                        'type': 'int',
+                    },
+                    'ports_consumed_total': {
+                        'type': 'int',
+                    },
+                    'ports_freed_total': {
+                        'type': 'int',
+                    },
+                    'alloc_failed': {
+                        'type': 'int',
+                    }
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'curr_conn': {
+                'type': 'str',
+            },
+            'total_conn': {
+                'type': 'str',
             },
             'fwd_pkt': {
                 'type': 'str',
@@ -657,52 +660,100 @@ def get_argspec():
             'rev_pkt': {
                 'type': 'str',
             },
-            'total_conn': {
+            'peak_conn': {
                 'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port_list': {
+                'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                },
+                'stats': {
+                    'type': 'dict',
+                    'curr_conn': {
+                        'type': 'str',
+                    },
+                    'curr_req': {
+                        'type': 'str',
+                    },
+                    'total_req': {
+                        'type': 'str',
+                    },
+                    'total_req_succ': {
+                        'type': 'str',
+                    },
+                    'total_fwd_bytes': {
+                        'type': 'str',
+                    },
+                    'total_fwd_pkts': {
+                        'type': 'str',
+                    },
+                    'total_rev_bytes': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts': {
+                        'type': 'str',
+                    },
+                    'total_conn': {
+                        'type': 'str',
+                    },
+                    'last_total_conn': {
+                        'type': 'str',
+                    },
+                    'peak_conn': {
+                        'type': 'str',
+                    },
+                    'es_resp_200': {
+                        'type': 'str',
+                    },
+                    'es_resp_300': {
+                        'type': 'str',
+                    },
+                    'es_resp_400': {
+                        'type': 'str',
+                    },
+                    'es_resp_500': {
+                        'type': 'str',
+                    },
+                    'es_resp_other': {
+                        'type': 'str',
+                    },
+                    'es_req_count': {
+                        'type': 'str',
+                    },
+                    'es_resp_count': {
+                        'type': 'str',
+                    },
+                    'es_resp_invalid_http': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_good_status_code': {
+                        'type': 'str',
+                    },
+                    'response_time': {
+                        'type': 'str',
+                    },
+                    'fastest_rsp_time': {
+                        'type': 'str',
+                    },
+                    'slowest_rsp_time': {
+                        'type': 'str',
+                    }
+                }
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'fqdn_name': {
-            'type': 'str',
-        },
-        'resolve_as': {
-            'type':
-            'str',
-            'choices':
-            ['resolve-to-ipv4', 'resolve-to-ipv6', 'resolve-to-ipv4-and-ipv6']
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'curr-conn', 'total-conn', 'fwd-pkt', 'rev-pkt',
-                    'peak-conn'
-                ]
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'host': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'server_ipv6_addr': {
-            'type': 'str',
-        },
-        'health_check': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

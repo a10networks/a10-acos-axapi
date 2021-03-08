@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_policy_active_rdt
 description:
     - Select SLB device with the shortest round delay time to local DNS
-short_description: Configures A10 gslb.policy.active-rdt
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,92 +22,116 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    ignore_id:
-        description:
-        - "Ignore IP Address specified in IP List by ID"
-        required: False
-    keep_tracking:
-        description:
-        - "Keep tracking client even round-delay-time samples are ready"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     enable:
         description:
         - "Enable the active rdt"
+        type: bool
+        required: False
+    single_shot:
+        description:
+        - "Single Shot RDT"
+        type: bool
         required: False
     timeout:
         description:
         - "Specify timeout if round-delay-time samples are not ready (Specify timeout,
           unit=sec,default is 3)"
+        type: int
         required: False
     skip:
         description:
         - "Skip query if round-delay-time samples are not ready (Specify maximum skip
           count,default is 3)"
+        type: int
         required: False
-    fail_break:
+    keep_tracking:
         description:
-        - "Break when no valid RDT"
+        - "Keep tracking client even round-delay-time samples are ready"
+        type: bool
         required: False
-    controller:
+    ignore_id:
         description:
-        - "Active round-delay-time by controller"
-        required: False
-    limit:
-        description:
-        - "Limit of allowed RDT, default is 16383 (Limit, unit= millisecond)"
+        - "Ignore IP Address specified in IP List by ID"
+        type: int
         required: False
     samples:
         description:
         - "Specify samples number for round-delay-time (Number of samples,default is 5)"
-        required: False
-    proto_rdt_enable:
-        description:
-        - "Enable the round-delay-time to the controller"
-        required: False
-    single_shot:
-        description:
-        - "Single Shot RDT"
-        required: False
-    difference:
-        description:
-        - "The difference between the round-delay-time, default is 0"
+        type: int
         required: False
     tolerance:
         description:
         - "The difference percentage between the round-delay-time, default is 10
           (Tolerance)"
+        type: int
+        required: False
+    difference:
+        description:
+        - "The difference between the round-delay-time, default is 0"
+        type: int
+        required: False
+    limit:
+        description:
+        - "Limit of allowed RDT, default is 16383 (Limit, unit= millisecond)"
+        type: int
+        required: False
+    fail_break:
+        description:
+        - "Break when no valid RDT"
+        type: bool
+        required: False
+    controller:
+        description:
+        - "Active round-delay-time by controller"
+        type: bool
+        required: False
+    proto_rdt_enable:
+        description:
+        - "Enable the round-delay-time to the controller"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -176,13 +198,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'ignore_id': {
-            'type': 'int',
-        },
-        'keep_tracking': {
+        'enable': {
             'type': 'bool',
         },
-        'enable': {
+        'single_shot': {
             'type': 'bool',
         },
         'timeout': {
@@ -191,29 +210,32 @@ def get_argspec():
         'skip': {
             'type': 'int',
         },
+        'keep_tracking': {
+            'type': 'bool',
+        },
+        'ignore_id': {
+            'type': 'int',
+        },
+        'samples': {
+            'type': 'int',
+        },
+        'tolerance': {
+            'type': 'int',
+        },
+        'difference': {
+            'type': 'int',
+        },
+        'limit': {
+            'type': 'int',
+        },
         'fail_break': {
             'type': 'bool',
         },
         'controller': {
             'type': 'bool',
         },
-        'limit': {
-            'type': 'int',
-        },
-        'samples': {
-            'type': 'int',
-        },
         'proto_rdt_enable': {
             'type': 'bool',
-        },
-        'single_shot': {
-            'type': 'bool',
-        },
-        'difference': {
-            'type': 'int',
-        },
-        'tolerance': {
-            'type': 'int',
         },
         'uuid': {
             'type': 'str',

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_session_filter
 description:
     - Create a convenience Filter to display/clear sessions
-short_description: Configures A10 session-filter
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,87 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Session filter name"
+        type: str
+        required: True
+    set:
+        description:
+        - "Set filter criteria"
+        type: bool
         required: False
     filter_cfg:
         description:
         - "Field filter_cfg"
+        type: dict
         required: False
         suboptions:
+            session_type:
+                description:
+                - "'ipv6'= Display ipv6 sessions only; 'sip'= SIP sessions;"
+                type: str
             source_addr:
                 description:
                 - "Forward Source IP (Source IP address)"
-            dport2:
+                type: str
+            source_mask:
                 description:
-                - "Forward Destination Port (Dest Port)"
-            app:
+                - "Forward Source IP Subnet (Source Netmask)"
+                type: str
+            source_port:
                 description:
-                - "Specify application(s), separated by comma (For example= http,tcp)"
+                - "Forward Source Port"
+                type: int
+            dest_addr:
+                description:
+                - "Forward Destination IP (Destination IP address)"
+                type: str
             dest_mask:
                 description:
                 - "Forward Destination IP Subnet (Destination Netmask)"
+                type: str
+            dport2:
+                description:
+                - "Forward Destination Port (Dest Port)"
+                type: int
+            app:
+                description:
+                - "Specify application(s), separated by comma (For example= http,tcp)"
+                type: str
             app_category:
                 description:
                 - "'aaa'= Protocol/application used for AAA (Authentification, Authorization and
@@ -78,28 +114,30 @@ options:
           Blogging platform.; 'cdn'= Protocol/application used for Content-Delivery
           Networks.; 'chat'= Protocol/application used for Text Chat.; 'classified-ads'=
           Protocol/application used for Classified ads.; 'cloud-based-services'= SaaS
-          and/or PaaS cloud based services.; 'cryptocurrency'= Cryptocurrency.;
-          'database'= Database-specific protocols.; 'disposable-email'= Disposable email
-          accounts.; 'email'= Native email protocol.; 'enterprise'= Protocol/application
-          used in an enterprise network.; 'file-management'= Protocol/application
-          designed specifically for file management and exchange, e.g., Dropbox, SMB;
-          'file-transfer'= Protocol that offers file transferring as a functionality as a
-          secondary feature. e.g., Skype, Whatsapp; 'forum'= Online forum.; 'gaming'=
-          Protocol/application used by games.; 'instant-messaging-and-multimedia-
-          conferencing'= Protocol/application used for Instant messaging or
+          and/or PaaS cloud based services.; 'crowdfunding'= Service for funding a
+          project or venture by raising small amounts of money from a large number of
+          people.; 'cryptocurrency'= Cryptocurrency.; 'database'= Database-specific
+          protocols.; 'disposable-email'= Disposable email accounts.; 'ebook-reader'=
+          Services for e-book readers.; 'email'= Native email protocol.; 'enterprise'=
+          Protocol/application used in an enterprise network.; 'file-management'=
+          Protocol/application designed specifically for file management and exchange,
+          e.g., Dropbox, SMB; 'file-transfer'= Protocol that offers file transferring as
+          a functionality as a secondary feature. e.g., Skype, Whatsapp; 'forum'= Online
+          forum.; 'gaming'= Protocol/application used by games.; 'instant-messaging-and-
+          multimedia-conferencing'= Protocol/application used for Instant messaging or
           multiconferencing.; 'internet-of-things'= Internet Of Things
-          protocol/application.; 'mobile'= Mobile-specific protocol/application.;
-          'multimedia-streaming'= Protocol/application used for multimedia streaming.;
-          'networking'= Protocol used for (inter) networking purpose.; 'news-portal'=
-          Protocol/application used for News Portals.; 'peer-to-peer'=
-          Protocol/application used for Peer-to-peer purposes.; 'remote-access'=
-          Protocol/application used for remote access.; 'scada'= SCADA (Supervisory
-          control and data acquisition) protocols, all generations.; 'social-networks'=
-          Social networking application.; 'software-update'= Auto-update protocol.;
-          'standards-based'= Protocol issued from standardized bodies such as IETF, ITU,
-          IEEE, ETSI, OIF.; 'transportation'= Transportation.; 'video-chat'=
-          Protocol/application used for Video Chat.; 'voip'= Application used for Voice
-          over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
+          protocol/application.; 'mobile'= Mobile-specific protocol/application.; 'map-
+          service'= Digital Maps service.; 'multimedia-streaming'= Protocol/application
+          used for multimedia streaming.; 'networking'= Protocol used for (inter)
+          networking purpose.; 'news-portal'= Protocol/application used for News
+          Portals.; 'peer-to-peer'= Protocol/application used for Peer-to-peer purposes.;
+          'remote-access'= Protocol/application used for remote access.; 'scada'= SCADA
+          (Supervisory control and data acquisition) protocols, all generations.;
+          'social-networks'= Social networking application.; 'software-update'= Auto-
+          update protocol.; 'standards-based'= Protocol issued from standardized bodies
+          such as IETF, ITU, IEEE, ETSI, OIF.; 'transportation'= Transportation.; 'video-
+          chat'= Protocol/application used for Video Chat.; 'voip'= Application used for
+          Voice over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
           purposes.; 'web'= Application based on HTTP/HTTPS.; 'web-e-commerce'=
           Protocol/application used for E-commerce websites.; 'web-search-engines'=
           Protocol/application used for Web search portals.; 'web-websites'=
@@ -137,29 +175,11 @@ options:
           Advertisements; 'web-ext-web-based-email'= Web Extension Web based Email; 'web-
           ext-web-hosting'= Web Extension Web Hosting; 'web-ext-web-service'= Web
           Extension Web Service;"
-            session_type:
-                description:
-                - "'ipv6'= Display ipv6 sessions only; 'sip'= SIP sessions;"
-            source_port:
-                description:
-                - "Forward Source Port"
-            source_mask:
-                description:
-                - "Forward Source IP Subnet (Source Netmask)"
-            dest_addr:
-                description:
-                - "Forward Destination IP (Destination IP address)"
-    set:
-        description:
-        - "Set filter criteria"
-        required: False
-    name:
-        description:
-        - "Session filter name"
-        required: True
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -216,18 +236,38 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'set': {
+            'type': 'bool',
+        },
         'filter_cfg': {
             'type': 'dict',
+            'session_type': {
+                'type': 'str',
+                'choices': ['ipv6', 'sip']
+            },
             'source_addr': {
+                'type': 'str',
+            },
+            'source_mask': {
+                'type': 'str',
+            },
+            'source_port': {
+                'type': 'int',
+            },
+            'dest_addr': {
+                'type': 'str',
+            },
+            'dest_mask': {
                 'type': 'str',
             },
             'dport2': {
                 'type': 'int',
             },
             'app': {
-                'type': 'str',
-            },
-            'dest_mask': {
                 'type': 'str',
             },
             'app_category': {
@@ -237,19 +277,21 @@ def get_argspec():
                     'aaa', 'adult-content', 'advertising',
                     'analytics-and-statistics', 'anonymizers-and-proxies',
                     'audio-chat', 'basic', 'blog', 'cdn', 'chat',
-                    'classified-ads', 'cloud-based-services', 'cryptocurrency',
-                    'database', 'disposable-email', 'email', 'enterprise',
-                    'file-management', 'file-transfer', 'forum', 'gaming',
+                    'classified-ads', 'cloud-based-services', 'crowdfunding',
+                    'cryptocurrency', 'database', 'disposable-email',
+                    'ebook-reader', 'email', 'enterprise', 'file-management',
+                    'file-transfer', 'forum', 'gaming',
                     'instant-messaging-and-multimedia-conferencing',
-                    'internet-of-things', 'mobile', 'multimedia-streaming',
-                    'networking', 'news-portal', 'peer-to-peer',
-                    'remote-access', 'scada', 'social-networks',
-                    'software-update', 'standards-based', 'transportation',
-                    'video-chat', 'voip', 'vpn-tunnels', 'web',
-                    'web-e-commerce', 'web-search-engines', 'web-websites',
-                    'webmails', 'web-ext-adult', 'web-ext-auctions',
-                    'web-ext-blogs', 'web-ext-business-and-economy',
-                    'web-ext-cdns', 'web-ext-collaboration',
+                    'internet-of-things', 'mobile', 'map-service',
+                    'multimedia-streaming', 'networking', 'news-portal',
+                    'peer-to-peer', 'remote-access', 'scada',
+                    'social-networks', 'software-update', 'standards-based',
+                    'transportation', 'video-chat', 'voip', 'vpn-tunnels',
+                    'web', 'web-e-commerce', 'web-search-engines',
+                    'web-websites', 'webmails', 'web-ext-adult',
+                    'web-ext-auctions', 'web-ext-blogs',
+                    'web-ext-business-and-economy', 'web-ext-cdns',
+                    'web-ext-collaboration',
                     'web-ext-computer-and-internet-info',
                     'web-ext-computer-and-internet-security', 'web-ext-dating',
                     'web-ext-educational-institutions',
@@ -273,27 +315,7 @@ def get_argspec():
                     'web-ext-web-advertisements', 'web-ext-web-based-email',
                     'web-ext-web-hosting', 'web-ext-web-service'
                 ]
-            },
-            'session_type': {
-                'type': 'str',
-                'choices': ['ipv6', 'sip']
-            },
-            'source_port': {
-                'type': 'int',
-            },
-            'source_mask': {
-                'type': 'str',
-            },
-            'dest_addr': {
-                'type': 'str',
             }
-        },
-        'set': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         },
         'uuid': {
             'type': 'str',

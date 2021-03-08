@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_dns64_virtualserver
 description:
     - Create a DNS64 Virtual Server
-short_description: Configures A10 cgnv6.dns64-virtualserver
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,180 +22,247 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            peak_conn:
-                description:
-                - "Field peak_conn"
-            conn_rate_unit:
-                description:
-                - "Field conn_rate_unit"
-            port_list:
-                description:
-                - "Field port_list"
-            curr_conn_overflow:
-                description:
-                - "Field curr_conn_overflow"
-            icmp_rate_over_limit_drop:
-                description:
-                - "Field icmp_rate_over_limit_drop"
-            name:
-                description:
-                - "CGNV6 Virtual Server Name"
-            icmpv6_rate_over_limit_drop:
-                description:
-                - "Field icmpv6_rate_over_limit_drop"
-            curr_conn_rate:
-                description:
-                - "Field curr_conn_rate"
-            mac:
-                description:
-                - "Field mac"
-            curr_icmp_rate:
-                description:
-                - "Field curr_icmp_rate"
-            icmpv6_lockup_time_left:
-                description:
-                - "Field icmpv6_lockup_time_left"
-            state:
-                description:
-                - "Field state"
-            curr_icmpv6_rate:
-                description:
-                - "Field curr_icmpv6_rate"
-            ip_address:
-                description:
-                - "Field ip_address"
-            icmp_lockup_time_left:
-                description:
-                - "Field icmp_lockup_time_left"
-            migration_status:
-                description:
-                - "Field migration_status"
-    use_if_ip:
-        description:
-        - "Use Interface IP"
-        required: False
-    port_list:
-        description:
-        - "Field port_list"
-        required: False
-        suboptions:
-            protocol:
-                description:
-                - "'dns-udp'= DNS service over UDP;"
-            uuid:
-                description:
-                - "uuid of the object"
-            precedence:
-                description:
-                - "Set auto NAT pool as higher precedence for source NAT"
-            auto:
-                description:
-                - "Configure auto NAT for the vport"
-            template_policy:
-                description:
-                - "Policy Template (Policy template name)"
-            service_group:
-                description:
-                - "Bind a Service Group to this Virtual Server (Service Group Name)"
-            port_number:
-                description:
-                - "Port"
-            acl_name_list:
-                description:
-                - "Field acl_name_list"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            user_tag:
-                description:
-                - "Customized tag"
-            template_dns:
-                description:
-                - "DNS template (DNS template name)"
-            acl_id_list:
-                description:
-                - "Field acl_id_list"
-            action:
-                description:
-                - "'enable'= Enable; 'disable'= Disable;"
-            pool:
-                description:
-                - "Specify NAT pool or pool group"
     name:
         description:
         - "CGNV6 Virtual Server Name"
+        type: str
         required: True
-    template_policy:
-        description:
-        - "Policy template name"
-        required: False
-    vrid:
-        description:
-        - "Join a vrrp group (Specify ha VRRP-A vrid)"
-        required: False
-    enable_disable_action:
-        description:
-        - "'enable'= Enable Virtual Server (default); 'disable'= Disable Virtual Server;"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     ipv6_address:
         description:
         - "IPV6 address"
-        required: False
-    netmask:
-        description:
-        - "IP subnet mask"
+        type: str
         required: False
     ip_address:
         description:
         - "IP Address"
+        type: str
         required: False
-    policy:
+    netmask:
         description:
-        - "Policy template"
+        - "IP subnet mask"
+        type: str
+        required: False
+    use_if_ip:
+        description:
+        - "Use Interface IP"
+        type: bool
         required: False
     ethernet:
         description:
         - "Ethernet interface"
+        type: str
+        required: False
+    enable_disable_action:
+        description:
+        - "'enable'= Enable Virtual Server (default); 'disable'= Disable Virtual Server;"
+        type: str
+        required: False
+    policy:
+        description:
+        - "Policy template"
+        type: bool
+        required: False
+    template_policy:
+        description:
+        - "Policy template name"
+        type: str
+        required: False
+    vrid:
+        description:
+        - "Join a vrrp group (Specify ha VRRP-A vrid)"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    port_list:
+        description:
+        - "Field port_list"
+        type: list
+        required: False
+        suboptions:
+            port_number:
+                description:
+                - "Port"
+                type: int
+            protocol:
+                description:
+                - "'dns-udp'= DNS service over UDP;"
+                type: str
+            action:
+                description:
+                - "'enable'= Enable; 'disable'= Disable;"
+                type: str
+            pool:
+                description:
+                - "Specify NAT pool or pool group"
+                type: str
+            auto:
+                description:
+                - "Configure auto NAT for the vport"
+                type: bool
+            precedence:
+                description:
+                - "Set auto NAT pool as higher precedence for source NAT"
+                type: bool
+            service_group:
+                description:
+                - "Bind a Service Group to this Virtual Server (Service Group Name)"
+                type: str
+            template_dns:
+                description:
+                - "DNS template (DNS template name)"
+                type: str
+            template_policy:
+                description:
+                - "Policy Template (Policy template name)"
+                type: str
+            acl_id_list:
+                description:
+                - "Field acl_id_list"
+                type: list
+            acl_name_list:
+                description:
+                - "Field acl_name_list"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            mac:
+                description:
+                - "Field mac"
+                type: str
+            state:
+                description:
+                - "Field state"
+                type: str
+            curr_conn_rate:
+                description:
+                - "Field curr_conn_rate"
+                type: int
+            conn_rate_unit:
+                description:
+                - "Field conn_rate_unit"
+                type: str
+            curr_icmp_rate:
+                description:
+                - "Field curr_icmp_rate"
+                type: int
+            icmp_lockup_time_left:
+                description:
+                - "Field icmp_lockup_time_left"
+                type: int
+            icmp_rate_over_limit_drop:
+                description:
+                - "Field icmp_rate_over_limit_drop"
+                type: int
+            curr_icmpv6_rate:
+                description:
+                - "Field curr_icmpv6_rate"
+                type: int
+            icmpv6_lockup_time_left:
+                description:
+                - "Field icmpv6_lockup_time_left"
+                type: int
+            icmpv6_rate_over_limit_drop:
+                description:
+                - "Field icmpv6_rate_over_limit_drop"
+                type: int
+            migration_status:
+                description:
+                - "Field migration_status"
+                type: str
+            peak_conn:
+                description:
+                - "Field peak_conn"
+                type: int
+            ip_address:
+                description:
+                - "Field ip_address"
+                type: str
+            curr_conn_overflow:
+                description:
+                - "Field curr_conn_overflow"
+                type: int
+            ip_only_lb_fwd_bytes:
+                description:
+                - "Field ip_only_lb_fwd_bytes"
+                type: int
+            ip_only_lb_rev_bytes:
+                description:
+                - "Field ip_only_lb_rev_bytes"
+                type: int
+            ip_only_lb_fwd_pkts:
+                description:
+                - "Field ip_only_lb_fwd_pkts"
+                type: int
+            ip_only_lb_rev_pkts:
+                description:
+                - "Field ip_only_lb_rev_pkts"
+                type: int
+            name:
+                description:
+                - "CGNV6 Virtual Server Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
 
 '''
 
@@ -263,464 +328,88 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'peak_conn': {
-                'type': 'int',
-            },
-            'conn_rate_unit': {
-                'type': 'str',
-                'choices': ['100ms', 'second']
-            },
-            'port_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'http_host_hits': {
-                        'type': 'bool',
-                    },
-                    'cpu_count': {
-                        'type': 'int',
-                    },
-                    'loc_list': {
-                        'type': 'str',
-                    },
-                    'http_hits_list': {
-                        'type': 'list',
-                        'name': {
-                            'type': 'str',
-                        },
-                        'hits_count': {
-                            'type': 'int',
-                        }
-                    },
-                    'http_vport': {
-                        'type': 'bool',
-                    },
-                    'state': {
-                        'type':
-                        'str',
-                        'choices':
-                        ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
-                    },
-                    'loc_max_depth': {
-                        'type': 'int',
-                    },
-                    'level_str': {
-                        'type': 'str',
-                    },
-                    'loc_last': {
-                        'type': 'str',
-                    },
-                    'http_url_hits': {
-                        'type': 'bool',
-                    },
-                    'geo_location': {
-                        'type': 'str',
-                    },
-                    'http_vport_cpu_list': {
-                        'type': 'list',
-                        'REQ_50u': {
-                            'type': 'int',
-                        },
-                        'http2_control_bytes': {
-                            'type': 'int',
-                        },
-                        'ws_server_switch': {
-                            'type': 'int',
-                        },
-                        'REQ_50m': {
-                            'type': 'int',
-                        },
-                        'status_450': {
-                            'type': 'int',
-                        },
-                        'http2_reset_received': {
-                            'type': 'int',
-                        },
-                        'status_510': {
-                            'type': 'int',
-                        },
-                        'ws_handshake_request': {
-                            'type': 'int',
-                        },
-                        'http2_header_bytes': {
-                            'type': 'int',
-                        },
-                        'status_207': {
-                            'type': 'int',
-                        },
-                        'status_206': {
-                            'type': 'int',
-                        },
-                        'status_205': {
-                            'type': 'int',
-                        },
-                        'status_204': {
-                            'type': 'int',
-                        },
-                        'status_203': {
-                            'type': 'int',
-                        },
-                        'status_202': {
-                            'type': 'int',
-                        },
-                        'status_201': {
-                            'type': 'int',
-                        },
-                        'status_200': {
-                            'type': 'int',
-                        },
-                        'ws_client_switch': {
-                            'type': 'int',
-                        },
-                        'status_2xx': {
-                            'type': 'int',
-                        },
-                        'http2_goaway_received': {
-                            'type': 'int',
-                        },
-                        'REQ_500u': {
-                            'type': 'int',
-                        },
-                        'status_4xx': {
-                            'type': 'int',
-                        },
-                        'status_3xx': {
-                            'type': 'int',
-                        },
-                        'REQ_200u': {
-                            'type': 'int',
-                        },
-                        'stream_closed': {
-                            'type': 'int',
-                        },
-                        'REQ_100m': {
-                            'type': 'int',
-                        },
-                        'REQ_5m': {
-                            'type': 'int',
-                        },
-                        'REQ_100u': {
-                            'type': 'int',
-                        },
-                        'REQ_5s': {
-                            'type': 'int',
-                        },
-                        'REQ_20m': {
-                            'type': 'int',
-                        },
-                        'header_length_long': {
-                            'type': 'int',
-                        },
-                        'REQ_20u': {
-                            'type': 'int',
-                        },
-                        'REQ_2s': {
-                            'type': 'int',
-                        },
-                        'total_http2_bytes': {
-                            'type': 'int',
-                        },
-                        'status_411': {
-                            'type': 'int',
-                        },
-                        'status_306': {
-                            'type': 'int',
-                        },
-                        'status_307': {
-                            'type': 'int',
-                        },
-                        'status_304': {
-                            'type': 'int',
-                        },
-                        'status_305': {
-                            'type': 'int',
-                        },
-                        'status_302': {
-                            'type': 'int',
-                        },
-                        'status_303': {
-                            'type': 'int',
-                        },
-                        'REQ_2m': {
-                            'type': 'int',
-                        },
-                        'status_301': {
-                            'type': 'int',
-                        },
-                        'REQ_10u': {
-                            'type': 'int',
-                        },
-                        'total_http2_conn': {
-                            'type': 'int',
-                        },
-                        'REQ_10m': {
-                            'type': 'int',
-                        },
-                        'REQ_200m': {
-                            'type': 'int',
-                        },
-                        'peak_http2_conn': {
-                            'type': 'int',
-                        },
-                        'status_412': {
-                            'type': 'int',
-                        },
-                        'status_413': {
-                            'type': 'int',
-                        },
-                        'status_410': {
-                            'type': 'int',
-                        },
-                        'http2_reset_sent': {
-                            'type': 'int',
-                        },
-                        'status_416': {
-                            'type': 'int',
-                        },
-                        'status_417': {
-                            'type': 'int',
-                        },
-                        'status_414': {
-                            'type': 'int',
-                        },
-                        'status_415': {
-                            'type': 'int',
-                        },
-                        'status_418': {
-                            'type': 'int',
-                        },
-                        'status_unknown': {
-                            'type': 'int',
-                        },
-                        'status_100': {
-                            'type': 'int',
-                        },
-                        'status_101': {
-                            'type': 'int',
-                        },
-                        'status_102': {
-                            'type': 'int',
-                        },
-                        'status_300': {
-                            'type': 'int',
-                        },
-                        'status_424': {
-                            'type': 'int',
-                        },
-                        'curr_http2_conn': {
-                            'type': 'int',
-                        },
-                        'ws_handshake_success': {
-                            'type': 'int',
-                        },
-                        'status_504_ax': {
-                            'type': 'int',
-                        },
-                        'status_6xx': {
-                            'type': 'int',
-                        },
-                        'status_5xx': {
-                            'type': 'int',
-                        },
-                        'status_401': {
-                            'type': 'int',
-                        },
-                        'status_400': {
-                            'type': 'int',
-                        },
-                        'status_403': {
-                            'type': 'int',
-                        },
-                        'status_402': {
-                            'type': 'int',
-                        },
-                        'status_405': {
-                            'type': 'int',
-                        },
-                        'status_404': {
-                            'type': 'int',
-                        },
-                        'status_407': {
-                            'type': 'int',
-                        },
-                        'status_406': {
-                            'type': 'int',
-                        },
-                        'status_409': {
-                            'type': 'int',
-                        },
-                        'status_408': {
-                            'type': 'int',
-                        },
-                        'http2_goaway_sent': {
-                            'type': 'int',
-                        },
-                        'REQ_1m': {
-                            'type': 'int',
-                        },
-                        'REQ_1s': {
-                            'type': 'int',
-                        },
-                        'status_1xx': {
-                            'type': 'int',
-                        },
-                        'http2_data_bytes': {
-                            'type': 'int',
-                        },
-                        'status_423': {
-                            'type': 'int',
-                        },
-                        'status_422': {
-                            'type': 'int',
-                        },
-                        'status_426': {
-                            'type': 'int',
-                        },
-                        'status_425': {
-                            'type': 'int',
-                        },
-                        'REQ_500m': {
-                            'type': 'int',
-                        },
-                        'status_508': {
-                            'type': 'int',
-                        },
-                        'status_509': {
-                            'type': 'int',
-                        },
-                        'REQ_OVER_5s': {
-                            'type': 'int',
-                        },
-                        'status_500': {
-                            'type': 'int',
-                        },
-                        'status_501': {
-                            'type': 'int',
-                        },
-                        'status_502': {
-                            'type': 'int',
-                        },
-                        'status_503': {
-                            'type': 'int',
-                        },
-                        'status_504': {
-                            'type': 'int',
-                        },
-                        'status_505': {
-                            'type': 'int',
-                        },
-                        'status_506': {
-                            'type': 'int',
-                        },
-                        'status_507': {
-                            'type': 'int',
-                        },
-                        'status_449': {
-                            'type': 'int',
-                        }
-                    },
-                    'real_curr_conn': {
-                        'type': 'int',
-                    },
-                    'loc_success': {
-                        'type': 'int',
-                    },
-                    'loc_error': {
-                        'type': 'int',
-                    },
-                    'group_id': {
-                        'type': 'int',
-                    },
-                    'loc_override': {
-                        'type': 'int',
-                    }
-                },
-                'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['dns-udp']
-                },
-                'port_number': {
-                    'type': 'int',
-                    'required': True,
-                }
-            },
-            'curr_conn_overflow': {
-                'type': 'int',
-            },
-            'icmp_rate_over_limit_drop': {
-                'type': 'int',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'icmpv6_rate_over_limit_drop': {
-                'type': 'int',
-            },
-            'curr_conn_rate': {
-                'type': 'int',
-            },
-            'mac': {
-                'type': 'str',
-            },
-            'curr_icmp_rate': {
-                'type': 'int',
-            },
-            'icmpv6_lockup_time_left': {
-                'type': 'int',
-            },
-            'state': {
-                'type':
-                'str',
-                'choices': [
-                    'All Up', 'Functional Up', 'Partial Up', 'Down', 'Disb',
-                    'Unkn'
-                ]
-            },
-            'curr_icmpv6_rate': {
-                'type': 'int',
-            },
-            'ip_address': {
-                'type': 'str',
-            },
-            'icmp_lockup_time_left': {
-                'type': 'int',
-            },
-            'migration_status': {
-                'type': 'str',
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'ipv6_address': {
+            'type': 'str',
+        },
+        'ip_address': {
+            'type': 'str',
+        },
+        'netmask': {
+            'type': 'str',
         },
         'use_if_ip': {
             'type': 'bool',
         },
+        'ethernet': {
+            'type': 'str',
+        },
+        'enable_disable_action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'policy': {
+            'type': 'bool',
+        },
+        'template_policy': {
+            'type': 'str',
+        },
+        'vrid': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'port_list': {
             'type': 'list',
+            'port_number': {
+                'type': 'int',
+                'required': True,
+            },
             'protocol': {
                 'type': 'str',
                 'required': True,
                 'choices': ['dns-udp']
             },
-            'uuid': {
+            'action': {
                 'type': 'str',
+                'choices': ['enable', 'disable']
             },
-            'precedence': {
-                'type': 'bool',
+            'pool': {
+                'type': 'str',
             },
             'auto': {
                 'type': 'bool',
             },
-            'template_policy': {
-                'type': 'str',
+            'precedence': {
+                'type': 'bool',
             },
             'service_group': {
                 'type': 'str',
             },
-            'port_number': {
-                'type': 'int',
-                'required': True,
+            'template_dns': {
+                'type': 'str',
+            },
+            'template_policy': {
+                'type': 'str',
+            },
+            'acl_id_list': {
+                'type': 'list',
+                'acl_id': {
+                    'type': 'int',
+                },
+                'acl_id_src_nat_pool': {
+                    'type': 'str',
+                },
+                'acl_id_seq_num': {
+                    'type': 'int',
+                }
             },
             'acl_name_list': {
                 'type': 'list',
@@ -733,6 +422,12 @@ def get_argspec():
                 'acl_name_seq_num': {
                     'type': 'int',
                 }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -753,67 +448,449 @@ def get_argspec():
                         'slowest_rsp_time'
                     ]
                 }
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'template_dns': {
-                'type': 'str',
-            },
-            'acl_id_list': {
-                'type': 'list',
-                'acl_id_seq_num': {
-                    'type': 'int',
-                },
-                'acl_id': {
-                    'type': 'int',
-                },
-                'acl_id_src_nat_pool': {
-                    'type': 'str',
-                }
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'pool': {
-                'type': 'str',
             }
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'template_policy': {
-            'type': 'str',
-        },
-        'vrid': {
-            'type': 'int',
-        },
-        'enable_disable_action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'ipv6_address': {
-            'type': 'str',
-        },
-        'netmask': {
-            'type': 'str',
-        },
-        'ip_address': {
-            'type': 'str',
-        },
-        'policy': {
-            'type': 'bool',
-        },
-        'ethernet': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
+        'oper': {
+            'type': 'dict',
+            'mac': {
+                'type': 'str',
+            },
+            'state': {
+                'type':
+                'str',
+                'choices': [
+                    'All Up', 'Functional Up', 'Partial Up', 'Down', 'Disb',
+                    'Unkn'
+                ]
+            },
+            'curr_conn_rate': {
+                'type': 'int',
+            },
+            'conn_rate_unit': {
+                'type': 'str',
+                'choices': ['100ms', 'second']
+            },
+            'curr_icmp_rate': {
+                'type': 'int',
+            },
+            'icmp_lockup_time_left': {
+                'type': 'int',
+            },
+            'icmp_rate_over_limit_drop': {
+                'type': 'int',
+            },
+            'curr_icmpv6_rate': {
+                'type': 'int',
+            },
+            'icmpv6_lockup_time_left': {
+                'type': 'int',
+            },
+            'icmpv6_rate_over_limit_drop': {
+                'type': 'int',
+            },
+            'migration_status': {
+                'type': 'str',
+            },
+            'peak_conn': {
+                'type': 'int',
+            },
+            'ip_address': {
+                'type': 'str',
+            },
+            'curr_conn_overflow': {
+                'type': 'int',
+            },
+            'ip_only_lb_fwd_bytes': {
+                'type': 'int',
+            },
+            'ip_only_lb_rev_bytes': {
+                'type': 'int',
+            },
+            'ip_only_lb_fwd_pkts': {
+                'type': 'int',
+            },
+            'ip_only_lb_rev_pkts': {
+                'type': 'int',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port_list': {
+                'type': 'list',
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['dns-udp']
+                },
+                'oper': {
+                    'type': 'dict',
+                    'state': {
+                        'type':
+                        'str',
+                        'choices':
+                        ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
+                    },
+                    'loc_list': {
+                        'type': 'str',
+                    },
+                    'geo_location': {
+                        'type': 'str',
+                    },
+                    'level_str': {
+                        'type': 'str',
+                    },
+                    'group_id': {
+                        'type': 'int',
+                    },
+                    'loc_max_depth': {
+                        'type': 'int',
+                    },
+                    'loc_success': {
+                        'type': 'int',
+                    },
+                    'loc_error': {
+                        'type': 'int',
+                    },
+                    'loc_override': {
+                        'type': 'int',
+                    },
+                    'loc_last': {
+                        'type': 'str',
+                    },
+                    'http_hits_list': {
+                        'type': 'list',
+                        'name': {
+                            'type': 'str',
+                        },
+                        'hits_count': {
+                            'type': 'int',
+                        }
+                    },
+                    'http_vport_cpu_list': {
+                        'type': 'list',
+                        'status_200': {
+                            'type': 'int',
+                        },
+                        'status_201': {
+                            'type': 'int',
+                        },
+                        'status_202': {
+                            'type': 'int',
+                        },
+                        'status_203': {
+                            'type': 'int',
+                        },
+                        'status_204': {
+                            'type': 'int',
+                        },
+                        'status_205': {
+                            'type': 'int',
+                        },
+                        'status_206': {
+                            'type': 'int',
+                        },
+                        'status_207': {
+                            'type': 'int',
+                        },
+                        'status_100': {
+                            'type': 'int',
+                        },
+                        'status_101': {
+                            'type': 'int',
+                        },
+                        'status_102': {
+                            'type': 'int',
+                        },
+                        'status_300': {
+                            'type': 'int',
+                        },
+                        'status_301': {
+                            'type': 'int',
+                        },
+                        'status_302': {
+                            'type': 'int',
+                        },
+                        'status_303': {
+                            'type': 'int',
+                        },
+                        'status_304': {
+                            'type': 'int',
+                        },
+                        'status_305': {
+                            'type': 'int',
+                        },
+                        'status_306': {
+                            'type': 'int',
+                        },
+                        'status_307': {
+                            'type': 'int',
+                        },
+                        'status_400': {
+                            'type': 'int',
+                        },
+                        'status_401': {
+                            'type': 'int',
+                        },
+                        'status_402': {
+                            'type': 'int',
+                        },
+                        'status_403': {
+                            'type': 'int',
+                        },
+                        'status_404': {
+                            'type': 'int',
+                        },
+                        'status_405': {
+                            'type': 'int',
+                        },
+                        'status_406': {
+                            'type': 'int',
+                        },
+                        'status_407': {
+                            'type': 'int',
+                        },
+                        'status_408': {
+                            'type': 'int',
+                        },
+                        'status_409': {
+                            'type': 'int',
+                        },
+                        'status_410': {
+                            'type': 'int',
+                        },
+                        'status_411': {
+                            'type': 'int',
+                        },
+                        'status_412': {
+                            'type': 'int',
+                        },
+                        'status_413': {
+                            'type': 'int',
+                        },
+                        'status_414': {
+                            'type': 'int',
+                        },
+                        'status_415': {
+                            'type': 'int',
+                        },
+                        'status_416': {
+                            'type': 'int',
+                        },
+                        'status_417': {
+                            'type': 'int',
+                        },
+                        'status_418': {
+                            'type': 'int',
+                        },
+                        'status_422': {
+                            'type': 'int',
+                        },
+                        'status_423': {
+                            'type': 'int',
+                        },
+                        'status_424': {
+                            'type': 'int',
+                        },
+                        'status_425': {
+                            'type': 'int',
+                        },
+                        'status_426': {
+                            'type': 'int',
+                        },
+                        'status_449': {
+                            'type': 'int',
+                        },
+                        'status_450': {
+                            'type': 'int',
+                        },
+                        'status_500': {
+                            'type': 'int',
+                        },
+                        'status_501': {
+                            'type': 'int',
+                        },
+                        'status_502': {
+                            'type': 'int',
+                        },
+                        'status_503': {
+                            'type': 'int',
+                        },
+                        'status_504': {
+                            'type': 'int',
+                        },
+                        'status_504_ax': {
+                            'type': 'int',
+                        },
+                        'status_505': {
+                            'type': 'int',
+                        },
+                        'status_506': {
+                            'type': 'int',
+                        },
+                        'status_507': {
+                            'type': 'int',
+                        },
+                        'status_508': {
+                            'type': 'int',
+                        },
+                        'status_509': {
+                            'type': 'int',
+                        },
+                        'status_510': {
+                            'type': 'int',
+                        },
+                        'status_1xx': {
+                            'type': 'int',
+                        },
+                        'status_2xx': {
+                            'type': 'int',
+                        },
+                        'status_3xx': {
+                            'type': 'int',
+                        },
+                        'status_4xx': {
+                            'type': 'int',
+                        },
+                        'status_5xx': {
+                            'type': 'int',
+                        },
+                        'status_6xx': {
+                            'type': 'int',
+                        },
+                        'status_unknown': {
+                            'type': 'int',
+                        },
+                        'ws_handshake_request': {
+                            'type': 'int',
+                        },
+                        'ws_handshake_success': {
+                            'type': 'int',
+                        },
+                        'ws_client_switch': {
+                            'type': 'int',
+                        },
+                        'ws_server_switch': {
+                            'type': 'int',
+                        },
+                        'REQ_10u': {
+                            'type': 'int',
+                        },
+                        'REQ_20u': {
+                            'type': 'int',
+                        },
+                        'REQ_50u': {
+                            'type': 'int',
+                        },
+                        'REQ_100u': {
+                            'type': 'int',
+                        },
+                        'REQ_200u': {
+                            'type': 'int',
+                        },
+                        'REQ_500u': {
+                            'type': 'int',
+                        },
+                        'REQ_1m': {
+                            'type': 'int',
+                        },
+                        'REQ_2m': {
+                            'type': 'int',
+                        },
+                        'REQ_5m': {
+                            'type': 'int',
+                        },
+                        'REQ_10m': {
+                            'type': 'int',
+                        },
+                        'REQ_20m': {
+                            'type': 'int',
+                        },
+                        'REQ_50m': {
+                            'type': 'int',
+                        },
+                        'REQ_100m': {
+                            'type': 'int',
+                        },
+                        'REQ_200m': {
+                            'type': 'int',
+                        },
+                        'REQ_500m': {
+                            'type': 'int',
+                        },
+                        'REQ_1s': {
+                            'type': 'int',
+                        },
+                        'REQ_2s': {
+                            'type': 'int',
+                        },
+                        'REQ_5s': {
+                            'type': 'int',
+                        },
+                        'REQ_OVER_5s': {
+                            'type': 'int',
+                        },
+                        'curr_http2_conn': {
+                            'type': 'int',
+                        },
+                        'total_http2_conn': {
+                            'type': 'int',
+                        },
+                        'peak_http2_conn': {
+                            'type': 'int',
+                        },
+                        'total_http2_bytes': {
+                            'type': 'int',
+                        },
+                        'http2_control_bytes': {
+                            'type': 'int',
+                        },
+                        'http2_header_bytes': {
+                            'type': 'int',
+                        },
+                        'http2_data_bytes': {
+                            'type': 'int',
+                        },
+                        'http2_reset_received': {
+                            'type': 'int',
+                        },
+                        'http2_reset_sent': {
+                            'type': 'int',
+                        },
+                        'http2_goaway_received': {
+                            'type': 'int',
+                        },
+                        'http2_goaway_sent': {
+                            'type': 'int',
+                        },
+                        'stream_closed': {
+                            'type': 'int',
+                        },
+                        'header_length_long': {
+                            'type': 'int',
+                        }
+                    },
+                    'cpu_count': {
+                        'type': 'int',
+                    },
+                    'http_host_hits': {
+                        'type': 'bool',
+                    },
+                    'http_url_hits': {
+                        'type': 'bool',
+                    },
+                    'http_vport': {
+                        'type': 'bool',
+                    },
+                    'real_curr_conn': {
+                        'type': 'int',
+                    }
+                }
+            }
         }
     })
     return rv

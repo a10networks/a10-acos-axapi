@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_fw_alg_rtsp
 description:
     - Change Firewall RTSP ALG Settings
-short_description: Configures A10 fw.alg.rtsp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     default_port_disable:
         description:
         - "'default-port-disable'= Disable RTSP ALG default port 554;"
+        type: str
         required: False
-    stats:
+    uuid:
         description:
-        - "Field stats"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            data_session_created:
-                description:
-                - "Data Session Created"
-            transport_alloc_failure:
-                description:
-                - "Transport Alloc Failure"
-            data_session_freed:
-                description:
-                - "Data Session Freed"
-            transport_freed:
-                description:
-                - "Transport Freed"
-            transport_inserted:
-                description:
-                - "Transport Created"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -109,10 +101,33 @@ options:
           shadow'= Data Session Freed Shadow; 'ha-control-ext-creation-failure'= HA
           Control Extension Creation Failure; 'ha-control-session-created'= HA Control
           Session Created; 'ha-data-session-created'= HA Data Session Created;"
-    uuid:
+                type: str
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            transport_inserted:
+                description:
+                - "Transport Created"
+                type: str
+            transport_freed:
+                description:
+                - "Transport Freed"
+                type: str
+            transport_alloc_failure:
+                description:
+                - "Transport Alloc Failure"
+                type: str
+            data_session_created:
+                description:
+                - "Data Session Created"
+                type: str
+            data_session_freed:
+                description:
+                - "Data Session Freed"
+                type: str
 
 '''
 
@@ -172,23 +187,8 @@ def get_argspec():
             'type': 'str',
             'choices': ['default-port-disable']
         },
-        'stats': {
-            'type': 'dict',
-            'data_session_created': {
-                'type': 'str',
-            },
-            'transport_alloc_failure': {
-                'type': 'str',
-            },
-            'data_session_freed': {
-                'type': 'str',
-            },
-            'transport_freed': {
-                'type': 'str',
-            },
-            'transport_inserted': {
-                'type': 'str',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -224,8 +224,23 @@ def get_argspec():
                 ]
             }
         },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'transport_inserted': {
+                'type': 'str',
+            },
+            'transport_freed': {
+                'type': 'str',
+            },
+            'transport_alloc_failure': {
+                'type': 'str',
+            },
+            'data_session_created': {
+                'type': 'str',
+            },
+            'data_session_freed': {
+                'type': 'str',
+            }
         }
     })
     return rv

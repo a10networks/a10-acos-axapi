@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_http_alg
 description:
     - HTTP-ALG Statistics
-short_description: Configures A10 cgnv6.http-alg
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -70,48 +81,57 @@ options:
           Out-of-Order Dropped; 'buff-resent'= Packet Resent from Queue; 'buff-spilt-
           failed'= Buff Split Failed; 'header-insertion-failed'= Buff Insertion Failed;
           'header-removal-failed'= Buff Removal Failed; 'no-queue'= No Queue;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            radius_response_dropped:
-                description:
-                - "Query Response Dropped"
-            radius_requst_sent:
-                description:
-                - "Query Request Sent"
-            radius_requst_dropped:
-                description:
-                - "Query Request Dropped"
-            request_insert_client_ip_performed:
-                description:
-                - "HTTP Client IP Insertion Performed"
-            request_insert_msisdn_performed:
-                description:
-                - "HTTP MSISDN Insertion Performed"
-            request_insert_msisdn_unavailable:
-                description:
-                - "Inserted MSISDN is 0000 (MSISDN Unavailable)"
             request_processed:
                 description:
                 - "HTTP Request Processed"
-            radius_query_succeed:
+                type: str
+            request_insert_msisdn_performed:
                 description:
-                - "MSISDN Query Succeed"
-            radius_query_failed:
+                - "HTTP MSISDN Insertion Performed"
+                type: str
+            request_insert_client_ip_performed:
                 description:
-                - "MSISDN Query Failed"
+                - "HTTP Client IP Insertion Performed"
+                type: str
+            request_insert_msisdn_unavailable:
+                description:
+                - "Inserted MSISDN is 0000 (MSISDN Unavailable)"
+                type: str
             queued_session_too_many:
                 description:
                 - "Queued Session Exceed Drop"
+                type: str
+            radius_query_succeed:
+                description:
+                - "MSISDN Query Succeed"
+                type: str
+            radius_query_failed:
+                description:
+                - "MSISDN Query Failed"
+                type: str
+            radius_requst_sent:
+                description:
+                - "Query Request Sent"
+                type: str
+            radius_requst_dropped:
+                description:
+                - "Query Request Dropped"
+                type: str
             radius_response_received:
                 description:
                 - "Query Response Received"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            radius_response_dropped:
+                description:
+                - "Query Response Dropped"
+                type: str
 
 '''
 
@@ -166,6 +186,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -189,25 +212,19 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'radius_response_dropped': {
-                'type': 'str',
-            },
-            'radius_requst_sent': {
-                'type': 'str',
-            },
-            'radius_requst_dropped': {
-                'type': 'str',
-            },
-            'request_insert_client_ip_performed': {
+            'request_processed': {
                 'type': 'str',
             },
             'request_insert_msisdn_performed': {
                 'type': 'str',
             },
+            'request_insert_client_ip_performed': {
+                'type': 'str',
+            },
             'request_insert_msisdn_unavailable': {
                 'type': 'str',
             },
-            'request_processed': {
+            'queued_session_too_many': {
                 'type': 'str',
             },
             'radius_query_succeed': {
@@ -216,15 +233,18 @@ def get_argspec():
             'radius_query_failed': {
                 'type': 'str',
             },
-            'queued_session_too_many': {
+            'radius_requst_sent': {
+                'type': 'str',
+            },
+            'radius_requst_dropped': {
                 'type': 'str',
             },
             'radius_response_received': {
                 'type': 'str',
+            },
+            'radius_response_dropped': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

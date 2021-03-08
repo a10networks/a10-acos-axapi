@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_reporting_template_notification_template_name_authentication
 description:
     - Configure authentication information
-short_description: Configures A10 visibility.reporting.template.notification.template.name.authentication
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,95 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name_name:
         description:
-        - Key to identify parent object    uuid:
+        - Key to identify parent object
+        type: str
+        required: True
+    relative_login_uri:
         description:
-        - "uuid of the object"
+        - "Configure the authentication login uri"
+        type: str
+        required: False
+    relative_logoff_uri:
+        description:
+        - "Configure the authentication logoff uri"
+        type: str
+        required: False
+    auth_username:
+        description:
+        - "Configure the authentication user name"
+        type: str
+        required: False
+    auth_password:
+        description:
+        - "Configure the authentication user password (Authentication password)"
+        type: bool
+        required: False
+    auth_password_string:
+        description:
+        - "Configure the authentication user password (Authentication password)"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
-    relative_logoff_uri:
+    api_key:
         description:
-        - "Configure the authentication logoff uri"
+        - "Configure api-key as a mode of authentication"
+        type: bool
+        required: False
+    api_key_string:
+        description:
+        - "Configure api-key as a mode of authentication"
+        type: str
         required: False
     api_key_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
-    api_key:
+    uuid:
         description:
-        - "Configure api-key as a mode of authentication"
-        required: False
-    auth_password_string:
-        description:
-        - "Configure the authentication user password (Authentication password)"
-        required: False
-    auth_password:
-        description:
-        - "Configure the authentication user password (Authentication password)"
-        required: False
-    api_key_string:
-        description:
-        - "Configure api-key as a mode of authentication"
-        required: False
-    relative_login_uri:
-        description:
-        - "Configure the authentication login uri"
-        required: False
-    auth_username:
-        description:
-        - "Configure the authentication user name"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -155,34 +173,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'encrypted': {
+        'relative_login_uri': {
             'type': 'str',
         },
         'relative_logoff_uri': {
             'type': 'str',
         },
-        'api_key_encrypted': {
-            'type': 'str',
-        },
-        'api_key': {
-            'type': 'bool',
-        },
-        'auth_password_string': {
+        'auth_username': {
             'type': 'str',
         },
         'auth_password': {
             'type': 'bool',
         },
+        'auth_password_string': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'api_key': {
+            'type': 'bool',
+        },
         'api_key_string': {
             'type': 'str',
         },
-        'relative_login_uri': {
+        'api_key_encrypted': {
             'type': 'str',
         },
-        'auth_username': {
+        'uuid': {
             'type': 'str',
         }
     })

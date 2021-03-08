@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_class_list
 description:
     - Configure classification list
-short_description: Configures A10 class-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,153 +22,206 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    name:
         description:
-        - "Field oper"
+        - "Specify name of the class list"
+        type: str
+        required: True
+    ntype:
+        description:
+        - "'ac'= Make class-list type Aho-Corasick; 'dns'= Make class-list type DNS;
+          'ipv4'= Make class-list type IPv4; 'ipv6'= Make class-list type IPv6; 'string'=
+          Make class-list type String; 'string-case-insensitive'= Make class-list type
+          String-case-insensitive. Case insensitive is applied to key string;"
+        type: str
+        required: False
+    file:
+        description:
+        - "Create/Edit a class-list stored as a file"
+        type: bool
+        required: False
+    ipv4_list:
+        description:
+        - "Field ipv4_list"
+        type: list
         required: False
         suboptions:
-            file_or_string:
+            ipv4addr:
                 description:
-                - "Field file_or_string"
-            ac_total_entries:
+                - "Specify IP address"
+                type: str
+            lid:
                 description:
-                - "Field ac_total_entries"
-            ipv6_total_subnet:
+                - "Use Limit ID defined in template (Specify LID index)"
+                type: int
+            glid:
                 description:
-                - "Field ipv6_total_subnet"
-            dns_total_entries:
+                - "Use global Limit ID (Specify global LID index)"
+                type: int
+            shared_partition_glid:
                 description:
-                - "Field dns_total_entries"
-            ipv4_total_subnet:
+                - "Reference a glid from shared partition"
+                type: bool
+            glid_shared:
                 description:
-                - "Field ipv4_total_subnet"
-            dns_entries:
+                - "Use global Limit ID"
+                type: int
+            lsn_lid:
                 description:
-                - "Field dns_entries"
-            ipv4_entries:
+                - "LSN Limit ID (LID index)"
+                type: int
+            lsn_radius_profile:
                 description:
-                - "Field ipv4_entries"
-            ipv4_total_single_ip:
+                - "LSN RADIUS Profile Index"
+                type: int
+            age:
                 description:
-                - "Field ipv4_total_single_ip"
-            user_tag:
+                - "Specify age in minutes"
+                type: int
+    ipv6_list:
+        description:
+        - "Field ipv6_list"
+        type: list
+        required: False
+        suboptions:
+            ipv6_addr:
                 description:
-                - "Field user_tag"
-            name:
+                - "Specify IPv6 host or subnet"
+                type: str
+            v6_lid:
                 description:
-                - "Specify name of the class list"
-            ipv6_entries:
+                - "Use Limit ID defined in template (Specify LID index)"
+                type: int
+            v6_glid:
                 description:
-                - "Field ipv6_entries"
-            string_total_entries:
+                - "Use global Limit ID (Specify global LID index)"
+                type: int
+            shared_partition_v6_glid:
                 description:
-                - "Field string_total_entries"
-            ac_entries:
+                - "Reference a glid from shared partition"
+                type: bool
+            v6_glid_shared:
                 description:
-                - "Field ac_entries"
-            ntype:
+                - "Use global Limit ID"
+                type: int
+            v6_lsn_lid:
                 description:
-                - "Field type"
-            string_entries:
+                - "LSN Limit ID (LID index)"
+                type: int
+            v6_lsn_radius_profile:
                 description:
-                - "Field string_entries"
-            ipv6_total_single_ip:
+                - "LSN RADIUS Profile Index"
+                type: int
+            v6_age:
                 description:
-                - "Field ipv6_total_single_ip"
+                - "Specify age in minutes"
+                type: int
     dns:
         description:
         - "Field dns"
+        type: list
         required: False
         suboptions:
-            dns_match_string:
-                description:
-                - "Domain name"
-            dns_glid_shared:
-                description:
-                - "Use global Limit ID"
-            dns_glid:
-                description:
-                - "Use global Limit ID (Specify global LID index)"
-            dns_lid:
-                description:
-                - "Use Limit ID defined in template (Specify LID index)"
-            shared_partition_dns_glid:
-                description:
-                - "Reference a glid from shared partition"
             dns_match_type:
                 description:
                 - "'contains'= Domain contains another string; 'ends-with'= Domain ends with
           another string; 'starts-with'= Domain starts-with another string;"
-    name:
-        description:
-        - "Specify name of the class list"
-        required: True
-    ipv4_list:
-        description:
-        - "Field ipv4_list"
-        required: False
-        suboptions:
-            lid:
+                type: str
+            dns_match_string:
+                description:
+                - "Domain name"
+                type: str
+            dns_lid:
                 description:
                 - "Use Limit ID defined in template (Specify LID index)"
-            glid:
+                type: int
+            dns_glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
-            age:
-                description:
-                - "Specify age in minutes"
-            glid_shared:
-                description:
-                - "Use global Limit ID"
-            ipv4addr:
-                description:
-                - "Specify IP address"
-            lsn_lid:
-                description:
-                - "LSN Limit ID (LID index)"
-            shared_partition_glid:
+                type: int
+            shared_partition_dns_glid:
                 description:
                 - "Reference a glid from shared partition"
-            lsn_radius_profile:
+                type: bool
+            dns_glid_shared:
                 description:
-                - "LSN RADIUS Profile Index"
-    uuid:
+                - "Use global Limit ID"
+                type: int
+    str_list:
         description:
-        - "uuid of the object"
+        - "Field str_list"
+        type: list
         required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+        suboptions:
+            str:
+                description:
+                - "Specify key string"
+                type: str
+            str_lid_dummy:
+                description:
+                - "Use Limit ID defined in template"
+                type: bool
+            str_lid:
+                description:
+                - "LID index"
+                type: int
+            str_glid_dummy:
+                description:
+                - "Use global Limit ID"
+                type: bool
+            str_glid:
+                description:
+                - "Global LID index"
+                type: int
+            shared_partition_str_glid:
+                description:
+                - "Reference a glid from shared partition"
+                type: bool
+            str_glid_shared:
+                description:
+                - "Use global Limit ID"
+                type: int
+            value_str:
+                description:
+                - "Specify value string"
+                type: str
     ac_list:
         description:
         - "Field ac_list"
+        type: list
         required: False
         suboptions:
             ac_match_type:
@@ -178,81 +229,95 @@ options:
                 - "'contains'= String contains another string; 'ends-with'= String ends with
           another string; 'equals'= String equals another string; 'starts-with'= String
           starts with another string;"
+                type: str
             ac_key_string:
                 description:
                 - "Specify key string"
+                type: str
             ac_value:
                 description:
                 - "Specify value string"
-    str_list:
+                type: str
+    uuid:
         description:
-        - "Field str_list"
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            str_lid:
+            ntype:
                 description:
-                - "LID index"
-            shared_partition_str_glid:
+                - "Field type"
+                type: str
+            file_or_string:
                 description:
-                - "Reference a glid from shared partition"
-            value_str:
+                - "Field file_or_string"
+                type: str
+            user_tag:
                 description:
-                - "Specify value string"
-            str_glid_shared:
+                - "Field user_tag"
+                type: str
+            ipv4_total_single_ip:
                 description:
-                - "Use global Limit ID"
-            str_glid_dummy:
+                - "Field ipv4_total_single_ip"
+                type: int
+            ipv4_total_subnet:
                 description:
-                - "Use global Limit ID"
-            str_glid:
+                - "Field ipv4_total_subnet"
+                type: int
+            ipv6_total_single_ip:
                 description:
-                - "Global LID index"
-            str_lid_dummy:
+                - "Field ipv6_total_single_ip"
+                type: int
+            ipv6_total_subnet:
                 description:
-                - "Use Limit ID defined in template"
-            str:
+                - "Field ipv6_total_subnet"
+                type: int
+            dns_total_entries:
                 description:
-                - "Specify key string"
-    file:
-        description:
-        - "Create/Edit a class-list stored as a file"
-        required: False
-    ntype:
-        description:
-        - "'ac'= Make class-list type Aho-Corasick; 'dns'= Make class-list type DNS;
-          'ipv4'= Make class-list type IPv4; 'ipv6'= Make class-list type IPv6; 'string'=
-          Make class-list type String; 'string-case-insensitive'= Make class-list type
-          String-case-insensitive. Case insensitive is applied to key string;"
-        required: False
-    ipv6_list:
-        description:
-        - "Field ipv6_list"
-        required: False
-        suboptions:
-            v6_lsn_lid:
+                - "Field dns_total_entries"
+                type: int
+            string_total_entries:
                 description:
-                - "LSN Limit ID (LID index)"
-            v6_glid:
+                - "Field string_total_entries"
+                type: int
+            ac_total_entries:
                 description:
-                - "Use global Limit ID (Specify global LID index)"
-            ipv6_addr:
+                - "Field ac_total_entries"
+                type: int
+            ipv4_entries:
                 description:
-                - "Specify IPv6 host or subnet"
-            v6_age:
+                - "Field ipv4_entries"
+                type: list
+            ipv6_entries:
                 description:
-                - "Specify age in minutes"
-            v6_glid_shared:
+                - "Field ipv6_entries"
+                type: list
+            dns_entries:
                 description:
-                - "Use global Limit ID"
-            v6_lid:
+                - "Field dns_entries"
+                type: list
+            string_entries:
                 description:
-                - "Use Limit ID defined in template (Specify LID index)"
-            shared_partition_v6_glid:
+                - "Field string_entries"
+                type: list
+            ac_entries:
                 description:
-                - "Reference a glid from shared partition"
-            v6_lsn_radius_profile:
+                - "Field ac_entries"
+                type: list
+            name:
                 description:
-                - "LSN RADIUS Profile Index"
+                - "Specify name of the class list"
+                type: str
 
 '''
 
@@ -315,13 +380,166 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'ntype': {
+            'type':
+            'str',
+            'choices':
+            ['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
+        },
+        'file': {
+            'type': 'bool',
+        },
+        'ipv4_list': {
+            'type': 'list',
+            'ipv4addr': {
+                'type': 'str',
+            },
+            'lid': {
+                'type': 'int',
+            },
+            'glid': {
+                'type': 'int',
+            },
+            'shared_partition_glid': {
+                'type': 'bool',
+            },
+            'glid_shared': {
+                'type': 'int',
+            },
+            'lsn_lid': {
+                'type': 'int',
+            },
+            'lsn_radius_profile': {
+                'type': 'int',
+            },
+            'age': {
+                'type': 'int',
+            }
+        },
+        'ipv6_list': {
+            'type': 'list',
+            'ipv6_addr': {
+                'type': 'str',
+            },
+            'v6_lid': {
+                'type': 'int',
+            },
+            'v6_glid': {
+                'type': 'int',
+            },
+            'shared_partition_v6_glid': {
+                'type': 'bool',
+            },
+            'v6_glid_shared': {
+                'type': 'int',
+            },
+            'v6_lsn_lid': {
+                'type': 'int',
+            },
+            'v6_lsn_radius_profile': {
+                'type': 'int',
+            },
+            'v6_age': {
+                'type': 'int',
+            }
+        },
+        'dns': {
+            'type': 'list',
+            'dns_match_type': {
+                'type': 'str',
+                'choices': ['contains', 'ends-with', 'starts-with']
+            },
+            'dns_match_string': {
+                'type': 'str',
+            },
+            'dns_lid': {
+                'type': 'int',
+            },
+            'dns_glid': {
+                'type': 'int',
+            },
+            'shared_partition_dns_glid': {
+                'type': 'bool',
+            },
+            'dns_glid_shared': {
+                'type': 'int',
+            }
+        },
+        'str_list': {
+            'type': 'list',
+            'str': {
+                'type': 'str',
+            },
+            'str_lid_dummy': {
+                'type': 'bool',
+            },
+            'str_lid': {
+                'type': 'int',
+            },
+            'str_glid_dummy': {
+                'type': 'bool',
+            },
+            'str_glid': {
+                'type': 'int',
+            },
+            'shared_partition_str_glid': {
+                'type': 'bool',
+            },
+            'str_glid_shared': {
+                'type': 'int',
+            },
+            'value_str': {
+                'type': 'str',
+            }
+        },
+        'ac_list': {
+            'type': 'list',
+            'ac_match_type': {
+                'type': 'str',
+                'choices': ['contains', 'ends-with', 'equals', 'starts-with']
+            },
+            'ac_key_string': {
+                'type': 'str',
+            },
+            'ac_value': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'ntype': {
+                'type':
+                'str',
+                'choices': [
+                    'ac', 'dns', 'ipv4', 'ipv6', 'string',
+                    'string-case-insensitive', '[ipv4]', '[ipv6]', '[dns]',
+                    '[dns, ipv4]', '[dns, ipv6]'
+                ]
+            },
             'file_or_string': {
                 'type': 'str',
                 'choices': ['file', 'config']
             },
-            'ac_total_entries': {
+            'user_tag': {
+                'type': 'str',
+            },
+            'ipv4_total_single_ip': {
+                'type': 'int',
+            },
+            'ipv4_total_subnet': {
+                'type': 'int',
+            },
+            'ipv6_total_single_ip': {
                 'type': 'int',
             },
             'ipv6_total_subnet': {
@@ -330,17 +548,62 @@ def get_argspec():
             'dns_total_entries': {
                 'type': 'int',
             },
-            'ipv4_total_subnet': {
+            'string_total_entries': {
                 'type': 'int',
+            },
+            'ac_total_entries': {
+                'type': 'int',
+            },
+            'ipv4_entries': {
+                'type': 'list',
+                'ipv4_addr': {
+                    'type': 'str',
+                },
+                'ipv4_lid': {
+                    'type': 'int',
+                },
+                'ipv4_glid': {
+                    'type': 'int',
+                },
+                'ipv4_lsn_lid': {
+                    'type': 'int',
+                },
+                'ipv4_lsn_radius_profile': {
+                    'type': 'int',
+                },
+                'ipv4_hit_count': {
+                    'type': 'int',
+                },
+                'ipv4_age': {
+                    'type': 'int',
+                }
+            },
+            'ipv6_entries': {
+                'type': 'list',
+                'ipv6addr': {
+                    'type': 'str',
+                },
+                'ipv6_lid': {
+                    'type': 'int',
+                },
+                'ipv6_glid': {
+                    'type': 'int',
+                },
+                'ipv6_lsn_lid': {
+                    'type': 'int',
+                },
+                'ipv6_lsn_radius_profile': {
+                    'type': 'int',
+                },
+                'ipv6_hit_count': {
+                    'type': 'int',
+                },
+                'ipv6_age': {
+                    'type': 'int',
+                }
             },
             'dns_entries': {
                 'type': 'list',
-                'dns_glid': {
-                    'type': 'int',
-                },
-                'dns_hit_count': {
-                    'type': 'int',
-                },
                 'dns_match_type': {
                     'type': 'str',
                     'choices': ['contains', 'ends-with', 'starts-with']
@@ -350,68 +613,31 @@ def get_argspec():
                 },
                 'dns_lid': {
                     'type': 'int',
-                }
-            },
-            'ipv4_entries': {
-                'type': 'list',
-                'ipv4_lsn_lid': {
+                },
+                'dns_glid': {
                     'type': 'int',
                 },
-                'ipv4_addr': {
+                'dns_hit_count': {
+                    'type': 'int',
+                }
+            },
+            'string_entries': {
+                'type': 'list',
+                'string_key': {
                     'type': 'str',
                 },
-                'ipv4_lid': {
-                    'type': 'int',
-                },
-                'ipv4_age': {
-                    'type': 'int',
-                },
-                'ipv4_lsn_radius_profile': {
-                    'type': 'int',
-                },
-                'ipv4_hit_count': {
-                    'type': 'int',
-                },
-                'ipv4_glid': {
-                    'type': 'int',
-                }
-            },
-            'ipv4_total_single_ip': {
-                'type': 'int',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'ipv6_entries': {
-                'type': 'list',
-                'ipv6_lid': {
-                    'type': 'int',
-                },
-                'ipv6_hit_count': {
-                    'type': 'int',
-                },
-                'ipv6_lsn_radius_profile': {
-                    'type': 'int',
-                },
-                'ipv6_lsn_lid': {
-                    'type': 'int',
-                },
-                'ipv6_glid': {
-                    'type': 'int',
-                },
-                'ipv6addr': {
+                'string_value': {
                     'type': 'str',
                 },
-                'ipv6_age': {
+                'string_lid': {
+                    'type': 'int',
+                },
+                'string_glid': {
+                    'type': 'int',
+                },
+                'string_hit_count': {
                     'type': 'int',
                 }
-            },
-            'string_total_entries': {
-                'type': 'int',
             },
             'ac_entries': {
                 'type': 'list',
@@ -430,170 +656,9 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'ntype': {
-                'type':
-                'str',
-                'choices': [
-                    'ac', 'dns', 'ipv4', 'ipv6', 'string',
-                    'string-case-insensitive', '[ipv4]', '[ipv6]', '[dns]',
-                    '[dns, ipv4]', '[dns, ipv6]'
-                ]
-            },
-            'string_entries': {
-                'type': 'list',
-                'string_lid': {
-                    'type': 'int',
-                },
-                'string_hit_count': {
-                    'type': 'int',
-                },
-                'string_key': {
-                    'type': 'str',
-                },
-                'string_glid': {
-                    'type': 'int',
-                },
-                'string_value': {
-                    'type': 'str',
-                }
-            },
-            'ipv6_total_single_ip': {
-                'type': 'int',
-            }
-        },
-        'dns': {
-            'type': 'list',
-            'dns_match_string': {
+            'name': {
                 'type': 'str',
-            },
-            'dns_glid_shared': {
-                'type': 'int',
-            },
-            'dns_glid': {
-                'type': 'int',
-            },
-            'dns_lid': {
-                'type': 'int',
-            },
-            'shared_partition_dns_glid': {
-                'type': 'bool',
-            },
-            'dns_match_type': {
-                'type': 'str',
-                'choices': ['contains', 'ends-with', 'starts-with']
-            }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'ipv4_list': {
-            'type': 'list',
-            'lid': {
-                'type': 'int',
-            },
-            'glid': {
-                'type': 'int',
-            },
-            'age': {
-                'type': 'int',
-            },
-            'glid_shared': {
-                'type': 'int',
-            },
-            'ipv4addr': {
-                'type': 'str',
-            },
-            'lsn_lid': {
-                'type': 'int',
-            },
-            'shared_partition_glid': {
-                'type': 'bool',
-            },
-            'lsn_radius_profile': {
-                'type': 'int',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'ac_list': {
-            'type': 'list',
-            'ac_match_type': {
-                'type': 'str',
-                'choices': ['contains', 'ends-with', 'equals', 'starts-with']
-            },
-            'ac_key_string': {
-                'type': 'str',
-            },
-            'ac_value': {
-                'type': 'str',
-            }
-        },
-        'str_list': {
-            'type': 'list',
-            'str_lid': {
-                'type': 'int',
-            },
-            'shared_partition_str_glid': {
-                'type': 'bool',
-            },
-            'value_str': {
-                'type': 'str',
-            },
-            'str_glid_shared': {
-                'type': 'int',
-            },
-            'str_glid_dummy': {
-                'type': 'bool',
-            },
-            'str_glid': {
-                'type': 'int',
-            },
-            'str_lid_dummy': {
-                'type': 'bool',
-            },
-            'str': {
-                'type': 'str',
-            }
-        },
-        'file': {
-            'type': 'bool',
-        },
-        'ntype': {
-            'type':
-            'str',
-            'choices':
-            ['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
-        },
-        'ipv6_list': {
-            'type': 'list',
-            'v6_lsn_lid': {
-                'type': 'int',
-            },
-            'v6_glid': {
-                'type': 'int',
-            },
-            'ipv6_addr': {
-                'type': 'str',
-            },
-            'v6_age': {
-                'type': 'int',
-            },
-            'v6_glid_shared': {
-                'type': 'int',
-            },
-            'v6_lid': {
-                'type': 'int',
-            },
-            'shared_partition_v6_glid': {
-                'type': 'bool',
-            },
-            'v6_lsn_radius_profile': {
-                'type': 'int',
+                'required': True,
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_lsn_quota_exceeded
 description:
     - Set LSN quota exceeded log parameters
-short_description: Configures A10 logging.lsn.quota-exceeded
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,71 +22,88 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    with_radius_attribute:
-        description:
-        - "Log with radius attribute"
-        required: False
-    msisdn:
-        description:
-        - "Mobile Subscriber Integrated Services Digital Netwrok-Number (MSISDN)"
-        required: False
-    custom1:
-        description:
-        - "Customized attribute No.1"
-        required: False
-    custom2:
-        description:
-        - "Customized attribute No.2"
-        required: False
-    custom3:
-        description:
-        - "Customized attribute No.3"
-        required: False
-    disable_pool_based:
-        description:
-        - "Disable log LSN user quota exceeded based on LSN pool(Default= enabled)"
-        required: False
-    imei:
-        description:
-        - " International Mobile Equipment Identity (IMEI)"
+        type: str
         required: False
     ip_based:
         description:
         - "Log LSN user quota exceeded based on private IP(Default= disabled)"
+        type: bool
+        required: False
+    disable_pool_based:
+        description:
+        - "Disable log LSN user quota exceeded based on LSN pool(Default= enabled)"
+        type: bool
+        required: False
+    with_radius_attribute:
+        description:
+        - "Log with radius attribute"
+        type: bool
+        required: False
+    custom1:
+        description:
+        - "Customized attribute No.1"
+        type: bool
+        required: False
+    custom2:
+        description:
+        - "Customized attribute No.2"
+        type: bool
+        required: False
+    custom3:
+        description:
+        - "Customized attribute No.3"
+        type: bool
+        required: False
+    imei:
+        description:
+        - " International Mobile Equipment Identity (IMEI)"
+        type: bool
         required: False
     imsi:
         description:
         - "International Mobile Subscriber Identity (IMSI)"
+        type: bool
+        required: False
+    msisdn:
+        description:
+        - "Mobile Subscriber Integrated Services Digital Netwrok-Number (MSISDN)"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -151,10 +166,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'with_radius_attribute': {
+        'ip_based': {
             'type': 'bool',
         },
-        'msisdn': {
+        'disable_pool_based': {
+            'type': 'bool',
+        },
+        'with_radius_attribute': {
             'type': 'bool',
         },
         'custom1': {
@@ -166,16 +184,13 @@ def get_argspec():
         'custom3': {
             'type': 'bool',
         },
-        'disable_pool_based': {
-            'type': 'bool',
-        },
         'imei': {
             'type': 'bool',
         },
-        'ip_based': {
+        'imsi': {
             'type': 'bool',
         },
-        'imsi': {
+        'msisdn': {
             'type': 'bool',
         },
         'uuid': {

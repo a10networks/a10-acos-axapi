@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_cert_revoke
 description:
     - Configure ssl-cert-revoke-stats
-short_description: Configures A10 slb.ssl-cert-revoke
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -79,111 +90,141 @@ options:
           revoked; 'crl_response_status_unknown'= CRL response status unknown;
           'crl_cache_status_good'= CRL cache status good; 'crl_cache_status_revoked'= CRL
           cache status revoked; 'crl_other_error'= CRL other errors;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            ocsp_request:
-                description:
-                - "OCSP requests"
-            ocsp_cache_status_revoked:
-                description:
-                - "OCSP cache status revoked"
-            crl_uri_not_found:
-                description:
-                - "CRL URI not found"
-            ocsp_connection_error:
-                description:
-                - "OCSP connection error"
-            ocsp_response_status_revoked:
-                description:
-                - "OCSP response status revoked"
-            ocsp_chain_status_good:
-                description:
-                - "Certificate chain status good"
-            ocsp_response_no_nonce:
-                description:
-                - "Log OCSP other errors"
-            crl_response:
-                description:
-                - "CRL responses"
-            crl_cache_status_good:
-                description:
-                - "CRL cache status good"
-            ocsp_cache_expired:
-                description:
-                - "OCSP cache expired"
-            ocsp_response_nonce_error:
-                description:
-                - "Log OCSP other errors"
-            ocsp_uri_unsupported:
-                description:
-                - "OCSP URI unsupported"
-            crl_other_error:
-                description:
-                - "CRL other errors"
-            ocsp_cache_miss:
-                description:
-                - "OCSP cache miss"
             ocsp_stapling_response_good:
                 description:
                 - "OCSP stapling response good"
-            ocsp_uri_https:
+                type: str
+            ocsp_chain_status_good:
                 description:
-                - "Log OCSP URI https"
-            crl_uri_https:
-                description:
-                - "CRL URI https"
+                - "Certificate chain status good"
+                type: str
             ocsp_chain_status_revoked:
                 description:
                 - "Certificate chain status revoked"
+                type: str
             ocsp_chain_status_unknown:
                 description:
                 - "Certificate chain status unknown"
-            ocsp_uri_not_found:
+                type: str
+            ocsp_request:
                 description:
-                - "OCSP URI not found"
-            crl_response_status_revoked:
-                description:
-                - "CRL response status revoked"
-            crl_connection_error:
-                description:
-                - "CRL connection errors"
-            ocsp_response_status_good:
-                description:
-                - "OCSP response status good"
+                - "OCSP requests"
+                type: str
             ocsp_response:
                 description:
                 - "OCSP responses"
-            crl_response_status_unknown:
+                type: str
+            ocsp_connection_error:
                 description:
-                - "CRL response status unknown"
-            crl_uri_unsupported:
+                - "OCSP connection error"
+                type: str
+            ocsp_uri_not_found:
                 description:
-                - "CRL URI unsupported"
-            ocsp_cache_status_good:
+                - "OCSP URI not found"
+                type: str
+            ocsp_uri_https:
                 description:
-                - "OCSP cache status good"
-            crl_request:
+                - "Log OCSP URI https"
+                type: str
+            ocsp_uri_unsupported:
                 description:
-                - "CRL requests"
-            ocsp_other_error:
+                - "OCSP URI unsupported"
+                type: str
+            ocsp_response_status_good:
                 description:
-                - "Log OCSP other errors"
-            crl_response_status_good:
+                - "OCSP response status good"
+                type: str
+            ocsp_response_status_revoked:
                 description:
-                - "CRL response status good"
-            crl_cache_status_revoked:
-                description:
-                - "CRL cache status revoked"
+                - "OCSP response status revoked"
+                type: str
             ocsp_response_status_unknown:
                 description:
                 - "OCSP response status unknown"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ocsp_cache_status_good:
+                description:
+                - "OCSP cache status good"
+                type: str
+            ocsp_cache_status_revoked:
+                description:
+                - "OCSP cache status revoked"
+                type: str
+            ocsp_cache_miss:
+                description:
+                - "OCSP cache miss"
+                type: str
+            ocsp_cache_expired:
+                description:
+                - "OCSP cache expired"
+                type: str
+            ocsp_other_error:
+                description:
+                - "Log OCSP other errors"
+                type: str
+            ocsp_response_no_nonce:
+                description:
+                - "Log OCSP other errors"
+                type: str
+            ocsp_response_nonce_error:
+                description:
+                - "Log OCSP other errors"
+                type: str
+            crl_request:
+                description:
+                - "CRL requests"
+                type: str
+            crl_response:
+                description:
+                - "CRL responses"
+                type: str
+            crl_connection_error:
+                description:
+                - "CRL connection errors"
+                type: str
+            crl_uri_not_found:
+                description:
+                - "CRL URI not found"
+                type: str
+            crl_uri_https:
+                description:
+                - "CRL URI https"
+                type: str
+            crl_uri_unsupported:
+                description:
+                - "CRL URI unsupported"
+                type: str
+            crl_response_status_good:
+                description:
+                - "CRL response status good"
+                type: str
+            crl_response_status_revoked:
+                description:
+                - "CRL response status revoked"
+                type: str
+            crl_response_status_unknown:
+                description:
+                - "CRL response status unknown"
+                type: str
+            crl_cache_status_good:
+                description:
+                - "CRL cache status good"
+                type: str
+            crl_cache_status_revoked:
+                description:
+                - "CRL cache status revoked"
+                type: str
+            crl_other_error:
+                description:
+                - "CRL other errors"
+                type: str
 
 '''
 
@@ -238,6 +279,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -266,55 +310,10 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'ocsp_request': {
-                'type': 'str',
-            },
-            'ocsp_cache_status_revoked': {
-                'type': 'str',
-            },
-            'crl_uri_not_found': {
-                'type': 'str',
-            },
-            'ocsp_connection_error': {
-                'type': 'str',
-            },
-            'ocsp_response_status_revoked': {
-                'type': 'str',
-            },
-            'ocsp_chain_status_good': {
-                'type': 'str',
-            },
-            'ocsp_response_no_nonce': {
-                'type': 'str',
-            },
-            'crl_response': {
-                'type': 'str',
-            },
-            'crl_cache_status_good': {
-                'type': 'str',
-            },
-            'ocsp_cache_expired': {
-                'type': 'str',
-            },
-            'ocsp_response_nonce_error': {
-                'type': 'str',
-            },
-            'ocsp_uri_unsupported': {
-                'type': 'str',
-            },
-            'crl_other_error': {
-                'type': 'str',
-            },
-            'ocsp_cache_miss': {
-                'type': 'str',
-            },
             'ocsp_stapling_response_good': {
                 'type': 'str',
             },
-            'ocsp_uri_https': {
-                'type': 'str',
-            },
-            'crl_uri_https': {
+            'ocsp_chain_status_good': {
                 'type': 'str',
             },
             'ocsp_chain_status_revoked': {
@@ -323,48 +322,90 @@ def get_argspec():
             'ocsp_chain_status_unknown': {
                 'type': 'str',
             },
-            'ocsp_uri_not_found': {
-                'type': 'str',
-            },
-            'crl_response_status_revoked': {
-                'type': 'str',
-            },
-            'crl_connection_error': {
-                'type': 'str',
-            },
-            'ocsp_response_status_good': {
+            'ocsp_request': {
                 'type': 'str',
             },
             'ocsp_response': {
                 'type': 'str',
             },
-            'crl_response_status_unknown': {
+            'ocsp_connection_error': {
                 'type': 'str',
             },
-            'crl_uri_unsupported': {
+            'ocsp_uri_not_found': {
+                'type': 'str',
+            },
+            'ocsp_uri_https': {
+                'type': 'str',
+            },
+            'ocsp_uri_unsupported': {
+                'type': 'str',
+            },
+            'ocsp_response_status_good': {
+                'type': 'str',
+            },
+            'ocsp_response_status_revoked': {
+                'type': 'str',
+            },
+            'ocsp_response_status_unknown': {
                 'type': 'str',
             },
             'ocsp_cache_status_good': {
                 'type': 'str',
             },
-            'crl_request': {
+            'ocsp_cache_status_revoked': {
+                'type': 'str',
+            },
+            'ocsp_cache_miss': {
+                'type': 'str',
+            },
+            'ocsp_cache_expired': {
                 'type': 'str',
             },
             'ocsp_other_error': {
                 'type': 'str',
             },
+            'ocsp_response_no_nonce': {
+                'type': 'str',
+            },
+            'ocsp_response_nonce_error': {
+                'type': 'str',
+            },
+            'crl_request': {
+                'type': 'str',
+            },
+            'crl_response': {
+                'type': 'str',
+            },
+            'crl_connection_error': {
+                'type': 'str',
+            },
+            'crl_uri_not_found': {
+                'type': 'str',
+            },
+            'crl_uri_https': {
+                'type': 'str',
+            },
+            'crl_uri_unsupported': {
+                'type': 'str',
+            },
             'crl_response_status_good': {
+                'type': 'str',
+            },
+            'crl_response_status_revoked': {
+                'type': 'str',
+            },
+            'crl_response_status_unknown': {
+                'type': 'str',
+            },
+            'crl_cache_status_good': {
                 'type': 'str',
             },
             'crl_cache_status_revoked': {
                 'type': 'str',
             },
-            'ocsp_response_status_unknown': {
+            'crl_other_error': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

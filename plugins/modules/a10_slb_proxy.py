@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_proxy
 description:
     - Configure Proxy Global
-short_description: Configures A10 slb.proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -75,105 +86,133 @@ options:
           'start_server_conn_fail_server'= Fail Server issue;
           'start_server_conn_fail_tuple'= Fail Tuple Issue; 'line_too_long'= Line too
           long;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            queue_depth_over_limit:
-                description:
-                - "Queue depth over limit"
-            server_fin:
-                description:
-                - "Server FIN"
-            start_server_conn_fail_tuple:
-                description:
-                - "Fail Tuple Issue"
-            client_rst:
-                description:
-                - "Client RST"
-            err_cb_failed:
-                description:
-                - "App ERR callback failed"
-            start_server_conn:
-                description:
-                - "Start server conn"
-            start_server_conn_fail_server:
-                description:
-                - "Fail Server issue"
-            service_free_cb_failed:
-                description:
-                - "Service free callback failed"
-            est_event:
-                description:
-                - "Connection established"
-            service_free_cb:
-                description:
-                - "Service free callback"
-            data_cb_failed:
-                description:
-                - "App DATA callback failed"
-            wbuf_event:
-                description:
-                - "Ready to send data"
-            data_event:
-                description:
-                - "Data received"
             tcp_event:
                 description:
                 - "TCP stack event"
-            start_server_conn_fail_persist:
+                type: str
+            est_event:
                 description:
-                - "Fail Persistence"
-            service_alloc_cb:
+                - "Connection established"
+                type: str
+            data_event:
                 description:
-                - "Service alloc callback"
-            server_rst:
-                description:
-                - "Server RST"
-            start_server_conn_fail_snat:
-                description:
-                - "Failed Source NAT"
-            start_server_conn_no_route:
-                description:
-                - "No route to server"
-            start_server_conn_succ:
-                description:
-                - "Success"
-            no_mem:
-                description:
-                - "No memory"
-            event_failed:
-                description:
-                - "Event failed"
-            err_event:
-                description:
-                - "Error occured"
-            line_too_long:
-                description:
-                - "Line too long"
-            wbuf_cb_failed:
-                description:
-                - "App WBUF callback failed"
-            service_alloc_cb_failed:
-                description:
-                - "Service alloc callback failed"
+                - "Data received"
+                type: str
             client_fin:
                 description:
                 - "Client FIN"
-            est_cb_failed:
+                type: str
+            server_fin:
                 description:
-                - "App EST callback failed"
-            start_server_conn_fail_mem:
+                - "Server FIN"
+                type: str
+            wbuf_event:
+                description:
+                - "Ready to send data"
+                type: str
+            err_event:
+                description:
+                - "Error occured"
+                type: str
+            no_mem:
                 description:
                 - "No memory"
+                type: str
+            client_rst:
+                description:
+                - "Client RST"
+                type: str
+            server_rst:
+                description:
+                - "Server RST"
+                type: str
+            queue_depth_over_limit:
+                description:
+                - "Queue depth over limit"
+                type: str
+            event_failed:
+                description:
+                - "Event failed"
+                type: str
             conn_not_exist:
                 description:
                 - "Conn not exist"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            service_alloc_cb:
+                description:
+                - "Service alloc callback"
+                type: str
+            service_alloc_cb_failed:
+                description:
+                - "Service alloc callback failed"
+                type: str
+            service_free_cb:
+                description:
+                - "Service free callback"
+                type: str
+            service_free_cb_failed:
+                description:
+                - "Service free callback failed"
+                type: str
+            est_cb_failed:
+                description:
+                - "App EST callback failed"
+                type: str
+            data_cb_failed:
+                description:
+                - "App DATA callback failed"
+                type: str
+            wbuf_cb_failed:
+                description:
+                - "App WBUF callback failed"
+                type: str
+            err_cb_failed:
+                description:
+                - "App ERR callback failed"
+                type: str
+            start_server_conn:
+                description:
+                - "Start server conn"
+                type: str
+            start_server_conn_succ:
+                description:
+                - "Success"
+                type: str
+            start_server_conn_no_route:
+                description:
+                - "No route to server"
+                type: str
+            start_server_conn_fail_mem:
+                description:
+                - "No memory"
+                type: str
+            start_server_conn_fail_snat:
+                description:
+                - "Failed Source NAT"
+                type: str
+            start_server_conn_fail_persist:
+                description:
+                - "Fail Persistence"
+                type: str
+            start_server_conn_fail_server:
+                description:
+                - "Fail Server issue"
+                type: str
+            start_server_conn_fail_tuple:
+                description:
+                - "Fail Tuple Issue"
+                type: str
+            line_too_long:
+                description:
+                - "Line too long"
+                type: str
 
 '''
 
@@ -228,6 +267,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -253,16 +295,64 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'queue_depth_over_limit': {
+            'tcp_event': {
+                'type': 'str',
+            },
+            'est_event': {
+                'type': 'str',
+            },
+            'data_event': {
+                'type': 'str',
+            },
+            'client_fin': {
                 'type': 'str',
             },
             'server_fin': {
                 'type': 'str',
             },
-            'start_server_conn_fail_tuple': {
+            'wbuf_event': {
+                'type': 'str',
+            },
+            'err_event': {
+                'type': 'str',
+            },
+            'no_mem': {
                 'type': 'str',
             },
             'client_rst': {
+                'type': 'str',
+            },
+            'server_rst': {
+                'type': 'str',
+            },
+            'queue_depth_over_limit': {
+                'type': 'str',
+            },
+            'event_failed': {
+                'type': 'str',
+            },
+            'conn_not_exist': {
+                'type': 'str',
+            },
+            'service_alloc_cb': {
+                'type': 'str',
+            },
+            'service_alloc_cb_failed': {
+                'type': 'str',
+            },
+            'service_free_cb': {
+                'type': 'str',
+            },
+            'service_free_cb_failed': {
+                'type': 'str',
+            },
+            'est_cb_failed': {
+                'type': 'str',
+            },
+            'data_cb_failed': {
+                'type': 'str',
+            },
+            'wbuf_cb_failed': {
                 'type': 'str',
             },
             'err_cb_failed': {
@@ -271,81 +361,30 @@ def get_argspec():
             'start_server_conn': {
                 'type': 'str',
             },
-            'start_server_conn_fail_server': {
-                'type': 'str',
-            },
-            'service_free_cb_failed': {
-                'type': 'str',
-            },
-            'est_event': {
-                'type': 'str',
-            },
-            'service_free_cb': {
-                'type': 'str',
-            },
-            'data_cb_failed': {
-                'type': 'str',
-            },
-            'wbuf_event': {
-                'type': 'str',
-            },
-            'data_event': {
-                'type': 'str',
-            },
-            'tcp_event': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_persist': {
-                'type': 'str',
-            },
-            'service_alloc_cb': {
-                'type': 'str',
-            },
-            'server_rst': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_snat': {
+            'start_server_conn_succ': {
                 'type': 'str',
             },
             'start_server_conn_no_route': {
                 'type': 'str',
             },
-            'start_server_conn_succ': {
+            'start_server_conn_fail_mem': {
                 'type': 'str',
             },
-            'no_mem': {
+            'start_server_conn_fail_snat': {
                 'type': 'str',
             },
-            'event_failed': {
+            'start_server_conn_fail_persist': {
                 'type': 'str',
             },
-            'err_event': {
+            'start_server_conn_fail_server': {
+                'type': 'str',
+            },
+            'start_server_conn_fail_tuple': {
                 'type': 'str',
             },
             'line_too_long': {
                 'type': 'str',
-            },
-            'wbuf_cb_failed': {
-                'type': 'str',
-            },
-            'service_alloc_cb_failed': {
-                'type': 'str',
-            },
-            'client_fin': {
-                'type': 'str',
-            },
-            'est_cb_failed': {
-                'type': 'str',
-            },
-            'start_server_conn_fail_mem': {
-                'type': 'str',
-            },
-            'conn_not_exist': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_lsn
 description:
     - Enable LSN group traps
-short_description: Configures A10 snmp.server.enable.traps.lsn
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,79 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "Enable all LSN group traps"
-        required: False
-    fixed_nat_port_mapping_file_change:
-        description:
-        - "Enable LSN trap when fixed nat port mapping file change"
-        required: False
-    per_ip_port_usage_threshold:
-        description:
-        - "Enable LSN trap when IP total port usage reaches the threshold (default 64512)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     total_port_usage_threshold:
         description:
         - "Enable LSN trap when NAT total port usage reaches the threshold (default
           655350000)"
+        type: bool
+        required: False
+    per_ip_port_usage_threshold:
+        description:
+        - "Enable LSN trap when IP total port usage reaches the threshold (default 64512)"
+        type: bool
         required: False
     max_port_threshold:
         description:
         - "Maximum threshold"
+        type: int
         required: False
     max_ipport_threshold:
         description:
         - "Maximum threshold"
+        type: int
+        required: False
+    fixed_nat_port_mapping_file_change:
+        description:
+        - "Enable LSN trap when fixed nat port mapping file change"
+        type: bool
         required: False
     traffic_exceeded:
         description:
         - "Enable LSN trap when NAT pool reaches the threshold"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -145,16 +158,10 @@ def get_argspec():
         'all': {
             'type': 'bool',
         },
-        'fixed_nat_port_mapping_file_change': {
+        'total_port_usage_threshold': {
             'type': 'bool',
         },
         'per_ip_port_usage_threshold': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'total_port_usage_threshold': {
             'type': 'bool',
         },
         'max_port_threshold': {
@@ -163,8 +170,14 @@ def get_argspec():
         'max_ipport_threshold': {
             'type': 'int',
         },
+        'fixed_nat_port_mapping_file_change': {
+            'type': 'bool',
+        },
         'traffic_exceeded': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

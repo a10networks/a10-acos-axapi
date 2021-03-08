@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rrd_performance
 description:
     - performance data in RRD
-short_description: Configures A10 rrd.performance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,62 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            end_time:
-                description:
-                - "Field end_time"
             start_time:
                 description:
                 - "Field start_time"
+                type: int
+            end_time:
+                description:
+                - "Field end_time"
+                type: int
             performance_data:
                 description:
                 - "Field performance_data"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -121,107 +131,107 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'end_time': {
+            'start_time': {
                 'type': 'int',
             },
-            'start_time': {
+            'end_time': {
                 'type': 'int',
             },
             'performance_data': {
                 'type': 'list',
-                'lsn_cps': {
-                    'type': 'int',
-                },
-                'ov_ip_cur_conns': {
-                    'type': 'int',
-                },
-                'ov_l7_req': {
-                    'type': 'int',
-                },
-                'lsn_udp_port_avail': {
-                    'type': 'int',
-                },
-                'rus_s_conns_act': {
-                    'type': 'int',
-                },
-                'ov_new_conn_srv_ssl': {
-                    'type': 'int',
-                },
-                'syn_recv': {
-                    'type': 'int',
-                },
-                'ov_udp_cur_conns': {
-                    'type': 'int',
-                },
-                'ov_cur_conns': {
-                    'type': 'int',
-                },
-                'ov_new_conn_l7': {
-                    'type': 'int',
-                },
-                'ov_new_conn_l4': {
-                    'type': 'int',
-                },
-                'ov_new_conn_tot': {
-                    'type': 'int',
-                },
-                'lsn_tcp_port_used': {
-                    'type': 'int',
-                },
-                'lsn_avail_sess': {
-                    'type': 'int',
-                },
-                'lsn_used_sess': {
-                    'type': 'int',
-                },
-                'syn_fail': {
-                    'type': 'int',
-                },
-                'rus_s_conns_tot': {
-                    'type': 'int',
-                },
-                'ov_new_conn_ssl': {
-                    'type': 'int',
-                },
-                'lsn_tcp_port_avail': {
+                'time': {
                     'type': 'int',
                 },
                 'ov_puts': {
                     'type': 'int',
                 },
-                'rus_c_conns_cur': {
+                'ov_cur_conns': {
                     'type': 'int',
                 },
-                'ov_sctp_cur_conns': {
+                'ov_new_conn_l4': {
                     'type': 'int',
                 },
-                'ov_tcp_cur_conns': {
-                    'type': 'int',
-                },
-                'rus_c_conns_tot': {
+                'ov_new_conn_l7': {
                     'type': 'int',
                 },
                 'ov_new_conn_ipnat': {
                     'type': 'int',
                 },
-                'time': {
+                'ov_new_conn_ssl': {
+                    'type': 'int',
+                },
+                'ov_new_conn_srv_ssl': {
+                    'type': 'int',
+                },
+                'ov_new_conn_tot': {
+                    'type': 'int',
+                },
+                'ov_l7_req': {
+                    'type': 'int',
+                },
+                'rus_c_conns_tot': {
+                    'type': 'int',
+                },
+                'rus_c_conns_cur': {
+                    'type': 'int',
+                },
+                'rus_s_conns_tot': {
                     'type': 'int',
                 },
                 'rus_s_conns_cur': {
                     'type': 'int',
                 },
+                'rus_s_conns_act': {
+                    'type': 'int',
+                },
+                'syn_recv': {
+                    'type': 'int',
+                },
+                'syn_fail': {
+                    'type': 'int',
+                },
+                'lsn_cps': {
+                    'type': 'int',
+                },
+                'lsn_used_sess': {
+                    'type': 'int',
+                },
+                'lsn_avail_sess': {
+                    'type': 'int',
+                },
+                'lsn_tcp_port_used': {
+                    'type': 'int',
+                },
+                'lsn_tcp_port_avail': {
+                    'type': 'int',
+                },
                 'lsn_udp_port_used': {
+                    'type': 'int',
+                },
+                'lsn_udp_port_avail': {
+                    'type': 'int',
+                },
+                'ov_tcp_cur_conns': {
+                    'type': 'int',
+                },
+                'ov_sctp_cur_conns': {
+                    'type': 'int',
+                },
+                'ov_udp_cur_conns': {
+                    'type': 'int',
+                },
+                'ov_ip_cur_conns': {
                     'type': 'int',
                 },
                 'ov_other_cur_conns': {
                     'type': 'int',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

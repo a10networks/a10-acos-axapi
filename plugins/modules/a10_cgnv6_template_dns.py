@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_dns
 description:
     - DNS template
-short_description: Configures A10 cgnv6.template.dns
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,145 +22,185 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     name:
         description:
         - "DNS Template Name"
+        type: str
         required: True
-    class_list:
-        description:
-        - "Field class_list"
-        required: False
-        suboptions:
-            lid_list:
-                description:
-                - "Field lid_list"
-            name:
-                description:
-                - "Specify a class list name"
-            uuid:
-                description:
-                - "uuid of the object"
-    dns64:
-        description:
-        - "Field dns64"
-        required: False
-        suboptions:
-            deep_check_rr_disable:
-                description:
-                - "Disable Check DNS Response Records"
-            answer_only_disable:
-                description:
-                - "Disable Only translate the Answer Section"
-            enable:
-                description:
-                - "Enable DNS64 (Need to config this option before config any other dns64 options)"
-            single_response_disable:
-                description:
-                - "Disable Single Response which is used to avoid ambiguity"
-            uuid:
-                description:
-                - "uuid of the object"
-            max_qr_length:
-                description:
-                - "Max Question Record Length, default is 128"
-            ignore_rcode3_disable:
-                description:
-                - "Disable Ignore DNS error Response with rcode 3"
-            auth_data:
-                description:
-                - "Set AA flag in DNS Response"
-            change_query:
-                description:
-                - "Always change incoming AAAA DNS Query to A"
-            drop_cname_disable:
-                description:
-                - "Disable Drop DNS CNAME Response"
-            cache:
-                description:
-                - "Use a cached A-query response to provide AAAA query responses for the same
-          hostname"
-            passive_query_disable:
-                description:
-                - "Disable Generate A query upon empty or error Response"
-            retry:
-                description:
-                - "Retry count, default is 3 (Retry Number)"
-            parallel_query:
-                description:
-                - "Forward AAAA Query & generate A Query in parallel"
-            timeout:
-                description:
-                - "Timeout to send additional Queries, unit= second, default is 1"
-            ttl:
-                description:
-                - "Specify Max TTL in DNS Response, unit= second"
-            trans_ptr_query:
-                description:
-                - "Translate DNS PTR Query"
-            trans_ptr:
-                description:
-                - "Translate DNS PTR Records"
-            compress_disable:
-                description:
-                - "Disable Always try DNS Compression"
-    drop:
-        description:
-        - "Drop the malformed query"
-        required: False
-    period:
-        description:
-        - "Period in minutes"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     default_policy:
         description:
         - "'nocache'= Cache disable; 'cache'= Cache enable;"
+        type: str
         required: False
     disable_dns_template:
         description:
         - "Disable DNS template"
+        type: bool
+        required: False
+    period:
+        description:
+        - "Period in minutes"
+        type: int
+        required: False
+    drop:
+        description:
+        - "Drop the malformed query"
+        type: bool
         required: False
     forward:
         description:
         - "Forward to service group (Service group name)"
+        type: str
         required: False
     max_cache_size:
         description:
         - "Define maximum cache size (Maximum cache entry per VIP)"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    class_list:
+        description:
+        - "Field class_list"
+        type: dict
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Specify a class list name"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            lid_list:
+                description:
+                - "Field lid_list"
+                type: list
+    dns64:
+        description:
+        - "Field dns64"
+        type: dict
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable DNS64 (Need to config this option before config any other dns64 options)"
+                type: bool
+            answer_only_disable:
+                description:
+                - "Disable Only translate the Answer Section"
+                type: bool
+            auth_data:
+                description:
+                - "Set AA flag in DNS Response"
+                type: bool
+            cache:
+                description:
+                - "Use a cached A-query response to provide AAAA query responses for the same
+          hostname"
+                type: bool
+            change_query:
+                description:
+                - "Always change incoming AAAA DNS Query to A"
+                type: bool
+            compress_disable:
+                description:
+                - "Disable Always try DNS Compression"
+                type: bool
+            deep_check_rr_disable:
+                description:
+                - "Disable Check DNS Response Records"
+                type: bool
+            drop_cname_disable:
+                description:
+                - "Disable Drop DNS CNAME Response"
+                type: bool
+            ignore_rcode3_disable:
+                description:
+                - "Disable Ignore DNS error Response with rcode 3"
+                type: bool
+            max_qr_length:
+                description:
+                - "Max Question Record Length, default is 128"
+                type: int
+            parallel_query:
+                description:
+                - "Forward AAAA Query & generate A Query in parallel"
+                type: bool
+            passive_query_disable:
+                description:
+                - "Disable Generate A query upon empty or error Response"
+                type: bool
+            retry:
+                description:
+                - "Retry count, default is 3 (Retry Number)"
+                type: int
+            single_response_disable:
+                description:
+                - "Disable Single Response which is used to avoid ambiguity"
+                type: bool
+            timeout:
+                description:
+                - "Timeout to send additional Queries, unit= second, default is 1"
+                type: int
+            trans_ptr:
+                description:
+                - "Translate DNS PTR Records"
+                type: bool
+            trans_ptr_query:
+                description:
+                - "Translate DNS PTR Query"
+                type: bool
+            ttl:
+                description:
+                - "Specify Max TTL in DNS Response, unit= second"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -229,138 +267,17 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'class_list': {
-            'type': 'dict',
-            'lid_list': {
-                'type': 'list',
-                'action_value': {
-                    'type': 'str',
-                    'choices':
-                    ['dns-cache-disable', 'dns-cache-enable', 'forward']
-                },
-                'log': {
-                    'type': 'bool',
-                },
-                'lidnum': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'over_limit_action': {
-                    'type': 'bool',
-                },
-                'per': {
-                    'type': 'int',
-                },
-                'lockout': {
-                    'type': 'int',
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'dns': {
-                    'type': 'dict',
-                    'cache_action': {
-                        'type': 'str',
-                        'choices': ['cache-disable', 'cache-enable']
-                    },
-                    'weight': {
-                        'type': 'int',
-                    },
-                    'ttl': {
-                        'type': 'int',
-                    }
-                },
-                'conn_rate_limit': {
-                    'type': 'int',
-                },
-                'log_interval': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'name': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'dns64': {
-            'type': 'dict',
-            'deep_check_rr_disable': {
-                'type': 'bool',
-            },
-            'answer_only_disable': {
-                'type': 'bool',
-            },
-            'enable': {
-                'type': 'bool',
-            },
-            'single_response_disable': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'max_qr_length': {
-                'type': 'int',
-            },
-            'ignore_rcode3_disable': {
-                'type': 'bool',
-            },
-            'auth_data': {
-                'type': 'bool',
-            },
-            'change_query': {
-                'type': 'bool',
-            },
-            'drop_cname_disable': {
-                'type': 'bool',
-            },
-            'cache': {
-                'type': 'bool',
-            },
-            'passive_query_disable': {
-                'type': 'bool',
-            },
-            'retry': {
-                'type': 'int',
-            },
-            'parallel_query': {
-                'type': 'bool',
-            },
-            'timeout': {
-                'type': 'int',
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'trans_ptr_query': {
-                'type': 'bool',
-            },
-            'trans_ptr': {
-                'type': 'bool',
-            },
-            'compress_disable': {
-                'type': 'bool',
-            }
-        },
-        'drop': {
-            'type': 'bool',
-        },
-        'period': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
         'default_policy': {
             'type': 'str',
             'choices': ['nocache', 'cache']
         },
         'disable_dns_template': {
+            'type': 'bool',
+        },
+        'period': {
+            'type': 'int',
+        },
+        'drop': {
             'type': 'bool',
         },
         'forward': {
@@ -371,6 +288,127 @@ def get_argspec():
         },
         'uuid': {
             'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'class_list': {
+            'type': 'dict',
+            'name': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'lid_list': {
+                'type': 'list',
+                'lidnum': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'conn_rate_limit': {
+                    'type': 'int',
+                },
+                'per': {
+                    'type': 'int',
+                },
+                'over_limit_action': {
+                    'type': 'bool',
+                },
+                'action_value': {
+                    'type': 'str',
+                    'choices':
+                    ['dns-cache-disable', 'dns-cache-enable', 'forward']
+                },
+                'lockout': {
+                    'type': 'int',
+                },
+                'log': {
+                    'type': 'bool',
+                },
+                'log_interval': {
+                    'type': 'int',
+                },
+                'dns': {
+                    'type': 'dict',
+                    'cache_action': {
+                        'type': 'str',
+                        'choices': ['cache-disable', 'cache-enable']
+                    },
+                    'ttl': {
+                        'type': 'int',
+                    },
+                    'weight': {
+                        'type': 'int',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
+            }
+        },
+        'dns64': {
+            'type': 'dict',
+            'enable': {
+                'type': 'bool',
+            },
+            'answer_only_disable': {
+                'type': 'bool',
+            },
+            'auth_data': {
+                'type': 'bool',
+            },
+            'cache': {
+                'type': 'bool',
+            },
+            'change_query': {
+                'type': 'bool',
+            },
+            'compress_disable': {
+                'type': 'bool',
+            },
+            'deep_check_rr_disable': {
+                'type': 'bool',
+            },
+            'drop_cname_disable': {
+                'type': 'bool',
+            },
+            'ignore_rcode3_disable': {
+                'type': 'bool',
+            },
+            'max_qr_length': {
+                'type': 'int',
+            },
+            'parallel_query': {
+                'type': 'bool',
+            },
+            'passive_query_disable': {
+                'type': 'bool',
+            },
+            'retry': {
+                'type': 'int',
+            },
+            'single_response_disable': {
+                'type': 'bool',
+            },
+            'timeout': {
+                'type': 'int',
+            },
+            'trans_ptr': {
+                'type': 'bool',
+            },
+            'trans_ptr_query': {
+                'type': 'bool',
+            },
+            'ttl': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

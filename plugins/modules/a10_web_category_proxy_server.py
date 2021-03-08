@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_web_category_proxy_server
 description:
     - Commands to connect web-category through proxy server
-short_description: Configures A10 web.category.proxy-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,72 +22,89 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    username:
+    proxy_host:
         description:
-        - "Username for proxy authentication"
+        - "Proxy server hostname or IP address"
+        type: str
         required: False
-    domain:
+    http_port:
         description:
-        - "Realm for NTLM authentication"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        - "Proxy server HTTP port"
+        type: int
         required: False
     https_port:
         description:
         - "Proxy server HTTPS port(HTTP port will be used if not configured)"
+        type: int
+        required: False
+    auth_type:
+        description:
+        - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
+        type: str
+        required: False
+    domain:
+        description:
+        - "Realm for NTLM authentication"
+        type: str
+        required: False
+    username:
+        description:
+        - "Username for proxy authentication"
+        type: str
+        required: False
+    password:
+        description:
+        - "Password for proxy authentication"
+        type: bool
+        required: False
+    secret_string:
+        description:
+        - "password value"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
-    proxy_host:
+    uuid:
         description:
-        - "Proxy server hostname or IP address"
-        required: False
-    auth_type:
-        description:
-        - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication;"
-        required: False
-    http_port:
-        description:
-        - "Proxy server HTTP port"
-        required: False
-    password:
-        description:
-        - "Password for proxy authentication"
-        required: False
-    secret_string:
-        description:
-        - "password value"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -152,35 +167,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'username': {
+        'proxy_host': {
             'type': 'str',
         },
-        'domain': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
+        'http_port': {
+            'type': 'int',
         },
         'https_port': {
             'type': 'int',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'proxy_host': {
-            'type': 'str',
         },
         'auth_type': {
             'type': 'str',
             'choices': ['ntlm', 'basic']
         },
-        'http_port': {
-            'type': 'int',
+        'domain': {
+            'type': 'str',
+        },
+        'username': {
+            'type': 'str',
         },
         'password': {
             'type': 'bool',
         },
         'secret_string': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         }
     })

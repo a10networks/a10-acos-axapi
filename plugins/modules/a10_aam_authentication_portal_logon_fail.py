@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_portal_logon_fail
 description:
     - Logon fail page configuration
-short_description: Configures A10 aam.authentication.portal.logon-fail
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,129 +22,165 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     portal_name:
         description:
-        - Key to identify parent object    fail_msg_cfg:
-        description:
-        - "Field fail_msg_cfg"
-        required: False
-        suboptions:
-            fail_font_custom:
-                description:
-                - "Specify custom font"
-            fail_color:
-                description:
-                - "Specify font color (Default= black)"
-            fail_size:
-                description:
-                - "Specify font size (Default= 3)"
-            fail_msg:
-                description:
-                - "Configure logon failure message in default logon fail page"
-            fail_text:
-                description:
-                - "Specify logon failure message (Default= Login Failed!!)"
-            fail_color_value:
-                description:
-                - "Specify 6-digit HEX color value"
-            fail_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
-            fail_color_name:
-                description:
-                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
-          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
-          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
-          'white'= white; 'yellow'= yellow;"
-            fail_font:
-                description:
-                - "Sepcify font (Default= Arial)"
+        - Key to identify parent object
+        type: str
+        required: True
     background:
         description:
         - "Field background"
+        type: dict
         required: False
         suboptions:
             bgfile:
                 description:
                 - "Specify background image filename"
+                type: str
             bgstyle:
                 description:
                 - "'tile'= Tile; 'stretch'= Stretch; 'fit'= Fit;"
-            bgcolor_value:
-                description:
-                - "Specify 6-digit HEX color value"
+                type: str
             bgcolor_name:
                 description:
                 - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
           'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
           'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
           'white'= white; 'yellow'= yellow;"
+                type: str
+            bgcolor_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
     title_cfg:
         description:
         - "Field title_cfg"
+        type: dict
         required: False
         suboptions:
-            title_color:
-                description:
-                - "Specify font color (Default= black)"
             title:
                 description:
                 - "Configure title in default logon fail page"
+                type: bool
+            title_text:
+                description:
+                - "Specify title (Default= Try Too Many Times)"
+                type: str
+            title_font:
+                description:
+                - "Sepcify font (Default= Arial)"
+                type: bool
+            title_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            title_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            title_size:
+                description:
+                - "Specify font size (Default= 5)"
+                type: int
+            title_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
             title_color_name:
                 description:
                 - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
           'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
           'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
           'white'= white; 'yellow'= yellow;"
-            title_font_custom:
-                description:
-                - "Specify custom font"
-            title_face:
-                description:
-                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
-          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
             title_color_value:
                 description:
                 - "Specify 6-digit HEX color value"
-            title_size:
+                type: str
+    fail_msg_cfg:
+        description:
+        - "Field fail_msg_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fail_msg:
                 description:
-                - "Specify font size (Default= 5)"
-            title_text:
+                - "Configure logon failure message in default logon fail page"
+                type: bool
+            fail_text:
                 description:
-                - "Specify title (Default= Try Too Many Times)"
-            title_font:
+                - "Specify logon failure message (Default= Login Failed!!)"
+                type: str
+            fail_font:
                 description:
                 - "Sepcify font (Default= Arial)"
+                type: bool
+            fail_face:
+                description:
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia;
+          'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana;"
+                type: str
+            fail_font_custom:
+                description:
+                - "Specify custom font"
+                type: str
+            fail_size:
+                description:
+                - "Specify font size (Default= 3)"
+                type: int
+            fail_color:
+                description:
+                - "Specify font color (Default= black)"
+                type: bool
+            fail_color_name:
+                description:
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray;
+          'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive;
+          'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal;
+          'white'= white; 'yellow'= yellow;"
+                type: str
+            fail_color_value:
+                description:
+                - "Specify 6-digit HEX color value"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -203,47 +237,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'fail_msg_cfg': {
-            'type': 'dict',
-            'fail_font_custom': {
-                'type': 'str',
-            },
-            'fail_color': {
-                'type': 'bool',
-            },
-            'fail_size': {
-                'type': 'int',
-            },
-            'fail_msg': {
-                'type': 'bool',
-            },
-            'fail_text': {
-                'type': 'str',
-            },
-            'fail_color_value': {
-                'type': 'str',
-            },
-            'fail_face': {
-                'type':
-                'str',
-                'choices': [
-                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
-                    'Verdana'
-                ]
-            },
-            'fail_color_name': {
-                'type':
-                'str',
-                'choices': [
-                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
-                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
-                    'red', 'silver', 'teal', 'white', 'yellow'
-                ]
-            },
-            'fail_font': {
-                'type': 'bool',
-            }
-        },
         'background': {
             'type': 'dict',
             'bgfile': {
@@ -253,9 +246,6 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['tile', 'stretch', 'fit']
             },
-            'bgcolor_value': {
-                'type': 'str',
-            },
             'bgcolor_name': {
                 'type':
                 'str',
@@ -264,14 +254,37 @@ def get_argspec():
                     'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
+            },
+            'bgcolor_value': {
+                'type': 'str',
             }
         },
         'title_cfg': {
             'type': 'dict',
-            'title_color': {
+            'title': {
                 'type': 'bool',
             },
-            'title': {
+            'title_text': {
+                'type': 'str',
+            },
+            'title_font': {
+                'type': 'bool',
+            },
+            'title_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'title_font_custom': {
+                'type': 'str',
+            },
+            'title_size': {
+                'type': 'int',
+            },
+            'title_color': {
                 'type': 'bool',
             },
             'title_color_name': {
@@ -283,10 +296,22 @@ def get_argspec():
                     'red', 'silver', 'teal', 'white', 'yellow'
                 ]
             },
-            'title_font_custom': {
+            'title_color_value': {
+                'type': 'str',
+            }
+        },
+        'fail_msg_cfg': {
+            'type': 'dict',
+            'fail_msg': {
+                'type': 'bool',
+            },
+            'fail_text': {
                 'type': 'str',
             },
-            'title_face': {
+            'fail_font': {
+                'type': 'bool',
+            },
+            'fail_face': {
                 'type':
                 'str',
                 'choices': [
@@ -294,17 +319,26 @@ def get_argspec():
                     'Verdana'
                 ]
             },
-            'title_color_value': {
+            'fail_font_custom': {
                 'type': 'str',
             },
-            'title_size': {
+            'fail_size': {
                 'type': 'int',
             },
-            'title_text': {
-                'type': 'str',
-            },
-            'title_font': {
+            'fail_color': {
                 'type': 'bool',
+            },
+            'fail_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'fail_color_value': {
+                'type': 'str',
             }
         },
         'uuid': {

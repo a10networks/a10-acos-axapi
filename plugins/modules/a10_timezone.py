@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_timezone
 description:
     - Configure the Time Zone
-short_description: Configures A10 timezone
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,52 +22,43 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            dst_name:
-                description:
-                - "Field dst_name"
-            deny_dst:
-                description:
-                - "Field deny_dst"
-            std_name:
-                description:
-                - "Field std_name"
-            location:
-                description:
-                - "Field location"
     timezone_index_cfg:
         description:
         - "Field timezone_index_cfg"
+        type: dict
         required: False
         suboptions:
             timezone_index:
@@ -129,13 +118,38 @@ options:
           (GMT+12=00)Auckland, Wellington; 'Pacific/Fiji'= (GMT+12=00)Fiji, Kamchatka,
           Marshall Is.; 'Pacific/Kwajalein'= (GMT+12=00)Eniwetok, Kwajalein;
           'Pacific/Enderbury'= (GMT+13=00)Nuku'alofa;"
+                type: str
             nodst:
                 description:
                 - "Disable daylight saving time"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            std_name:
+                description:
+                - "Field std_name"
+                type: str
+            dst_name:
+                description:
+                - "Field dst_name"
+                type: str
+            deny_dst:
+                description:
+                - "Field deny_dst"
+                type: str
+            location:
+                description:
+                - "Field location"
+                type: str
 
 '''
 
@@ -190,21 +204,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'dst_name': {
-                'type': 'str',
-            },
-            'deny_dst': {
-                'type': 'str',
-            },
-            'std_name': {
-                'type': 'str',
-            },
-            'location': {
-                'type': 'str',
-            }
-        },
         'timezone_index_cfg': {
             'type': 'dict',
             'timezone_index': {
@@ -248,6 +247,21 @@ def get_argspec():
         },
         'uuid': {
             'type': 'str',
+        },
+        'oper': {
+            'type': 'dict',
+            'std_name': {
+                'type': 'str',
+            },
+            'dst_name': {
+                'type': 'str',
+            },
+            'deny_dst': {
+                'type': 'str',
+            },
+            'location': {
+                'type': 'str',
+            }
         }
     })
     return rv
@@ -470,6 +484,22 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
+
+def replace(module, result, existing_config, payload):
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 
 def run_command(module):

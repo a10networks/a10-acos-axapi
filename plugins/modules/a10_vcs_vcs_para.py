@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_vcs_para
 description:
     - Virtual Chassis System Paramter
-short_description: Configures A10 vcs.vcs-para
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,104 +22,129 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    multicast_port:
-        description:
-        - "Port used in multicast communication (Port number)"
-        required: False
-    dead_interval:
-        description:
-        - "The node will be considered dead as lack of hearbeats after this time (in unit
-          of second, 10 by default)"
-        required: False
-    forever:
-        description:
-        - "VCS retry forever if fails to join the chassis"
-        required: False
-    ssl_enable:
-        description:
-        - "Enable SSL"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    multicast_ip:
-        description:
-        - "Multicast (group) IP address (Multicast IP address)"
-        required: False
-    multicast_ipv6:
-        description:
-        - "Multicast (group) IPv6 address (Multicast IPv6 address)"
-        required: False
-    force_wait_interval:
-        description:
-        - "The node will wait the specified time interval before it start aVCS (in unit of
-          second (default is 5))"
+        type: str
         required: False
     floating_ip_cfg:
         description:
         - "Field floating_ip_cfg"
+        type: list
         required: False
         suboptions:
-            floating_ip_mask:
-                description:
-                - "Netmask"
             floating_ip:
                 description:
                 - "Floating IP address (IPv4 address)"
-    failure_retry_count_value:
-        description:
-        - "0-255, default is 2"
-        required: False
-    time_interval:
-        description:
-        - "how long between heartbeats (in unit of second, default is 3)"
-        required: False
-    speed_limit:
-        description:
-        - "speed (KByte/s) limitation for the transmit monitor"
-        required: False
-    config_seq:
-        description:
-        - "Configuration sequence number"
-        required: False
+                type: str
+            floating_ip_mask:
+                description:
+                - "Netmask"
+                type: str
     floating_ipv6_cfg:
         description:
         - "Field floating_ipv6_cfg"
+        type: list
         required: False
         suboptions:
             floating_ipv6:
                 description:
                 - "Floating IPv6 address"
+                type: str
+    ssl_enable:
+        description:
+        - "Enable SSL"
+        type: bool
+        required: False
+    multicast_ip:
+        description:
+        - "Multicast (group) IP address (Multicast IP address)"
+        type: str
+        required: False
+    multicast_ipv6:
+        description:
+        - "Multicast (group) IPv6 address (Multicast IPv6 address)"
+        type: str
+        required: False
+    multicast_port:
+        description:
+        - "Port used in multicast communication (Port number)"
+        type: int
+        required: False
+    failure_retry_count_value:
+        description:
+        - "0-255, default is 2"
+        type: int
+        required: False
+    forever:
+        description:
+        - "VCS retry forever if fails to join the chassis"
+        type: bool
+        required: False
+    dead_interval:
+        description:
+        - "The node will be considered dead as lack of hearbeats after this time (in unit
+          of second, 10 by default)"
+        type: int
+        required: False
+    time_interval:
+        description:
+        - "how long between heartbeats (in unit of second, default is 3)"
+        type: int
+        required: False
+    config_seq:
+        description:
+        - "Configuration sequence number"
+        type: str
+        required: False
     size:
         description:
         - "file size (MBytes) to transmit to monitor the TCP channel"
+        type: int
+        required: False
+    speed_limit:
+        description:
+        - "speed (KByte/s) limitation for the transmit monitor"
+        type: int
+        required: False
+    force_wait_interval:
+        description:
+        - "The node will wait the specified time interval before it start aVCS (in unit of
+          second (default is 5))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -189,50 +212,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'multicast_port': {
-            'type': 'int',
-        },
-        'dead_interval': {
-            'type': 'int',
-        },
-        'forever': {
-            'type': 'bool',
-        },
-        'ssl_enable': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'multicast_ip': {
-            'type': 'str',
-        },
-        'multicast_ipv6': {
-            'type': 'str',
-        },
-        'force_wait_interval': {
-            'type': 'int',
-        },
         'floating_ip_cfg': {
             'type': 'list',
-            'floating_ip_mask': {
-                'type': 'str',
-            },
             'floating_ip': {
                 'type': 'str',
+            },
+            'floating_ip_mask': {
+                'type': 'str',
             }
-        },
-        'failure_retry_count_value': {
-            'type': 'int',
-        },
-        'time_interval': {
-            'type': 'int',
-        },
-        'speed_limit': {
-            'type': 'int',
-        },
-        'config_seq': {
-            'type': 'str',
         },
         'floating_ipv6_cfg': {
             'type': 'list',
@@ -240,8 +227,44 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'ssl_enable': {
+            'type': 'bool',
+        },
+        'multicast_ip': {
+            'type': 'str',
+        },
+        'multicast_ipv6': {
+            'type': 'str',
+        },
+        'multicast_port': {
+            'type': 'int',
+        },
+        'failure_retry_count_value': {
+            'type': 'int',
+        },
+        'forever': {
+            'type': 'bool',
+        },
+        'dead_interval': {
+            'type': 'int',
+        },
+        'time_interval': {
+            'type': 'int',
+        },
+        'config_seq': {
+            'type': 'str',
+        },
         'size': {
             'type': 'int',
+        },
+        'speed_limit': {
+            'type': 'int',
+        },
+        'force_wait_interval': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

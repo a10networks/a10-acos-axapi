@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_inspection_global
 description:
     - File Inspection global commands
-short_description: Configures A10 file.inspection.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,87 +22,108 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
-        required: False
-    logging:
-        description:
-        - "Field logging"
-        required: False
-        suboptions:
-            failed_transactions:
-                description:
-                - "'log'= Log event (default); 'no-log'= Do not Log event;"
-            local_logging_disable:
-                description:
-                - "Disable local logging"
-            bypass:
-                description:
-                - "Field bypass"
-    classification:
-        description:
-        - "Field classification"
-        required: False
-        suboptions:
-            max_classification_len:
-                description:
-                - "maximum length to be taken for file classification - default 65536"
-            classification_disable:
-                description:
-                - "Disable Internal File Inspection Classification"
-            min_classification_len:
-                description:
-                - "minimum length to be taken for file classification - default 4096"
-    max_concurrent_files:
-        description:
-        - "Max concurrenet inspected files per server - default 10 ( Max concurrenet
-          inspected files per server - default 10)"
         required: False
     max_file_size:
         description:
         - "Maximum file size (bytes) - default 157286400"
+        type: int
         required: False
     max_buffer_size:
         description:
         - "Maximum size (bytes) of content that can be buffered - default 0 (disabled)
           (Maximum size (bytes) content that can be buffered - default 0 (disabled))"
+        type: int
+        required: False
+    classification:
+        description:
+        - "Field classification"
+        type: dict
+        required: False
+        suboptions:
+            classification_disable:
+                description:
+                - "Disable Internal File Inspection Classification"
+                type: bool
+            min_classification_len:
+                description:
+                - "minimum length to be taken for file classification - default 4096"
+                type: int
+            max_classification_len:
+                description:
+                - "maximum length to be taken for file classification - default 65536"
+                type: int
+    max_concurrent_files:
+        description:
+        - "Max concurrenet inspected files per server - default 10 ( Max concurrenet
+          inspected files per server - default 10)"
+        type: int
         required: False
     max_concurrent_files_action:
         description:
         - "'bypass'= Bypass File Inspection (default);"
+        type: str
         required: False
+    logging:
+        description:
+        - "Field logging"
+        type: dict
+        required: False
+        suboptions:
+            bypass:
+                description:
+                - "Field bypass"
+                type: dict
+            failed_transactions:
+                description:
+                - "'log'= Log event (default); 'no-log'= Do not Log event;"
+                type: str
+            local_logging_disable:
+                description:
+                - "Disable local logging"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -167,26 +186,36 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
-        'logging': {
+        'max_file_size': {
+            'type': 'int',
+        },
+        'max_buffer_size': {
+            'type': 'int',
+        },
+        'classification': {
             'type': 'dict',
-            'failed_transactions': {
-                'type': 'str',
-                'choices': ['log', 'no-log']
-            },
-            'local_logging_disable': {
+            'classification_disable': {
                 'type': 'bool',
             },
+            'min_classification_len': {
+                'type': 'int',
+            },
+            'max_classification_len': {
+                'type': 'int',
+            }
+        },
+        'max_concurrent_files': {
+            'type': 'int',
+        },
+        'max_concurrent_files_action': {
+            'type': 'str',
+            'choices': ['bypass']
+        },
+        'logging': {
+            'type': 'dict',
             'bypass': {
                 'type': 'dict',
-                'service_down_log': {
-                    'type': 'str',
-                    'choices': ['log', 'no-log']
-                },
-                'filesize_overlimit_log': {
-                    'type': 'str',
-                    'choices': ['log', 'no-log']
-                },
-                'service_disabled_log': {
+                'all_bypass_log': {
                     'type': 'str',
                     'choices': ['log', 'no-log']
                 },
@@ -194,15 +223,7 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['log', 'no-log']
                 },
-                'all_bypass_log': {
-                    'type': 'str',
-                    'choices': ['log', 'no-log']
-                },
                 'old_http_version_log': {
-                    'type': 'str',
-                    'choices': ['log', 'no-log']
-                },
-                'max_concurrent_files_log': {
                     'type': 'str',
                     'choices': ['log', 'no-log']
                 },
@@ -210,36 +231,34 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['log', 'no-log']
                 },
+                'service_disabled_log': {
+                    'type': 'str',
+                    'choices': ['log', 'no-log']
+                },
+                'service_down_log': {
+                    'type': 'str',
+                    'choices': ['log', 'no-log']
+                },
+                'max_concurrent_files_log': {
+                    'type': 'str',
+                    'choices': ['log', 'no-log']
+                },
+                'filesize_overlimit_log': {
+                    'type': 'str',
+                    'choices': ['log', 'no-log']
+                },
                 'internal_buffered_overlimit_log': {
                     'type': 'str',
                     'choices': ['log', 'no-log']
                 }
-            }
-        },
-        'classification': {
-            'type': 'dict',
-            'max_classification_len': {
-                'type': 'int',
             },
-            'classification_disable': {
+            'failed_transactions': {
+                'type': 'str',
+                'choices': ['log', 'no-log']
+            },
+            'local_logging_disable': {
                 'type': 'bool',
-            },
-            'min_classification_len': {
-                'type': 'int',
             }
-        },
-        'max_concurrent_files': {
-            'type': 'int',
-        },
-        'max_file_size': {
-            'type': 'int',
-        },
-        'max_buffer_size': {
-            'type': 'int',
-        },
-        'max_concurrent_files_action': {
-            'type': 'str',
-            'choices': ['bypass']
         },
         'uuid': {
             'type': 'str',

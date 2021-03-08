@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_cert
 description:
     - Field ssl_cert
-short_description: Configures A10 slb.ssl-cert
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,80 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            exact_match:
-                description:
-                - "Field exact_match"
-            sortby_exp:
-                description:
-                - "Field sortby_exp"
-            ssl_certs:
-                description:
-                - "Field ssl_certs"
             sortby_name:
                 description:
                 - "Field sortby_name"
+                type: bool
+            sortby_exp:
+                description:
+                - "Field sortby_exp"
+                type: bool
+            ssl_certs:
+                description:
+                - "Field ssl_certs"
+                type: list
             partition:
                 description:
                 - "Field partition"
+                type: str
+            exact_match:
+                description:
+                - "Field exact_match"
+                type: bool
     stats:
         description:
         - "Field stats"
+        type: str
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -136,9 +150,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'exact_match': {
+            'sortby_name': {
                 'type': 'bool',
             },
             'sortby_exp': {
@@ -146,23 +163,20 @@ def get_argspec():
             },
             'ssl_certs': {
                 'type': 'list',
-                'status': {
+                'name': {
                     'type': 'str',
                 },
-                'name': {
+                'ntype': {
+                    'type': 'str',
+                },
+                'serial': {
                     'type': 'str',
                 },
                 'notbefore': {
                     'type': 'str',
                 },
-                'notafter_number': {
-                    'type': 'int',
-                },
                 'notafter': {
                     'type': 'str',
-                },
-                'keysize': {
-                    'type': 'int',
                 },
                 'common_name': {
                     'type': 'str',
@@ -170,24 +184,27 @@ def get_argspec():
                 'organization': {
                     'type': 'str',
                 },
-                'serial': {
-                    'type': 'str',
-                },
                 'subject': {
-                    'type': 'str',
-                },
-                'ntype': {
                     'type': 'str',
                 },
                 'issuer': {
                     'type': 'str',
+                },
+                'notafter_number': {
+                    'type': 'int',
+                },
+                'status': {
+                    'type': 'str',
+                },
+                'keysize': {
+                    'type': 'int',
                 }
-            },
-            'sortby_name': {
-                'type': 'bool',
             },
             'partition': {
                 'type': 'str',
+            },
+            'exact_match': {
+                'type': 'bool',
             }
         },
         'stats': {
@@ -196,9 +213,6 @@ def get_argspec():
             'uuid': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

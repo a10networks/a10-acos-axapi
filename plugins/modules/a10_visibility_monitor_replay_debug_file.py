@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitor_replay_debug_file
 description:
     - Replay the debug entity file
-short_description: Configures A10 visibility.monitor.replay-debug-file
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,43 +21,53 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    debug_port:
-        description:
-        - "Specify port"
+        type: str
         required: False
     debug_ip_addr:
         description:
         - "Specify source/dest ip addr"
+        type: str
         required: True
+    debug_port:
+        description:
+        - "Specify port"
+        type: int
+        required: False
     debug_protocol:
         description:
         - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+        type: str
         required: False
 
 '''
@@ -113,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'debug_port': {
-            'type': 'int',
-        },
         'debug_ip_addr': {
             'type': 'str',
             'required': True,
+        },
+        'debug_port': {
+            'type': 'int',
         },
         'debug_protocol': {
             'type': 'str',

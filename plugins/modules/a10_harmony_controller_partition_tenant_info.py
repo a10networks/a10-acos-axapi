@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_harmony_controller_partition_tenant_info
 description:
     - Harmony controller profile
-short_description: Configures A10 harmony.controller.partition-tenant-info
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            cluster_id:
-                description:
-                - "Field cluster_id"
-            tenant_name:
-                description:
-                - "Field tenant_name"
             partition_name:
                 description:
                 - "Field partition_name"
-            cluster_name:
+                type: str
+            tenant_name:
                 description:
-                - "Field cluster_name"
+                - "Field tenant_name"
+                type: str
             tenant_id:
                 description:
                 - "Field tenant_id"
+                type: str
+            cluster_name:
+                description:
+                - "Field cluster_name"
+                type: str
+            cluster_id:
+                description:
+                - "Field cluster_id"
+                type: str
             log_rate_per_sec:
                 description:
                 - "Field log_rate_per_sec"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
 
 '''
 
@@ -130,29 +143,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'cluster_id': {
+            'partition_name': {
                 'type': 'str',
             },
             'tenant_name': {
                 'type': 'str',
             },
-            'partition_name': {
+            'tenant_id': {
                 'type': 'str',
             },
             'cluster_name': {
                 'type': 'str',
             },
-            'tenant_id': {
+            'cluster_id': {
                 'type': 'str',
             },
             'log_rate_per_sec': {
                 'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_action
 description:
     - action list
-short_description: Configures A10 slb.template.policy.forward.policy.action
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,112 +22,141 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    log:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
         description:
-        - "enable logging"
-        required: False
-    http_status_code:
-        description:
-        - "'301'= Moved permanently; '302'= Found;"
-        required: False
-    forward_snat:
-        description:
-        - "Source NAT pool or pool group"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    drop_response_code:
-        description:
-        - "Specify response code for drop action"
-        required: False
+        - "Action policy name"
+        type: str
+        required: True
     action1:
         description:
         - "'forward-to-internet'= Forward request to Internet; 'forward-to-service-group'=
           Forward request to service group; 'forward-to-proxy'= Forward request to HTTP
           proxy server; 'drop'= Drop request;"
+        type: str
         required: False
     fake_sg:
         description:
         - "service group to forward the packets to Internet"
+        type: str
         required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            hits:
-                description:
-                - "Number of requests matching this destination rule"
-            name:
-                description:
-                - "Action policy name"
     real_sg:
         description:
         - "service group to forward the packets"
+        type: str
+        required: False
+    forward_snat:
+        description:
+        - "Source NAT pool or pool group"
+        type: str
+        required: False
+    fall_back:
+        description:
+        - "Fallback service group for Internet"
+        type: str
+        required: False
+    fall_back_snat:
+        description:
+        - "Source NAT pool or pool group for fallback server"
+        type: str
+        required: False
+    log:
+        description:
+        - "enable logging"
+        type: bool
+        required: False
+    drop_response_code:
+        description:
+        - "Specify response code for drop action"
+        type: int
         required: False
     drop_message:
         description:
         - "drop-message sent to the client as webpage(html tags are included and quotation
           marks are required for white spaces)"
+        type: str
+        required: False
+    drop_redirect_url:
+        description:
+        - "Specify URL to which client request is redirected upon being dropped"
+        type: str
+        required: False
+    http_status_code:
+        description:
+        - "'301'= Moved permanently; '302'= Found;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Number of requests matching this destination rule;"
-    fall_back:
+                type: str
+    stats:
         description:
-        - "Fallback service group for Internet"
+        - "Field stats"
+        type: dict
         required: False
-    fall_back_snat:
-        description:
-        - "Source NAT pool or pool group for fallback server"
-        required: False
-    drop_redirect_url:
-        description:
-        - "Specify URL to which client request is redirected upon being dropped"
-        required: False
-    name:
-        description:
-        - "Action policy name"
-        required: True
+        suboptions:
+            hits:
+                description:
+                - "Number of requests matching this destination rule"
+                type: str
+            name:
+                description:
+                - "Action policy name"
+                type: str
 
 '''
 
@@ -197,21 +224,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'log': {
-            'type': 'bool',
-        },
-        'http_status_code': {
+        'name': {
             'type': 'str',
-            'choices': ['301', '302']
-        },
-        'forward_snat': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'drop_response_code': {
-            'type': 'int',
+            'required': True,
         },
         'action1': {
             'type':
@@ -224,8 +239,46 @@ def get_argspec():
         'fake_sg': {
             'type': 'str',
         },
+        'real_sg': {
+            'type': 'str',
+        },
+        'forward_snat': {
+            'type': 'str',
+        },
+        'fall_back': {
+            'type': 'str',
+        },
+        'fall_back_snat': {
+            'type': 'str',
+        },
+        'log': {
+            'type': 'bool',
+        },
+        'drop_response_code': {
+            'type': 'int',
+        },
+        'drop_message': {
+            'type': 'str',
+        },
+        'drop_redirect_url': {
+            'type': 'str',
+        },
+        'http_status_code': {
+            'type': 'str',
+            'choices': ['301', '302']
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'user_tag': {
             'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits']
+            }
         },
         'stats': {
             'type': 'dict',
@@ -236,32 +289,6 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
             }
-        },
-        'real_sg': {
-            'type': 'str',
-        },
-        'drop_message': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
-            }
-        },
-        'fall_back': {
-            'type': 'str',
-        },
-        'fall_back_snat': {
-            'type': 'str',
-        },
-        'drop_redirect_url': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     # Parent keys

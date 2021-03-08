@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_access_list_extended
 description:
     - Configure Extended Access List
-short_description: Configures A10 access-list.extended
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,157 +22,91 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    extd:
+        description:
+        - "IP extended access list"
+        type: int
+        required: True
     rules:
         description:
         - "Field rules"
+        type: list
         required: False
         suboptions:
-            icmp_type:
+            extd_seq_num:
                 description:
-                - "ICMP type number"
-            ip:
+                - "Sequence number"
+                type: int
+            extd_remark:
                 description:
-                - "Any Internet Protocol"
-            service_obj_group:
-                description:
-                - "Service object group (Source object group name)"
-            udp:
-                description:
-                - "protocol UDP"
-            tcp:
-                description:
-                - "protocol TCP"
-            src_range:
-                description:
-                - "match only packets in the range of port numbers (Starting Port Number)"
-            any_code:
-                description:
-                - "Any ICMP code"
-            src_lt:
-                description:
-                - "Match only packets with a lower port number"
-            src_mask:
-                description:
-                - "Source Mask 0=apply 255=ignore"
-            src_port_end:
-                description:
-                - "Ending Port Number"
-            dst_port_end:
-                description:
-                - "Edning Destination Port Number"
-            dst_range:
-                description:
-                - "Match only packets in the range of port numbers (Starting Destination Port
-          Number)"
-            established:
-                description:
-                - "TCP established"
-            src_subnet:
-                description:
-                - "Source Address"
+                - "Access list entry comment (Notes for this ACL)"
+                type: str
             extd_action:
                 description:
                 - "'deny'= Deny; 'permit'= Permit; 'l3-vlan-fwd-disable'= Disable L3 forwarding
           between VLANs;"
-            src_any:
-                description:
-                - "Any source host"
-            fragments:
-                description:
-                - "IP fragments"
-            icmp_code:
-                description:
-                - "ICMP code number"
-            src_object_group:
-                description:
-                - "Network object group (Source network object group name)"
-            dst_eq:
-                description:
-                - "Match only packets on a given destination port (port number)"
-            dst_subnet:
-                description:
-                - "Destination Address"
-            dst_mask:
-                description:
-                - "Destination Mask 0=apply 255=ignore"
-            extd_remark:
-                description:
-                - "Access list entry comment (Notes for this ACL)"
-            vlan:
-                description:
-                - "VLAN ID"
-            dscp:
-                description:
-                - "DSCP"
-            special_code:
-                description:
-                - "'frag-required'= Code 4, fragmentation required; 'host-unreachable'= Code 1,
-          destination host unreachable; 'network-unreachable'= Code 0, destination
-          network unreachable; 'port-unreachable'= Code 3, destination port unreachable;
-          'proto-unreachable'= Code 2, destination protocol unreachable; 'route-failed'=
-          Code 5, source route failed;"
-            trunk:
-                description:
-                - "Ethernet trunk (trunk number)"
+                type: str
             icmp:
                 description:
                 - "Internet Control Message Protocol"
-            dst_gt:
+                type: bool
+            tcp:
                 description:
-                - "Match only packets with a greater port number"
-            acl_log:
+                - "protocol TCP"
+                type: bool
+            udp:
                 description:
-                - "Log matches against this entry"
-            src_gt:
+                - "protocol UDP"
+                type: bool
+            ip:
                 description:
-                - "Match only packets with a greater port number"
-            dst_object_group:
+                - "Any Internet Protocol"
+                type: bool
+            service_obj_group:
                 description:
-                - "Destination network object group name"
+                - "Service object group (Source object group name)"
+                type: str
+            icmp_type:
+                description:
+                - "ICMP type number"
+                type: int
             any_type:
                 description:
                 - "Any ICMP type"
-            transparent_session_only:
-                description:
-                - "Only log transparent sessions"
-            dst_any:
-                description:
-                - "Any destination host"
-            src_host:
-                description:
-                - "A single source host (Host address)"
-            dst_lt:
-                description:
-                - "Match only packets with a lesser port number"
-            ethernet:
-                description:
-                - "Ethernet interface (Port number)"
+                type: bool
             special_type:
                 description:
                 - "'echo-reply'= Type 0, echo reply; 'echo-request'= Type 8, echo request; 'info-
@@ -185,22 +117,140 @@ options:
           'time-exceeded'= Type 11, time exceeded; 'timestamp'= Type 13, timestamp;
           'timestamp-reply'= Type 14, timestamp reply; 'dest-unreachable'= Type 3,
           destination unreachable;"
+                type: str
+            any_code:
+                description:
+                - "Any ICMP code"
+                type: bool
+            icmp_code:
+                description:
+                - "ICMP code number"
+                type: int
+            special_code:
+                description:
+                - "'frag-required'= Code 4, fragmentation required; 'host-unreachable'= Code 1,
+          destination host unreachable; 'network-unreachable'= Code 0, destination
+          network unreachable; 'port-unreachable'= Code 3, destination port unreachable;
+          'proto-unreachable'= Code 2, destination protocol unreachable; 'route-failed'=
+          Code 5, source route failed;"
+                type: str
+            src_any:
+                description:
+                - "Any source host"
+                type: bool
+            src_host:
+                description:
+                - "A single source host (Host address)"
+                type: str
+            src_subnet:
+                description:
+                - "Source Address"
+                type: str
+            src_mask:
+                description:
+                - "Source Mask 0=apply 255=ignore"
+                type: str
+            src_object_group:
+                description:
+                - "Network object group (Source network object group name)"
+                type: str
             src_eq:
                 description:
                 - "Match only packets on a given source port (port number)"
+                type: int
+            src_gt:
+                description:
+                - "Match only packets with a greater port number"
+                type: int
+            src_lt:
+                description:
+                - "Match only packets with a lower port number"
+                type: int
+            src_range:
+                description:
+                - "match only packets in the range of port numbers (Starting Port Number)"
+                type: int
+            src_port_end:
+                description:
+                - "Ending Port Number"
+                type: int
+            dst_any:
+                description:
+                - "Any destination host"
+                type: bool
             dst_host:
                 description:
                 - "A single destination host (Host address)"
-            extd_seq_num:
+                type: str
+            dst_subnet:
                 description:
-                - "Sequence number"
-    extd:
-        description:
-        - "IP extended access list"
-        required: True
+                - "Destination Address"
+                type: str
+            dst_mask:
+                description:
+                - "Destination Mask 0=apply 255=ignore"
+                type: str
+            dst_object_group:
+                description:
+                - "Destination network object group name"
+                type: str
+            dst_eq:
+                description:
+                - "Match only packets on a given destination port (port number)"
+                type: int
+            dst_gt:
+                description:
+                - "Match only packets with a greater port number"
+                type: int
+            dst_lt:
+                description:
+                - "Match only packets with a lesser port number"
+                type: int
+            dst_range:
+                description:
+                - "Match only packets in the range of port numbers (Starting Destination Port
+          Number)"
+                type: int
+            dst_port_end:
+                description:
+                - "Edning Destination Port Number"
+                type: int
+            fragments:
+                description:
+                - "IP fragments"
+                type: bool
+            vlan:
+                description:
+                - "VLAN ID"
+                type: int
+            ethernet:
+                description:
+                - "Ethernet interface (Port number)"
+                type: str
+            trunk:
+                description:
+                - "Ethernet trunk (trunk number)"
+                type: str
+            dscp:
+                description:
+                - "DSCP"
+                type: int
+            established:
+                description:
+                - "TCP established"
+                type: bool
+            acl_log:
+                description:
+                - "Log matches against this entry"
+                type: bool
+            transparent_session_only:
+                description:
+                - "Only log transparent sessions"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -256,10 +306,30 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'extd': {
+            'type': 'int',
+            'required': True,
+        },
         'rules': {
             'type': 'list',
-            'icmp_type': {
+            'extd_seq_num': {
                 'type': 'int',
+            },
+            'extd_remark': {
+                'type': 'str',
+            },
+            'extd_action': {
+                'type': 'str',
+                'choices': ['deny', 'permit', 'l3-vlan-fwd-disable']
+            },
+            'icmp': {
+                'type': 'bool',
+            },
+            'tcp': {
+                'type': 'bool',
+            },
+            'udp': {
+                'type': 'bool',
             },
             'ip': {
                 'type': 'bool',
@@ -267,116 +337,11 @@ def get_argspec():
             'service_obj_group': {
                 'type': 'str',
             },
-            'udp': {
-                'type': 'bool',
-            },
-            'tcp': {
-                'type': 'bool',
-            },
-            'src_range': {
+            'icmp_type': {
                 'type': 'int',
-            },
-            'any_code': {
-                'type': 'bool',
-            },
-            'src_lt': {
-                'type': 'int',
-            },
-            'src_mask': {
-                'type': 'str',
-            },
-            'src_port_end': {
-                'type': 'int',
-            },
-            'dst_port_end': {
-                'type': 'int',
-            },
-            'dst_range': {
-                'type': 'int',
-            },
-            'established': {
-                'type': 'bool',
-            },
-            'src_subnet': {
-                'type': 'str',
-            },
-            'extd_action': {
-                'type': 'str',
-                'choices': ['deny', 'permit', 'l3-vlan-fwd-disable']
-            },
-            'src_any': {
-                'type': 'bool',
-            },
-            'fragments': {
-                'type': 'bool',
-            },
-            'icmp_code': {
-                'type': 'int',
-            },
-            'src_object_group': {
-                'type': 'str',
-            },
-            'dst_eq': {
-                'type': 'int',
-            },
-            'dst_subnet': {
-                'type': 'str',
-            },
-            'dst_mask': {
-                'type': 'str',
-            },
-            'extd_remark': {
-                'type': 'str',
-            },
-            'vlan': {
-                'type': 'int',
-            },
-            'dscp': {
-                'type': 'int',
-            },
-            'special_code': {
-                'type':
-                'str',
-                'choices': [
-                    'frag-required', 'host-unreachable', 'network-unreachable',
-                    'port-unreachable', 'proto-unreachable', 'route-failed'
-                ]
-            },
-            'trunk': {
-                'type': 'str',
-            },
-            'icmp': {
-                'type': 'bool',
-            },
-            'dst_gt': {
-                'type': 'int',
-            },
-            'acl_log': {
-                'type': 'bool',
-            },
-            'src_gt': {
-                'type': 'int',
-            },
-            'dst_object_group': {
-                'type': 'str',
             },
             'any_type': {
                 'type': 'bool',
-            },
-            'transparent_session_only': {
-                'type': 'bool',
-            },
-            'dst_any': {
-                'type': 'bool',
-            },
-            'src_host': {
-                'type': 'str',
-            },
-            'dst_lt': {
-                'type': 'int',
-            },
-            'ethernet': {
-                'type': 'str',
             },
             'special_type': {
                 'type':
@@ -388,19 +353,104 @@ def get_argspec():
                     'timestamp-reply', 'dest-unreachable'
                 ]
             },
+            'any_code': {
+                'type': 'bool',
+            },
+            'icmp_code': {
+                'type': 'int',
+            },
+            'special_code': {
+                'type':
+                'str',
+                'choices': [
+                    'frag-required', 'host-unreachable', 'network-unreachable',
+                    'port-unreachable', 'proto-unreachable', 'route-failed'
+                ]
+            },
+            'src_any': {
+                'type': 'bool',
+            },
+            'src_host': {
+                'type': 'str',
+            },
+            'src_subnet': {
+                'type': 'str',
+            },
+            'src_mask': {
+                'type': 'str',
+            },
+            'src_object_group': {
+                'type': 'str',
+            },
             'src_eq': {
                 'type': 'int',
+            },
+            'src_gt': {
+                'type': 'int',
+            },
+            'src_lt': {
+                'type': 'int',
+            },
+            'src_range': {
+                'type': 'int',
+            },
+            'src_port_end': {
+                'type': 'int',
+            },
+            'dst_any': {
+                'type': 'bool',
             },
             'dst_host': {
                 'type': 'str',
             },
-            'extd_seq_num': {
+            'dst_subnet': {
+                'type': 'str',
+            },
+            'dst_mask': {
+                'type': 'str',
+            },
+            'dst_object_group': {
+                'type': 'str',
+            },
+            'dst_eq': {
                 'type': 'int',
+            },
+            'dst_gt': {
+                'type': 'int',
+            },
+            'dst_lt': {
+                'type': 'int',
+            },
+            'dst_range': {
+                'type': 'int',
+            },
+            'dst_port_end': {
+                'type': 'int',
+            },
+            'fragments': {
+                'type': 'bool',
+            },
+            'vlan': {
+                'type': 'int',
+            },
+            'ethernet': {
+                'type': 'str',
+            },
+            'trunk': {
+                'type': 'str',
+            },
+            'dscp': {
+                'type': 'int',
+            },
+            'established': {
+                'type': 'bool',
+            },
+            'acl_log': {
+                'type': 'bool',
+            },
+            'transparent_session_only': {
+                'type': 'bool',
             }
-        },
-        'extd': {
-            'type': 'int',
-            'required': True,
         },
         'uuid': {
             'type': 'str',

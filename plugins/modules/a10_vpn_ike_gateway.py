@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_ike_gateway
 description:
     - IKE-gateway settings
-short_description: Configures A10 vpn.ike-gateway
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,350 +22,168 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    name:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            Status:
-                description:
-                - "Field Status"
-            Remote_IP:
-                description:
-                - "Field Remote_IP"
-            Hash:
-                description:
-                - "Field Hash"
-            name:
-                description:
-                - "IKE-gateway name"
-            NAT_Traversal:
-                description:
-                - "Field NAT_Traversal"
-            Local_IP:
-                description:
-                - "Field Local_IP"
-            Responder_SPI:
-                description:
-                - "Field Responder_SPI"
-            Encryption:
-                description:
-                - "Field Encryption"
-            Lifetime:
-                description:
-                - "Field Lifetime"
-            Initiator_SPI:
-                description:
-                - "Field Initiator_SPI"
+        - "IKE-gateway name"
+        type: str
+        required: True
     ike_version:
         description:
         - "'v1'= IKEv1 key exchange; 'v2'= IKEv2 key exchange;"
-        required: False
-    key_passphrase_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED key string)"
-        required: False
-    local_cert:
-        description:
-        - "Field local_cert"
-        required: False
-        suboptions:
-            local_cert_name:
-                description:
-                - "Certificate File Name"
-    lifetime:
-        description:
-        - "IKE SA age in seconds"
-        required: False
-    local_id:
-        description:
-        - "Local Gateway Identity"
-        required: False
-    enc_cfg:
-        description:
-        - "Field enc_cfg"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "Prioritizes (1-10) security protocol, least value has highest priority"
-            encryption:
-                description:
-                - "'des'= Data Encryption Standard algorithm; '3des'= Triple Data Encryption
-          Standard algorithm; 'aes-128'= Advanced Encryption Standard algorithm CBC
-          mode(key size= 128 bits); 'aes-192'= Advanced Encryption Standard algorithm CBC
-          mode(key size= 192 bits); 'aes-256'= Advanced Encryption Standard algorithm CBC
-          mode(key size= 256 bits); 'null'= No encryption algorithm, only for IKEv2;"
-            hash:
-                description:
-                - "'md5'= MD5 Dessage-Digest Algorithm; 'sha1'= Secure Hash Algorithm 1; 'sha256'=
-          Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384; 'sha512'=
-          Secure Hash Algorithm 512;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            v1_in_id_prot_rsp:
-                description:
-                - "Incoming ID Protection Response"
-            v1_in_auth_only_rsp:
-                description:
-                - "Incoming Auth Only Response"
-            v1_out_quick_mode_req:
-                description:
-                - "Outgoing Quick Mode Request"
-            v1_out_aggressive_req:
-                description:
-                - "Outgoing Aggressive Request"
-            v2_child_sa_rekey:
-                description:
-                - "Child SA Rekey"
-            ike_current_version:
-                description:
-                - "IKE version"
-            v2_out_auth_req:
-                description:
-                - "Outgoing Auth Request"
-            v2_rsp_rekey:
-                description:
-                - "Respond Rekey"
-            v2_out_info_req:
-                description:
-                - "Outgoing Info Request"
-            v2_out_init_req:
-                description:
-                - "Outgoing Init Request"
-            v1_in_info_v1_rsp:
-                description:
-                - "Incoming Info Response"
-            v1_out_id_prot_req:
-                description:
-                - "Outgoing ID Protection Request"
-            v2_in_invalid:
-                description:
-                - "Incoming Invalid"
-            v1_in_aggressive_req:
-                description:
-                - "Incoming Aggressive Request"
-            v1_child_sa_invalid_spi:
-                description:
-                - "Invalid SPI for Child SAs"
-            v2_in_info_rsp:
-                description:
-                - "Incoming Info Response"
-            v1_out_new_group_mode_rsp:
-                description:
-                - "Outgoing New Group Mode Response"
-            v2_out_auth_rsp:
-                description:
-                - "Outgoing Auth Response"
-            v1_in_auth_only_req:
-                description:
-                - "Incoming Auth Only Request"
-            v1_in_info_v1_req:
-                description:
-                - "Incoming Info Request"
-            v2_in_create_child_req:
-                description:
-                - "Incoming Create Child Request"
-            v2_out_info_rsp:
-                description:
-                - "Outgoing Info Response"
-            v2_out_create_child_req:
-                description:
-                - "Outgoing Create Child Request"
-            v2_in_auth_rsp:
-                description:
-                - "Incoming Auth Response"
-            v2_in_init_req:
-                description:
-                - "Incoming Init Request"
-            v1_out_info_v1_req:
-                description:
-                - "Outgoing Info Request"
-            v2_init_rekey:
-                description:
-                - "Initiate Rekey"
-            v1_in_id_prot_req:
-                description:
-                - "Incoming ID Protection Request"
-            v1_out_transaction_rsp:
-                description:
-                - "Outgoing Transaction Response"
-            v1_out_quick_mode_rsp:
-                description:
-                - "Outgoing Quick Mode Response"
-            v1_out_auth_only_rsp:
-                description:
-                - "Outgoing Auth Only Response"
-            v1_in_quick_mode_rsp:
-                description:
-                - "Incoming Quick Mode Response"
-            v1_in_new_group_mode_req:
-                description:
-                - "Incoming New Group Mode Request"
-            v1_out_id_prot_rsp:
-                description:
-                - "Outgoing ID Protection Response"
-            v1_in_transaction_rsp:
-                description:
-                - "Incoming Transaction Response"
-            v1_in_aggressive_rsp:
-                description:
-                - "Incoming Aggressive Response"
-            v1_in_transaction_req:
-                description:
-                - "Incoming Transaction Request"
-            v1_in_quick_mode_req:
-                description:
-                - "Incoming Quick Mode Request"
-            name:
-                description:
-                - "IKE-gateway name"
-            v2_in_invalid_spi:
-                description:
-                - "Incoming Invalid SPI"
-            v1_out_auth_only_req:
-                description:
-                - "Outgoing Auth Only Request"
-            v1_out_transaction_req:
-                description:
-                - "Outgoing Transaction Request"
-            v1_out_new_group_mode_req:
-                description:
-                - "Outgoing New Group Mode Request"
-            v2_child_sa_invalid_spi:
-                description:
-                - "Invalid SPI for Child SAs"
-            v1_out_info_v1_rsp:
-                description:
-                - "Outgoing Info Response"
-            v2_in_init_rsp:
-                description:
-                - "Incoming Init Response"
-            v2_in_create_child_rsp:
-                description:
-                - "Incoming Create Child Response"
-            v2_in_auth_req:
-                description:
-                - "Incoming Auth Request"
-            v2_out_init_rsp:
-                description:
-                - "Outgoing Init Response"
-            v1_in_new_group_mode_rsp:
-                description:
-                - "Incoming New Group Mode Response"
-            v2_out_create_child_rsp:
-                description:
-                - "Outgoing Create Child Response"
-            v1_out_aggressive_rsp:
-                description:
-                - "Outgoing Aggressive Response"
-            v2_in_info_req:
-                description:
-                - "Incoming Info Request"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    nat_traversal:
-        description:
-        - "Field nat_traversal"
-        required: False
-    vrid:
-        description:
-        - "Field vrid"
-        required: False
-        suboptions:
-            vrid_num:
-                description:
-                - "Specify ha VRRP-A vrid"
-    preshare_key_value:
-        description:
-        - "pre-shared key"
-        required: False
-    key_passphrase:
-        description:
-        - "Private Key Pass Phrase"
+        type: str
         required: False
     mode:
         description:
         - "'main'= Negotiate Main mode (Default); 'aggressive'= Negotiate Aggressive mode;"
+        type: str
         required: False
-    local_address:
+    auth_method:
         description:
-        - "Field local_address"
+        - "'preshare-key'= Authenticate the remote gateway using a pre-shared key
+          (Default); 'rsa-signature'= Authenticate the remote gateway using an RSA
+          certificate; 'ecdsa-signature'= Authenticate the remote gateway using an ECDSA
+          certificate;"
+        type: str
         required: False
-        suboptions:
-            local_ip:
-                description:
-                - "Ipv4 address"
-            local_ipv6:
-                description:
-                - "Ipv6 address"
-    key:
+    preshare_key_value:
         description:
-        - "Private Key"
+        - "pre-shared key"
+        type: str
         required: False
     preshare_key_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED pre-shared key string)"
+        type: str
         required: False
-    remote_address:
+    key:
         description:
-        - "Field remote_address"
+        - "Private Key"
+        type: str
+        required: False
+    key_passphrase:
+        description:
+        - "Private Key Pass Phrase"
+        type: str
+        required: False
+    key_passphrase_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED key string)"
+        type: str
+        required: False
+    vrid:
+        description:
+        - "Field vrid"
+        type: dict
         required: False
         suboptions:
-            remote_ip:
+            vrid_num:
                 description:
-                - "Ipv4 address"
-            dns:
+                - "Specify ha VRRP-A vrid"
+                type: int
+    local_cert:
+        description:
+        - "Field local_cert"
+        type: dict
+        required: False
+        suboptions:
+            local_cert_name:
                 description:
-                - "Remote IP based on Domain name"
-            remote_ipv6:
-                description:
-                - "Ipv6 address"
+                - "Certificate File Name"
+                type: str
     remote_ca_cert:
         description:
         - "Field remote_ca_cert"
+        type: dict
         required: False
         suboptions:
             remote_cert_name:
                 description:
                 - "Remote CA certificate DN (C=, ST=, L=, O=, CN=) without emailAddress"
-    name:
+                type: str
+    local_id:
         description:
-        - "IKE-gateway name"
-        required: True
+        - "Local Gateway Identity"
+        type: str
+        required: False
+    remote_id:
+        description:
+        - "Remote Gateway Identity"
+        type: str
+        required: False
+    enc_cfg:
+        description:
+        - "Field enc_cfg"
+        type: list
+        required: False
+        suboptions:
+            encryption:
+                description:
+                - "'des'= Data Encryption Standard algorithm; '3des'= Triple Data Encryption
+          Standard algorithm; 'aes-128'= Advanced Encryption Standard algorithm CBC
+          Mode(key size= 128 bits); 'aes-192'= Advanced Encryption Standard algorithm CBC
+          Mode(key size= 192 bits); 'aes-256'= Advanced Encryption Standard algorithm CBC
+          Mode(key size= 256 bits); 'aes-gcm-128'= Advanced Encryption Standard algorithm
+          Galois/Counter Mode(key size= 128 bits, ICV size= 16 bytes), only for IKEv2;
+          'aes-gcm-192'= Advanced Encryption Standard algorithm Galois/Counter Mode(key
+          size= 192 bits, ICV size= 16 bytes), only for IKEv2; 'aes-gcm-256'= Advanced
+          Encryption Standard algorithm Galois/Counter Mode(key size= 256 bits, ICV size=
+          16 bytes), only for IKEv2; 'null'= No encryption algorithm, only for IKEv2;"
+                type: str
+            hash:
+                description:
+                - "'md5'= MD5 Dessage-Digest Algorithm; 'sha1'= Secure Hash Algorithm 1; 'sha256'=
+          Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384; 'sha512'=
+          Secure Hash Algorithm 512;"
+                type: str
+            prf:
+                description:
+                - "'md5'= MD5 Dessage-Digest Algorithm; 'sha1'= Secure Hash Algorithm 1; 'sha256'=
+          Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384; 'sha512'=
+          Secure Hash Algorithm 512;"
+                type: str
+            priority:
+                description:
+                - "Prioritizes (1-10) security protocol, least value has highest priority"
+                type: int
+            gcm_priority:
+                description:
+                - "Prioritizes (1-10) security protocol, least value has highest priority"
+                type: int
     dh_group:
         description:
         - "'1'= Diffie-Hellman group 1 - 768-bit(Default); '2'= Diffie-Hellman group 2 -
@@ -376,20 +192,84 @@ options:
           group 16 - 4096-bit; '18'= Diffie-Hellman group 18 - 8192-bit; '19'= Diffie-
           Hellman group 19 - 256-bit Elliptic Curve; '20'= Diffie-Hellman group 20 -
           384-bit Elliptic Curve;"
+        type: str
+        required: False
+    local_address:
+        description:
+        - "Field local_address"
+        type: dict
+        required: False
+        suboptions:
+            local_ip:
+                description:
+                - "Ipv4 address"
+                type: str
+            local_ipv6:
+                description:
+                - "Ipv6 address"
+                type: str
+    remote_address:
+        description:
+        - "Field remote_address"
+        type: dict
+        required: False
+        suboptions:
+            remote_ip:
+                description:
+                - "Ipv4 address"
+                type: str
+            dns:
+                description:
+                - "Remote IP based on Domain name"
+                type: str
+            remote_ipv6:
+                description:
+                - "Ipv6 address"
+                type: str
+    lifetime:
+        description:
+        - "IKE SA age in seconds"
+        type: int
+        required: False
+    nat_traversal:
+        description:
+        - "Field nat_traversal"
+        type: bool
+        required: False
+    dpd:
+        description:
+        - "Field dpd"
+        type: dict
+        required: False
+        suboptions:
+            interval:
+                description:
+                - "Interval time in seconds"
+                type: int
+            retry:
+                description:
+                - "Retry times"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'v2-init-rekey'= Initiate Rekey; 'v2-rsp-rekey'= Respond Rekey; 'v2
-          -child-sa-rekey'= Child SA Rekey; 'v2-in-invalid'= Incoming Invalid; 'v2-in-
+                - "'all'= all; 'v2-init-rekey'= Initiate Rekey; 'v2-rsp-rekey'= Respond Rekey;
+          'v2-child-sa-rekey'= Child SA Rekey; 'v2-in-invalid'= Incoming Invalid; 'v2-in-
           invalid-spi'= Incoming Invalid SPI; 'v2-in-init-req'= Incoming Init Request;
           'v2-in-init-rsp'= Incoming Init Response; 'v2-out-init-req'= Outgoing Init
           Request; 'v2-out-init-rsp'= Outgoing Init Response; 'v2-in-auth-req'= Incoming
@@ -397,54 +277,297 @@ options:
           Outgoing Auth Request; 'v2-out-auth-rsp'= Outgoing Auth Response; 'v2-in-
           create-child-req'= Incoming Create Child Request; 'v2-in-create-child-rsp'=
           Incoming Create Child Response; 'v2-out-create-child-req'= Outgoing Create
-          Child Request; 'v2-out-create-child-rsp'= Outgoing Create Child Response; 'v2
-          -in-info-req'= Incoming Info Request; 'v2-in-info-rsp'= Incoming Info Response;
-          'v2-out-info-req'= Outgoing Info Request; 'v2-out-info-rsp'= Outgoing Info
-          Response; 'v1-in-id-prot-req'= Incoming ID Protection Request; 'v1-in-id-prot-
-          rsp'= Incoming ID Protection Response; 'v1-out-id-prot-req'= Outgoing ID
-          Protection Request; 'v1-out-id-prot-rsp'= Outgoing ID Protection Response; 'v1
-          -in-auth-only-req'= Incoming Auth Only Request; 'v1-in-auth-only-rsp'= Incoming
-          Auth Only Response; 'v1-out-auth-only-req'= Outgoing Auth Only Request; 'v1
-          -out-auth-only-rsp'= Outgoing Auth Only Response; 'v1-in-aggressive-req'=
-          Incoming Aggressive Request; 'v1-in-aggressive-rsp'= Incoming Aggressive
-          Response; 'v1-out-aggressive-req'= Outgoing Aggressive Request; 'v1-out-
-          aggressive-rsp'= Outgoing Aggressive Response; 'v1-in-info-v1-req'= Incoming
-          Info Request; 'v1-in-info-v1-rsp'= Incoming Info Response; 'v1-out-
+          Child Request; 'v2-out-create-child-rsp'= Outgoing Create Child Response;
+          'v2-in-info-req'= Incoming Info Request; 'v2-in-info-rsp'= Incoming Info
+          Response; 'v2-out-info-req'= Outgoing Info Request; 'v2-out-info-rsp'= Outgoing
+          Info Response; 'v1-in-id-prot-req'= Incoming ID Protection Request; 'v1-in-id-
+          prot-rsp'= Incoming ID Protection Response; 'v1-out-id-prot-req'= Outgoing ID
+          Protection Request; 'v1-out-id-prot-rsp'= Outgoing ID Protection Response;
+          'v1-in-auth-only-req'= Incoming Auth Only Request; 'v1-in-auth-only-rsp'=
+          Incoming Auth Only Response; 'v1-out-auth-only-req'= Outgoing Auth Only
+          Request; 'v1-out-auth-only-rsp'= Outgoing Auth Only Response; 'v1-in-
+          aggressive-req'= Incoming Aggressive Request; 'v1-in-aggressive-rsp'= Incoming
+          Aggressive Response; 'v1-out-aggressive-req'= Outgoing Aggressive Request;
+          'v1-out-aggressive-rsp'= Outgoing Aggressive Response; 'v1-in-info-v1-req'=
+          Incoming Info Request; 'v1-in-info-v1-rsp'= Incoming Info Response; 'v1-out-
           info-v1-req'= Outgoing Info Request; 'v1-out-info-v1-rsp'= Outgoing Info
           Response; 'v1-in-transaction-req'= Incoming Transaction Request; 'v1-in-
           transaction-rsp'= Incoming Transaction Response; 'v1-out-transaction-req'=
           Outgoing Transaction Request; 'v1-out-transaction-rsp'= Outgoing Transaction
           Response; 'v1-in-quick-mode-req'= Incoming Quick Mode Request; 'v1-in-quick-
           mode-rsp'= Incoming Quick Mode Response; 'v1-out-quick-mode-req'= Outgoing
-          Quick Mode Request; 'v1-out-quick-mode-rsp'= Outgoing Quick Mode Response; 'v1
-          -in-new-group-mode-req'= Incoming New Group Mode Request; 'v1-in-new-group-
+          Quick Mode Request; 'v1-out-quick-mode-rsp'= Outgoing Quick Mode Response;
+          'v1-in-new-group-mode-req'= Incoming New Group Mode Request; 'v1-in-new-group-
           mode-rsp'= Incoming New Group Mode Response; 'v1-out-new-group-mode-req'=
           Outgoing New Group Mode Request; 'v1-out-new-group-mode-rsp'= Outgoing New
-          Group Mode Response; 'v1-child-sa-invalid-spi'= Invalid SPI for Child SAs; 'v2
-          -child-sa-invalid-spi'= Invalid SPI for Child SAs; 'ike-current-version'= IKE
-          version;"
-    dpd:
+          Group Mode Response; 'v1-child-sa-invalid-spi'= Invalid SPI for Child SAs;
+          'v2-child-sa-invalid-spi'= Invalid SPI for Child SAs; 'ike-current-version'=
+          IKE version;"
+                type: str
+    oper:
         description:
-        - "Field dpd"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            interval:
+            Initiator_SPI:
                 description:
-                - "Interval time in seconds"
-            retry:
+                - "Field Initiator_SPI"
+                type: str
+            Responder_SPI:
                 description:
-                - "Retry times"
-    remote_id:
+                - "Field Responder_SPI"
+                type: str
+            Local_IP:
+                description:
+                - "Field Local_IP"
+                type: str
+            Remote_IP:
+                description:
+                - "Field Remote_IP"
+                type: str
+            Encryption:
+                description:
+                - "Field Encryption"
+                type: str
+            Hash:
+                description:
+                - "Field Hash"
+                type: str
+            Lifetime:
+                description:
+                - "Field Lifetime"
+                type: int
+            Status:
+                description:
+                - "Field Status"
+                type: str
+            NAT_Traversal:
+                description:
+                - "Field NAT_Traversal"
+                type: int
+            name:
+                description:
+                - "IKE-gateway name"
+                type: str
+    stats:
         description:
-        - "Remote Gateway Identity"
+        - "Field stats"
+        type: dict
         required: False
-    auth_method:
-        description:
-        - "'preshare-key'= Authenticate the remote gateway using a pre-shared key
-          (Default); 'rsa-signature'= Authenticate the remote gateway using an RSA
-          certificate; 'ecdsa-signature'= Authenticate the remote gateway using an ECDSA
-          certificate;"
-        required: False
+        suboptions:
+            v2_init_rekey:
+                description:
+                - "Initiate Rekey"
+                type: str
+            v2_rsp_rekey:
+                description:
+                - "Respond Rekey"
+                type: str
+            v2_child_sa_rekey:
+                description:
+                - "Child SA Rekey"
+                type: str
+            v2_in_invalid:
+                description:
+                - "Incoming Invalid"
+                type: str
+            v2_in_invalid_spi:
+                description:
+                - "Incoming Invalid SPI"
+                type: str
+            v2_in_init_req:
+                description:
+                - "Incoming Init Request"
+                type: str
+            v2_in_init_rsp:
+                description:
+                - "Incoming Init Response"
+                type: str
+            v2_out_init_req:
+                description:
+                - "Outgoing Init Request"
+                type: str
+            v2_out_init_rsp:
+                description:
+                - "Outgoing Init Response"
+                type: str
+            v2_in_auth_req:
+                description:
+                - "Incoming Auth Request"
+                type: str
+            v2_in_auth_rsp:
+                description:
+                - "Incoming Auth Response"
+                type: str
+            v2_out_auth_req:
+                description:
+                - "Outgoing Auth Request"
+                type: str
+            v2_out_auth_rsp:
+                description:
+                - "Outgoing Auth Response"
+                type: str
+            v2_in_create_child_req:
+                description:
+                - "Incoming Create Child Request"
+                type: str
+            v2_in_create_child_rsp:
+                description:
+                - "Incoming Create Child Response"
+                type: str
+            v2_out_create_child_req:
+                description:
+                - "Outgoing Create Child Request"
+                type: str
+            v2_out_create_child_rsp:
+                description:
+                - "Outgoing Create Child Response"
+                type: str
+            v2_in_info_req:
+                description:
+                - "Incoming Info Request"
+                type: str
+            v2_in_info_rsp:
+                description:
+                - "Incoming Info Response"
+                type: str
+            v2_out_info_req:
+                description:
+                - "Outgoing Info Request"
+                type: str
+            v2_out_info_rsp:
+                description:
+                - "Outgoing Info Response"
+                type: str
+            v1_in_id_prot_req:
+                description:
+                - "Incoming ID Protection Request"
+                type: str
+            v1_in_id_prot_rsp:
+                description:
+                - "Incoming ID Protection Response"
+                type: str
+            v1_out_id_prot_req:
+                description:
+                - "Outgoing ID Protection Request"
+                type: str
+            v1_out_id_prot_rsp:
+                description:
+                - "Outgoing ID Protection Response"
+                type: str
+            v1_in_auth_only_req:
+                description:
+                - "Incoming Auth Only Request"
+                type: str
+            v1_in_auth_only_rsp:
+                description:
+                - "Incoming Auth Only Response"
+                type: str
+            v1_out_auth_only_req:
+                description:
+                - "Outgoing Auth Only Request"
+                type: str
+            v1_out_auth_only_rsp:
+                description:
+                - "Outgoing Auth Only Response"
+                type: str
+            v1_in_aggressive_req:
+                description:
+                - "Incoming Aggressive Request"
+                type: str
+            v1_in_aggressive_rsp:
+                description:
+                - "Incoming Aggressive Response"
+                type: str
+            v1_out_aggressive_req:
+                description:
+                - "Outgoing Aggressive Request"
+                type: str
+            v1_out_aggressive_rsp:
+                description:
+                - "Outgoing Aggressive Response"
+                type: str
+            v1_in_info_v1_req:
+                description:
+                - "Incoming Info Request"
+                type: str
+            v1_in_info_v1_rsp:
+                description:
+                - "Incoming Info Response"
+                type: str
+            v1_out_info_v1_req:
+                description:
+                - "Outgoing Info Request"
+                type: str
+            v1_out_info_v1_rsp:
+                description:
+                - "Outgoing Info Response"
+                type: str
+            v1_in_transaction_req:
+                description:
+                - "Incoming Transaction Request"
+                type: str
+            v1_in_transaction_rsp:
+                description:
+                - "Incoming Transaction Response"
+                type: str
+            v1_out_transaction_req:
+                description:
+                - "Outgoing Transaction Request"
+                type: str
+            v1_out_transaction_rsp:
+                description:
+                - "Outgoing Transaction Response"
+                type: str
+            v1_in_quick_mode_req:
+                description:
+                - "Incoming Quick Mode Request"
+                type: str
+            v1_in_quick_mode_rsp:
+                description:
+                - "Incoming Quick Mode Response"
+                type: str
+            v1_out_quick_mode_req:
+                description:
+                - "Outgoing Quick Mode Request"
+                type: str
+            v1_out_quick_mode_rsp:
+                description:
+                - "Outgoing Quick Mode Response"
+                type: str
+            v1_in_new_group_mode_req:
+                description:
+                - "Incoming New Group Mode Request"
+                type: str
+            v1_in_new_group_mode_rsp:
+                description:
+                - "Incoming New Group Mode Response"
+                type: str
+            v1_out_new_group_mode_req:
+                description:
+                - "Outgoing New Group Mode Request"
+                type: str
+            v1_out_new_group_mode_rsp:
+                description:
+                - "Outgoing New Group Mode Response"
+                type: str
+            v1_child_sa_invalid_spi:
+                description:
+                - "Invalid SPI for Child SAs"
+                type: str
+            v2_child_sa_invalid_spi:
+                description:
+                - "Invalid SPI for Child SAs"
+                type: str
+            ike_current_version:
+                description:
+                - "IKE version"
+                type: str
+            name:
+                description:
+                - "IKE-gateway name"
+                type: str
 
 '''
 
@@ -522,242 +645,36 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'Status': {
-                'type': 'str',
-            },
-            'Remote_IP': {
-                'type': 'str',
-            },
-            'Hash': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'NAT_Traversal': {
-                'type': 'int',
-            },
-            'Local_IP': {
-                'type': 'str',
-            },
-            'Responder_SPI': {
-                'type': 'str',
-            },
-            'Encryption': {
-                'type': 'str',
-            },
-            'Lifetime': {
-                'type': 'int',
-            },
-            'Initiator_SPI': {
-                'type': 'str',
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
         },
         'ike_version': {
             'type': 'str',
             'choices': ['v1', 'v2']
         },
+        'mode': {
+            'type': 'str',
+            'choices': ['main', 'aggressive']
+        },
+        'auth_method': {
+            'type': 'str',
+            'choices': ['preshare-key', 'rsa-signature', 'ecdsa-signature']
+        },
+        'preshare_key_value': {
+            'type': 'str',
+        },
+        'preshare_key_encrypted': {
+            'type': 'str',
+        },
+        'key': {
+            'type': 'str',
+        },
+        'key_passphrase': {
+            'type': 'str',
+        },
         'key_passphrase_encrypted': {
             'type': 'str',
-        },
-        'local_cert': {
-            'type': 'dict',
-            'local_cert_name': {
-                'type': 'str',
-            }
-        },
-        'lifetime': {
-            'type': 'int',
-        },
-        'local_id': {
-            'type': 'str',
-        },
-        'enc_cfg': {
-            'type': 'list',
-            'priority': {
-                'type': 'int',
-            },
-            'encryption': {
-                'type': 'str',
-                'choices':
-                ['des', '3des', 'aes-128', 'aes-192', 'aes-256', 'null']
-            },
-            'hash': {
-                'type': 'str',
-                'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512']
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'v1_in_id_prot_rsp': {
-                'type': 'str',
-            },
-            'v1_in_auth_only_rsp': {
-                'type': 'str',
-            },
-            'v1_out_quick_mode_req': {
-                'type': 'str',
-            },
-            'v1_out_aggressive_req': {
-                'type': 'str',
-            },
-            'v2_child_sa_rekey': {
-                'type': 'str',
-            },
-            'ike_current_version': {
-                'type': 'str',
-            },
-            'v2_out_auth_req': {
-                'type': 'str',
-            },
-            'v2_rsp_rekey': {
-                'type': 'str',
-            },
-            'v2_out_info_req': {
-                'type': 'str',
-            },
-            'v2_out_init_req': {
-                'type': 'str',
-            },
-            'v1_in_info_v1_rsp': {
-                'type': 'str',
-            },
-            'v1_out_id_prot_req': {
-                'type': 'str',
-            },
-            'v2_in_invalid': {
-                'type': 'str',
-            },
-            'v1_in_aggressive_req': {
-                'type': 'str',
-            },
-            'v1_child_sa_invalid_spi': {
-                'type': 'str',
-            },
-            'v2_in_info_rsp': {
-                'type': 'str',
-            },
-            'v1_out_new_group_mode_rsp': {
-                'type': 'str',
-            },
-            'v2_out_auth_rsp': {
-                'type': 'str',
-            },
-            'v1_in_auth_only_req': {
-                'type': 'str',
-            },
-            'v1_in_info_v1_req': {
-                'type': 'str',
-            },
-            'v2_in_create_child_req': {
-                'type': 'str',
-            },
-            'v2_out_info_rsp': {
-                'type': 'str',
-            },
-            'v2_out_create_child_req': {
-                'type': 'str',
-            },
-            'v2_in_auth_rsp': {
-                'type': 'str',
-            },
-            'v2_in_init_req': {
-                'type': 'str',
-            },
-            'v1_out_info_v1_req': {
-                'type': 'str',
-            },
-            'v2_init_rekey': {
-                'type': 'str',
-            },
-            'v1_in_id_prot_req': {
-                'type': 'str',
-            },
-            'v1_out_transaction_rsp': {
-                'type': 'str',
-            },
-            'v1_out_quick_mode_rsp': {
-                'type': 'str',
-            },
-            'v1_out_auth_only_rsp': {
-                'type': 'str',
-            },
-            'v1_in_quick_mode_rsp': {
-                'type': 'str',
-            },
-            'v1_in_new_group_mode_req': {
-                'type': 'str',
-            },
-            'v1_out_id_prot_rsp': {
-                'type': 'str',
-            },
-            'v1_in_transaction_rsp': {
-                'type': 'str',
-            },
-            'v1_in_aggressive_rsp': {
-                'type': 'str',
-            },
-            'v1_in_transaction_req': {
-                'type': 'str',
-            },
-            'v1_in_quick_mode_req': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'v2_in_invalid_spi': {
-                'type': 'str',
-            },
-            'v1_out_auth_only_req': {
-                'type': 'str',
-            },
-            'v1_out_transaction_req': {
-                'type': 'str',
-            },
-            'v1_out_new_group_mode_req': {
-                'type': 'str',
-            },
-            'v2_child_sa_invalid_spi': {
-                'type': 'str',
-            },
-            'v1_out_info_v1_rsp': {
-                'type': 'str',
-            },
-            'v2_in_init_rsp': {
-                'type': 'str',
-            },
-            'v2_in_create_child_rsp': {
-                'type': 'str',
-            },
-            'v2_in_auth_req': {
-                'type': 'str',
-            },
-            'v2_out_init_rsp': {
-                'type': 'str',
-            },
-            'v1_in_new_group_mode_rsp': {
-                'type': 'str',
-            },
-            'v2_out_create_child_rsp': {
-                'type': 'str',
-            },
-            'v1_out_aggressive_rsp': {
-                'type': 'str',
-            },
-            'v2_in_info_req': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'nat_traversal': {
-            'type': 'bool',
         },
         'vrid': {
             'type': 'dict',
@@ -765,15 +682,52 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'preshare_key_value': {
+        'local_cert': {
+            'type': 'dict',
+            'local_cert_name': {
+                'type': 'str',
+            }
+        },
+        'remote_ca_cert': {
+            'type': 'dict',
+            'remote_cert_name': {
+                'type': 'str',
+            }
+        },
+        'local_id': {
             'type': 'str',
         },
-        'key_passphrase': {
+        'remote_id': {
             'type': 'str',
         },
-        'mode': {
+        'enc_cfg': {
+            'type': 'list',
+            'encryption': {
+                'type':
+                'str',
+                'choices': [
+                    'des', '3des', 'aes-128', 'aes-192', 'aes-256',
+                    'aes-gcm-128', 'aes-gcm-192', 'aes-gcm-256', 'null'
+                ]
+            },
+            'hash': {
+                'type': 'str',
+                'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512']
+            },
+            'prf': {
+                'type': 'str',
+                'choices': ['md5', 'sha1', 'sha256', 'sha384', 'sha512']
+            },
+            'priority': {
+                'type': 'int',
+            },
+            'gcm_priority': {
+                'type': 'int',
+            }
+        },
+        'dh_group': {
             'type': 'str',
-            'choices': ['main', 'aggressive']
+            'choices': ['1', '2', '5', '14', '15', '16', '18', '19', '20']
         },
         'local_address': {
             'type': 'dict',
@@ -783,12 +737,6 @@ def get_argspec():
             'local_ipv6': {
                 'type': 'str',
             }
-        },
-        'key': {
-            'type': 'str',
-        },
-        'preshare_key_encrypted': {
-            'type': 'str',
         },
         'remote_address': {
             'type': 'dict',
@@ -802,19 +750,23 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'remote_ca_cert': {
+        'lifetime': {
+            'type': 'int',
+        },
+        'nat_traversal': {
+            'type': 'bool',
+        },
+        'dpd': {
             'type': 'dict',
-            'remote_cert_name': {
-                'type': 'str',
+            'interval': {
+                'type': 'int',
+            },
+            'retry': {
+                'type': 'int',
             }
         },
-        'name': {
+        'uuid': {
             'type': 'str',
-            'required': True,
-        },
-        'dh_group': {
-            'type': 'str',
-            'choices': ['1', '2', '5', '14', '15', '16', '18', '19', '20']
         },
         'user_tag': {
             'type': 'str',
@@ -852,21 +804,202 @@ def get_argspec():
                 ]
             }
         },
-        'dpd': {
+        'oper': {
             'type': 'dict',
-            'interval': {
+            'Initiator_SPI': {
+                'type': 'str',
+            },
+            'Responder_SPI': {
+                'type': 'str',
+            },
+            'Local_IP': {
+                'type': 'str',
+            },
+            'Remote_IP': {
+                'type': 'str',
+            },
+            'Encryption': {
+                'type': 'str',
+            },
+            'Hash': {
+                'type': 'str',
+            },
+            'Lifetime': {
                 'type': 'int',
             },
-            'retry': {
+            'Status': {
+                'type': 'str',
+            },
+            'NAT_Traversal': {
                 'type': 'int',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
         },
-        'remote_id': {
-            'type': 'str',
-        },
-        'auth_method': {
-            'type': 'str',
-            'choices': ['preshare-key', 'rsa-signature', 'ecdsa-signature']
+        'stats': {
+            'type': 'dict',
+            'v2_init_rekey': {
+                'type': 'str',
+            },
+            'v2_rsp_rekey': {
+                'type': 'str',
+            },
+            'v2_child_sa_rekey': {
+                'type': 'str',
+            },
+            'v2_in_invalid': {
+                'type': 'str',
+            },
+            'v2_in_invalid_spi': {
+                'type': 'str',
+            },
+            'v2_in_init_req': {
+                'type': 'str',
+            },
+            'v2_in_init_rsp': {
+                'type': 'str',
+            },
+            'v2_out_init_req': {
+                'type': 'str',
+            },
+            'v2_out_init_rsp': {
+                'type': 'str',
+            },
+            'v2_in_auth_req': {
+                'type': 'str',
+            },
+            'v2_in_auth_rsp': {
+                'type': 'str',
+            },
+            'v2_out_auth_req': {
+                'type': 'str',
+            },
+            'v2_out_auth_rsp': {
+                'type': 'str',
+            },
+            'v2_in_create_child_req': {
+                'type': 'str',
+            },
+            'v2_in_create_child_rsp': {
+                'type': 'str',
+            },
+            'v2_out_create_child_req': {
+                'type': 'str',
+            },
+            'v2_out_create_child_rsp': {
+                'type': 'str',
+            },
+            'v2_in_info_req': {
+                'type': 'str',
+            },
+            'v2_in_info_rsp': {
+                'type': 'str',
+            },
+            'v2_out_info_req': {
+                'type': 'str',
+            },
+            'v2_out_info_rsp': {
+                'type': 'str',
+            },
+            'v1_in_id_prot_req': {
+                'type': 'str',
+            },
+            'v1_in_id_prot_rsp': {
+                'type': 'str',
+            },
+            'v1_out_id_prot_req': {
+                'type': 'str',
+            },
+            'v1_out_id_prot_rsp': {
+                'type': 'str',
+            },
+            'v1_in_auth_only_req': {
+                'type': 'str',
+            },
+            'v1_in_auth_only_rsp': {
+                'type': 'str',
+            },
+            'v1_out_auth_only_req': {
+                'type': 'str',
+            },
+            'v1_out_auth_only_rsp': {
+                'type': 'str',
+            },
+            'v1_in_aggressive_req': {
+                'type': 'str',
+            },
+            'v1_in_aggressive_rsp': {
+                'type': 'str',
+            },
+            'v1_out_aggressive_req': {
+                'type': 'str',
+            },
+            'v1_out_aggressive_rsp': {
+                'type': 'str',
+            },
+            'v1_in_info_v1_req': {
+                'type': 'str',
+            },
+            'v1_in_info_v1_rsp': {
+                'type': 'str',
+            },
+            'v1_out_info_v1_req': {
+                'type': 'str',
+            },
+            'v1_out_info_v1_rsp': {
+                'type': 'str',
+            },
+            'v1_in_transaction_req': {
+                'type': 'str',
+            },
+            'v1_in_transaction_rsp': {
+                'type': 'str',
+            },
+            'v1_out_transaction_req': {
+                'type': 'str',
+            },
+            'v1_out_transaction_rsp': {
+                'type': 'str',
+            },
+            'v1_in_quick_mode_req': {
+                'type': 'str',
+            },
+            'v1_in_quick_mode_rsp': {
+                'type': 'str',
+            },
+            'v1_out_quick_mode_req': {
+                'type': 'str',
+            },
+            'v1_out_quick_mode_rsp': {
+                'type': 'str',
+            },
+            'v1_in_new_group_mode_req': {
+                'type': 'str',
+            },
+            'v1_in_new_group_mode_rsp': {
+                'type': 'str',
+            },
+            'v1_out_new_group_mode_req': {
+                'type': 'str',
+            },
+            'v1_out_new_group_mode_rsp': {
+                'type': 'str',
+            },
+            'v1_child_sa_invalid_spi': {
+                'type': 'str',
+            },
+            'v2_child_sa_invalid_spi': {
+                'type': 'str',
+            },
+            'ike_current_version': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_tunnel
 description:
     - Tunnel interface
-short_description: Configures A10 interface.tunnel
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,168 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            config_speed:
-                description:
-                - "Field config_speed"
-            ipv6_list:
-                description:
-                - "Field ipv6_list"
-            ipv4_netmask:
-                description:
-                - "IPv4 subnet mask"
-            ipv6_link_local:
-                description:
-                - "Field ipv6_link_local"
-            link_type:
-                description:
-                - "Field link_type"
-            ipv4_addr_count:
-                description:
-                - "Field ipv4_addr_count"
-            ipv4_list:
-                description:
-                - "Field ipv4_list"
-            mac:
-                description:
-                - "Field mac"
-            ifnum:
-                description:
-                - "Tunnel interface number"
-            state:
-                description:
-                - "Field state"
-            ipv6_link_local_type:
-                description:
-                - "Field ipv6_link_local_type"
-            ipv6_link_local_scope:
-                description:
-                - "Field ipv6_link_local_scope"
-            ipv6_addr_count:
-                description:
-                - "Field ipv6_addr_count"
-            line_protocol:
-                description:
-                - "Field line_protocol"
-            ipv6_link_local_prefix:
-                description:
-                - "Field ipv6_link_local_prefix"
-            ipv4_address:
-                description:
-                - "IPv4 address"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            num_tx_err_pkts:
-                description:
-                - "sent error packets"
-            rate_pkt_rcvd:
-                description:
-                - "Packet received rate packets/sec"
-            num_rx_err_pkts:
-                description:
-                - "received error packets"
-            ifnum:
-                description:
-                - "Tunnel interface number"
-            num_total_rx_bytes:
-                description:
-                - "received bytes"
-            rate_byte_sent:
-                description:
-                - "Byte sent rate bits/sec"
-            rate_byte_rcvd:
-                description:
-                - "Byte received rate bits/sec"
-            num_total_tx_bytes:
-                description:
-                - "sent bytes"
-            num_tx_pkts:
-                description:
-                - "sent packets"
-            rate_pkt_sent:
-                description:
-                - "Packet sent rate packets/sec"
-            num_rx_pkts:
-                description:
-                - "received packets"
-    name:
-        description:
-        - "Name for the interface"
-        required: False
-    ip:
-        description:
-        - "Field ip"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            generate_membership_query:
-                description:
-                - "Enable Membership Query"
-            rip:
-                description:
-                - "Field rip"
-            max_resp_time:
-                description:
-                - "Max Response Time (Default is 100)"
-            address:
-                description:
-                - "Field address"
-            ospf:
-                description:
-                - "Field ospf"
-            generate_membership_query_val:
-                description:
-                - "1 - 255 (Default is 125)"
     ifnum:
         description:
         - "Tunnel interface number"
+        type: int
         required: True
-    user_tag:
+    name:
         description:
-        - "Customized tag"
+        - "Name for the interface"
+        type: str
         required: False
     mtu:
         description:
         - "Interface mtu (Interface MTU, default 1 (min MTU is 1280 for IPv6))"
+        type: int
+        required: False
+    action:
+        description:
+        - "'enable'= Enable; 'disable'= Disable;"
+        type: str
+        required: False
+    speed:
+        description:
+        - "Speed in Gbit/Sec (Default 10 Gbps)"
+        type: int
+        required: False
+    load_interval:
+        description:
+        - "Configure Load Interval (Seconds (5-300, Multiple of 5), default 300)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -196,42 +109,187 @@ options:
           'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'= Byte sent rate
           bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'=
           Byte received rate bits/sec;"
-    load_interval:
+                type: str
+    ip:
         description:
-        - "Configure Load Interval (Seconds (5-300, Multiple of 5), default 300)"
-        required: False
-    ipv6:
-        description:
-        - "Field ipv6"
+        - "Field ip"
+        type: dict
         required: False
         suboptions:
-            router:
+            address:
                 description:
-                - "Field router"
-            address_cfg:
+                - "Field address"
+                type: dict
+            generate_membership_query:
                 description:
-                - "Field address_cfg"
-            ospf:
+                - "Enable Membership Query"
+                type: bool
+            generate_membership_query_val:
                 description:
-                - "Field ospf"
-            ipv6_enable:
+                - "1 - 255 (Default is 125)"
+                type: int
+            max_resp_time:
                 description:
-                - "Enable IPv6 processing"
+                - "Max Response Time (Default is 100)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
-    action:
+                type: str
+            rip:
+                description:
+                - "Field rip"
+                type: dict
+            ospf:
+                description:
+                - "Field ospf"
+                type: dict
+    ipv6:
         description:
-        - "'enable'= Enable; 'disable'= Disable;"
+        - "Field ipv6"
+        type: dict
         required: False
-    speed:
+        suboptions:
+            address_cfg:
+                description:
+                - "Field address_cfg"
+                type: list
+            ipv6_enable:
+                description:
+                - "Enable IPv6 processing"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            router:
+                description:
+                - "Field router"
+                type: dict
+            ospf:
+                description:
+                - "Field ospf"
+                type: dict
+    oper:
         description:
-        - "Speed in Gbit/Sec (Default 10 Gbps)"
+        - "Field oper"
+        type: dict
         required: False
-    uuid:
+        suboptions:
+            state:
+                description:
+                - "Field state"
+                type: str
+            line_protocol:
+                description:
+                - "Field line_protocol"
+                type: str
+            link_type:
+                description:
+                - "Field link_type"
+                type: str
+            mac:
+                description:
+                - "Field mac"
+                type: str
+            config_speed:
+                description:
+                - "Field config_speed"
+                type: int
+            ipv4_address:
+                description:
+                - "IPv4 address"
+                type: str
+            ipv4_netmask:
+                description:
+                - "IPv4 subnet mask"
+                type: str
+            ipv6_link_local:
+                description:
+                - "Field ipv6_link_local"
+                type: str
+            ipv6_link_local_prefix:
+                description:
+                - "Field ipv6_link_local_prefix"
+                type: str
+            ipv6_link_local_type:
+                description:
+                - "Field ipv6_link_local_type"
+                type: str
+            ipv6_link_local_scope:
+                description:
+                - "Field ipv6_link_local_scope"
+                type: str
+            ipv4_addr_count:
+                description:
+                - "Field ipv4_addr_count"
+                type: int
+            ipv4_list:
+                description:
+                - "Field ipv4_list"
+                type: list
+            ipv6_addr_count:
+                description:
+                - "Field ipv6_addr_count"
+                type: int
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
+                type: list
+            ifnum:
+                description:
+                - "Tunnel interface number"
+                type: int
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            num_rx_pkts:
+                description:
+                - "received packets"
+                type: str
+            num_total_rx_bytes:
+                description:
+                - "received bytes"
+                type: str
+            num_tx_pkts:
+                description:
+                - "sent packets"
+                type: str
+            num_total_tx_bytes:
+                description:
+                - "sent bytes"
+                type: str
+            num_rx_err_pkts:
+                description:
+                - "received error packets"
+                type: str
+            num_tx_err_pkts:
+                description:
+                - "sent error packets"
+                type: str
+            rate_pkt_sent:
+                description:
+                - "Packet sent rate packets/sec"
+                type: str
+            rate_byte_sent:
+                description:
+                - "Byte sent rate bits/sec"
+                type: str
+            rate_pkt_rcvd:
+                description:
+                - "Packet received rate packets/sec"
+                type: str
+            rate_byte_rcvd:
+                description:
+                - "Byte received rate bits/sec"
+                type: str
+            ifnum:
+                description:
+                - "Tunnel interface number"
+                type: int
 
 '''
 
@@ -296,187 +354,47 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'config_speed': {
-                'type': 'int',
-            },
-            'ipv6_list': {
-                'type': 'list',
-                'is_anycast': {
-                    'type': 'int',
-                },
-                'prefix': {
-                    'type': 'str',
-                },
-                'addr': {
-                    'type': 'str',
-                }
-            },
-            'ipv4_netmask': {
-                'type': 'str',
-            },
-            'ipv6_link_local': {
-                'type': 'str',
-            },
-            'link_type': {
-                'type': 'str',
-            },
-            'ipv4_addr_count': {
-                'type': 'int',
-            },
-            'ipv4_list': {
-                'type': 'list',
-                'mask': {
-                    'type': 'str',
-                },
-                'addr': {
-                    'type': 'str',
-                }
-            },
-            'mac': {
-                'type': 'str',
-            },
-            'ifnum': {
-                'type': 'int',
-                'required': True,
-            },
-            'state': {
-                'type': 'str',
-                'choices': ['up', 'disabled', 'down']
-            },
-            'ipv6_link_local_type': {
-                'type': 'str',
-            },
-            'ipv6_link_local_scope': {
-                'type': 'str',
-            },
-            'ipv6_addr_count': {
-                'type': 'int',
-            },
-            'line_protocol': {
-                'type': 'str',
-                'choices': ['up', 'down']
-            },
-            'ipv6_link_local_prefix': {
-                'type': 'str',
-            },
-            'ipv4_address': {
-                'type': 'str',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'num_tx_err_pkts': {
-                'type': 'str',
-            },
-            'rate_pkt_rcvd': {
-                'type': 'str',
-            },
-            'num_rx_err_pkts': {
-                'type': 'str',
-            },
-            'ifnum': {
-                'type': 'int',
-                'required': True,
-            },
-            'num_total_rx_bytes': {
-                'type': 'str',
-            },
-            'rate_byte_sent': {
-                'type': 'str',
-            },
-            'rate_byte_rcvd': {
-                'type': 'str',
-            },
-            'num_total_tx_bytes': {
-                'type': 'str',
-            },
-            'num_tx_pkts': {
-                'type': 'str',
-            },
-            'rate_pkt_sent': {
-                'type': 'str',
-            },
-            'num_rx_pkts': {
-                'type': 'str',
-            }
+        'ifnum': {
+            'type': 'int',
+            'required': True,
         },
         'name': {
             'type': 'str',
         },
+        'mtu': {
+            'type': 'int',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'speed': {
+            'type': 'int',
+        },
+        'load_interval': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'num-rx-pkts', 'num-total-rx-bytes', 'num-tx-pkts',
+                    'num-total-tx-bytes', 'num-rx-err-pkts', 'num-tx-err-pkts',
+                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd',
+                    'rate_byte_rcvd'
+                ]
+            }
+        },
         'ip': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'generate_membership_query': {
-                'type': 'bool',
-            },
-            'rip': {
-                'type': 'dict',
-                'receive_cfg': {
-                    'type': 'dict',
-                    'receive': {
-                        'type': 'bool',
-                    },
-                    'version': {
-                        'type': 'str',
-                        'choices': ['2']
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'receive_packet': {
-                    'type': 'bool',
-                },
-                'split_horizon_cfg': {
-                    'type': 'dict',
-                    'state': {
-                        'type': 'str',
-                        'choices': ['poisoned', 'disable', 'enable']
-                    }
-                },
-                'authentication': {
-                    'type': 'dict',
-                    'key_chain': {
-                        'type': 'dict',
-                        'key_chain': {
-                            'type': 'str',
-                        }
-                    },
-                    'mode': {
-                        'type': 'dict',
-                        'mode': {
-                            'type': 'str',
-                            'choices': ['md5', 'text']
-                        }
-                    },
-                    'str': {
-                        'type': 'dict',
-                        'string': {
-                            'type': 'str',
-                        }
-                    }
-                },
-                'send_cfg': {
-                    'type': 'dict',
-                    'version': {
-                        'type': 'str',
-                        'choices': ['2']
-                    },
-                    'send': {
-                        'type': 'bool',
-                    }
-                },
-                'send_packet': {
-                    'type': 'bool',
-                }
-            },
-            'max_resp_time': {
-                'type': 'int',
-            },
             'address': {
                 'type': 'dict',
                 'ip_cfg': {
@@ -489,103 +407,83 @@ def get_argspec():
                     }
                 }
             },
-            'ospf': {
+            'generate_membership_query': {
+                'type': 'bool',
+            },
+            'generate_membership_query_val': {
+                'type': 'int',
+            },
+            'max_resp_time': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'rip': {
                 'type': 'dict',
-                'ospf_ip_list': {
-                    'type': 'list',
-                    'dead_interval': {
-                        'type': 'int',
-                    },
-                    'authentication_key': {
-                        'type': 'str',
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'mtu_ignore': {
-                        'type': 'bool',
-                    },
-                    'transmit_delay': {
-                        'type': 'int',
-                    },
-                    'value': {
-                        'type': 'str',
-                        'choices': ['message-digest', 'null']
-                    },
-                    'priority': {
-                        'type': 'int',
-                    },
-                    'authentication': {
-                        'type': 'bool',
-                    },
-                    'cost': {
-                        'type': 'int',
-                    },
-                    'database_filter': {
-                        'type': 'str',
-                        'choices': ['all']
-                    },
-                    'hello_interval': {
-                        'type': 'int',
-                    },
-                    'ip_addr': {
-                        'type': 'str',
-                        'required': True,
-                    },
-                    'retransmit_interval': {
-                        'type': 'int',
-                    },
-                    'message_digest_cfg': {
-                        'type': 'list',
-                        'md5_value': {
-                            'type': 'str',
-                        },
-                        'message_digest_key': {
-                            'type': 'int',
-                        },
-                        'encrypted': {
+                'authentication': {
+                    'type': 'dict',
+                    'str': {
+                        'type': 'dict',
+                        'string': {
                             'type': 'str',
                         }
                     },
-                    'out': {
-                        'type': 'bool',
+                    'mode': {
+                        'type': 'dict',
+                        'mode': {
+                            'type': 'str',
+                            'choices': ['md5', 'text']
+                        }
+                    },
+                    'key_chain': {
+                        'type': 'dict',
+                        'key_chain': {
+                            'type': 'str',
+                        }
                     }
                 },
-                'ospf_global': {
+                'send_packet': {
+                    'type': 'bool',
+                },
+                'receive_packet': {
+                    'type': 'bool',
+                },
+                'send_cfg': {
                     'type': 'dict',
-                    'cost': {
-                        'type': 'int',
-                    },
-                    'dead_interval': {
-                        'type': 'int',
-                    },
-                    'authentication_key': {
-                        'type': 'str',
-                    },
-                    'network': {
-                        'type': 'dict',
-                        'broadcast': {
-                            'type': 'bool',
-                        },
-                        'point_to_multipoint': {
-                            'type': 'bool',
-                        },
-                        'non_broadcast': {
-                            'type': 'bool',
-                        },
-                        'point_to_point': {
-                            'type': 'bool',
-                        },
-                        'p2mp_nbma': {
-                            'type': 'bool',
-                        }
-                    },
-                    'mtu_ignore': {
+                    'send': {
                         'type': 'bool',
                     },
-                    'transmit_delay': {
-                        'type': 'int',
+                    'version': {
+                        'type': 'str',
+                        'choices': ['2']
+                    }
+                },
+                'receive_cfg': {
+                    'type': 'dict',
+                    'receive': {
+                        'type': 'bool',
                     },
+                    'version': {
+                        'type': 'str',
+                        'choices': ['2']
+                    }
+                },
+                'split_horizon_cfg': {
+                    'type': 'dict',
+                    'state': {
+                        'type': 'str',
+                        'choices': ['poisoned', 'disable', 'enable']
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ospf': {
+                'type': 'dict',
+                'ospf_global': {
+                    'type': 'dict',
                     'authentication_cfg': {
                         'type': 'dict',
                         'authentication': {
@@ -596,23 +494,19 @@ def get_argspec():
                             'choices': ['message-digest', 'null']
                         }
                     },
-                    'retransmit_interval': {
-                        'type': 'int',
+                    'authentication_key': {
+                        'type': 'str',
                     },
                     'bfd_cfg': {
                         'type': 'dict',
-                        'disable': {
+                        'bfd': {
                             'type': 'bool',
                         },
-                        'bfd': {
+                        'disable': {
                             'type': 'bool',
                         }
                     },
-                    'disable': {
-                        'type': 'str',
-                        'choices': ['all']
-                    },
-                    'hello_interval': {
+                    'cost': {
                         'type': 'int',
                     },
                     'database_filter_cfg': {
@@ -625,10 +519,14 @@ def get_argspec():
                             'type': 'bool',
                         }
                     },
-                    'priority': {
+                    'dead_interval': {
                         'type': 'int',
                     },
-                    'mtu': {
+                    'disable': {
+                        'type': 'str',
+                        'choices': ['all']
+                    },
+                    'hello_interval': {
                         'type': 'int',
                     },
                     'message_digest_cfg': {
@@ -646,58 +544,141 @@ def get_argspec():
                             }
                         }
                     },
+                    'mtu': {
+                        'type': 'int',
+                    },
+                    'mtu_ignore': {
+                        'type': 'bool',
+                    },
+                    'network': {
+                        'type': 'dict',
+                        'broadcast': {
+                            'type': 'bool',
+                        },
+                        'non_broadcast': {
+                            'type': 'bool',
+                        },
+                        'point_to_point': {
+                            'type': 'bool',
+                        },
+                        'point_to_multipoint': {
+                            'type': 'bool',
+                        },
+                        'p2mp_nbma': {
+                            'type': 'bool',
+                        }
+                    },
+                    'priority': {
+                        'type': 'int',
+                    },
+                    'retransmit_interval': {
+                        'type': 'int',
+                    },
+                    'transmit_delay': {
+                        'type': 'int',
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    }
+                },
+                'ospf_ip_list': {
+                    'type': 'list',
+                    'ip_addr': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'authentication': {
+                        'type': 'bool',
+                    },
+                    'value': {
+                        'type': 'str',
+                        'choices': ['message-digest', 'null']
+                    },
+                    'authentication_key': {
+                        'type': 'str',
+                    },
+                    'cost': {
+                        'type': 'int',
+                    },
+                    'database_filter': {
+                        'type': 'str',
+                        'choices': ['all']
+                    },
+                    'out': {
+                        'type': 'bool',
+                    },
+                    'dead_interval': {
+                        'type': 'int',
+                    },
+                    'hello_interval': {
+                        'type': 'int',
+                    },
+                    'message_digest_cfg': {
+                        'type': 'list',
+                        'message_digest_key': {
+                            'type': 'int',
+                        },
+                        'md5_value': {
+                            'type': 'str',
+                        },
+                        'encrypted': {
+                            'type': 'str',
+                        }
+                    },
+                    'mtu_ignore': {
+                        'type': 'bool',
+                    },
+                    'priority': {
+                        'type': 'int',
+                    },
+                    'retransmit_interval': {
+                        'type': 'int',
+                    },
+                    'transmit_delay': {
+                        'type': 'int',
+                    },
                     'uuid': {
                         'type': 'str',
                     }
                 }
-            },
-            'generate_membership_query_val': {
-                'type': 'int',
             }
-        },
-        'ifnum': {
-            'type': 'int',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'mtu': {
-            'type': 'int',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num-rx-pkts', 'num-total-rx-bytes', 'num-tx-pkts',
-                    'num-total-tx-bytes', 'num-rx-err-pkts', 'num-tx-err-pkts',
-                    'rate_pkt_sent', 'rate_byte_sent', 'rate_pkt_rcvd',
-                    'rate_byte_rcvd'
-                ]
-            }
-        },
-        'load_interval': {
-            'type': 'int',
         },
         'ipv6': {
             'type': 'dict',
+            'address_cfg': {
+                'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                },
+                'address_type': {
+                    'type': 'str',
+                    'choices': ['anycast', 'link-local']
+                }
+            },
+            'ipv6_enable': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
             'router': {
                 'type': 'dict',
                 'ripng': {
                     'type': 'dict',
-                    'uuid': {
-                        'type': 'str',
-                    },
                     'rip': {
                         'type': 'bool',
+                    },
+                    'uuid': {
+                        'type': 'str',
                     }
                 },
                 'ospf': {
                     'type': 'dict',
                     'area_list': {
                         'type': 'list',
+                        'area_id_num': {
+                            'type': 'int',
+                        },
                         'area_id_addr': {
                             'type': 'str',
                         },
@@ -706,9 +687,6 @@ def get_argspec():
                         },
                         'instance_id': {
                             'type': 'int',
-                        },
-                        'area_id_num': {
-                            'type': 'int',
                         }
                     },
                     'uuid': {
@@ -716,22 +694,29 @@ def get_argspec():
                     }
                 }
             },
-            'address_cfg': {
-                'type': 'list',
-                'address_type': {
-                    'type': 'str',
-                    'choices': ['anycast', 'link-local']
-                },
-                'ipv6_addr': {
-                    'type': 'str',
-                }
-            },
             'ospf': {
                 'type': 'dict',
-                'uuid': {
-                    'type': 'str',
+                'network_list': {
+                    'type': 'list',
+                    'broadcast_type': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'broadcast', 'non-broadcast', 'point-to-point',
+                            'point-to-multipoint'
+                        ]
+                    },
+                    'p2mp_nbma': {
+                        'type': 'bool',
+                    },
+                    'network_instance_id': {
+                        'type': 'int',
+                    }
                 },
                 'bfd': {
+                    'type': 'bool',
+                },
+                'disable': {
                     'type': 'bool',
                 },
                 'cost_cfg': {
@@ -743,9 +728,9 @@ def get_argspec():
                         'type': 'int',
                     }
                 },
-                'priority_cfg': {
+                'dead_interval_cfg': {
                     'type': 'list',
-                    'priority': {
+                    'dead_interval': {
                         'type': 'int',
                     },
                     'instance_id': {
@@ -770,6 +755,33 @@ def get_argspec():
                         'type': 'int',
                     }
                 },
+                'neighbor_cfg': {
+                    'type': 'list',
+                    'neighbor': {
+                        'type': 'str',
+                    },
+                    'neig_inst': {
+                        'type': 'int',
+                    },
+                    'neighbor_cost': {
+                        'type': 'int',
+                    },
+                    'neighbor_poll_interval': {
+                        'type': 'int',
+                    },
+                    'neighbor_priority': {
+                        'type': 'int',
+                    }
+                },
+                'priority_cfg': {
+                    'type': 'list',
+                    'priority': {
+                        'type': 'int',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    }
+                },
                 'retransmit_interval_cfg': {
                     'type': 'list',
                     'retransmit_interval': {
@@ -778,9 +790,6 @@ def get_argspec():
                     'instance_id': {
                         'type': 'int',
                     }
-                },
-                'disable': {
-                    'type': 'bool',
                 },
                 'transmit_delay_cfg': {
                     'type': 'list',
@@ -791,67 +800,116 @@ def get_argspec():
                         'type': 'int',
                     }
                 },
-                'neighbor_cfg': {
-                    'type': 'list',
-                    'neighbor_priority': {
-                        'type': 'int',
-                    },
-                    'neighbor_poll_interval': {
-                        'type': 'int',
-                    },
-                    'neig_inst': {
-                        'type': 'int',
-                    },
-                    'neighbor': {
-                        'type': 'str',
-                    },
-                    'neighbor_cost': {
-                        'type': 'int',
-                    }
-                },
-                'network_list': {
-                    'type': 'list',
-                    'broadcast_type': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'broadcast', 'non-broadcast', 'point-to-point',
-                            'point-to-multipoint'
-                        ]
-                    },
-                    'p2mp_nbma': {
-                        'type': 'bool',
-                    },
-                    'network_instance_id': {
-                        'type': 'int',
-                    }
-                },
-                'dead_interval_cfg': {
-                    'type': 'list',
-                    'dead_interval': {
-                        'type': 'int',
-                    },
-                    'instance_id': {
-                        'type': 'int',
-                    }
+                'uuid': {
+                    'type': 'str',
                 }
-            },
-            'ipv6_enable': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
             }
         },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+                'choices': ['up', 'disabled', 'down']
+            },
+            'line_protocol': {
+                'type': 'str',
+                'choices': ['up', 'down']
+            },
+            'link_type': {
+                'type': 'str',
+            },
+            'mac': {
+                'type': 'str',
+            },
+            'config_speed': {
+                'type': 'int',
+            },
+            'ipv4_address': {
+                'type': 'str',
+            },
+            'ipv4_netmask': {
+                'type': 'str',
+            },
+            'ipv6_link_local': {
+                'type': 'str',
+            },
+            'ipv6_link_local_prefix': {
+                'type': 'str',
+            },
+            'ipv6_link_local_type': {
+                'type': 'str',
+            },
+            'ipv6_link_local_scope': {
+                'type': 'str',
+            },
+            'ipv4_addr_count': {
+                'type': 'int',
+            },
+            'ipv4_list': {
+                'type': 'list',
+                'addr': {
+                    'type': 'str',
+                },
+                'mask': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_addr_count': {
+                'type': 'int',
+            },
+            'ipv6_list': {
+                'type': 'list',
+                'addr': {
+                    'type': 'str',
+                },
+                'prefix': {
+                    'type': 'str',
+                },
+                'is_anycast': {
+                    'type': 'int',
+                }
+            },
+            'ifnum': {
+                'type': 'int',
+                'required': True,
+            }
         },
-        'speed': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'num_rx_pkts': {
+                'type': 'str',
+            },
+            'num_total_rx_bytes': {
+                'type': 'str',
+            },
+            'num_tx_pkts': {
+                'type': 'str',
+            },
+            'num_total_tx_bytes': {
+                'type': 'str',
+            },
+            'num_rx_err_pkts': {
+                'type': 'str',
+            },
+            'num_tx_err_pkts': {
+                'type': 'str',
+            },
+            'rate_pkt_sent': {
+                'type': 'str',
+            },
+            'rate_byte_sent': {
+                'type': 'str',
+            },
+            'rate_pkt_rcvd': {
+                'type': 'str',
+            },
+            'rate_byte_rcvd': {
+                'type': 'str',
+            },
+            'ifnum': {
+                'type': 'int',
+                'required': True,
+            }
         }
     })
     return rv

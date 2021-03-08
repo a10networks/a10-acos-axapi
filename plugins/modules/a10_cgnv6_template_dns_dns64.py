@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_dns_dns64
 description:
     - Enable DNS64
-short_description: Configures A10 cgnv6.template.dns.dns64
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,110 +22,139 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     dns_name:
         description:
-        - Key to identify parent object    deep_check_rr_disable:
+        - Key to identify parent object
+        type: str
+        required: True
+    enable:
         description:
-        - "Disable Check DNS Response Records"
+        - "Enable DNS64 (Need to config this option before config any other dns64 options)"
+        type: bool
         required: False
     answer_only_disable:
         description:
         - "Disable Only translate the Answer Section"
-        required: False
-    enable:
-        description:
-        - "Enable DNS64 (Need to config this option before config any other dns64 options)"
-        required: False
-    single_response_disable:
-        description:
-        - "Disable Single Response which is used to avoid ambiguity"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    max_qr_length:
-        description:
-        - "Max Question Record Length, default is 128"
-        required: False
-    ignore_rcode3_disable:
-        description:
-        - "Disable Ignore DNS error Response with rcode 3"
+        type: bool
         required: False
     auth_data:
         description:
         - "Set AA flag in DNS Response"
-        required: False
-    change_query:
-        description:
-        - "Always change incoming AAAA DNS Query to A"
-        required: False
-    drop_cname_disable:
-        description:
-        - "Disable Drop DNS CNAME Response"
+        type: bool
         required: False
     cache:
         description:
         - "Use a cached A-query response to provide AAAA query responses for the same
           hostname"
+        type: bool
         required: False
-    passive_query_disable:
+    change_query:
         description:
-        - "Disable Generate A query upon empty or error Response"
-        required: False
-    retry:
-        description:
-        - "Retry count, default is 3 (Retry Number)"
-        required: False
-    parallel_query:
-        description:
-        - "Forward AAAA Query & generate A Query in parallel"
-        required: False
-    timeout:
-        description:
-        - "Timeout to send additional Queries, unit= second, default is 1"
-        required: False
-    ttl:
-        description:
-        - "Specify Max TTL in DNS Response, unit= second"
-        required: False
-    trans_ptr_query:
-        description:
-        - "Translate DNS PTR Query"
-        required: False
-    trans_ptr:
-        description:
-        - "Translate DNS PTR Records"
+        - "Always change incoming AAAA DNS Query to A"
+        type: bool
         required: False
     compress_disable:
         description:
         - "Disable Always try DNS Compression"
+        type: bool
+        required: False
+    deep_check_rr_disable:
+        description:
+        - "Disable Check DNS Response Records"
+        type: bool
+        required: False
+    drop_cname_disable:
+        description:
+        - "Disable Drop DNS CNAME Response"
+        type: bool
+        required: False
+    ignore_rcode3_disable:
+        description:
+        - "Disable Ignore DNS error Response with rcode 3"
+        type: bool
+        required: False
+    max_qr_length:
+        description:
+        - "Max Question Record Length, default is 128"
+        type: int
+        required: False
+    parallel_query:
+        description:
+        - "Forward AAAA Query & generate A Query in parallel"
+        type: bool
+        required: False
+    passive_query_disable:
+        description:
+        - "Disable Generate A query upon empty or error Response"
+        type: bool
+        required: False
+    retry:
+        description:
+        - "Retry count, default is 3 (Retry Number)"
+        type: int
+        required: False
+    single_response_disable:
+        description:
+        - "Disable Single Response which is used to avoid ambiguity"
+        type: bool
+        required: False
+    timeout:
+        description:
+        - "Timeout to send additional Queries, unit= second, default is 1"
+        type: int
+        required: False
+    trans_ptr:
+        description:
+        - "Translate DNS PTR Records"
+        type: bool
+        required: False
+    trans_ptr_query:
+        description:
+        - "Translate DNS PTR Query"
+        type: bool
+        required: False
+    ttl:
+        description:
+        - "Specify Max TTL in DNS Response, unit= second"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -199,37 +226,37 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'deep_check_rr_disable': {
+        'enable': {
             'type': 'bool',
         },
         'answer_only_disable': {
             'type': 'bool',
         },
-        'enable': {
-            'type': 'bool',
-        },
-        'single_response_disable': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'max_qr_length': {
-            'type': 'int',
-        },
-        'ignore_rcode3_disable': {
-            'type': 'bool',
-        },
         'auth_data': {
+            'type': 'bool',
+        },
+        'cache': {
             'type': 'bool',
         },
         'change_query': {
             'type': 'bool',
         },
+        'compress_disable': {
+            'type': 'bool',
+        },
+        'deep_check_rr_disable': {
+            'type': 'bool',
+        },
         'drop_cname_disable': {
             'type': 'bool',
         },
-        'cache': {
+        'ignore_rcode3_disable': {
+            'type': 'bool',
+        },
+        'max_qr_length': {
+            'type': 'int',
+        },
+        'parallel_query': {
             'type': 'bool',
         },
         'passive_query_disable': {
@@ -238,23 +265,23 @@ def get_argspec():
         'retry': {
             'type': 'int',
         },
-        'parallel_query': {
+        'single_response_disable': {
             'type': 'bool',
         },
         'timeout': {
             'type': 'int',
         },
-        'ttl': {
-            'type': 'int',
+        'trans_ptr': {
+            'type': 'bool',
         },
         'trans_ptr_query': {
             'type': 'bool',
         },
-        'trans_ptr': {
-            'type': 'bool',
+        'ttl': {
+            'type': 'int',
         },
-        'compress_disable': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

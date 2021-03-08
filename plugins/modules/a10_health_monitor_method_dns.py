@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_dns
 description:
     - DNS type
-short_description: Configures A10 health.monitor.method.dns
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,126 +22,158 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    dns_domain_type:
+        - Key to identify parent object
+        type: str
+        required: True
+    dns:
         description:
-        - "'A'= Used for storing Ipv4 address (default); 'CNAME'= Canonical name for a DNS
-          alias; 'SOA'= Start of authority; 'PTR'= Domain name pointer; 'MX'= Mail
-          exchanger; 'TXT'= Text string; 'AAAA'= Used for storing Ipv6 128-bits address;"
+        - "DNS type"
+        type: bool
         required: False
-    dns_ipv4_recurse:
+    dns_ip_key:
         description:
-        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    dns_ipv6_port:
-        description:
-        - "Specify DNS port, default is 53 (DNS Port(default 53))"
+        - "Reverse DNS lookup (Specify IPv4 or IPv6 address)"
+        type: bool
         required: False
     dns_ipv4_addr:
         description:
         - "Specify IPv4 address"
+        type: str
         required: False
-    dns_domain_expect:
+    dns_ipv6_addr:
         description:
-        - "Field dns_domain_expect"
+        - "Specify IPv6 address"
+        type: str
         required: False
-        suboptions:
-            dns_domain_response:
-                description:
-                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
-          [0,15]))"
+    dns_ipv4_port:
+        description:
+        - "Specify DNS port, default is 53 (DNS Port(default 53))"
+        type: int
+        required: False
     dns_ipv4_expect:
         description:
         - "Field dns_ipv4_expect"
+        type: dict
         required: False
         suboptions:
             dns_ipv4_response:
                 description:
                 - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
           [0,15]))"
-    dns_ipv4_port:
+                type: str
+    dns_ipv4_recurse:
+        description:
+        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
+        type: str
+        required: False
+    dns_ipv4_tcp:
+        description:
+        - "Configure DNS transport over TCP, default is UDP"
+        type: bool
+        required: False
+    dns_ipv6_port:
         description:
         - "Specify DNS port, default is 53 (DNS Port(default 53))"
+        type: int
         required: False
     dns_ipv6_expect:
         description:
         - "Field dns_ipv6_expect"
+        type: dict
         required: False
         suboptions:
             dns_ipv6_response:
                 description:
                 - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
           [0,15]))"
-    dns_ip_key:
-        description:
-        - "Reverse DNS lookup (Specify IPv4 or IPv6 address)"
-        required: False
+                type: str
     dns_ipv6_recurse:
         description:
         - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
+        type: str
         required: False
     dns_ipv6_tcp:
         description:
         - "Configure DNS transport over TCP, default is UDP"
-        required: False
-    dns_domain_recurse:
-        description:
-        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
-        required: False
-    dns_domain_tcp:
-        description:
-        - "Configure DNS transport over TCP, default is UDP"
-        required: False
-    dns:
-        description:
-        - "DNS type"
-        required: False
-    dns_ipv4_tcp:
-        description:
-        - "Configure DNS transport over TCP, default is UDP"
+        type: bool
         required: False
     dns_domain:
         description:
         - "Specify fully qualified domain name of the host"
-        required: False
-    dns_ipv6_addr:
-        description:
-        - "Specify IPv6 address"
+        type: str
         required: False
     dns_domain_port:
         description:
         - "Specify DNS port, default is 53 (DNS Port(default 53))"
+        type: int
+        required: False
+    dns_domain_expect:
+        description:
+        - "Field dns_domain_expect"
+        type: dict
+        required: False
+        suboptions:
+            dns_domain_response:
+                description:
+                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
+          [0,15]))"
+                type: str
+    dns_domain_recurse:
+        description:
+        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
+        type: str
+        required: False
+    dns_domain_tcp:
+        description:
+        - "Configure DNS transport over TCP, default is UDP"
+        type: bool
+        required: False
+    dns_domain_type:
+        description:
+        - "'A'= Used for storing Ipv4 address (default); 'CNAME'= Canonical name for a DNS
+          alias; 'SOA'= Start of authority; 'PTR'= Domain name pointer; 'MX'= Mail
+          exchanger; 'TXT'= Text string; 'AAAA'= Used for storing Ipv6 128-bits address;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -215,28 +245,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dns_domain_type': {
-            'type': 'str',
-            'choices': ['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']
+        'dns': {
+            'type': 'bool',
         },
-        'dns_ipv4_recurse': {
-            'type': 'str',
-            'choices': ['enabled', 'disabled']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'dns_ipv6_port': {
-            'type': 'int',
+        'dns_ip_key': {
+            'type': 'bool',
         },
         'dns_ipv4_addr': {
             'type': 'str',
         },
-        'dns_domain_expect': {
-            'type': 'dict',
-            'dns_domain_response': {
-                'type': 'str',
-            }
+        'dns_ipv6_addr': {
+            'type': 'str',
+        },
+        'dns_ipv4_port': {
+            'type': 'int',
         },
         'dns_ipv4_expect': {
             'type': 'dict',
@@ -244,7 +266,14 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'dns_ipv4_port': {
+        'dns_ipv4_recurse': {
+            'type': 'str',
+            'choices': ['enabled', 'disabled']
+        },
+        'dns_ipv4_tcp': {
+            'type': 'bool',
+        },
+        'dns_ipv6_port': {
             'type': 'int',
         },
         'dns_ipv6_expect': {
@@ -253,15 +282,24 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'dns_ip_key': {
-            'type': 'bool',
-        },
         'dns_ipv6_recurse': {
             'type': 'str',
             'choices': ['enabled', 'disabled']
         },
         'dns_ipv6_tcp': {
             'type': 'bool',
+        },
+        'dns_domain': {
+            'type': 'str',
+        },
+        'dns_domain_port': {
+            'type': 'int',
+        },
+        'dns_domain_expect': {
+            'type': 'dict',
+            'dns_domain_response': {
+                'type': 'str',
+            }
         },
         'dns_domain_recurse': {
             'type': 'str',
@@ -270,20 +308,12 @@ def get_argspec():
         'dns_domain_tcp': {
             'type': 'bool',
         },
-        'dns': {
-            'type': 'bool',
-        },
-        'dns_ipv4_tcp': {
-            'type': 'bool',
-        },
-        'dns_domain': {
+        'dns_domain_type': {
             'type': 'str',
+            'choices': ['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']
         },
-        'dns_ipv6_addr': {
+        'uuid': {
             'type': 'str',
-        },
-        'dns_domain_port': {
-            'type': 'int',
         }
     })
     # Parent keys

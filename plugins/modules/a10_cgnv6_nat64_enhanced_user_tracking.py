@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat64_enhanced_user_tracking
 description:
     - NAT64 Enhanced User Data
-short_description: Configures A10 cgnv6.nat64.enhanced-user-tracking
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,68 +22,86 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            prefix_filter:
-                description:
-                - "Field prefix_filter"
-            pool_shared:
-                description:
-                - "Field pool_shared"
-            all_partitions:
-                description:
-                - "Field all_partitions"
             user_list:
                 description:
                 - "Field user_list"
-            shared_partition:
-                description:
-                - "Field shared_partition"
-            inside_addr_v6:
-                description:
-                - "Field inside_addr_v6"
-            partition_name:
-                description:
-                - "Field partition_name"
+                type: list
             user_count:
                 description:
                 - "Field user_count"
+                type: int
+            prefix_filter:
+                description:
+                - "Field prefix_filter"
+                type: str
+            inside_addr_v6:
+                description:
+                - "Field inside_addr_v6"
+                type: str
+            all_partitions:
+                description:
+                - "Field all_partitions"
+                type: bool
+            shared_partition:
+                description:
+                - "Field shared_partition"
+                type: bool
+            partition_name:
+                description:
+                - "Field partition_name"
+                type: str
             nat_pool_name:
                 description:
                 - "Field nat_pool_name"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            pool_shared:
+                description:
+                - "Field pool_shared"
+                type: bool
 
 '''
 
@@ -139,89 +155,89 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'prefix_filter': {
-                'type': 'str',
-            },
-            'pool_shared': {
-                'type': 'bool',
-            },
-            'all_partitions': {
-                'type': 'bool',
-            },
             'user_list': {
                 'type': 'list',
-                'udp_peak': {
-                    'type': 'int',
-                },
-                'tcp_peak': {
-                    'type': 'int',
-                },
-                'icmp_peak': {
-                    'type': 'int',
-                },
-                'upl_packets': {
-                    'type': 'int',
-                },
-                'tcp_quota': {
-                    'type': 'int',
+                'inside_address': {
+                    'type': 'str',
                 },
                 'prefix_len': {
-                    'type': 'int',
-                },
-                'dwl_packets': {
                     'type': 'int',
                 },
                 'nat_address': {
                     'type': 'str',
                 },
+                'tcp_quota': {
+                    'type': 'int',
+                },
+                'udp_quota': {
+                    'type': 'int',
+                },
                 'icmp_quota': {
-                    'type': 'int',
-                },
-                'nat_pool_name': {
-                    'type': 'str',
-                },
-                'session_peak': {
-                    'type': 'int',
-                },
-                'upl_bytes': {
                     'type': 'int',
                 },
                 'session_count': {
                     'type': 'int',
                 },
+                'tcp_peak': {
+                    'type': 'int',
+                },
+                'udp_peak': {
+                    'type': 'int',
+                },
+                'icmp_peak': {
+                    'type': 'int',
+                },
+                'session_peak': {
+                    'type': 'int',
+                },
                 'total_session_count': {
                     'type': 'int',
                 },
-                'inside_address': {
-                    'type': 'str',
+                'upl_packets': {
+                    'type': 'int',
+                },
+                'upl_bytes': {
+                    'type': 'int',
+                },
+                'dwl_packets': {
+                    'type': 'int',
                 },
                 'dwl_bytes': {
                     'type': 'int',
                 },
-                'udp_quota': {
-                    'type': 'int',
+                'nat_pool_name': {
+                    'type': 'str',
                 }
-            },
-            'shared_partition': {
-                'type': 'bool',
-            },
-            'inside_addr_v6': {
-                'type': 'str',
-            },
-            'partition_name': {
-                'type': 'str',
             },
             'user_count': {
                 'type': 'int',
             },
+            'prefix_filter': {
+                'type': 'str',
+            },
+            'inside_addr_v6': {
+                'type': 'str',
+            },
+            'all_partitions': {
+                'type': 'bool',
+            },
+            'shared_partition': {
+                'type': 'bool',
+            },
+            'partition_name': {
+                'type': 'str',
+            },
             'nat_pool_name': {
                 'type': 'str',
+            },
+            'pool_shared': {
+                'type': 'bool',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

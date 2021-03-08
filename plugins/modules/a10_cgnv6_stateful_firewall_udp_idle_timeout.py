@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_udp_idle_timeout
 description:
     - Configure UDP session idle timeout for IPv4 and IPv6
-short_description: Configures A10 cgnv6.stateful.firewall.udp.idle-timeout
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,52 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     port:
         description:
         - "Single Destination Port or Port Range Start"
+        type: int
         required: True
     port_end:
         description:
         - "Port Range End"
+        type: int
         required: True
+    fast:
+        description:
+        - "Fast aging for idle sessions"
+        type: bool
+        required: False
     idle_timeout_val_port_range:
         description:
         - "Idle timeout for IPv4 and IPv6 TCP established sessions (Idle timeout for IPv4
           and IPv6 TCP established sessions (default= 300 seconds))"
-        required: False
-    fast:
-        description:
-        - "Fast aging for idle sessions"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -135,11 +145,11 @@ def get_argspec():
             'type': 'int',
             'required': True,
         },
-        'idle_timeout_val_port_range': {
-            'type': 'int',
-        },
         'fast': {
             'type': 'bool',
+        },
+        'idle_timeout_val_port_range': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

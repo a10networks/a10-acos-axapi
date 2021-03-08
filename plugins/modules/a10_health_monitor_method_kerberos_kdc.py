@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_kerberos_kdc
 description:
     - Kerberos KDC type
-short_description: Configures A10 health.monitor.method.kerberos-kdc
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,102 +22,133 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    kerberos_cfg:
+        - Key to identify parent object
+        type: str
+        required: True
+    kerberos_cfg:
         description:
         - "Field kerberos_cfg"
+        type: dict
         required: False
         suboptions:
-            tcp_only:
-                description:
-                - "Specify the kerberos tcp only"
-            kpasswd_password:
-                description:
-                - "Password"
-            kadmin_server:
-                description:
-                - "Specify the admin server, host|ip [=port]"
-            kinit_password:
-                description:
-                - "Password"
-            kpasswd:
-                description:
-                - "Kerberos change passwd"
-            kinit_pricipal_name:
-                description:
-                - "Specify the principal name"
-            kpasswd_server:
-                description:
-                - "Specify the Kerberos password server, host|ip [=port]"
-            kadmin_encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
             kinit:
                 description:
                 - "Kerberos KDC"
-            kadmin_pricipal_name:
+                type: bool
+            kinit_pricipal_name:
                 description:
                 - "Specify the principal name"
-            kadmin_realm:
-                description:
-                - "Specify the realm"
-            kinit_kdc:
-                description:
-                - "Specify the kdc server, host|ip [=port]"
-            kpasswd_pricipal_name:
-                description:
-                - "Specify the principal name"
-            kadmin:
-                description:
-                - "Kerberos admin"
-            kadmin_kdc:
-                description:
-                - "Specify the kdc server, host|ip [=port]"
-            kpasswd_kdc:
-                description:
-                - "Specify the kdc server, host|ip [=port]"
-            kadmin_password:
+                type: str
+            kinit_password:
                 description:
                 - "Password"
-            kpasswd_encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
+                type: str
             kinit_encrypted:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+                type: str
+            kinit_kdc:
+                description:
+                - "Specify the kdc server, host|ip [=port]"
+                type: str
+            tcp_only:
+                description:
+                - "Specify the kerberos tcp only"
+                type: bool
+            kadmin:
+                description:
+                - "Kerberos admin"
+                type: bool
+            kadmin_realm:
+                description:
+                - "Specify the realm"
+                type: str
+            kadmin_pricipal_name:
+                description:
+                - "Specify the principal name"
+                type: str
+            kadmin_password:
+                description:
+                - "Password"
+                type: str
+            kadmin_encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+                type: str
+            kadmin_server:
+                description:
+                - "Specify the admin server, host|ip [=port]"
+                type: str
+            kadmin_kdc:
+                description:
+                - "Specify the kdc server, host|ip [=port]"
+                type: str
+            kpasswd:
+                description:
+                - "Kerberos change passwd"
+                type: bool
+            kpasswd_pricipal_name:
+                description:
+                - "Specify the principal name"
+                type: str
+            kpasswd_password:
+                description:
+                - "Password"
+                type: str
+            kpasswd_encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+                type: str
+            kpasswd_server:
+                description:
+                - "Specify the Kerberos password server, host|ip [=port]"
+                type: str
+            kpasswd_kdc:
+                description:
+                - "Specify the kdc server, host|ip [=port]"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -176,61 +205,61 @@ def get_argspec():
     rv.update({
         'kerberos_cfg': {
             'type': 'dict',
-            'tcp_only': {
-                'type': 'bool',
-            },
-            'kpasswd_password': {
-                'type': 'str',
-            },
-            'kadmin_server': {
-                'type': 'str',
-            },
-            'kinit_password': {
-                'type': 'str',
-            },
-            'kpasswd': {
+            'kinit': {
                 'type': 'bool',
             },
             'kinit_pricipal_name': {
                 'type': 'str',
             },
-            'kpasswd_server': {
+            'kinit_password': {
                 'type': 'str',
             },
-            'kadmin_encrypted': {
-                'type': 'str',
-            },
-            'kinit': {
-                'type': 'bool',
-            },
-            'kadmin_pricipal_name': {
-                'type': 'str',
-            },
-            'kadmin_realm': {
+            'kinit_encrypted': {
                 'type': 'str',
             },
             'kinit_kdc': {
                 'type': 'str',
             },
-            'kpasswd_pricipal_name': {
-                'type': 'str',
+            'tcp_only': {
+                'type': 'bool',
             },
             'kadmin': {
                 'type': 'bool',
             },
-            'kadmin_kdc': {
+            'kadmin_realm': {
                 'type': 'str',
             },
-            'kpasswd_kdc': {
+            'kadmin_pricipal_name': {
                 'type': 'str',
             },
             'kadmin_password': {
                 'type': 'str',
             },
+            'kadmin_encrypted': {
+                'type': 'str',
+            },
+            'kadmin_server': {
+                'type': 'str',
+            },
+            'kadmin_kdc': {
+                'type': 'str',
+            },
+            'kpasswd': {
+                'type': 'bool',
+            },
+            'kpasswd_pricipal_name': {
+                'type': 'str',
+            },
+            'kpasswd_password': {
+                'type': 'str',
+            },
             'kpasswd_encrypted': {
                 'type': 'str',
             },
-            'kinit_encrypted': {
+            'kpasswd_server': {
+                'type': 'str',
+            },
+            'kpasswd_kdc': {
                 'type': 'str',
             }
         },

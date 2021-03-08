@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_virtual_port
 description:
     - Virtual port template
-short_description: Configures A10 slb.template.virtual-port
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,145 +22,179 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    reset_unknown_conn:
+    name:
         description:
-        - "Send reset back if receives TCP packet without SYN or RST flag and it does not
-          belong to any existing connections"
-        required: False
-    ignore_tcp_msl:
+        - "Virtual port template name"
+        type: str
+        required: True
+    aflow:
         description:
-        - "reclaim TCP resource immediately without MSL"
-        required: False
-    rate:
-        description:
-        - "Source IP and port rate limit (Packet rate limit)"
-        required: False
-    snat_msl:
-        description:
-        - "Source NAT MSL (Source NAT MSL value (seconds))"
+        - "Use aFlow to eliminate the traffic surge"
+        type: bool
         required: False
     allow_syn_otherflags:
         description:
         - "Allow initial SYN packet with other flags"
-        required: False
-    aflow:
-        description:
-        - "Use aFlow to eliminate the traffic surge"
+        type: bool
         required: False
     conn_limit:
         description:
         - "Connection limit"
+        type: int
         required: False
-    drop_unknown_conn:
+    conn_limit_reset:
         description:
-        - "Drop conection if receives TCP packet without SYN or RST flag and it does not
-          belong to any existing connections"
+        - "Send client reset when connection over limit"
+        type: bool
         required: False
-    uuid:
+    conn_limit_no_logging:
         description:
-        - "uuid of the object"
+        - "Do not log connection over limit event"
+        type: bool
         required: False
-    reset_l7_on_failover:
+    conn_rate_limit:
         description:
-        - "Send reset to L7 client and server connection upon a failover"
-        required: False
-    pkt_rate_type:
-        description:
-        - "'src-ip-port'= Source IP and port rate limit; 'src-port'= Source port rate
-          limit;"
+        - "Connection rate limit"
+        type: int
         required: False
     rate_interval:
         description:
         - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling
           interval;"
-        required: False
-    snat_port_preserve:
-        description:
-        - "Source NAT Port Preservation"
+        type: str
         required: False
     conn_rate_limit_reset:
         description:
         - "Send client reset when connection rate over limit"
-        required: False
-    when_rr_enable:
-        description:
-        - "Only do rate limit if CPU RR triggered"
-        required: False
-    non_syn_initiation:
-        description:
-        - "Allow initial TCP packet to be non-SYN"
-        required: False
-    conn_limit_reset:
-        description:
-        - "Send client reset when connection over limit"
-        required: False
-    dscp:
-        description:
-        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
-        required: False
-    pkt_rate_limit_reset:
-        description:
-        - "send client-side reset (reset after packet limit)"
-        required: False
-    conn_limit_no_logging:
-        description:
-        - "Do not log connection over limit event"
+        type: bool
         required: False
     conn_rate_limit_no_logging:
         description:
         - "Do not log connection over limit event"
+        type: bool
         required: False
-    log_options:
+    pkt_rate_type:
         description:
-        - "'no-logging'= Do not log over limit event; 'no-repeat-logging'= log once for
-          over limit event. Default is log once per minute;"
+        - "'src-ip-port'= Source IP and port rate limit; 'src-port'= Source port rate
+          limit;"
+        type: str
         required: False
-    name:
+    rate:
         description:
-        - "Virtual port template name"
-        required: True
-    allow_vip_to_rport_mapping:
-        description:
-        - "Allow mapping of VIP to real port"
+        - "Source IP and port rate limit (Packet rate limit)"
+        type: int
         required: False
     pkt_rate_interval:
         description:
         - "'100ms'= Source IP and port rate limit per 100ms; 'second'= Source IP and port
           rate limit per second (default);"
+        type: str
+        required: False
+    pkt_rate_limit_reset:
+        description:
+        - "send client-side reset (reset after packet limit)"
+        type: int
+        required: False
+    log_options:
+        description:
+        - "'no-logging'= Do not log over limit event; 'no-repeat-logging'= log once for
+          over limit event. Default is log once per minute;"
+        type: str
+        required: False
+    when_rr_enable:
+        description:
+        - "Only do rate limit if CPU RR triggered"
+        type: bool
+        required: False
+    allow_vip_to_rport_mapping:
+        description:
+        - "Allow mapping of VIP to real port"
+        type: bool
+        required: False
+    dscp:
+        description:
+        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
+        type: int
+        required: False
+    drop_unknown_conn:
+        description:
+        - "Drop conection if receives TCP packet without SYN or RST flag and it does not
+          belong to any existing connections"
+        type: bool
+        required: False
+    reset_unknown_conn:
+        description:
+        - "Send reset back if receives TCP packet without SYN or RST flag and it does not
+          belong to any existing connections"
+        type: bool
+        required: False
+    reset_l7_on_failover:
+        description:
+        - "Send reset to L7 client and server connection upon a failover"
+        type: bool
+        required: False
+    ignore_tcp_msl:
+        description:
+        - "reclaim TCP resource immediately without MSL"
+        type: bool
+        required: False
+    snat_msl:
+        description:
+        - "Source NAT MSL (Source NAT MSL value (seconds))"
+        type: int
+        required: False
+    snat_port_preserve:
+        description:
+        - "Source NAT Port Preservation"
+        type: bool
+        required: False
+    non_syn_initiation:
+        description:
+        - "Allow initial TCP packet to be non-SYN"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
-        required: False
-    conn_rate_limit:
-        description:
-        - "Connection rate limit"
+        type: str
         required: False
 
 '''
@@ -242,91 +274,91 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'reset_unknown_conn': {
-            'type': 'bool',
-        },
-        'ignore_tcp_msl': {
-            'type': 'bool',
-        },
-        'rate': {
-            'type': 'int',
-        },
-        'snat_msl': {
-            'type': 'int',
-        },
-        'allow_syn_otherflags': {
-            'type': 'bool',
+        'name': {
+            'type': 'str',
+            'required': True,
         },
         'aflow': {
+            'type': 'bool',
+        },
+        'allow_syn_otherflags': {
             'type': 'bool',
         },
         'conn_limit': {
             'type': 'int',
         },
-        'drop_unknown_conn': {
+        'conn_limit_reset': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
+        'conn_limit_no_logging': {
+            'type': 'bool',
         },
-        'reset_l7_on_failover': {
+        'conn_rate_limit': {
+            'type': 'int',
+        },
+        'rate_interval': {
+            'type': 'str',
+            'choices': ['100ms', 'second']
+        },
+        'conn_rate_limit_reset': {
+            'type': 'bool',
+        },
+        'conn_rate_limit_no_logging': {
             'type': 'bool',
         },
         'pkt_rate_type': {
             'type': 'str',
             'choices': ['src-ip-port', 'src-port']
         },
-        'rate_interval': {
-            'type': 'str',
-            'choices': ['100ms', 'second']
-        },
-        'snat_port_preserve': {
-            'type': 'bool',
-        },
-        'conn_rate_limit_reset': {
-            'type': 'bool',
-        },
-        'when_rr_enable': {
-            'type': 'bool',
-        },
-        'non_syn_initiation': {
-            'type': 'bool',
-        },
-        'conn_limit_reset': {
-            'type': 'bool',
-        },
-        'dscp': {
+        'rate': {
             'type': 'int',
-        },
-        'pkt_rate_limit_reset': {
-            'type': 'int',
-        },
-        'conn_limit_no_logging': {
-            'type': 'bool',
-        },
-        'conn_rate_limit_no_logging': {
-            'type': 'bool',
-        },
-        'log_options': {
-            'type': 'str',
-            'choices': ['no-logging', 'no-repeat-logging']
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'allow_vip_to_rport_mapping': {
-            'type': 'bool',
         },
         'pkt_rate_interval': {
             'type': 'str',
             'choices': ['100ms', 'second']
         },
-        'user_tag': {
+        'pkt_rate_limit_reset': {
+            'type': 'int',
+        },
+        'log_options': {
+            'type': 'str',
+            'choices': ['no-logging', 'no-repeat-logging']
+        },
+        'when_rr_enable': {
+            'type': 'bool',
+        },
+        'allow_vip_to_rport_mapping': {
+            'type': 'bool',
+        },
+        'dscp': {
+            'type': 'int',
+        },
+        'drop_unknown_conn': {
+            'type': 'bool',
+        },
+        'reset_unknown_conn': {
+            'type': 'bool',
+        },
+        'reset_l7_on_failover': {
+            'type': 'bool',
+        },
+        'ignore_tcp_msl': {
+            'type': 'bool',
+        },
+        'snat_msl': {
+            'type': 'int',
+        },
+        'snat_port_preserve': {
+            'type': 'bool',
+        },
+        'non_syn_initiation': {
+            'type': 'bool',
+        },
+        'uuid': {
             'type': 'str',
         },
-        'conn_rate_limit': {
-            'type': 'int',
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

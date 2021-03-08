@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_protocol
 description:
     - Specify GSLB Message Protocol parameters
-short_description: Configures A10 gslb.protocol
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,107 +22,134 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            session_list:
-                description:
-                - "Field session_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port for connections in Shared Partition"
-        required: False
-    msg_format_acos_2x:
-        description:
-        - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
-        required: False
-    limit:
-        description:
-        - "Field limit"
-        required: False
-        suboptions:
-            ardt_response:
-                description:
-                - "Response Messages of Active RDT, default is 1000 (Number)"
-            uuid:
-                description:
-                - "uuid of the object"
-            conn_response:
-                description:
-                - "Response Messages of Connection Load, default is no limit (Number)"
-            ardt_session:
-                description:
-                - "Sessions of Active RDT, default is 32768 (Number)"
-            ardt_query:
-                description:
-                - "Query Messages of Active RDT, default is 200 (Number)"
-            message:
-                description:
-                - "Amount of Messages, default is 10000 (Number)"
-            response:
-                description:
-                - "Amount of Response Messages, default is 3600 (Number)"
-    ping_site:
-        description:
-        - "name of site or ip address to ping"
+        type: str
         required: False
     auto_detect:
         description:
         - "Automatically detect SLB Config"
+        type: bool
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port for connections in Shared Partition"
+        type: bool
         required: False
     use_mgmt_port_for_all_partitions:
         description:
         - "Use management port for connections in all L3v Partitions"
+        type: bool
+        required: False
+    status_interval:
+        description:
+        - "Specify GSLB Message Protocol update period (The GSLB Protocol update interval
+          (seconds), default is 30)"
+        type: int
+        required: False
+    ping_site:
+        description:
+        - "name of site or ip address to ping"
+        type: str
+        required: False
+    msg_format_acos_2x:
+        description:
+        - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     enable_list:
         description:
         - "Field enable_list"
+        type: list
         required: False
         suboptions:
             ntype:
                 description:
                 - "'controller'= Enable/Disable GSLB protocol as GSLB controller; 'device'=
           Enable/Disable GSLB protocol as site device;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-    status_interval:
+                type: str
+    limit:
         description:
-        - "Specify GSLB Message Protocol update period (The GSLB Protocol update interval
-          (seconds), default is 30)"
+        - "Field limit"
+        type: dict
         required: False
+        suboptions:
+            ardt_query:
+                description:
+                - "Query Messages of Active RDT, default is 200 (Number)"
+                type: int
+            ardt_response:
+                description:
+                - "Response Messages of Active RDT, default is 1000 (Number)"
+                type: int
+            ardt_session:
+                description:
+                - "Sessions of Active RDT, default is 32768 (Number)"
+                type: int
+            conn_response:
+                description:
+                - "Response Messages of Connection Load, default is no limit (Number)"
+                type: int
+            response:
+                description:
+                - "Amount of Response Messages, default is 3600 (Number)"
+                type: int
+            message:
+                description:
+                - "Amount of Messages, default is 10000 (Number)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            session_list:
+                description:
+                - "Field session_list"
+                type: list
 
 '''
 
@@ -186,107 +211,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'session_list': {
-                'type': 'list',
-                'session_id': {
-                    'type': 'int',
-                },
-                'connection_succeeded': {
-                    'type': 'int',
-                },
-                'sessions_dropped': {
-                    'type': 'int',
-                },
-                'retry': {
-                    'type': 'int',
-                },
-                'update_packet_sent': {
-                    'type': 'int',
-                },
-                'open_packet_received': {
-                    'type': 'int',
-                },
-                'protocol_info': {
-                    'type': 'str',
-                },
-                'keepalive_packet_received': {
-                    'type': 'int',
-                },
-                'notify_packet_sent': {
-                    'type': 'int',
-                },
-                'open_packet_sent': {
-                    'type': 'int',
-                },
-                'update_packet_received': {
-                    'type': 'int',
-                },
-                'state': {
-                    'type': 'str',
-                },
-                'message_header_error': {
-                    'type': 'int',
-                },
-                'open_session_failed': {
-                    'type': 'int',
-                },
-                'notify_packet_received': {
-                    'type': 'int',
-                },
-                'connection_failed': {
-                    'type': 'int',
-                },
-                'open_session_succeeded': {
-                    'type': 'int',
-                },
-                'keepalive_packet_sent': {
-                    'type': 'int',
-                }
-            }
-        },
-        'uuid': {
-            'type': 'str',
+        'auto_detect': {
+            'type': 'bool',
         },
         'use_mgmt_port': {
             'type': 'bool',
         },
-        'msg_format_acos_2x': {
+        'use_mgmt_port_for_all_partitions': {
             'type': 'bool',
         },
-        'limit': {
-            'type': 'dict',
-            'ardt_response': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'conn_response': {
-                'type': 'int',
-            },
-            'ardt_session': {
-                'type': 'int',
-            },
-            'ardt_query': {
-                'type': 'int',
-            },
-            'message': {
-                'type': 'int',
-            },
-            'response': {
-                'type': 'int',
-            }
+        'status_interval': {
+            'type': 'int',
         },
         'ping_site': {
             'type': 'str',
         },
-        'auto_detect': {
+        'msg_format_acos_2x': {
             'type': 'bool',
         },
-        'use_mgmt_port_for_all_partitions': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         },
         'enable_list': {
             'type': 'list',
@@ -299,8 +243,89 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'status_interval': {
-            'type': 'int',
+        'limit': {
+            'type': 'dict',
+            'ardt_query': {
+                'type': 'int',
+            },
+            'ardt_response': {
+                'type': 'int',
+            },
+            'ardt_session': {
+                'type': 'int',
+            },
+            'conn_response': {
+                'type': 'int',
+            },
+            'response': {
+                'type': 'int',
+            },
+            'message': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'session_list': {
+                'type': 'list',
+                'protocol_info': {
+                    'type': 'str',
+                },
+                'state': {
+                    'type': 'str',
+                },
+                'session_id': {
+                    'type': 'int',
+                },
+                'connection_succeeded': {
+                    'type': 'int',
+                },
+                'connection_failed': {
+                    'type': 'int',
+                },
+                'open_packet_sent': {
+                    'type': 'int',
+                },
+                'open_packet_received': {
+                    'type': 'int',
+                },
+                'open_session_succeeded': {
+                    'type': 'int',
+                },
+                'open_session_failed': {
+                    'type': 'int',
+                },
+                'sessions_dropped': {
+                    'type': 'int',
+                },
+                'retry': {
+                    'type': 'int',
+                },
+                'update_packet_sent': {
+                    'type': 'int',
+                },
+                'update_packet_received': {
+                    'type': 'int',
+                },
+                'keepalive_packet_sent': {
+                    'type': 'int',
+                },
+                'keepalive_packet_received': {
+                    'type': 'int',
+                },
+                'notify_packet_sent': {
+                    'type': 'int',
+                },
+                'notify_packet_received': {
+                    'type': 'int',
+                },
+                'message_header_error': {
+                    'type': 'int',
+                }
+            }
         }
     })
     return rv

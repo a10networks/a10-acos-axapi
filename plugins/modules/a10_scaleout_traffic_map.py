@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_traffic_map
 description:
     - Field traffic_map
-short_description: Configures A10 scaleout.traffic-map
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             virtual_server:
                 description:
                 - "Field virtual_server"
+                type: str
             virtual_port:
                 description:
                 - "Field virtual_port"
-            map_entries_list_head:
-                description:
-                - "Field map_entries_list_head"
+                type: int
             src_ip:
                 description:
                 - "Field src_ip"
+                type: str
+            map_entries_list_head:
+                description:
+                - "Field map_entries_list_head"
+                type: list
             tbl_num:
                 description:
                 - "Field tbl_num"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
 
 '''
 
@@ -127,6 +139,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'virtual_server': {
@@ -135,42 +150,39 @@ def get_argspec():
             'virtual_port': {
                 'type': 'int',
             },
+            'src_ip': {
+                'type': 'str',
+            },
             'map_entries_list_head': {
                 'type': 'list',
                 'service_type': {
                     'type': 'str',
                 },
+                'service_name': {
+                    'type': 'str',
+                },
                 'map_entries_list': {
                     'type': 'list',
-                    'cur_standby': {
-                        'type': 'int',
-                    },
-                    'new_standby': {
-                        'type': 'int',
-                    },
-                    'new_active': {
-                        'type': 'int',
-                    },
                     'user_group': {
                         'type': 'int',
                     },
                     'cur_active': {
                         'type': 'int',
+                    },
+                    'cur_standby': {
+                        'type': 'int',
+                    },
+                    'new_active': {
+                        'type': 'int',
+                    },
+                    'new_standby': {
+                        'type': 'int',
                     }
-                },
-                'service_name': {
-                    'type': 'str',
                 }
-            },
-            'src_ip': {
-                'type': 'str',
             },
             'tbl_num': {
                 'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

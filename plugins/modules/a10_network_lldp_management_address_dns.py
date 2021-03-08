@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_lldp_management_address_dns
 description:
     - Configure lldp management-address dns address
-short_description: Configures A10 network.lldp.management.address.dns
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    dns:
+        description:
+        - "Configure lldp management-address, subtype is dns (lldp management-address dns
+          address)"
+        type: str
+        required: True
     interface:
         description:
         - "Field interface"
+        type: dict
         required: False
         suboptions:
             ethernet:
                 description:
                 - "configure lldp management-address interface ethernet (lldp management-address
           interface port number)"
-            management:
-                description:
-                - "configure lldp management-address interface management"
+                type: str
             ve:
                 description:
                 - "configure lldp management-address interface management (lldp management-address
           interface port number)"
+                type: int
+            management:
+                description:
+                - "configure lldp management-address interface management"
+                type: bool
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    dns:
-        description:
-        - "Configure lldp management-address, subtype is dns (lldp management-address dns
-          address)"
-        required: True
 
 '''
 
@@ -129,24 +140,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'dns': {
+            'type': 'str',
+            'required': True,
+        },
         'interface': {
             'type': 'dict',
             'ethernet': {
                 'type': 'str',
             },
-            'management': {
-                'type': 'bool',
-            },
             've': {
                 'type': 'int',
+            },
+            'management': {
+                'type': 'bool',
             }
         },
         'uuid': {
             'type': 'str',
-        },
-        'dns': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

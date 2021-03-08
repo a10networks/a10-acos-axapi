@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_radius
 description:
     - RADIUS type
-short_description: Configures A10 health.monitor.method.radius
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,95 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    radius_username:
+        - Key to identify parent object
+        type: str
+        required: True
+    radius:
+        description:
+        - "RADIUS type"
+        type: bool
+        required: False
+    radius_username:
         description:
         - "Specify the username"
+        type: str
+        required: False
+    radius_password:
+        description:
+        - "Specify the user password"
+        type: bool
         required: False
     radius_password_string:
         description:
         - "Configure password, '' means empty password"
+        type: str
         required: False
     radius_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        type: str
+        required: False
+    radius_secret:
+        description:
+        - "Specify the shared secret of RADIUS server (Shared Crypto Key)"
+        type: str
+        required: False
+    radius_port:
+        description:
+        - "Specify the RADIUS port, default is 1812 (Port number (default 1812))"
+        type: int
+        required: False
+    radius_expect:
+        description:
+        - "Specify what you expect from the response message"
+        type: bool
         required: False
     radius_response_code:
         description:
         - "Specify response code range (e.g. 2,4-7) (Format is xx,xx-xx (xx between [1,
           13]))"
-        required: False
-    radius_expect:
-        description:
-        - "Specify what you expect from the response message"
-        required: False
-    radius:
-        description:
-        - "RADIUS type"
-        required: False
-    radius_secret:
-        description:
-        - "Specify the shared secret of RADIUS server (Shared Crypto Key)"
-        required: False
-    radius_password:
-        description:
-        - "Specify the user password"
-        required: False
-    radius_port:
-        description:
-        - "Specify the RADIUS port, default is 1812 (Port number (default 1812))"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -155,8 +173,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'radius': {
+            'type': 'bool',
+        },
         'radius_username': {
             'type': 'str',
+        },
+        'radius_password': {
+            'type': 'bool',
         },
         'radius_password_string': {
             'type': 'str',
@@ -164,23 +188,17 @@ def get_argspec():
         'radius_encrypted': {
             'type': 'str',
         },
-        'radius_response_code': {
+        'radius_secret': {
             'type': 'str',
+        },
+        'radius_port': {
+            'type': 'int',
         },
         'radius_expect': {
             'type': 'bool',
         },
-        'radius': {
-            'type': 'bool',
-        },
-        'radius_secret': {
+        'radius_response_code': {
             'type': 'str',
-        },
-        'radius_password': {
-            'type': 'bool',
-        },
-        'radius_port': {
-            'type': 'int',
         },
         'uuid': {
             'type': 'str',

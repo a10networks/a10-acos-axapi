@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sys_ut_template_tcp
 description:
     - TCP header
-short_description: Configures A10 sys.ut.template.tcp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,136 +22,175 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    src_port_range:
+        - Key to identify parent object
+        type: str
+        required: True
+    src_port_range:
         description:
         - "Field src_port_range"
+        type: list
         required: False
         suboptions:
-            src_port_end:
-                description:
-                - "Src port end value"
             src_port_start:
                 description:
                 - "Source port value"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    checksum:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    seq_number:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    nat_pool:
-        description:
-        - "Nat pool port"
-        required: False
-    urgent:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    window:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    ack_seq_number:
-        description:
-        - "'valid'= valid; 'invalid'= invalid;"
-        required: False
-    flags:
-        description:
-        - "Field flags"
-        required: False
-        suboptions:
-            ece:
+                type: int
+            src_port_end:
                 description:
-                - "Ece"
-            urg:
-                description:
-                - "Urg"
-            uuid:
-                description:
-                - "uuid of the object"
-            ack:
-                description:
-                - "Ack"
-            cwr:
-                description:
-                - "Cwr"
-            psh:
-                description:
-                - "Psh"
-            syn:
-                description:
-                - "Syn"
-            rst:
-                description:
-                - "Rst"
-            fin:
-                description:
-                - "Fin"
+                - "Src port end value"
+                type: int
     dest_port:
         description:
         - "Dest port"
+        type: bool
         required: False
     dest_port_value:
         description:
         - "Dest port value"
+        type: int
         required: False
-    options:
+    nat_pool:
         description:
-        - "Field options"
+        - "Nat pool port"
+        type: str
+        required: False
+    seq_number:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    ack_seq_number:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    checksum:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    urgent:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    window:
+        description:
+        - "'valid'= valid; 'invalid'= invalid;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    flags:
+        description:
+        - "Field flags"
+        type: dict
         required: False
         suboptions:
+            syn:
+                description:
+                - "Syn"
+                type: bool
+            ack:
+                description:
+                - "Ack"
+                type: bool
+            fin:
+                description:
+                - "Fin"
+                type: bool
+            rst:
+                description:
+                - "Rst"
+                type: bool
+            psh:
+                description:
+                - "Psh"
+                type: bool
+            ece:
+                description:
+                - "Ece"
+                type: bool
+            urg:
+                description:
+                - "Urg"
+                type: bool
+            cwr:
+                description:
+                - "Cwr"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+    options:
+        description:
+        - "Field options"
+        type: dict
+        required: False
+        suboptions:
             mss:
                 description:
                 - "TCP MSS"
-            sack_type:
-                description:
-                - "'permitted'= permitted; 'block'= block;"
-            time_stamp_enable:
-                description:
-                - "adds Time Stamp to options"
-            nop:
-                description:
-                - "No Op"
+                type: int
             wscale:
                 description:
                 - "Field wscale"
+                type: int
+            sack_type:
+                description:
+                - "'permitted'= permitted; 'block'= block;"
+                type: str
+            time_stamp_enable:
+                description:
+                - "adds Time Stamp to options"
+                type: bool
+            nop:
+                description:
+                - "No Op"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -219,26 +256,33 @@ def get_argspec():
     rv.update({
         'src_port_range': {
             'type': 'list',
-            'src_port_end': {
+            'src_port_start': {
                 'type': 'int',
             },
-            'src_port_start': {
+            'src_port_end': {
                 'type': 'int',
             }
         },
-        'uuid': {
-            'type': 'str',
+        'dest_port': {
+            'type': 'bool',
         },
-        'checksum': {
+        'dest_port_value': {
+            'type': 'int',
+        },
+        'nat_pool': {
             'type': 'str',
-            'choices': ['valid', 'invalid']
         },
         'seq_number': {
             'type': 'str',
             'choices': ['valid', 'invalid']
         },
-        'nat_pool': {
+        'ack_seq_number': {
             'type': 'str',
+            'choices': ['valid', 'invalid']
+        },
+        'checksum': {
+            'type': 'str',
+            'choices': ['valid', 'invalid']
         },
         'urgent': {
             'type': 'str',
@@ -248,52 +292,45 @@ def get_argspec():
             'type': 'str',
             'choices': ['valid', 'invalid']
         },
-        'ack_seq_number': {
+        'uuid': {
             'type': 'str',
-            'choices': ['valid', 'invalid']
         },
         'flags': {
             'type': 'dict',
+            'syn': {
+                'type': 'bool',
+            },
+            'ack': {
+                'type': 'bool',
+            },
+            'fin': {
+                'type': 'bool',
+            },
+            'rst': {
+                'type': 'bool',
+            },
+            'psh': {
+                'type': 'bool',
+            },
             'ece': {
                 'type': 'bool',
             },
             'urg': {
                 'type': 'bool',
             },
-            'uuid': {
-                'type': 'str',
-            },
-            'ack': {
-                'type': 'bool',
-            },
             'cwr': {
                 'type': 'bool',
             },
-            'psh': {
-                'type': 'bool',
-            },
-            'syn': {
-                'type': 'bool',
-            },
-            'rst': {
-                'type': 'bool',
-            },
-            'fin': {
-                'type': 'bool',
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'dest_port': {
-            'type': 'bool',
-        },
-        'dest_port_value': {
-            'type': 'int',
         },
         'options': {
             'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
             'mss': {
+                'type': 'int',
+            },
+            'wscale': {
                 'type': 'int',
             },
             'sack_type': {
@@ -306,8 +343,8 @@ def get_argspec():
             'nop': {
                 'type': 'bool',
             },
-            'wscale': {
-                'type': 'int',
+            'uuid': {
+                'type': 'str',
             }
         }
     })

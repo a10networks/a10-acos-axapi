@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_full_cone_session
 description:
     - Full Cone Sessions
-short_description: Configures A10 cgnv6.lsn.full-cone-session
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,95 +22,122 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            shared_partition:
-                description:
-                - "Field shared_partition"
-            pool_shared:
-                description:
-                - "Field pool_shared"
-            nat_pool_name:
-                description:
-                - "Field nat_pool_name"
-            all_partitions:
-                description:
-                - "Field all_partitions"
-            inside_addr_end:
-                description:
-                - "Field inside_addr_end"
-            pcp:
-                description:
-                - "Field pcp"
-            debug_session:
-                description:
-                - "Field debug_session"
-            inside_addr_start:
-                description:
-                - "Field inside_addr_start"
-            nat_addr:
-                description:
-                - "Field nat_addr"
-            partition_name:
-                description:
-                - "Field partition_name"
-            nat_addr_start:
-                description:
-                - "Field nat_addr_start"
-            nat_port:
-                description:
-                - "Field nat_port"
             session_list:
                 description:
                 - "Field session_list"
-            inside_port:
-                description:
-                - "Field inside_port"
-            graceful:
-                description:
-                - "Field graceful"
+                type: list
             session_count:
                 description:
                 - "Field session_count"
+                type: int
+            all_partitions:
+                description:
+                - "Field all_partitions"
+                type: bool
+            shared_partition:
+                description:
+                - "Field shared_partition"
+                type: bool
+            partition_name:
+                description:
+                - "Field partition_name"
+                type: str
             inside_addr:
                 description:
                 - "Field inside_addr"
+                type: str
+            inside_addr_start:
+                description:
+                - "Field inside_addr_start"
+                type: str
+            inside_addr_end:
+                description:
+                - "Field inside_addr_end"
+                type: str
+            nat_addr:
+                description:
+                - "Field nat_addr"
+                type: str
+            nat_addr_start:
+                description:
+                - "Field nat_addr_start"
+                type: str
             nat_addr_end:
                 description:
                 - "Field nat_addr_end"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            inside_port:
+                description:
+                - "Field inside_port"
+                type: int
+            nat_port:
+                description:
+                - "Field nat_port"
+                type: int
+            nat_pool_name:
+                description:
+                - "Field nat_pool_name"
+                type: str
+            pool_shared:
+                description:
+                - "Field pool_shared"
+                type: bool
+            pcp:
+                description:
+                - "Field pcp"
+                type: bool
+            graceful:
+                description:
+                - "Field graceful"
+                type: bool
+            debug_session:
+                description:
+                - "Field debug_session"
+                type: bool
 
 '''
 
@@ -166,57 +191,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'shared_partition': {
-                'type': 'bool',
-            },
-            'pool_shared': {
-                'type': 'bool',
-            },
-            'nat_pool_name': {
-                'type': 'str',
-            },
-            'all_partitions': {
-                'type': 'bool',
-            },
-            'inside_addr_end': {
-                'type': 'str',
-            },
-            'pcp': {
-                'type': 'bool',
-            },
-            'debug_session': {
-                'type': 'bool',
-            },
-            'inside_addr_start': {
-                'type': 'str',
-            },
-            'nat_addr': {
-                'type': 'str',
-            },
-            'partition_name': {
-                'type': 'str',
-            },
-            'nat_addr_start': {
-                'type': 'str',
-            },
-            'nat_port': {
-                'type': 'int',
-            },
             'session_list': {
                 'type': 'list',
                 'protocol': {
                     'type': 'str',
                 },
-                'inbound': {
-                    'type': 'int',
-                },
-                'age': {
-                    'type': 'str',
-                },
                 'inside_address': {
                     'type': 'str',
+                },
+                'inside_port': {
+                    'type': 'int',
                 },
                 'nat_address': {
                     'type': 'str',
@@ -224,40 +213,76 @@ def get_argspec():
                 'nat_port': {
                     'type': 'int',
                 },
-                'flags': {
-                    'type': 'str',
+                'outbound': {
+                    'type': 'int',
+                },
+                'inbound': {
+                    'type': 'int',
                 },
                 'nat_pool_name': {
                     'type': 'str',
                 },
-                'inside_port': {
-                    'type': 'int',
-                },
-                'outbound': {
-                    'type': 'int',
-                },
                 'cpu': {
                     'type': 'int',
+                },
+                'age': {
+                    'type': 'str',
+                },
+                'flags': {
+                    'type': 'str',
                 }
-            },
-            'inside_port': {
-                'type': 'int',
-            },
-            'graceful': {
-                'type': 'bool',
             },
             'session_count': {
                 'type': 'int',
             },
+            'all_partitions': {
+                'type': 'bool',
+            },
+            'shared_partition': {
+                'type': 'bool',
+            },
+            'partition_name': {
+                'type': 'str',
+            },
             'inside_addr': {
+                'type': 'str',
+            },
+            'inside_addr_start': {
+                'type': 'str',
+            },
+            'inside_addr_end': {
+                'type': 'str',
+            },
+            'nat_addr': {
+                'type': 'str',
+            },
+            'nat_addr_start': {
                 'type': 'str',
             },
             'nat_addr_end': {
                 'type': 'str',
+            },
+            'inside_port': {
+                'type': 'int',
+            },
+            'nat_port': {
+                'type': 'int',
+            },
+            'nat_pool_name': {
+                'type': 'str',
+            },
+            'pool_shared': {
+                'type': 'bool',
+            },
+            'pcp': {
+                'type': 'bool',
+            },
+            'graceful': {
+                'type': 'bool',
+            },
+            'debug_session': {
+                'type': 'bool',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_scaleout_address_mapping
 description:
     - Field address_mapping
-short_description: Configures A10 cgnv6.scaleout.address-mapping
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,65 +22,82 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            active_node:
-                description:
-                - "Field active_node"
             user_group:
                 description:
                 - "Field user_group"
+                type: int
+            active_node:
+                description:
+                - "Field active_node"
+                type: int
             standby_node:
                 description:
                 - "Field standby_node"
-            ip:
-                description:
-                - "Field ip"
-            nat_ip:
-                description:
-                - "Field nat_ip"
-            nat_pool:
-                description:
-                - "Field nat_pool"
+                type: int
             ip_list:
                 description:
                 - "Field ip_list"
+                type: list
+            ip:
+                description:
+                - "Field ip"
+                type: str
             ipv6:
                 description:
                 - "Field ipv6"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            nat_ip:
+                description:
+                - "Field nat_ip"
+                type: str
+            nat_pool:
+                description:
+                - "Field nat_pool"
+                type: str
 
 '''
 
@@ -136,25 +151,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'active_node': {
+            'user_group': {
                 'type': 'int',
             },
-            'user_group': {
+            'active_node': {
                 'type': 'int',
             },
             'standby_node': {
                 'type': 'int',
-            },
-            'ip': {
-                'type': 'str',
-            },
-            'nat_ip': {
-                'type': 'str',
-            },
-            'nat_pool': {
-                'type': 'str',
             },
             'ip_list': {
                 'type': 'list',
@@ -165,12 +174,18 @@ def get_argspec():
                     'type': 'str',
                 }
             },
+            'ip': {
+                'type': 'str',
+            },
             'ipv6': {
                 'type': 'str',
+            },
+            'nat_ip': {
+                'type': 'str',
+            },
+            'nat_pool': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_cname_record
 description:
     - Specify DNS CNAME Record
-short_description: Configures A10 gslb.zone.service.dns-cname-record
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,77 +22,103 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    service-name:
+    service_name:
         description:
-        - Key to identify parent object    service_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_port:
         description:
-        - Key to identify parent object    zone_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    zone_name:
         description:
-        - Key to identify parent object    alias_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    alias_name:
         description:
         - "Specify the alias name"
+        type: str
         required: True
-    stats:
+    admin_preference:
         description:
-        - "Field stats"
-        required: False
-        suboptions:
-            alias_name:
-                description:
-                - "Specify the alias name"
-            cname_hits:
-                description:
-                - "Number of times the CNAME has been used"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    as_backup:
-        description:
-        - "As backup when fail"
+        - "Specify Administrative Preference, default is 100"
+        type: int
         required: False
     weight:
         description:
         - "Specify Weight, default is 1"
+        type: int
+        required: False
+    as_backup:
+        description:
+        - "As backup when fail"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'cname-hits'= Number of times the CNAME has been used;"
-    admin_preference:
+                type: str
+    stats:
         description:
-        - "Specify Administrative Preference, default is 100"
+        - "Field stats"
+        type: dict
         required: False
+        suboptions:
+            cname_hits:
+                description:
+                - "Number of times the CNAME has been used"
+                type: str
+            alias_name:
+                description:
+                - "Specify the alias name"
+                type: str
 
 '''
 
@@ -157,24 +181,17 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'stats': {
-            'type': 'dict',
-            'alias_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'cname_hits': {
-                'type': 'str',
-            }
+        'admin_preference': {
+            'type': 'int',
         },
-        'uuid': {
-            'type': 'str',
+        'weight': {
+            'type': 'int',
         },
         'as_backup': {
             'type': 'bool',
         },
-        'weight': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -183,14 +200,21 @@ def get_argspec():
                 'choices': ['all', 'cname-hits']
             }
         },
-        'admin_preference': {
-            'type': 'int',
+        'stats': {
+            'type': 'dict',
+            'cname_hits': {
+                'type': 'str',
+            },
+            'alias_name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     # Parent keys
     rv.update(
         dict(
-            service - name=dict(type='str', required=True),
+            service_name=dict(type='str', required=True),
             service_port=dict(type='str', required=True),
             zone_name=dict(type='str', required=True),
         ))
@@ -204,7 +228,7 @@ def existing_url(module):
 
     f_dict = {}
     f_dict["alias-name"] = module.params["alias_name"]
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 
@@ -279,7 +303,7 @@ def new_url(module):
 
     f_dict = {}
     f_dict["alias-name"] = ""
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_srv_record
 description:
     - Specify DNS SRV Record
-short_description: Configures A10 gslb.zone.service.dns-srv-record
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,84 +22,112 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    service-name:
+    service_name:
         description:
-        - Key to identify parent object    service_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_port:
         description:
-        - Key to identify parent object    zone_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    zone_name:
         description:
-        - Key to identify parent object    srv_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    srv_name:
         description:
         - "Specify Domain Name"
+        type: str
         required: True
-    stats:
+    port:
         description:
-        - "Field stats"
-        required: False
-        suboptions:
-            srv_name:
-                description:
-                - "Specify Domain Name"
-            hits:
-                description:
-                - "Number of times the record has been used"
-            port:
-                description:
-                - "Specify Port (Port Number)"
-    uuid:
+        - "Specify Port (Port Number)"
+        type: int
+        required: True
+    priority:
         description:
-        - "uuid of the object"
+        - "Specify Priority"
+        type: int
         required: False
     weight:
         description:
         - "Specify Weight, default is 10"
+        type: int
         required: False
-    priority:
+    ttl:
         description:
-        - "Specify Priority"
+        - "Specify TTL"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Number of times the record has been used;"
-    ttl:
+                type: str
+    stats:
         description:
-        - "Specify TTL"
+        - "Field stats"
+        type: dict
         required: False
-    port:
-        description:
-        - "Specify Port (Port Number)"
-        required: True
+        suboptions:
+            hits:
+                description:
+                - "Number of times the record has been used"
+                type: str
+            srv_name:
+                description:
+                - "Specify Domain Name"
+                type: str
+            port:
+                description:
+                - "Specify Port (Port Number)"
+                type: int
 
 '''
 
@@ -165,28 +191,21 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'stats': {
-            'type': 'dict',
-            'srv_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'hits': {
-                'type': 'str',
-            },
-            'port': {
-                'type': 'int',
-                'required': True,
-            }
+        'port': {
+            'type': 'int',
+            'required': True,
         },
-        'uuid': {
-            'type': 'str',
+        'priority': {
+            'type': 'int',
         },
         'weight': {
             'type': 'int',
         },
-        'priority': {
+        'ttl': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -195,18 +214,25 @@ def get_argspec():
                 'choices': ['all', 'hits']
             }
         },
-        'ttl': {
-            'type': 'int',
-        },
-        'port': {
-            'type': 'int',
-            'required': True,
+        'stats': {
+            'type': 'dict',
+            'hits': {
+                'type': 'str',
+            },
+            'srv_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port': {
+                'type': 'int',
+                'required': True,
+            }
         }
     })
     # Parent keys
     rv.update(
         dict(
-            service - name=dict(type='str', required=True),
+            service_name=dict(type='str', required=True),
             service_port=dict(type='str', required=True),
             zone_name=dict(type='str', required=True),
         ))
@@ -221,7 +247,7 @@ def existing_url(module):
     f_dict = {}
     f_dict["srv-name"] = module.params["srv_name"]
     f_dict["port"] = module.params["port"]
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 
@@ -297,7 +323,7 @@ def new_url(module):
     f_dict = {}
     f_dict["srv-name"] = ""
     f_dict["port"] = ""
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 

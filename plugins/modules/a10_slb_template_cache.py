@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_cache
 description:
     - RAM caching template
-short_description: Configures A10 slb.template.cache
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,167 +22,157 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            nm_response:
-                description:
-                - "Field nm_response"
-            rsp_type_304:
-                description:
-                - "Field rsp_type_304"
-            rsp_other:
-                description:
-                - "Field rsp_other"
-            content_toosmall:
-                description:
-                - "Field content_toosmall"
-            entry_create_failures:
-                description:
-                - "Field entry_create_failures"
-            nocache_match:
-                description:
-                - "Field nocache_match"
-            content_toobig:
-                description:
-                - "Field content_toobig"
-            replaced_entry:
-                description:
-                - "Field replaced_entry"
-            miss:
-                description:
-                - "Cache misses"
-            nc_req_header:
-                description:
-                - "Field nc_req_header"
-            aging_entry:
-                description:
-                - "Field aging_entry"
-            mem_size:
-                description:
-                - "Field mem_size"
-            rsp_deflate:
-                description:
-                - "Field rsp_deflate"
-            invalidate_match:
-                description:
-                - "Field invalidate_match"
-            match:
-                description:
-                - "Field match"
-            cleaned_entry:
-                description:
-                - "Field cleaned_entry"
-            entry_num:
-                description:
-                - "Field entry_num"
-            total_req:
-                description:
-                - "Total requests received"
-            bytes_served:
-                description:
-                - "Bytes served from cache"
-            rv_success:
-                description:
-                - "Field rv_success"
-            rv_failure:
-                description:
-                - "Field rv_failure"
-            rsp_gzip:
-                description:
-                - "Field rsp_gzip"
-            hits:
-                description:
-                - "Cache hits"
-            rsp_type_other:
-                description:
-                - "Field rsp_type_other"
-            name:
-                description:
-                - "Specify cache template name"
-            rsp_type_CE:
-                description:
-                - "Field rsp_type_CE"
-            rsp_type_CL:
-                description:
-                - "Field rsp_type_CL"
-            rsp_no_compress:
-                description:
-                - "Field rsp_no_compress"
-            nc_res_header:
-                description:
-                - "Field nc_res_header"
-            caching_req:
-                description:
-                - "Total requests to cache"
-            ims_request:
-                description:
-                - "Field ims_request"
-    accept_reload_req:
-        description:
-        - "Accept reload requests via cache-control directives in HTTP headers"
+        type: str
         required: False
     name:
         description:
         - "Specify cache template name"
+        type: str
         required: True
-    default_policy_nocache:
+    accept_reload_req:
         description:
-        - "Specify default policy to be to not cache"
+        - "Accept reload requests via cache-control directives in HTTP headers"
+        type: bool
         required: False
     age:
         description:
         - "Specify duration in seconds cached content valid, default is 3600 seconds
           (seconds that the cached content is valid (default 3600 seconds))"
+        type: int
+        required: False
+    default_policy_nocache:
+        description:
+        - "Specify default policy to be to not cache"
+        type: bool
+        required: False
+    disable_insert_age:
+        description:
+        - "Disable insertion of age header in response served from RAM cache"
+        type: bool
         required: False
     disable_insert_via:
         description:
         - "Disable insertion of via header in response served from RAM cache"
+        type: bool
         required: False
-    user_tag:
+    max_cache_size:
         description:
-        - "Customized tag"
+        - "Specify maximum cache size in megabytes, default is 80MB (RAM cache size in
+          megabytes (default 80MB))"
+        type: int
+        required: False
+    min_content_size:
+        description:
+        - "Minimum size (bytes) of response that can be cached - default 512"
+        type: int
+        required: False
+    max_content_size:
+        description:
+        - "Maximum size (bytes) of response that can be cached - default 81920 (80KB)"
+        type: int
         required: False
     local_uri_policy:
         description:
         - "Field local_uri_policy"
+        type: list
         required: False
         suboptions:
             local_uri:
                 description:
                 - "Specify Local URI for caching (Specify URI pattern that the policy should be
           applied to, maximum 63 charaters)"
+                type: str
+    uri_policy:
+        description:
+        - "Field uri_policy"
+        type: list
+        required: False
+        suboptions:
+            uri:
+                description:
+                - "Specify URI for cache policy (Specify URI pattern that the policy should be
+          applied to, maximum 63 charaters)"
+                type: str
+            cache_action:
+                description:
+                - "'cache'= Specify if certain URIs should be cached; 'nocache'= Specify if
+          certain URIs should not be cached;"
+                type: str
+            cache_value:
+                description:
+                - "Specify seconds that content should be cached, default is age specified in
+          cache template"
+                type: int
+            invalidate:
+                description:
+                - "Specify if URI should invalidate cache entries matching pattern (pattern that
+          would match entries to be invalidated (64 chars max))"
+                type: str
+    remove_cookies:
+        description:
+        - "Remove cookies in response and cache"
+        type: bool
+        required: False
+    replacement_policy:
+        description:
+        - "'LFU'= LFU;"
+        type: str
+        required: False
+    logging:
+        description:
+        - "Specify logging template (Logging Config name)"
+        type: str
+        required: False
+    verify_host:
+        description:
+        - "Verify request using host before sending response from RAM cache"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -202,64 +190,137 @@ options:
           content_toosmall; 'entry_create_failures'= entry_create_failures; 'mem_size'=
           mem_size; 'entry_num'= entry_num; 'replaced_entry'= replaced_entry;
           'aging_entry'= aging_entry; 'cleaned_entry'= cleaned_entry;"
-    replacement_policy:
+                type: str
+    stats:
         description:
-        - "'LFU'= LFU;"
-        required: False
-    disable_insert_age:
-        description:
-        - "Disable insertion of age header in response served from RAM cache"
-        required: False
-    max_content_size:
-        description:
-        - "Maximum size (bytes) of response that can be cached - default 81920 (80KB)"
-        required: False
-    max_cache_size:
-        description:
-        - "Specify maximum cache size in megabytes, default is 80MB (RAM cache size in
-          megabytes (default 80MB))"
-        required: False
-    logging:
-        description:
-        - "Specify logging template (Logging Config name)"
-        required: False
-    uri_policy:
-        description:
-        - "Field uri_policy"
+        - "Field stats"
+        type: dict
         required: False
         suboptions:
-            cache_action:
+            hits:
                 description:
-                - "'cache'= Specify if certain URIs should be cached; 'nocache'= Specify if
-          certain URIs should not be cached;"
-            cache_value:
+                - "Cache hits"
+                type: str
+            miss:
                 description:
-                - "Specify seconds that content should be cached, default is age specified in
-          cache template"
-            uri:
+                - "Cache misses"
+                type: str
+            bytes_served:
                 description:
-                - "Specify URI for cache policy (Specify URI pattern that the policy should be
-          applied to, maximum 63 charaters)"
-            invalidate:
+                - "Bytes served from cache"
+                type: str
+            total_req:
                 description:
-                - "Specify if URI should invalidate cache entries matching pattern (pattern that
-          would match entries to be invalidated (64 chars max))"
-    remove_cookies:
-        description:
-        - "Remove cookies in response and cache"
-        required: False
-    verify_host:
-        description:
-        - "Verify request using host before sending response from RAM cache"
-        required: False
-    min_content_size:
-        description:
-        - "Minimum size (bytes) of response that can be cached - default 512"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                - "Total requests received"
+                type: str
+            caching_req:
+                description:
+                - "Total requests to cache"
+                type: str
+            nc_req_header:
+                description:
+                - "Field nc_req_header"
+                type: str
+            nc_res_header:
+                description:
+                - "Field nc_res_header"
+                type: str
+            rv_success:
+                description:
+                - "Field rv_success"
+                type: str
+            rv_failure:
+                description:
+                - "Field rv_failure"
+                type: str
+            ims_request:
+                description:
+                - "Field ims_request"
+                type: str
+            nm_response:
+                description:
+                - "Field nm_response"
+                type: str
+            rsp_type_CL:
+                description:
+                - "Field rsp_type_CL"
+                type: str
+            rsp_type_CE:
+                description:
+                - "Field rsp_type_CE"
+                type: str
+            rsp_type_304:
+                description:
+                - "Field rsp_type_304"
+                type: str
+            rsp_type_other:
+                description:
+                - "Field rsp_type_other"
+                type: str
+            rsp_no_compress:
+                description:
+                - "Field rsp_no_compress"
+                type: str
+            rsp_gzip:
+                description:
+                - "Field rsp_gzip"
+                type: str
+            rsp_deflate:
+                description:
+                - "Field rsp_deflate"
+                type: str
+            rsp_other:
+                description:
+                - "Field rsp_other"
+                type: str
+            nocache_match:
+                description:
+                - "Field nocache_match"
+                type: str
+            match:
+                description:
+                - "Field match"
+                type: str
+            invalidate_match:
+                description:
+                - "Field invalidate_match"
+                type: str
+            content_toobig:
+                description:
+                - "Field content_toobig"
+                type: str
+            content_toosmall:
+                description:
+                - "Field content_toosmall"
+                type: str
+            entry_create_failures:
+                description:
+                - "Field entry_create_failures"
+                type: str
+            mem_size:
+                description:
+                - "Field mem_size"
+                type: str
+            entry_num:
+                description:
+                - "Field entry_num"
+                type: str
+            replaced_entry:
+                description:
+                - "Field replaced_entry"
+                type: str
+            aging_entry:
+                description:
+                - "Field aging_entry"
+                type: str
+            cleaned_entry:
+                description:
+                - "Field cleaned_entry"
+                type: str
+            name:
+                description:
+                - "Specify cache template name"
+                type: str
 
 '''
 
@@ -330,127 +391,74 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'stats': {
-            'type': 'dict',
-            'nm_response': {
-                'type': 'str',
-            },
-            'rsp_type_304': {
-                'type': 'str',
-            },
-            'rsp_other': {
-                'type': 'str',
-            },
-            'content_toosmall': {
-                'type': 'str',
-            },
-            'entry_create_failures': {
-                'type': 'str',
-            },
-            'nocache_match': {
-                'type': 'str',
-            },
-            'content_toobig': {
-                'type': 'str',
-            },
-            'replaced_entry': {
-                'type': 'str',
-            },
-            'miss': {
-                'type': 'str',
-            },
-            'nc_req_header': {
-                'type': 'str',
-            },
-            'aging_entry': {
-                'type': 'str',
-            },
-            'mem_size': {
-                'type': 'str',
-            },
-            'rsp_deflate': {
-                'type': 'str',
-            },
-            'invalidate_match': {
-                'type': 'str',
-            },
-            'match': {
-                'type': 'str',
-            },
-            'cleaned_entry': {
-                'type': 'str',
-            },
-            'entry_num': {
-                'type': 'str',
-            },
-            'total_req': {
-                'type': 'str',
-            },
-            'bytes_served': {
-                'type': 'str',
-            },
-            'rv_success': {
-                'type': 'str',
-            },
-            'rv_failure': {
-                'type': 'str',
-            },
-            'rsp_gzip': {
-                'type': 'str',
-            },
-            'hits': {
-                'type': 'str',
-            },
-            'rsp_type_other': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'rsp_type_CE': {
-                'type': 'str',
-            },
-            'rsp_type_CL': {
-                'type': 'str',
-            },
-            'rsp_no_compress': {
-                'type': 'str',
-            },
-            'nc_res_header': {
-                'type': 'str',
-            },
-            'caching_req': {
-                'type': 'str',
-            },
-            'ims_request': {
-                'type': 'str',
-            }
-        },
-        'accept_reload_req': {
-            'type': 'bool',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'default_policy_nocache': {
+        'accept_reload_req': {
             'type': 'bool',
         },
         'age': {
             'type': 'int',
         },
+        'default_policy_nocache': {
+            'type': 'bool',
+        },
+        'disable_insert_age': {
+            'type': 'bool',
+        },
         'disable_insert_via': {
             'type': 'bool',
         },
-        'user_tag': {
-            'type': 'str',
+        'max_cache_size': {
+            'type': 'int',
+        },
+        'min_content_size': {
+            'type': 'int',
+        },
+        'max_content_size': {
+            'type': 'int',
         },
         'local_uri_policy': {
             'type': 'list',
             'local_uri': {
                 'type': 'str',
             }
+        },
+        'uri_policy': {
+            'type': 'list',
+            'uri': {
+                'type': 'str',
+            },
+            'cache_action': {
+                'type': 'str',
+                'choices': ['cache', 'nocache']
+            },
+            'cache_value': {
+                'type': 'int',
+            },
+            'invalidate': {
+                'type': 'str',
+            }
+        },
+        'remove_cookies': {
+            'type': 'bool',
+        },
+        'replacement_policy': {
+            'type': 'str',
+            'choices': ['LFU']
+        },
+        'logging': {
+            'type': 'str',
+        },
+        'verify_host': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -470,49 +478,102 @@ def get_argspec():
                 ]
             }
         },
-        'replacement_policy': {
-            'type': 'str',
-            'choices': ['LFU']
-        },
-        'disable_insert_age': {
-            'type': 'bool',
-        },
-        'max_content_size': {
-            'type': 'int',
-        },
-        'max_cache_size': {
-            'type': 'int',
-        },
-        'logging': {
-            'type': 'str',
-        },
-        'uri_policy': {
-            'type': 'list',
-            'cache_action': {
-                'type': 'str',
-                'choices': ['cache', 'nocache']
-            },
-            'cache_value': {
-                'type': 'int',
-            },
-            'uri': {
+        'stats': {
+            'type': 'dict',
+            'hits': {
                 'type': 'str',
             },
-            'invalidate': {
+            'miss': {
                 'type': 'str',
+            },
+            'bytes_served': {
+                'type': 'str',
+            },
+            'total_req': {
+                'type': 'str',
+            },
+            'caching_req': {
+                'type': 'str',
+            },
+            'nc_req_header': {
+                'type': 'str',
+            },
+            'nc_res_header': {
+                'type': 'str',
+            },
+            'rv_success': {
+                'type': 'str',
+            },
+            'rv_failure': {
+                'type': 'str',
+            },
+            'ims_request': {
+                'type': 'str',
+            },
+            'nm_response': {
+                'type': 'str',
+            },
+            'rsp_type_CL': {
+                'type': 'str',
+            },
+            'rsp_type_CE': {
+                'type': 'str',
+            },
+            'rsp_type_304': {
+                'type': 'str',
+            },
+            'rsp_type_other': {
+                'type': 'str',
+            },
+            'rsp_no_compress': {
+                'type': 'str',
+            },
+            'rsp_gzip': {
+                'type': 'str',
+            },
+            'rsp_deflate': {
+                'type': 'str',
+            },
+            'rsp_other': {
+                'type': 'str',
+            },
+            'nocache_match': {
+                'type': 'str',
+            },
+            'match': {
+                'type': 'str',
+            },
+            'invalidate_match': {
+                'type': 'str',
+            },
+            'content_toobig': {
+                'type': 'str',
+            },
+            'content_toosmall': {
+                'type': 'str',
+            },
+            'entry_create_failures': {
+                'type': 'str',
+            },
+            'mem_size': {
+                'type': 'str',
+            },
+            'entry_num': {
+                'type': 'str',
+            },
+            'replaced_entry': {
+                'type': 'str',
+            },
+            'aging_entry': {
+                'type': 'str',
+            },
+            'cleaned_entry': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
-        },
-        'remove_cookies': {
-            'type': 'bool',
-        },
-        'verify_host': {
-            'type': 'bool',
-        },
-        'min_content_size': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

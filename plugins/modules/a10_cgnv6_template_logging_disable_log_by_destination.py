@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_logging_disable_log_by_destination
 description:
     - Disable logging by destination ip address protocol and port
-short_description: Configures A10 cgnv6.template.logging.disable-log-by-destination
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,120 +22,155 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     logging_name:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ip_list:
-        description:
-        - "Field ip_list"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ipv4_addr:
-                description:
-                - "Configure an IP subnet"
-            user_tag:
-                description:
-                - "Customized tag"
-            tcp_list:
-                description:
-                - "Field tcp_list"
-            others:
-                description:
-                - "Disable logging for other L4 protocols"
-            udp_list:
-                description:
-                - "Field udp_list"
-            icmp:
-                description:
-                - "Disable logging for icmp traffic"
+        - Key to identify parent object
+        type: str
+        required: True
     tcp_list:
         description:
         - "Field tcp_list"
+        type: list
         required: False
         suboptions:
             tcp_port_start:
                 description:
                 - "Destination Port (Single Destination Port or Port Range Start)"
+                type: int
             tcp_port_end:
                 description:
                 - "Port Range End"
-    others:
-        description:
-        - "Disable logging for other L4 protocols"
-        required: False
-    ip6_list:
-        description:
-        - "Field ip6_list"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ipv6_addr:
-                description:
-                - "Configure an IPv6 subnet"
-            user_tag:
-                description:
-                - "Customized tag"
-            tcp_list:
-                description:
-                - "Field tcp_list"
-            others:
-                description:
-                - "Disable logging for other L4 protocols"
-            udp_list:
-                description:
-                - "Field udp_list"
-            icmp:
-                description:
-                - "Disable logging for icmp traffic"
+                type: int
     udp_list:
         description:
         - "Field udp_list"
+        type: list
         required: False
         suboptions:
             udp_port_start:
                 description:
                 - "Destination Port (Single Destination Port or Port Range Start)"
+                type: int
             udp_port_end:
                 description:
                 - "Port Range End"
+                type: int
     icmp:
         description:
         - "Disable logging for icmp traffic"
+        type: bool
         required: False
+    others:
+        description:
+        - "Disable logging for other L4 protocols"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    ip_list:
+        description:
+        - "Field ip_list"
+        type: list
+        required: False
+        suboptions:
+            ipv4_addr:
+                description:
+                - "Configure an IP subnet"
+                type: str
+            tcp_list:
+                description:
+                - "Field tcp_list"
+                type: list
+            udp_list:
+                description:
+                - "Field udp_list"
+                type: list
+            icmp:
+                description:
+                - "Disable logging for icmp traffic"
+                type: bool
+            others:
+                description:
+                - "Disable logging for other L4 protocols"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+    ip6_list:
+        description:
+        - "Field ip6_list"
+        type: list
+        required: False
+        suboptions:
+            ipv6_addr:
+                description:
+                - "Configure an IPv6 subnet"
+                type: str
+            tcp_list:
+                description:
+                - "Field tcp_list"
+                type: list
+            udp_list:
+                description:
+                - "Field udp_list"
+                type: list
+            icmp:
+                description:
+                - "Disable logging for icmp traffic"
+                type: bool
+            others:
+                description:
+                - "Disable logging for other L4 protocols"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -196,46 +229,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'ip_list': {
-            'type': 'list',
-            'uuid': {
-                'type': 'str',
-            },
-            'ipv4_addr': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'tcp_list': {
-                'type': 'list',
-                'tcp_port_start': {
-                    'type': 'int',
-                },
-                'tcp_port_end': {
-                    'type': 'int',
-                }
-            },
-            'others': {
-                'type': 'bool',
-            },
-            'udp_list': {
-                'type': 'list',
-                'udp_port_start': {
-                    'type': 'int',
-                },
-                'udp_port_end': {
-                    'type': 'int',
-                }
-            },
-            'icmp': {
-                'type': 'bool',
-            }
-        },
         'tcp_list': {
             'type': 'list',
             'tcp_port_start': {
@@ -243,46 +236,6 @@ def get_argspec():
             },
             'tcp_port_end': {
                 'type': 'int',
-            }
-        },
-        'others': {
-            'type': 'bool',
-        },
-        'ip6_list': {
-            'type': 'list',
-            'uuid': {
-                'type': 'str',
-            },
-            'ipv6_addr': {
-                'type': 'str',
-                'required': True,
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'tcp_list': {
-                'type': 'list',
-                'tcp_port_start': {
-                    'type': 'int',
-                },
-                'tcp_port_end': {
-                    'type': 'int',
-                }
-            },
-            'others': {
-                'type': 'bool',
-            },
-            'udp_list': {
-                'type': 'list',
-                'udp_port_start': {
-                    'type': 'int',
-                },
-                'udp_port_end': {
-                    'type': 'int',
-                }
-            },
-            'icmp': {
-                'type': 'bool',
             }
         },
         'udp_list': {
@@ -296,6 +249,86 @@ def get_argspec():
         },
         'icmp': {
             'type': 'bool',
+        },
+        'others': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'ip_list': {
+            'type': 'list',
+            'ipv4_addr': {
+                'type': 'str',
+                'required': True,
+            },
+            'tcp_list': {
+                'type': 'list',
+                'tcp_port_start': {
+                    'type': 'int',
+                },
+                'tcp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'udp_list': {
+                'type': 'list',
+                'udp_port_start': {
+                    'type': 'int',
+                },
+                'udp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'icmp': {
+                'type': 'bool',
+            },
+            'others': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
+        },
+        'ip6_list': {
+            'type': 'list',
+            'ipv6_addr': {
+                'type': 'str',
+                'required': True,
+            },
+            'tcp_list': {
+                'type': 'list',
+                'tcp_port_start': {
+                    'type': 'int',
+                },
+                'tcp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'udp_list': {
+                'type': 'list',
+                'udp_port_start': {
+                    'type': 'int',
+                },
+                'udp_port_end': {
+                    'type': 'int',
+                }
+            },
+            'icmp': {
+                'type': 'bool',
+            },
+            'others': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            }
         }
     })
     # Parent keys

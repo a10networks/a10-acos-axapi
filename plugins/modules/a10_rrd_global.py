@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rrd_global
 description:
     - global session data in RRD
-short_description: Configures A10 rrd.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,62 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            global_data:
-                description:
-                - "Field global_data"
-            end_time:
-                description:
-                - "Field end_time"
             start_time:
                 description:
                 - "Field start_time"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            end_time:
+                description:
+                - "Field end_time"
+                type: int
+            global_data:
+                description:
+                - "Field global_data"
+                type: list
 
 '''
 
@@ -121,50 +131,47 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'start_time': {
+                'type': 'int',
+            },
+            'end_time': {
+                'type': 'int',
+            },
             'global_data': {
                 'type': 'list',
-                'conn_smp_alloc': {
-                    'type': 'int',
-                },
-                'snat_udp_count': {
+                'time': {
                     'type': 'int',
                 },
                 'tcp_est_count': {
                     'type': 'int',
                 },
-                'free_buff_count': {
-                    'type': 'int',
-                },
-                'snat_tcp_count': {
-                    'type': 'int',
-                },
-                'other_conn_count': {
+                'tcp_half_open': {
                     'type': 'int',
                 },
                 'udp_conn_count': {
                     'type': 'int',
                 },
-                'tcp_half_open': {
-                    'type': 'int',
-                },
-                'curr_free_conn': {
-                    'type': 'int',
-                },
                 'ip_conn_count': {
                     'type': 'int',
                 },
-                'syn_half_open': {
+                'other_conn_count': {
                     'type': 'int',
                 },
-                'time': {
+                'snat_tcp_count': {
                     'type': 'int',
                 },
-                'conn_smp_aged': {
+                'snat_udp_count': {
                     'type': 'int',
                 },
-                'conn_smp_free': {
+                'free_buff_count': {
+                    'type': 'int',
+                },
+                'curr_free_conn': {
                     'type': 'int',
                 },
                 'conn_get_cnt': {
@@ -172,17 +179,20 @@ def get_argspec():
                 },
                 'conn_free_cnt': {
                     'type': 'int',
+                },
+                'syn_half_open': {
+                    'type': 'int',
+                },
+                'conn_smp_alloc': {
+                    'type': 'int',
+                },
+                'conn_smp_free': {
+                    'type': 'int',
+                },
+                'conn_smp_aged': {
+                    'type': 'int',
                 }
-            },
-            'end_time': {
-                'type': 'int',
-            },
-            'start_time': {
-                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

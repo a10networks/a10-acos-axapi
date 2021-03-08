@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_client_ssl
 description:
     - Client SSL Template
-short_description: Configures A10 slb.template.client-ssl
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,285 +22,1570 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    bypass_cert_subject_multi_class_list:
+    name:
         description:
-        - "Field bypass_cert_subject_multi_class_list"
-        required: False
-        suboptions:
-            bypass_cert_subject_multi_class_list_name:
-                description:
-                - "Class List Name"
-    verify_cert_fail_action:
+        - "Client SSL Template Name"
+        type: str
+        required: True
+    auth_username:
         description:
-        - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'=
-          close the connection; 'block'= block the connection with a warning page;"
-        required: False
-    inspect_certificate_issuer_cl_name:
-        description:
-        - "Forward proxy Inspect if Certificate issuer matches class-list"
-        required: False
-    certificate_san_contains_list:
-        description:
-        - "Field certificate_san_contains_list"
-        required: False
-        suboptions:
-            certificate_san_contains:
-                description:
-                - "Forward proxy bypass if Certificate SAN contains another string"
-    forward_proxy_block_message:
-        description:
-        - "Message to be included on the block page (Message, enclose in quotes if spaces
-          are present)"
-        required: False
-    direct_client_server_auth:
-        description:
-        - "Let backend server does SSL client authentication directly"
-        required: False
-    ocspst_sg_hours:
-        description:
-        - "Specify update period, in hours"
-        required: False
-    no_shared_cipher_action:
-        description:
-        - "'bypass'= bypass SSLi processing; 'drop'= close the connection;"
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            name:
-                description:
-                - "Client SSL Template Name"
-            cert_status_list:
-                description:
-                - "Field cert_status_list"
-    fp_cert_fetch_autonat:
-        description:
-        - "'auto'= Configure auto NAT for server certificate fetching;"
-        required: False
-    equals_list:
-        description:
-        - "Field equals_list"
-        required: False
-        suboptions:
-            equals:
-                description:
-                - "Forward proxy bypass if SNI string equals another string"
-    exception_certificate_subject_cl_name:
-        description:
-        - "Exceptions to forward-proxy-bypass"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    forward_proxy_trusted_ca_lists:
-        description:
-        - "Field forward_proxy_trusted_ca_lists"
-        required: False
-        suboptions:
-            forward_proxy_trusted_ca:
-                description:
-                - "Forward proxy trusted CA file (CA file name)"
-    template_cipher_shared:
-        description:
-        - "Cipher Template Name"
-        required: False
-    forward_proxy_ca_cert:
-        description:
-        - "CA Certificate for forward proxy (SSL forward proxy CA Certificate Name)"
-        required: False
-    ssl_false_start_disable:
-        description:
-        - "disable SSL False Start"
-        required: False
-    dgversion:
-        description:
-        - "Lower TLS/SSL version can be downgraded"
-        required: False
-    client_auth_class_list:
-        description:
-        - "Forward proxy client auth bypass if SNI string matches class-list (Class List
-          Name)"
-        required: False
-    key_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
-    notafteryear:
-        description:
-        - "Year"
-        required: False
-    forward_proxy_alt_sign:
-        description:
-        - "Forward proxy alternate signing cert and key"
-        required: False
-    template_hsm:
-        description:
-        - "HSM Template (HSM Template Name)"
-        required: False
-    forward_passphrase:
-        description:
-        - "Password Phrase"
-        required: False
-    exception_certificate_issuer_cl_name:
-        description:
-        - "Exceptions to forward-proxy-bypass"
-        required: False
-    contains_list:
-        description:
-        - "Field contains_list"
-        required: False
-        suboptions:
-            contains:
-                description:
-                - "Forward proxy bypass if SNI string contains another string"
-    forward_proxy_ca_key:
-        description:
-        - "CA Private Key for forward proxy (SSL forward proxy CA Key Name)"
-        required: False
-    notbefore:
-        description:
-        - "notBefore date"
-        required: False
-    ends_with_list:
-        description:
-        - "Field ends_with_list"
-        required: False
-        suboptions:
-            ends_with:
-                description:
-                - "Forward proxy bypass if SNI string ends with another string"
-    bypass_cert_subject_class_list_name:
-        description:
-        - "Class List Name"
-        required: False
-    notafter:
-        description:
-        - "notAfter date"
-        required: False
-    class_list_name:
-        description:
-        - "Class List Name"
-        required: False
-    ocspst_ocsp:
-        description:
-        - "Specify OCSP Authentication"
-        required: False
-    notbeforeday:
-        description:
-        - "Day"
-        required: False
-    key_alt_passphrase:
-        description:
-        - "Password Phrase"
-        required: False
-    forward_proxy_ssl_version:
-        description:
-        - "TLS/SSL version, default is TLS1.2 (TLS/SSL version= 31-TLSv1.0, 32-TLSv1.1 and
-          33-TLSv1.2)"
+        - "Specify the Username Field in the Client Certificate(If multi-fields are
+          specificed, prior one has higher priority)"
+        type: str
         required: False
     ca_certs:
         description:
         - "Field ca_certs"
+        type: list
         required: False
         suboptions:
             ca_cert:
                 description:
                 - "CA Certificate (CA Certificate Name)"
-            client_ocsp_sg:
-                description:
-                - "Specify service-group (Service group name)"
-            client_ocsp:
-                description:
-                - "Specify ocsp authentication server(s) for client certificate verification"
-            client_ocsp_srvr:
-                description:
-                - "Specify authentication server"
+                type: str
             ca_shared:
                 description:
                 - "CA Certificate Partition Shared"
-    forward_proxy_crl_disable:
+                type: bool
+            client_ocsp:
+                description:
+                - "Specify ocsp authentication server(s) for client certificate verification"
+                type: bool
+            client_ocsp_srvr:
+                description:
+                - "Specify authentication server"
+                type: str
+            client_ocsp_sg:
+                description:
+                - "Specify service-group (Service group name)"
+                type: str
+    chain_cert:
         description:
-        - "Disable Certificate Revocation List checking for forward proxy"
+        - "Chain Certificate Name"
+        type: str
         required: False
-    client_auth_contains_list:
+    chain_cert_shared_str:
         description:
-        - "Field client_auth_contains_list"
+        - "Chain Certificate Name"
+        type: str
+        required: False
+    cert:
+        description:
+        - "Certificate Name"
+        type: str
+        required: False
+    cert_shared_str:
+        description:
+        - "Certificate Name"
+        type: str
+        required: False
+    cert_alternate:
+        description:
+        - "Specify the second certificate (Certificate Name)"
+        type: str
+        required: False
+    cert_alt_partition_shared:
+        description:
+        - "Certificate Partition Shared"
+        type: bool
+        required: False
+    dh_type:
+        description:
+        - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048;"
+        type: str
+        required: False
+    ec_list:
+        description:
+        - "Field ec_list"
+        type: list
         required: False
         suboptions:
-            client_auth_contains:
+            ec:
                 description:
-                - "Forward proxy bypass if SNI string contains another string"
-    certificate_subject_contains_list:
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1;"
+                type: str
+    local_logging:
         description:
-        - "Field certificate_subject_contains_list"
+        - "Enable local logging"
+        type: bool
         required: False
-        suboptions:
-            certificate_subject_contains:
-                description:
-                - "Forward proxy bypass if Certificate Subject contains another string"
-    name:
+    ocsp_stapling:
         description:
-        - "Client SSL Template Name"
-        required: True
-    forward_proxy_cert_revoke_action:
-        description:
-        - "Action taken if a certificate is irreversibly revoked, bypass SSLi processing
-          by default"
+        - "Config OCSP stapling support"
+        type: bool
         required: False
-    fp_cert_ext_aia_ocsp:
+    ocspst_ca_cert:
         description:
-        - "OCSP (Authority Information Access URI)"
+        - "CA certificate"
+        type: str
+        required: False
+    ocspst_ocsp:
+        description:
+        - "Specify OCSP Authentication"
+        type: bool
+        required: False
+    ocspst_srvr:
+        description:
+        - "Specify OCSP authentication server"
+        type: str
+        required: False
+    ocspst_srvr_days:
+        description:
+        - "Specify update period, in days"
+        type: int
+        required: False
+    ocspst_srvr_hours:
+        description:
+        - "Specify update period, in hours"
+        type: int
+        required: False
+    ocspst_srvr_minutes:
+        description:
+        - "Specify update period, in minutes"
+        type: int
+        required: False
+    ocspst_srvr_timeout:
+        description:
+        - "Specify retry timeout (Default is 30 mins)"
+        type: int
+        required: False
+    ocspst_sg:
+        description:
+        - "Specify authentication service group"
+        type: str
+        required: False
+    ocspst_sg_days:
+        description:
+        - "Specify update period, in days"
+        type: int
+        required: False
+    ocspst_sg_hours:
+        description:
+        - "Specify update period, in hours"
+        type: int
+        required: False
+    ocspst_sg_minutes:
+        description:
+        - "Specify update period, in minutes"
+        type: int
+        required: False
+    ocspst_sg_timeout:
+        description:
+        - "Specify retry timeout (Default is 30 mins)"
+        type: int
+        required: False
+    ssli_logging:
+        description:
+        - "SSLi logging level, default is error logging only"
+        type: bool
+        required: False
+    sslilogging:
+        description:
+        - "'disable'= Disable all logging; 'all'= enable all logging(error, info);"
+        type: str
+        required: False
+    client_certificate:
+        description:
+        - "'Ignore'= Don't request client certificate; 'Require'= Require client
+          certificate; 'Request'= Request client certificate;"
+        type: str
         required: False
     req_ca_lists:
         description:
         - "Field req_ca_lists"
+        type: list
         required: False
         suboptions:
             client_certificate_Request_CA:
                 description:
                 - "Send CA lists in certificate request (CA Certificate Name)"
-    user_tag:
+                type: str
+            client_cert_req_ca_shared:
+                description:
+                - "CA Certificate Partition Shared"
+                type: bool
+    close_notify:
         description:
-        - "Customized tag"
+        - "Send close notification when terminate connection"
+        type: bool
+        required: False
+    crl_certs:
+        description:
+        - "Field crl_certs"
+        type: list
+        required: False
+        suboptions:
+            crl:
+                description:
+                - "Certificate Revocation Lists (Certificate Revocation Lists file name)"
+                type: str
+            crl_shared:
+                description:
+                - "Certificate Revocation Lists Partition Shared"
+                type: bool
+    forward_proxy_ca_cert:
+        description:
+        - "CA Certificate for forward proxy (SSL forward proxy CA Certificate Name)"
+        type: str
+        required: False
+    fp_ca_shared:
+        description:
+        - "CA Certificate Partition Shared"
+        type: bool
+        required: False
+    forward_proxy_ca_key:
+        description:
+        - "CA Private Key for forward proxy (SSL forward proxy CA Key Name)"
+        type: str
+        required: False
+    forward_passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
+    forward_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    fp_ca_key_shared:
+        description:
+        - "CA Private Key Partition Shared"
+        type: bool
+        required: False
+    forward_proxy_alt_sign:
+        description:
+        - "Forward proxy alternate signing cert and key"
+        type: bool
+        required: False
+    fp_alt_cert:
+        description:
+        - "CA Certificate for forward proxy alternate signing (Certificate name)"
+        type: str
+        required: False
+    fp_alt_key:
+        description:
+        - "CA Private Key for forward proxy alternate signing (Key name)"
+        type: str
+        required: False
+    fp_alt_passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
+    fp_alt_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    fp_alt_shared:
+        description:
+        - "Alternate CA Certificate and Private Key Partition Shared"
+        type: bool
+        required: False
+    forward_proxy_trusted_ca_lists:
+        description:
+        - "Field forward_proxy_trusted_ca_lists"
+        type: list
+        required: False
+        suboptions:
+            forward_proxy_trusted_ca:
+                description:
+                - "Forward proxy trusted CA file (CA file name)"
+                type: str
+            fp_trusted_ca_shared:
+                description:
+                - "Trusted CA Certificate Partition Shared"
+                type: bool
+    forward_proxy_decrypted_dscp:
+        description:
+        - "Apply a DSCP to decrypted and bypassed traffic (DSCP to apply to decrypted
+          traffic)"
+        type: int
+        required: False
+    forward_proxy_decrypted_dscp_bypass:
+        description:
+        - "DSCP to apply to bypassed traffic"
+        type: int
+        required: False
+    enable_tls_alert_logging:
+        description:
+        - "Enable TLS alert logging"
+        type: bool
+        required: False
+    alert_type:
+        description:
+        - "'fatal'= Log fatal alerts;"
+        type: str
+        required: False
+    forward_proxy_verify_cert_fail_action:
+        description:
+        - "Action taken if certificate verification fails, close the connection by default"
+        type: bool
+        required: False
+    verify_cert_fail_action:
+        description:
+        - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'=
+          close the connection; 'block'= block the connection with a warning page;"
+        type: str
+        required: False
+    forward_proxy_cert_revoke_action:
+        description:
+        - "Action taken if a certificate is irreversibly revoked, bypass SSLi processing
+          by default"
+        type: bool
+        required: False
+    cert_revoke_action:
+        description:
+        - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'=
+          close the connection; 'block'= block the connection with a warning page;"
+        type: str
+        required: False
+    forward_proxy_no_shared_cipher_action:
+        description:
+        - "Action taken if handshake fails due to no shared ciper, close the connection by
+          default"
+        type: bool
+        required: False
+    no_shared_cipher_action:
+        description:
+        - "'bypass'= bypass SSLi processing; 'drop'= close the connection;"
+        type: str
+        required: False
+    forward_proxy_cert_unknown_action:
+        description:
+        - "Action taken if a certificate revocation status is unknown, bypass SSLi
+          processing by default"
+        type: bool
         required: False
     cert_unknown_action:
         description:
         - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'=
           close the connection; 'block'= block the connection with a warning page;"
+        type: str
+        required: False
+    forward_proxy_block_message:
+        description:
+        - "Message to be included on the block page (Message, enclose in quotes if spaces
+          are present)"
+        type: str
+        required: False
+    cache_persistence_list_name:
+        description:
+        - "Class List Name"
+        type: str
+        required: False
+    fp_cert_ext_crldp:
+        description:
+        - "CRL Distribution Point (CRL Distribution Point URI)"
+        type: str
+        required: False
+    fp_cert_ext_aia_ocsp:
+        description:
+        - "OCSP (Authority Information Access URI)"
+        type: str
+        required: False
+    fp_cert_ext_aia_ca_issuers:
+        description:
+        - "CA Issuers (Authority Information Access URI)"
+        type: str
+        required: False
+    notbefore:
+        description:
+        - "notBefore date"
+        type: bool
+        required: False
+    notbeforeday:
+        description:
+        - "Day"
+        type: int
+        required: False
+    notbeforemonth:
+        description:
+        - "Month"
+        type: int
+        required: False
+    notbeforeyear:
+        description:
+        - "Year"
+        type: int
+        required: False
+    notafter:
+        description:
+        - "notAfter date"
+        type: bool
+        required: False
+    notafterday:
+        description:
+        - "Day"
+        type: int
+        required: False
+    notaftermonth:
+        description:
+        - "Month"
+        type: int
+        required: False
+    notafteryear:
+        description:
+        - "Year"
+        type: int
+        required: False
+    forward_proxy_ssl_version:
+        description:
+        - "TLS/SSL version, default is TLS1.2 (TLS/SSL version= 31-TLSv1.0, 32-TLSv1.1 and
+          33-TLSv1.2)"
+        type: int
+        required: False
+    forward_proxy_ocsp_disable:
+        description:
+        - "Disable ocsp-stapling for forward proxy"
+        type: bool
+        required: False
+    forward_proxy_crl_disable:
+        description:
+        - "Disable Certificate Revocation List checking for forward proxy"
+        type: bool
+        required: False
+    forward_proxy_cert_cache_timeout:
+        description:
+        - "Certificate cache timeout, default is 1 hour (seconds, set to 0 for never
+          timeout)"
+        type: int
+        required: False
+    forward_proxy_cert_cache_limit:
+        description:
+        - "Certificate cache size limit, default is 524288 (set to 0 for unlimited size)"
+        type: int
+        required: False
+    forward_proxy_cert_expiry:
+        description:
+        - "Adjust certificate expiry relative to the time when it is created on the device"
+        type: bool
+        required: False
+    expire_hours:
+        description:
+        - "Certificate lifetime in hours"
+        type: int
+        required: False
+    forward_proxy_enable:
+        description:
+        - "Enable SSL forward proxy"
+        type: bool
+        required: False
+    handshake_logging_enable:
+        description:
+        - "Enable SSL handshake logging"
+        type: bool
+        required: False
+    forward_proxy_selfsign_redir:
+        description:
+        - "Redirect connections to pages with self signed certs to a warning page"
+        type: bool
+        required: False
+    forward_proxy_failsafe_disable:
+        description:
+        - "Disable Failsafe for SSL forward proxy"
+        type: bool
+        required: False
+    forward_proxy_log_disable:
+        description:
+        - "Disable SSL forward proxy logging"
+        type: bool
+        required: False
+    fp_cert_fetch_natpool_name:
+        description:
+        - "Specify NAT pool or pool group"
+        type: str
+        required: False
+    shared_partition_pool:
+        description:
+        - "Reference a NAT pool or pool group from shared partition"
+        type: bool
+        required: False
+    fp_cert_fetch_natpool_name_shared:
+        description:
+        - "Specify NAT pool or pool group"
+        type: str
+        required: False
+    fp_cert_fetch_natpool_precedence:
+        description:
+        - "Set this NAT pool as higher precedence than other source NAT like configued
+          under template policy"
+        type: bool
+        required: False
+    fp_cert_fetch_autonat:
+        description:
+        - "'auto'= Configure auto NAT for server certificate fetching;"
+        type: str
+        required: False
+    fp_cert_fetch_autonat_precedence:
+        description:
+        - "Set this NAT pool as higher precedence than other source NAT like configued
+          under template policy"
+        type: bool
+        required: False
+    forward_proxy_no_sni_action:
+        description:
+        - "'intercept'= intercept in no SNI case; 'bypass'= bypass in no SNI case;
+          'reset'= reset in no SNI case;"
+        type: str
+        required: False
+    case_insensitive:
+        description:
+        - "Case insensitive forward proxy bypass"
+        type: bool
+        required: False
+    class_list_name:
+        description:
+        - "Class List Name"
+        type: str
+        required: False
+    multi_class_list:
+        description:
+        - "Field multi_class_list"
+        type: list
+        required: False
+        suboptions:
+            multi_clist_name:
+                description:
+                - "Class List Name"
+                type: str
+    user_name_list:
+        description:
+        - "Forward proxy bypass if user-name matches class-list"
+        type: str
+        required: False
+    ad_group_list:
+        description:
+        - "Forward proxy bypass if ad-group matches class-list"
+        type: str
+        required: False
+    exception_user_name_list:
+        description:
+        - "Exceptions to forward proxy bypass if user-name matches class-list"
+        type: str
+        required: False
+    exception_ad_group_list:
+        description:
+        - "Exceptions to forward proxy bypass if ad-group matches class-list"
+        type: str
+        required: False
+    exception_sni_cl_name:
+        description:
+        - "Exceptions to forward-proxy-bypass"
+        type: str
+        required: False
+    inspect_list_name:
+        description:
+        - "Class List Name"
+        type: str
+        required: False
+    inspect_certificate_subject_cl_name:
+        description:
+        - "Forward proxy Inspect if Certificate Subject matches class-list"
+        type: str
+        required: False
+    inspect_certificate_issuer_cl_name:
+        description:
+        - "Forward proxy Inspect if Certificate issuer matches class-list"
+        type: str
+        required: False
+    inspect_certificate_san_cl_name:
+        description:
+        - "Forward proxy Inspect if Certificate Subject Alternative Name matches class-
+          list"
+        type: str
+        required: False
+    contains_list:
+        description:
+        - "Field contains_list"
+        type: list
+        required: False
+        suboptions:
+            contains:
+                description:
+                - "Forward proxy bypass if SNI string contains another string"
+                type: str
+    ends_with_list:
+        description:
+        - "Field ends_with_list"
+        type: list
+        required: False
+        suboptions:
+            ends_with:
+                description:
+                - "Forward proxy bypass if SNI string ends with another string"
+                type: str
+    equals_list:
+        description:
+        - "Field equals_list"
+        type: list
+        required: False
+        suboptions:
+            equals:
+                description:
+                - "Forward proxy bypass if SNI string equals another string"
+                type: str
+    starts_with_list:
+        description:
+        - "Field starts_with_list"
+        type: list
+        required: False
+        suboptions:
+            starts_with:
+                description:
+                - "Forward proxy bypass if SNI string starts with another string"
+                type: str
+    certificate_subject_contains_list:
+        description:
+        - "Field certificate_subject_contains_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_subject_contains:
+                description:
+                - "Forward proxy bypass if Certificate Subject contains another string"
+                type: str
+    bypass_cert_subject_class_list_name:
+        description:
+        - "Class List Name"
+        type: str
+        required: False
+    bypass_cert_subject_multi_class_list:
+        description:
+        - "Field bypass_cert_subject_multi_class_list"
+        type: list
+        required: False
+        suboptions:
+            bypass_cert_subject_multi_class_list_name:
+                description:
+                - "Class List Name"
+                type: str
+    exception_certificate_subject_cl_name:
+        description:
+        - "Exceptions to forward-proxy-bypass"
+        type: str
+        required: False
+    certificate_subject_ends_with_list:
+        description:
+        - "Field certificate_subject_ends_with_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_subject_ends_with:
+                description:
+                - "Forward proxy bypass if Certificate Subject ends with another string"
+                type: str
+    certificate_subject_equals_list:
+        description:
+        - "Field certificate_subject_equals_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_subject_equals:
+                description:
+                - "Forward proxy bypass if Certificate Subject equals another string"
+                type: str
+    certificate_subject_starts_with_list:
+        description:
+        - "Field certificate_subject_starts_with_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_subject_starts:
+                description:
+                - "Forward proxy bypass if Certificate Subject starts with another string"
+                type: str
+    certificate_issuer_contains_list:
+        description:
+        - "Field certificate_issuer_contains_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_issuer_contains:
+                description:
+                - "Forward proxy bypass if Certificate  issuer contains another string
+          (Certificate issuer)"
+                type: str
+    bypass_cert_issuer_class_list_name:
+        description:
+        - "Class List Name"
+        type: str
+        required: False
+    bypass_cert_issuer_multi_class_list:
+        description:
+        - "Field bypass_cert_issuer_multi_class_list"
+        type: list
+        required: False
+        suboptions:
+            bypass_cert_issuer_multi_class_list_name:
+                description:
+                - "Class List Name"
+                type: str
+    exception_certificate_issuer_cl_name:
+        description:
+        - "Exceptions to forward-proxy-bypass"
+        type: str
+        required: False
+    certificate_issuer_ends_with_list:
+        description:
+        - "Field certificate_issuer_ends_with_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_issuer_ends_with:
+                description:
+                - "Forward proxy bypass if Certificate issuer ends with another string"
+                type: str
+    certificate_issuer_equals_list:
+        description:
+        - "Field certificate_issuer_equals_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_issuer_equals:
+                description:
+                - "Forward proxy bypass if Certificate issuer equals another string"
+                type: str
+    certificate_issuer_starts_with_list:
+        description:
+        - "Field certificate_issuer_starts_with_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_issuer_starts:
+                description:
+                - "Forward proxy bypass if Certificate issuer starts with another string"
+                type: str
+    certificate_san_contains_list:
+        description:
+        - "Field certificate_san_contains_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_san_contains:
+                description:
+                - "Forward proxy bypass if Certificate SAN contains another string"
+                type: str
+    bypass_cert_san_class_list_name:
+        description:
+        - "Class List Name"
+        type: str
+        required: False
+    bypass_cert_san_multi_class_list:
+        description:
+        - "Field bypass_cert_san_multi_class_list"
+        type: list
+        required: False
+        suboptions:
+            bypass_cert_san_multi_class_list_name:
+                description:
+                - "Class List Name"
+                type: str
+    exception_certificate_san_cl_name:
+        description:
+        - "Exceptions to forward-proxy-bypass"
+        type: str
+        required: False
+    certificate_san_ends_with_list:
+        description:
+        - "Field certificate_san_ends_with_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_san_ends_with:
+                description:
+                - "Forward proxy bypass if Certificate SAN ends with another string"
+                type: str
+    certificate_san_equals_list:
+        description:
+        - "Field certificate_san_equals_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_san_equals:
+                description:
+                - "Forward proxy bypass if Certificate SAN equals another string"
+                type: str
+    certificate_san_starts_with_list:
+        description:
+        - "Field certificate_san_starts_with_list"
+        type: list
+        required: False
+        suboptions:
+            certificate_san_starts:
+                description:
+                - "Forward proxy bypass if Certificate SAN starts with another string"
+                type: str
+    client_auth_case_insensitive:
+        description:
+        - "Case insensitive forward proxy client auth bypass"
+        type: bool
+        required: False
+    client_auth_class_list:
+        description:
+        - "Forward proxy client auth bypass if SNI string matches class-list (Class List
+          Name)"
+        type: str
+        required: False
+    client_auth_contains_list:
+        description:
+        - "Field client_auth_contains_list"
+        type: list
+        required: False
+        suboptions:
+            client_auth_contains:
+                description:
+                - "Forward proxy bypass if SNI string contains another string"
+                type: str
+    client_auth_ends_with_list:
+        description:
+        - "Field client_auth_ends_with_list"
+        type: list
+        required: False
+        suboptions:
+            client_auth_ends_with:
+                description:
+                - "Forward proxy bypass if SNI string ends with another string"
+                type: str
+    client_auth_equals_list:
+        description:
+        - "Field client_auth_equals_list"
+        type: list
+        required: False
+        suboptions:
+            client_auth_equals:
+                description:
+                - "Forward proxy bypass if SNI string equals another string"
+                type: str
+    client_auth_starts_with_list:
+        description:
+        - "Field client_auth_starts_with_list"
+        type: list
+        required: False
+        suboptions:
+            client_auth_starts_with:
+                description:
+                - "Forward proxy bypass if SNI string starts with another string"
+                type: str
+    forward_proxy_cert_not_ready_action:
+        description:
+        - "'bypass'= bypass the connection; 'reset'= reset the connection; 'intercept'=
+          wait for cert and then inspect the connection;"
+        type: str
+        required: False
+    web_category:
+        description:
+        - "Field web_category"
+        type: dict
+        required: False
+        suboptions:
+            uncategorized:
+                description:
+                - "Uncategorized URLs"
+                type: bool
+            real_estate:
+                description:
+                - "Category Real Estate"
+                type: bool
+            computer_and_internet_security:
+                description:
+                - "Category Computer and Internet Security"
+                type: bool
+            financial_services:
+                description:
+                - "Category Financial Services"
+                type: bool
+            business_and_economy:
+                description:
+                - "Category Business and Economy"
+                type: bool
+            computer_and_internet_info:
+                description:
+                - "Category Computer and Internet Info"
+                type: bool
+            auctions:
+                description:
+                - "Category Auctions"
+                type: bool
+            shopping:
+                description:
+                - "Category Shopping"
+                type: bool
+            cult_and_occult:
+                description:
+                - "Category Cult and Occult"
+                type: bool
+            travel:
+                description:
+                - "Category Travel"
+                type: bool
+            drugs:
+                description:
+                - "Category Abused Drugs"
+                type: bool
+            adult_and_pornography:
+                description:
+                - "Category Adult and Pornography"
+                type: bool
+            home_and_garden:
+                description:
+                - "Category Home and Garden"
+                type: bool
+            military:
+                description:
+                - "Category Military"
+                type: bool
+            social_network:
+                description:
+                - "Category Social Network"
+                type: bool
+            dead_sites:
+                description:
+                - "Category Dead Sites (db Ops only)"
+                type: bool
+            stock_advice_and_tools:
+                description:
+                - "Category Stock Advice and Tools"
+                type: bool
+            training_and_tools:
+                description:
+                - "Category Training and Tools"
+                type: bool
+            dating:
+                description:
+                - "Category Dating"
+                type: bool
+            sex_education:
+                description:
+                - "Category Sex Education"
+                type: bool
+            religion:
+                description:
+                - "Category Religion"
+                type: bool
+            entertainment_and_arts:
+                description:
+                - "Category Entertainment and Arts"
+                type: bool
+            personal_sites_and_blogs:
+                description:
+                - "Category Personal sites and Blogs"
+                type: bool
+            legal:
+                description:
+                - "Category Legal"
+                type: bool
+            local_information:
+                description:
+                - "Category Local Information"
+                type: bool
+            streaming_media:
+                description:
+                - "Category Streaming Media"
+                type: bool
+            job_search:
+                description:
+                - "Category Job Search"
+                type: bool
+            gambling:
+                description:
+                - "Category Gambling"
+                type: bool
+            translation:
+                description:
+                - "Category Translation"
+                type: bool
+            reference_and_research:
+                description:
+                - "Category Reference and Research"
+                type: bool
+            shareware_and_freeware:
+                description:
+                - "Category Shareware and Freeware"
+                type: bool
+            peer_to_peer:
+                description:
+                - "Category Peer to Peer"
+                type: bool
+            marijuana:
+                description:
+                - "Category Marijuana"
+                type: bool
+            hacking:
+                description:
+                - "Category Hacking"
+                type: bool
+            games:
+                description:
+                - "Category Games"
+                type: bool
+            philosophy_and_politics:
+                description:
+                - "Category Philosophy and Political Advocacy"
+                type: bool
+            weapons:
+                description:
+                - "Category Weapons"
+                type: bool
+            pay_to_surf:
+                description:
+                - "Category Pay to Surf"
+                type: bool
+            hunting_and_fishing:
+                description:
+                - "Category Hunting and Fishing"
+                type: bool
+            society:
+                description:
+                - "Category Society"
+                type: bool
+            educational_institutions:
+                description:
+                - "Category Educational Institutions"
+                type: bool
+            online_greeting_cards:
+                description:
+                - "Category Online Greeting cards"
+                type: bool
+            sports:
+                description:
+                - "Category Sports"
+                type: bool
+            swimsuits_and_intimate_apparel:
+                description:
+                - "Category Swimsuits and Intimate Apparel"
+                type: bool
+            questionable:
+                description:
+                - "Category Questionable"
+                type: bool
+            kids:
+                description:
+                - "Category Kids"
+                type: bool
+            hate_and_racism:
+                description:
+                - "Category Hate and Racism"
+                type: bool
+            personal_storage:
+                description:
+                - "Category Personal Storage"
+                type: bool
+            violence:
+                description:
+                - "Category Violence"
+                type: bool
+            keyloggers_and_monitoring:
+                description:
+                - "Category Keyloggers and Monitoring"
+                type: bool
+            search_engines:
+                description:
+                - "Category Search Engines"
+                type: bool
+            internet_portals:
+                description:
+                - "Category Internet Portals"
+                type: bool
+            web_advertisements:
+                description:
+                - "Category Web Advertisements"
+                type: bool
+            cheating:
+                description:
+                - "Category Cheating"
+                type: bool
+            gross:
+                description:
+                - "Category Gross"
+                type: bool
+            web_based_email:
+                description:
+                - "Category Web based email"
+                type: bool
+            malware_sites:
+                description:
+                - "Category Malware Sites"
+                type: bool
+            phishing_and_other_fraud:
+                description:
+                - "Category Phishing and Other Frauds"
+                type: bool
+            proxy_avoid_and_anonymizers:
+                description:
+                - "Category Proxy Avoid and Anonymizers"
+                type: bool
+            spyware_and_adware:
+                description:
+                - "Category Spyware and Adware"
+                type: bool
+            music:
+                description:
+                - "Category Music"
+                type: bool
+            government:
+                description:
+                - "Category Government"
+                type: bool
+            nudity:
+                description:
+                - "Category Nudity"
+                type: bool
+            news_and_media:
+                description:
+                - "Category News and Media"
+                type: bool
+            illegal:
+                description:
+                - "Category Illegal"
+                type: bool
+            cdns:
+                description:
+                - "Category CDNs"
+                type: bool
+            internet_communications:
+                description:
+                - "Category Internet Communications"
+                type: bool
+            bot_nets:
+                description:
+                - "Category Bot Nets"
+                type: bool
+            abortion:
+                description:
+                - "Category Abortion"
+                type: bool
+            health_and_medicine:
+                description:
+                - "Category Health and Medicine"
+                type: bool
+            confirmed_spam_sources:
+                description:
+                - "Category Confirmed SPAM Sources"
+                type: bool
+            spam_urls:
+                description:
+                - "Category SPAM URLs"
+                type: bool
+            unconfirmed_spam_sources:
+                description:
+                - "Category Unconfirmed SPAM Sources"
+                type: bool
+            open_http_proxies:
+                description:
+                - "Category Open HTTP Proxies"
+                type: bool
+            dynamic_comment:
+                description:
+                - "Category Dynamic Comment"
+                type: bool
+            parked_domains:
+                description:
+                - "Category Parked Domains"
+                type: bool
+            alcohol_and_tobacco:
+                description:
+                - "Category Alcohol and Tobacco"
+                type: bool
+            private_ip_addresses:
+                description:
+                - "Category Private IP Addresses"
+                type: bool
+            image_and_video_search:
+                description:
+                - "Category Image and Video Search"
+                type: bool
+            fashion_and_beauty:
+                description:
+                - "Category Fashion and Beauty"
+                type: bool
+            recreation_and_hobbies:
+                description:
+                - "Category Recreation and Hobbies"
+                type: bool
+            motor_vehicles:
+                description:
+                - "Category Motor Vehicles"
+                type: bool
+            web_hosting_sites:
+                description:
+                - "Category Web Hosting Sites"
+                type: bool
+            food_and_dining:
+                description:
+                - "Category Food and Dining"
+                type: bool
+    require_web_category:
+        description:
+        - "Wait for web category to be resolved before taking bypass decision"
+        type: bool
+        required: False
+    forward_proxy_require_sni_cert_matched:
+        description:
+        - "'no-match-action-inspect'= Inspected if not matched; 'no-match-action-drop'=
+          Dropped if not matched;"
+        type: str
+        required: False
+    key:
+        description:
+        - "Key Name"
+        type: str
+        required: False
+    key_passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
+    key_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    key_shared_str:
+        description:
+        - "Key Name"
+        type: str
+        required: False
+    key_shared_passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
+    key_shared_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    key_alternate:
+        description:
+        - "Specify the second private key (Key Name)"
+        type: str
+        required: False
+    key_alt_passphrase:
+        description:
+        - "Password Phrase"
+        type: str
+        required: False
+    key_alt_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    key_alt_partition_shared:
+        description:
+        - "Key Partition Shared"
+        type: bool
+        required: False
+    template_cipher:
+        description:
+        - "Cipher Template Name"
+        type: str
+        required: False
+    shared_partition_cipher_template:
+        description:
+        - "Reference a cipher template from shared partition"
+        type: bool
+        required: False
+    template_cipher_shared:
+        description:
+        - "Cipher Template Name"
+        type: str
+        required: False
+    template_hsm:
+        description:
+        - "HSM Template (HSM Template Name)"
+        type: str
+        required: False
+    hsm_type:
+        description:
+        - "'thales-embed'= Thales embed key; 'thales-hwcrhk'= Thales hwcrhk Key;"
+        type: str
+        required: False
+    cipher_without_prio_list:
+        description:
+        - "Field cipher_without_prio_list"
+        type: list
+        required: False
+        suboptions:
+            cipher_wo_prio:
+                description:
+                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'=
+          SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA;
+          'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'=
+          TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256;
+          'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256;
+          'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256;
+          'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA;
+          'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256;
+          'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384;
+          'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA;
+          'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256;
+          'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256;
+          'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA;
+          'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256;
+          'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384;
+          'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA;
+          'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256;
+          'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA;
+          'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256;
+          'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384;
+          'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA;
+          'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256;
+          'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384;
+          'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384;
+          'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384;
+          'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256'=
+          TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256;
+          'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256'=
+          TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256;
+          'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256;"
+                type: str
+    server_name_list:
+        description:
+        - "Field server_name_list"
+        type: list
+        required: False
+        suboptions:
+            server_name:
+                description:
+                - "Server name indication in Client hello extension (Server name String)"
+                type: str
+            server_cert:
+                description:
+                - "Server Certificate associated to SNI (Server Certificate Name)"
+                type: str
+            server_chain:
+                description:
+                - "Server Certificate Chain associated to SNI (Server Certificate Chain Name)"
+                type: str
+            server_key:
+                description:
+                - "Server Private Key associated to SNI (Server Private Key Name)"
+                type: str
+            server_passphrase:
+                description:
+                - "help Password Phrase"
+                type: str
+            server_encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+                type: str
+            server_name_alternate:
+                description:
+                - "Specific the second certifcate"
+                type: bool
+            server_shared:
+                description:
+                - "Server Name Partition Shared"
+                type: bool
+            server_name_regex:
+                description:
+                - "Server name indication in Client hello extension with regular expression
+          (Server name String with regex)"
+                type: str
+            server_cert_regex:
+                description:
+                - "Server Certificate associated to SNI regex (Server Certificate Name)"
+                type: str
+            server_chain_regex:
+                description:
+                - "Server Certificate Chain associated to SNI regex (Server Certificate Chain
+          Name)"
+                type: str
+            server_key_regex:
+                description:
+                - "Server Private Key associated to SNI regex (Server Private Key Name)"
+                type: str
+            server_passphrase_regex:
+                description:
+                - "help Password Phrase"
+                type: str
+            server_encrypted_regex:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+                type: str
+            server_name_regex_alternate:
+                description:
+                - "Specific the second certifcate"
+                type: bool
+            server_shared_regex:
+                description:
+                - "Server Name Partition Shared"
+                type: bool
+    server_name_auto_map:
+        description:
+        - "Enable automatic mapping of server name indication in Client hello extension"
+        type: bool
+        required: False
+    sni_enable_log:
+        description:
+        - "Enable logging of sni-auto-map failures. Disable by default"
+        type: bool
+        required: False
+    direct_client_server_auth:
+        description:
+        - "Let backend server does SSL client authentication directly"
+        type: bool
+        required: False
+    session_cache_size:
+        description:
+        - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse
+          disabled))"
+        type: int
+        required: False
+    session_cache_timeout:
+        description:
+        - "Session Cache Timeout (Timeout value, in seconds. Default value 0 (Session
+          cache timeout disabled))"
+        type: int
+        required: False
+    session_ticket_lifetime:
+        description:
+        - "Session ticket lifetime in seconds from stateless session resumption (Lifetime
+          value in seconds. Default value 0 (Session ticket lifetime limit disabled))"
+        type: int
+        required: False
+    ssl_false_start_disable:
+        description:
+        - "disable SSL False Start"
+        type: bool
+        required: False
+    disable_sslv3:
+        description:
+        - "Reject Client requests for SSL version 3"
+        type: bool
+        required: False
+    version:
+        description:
+        - "TLS/SSL version, default is the highest number supported (TLS/SSL version=
+          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
+        type: int
+        required: False
+    dgversion:
+        description:
+        - "Lower TLS/SSL version can be downgraded"
+        type: int
+        required: False
+    renegotiation_disable:
+        description:
+        - "Disable SSL renegotiation"
+        type: bool
+        required: False
+    sslv2_bypass_service_group:
+        description:
+        - "Service Group for Bypass SSLV2 (Service Group Name)"
+        type: str
+        required: False
+    authorization:
+        description:
+        - "Specify LDAP server for client SSL authorizaiton"
+        type: bool
+        required: False
+    authen_name:
+        description:
+        - "Specify authorization LDAP server name"
+        type: str
+        required: False
+    ldap_base_dn_from_cert:
+        description:
+        - "Use Subject DN as LDAP search base DN"
+        type: bool
+        required: False
+    ldap_search_filter:
+        description:
+        - "Specify LDAP search filter"
+        type: str
+        required: False
+    auth_sg:
+        description:
+        - "Specify authorization LDAP service group"
+        type: str
+        required: False
+    auth_sg_dn:
+        description:
+        - "Use Subject DN as LDAP search base DN"
+        type: bool
+        required: False
+    auth_sg_filter:
+        description:
+        - "Specify LDAP search filter"
+        type: str
+        required: False
+    auth_username_attribute:
+        description:
+        - "Specify attribute name of username for client SSL authorization"
+        type: str
+        required: False
+    non_ssl_bypass_service_group:
+        description:
+        - "Service Group for Bypass non-ssl traffic (Service Group Name)"
+        type: str
+        required: False
+    non_ssl_bypass_l4session:
+        description:
+        - "Handle the non-ssl session as L4 for performance optimization"
+        type: bool
+        required: False
+    enable_ssli_ftp_alg:
+        description:
+        - "Enable SSLi FTP over TLS support at which port"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -357,1208 +1640,371 @@ options:
           'motor-vehicles'= motor vehicles category; 'web-hosting-sites'= web hosting
           sites category; 'food-and-dining'= food and dining category; 'uncategorised'=
           uncategorised; 'other-category'= other category;"
-    renegotiation_disable:
+                type: str
+    oper:
         description:
-        - "Disable SSL renegotiation"
-        required: False
-    exception_ad_group_list:
-        description:
-        - "Exceptions to forward proxy bypass if ad-group matches class-list"
-        required: False
-    key_alternate:
-        description:
-        - "Specify the second private key (Key Name)"
-        required: False
-    fp_alt_key:
-        description:
-        - "CA Private Key for forward proxy alternate signing (Key name)"
-        required: False
-    server_name_auto_map:
-        description:
-        - "Enable automatic mapping of server name indication in Client hello extension"
-        required: False
-    disable_sslv3:
-        description:
-        - "Reject Client requests for SSL version 3"
-        required: False
-    bypass_cert_issuer_multi_class_list:
-        description:
-        - "Field bypass_cert_issuer_multi_class_list"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            bypass_cert_issuer_multi_class_list_name:
+            cert_status_list:
                 description:
-                - "Class List Name"
-    client_auth_equals_list:
-        description:
-        - "Field client_auth_equals_list"
-        required: False
-        suboptions:
-            client_auth_equals:
-                description:
-                - "Forward proxy bypass if SNI string equals another string"
-    forward_proxy_no_sni_action:
-        description:
-        - "'intercept'= intercept in no SNI case; 'bypass'= bypass in no SNI case;
-          'reset'= reset in no SNI case;"
-        required: False
-    certificate_issuer_equals_list:
-        description:
-        - "Field certificate_issuer_equals_list"
-        required: False
-        suboptions:
-            certificate_issuer_equals:
-                description:
-                - "Forward proxy bypass if Certificate issuer equals another string"
-    fp_alt_passphrase:
-        description:
-        - "Password Phrase"
-        required: False
-    certificate_subject_starts_with_list:
-        description:
-        - "Field certificate_subject_starts_with_list"
-        required: False
-        suboptions:
-            certificate_subject_starts:
-                description:
-                - "Forward proxy bypass if Certificate Subject starts with another string"
-    certificate_san_ends_with_list:
-        description:
-        - "Field certificate_san_ends_with_list"
-        required: False
-        suboptions:
-            certificate_san_ends_with:
-                description:
-                - "Forward proxy bypass if Certificate SAN ends with another string"
-    forward_proxy_cert_cache_timeout:
-        description:
-        - "Certificate cache timeout, default is 1 hour (seconds, set to 0 for never
-          timeout)"
-        required: False
-    fp_cert_fetch_natpool_name_shared:
-        description:
-        - "Specify NAT pool or pool group"
-        required: False
-    crl_certs:
-        description:
-        - "Field crl_certs"
-        required: False
-        suboptions:
-            crl_shared:
-                description:
-                - "Certificate Revocation Lists Partition Shared"
-            crl:
-                description:
-                - "Certificate Revocation Lists (Certificate Revocation Lists file name)"
-    notafterday:
-        description:
-        - "Day"
-        required: False
-    ocspst_srvr_hours:
-        description:
-        - "Specify update period, in hours"
-        required: False
-    local_logging:
-        description:
-        - "Enable local logging"
-        required: False
-    fp_cert_fetch_autonat_precedence:
-        description:
-        - "Set this NAT pool as higher precedence than other source NAT like configued
-          under template policy"
-        required: False
-    cert_str:
-        description:
-        - "Certificate Name"
-        required: False
-    cert_shared_str:
-        description:
-        - "Certificate Name"
-        required: False
-    cert_revoke_action:
-        description:
-        - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'=
-          close the connection; 'block'= block the connection with a warning page;"
-        required: False
-    version:
-        description:
-        - "TLS/SSL version, default is the highest number supported (TLS/SSL version=
-          30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
-        required: False
-    multi_class_list:
-        description:
-        - "Field multi_class_list"
-        required: False
-        suboptions:
-            multi_clist_name:
-                description:
-                - "Class List Name"
-    user_name_list:
-        description:
-        - "Forward proxy bypass if user-name matches class-list"
-        required: False
-    session_ticket_lifetime:
-        description:
-        - "Session ticket lifetime in seconds from stateless session resumption (Lifetime
-          value in seconds. Default value 0 (Session ticket lifetime limit disabled))"
-        required: False
-    certificate_issuer_ends_with_list:
-        description:
-        - "Field certificate_issuer_ends_with_list"
-        required: False
-        suboptions:
-            certificate_issuer_ends_with:
-                description:
-                - "Forward proxy bypass if Certificate issuer ends with another string"
-    ssli_logging:
-        description:
-        - "SSLi logging level, default is error logging only"
-        required: False
-    session_cache_size:
-        description:
-        - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse
-          disabled))"
-        required: False
-    handshake_logging_enable:
-        description:
-        - "Enable SSL handshake logging"
-        required: False
-    non_ssl_bypass_service_group:
-        description:
-        - "Service Group for Bypass non-ssl traffic (Service Group Name)"
-        required: False
-    forward_proxy_failsafe_disable:
-        description:
-        - "Disable Failsafe for SSL forward proxy"
-        required: False
-    session_cache_timeout:
-        description:
-        - "Session Cache Timeout (Timeout value, in seconds. Default value 0 (Session
-          cache timeout disabled))"
-        required: False
-    sslv2_bypass_service_group:
-        description:
-        - "Service Group for Bypass SSLV2 (Service Group Name)"
-        required: False
-    forward_proxy_decrypted_dscp:
-        description:
-        - "Apply a DSCP to decrypted and bypassed traffic (DSCP to apply to decrypted
-          traffic)"
-        required: False
-    auth_sg:
-        description:
-        - "Specify authorization LDAP service group"
-        required: False
-    ocspst_ca_cert:
-        description:
-        - "CA certificate"
-        required: False
-    forward_proxy_selfsign_redir:
-        description:
-        - "Redirect connections to pages with self signed certs to a warning page"
-        required: False
-    auth_sg_dn:
-        description:
-        - "Use Subject DN as LDAP search base DN"
-        required: False
-    hsm_type:
-        description:
-        - "'thales-embed'= Thales embed key; 'thales-hwcrhk'= Thales hwcrhk Key;"
-        required: False
-    forward_proxy_log_disable:
-        description:
-        - "Disable SSL forward proxy logging"
-        required: False
-    fp_alt_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
-    inspect_certificate_san_cl_name:
-        description:
-        - "Forward proxy Inspect if Certificate Subject Alternative Name matches class-
-          list"
-        required: False
-    web_category:
-        description:
-        - "Field web_category"
-        required: False
-        suboptions:
-            philosophy_and_politics:
-                description:
-                - "Category Philosophy and Political Advocacy"
-            stock_advice_and_tools:
-                description:
-                - "Category Stock Advice and Tools"
-            news_and_media:
-                description:
-                - "Category News and Media"
-            business_and_economy:
-                description:
-                - "Category Business and Economy"
-            peer_to_peer:
-                description:
-                - "Category Peer to Peer"
-            phishing_and_other_fraud:
-                description:
-                - "Category Phishing and Other Frauds"
-            nudity:
-                description:
-                - "Category Nudity"
-            weapons:
-                description:
-                - "Category Weapons"
-            health_and_medicine:
-                description:
-                - "Category Health and Medicine"
-            marijuana:
-                description:
-                - "Category Marijuana"
-            home_and_garden:
-                description:
-                - "Category Home and Garden"
-            cult_and_occult:
-                description:
-                - "Category Cult and Occult"
-            society:
-                description:
-                - "Category Society"
-            personal_storage:
-                description:
-                - "Category Personal Storage"
-            computer_and_internet_security:
-                description:
-                - "Category Computer and Internet Security"
-            food_and_dining:
-                description:
-                - "Category Food and Dining"
-            motor_vehicles:
-                description:
-                - "Category Motor Vehicles"
-            swimsuits_and_intimate_apparel:
-                description:
-                - "Category Swimsuits and Intimate Apparel"
-            dead_sites:
-                description:
-                - "Category Dead Sites (db Ops only)"
-            translation:
-                description:
-                - "Category Translation"
-            proxy_avoid_and_anonymizers:
-                description:
-                - "Category Proxy Avoid and Anonymizers"
-            financial_services:
-                description:
-                - "Category Financial Services"
-            gross:
-                description:
-                - "Category Gross"
-            cheating:
-                description:
-                - "Category Cheating"
-            entertainment_and_arts:
-                description:
-                - "Category Entertainment and Arts"
-            sex_education:
-                description:
-                - "Category Sex Education"
-            illegal:
-                description:
-                - "Category Illegal"
-            travel:
-                description:
-                - "Category Travel"
-            cdns:
-                description:
-                - "Category CDNs"
-            local_information:
-                description:
-                - "Category Local Information"
-            legal:
-                description:
-                - "Category Legal"
-            sports:
-                description:
-                - "Category Sports"
-            bot_nets:
-                description:
-                - "Category Bot Nets"
-            religion:
-                description:
-                - "Category Religion"
-            private_ip_addresses:
-                description:
-                - "Category Private IP Addresses"
-            music:
-                description:
-                - "Category Music"
-            hate_and_racism:
-                description:
-                - "Category Hate and Racism"
-            open_http_proxies:
-                description:
-                - "Category Open HTTP Proxies"
-            internet_communications:
-                description:
-                - "Category Internet Communications"
-            shareware_and_freeware:
-                description:
-                - "Category Shareware and Freeware"
-            dating:
-                description:
-                - "Category Dating"
-            spyware_and_adware:
-                description:
-                - "Category Spyware and Adware"
-            uncategorized:
-                description:
-                - "Uncategorized URLs"
-            questionable:
-                description:
-                - "Category Questionable"
-            reference_and_research:
-                description:
-                - "Category Reference and Research"
-            web_advertisements:
-                description:
-                - "Category Web Advertisements"
-            streaming_media:
-                description:
-                - "Category Streaming Media"
-            social_network:
-                description:
-                - "Category Social Network"
-            government:
-                description:
-                - "Category Government"
-            drugs:
-                description:
-                - "Category Abused Drugs"
-            web_hosting_sites:
-                description:
-                - "Category Web Hosting Sites"
-            malware_sites:
-                description:
-                - "Category Malware Sites"
-            pay_to_surf:
-                description:
-                - "Category Pay to Surf"
-            spam_urls:
-                description:
-                - "Category SPAM URLs"
-            kids:
-                description:
-                - "Category Kids"
-            gambling:
-                description:
-                - "Category Gambling"
-            online_greeting_cards:
-                description:
-                - "Category Online Greeting cards"
-            confirmed_spam_sources:
-                description:
-                - "Category Confirmed SPAM Sources"
-            image_and_video_search:
-                description:
-                - "Category Image and Video Search"
-            educational_institutions:
-                description:
-                - "Category Educational Institutions"
-            keyloggers_and_monitoring:
-                description:
-                - "Category Keyloggers and Monitoring"
-            hunting_and_fishing:
-                description:
-                - "Category Hunting and Fishing"
-            search_engines:
-                description:
-                - "Category Search Engines"
-            fashion_and_beauty:
-                description:
-                - "Category Fashion and Beauty"
-            dynamic_comment:
-                description:
-                - "Category Dynamic Comment"
-            computer_and_internet_info:
-                description:
-                - "Category Computer and Internet Info"
-            real_estate:
-                description:
-                - "Category Real Estate"
-            internet_portals:
-                description:
-                - "Category Internet Portals"
-            shopping:
-                description:
-                - "Category Shopping"
-            violence:
-                description:
-                - "Category Violence"
-            abortion:
-                description:
-                - "Category Abortion"
-            training_and_tools:
-                description:
-                - "Category Training and Tools"
-            web_based_email:
-                description:
-                - "Category Web based email"
-            personal_sites_and_blogs:
-                description:
-                - "Category Personal sites and Blogs"
-            unconfirmed_spam_sources:
-                description:
-                - "Category Unconfirmed SPAM Sources"
-            games:
-                description:
-                - "Category Games"
-            parked_domains:
-                description:
-                - "Category Parked Domains"
-            auctions:
-                description:
-                - "Category Auctions"
-            job_search:
-                description:
-                - "Category Job Search"
-            recreation_and_hobbies:
-                description:
-                - "Category Recreation and Hobbies"
-            hacking:
-                description:
-                - "Category Hacking"
-            alcohol_and_tobacco:
-                description:
-                - "Category Alcohol and Tobacco"
-            adult_and_pornography:
-                description:
-                - "Category Adult and Pornography"
-            military:
-                description:
-                - "Category Military"
-    certificate_san_equals_list:
-        description:
-        - "Field certificate_san_equals_list"
-        required: False
-        suboptions:
-            certificate_san_equals:
-                description:
-                - "Forward proxy bypass if Certificate SAN equals another string"
-    template_cipher:
-        description:
-        - "Cipher Template Name"
-        required: False
-    notbeforemonth:
-        description:
-        - "Month"
-        required: False
-    bypass_cert_san_class_list_name:
-        description:
-        - "Class List Name"
-        required: False
-    chain_cert:
-        description:
-        - "Chain Certificate Name"
-        required: False
-    forward_proxy_cert_unknown_action:
-        description:
-        - "Action taken if a certificate revocation status is unknown, bypass SSLi
-          processing by default"
-        required: False
-    exception_certificate_san_cl_name:
-        description:
-        - "Exceptions to forward-proxy-bypass"
-        required: False
-    ocspst_sg:
-        description:
-        - "Specify authentication service group"
-        required: False
-    key_alt_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
-    fp_cert_ext_aia_ca_issuers:
-        description:
-        - "CA Issuers (Authority Information Access URI)"
-        required: False
-    authen_name:
-        description:
-        - "Specify authorization LDAP server name"
-        required: False
-    expire_hours:
-        description:
-        - "Certificate lifetime in hours"
-        required: False
-    client_auth_case_insensitive:
-        description:
-        - "Case insensitive forward proxy client auth bypass"
-        required: False
-    ocsp_stapling:
-        description:
-        - "Config OCSP stapling support"
-        required: False
-    notbeforeyear:
-        description:
-        - "Year"
-        required: False
-    forward_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            stock_advice_and_tools:
-                description:
-                - "stock advice and tools category"
-            news_and_media:
-                description:
-                - "news and media category"
-            CDNs:
-                description:
-                - "content delivery networks category"
-            cult_and_occult:
-                description:
-                - "cult and occult category"
-            fashion_and_beauty:
-                description:
-                - "fashion and beauty category"
-            food_and_dining:
-                description:
-                - "food and dining category"
-            SPAM_URLs:
-                description:
-                - "SPAM URLs category"
-            streaming_media:
-                description:
-                - "streaming media category"
-            bot_nets:
-                description:
-                - "bot nets category"
-            cheating:
-                description:
-                - "cheating category"
-            entertainment_and_arts:
-                description:
-                - "entertainment and arts category"
-            illegal:
-                description:
-                - "illegal category"
-            local_information:
-                description:
-                - "local information category"
-            sports:
-                description:
-                - "sports category"
-            confirmed_SPAM_sources:
-                description:
-                - "confirmed SPAM sources category"
-            private_IP_addresses:
-                description:
-                - "private IP addresses category"
-            music:
-                description:
-                - "music category"
-            open_HTTP_proxies:
-                description:
-                - "open HTTP proxies category"
-            shareware_and_freeware:
-                description:
-                - "shareware and freeware category"
-            spyware_and_adware:
-                description:
-                - "spyware and adware category"
-            questionable:
-                description:
-                - "questionable category"
-            financial_services:
-                description:
-                - "financial services category"
-            social_network:
-                description:
-                - "social network category"
-            government:
-                description:
-                - "government category"
-            drugs:
-                description:
-                - "drugs category"
-            web_hosting_sites:
-                description:
-                - "web hosting sites category"
-            web_advertisements:
-                description:
-                - "web advertisements category"
-            educational_institutions:
-                description:
-                - "educational institutions category"
-            dynamic_comment:
-                description:
-                - "dynamic comment category"
-            translation:
-                description:
-                - "translation category"
-            job_search:
-                description:
-                - "job search category"
-            hunting_and_fishing:
-                description:
-                - "hunting and fishing category"
-            search_engines:
-                description:
-                - "search engines category"
-            peer_to_peer:
-                description:
-                - "peer to peer category"
-            computer_and_internet_security:
-                description:
-                - "computer and internet security category"
-            real_estate:
-                description:
-                - "real estate category"
-            computer_and_internet_info:
-                description:
-                - "computer and internet info category"
-            internet_portals:
-                description:
-                - "internet portals category"
-            shopping:
-                description:
-                - "shopping category"
-            philosophy_and_politics:
-                description:
-                - "philosophy and politics category"
-            web_based_email:
-                description:
-                - "web based email category"
-            recreation_and_hobbies:
-                description:
-                - "recreation and hobbies category"
-            hacking:
-                description:
-                - "hacking category"
-            adult_and_pornography:
-                description:
-                - "adult and pornography category"
-            business_and_economy:
-                description:
-                - "business and economy category"
-            phishing_and_other_fraud:
-                description:
-                - "phishing and other fraud category"
-            nudity:
-                description:
-                - "nudity category"
-            health_and_medicine:
-                description:
-                - "health and medicine category"
-            marijuana:
-                description:
-                - "marijuana category"
-            home_and_garden:
-                description:
-                - "home and garden category"
-            society:
-                description:
-                - "society category"
-            unconfirmed_SPAM_sources:
-                description:
-                - "unconfirmed SPAM sources category"
-            personal_storage:
-                description:
-                - "personal storage category"
-            motor_vehicles:
-                description:
-                - "motor vehicles category"
-            swimsuits_and_intimate_apparel:
-                description:
-                - "swimsuits and intimate apparel category"
-            dead_sites:
-                description:
-                - "dead sites category"
-            other_category:
-                description:
-                - "other category"
-            proxy_avoid_and_anonymizers:
-                description:
-                - "proxy avoid and anonymizers category"
-            gross:
-                description:
-                - "gross category"
-            uncategorised:
-                description:
-                - "uncategorised"
-            travel:
-                description:
-                - "travel category"
-            legal:
-                description:
-                - "legal category"
-            weapons:
-                description:
-                - "weapons category"
-            religion:
-                description:
-                - "religion category"
-            hate_and_racism:
-                description:
-                - "hate and racism category"
-            internet_communications:
-                description:
-                - "internet communications category"
-            gambling:
-                description:
-                - "gambling category"
-            dating:
-                description:
-                - "dating category"
-            malware_sites:
-                description:
-                - "malware sites category"
+                - "Field cert_status_list"
+                type: list
             name:
                 description:
                 - "Client SSL Template Name"
-            pay_to_surf:
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            real_estate:
                 description:
-                - "pay to surf category"
-            military:
+                - "real estate category"
+                type: str
+            computer_and_internet_security:
                 description:
-                - "military category"
-            image_and_video_search:
+                - "computer and internet security category"
+                type: str
+            financial_services:
                 description:
-                - "image and video search category"
-            reference_and_research:
+                - "financial services category"
+                type: str
+            business_and_economy:
                 description:
-                - "reference and research category"
-            keyloggers_and_monitoring:
+                - "business and economy category"
+                type: str
+            computer_and_internet_info:
                 description:
-                - "keyloggers and monitoring category"
-            kids:
-                description:
-                - "kids category"
-            online_greeting_cards:
-                description:
-                - "online greeting cards category"
-            violence:
-                description:
-                - "violence category"
-            training_and_tools:
-                description:
-                - "training and tools category"
-            sex_education:
-                description:
-                - "sex education category"
-            personal_sites_and_blogs:
-                description:
-                - "personal sites and blogs category"
-            games:
-                description:
-                - "games category"
-            parked_domains:
-                description:
-                - "parked domains category"
+                - "computer and internet info category"
+                type: str
             auctions:
                 description:
                 - "auctions category"
+                type: str
+            shopping:
+                description:
+                - "shopping category"
+                type: str
+            cult_and_occult:
+                description:
+                - "cult and occult category"
+                type: str
+            travel:
+                description:
+                - "travel category"
+                type: str
+            drugs:
+                description:
+                - "drugs category"
+                type: str
+            adult_and_pornography:
+                description:
+                - "adult and pornography category"
+                type: str
+            home_and_garden:
+                description:
+                - "home and garden category"
+                type: str
+            military:
+                description:
+                - "military category"
+                type: str
+            social_network:
+                description:
+                - "social network category"
+                type: str
+            dead_sites:
+                description:
+                - "dead sites category"
+                type: str
+            stock_advice_and_tools:
+                description:
+                - "stock advice and tools category"
+                type: str
+            training_and_tools:
+                description:
+                - "training and tools category"
+                type: str
+            dating:
+                description:
+                - "dating category"
+                type: str
+            sex_education:
+                description:
+                - "sex education category"
+                type: str
+            religion:
+                description:
+                - "religion category"
+                type: str
+            entertainment_and_arts:
+                description:
+                - "entertainment and arts category"
+                type: str
+            personal_sites_and_blogs:
+                description:
+                - "personal sites and blogs category"
+                type: str
+            legal:
+                description:
+                - "legal category"
+                type: str
+            local_information:
+                description:
+                - "local information category"
+                type: str
+            streaming_media:
+                description:
+                - "streaming media category"
+                type: str
+            job_search:
+                description:
+                - "job search category"
+                type: str
+            gambling:
+                description:
+                - "gambling category"
+                type: str
+            translation:
+                description:
+                - "translation category"
+                type: str
+            reference_and_research:
+                description:
+                - "reference and research category"
+                type: str
+            shareware_and_freeware:
+                description:
+                - "shareware and freeware category"
+                type: str
+            peer_to_peer:
+                description:
+                - "peer to peer category"
+                type: str
+            marijuana:
+                description:
+                - "marijuana category"
+                type: str
+            hacking:
+                description:
+                - "hacking category"
+                type: str
+            games:
+                description:
+                - "games category"
+                type: str
+            philosophy_and_politics:
+                description:
+                - "philosophy and politics category"
+                type: str
+            weapons:
+                description:
+                - "weapons category"
+                type: str
+            pay_to_surf:
+                description:
+                - "pay to surf category"
+                type: str
+            hunting_and_fishing:
+                description:
+                - "hunting and fishing category"
+                type: str
+            society:
+                description:
+                - "society category"
+                type: str
+            educational_institutions:
+                description:
+                - "educational institutions category"
+                type: str
+            online_greeting_cards:
+                description:
+                - "online greeting cards category"
+                type: str
+            sports:
+                description:
+                - "sports category"
+                type: str
+            swimsuits_and_intimate_apparel:
+                description:
+                - "swimsuits and intimate apparel category"
+                type: str
+            questionable:
+                description:
+                - "questionable category"
+                type: str
+            kids:
+                description:
+                - "kids category"
+                type: str
+            hate_and_racism:
+                description:
+                - "hate and racism category"
+                type: str
+            personal_storage:
+                description:
+                - "personal storage category"
+                type: str
+            violence:
+                description:
+                - "violence category"
+                type: str
+            keyloggers_and_monitoring:
+                description:
+                - "keyloggers and monitoring category"
+                type: str
+            search_engines:
+                description:
+                - "search engines category"
+                type: str
+            internet_portals:
+                description:
+                - "internet portals category"
+                type: str
+            web_advertisements:
+                description:
+                - "web advertisements category"
+                type: str
+            cheating:
+                description:
+                - "cheating category"
+                type: str
+            gross:
+                description:
+                - "gross category"
+                type: str
+            web_based_email:
+                description:
+                - "web based email category"
+                type: str
+            malware_sites:
+                description:
+                - "malware sites category"
+                type: str
+            phishing_and_other_fraud:
+                description:
+                - "phishing and other fraud category"
+                type: str
+            proxy_avoid_and_anonymizers:
+                description:
+                - "proxy avoid and anonymizers category"
+                type: str
+            spyware_and_adware:
+                description:
+                - "spyware and adware category"
+                type: str
+            music:
+                description:
+                - "music category"
+                type: str
+            government:
+                description:
+                - "government category"
+                type: str
+            nudity:
+                description:
+                - "nudity category"
+                type: str
+            news_and_media:
+                description:
+                - "news and media category"
+                type: str
+            illegal:
+                description:
+                - "illegal category"
+                type: str
+            CDNs:
+                description:
+                - "content delivery networks category"
+                type: str
+            internet_communications:
+                description:
+                - "internet communications category"
+                type: str
+            bot_nets:
+                description:
+                - "bot nets category"
+                type: str
             abortion:
                 description:
                 - "abortion category"
+                type: str
+            health_and_medicine:
+                description:
+                - "health and medicine category"
+                type: str
+            confirmed_SPAM_sources:
+                description:
+                - "confirmed SPAM sources category"
+                type: str
+            SPAM_URLs:
+                description:
+                - "SPAM URLs category"
+                type: str
+            unconfirmed_SPAM_sources:
+                description:
+                - "unconfirmed SPAM sources category"
+                type: str
+            open_HTTP_proxies:
+                description:
+                - "open HTTP proxies category"
+                type: str
+            dynamic_comment:
+                description:
+                - "dynamic comment category"
+                type: str
+            parked_domains:
+                description:
+                - "parked domains category"
+                type: str
             alcohol_and_tobacco:
                 description:
                 - "alcohol and tobacco category"
-    sni_enable_log:
-        description:
-        - "Enable logging of sni-auto-map failures. Disable by default"
-        required: False
-    key_shared_str:
-        description:
-        - "Key Name"
-        required: False
-    notaftermonth:
-        description:
-        - "Month"
-        required: False
-    cache_persistence_list_name:
-        description:
-        - "Class List Name"
-        required: False
-    ocspst_sg_timeout:
-        description:
-        - "Specify retry timeout (Default is 30 mins)"
-        required: False
-    key_passphrase:
-        description:
-        - "Password Phrase"
-        required: False
-    ocspst_srvr:
-        description:
-        - "Specify OCSP authentication server"
-        required: False
-    ocspst_srvr_minutes:
-        description:
-        - "Specify update period, in minutes"
-        required: False
-    certificate_issuer_contains_list:
-        description:
-        - "Field certificate_issuer_contains_list"
-        required: False
-        suboptions:
-            certificate_issuer_contains:
+                type: str
+            private_IP_addresses:
                 description:
-                - "Forward proxy bypass if Certificate  issuer contains another string
-          (Certificate issuer)"
-    require_web_category:
-        description:
-        - "Wait for web category to be resolved before taking bypass decision"
-        required: False
-    bypass_cert_san_multi_class_list:
-        description:
-        - "Field bypass_cert_san_multi_class_list"
-        required: False
-        suboptions:
-            bypass_cert_san_multi_class_list_name:
+                - "private IP addresses category"
+                type: str
+            image_and_video_search:
                 description:
-                - "Class List Name"
-    client_auth_starts_with_list:
-        description:
-        - "Field client_auth_starts_with_list"
-        required: False
-        suboptions:
-            client_auth_starts_with:
+                - "image and video search category"
+                type: str
+            fashion_and_beauty:
                 description:
-                - "Forward proxy bypass if SNI string starts with another string"
-    certificate_subject_ends_with_list:
-        description:
-        - "Field certificate_subject_ends_with_list"
-        required: False
-        suboptions:
-            certificate_subject_ends_with:
+                - "fashion and beauty category"
+                type: str
+            recreation_and_hobbies:
                 description:
-                - "Forward proxy bypass if Certificate Subject ends with another string"
-    authorization:
-        description:
-        - "Specify LDAP server for client SSL authorizaiton"
-        required: False
-    forward_proxy_verify_cert_fail_action:
-        description:
-        - "Action taken if certificate verification fails, close the connection by default"
-        required: False
-    ocspst_srvr_days:
-        description:
-        - "Specify update period, in days"
-        required: False
-    ec_list:
-        description:
-        - "Field ec_list"
-        required: False
-        suboptions:
-            ec:
+                - "recreation and hobbies category"
+                type: str
+            motor_vehicles:
                 description:
-                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1;"
-    forward_proxy_decrypted_dscp_bypass:
-        description:
-        - "DSCP to apply to bypassed traffic"
-        required: False
-    alert_type:
-        description:
-        - "'fatal'= Log fatal alerts;"
-        required: False
-    forward_proxy_cert_not_ready_action:
-        description:
-        - "'bypass'= bypass the connection; 'reset'= reset the connection; 'intercept'=
-          wait for cert and then inspect the connection;"
-        required: False
-    server_name_list:
-        description:
-        - "Field server_name_list"
-        required: False
-        suboptions:
-            server_shared:
+                - "motor vehicles category"
+                type: str
+            web_hosting_sites:
                 description:
-                - "Server Name Partition Shared"
-            server_passphrase_regex:
+                - "web hosting sites category"
+                type: str
+            food_and_dining:
                 description:
-                - "help Password Phrase"
-            server_chain:
+                - "food and dining category"
+                type: str
+            uncategorised:
                 description:
-                - "Server Certificate Chain associated to SNI (Server Certificate Chain Name)"
-            server_cert_regex:
+                - "uncategorised"
+                type: str
+            other_category:
                 description:
-                - "Server Certificate associated to SNI regex (Server Certificate Name)"
-            server_name:
+                - "other category"
+                type: str
+            name:
                 description:
-                - "Server name indication in Client hello extension (Server name String)"
-            server_key_regex:
-                description:
-                - "Server Private Key associated to SNI regex (Server Private Key Name)"
-            server_name_regex_alternate:
-                description:
-                - "Specific the second certifcate"
-            server_encrypted_regex:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-            server_shared_regex:
-                description:
-                - "Server Name Partition Shared"
-            server_name_regex:
-                description:
-                - "Server name indication in Client hello extension with regular expression
-          (Server name String with regex)"
-            server_passphrase:
-                description:
-                - "help Password Phrase"
-            server_key:
-                description:
-                - "Server Private Key associated to SNI (Server Private Key Name)"
-            server_chain_regex:
-                description:
-                - "Server Certificate Chain associated to SNI regex (Server Certificate Chain
-          Name)"
-            server_name_alternate:
-                description:
-                - "Specific the second certifcate"
-            server_encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-            server_cert:
-                description:
-                - "Server Certificate associated to SNI (Server Certificate Name)"
-    bypass_cert_issuer_class_list_name:
-        description:
-        - "Class List Name"
-        required: False
-    fp_cert_ext_crldp:
-        description:
-        - "CRL Distribution Point (CRL Distribution Point URI)"
-        required: False
-    shared_partition_cipher_template:
-        description:
-        - "Reference a cipher template from shared partition"
-        required: False
-    fp_cert_fetch_natpool_precedence:
-        description:
-        - "Set this NAT pool as higher precedence than other source NAT like configued
-          under template policy"
-        required: False
-    cert_alternate:
-        description:
-        - "Specify the second certificate (Certificate Name)"
-        required: False
-    forward_proxy_cert_cache_limit:
-        description:
-        - "Certificate cache size limit, default is 524288 (set to 0 for unlimited size)"
-        required: False
-    non_ssl_bypass_l4session:
-        description:
-        - "Handle the non-ssl session as L4 for performance optimization"
-        required: False
-    certificate_issuer_starts_with_list:
-        description:
-        - "Field certificate_issuer_starts_with_list"
-        required: False
-        suboptions:
-            certificate_issuer_starts:
-                description:
-                - "Forward proxy bypass if Certificate issuer starts with another string"
-    certificate_san_starts_with_list:
-        description:
-        - "Field certificate_san_starts_with_list"
-        required: False
-        suboptions:
-            certificate_san_starts:
-                description:
-                - "Forward proxy bypass if Certificate SAN starts with another string"
-    client_auth_ends_with_list:
-        description:
-        - "Field client_auth_ends_with_list"
-        required: False
-        suboptions:
-            client_auth_ends_with:
-                description:
-                - "Forward proxy bypass if SNI string ends with another string"
-    close_notify:
-        description:
-        - "Send close notification when terminate connection"
-        required: False
-    forward_proxy_no_shared_cipher_action:
-        description:
-        - "Action taken if handshake fails due to no shared ciper, close the connection by
-          default"
-        required: False
-    forward_proxy_ocsp_disable:
-        description:
-        - "Disable ocsp-stapling for forward proxy"
-        required: False
-    sslilogging:
-        description:
-        - "'disable'= Disable all logging; 'all'= enable all logging(error, info);"
-        required: False
-    auth_username:
-        description:
-        - "Specify the Username Field in the Client Certificate(If multi-fields are
-          specificed, prior one has higher priority)"
-        required: False
-    exception_user_name_list:
-        description:
-        - "Exceptions to forward proxy bypass if user-name matches class-list"
-        required: False
-    ocspst_sg_days:
-        description:
-        - "Specify update period, in days"
-        required: False
-    key_str:
-        description:
-        - "Key Name"
-        required: False
-    inspect_list_name:
-        description:
-        - "Class List Name"
-        required: False
-    auth_username_attribute:
-        description:
-        - "Specify attribute name of username for client SSL authorization"
-        required: False
-    fp_cert_fetch_natpool_name:
-        description:
-        - "Specify NAT pool or pool group"
-        required: False
-    exception_sni_cl_name:
-        description:
-        - "Exceptions to forward-proxy-bypass"
-        required: False
-    inspect_certificate_subject_cl_name:
-        description:
-        - "Forward proxy Inspect if Certificate Subject matches class-list"
-        required: False
-    ldap_base_dn_from_cert:
-        description:
-        - "Use Subject DN as LDAP search base DN"
-        required: False
-    ad_group_list:
-        description:
-        - "Forward proxy bypass if ad-group matches class-list"
-        required: False
-    client_certificate:
-        description:
-        - "'Ignore'= Don't request client certificate; 'Require'= Require client
-          certificate; 'Request'= Request client certificate;"
-        required: False
-    forward_proxy_cert_expiry:
-        description:
-        - "Adjust certificate expiry relative to the time when it is created on the device"
-        required: False
-    forward_proxy_enable:
-        description:
-        - "Enable SSL forward proxy"
-        required: False
-    shared_partition_pool:
-        description:
-        - "Reference a NAT pool or pool group from shared partition"
-        required: False
-    ldap_search_filter:
-        description:
-        - "Specify LDAP search filter"
-        required: False
-    key_shared_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
-    auth_sg_filter:
-        description:
-        - "Specify LDAP search filter"
-        required: False
-    ocspst_srvr_timeout:
-        description:
-        - "Specify retry timeout (Default is 30 mins)"
-        required: False
-    certificate_subject_equals_list:
-        description:
-        - "Field certificate_subject_equals_list"
-        required: False
-        suboptions:
-            certificate_subject_equals:
-                description:
-                - "Forward proxy bypass if Certificate Subject equals another string"
-    chain_cert_shared_str:
-        description:
-        - "Chain Certificate Name"
-        required: False
-    enable_tls_alert_logging:
-        description:
-        - "Enable TLS alert logging"
-        required: False
-    dh_type:
-        description:
-        - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048;"
-        required: False
-    fp_alt_cert:
-        description:
-        - "CA Certificate for forward proxy alternate signing (Certificate name)"
-        required: False
-    case_insensitive:
-        description:
-        - "Case insensitive forward proxy bypass"
-        required: False
-    cipher_without_prio_list:
-        description:
-        - "Field cipher_without_prio_list"
-        required: False
-        suboptions:
-            cipher_wo_prio:
-                description:
-                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'=
-          SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA;
-          'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'=
-          TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256;
-          'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256;
-          'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256;
-          'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA;
-          'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256;
-          'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384;
-          'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA;
-          'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256;
-          'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256;
-          'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA;
-          'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256;
-          'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384;
-          'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA;
-          'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256;
-          'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA;
-          'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256;
-          'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384;
-          'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA;
-          'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256;
-          'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384;
-          'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384;
-          'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384;
-          'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256'=
-          TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256;
-          'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256'=
-          TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256;
-          'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256;"
-    ocspst_sg_minutes:
-        description:
-        - "Specify update period, in minutes"
-        required: False
-    starts_with_list:
-        description:
-        - "Field starts_with_list"
-        required: False
-        suboptions:
-            starts_with:
-                description:
-                - "Forward proxy bypass if SNI string starts with another string"
-    key_shared_passphrase:
-        description:
-        - "Password Phrase"
-        required: False
+                - "Client SSL Template Name"
+                type: str
 
 '''
 
@@ -1591,10 +2037,11 @@ AVAILABLE_PROPERTIES = [
     "ca_certs",
     "cache_persistence_list_name",
     "case_insensitive",
+    "cert",
+    "cert_alt_partition_shared",
     "cert_alternate",
     "cert_revoke_action",
     "cert_shared_str",
-    "cert_str",
     "cert_unknown_action",
     "certificate_issuer_contains_list",
     "certificate_issuer_ends_with_list",
@@ -1627,6 +2074,7 @@ AVAILABLE_PROPERTIES = [
     "direct_client_server_auth",
     "disable_sslv3",
     "ec_list",
+    "enable_ssli_ftp_alg",
     "enable_tls_alert_logging",
     "ends_with_list",
     "equals_list",
@@ -1658,6 +2106,7 @@ AVAILABLE_PROPERTIES = [
     "forward_proxy_no_shared_cipher_action",
     "forward_proxy_no_sni_action",
     "forward_proxy_ocsp_disable",
+    "forward_proxy_require_sni_cert_matched",
     "forward_proxy_selfsign_redir",
     "forward_proxy_ssl_version",
     "forward_proxy_trusted_ca_lists",
@@ -1666,6 +2115,9 @@ AVAILABLE_PROPERTIES = [
     "fp_alt_encrypted",
     "fp_alt_key",
     "fp_alt_passphrase",
+    "fp_alt_shared",
+    "fp_ca_key_shared",
+    "fp_ca_shared",
     "fp_cert_ext_aia_ca_issuers",
     "fp_cert_ext_aia_ocsp",
     "fp_cert_ext_crldp",
@@ -1680,7 +2132,9 @@ AVAILABLE_PROPERTIES = [
     "inspect_certificate_san_cl_name",
     "inspect_certificate_subject_cl_name",
     "inspect_list_name",
+    "key",
     "key_alt_encrypted",
+    "key_alt_partition_shared",
     "key_alt_passphrase",
     "key_alternate",
     "key_encrypted",
@@ -1688,7 +2142,6 @@ AVAILABLE_PROPERTIES = [
     "key_shared_encrypted",
     "key_shared_passphrase",
     "key_shared_str",
-    "key_str",
     "ldap_base_dn_from_cert",
     "ldap_search_filter",
     "local_logging",
@@ -1783,116 +2236,355 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'bypass_cert_subject_multi_class_list': {
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'auth_username': {
+            'type': 'str',
+        },
+        'ca_certs': {
             'type': 'list',
-            'bypass_cert_subject_multi_class_list_name': {
+            'ca_cert': {
+                'type': 'str',
+            },
+            'ca_shared': {
+                'type': 'bool',
+            },
+            'client_ocsp': {
+                'type': 'bool',
+            },
+            'client_ocsp_srvr': {
+                'type': 'str',
+            },
+            'client_ocsp_sg': {
                 'type': 'str',
             }
         },
-        'verify_cert_fail_action': {
-            'type': 'str',
-            'choices': ['bypass', 'continue', 'drop', 'block']
-        },
-        'inspect_certificate_issuer_cl_name': {
+        'chain_cert': {
             'type': 'str',
         },
-        'certificate_san_contains_list': {
-            'type': 'list',
-            'certificate_san_contains': {
-                'type': 'str',
-            }
-        },
-        'forward_proxy_block_message': {
+        'chain_cert_shared_str': {
             'type': 'str',
         },
-        'direct_client_server_auth': {
+        'cert': {
+            'type': 'str',
+        },
+        'cert_shared_str': {
+            'type': 'str',
+        },
+        'cert_alternate': {
+            'type': 'str',
+        },
+        'cert_alt_partition_shared': {
             'type': 'bool',
+        },
+        'dh_type': {
+            'type': 'str',
+            'choices': ['1024', '1024-dsa', '2048']
+        },
+        'ec_list': {
+            'type': 'list',
+            'ec': {
+                'type': 'str',
+                'choices': ['secp256r1', 'secp384r1']
+            }
+        },
+        'local_logging': {
+            'type': 'bool',
+        },
+        'ocsp_stapling': {
+            'type': 'bool',
+        },
+        'ocspst_ca_cert': {
+            'type': 'str',
+        },
+        'ocspst_ocsp': {
+            'type': 'bool',
+        },
+        'ocspst_srvr': {
+            'type': 'str',
+        },
+        'ocspst_srvr_days': {
+            'type': 'int',
+        },
+        'ocspst_srvr_hours': {
+            'type': 'int',
+        },
+        'ocspst_srvr_minutes': {
+            'type': 'int',
+        },
+        'ocspst_srvr_timeout': {
+            'type': 'int',
+        },
+        'ocspst_sg': {
+            'type': 'str',
+        },
+        'ocspst_sg_days': {
+            'type': 'int',
         },
         'ocspst_sg_hours': {
             'type': 'int',
         },
-        'no_shared_cipher_action': {
-            'type': 'str',
-            'choices': ['bypass', 'drop']
+        'ocspst_sg_minutes': {
+            'type': 'int',
         },
-        'oper': {
-            'type': 'dict',
-            'name': {
+        'ocspst_sg_timeout': {
+            'type': 'int',
+        },
+        'ssli_logging': {
+            'type': 'bool',
+        },
+        'sslilogging': {
+            'type': 'str',
+            'choices': ['disable', 'all']
+        },
+        'client_certificate': {
+            'type': 'str',
+            'choices': ['Ignore', 'Require', 'Request']
+        },
+        'req_ca_lists': {
+            'type': 'list',
+            'client_certificate_Request_CA': {
                 'type': 'str',
-                'required': True,
             },
-            'cert_status_list': {
-                'type': 'list',
-                'cert_status_responder': {
-                    'type': 'str',
-                },
-                'cert_status_status': {
-                    'type': 'str',
-                },
-                'cert_status_age': {
-                    'type': 'int',
-                },
-                'cert_status_next_update': {
-                    'type': 'str',
-                },
-                'cert_status_name': {
-                    'type': 'str',
-                }
+            'client_cert_req_ca_shared': {
+                'type': 'bool',
             }
         },
-        'fp_cert_fetch_autonat': {
-            'type': 'str',
-            'choices': ['auto']
+        'close_notify': {
+            'type': 'bool',
         },
-        'equals_list': {
+        'crl_certs': {
             'type': 'list',
-            'equals': {
+            'crl': {
                 'type': 'str',
+            },
+            'crl_shared': {
+                'type': 'bool',
             }
-        },
-        'exception_certificate_subject_cl_name': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'forward_proxy_trusted_ca_lists': {
-            'type': 'list',
-            'forward_proxy_trusted_ca': {
-                'type': 'str',
-            }
-        },
-        'template_cipher_shared': {
-            'type': 'str',
         },
         'forward_proxy_ca_cert': {
             'type': 'str',
         },
-        'ssl_false_start_disable': {
+        'fp_ca_shared': {
             'type': 'bool',
         },
-        'dgversion': {
-            'type': 'int',
-        },
-        'client_auth_class_list': {
-            'type': 'str',
-        },
-        'key_encrypted': {
-            'type': 'str',
-        },
-        'notafteryear': {
-            'type': 'int',
-        },
-        'forward_proxy_alt_sign': {
-            'type': 'bool',
-        },
-        'template_hsm': {
+        'forward_proxy_ca_key': {
             'type': 'str',
         },
         'forward_passphrase': {
             'type': 'str',
         },
-        'exception_certificate_issuer_cl_name': {
+        'forward_encrypted': {
+            'type': 'str',
+        },
+        'fp_ca_key_shared': {
+            'type': 'bool',
+        },
+        'forward_proxy_alt_sign': {
+            'type': 'bool',
+        },
+        'fp_alt_cert': {
+            'type': 'str',
+        },
+        'fp_alt_key': {
+            'type': 'str',
+        },
+        'fp_alt_passphrase': {
+            'type': 'str',
+        },
+        'fp_alt_encrypted': {
+            'type': 'str',
+        },
+        'fp_alt_shared': {
+            'type': 'bool',
+        },
+        'forward_proxy_trusted_ca_lists': {
+            'type': 'list',
+            'forward_proxy_trusted_ca': {
+                'type': 'str',
+            },
+            'fp_trusted_ca_shared': {
+                'type': 'bool',
+            }
+        },
+        'forward_proxy_decrypted_dscp': {
+            'type': 'int',
+        },
+        'forward_proxy_decrypted_dscp_bypass': {
+            'type': 'int',
+        },
+        'enable_tls_alert_logging': {
+            'type': 'bool',
+        },
+        'alert_type': {
+            'type': 'str',
+            'choices': ['fatal']
+        },
+        'forward_proxy_verify_cert_fail_action': {
+            'type': 'bool',
+        },
+        'verify_cert_fail_action': {
+            'type': 'str',
+            'choices': ['bypass', 'continue', 'drop', 'block']
+        },
+        'forward_proxy_cert_revoke_action': {
+            'type': 'bool',
+        },
+        'cert_revoke_action': {
+            'type': 'str',
+            'choices': ['bypass', 'continue', 'drop', 'block']
+        },
+        'forward_proxy_no_shared_cipher_action': {
+            'type': 'bool',
+        },
+        'no_shared_cipher_action': {
+            'type': 'str',
+            'choices': ['bypass', 'drop']
+        },
+        'forward_proxy_cert_unknown_action': {
+            'type': 'bool',
+        },
+        'cert_unknown_action': {
+            'type': 'str',
+            'choices': ['bypass', 'continue', 'drop', 'block']
+        },
+        'forward_proxy_block_message': {
+            'type': 'str',
+        },
+        'cache_persistence_list_name': {
+            'type': 'str',
+        },
+        'fp_cert_ext_crldp': {
+            'type': 'str',
+        },
+        'fp_cert_ext_aia_ocsp': {
+            'type': 'str',
+        },
+        'fp_cert_ext_aia_ca_issuers': {
+            'type': 'str',
+        },
+        'notbefore': {
+            'type': 'bool',
+        },
+        'notbeforeday': {
+            'type': 'int',
+        },
+        'notbeforemonth': {
+            'type': 'int',
+        },
+        'notbeforeyear': {
+            'type': 'int',
+        },
+        'notafter': {
+            'type': 'bool',
+        },
+        'notafterday': {
+            'type': 'int',
+        },
+        'notaftermonth': {
+            'type': 'int',
+        },
+        'notafteryear': {
+            'type': 'int',
+        },
+        'forward_proxy_ssl_version': {
+            'type': 'int',
+        },
+        'forward_proxy_ocsp_disable': {
+            'type': 'bool',
+        },
+        'forward_proxy_crl_disable': {
+            'type': 'bool',
+        },
+        'forward_proxy_cert_cache_timeout': {
+            'type': 'int',
+        },
+        'forward_proxy_cert_cache_limit': {
+            'type': 'int',
+        },
+        'forward_proxy_cert_expiry': {
+            'type': 'bool',
+        },
+        'expire_hours': {
+            'type': 'int',
+        },
+        'forward_proxy_enable': {
+            'type': 'bool',
+        },
+        'handshake_logging_enable': {
+            'type': 'bool',
+        },
+        'forward_proxy_selfsign_redir': {
+            'type': 'bool',
+        },
+        'forward_proxy_failsafe_disable': {
+            'type': 'bool',
+        },
+        'forward_proxy_log_disable': {
+            'type': 'bool',
+        },
+        'fp_cert_fetch_natpool_name': {
+            'type': 'str',
+        },
+        'shared_partition_pool': {
+            'type': 'bool',
+        },
+        'fp_cert_fetch_natpool_name_shared': {
+            'type': 'str',
+        },
+        'fp_cert_fetch_natpool_precedence': {
+            'type': 'bool',
+        },
+        'fp_cert_fetch_autonat': {
+            'type': 'str',
+            'choices': ['auto']
+        },
+        'fp_cert_fetch_autonat_precedence': {
+            'type': 'bool',
+        },
+        'forward_proxy_no_sni_action': {
+            'type': 'str',
+            'choices': ['intercept', 'bypass', 'reset']
+        },
+        'case_insensitive': {
+            'type': 'bool',
+        },
+        'class_list_name': {
+            'type': 'str',
+        },
+        'multi_class_list': {
+            'type': 'list',
+            'multi_clist_name': {
+                'type': 'str',
+            }
+        },
+        'user_name_list': {
+            'type': 'str',
+        },
+        'ad_group_list': {
+            'type': 'str',
+        },
+        'exception_user_name_list': {
+            'type': 'str',
+        },
+        'exception_ad_group_list': {
+            'type': 'str',
+        },
+        'exception_sni_cl_name': {
+            'type': 'str',
+        },
+        'inspect_list_name': {
+            'type': 'str',
+        },
+        'inspect_certificate_subject_cl_name': {
+            'type': 'str',
+        },
+        'inspect_certificate_issuer_cl_name': {
+            'type': 'str',
+        },
+        'inspect_certificate_san_cl_name': {
             'type': 'str',
         },
         'contains_list': {
@@ -1901,63 +2593,21 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'forward_proxy_ca_key': {
-            'type': 'str',
-        },
-        'notbefore': {
-            'type': 'bool',
-        },
         'ends_with_list': {
             'type': 'list',
             'ends_with': {
                 'type': 'str',
             }
         },
-        'bypass_cert_subject_class_list_name': {
-            'type': 'str',
-        },
-        'notafter': {
-            'type': 'bool',
-        },
-        'class_list_name': {
-            'type': 'str',
-        },
-        'ocspst_ocsp': {
-            'type': 'bool',
-        },
-        'notbeforeday': {
-            'type': 'int',
-        },
-        'key_alt_passphrase': {
-            'type': 'str',
-        },
-        'forward_proxy_ssl_version': {
-            'type': 'int',
-        },
-        'ca_certs': {
+        'equals_list': {
             'type': 'list',
-            'ca_cert': {
+            'equals': {
                 'type': 'str',
-            },
-            'client_ocsp_sg': {
-                'type': 'str',
-            },
-            'client_ocsp': {
-                'type': 'bool',
-            },
-            'client_ocsp_srvr': {
-                'type': 'str',
-            },
-            'ca_shared': {
-                'type': 'bool',
             }
         },
-        'forward_proxy_crl_disable': {
-            'type': 'bool',
-        },
-        'client_auth_contains_list': {
+        'starts_with_list': {
             'type': 'list',
-            'client_auth_contains': {
+            'starts_with': {
                 'type': 'str',
             }
         },
@@ -1967,28 +2617,609 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'forward_proxy_cert_revoke_action': {
-            'type': 'bool',
-        },
-        'fp_cert_ext_aia_ocsp': {
+        'bypass_cert_subject_class_list_name': {
             'type': 'str',
         },
-        'req_ca_lists': {
+        'bypass_cert_subject_multi_class_list': {
             'type': 'list',
-            'client_certificate_Request_CA': {
+            'bypass_cert_subject_multi_class_list_name': {
                 'type': 'str',
             }
         },
-        'user_tag': {
+        'exception_certificate_subject_cl_name': {
             'type': 'str',
         },
-        'cert_unknown_action': {
+        'certificate_subject_ends_with_list': {
+            'type': 'list',
+            'certificate_subject_ends_with': {
+                'type': 'str',
+            }
+        },
+        'certificate_subject_equals_list': {
+            'type': 'list',
+            'certificate_subject_equals': {
+                'type': 'str',
+            }
+        },
+        'certificate_subject_starts_with_list': {
+            'type': 'list',
+            'certificate_subject_starts': {
+                'type': 'str',
+            }
+        },
+        'certificate_issuer_contains_list': {
+            'type': 'list',
+            'certificate_issuer_contains': {
+                'type': 'str',
+            }
+        },
+        'bypass_cert_issuer_class_list_name': {
             'type': 'str',
-            'choices': ['bypass', 'continue', 'drop', 'block']
+        },
+        'bypass_cert_issuer_multi_class_list': {
+            'type': 'list',
+            'bypass_cert_issuer_multi_class_list_name': {
+                'type': 'str',
+            }
+        },
+        'exception_certificate_issuer_cl_name': {
+            'type': 'str',
+        },
+        'certificate_issuer_ends_with_list': {
+            'type': 'list',
+            'certificate_issuer_ends_with': {
+                'type': 'str',
+            }
+        },
+        'certificate_issuer_equals_list': {
+            'type': 'list',
+            'certificate_issuer_equals': {
+                'type': 'str',
+            }
+        },
+        'certificate_issuer_starts_with_list': {
+            'type': 'list',
+            'certificate_issuer_starts': {
+                'type': 'str',
+            }
+        },
+        'certificate_san_contains_list': {
+            'type': 'list',
+            'certificate_san_contains': {
+                'type': 'str',
+            }
+        },
+        'bypass_cert_san_class_list_name': {
+            'type': 'str',
+        },
+        'bypass_cert_san_multi_class_list': {
+            'type': 'list',
+            'bypass_cert_san_multi_class_list_name': {
+                'type': 'str',
+            }
+        },
+        'exception_certificate_san_cl_name': {
+            'type': 'str',
+        },
+        'certificate_san_ends_with_list': {
+            'type': 'list',
+            'certificate_san_ends_with': {
+                'type': 'str',
+            }
+        },
+        'certificate_san_equals_list': {
+            'type': 'list',
+            'certificate_san_equals': {
+                'type': 'str',
+            }
+        },
+        'certificate_san_starts_with_list': {
+            'type': 'list',
+            'certificate_san_starts': {
+                'type': 'str',
+            }
+        },
+        'client_auth_case_insensitive': {
+            'type': 'bool',
+        },
+        'client_auth_class_list': {
+            'type': 'str',
+        },
+        'client_auth_contains_list': {
+            'type': 'list',
+            'client_auth_contains': {
+                'type': 'str',
+            }
+        },
+        'client_auth_ends_with_list': {
+            'type': 'list',
+            'client_auth_ends_with': {
+                'type': 'str',
+            }
+        },
+        'client_auth_equals_list': {
+            'type': 'list',
+            'client_auth_equals': {
+                'type': 'str',
+            }
+        },
+        'client_auth_starts_with_list': {
+            'type': 'list',
+            'client_auth_starts_with': {
+                'type': 'str',
+            }
+        },
+        'forward_proxy_cert_not_ready_action': {
+            'type': 'str',
+            'choices': ['bypass', 'reset', 'intercept']
+        },
+        'web_category': {
+            'type': 'dict',
+            'uncategorized': {
+                'type': 'bool',
+            },
+            'real_estate': {
+                'type': 'bool',
+            },
+            'computer_and_internet_security': {
+                'type': 'bool',
+            },
+            'financial_services': {
+                'type': 'bool',
+            },
+            'business_and_economy': {
+                'type': 'bool',
+            },
+            'computer_and_internet_info': {
+                'type': 'bool',
+            },
+            'auctions': {
+                'type': 'bool',
+            },
+            'shopping': {
+                'type': 'bool',
+            },
+            'cult_and_occult': {
+                'type': 'bool',
+            },
+            'travel': {
+                'type': 'bool',
+            },
+            'drugs': {
+                'type': 'bool',
+            },
+            'adult_and_pornography': {
+                'type': 'bool',
+            },
+            'home_and_garden': {
+                'type': 'bool',
+            },
+            'military': {
+                'type': 'bool',
+            },
+            'social_network': {
+                'type': 'bool',
+            },
+            'dead_sites': {
+                'type': 'bool',
+            },
+            'stock_advice_and_tools': {
+                'type': 'bool',
+            },
+            'training_and_tools': {
+                'type': 'bool',
+            },
+            'dating': {
+                'type': 'bool',
+            },
+            'sex_education': {
+                'type': 'bool',
+            },
+            'religion': {
+                'type': 'bool',
+            },
+            'entertainment_and_arts': {
+                'type': 'bool',
+            },
+            'personal_sites_and_blogs': {
+                'type': 'bool',
+            },
+            'legal': {
+                'type': 'bool',
+            },
+            'local_information': {
+                'type': 'bool',
+            },
+            'streaming_media': {
+                'type': 'bool',
+            },
+            'job_search': {
+                'type': 'bool',
+            },
+            'gambling': {
+                'type': 'bool',
+            },
+            'translation': {
+                'type': 'bool',
+            },
+            'reference_and_research': {
+                'type': 'bool',
+            },
+            'shareware_and_freeware': {
+                'type': 'bool',
+            },
+            'peer_to_peer': {
+                'type': 'bool',
+            },
+            'marijuana': {
+                'type': 'bool',
+            },
+            'hacking': {
+                'type': 'bool',
+            },
+            'games': {
+                'type': 'bool',
+            },
+            'philosophy_and_politics': {
+                'type': 'bool',
+            },
+            'weapons': {
+                'type': 'bool',
+            },
+            'pay_to_surf': {
+                'type': 'bool',
+            },
+            'hunting_and_fishing': {
+                'type': 'bool',
+            },
+            'society': {
+                'type': 'bool',
+            },
+            'educational_institutions': {
+                'type': 'bool',
+            },
+            'online_greeting_cards': {
+                'type': 'bool',
+            },
+            'sports': {
+                'type': 'bool',
+            },
+            'swimsuits_and_intimate_apparel': {
+                'type': 'bool',
+            },
+            'questionable': {
+                'type': 'bool',
+            },
+            'kids': {
+                'type': 'bool',
+            },
+            'hate_and_racism': {
+                'type': 'bool',
+            },
+            'personal_storage': {
+                'type': 'bool',
+            },
+            'violence': {
+                'type': 'bool',
+            },
+            'keyloggers_and_monitoring': {
+                'type': 'bool',
+            },
+            'search_engines': {
+                'type': 'bool',
+            },
+            'internet_portals': {
+                'type': 'bool',
+            },
+            'web_advertisements': {
+                'type': 'bool',
+            },
+            'cheating': {
+                'type': 'bool',
+            },
+            'gross': {
+                'type': 'bool',
+            },
+            'web_based_email': {
+                'type': 'bool',
+            },
+            'malware_sites': {
+                'type': 'bool',
+            },
+            'phishing_and_other_fraud': {
+                'type': 'bool',
+            },
+            'proxy_avoid_and_anonymizers': {
+                'type': 'bool',
+            },
+            'spyware_and_adware': {
+                'type': 'bool',
+            },
+            'music': {
+                'type': 'bool',
+            },
+            'government': {
+                'type': 'bool',
+            },
+            'nudity': {
+                'type': 'bool',
+            },
+            'news_and_media': {
+                'type': 'bool',
+            },
+            'illegal': {
+                'type': 'bool',
+            },
+            'cdns': {
+                'type': 'bool',
+            },
+            'internet_communications': {
+                'type': 'bool',
+            },
+            'bot_nets': {
+                'type': 'bool',
+            },
+            'abortion': {
+                'type': 'bool',
+            },
+            'health_and_medicine': {
+                'type': 'bool',
+            },
+            'confirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'spam_urls': {
+                'type': 'bool',
+            },
+            'unconfirmed_spam_sources': {
+                'type': 'bool',
+            },
+            'open_http_proxies': {
+                'type': 'bool',
+            },
+            'dynamic_comment': {
+                'type': 'bool',
+            },
+            'parked_domains': {
+                'type': 'bool',
+            },
+            'alcohol_and_tobacco': {
+                'type': 'bool',
+            },
+            'private_ip_addresses': {
+                'type': 'bool',
+            },
+            'image_and_video_search': {
+                'type': 'bool',
+            },
+            'fashion_and_beauty': {
+                'type': 'bool',
+            },
+            'recreation_and_hobbies': {
+                'type': 'bool',
+            },
+            'motor_vehicles': {
+                'type': 'bool',
+            },
+            'web_hosting_sites': {
+                'type': 'bool',
+            },
+            'food_and_dining': {
+                'type': 'bool',
+            }
+        },
+        'require_web_category': {
+            'type': 'bool',
+        },
+        'forward_proxy_require_sni_cert_matched': {
+            'type': 'str',
+            'choices': ['no-match-action-inspect', 'no-match-action-drop']
+        },
+        'key': {
+            'type': 'str',
+        },
+        'key_passphrase': {
+            'type': 'str',
+        },
+        'key_encrypted': {
+            'type': 'str',
+        },
+        'key_shared_str': {
+            'type': 'str',
+        },
+        'key_shared_passphrase': {
+            'type': 'str',
+        },
+        'key_shared_encrypted': {
+            'type': 'str',
+        },
+        'key_alternate': {
+            'type': 'str',
+        },
+        'key_alt_passphrase': {
+            'type': 'str',
+        },
+        'key_alt_encrypted': {
+            'type': 'str',
+        },
+        'key_alt_partition_shared': {
+            'type': 'bool',
+        },
+        'template_cipher': {
+            'type': 'str',
+        },
+        'shared_partition_cipher_template': {
+            'type': 'bool',
+        },
+        'template_cipher_shared': {
+            'type': 'str',
+        },
+        'template_hsm': {
+            'type': 'str',
+        },
+        'hsm_type': {
+            'type': 'str',
+            'choices': ['thales-embed', 'thales-hwcrhk']
+        },
+        'cipher_without_prio_list': {
+            'type': 'list',
+            'cipher_wo_prio': {
+                'type':
+                'str',
+                'choices': [
+                    'SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5',
+                    'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA',
+                    'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256',
+                    'TLS1_RSA_AES_256_SHA256',
+                    'TLS1_DHE_RSA_AES_128_GCM_SHA256',
+                    'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256',
+                    'TLS1_DHE_RSA_AES_256_GCM_SHA384',
+                    'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256',
+                    'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256',
+                    'TLS1_ECDHE_ECDSA_AES_128_SHA',
+                    'TLS1_ECDHE_ECDSA_AES_128_SHA256',
+                    'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384',
+                    'TLS1_ECDHE_ECDSA_AES_256_SHA',
+                    'TLS1_ECDHE_RSA_AES_128_GCM_SHA256',
+                    'TLS1_ECDHE_RSA_AES_128_SHA',
+                    'TLS1_ECDHE_RSA_AES_128_SHA256',
+                    'TLS1_ECDHE_RSA_AES_256_GCM_SHA384',
+                    'TLS1_ECDHE_RSA_AES_256_SHA',
+                    'TLS1_RSA_AES_128_GCM_SHA256',
+                    'TLS1_RSA_AES_256_GCM_SHA384',
+                    'TLS1_ECDHE_RSA_AES_256_SHA384',
+                    'TLS1_ECDHE_ECDSA_AES_256_SHA384',
+                    'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256',
+                    'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256',
+                    'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
+                ]
+            }
+        },
+        'server_name_list': {
+            'type': 'list',
+            'server_name': {
+                'type': 'str',
+            },
+            'server_cert': {
+                'type': 'str',
+            },
+            'server_chain': {
+                'type': 'str',
+            },
+            'server_key': {
+                'type': 'str',
+            },
+            'server_passphrase': {
+                'type': 'str',
+            },
+            'server_encrypted': {
+                'type': 'str',
+            },
+            'server_name_alternate': {
+                'type': 'bool',
+            },
+            'server_shared': {
+                'type': 'bool',
+            },
+            'server_name_regex': {
+                'type': 'str',
+            },
+            'server_cert_regex': {
+                'type': 'str',
+            },
+            'server_chain_regex': {
+                'type': 'str',
+            },
+            'server_key_regex': {
+                'type': 'str',
+            },
+            'server_passphrase_regex': {
+                'type': 'str',
+            },
+            'server_encrypted_regex': {
+                'type': 'str',
+            },
+            'server_name_regex_alternate': {
+                'type': 'bool',
+            },
+            'server_shared_regex': {
+                'type': 'bool',
+            }
+        },
+        'server_name_auto_map': {
+            'type': 'bool',
+        },
+        'sni_enable_log': {
+            'type': 'bool',
+        },
+        'direct_client_server_auth': {
+            'type': 'bool',
+        },
+        'session_cache_size': {
+            'type': 'int',
+        },
+        'session_cache_timeout': {
+            'type': 'int',
+        },
+        'session_ticket_lifetime': {
+            'type': 'int',
+        },
+        'ssl_false_start_disable': {
+            'type': 'bool',
+        },
+        'disable_sslv3': {
+            'type': 'bool',
+        },
+        'version': {
+            'type': 'int',
+        },
+        'dgversion': {
+            'type': 'int',
+        },
+        'renegotiation_disable': {
+            'type': 'bool',
+        },
+        'sslv2_bypass_service_group': {
+            'type': 'str',
+        },
+        'authorization': {
+            'type': 'bool',
+        },
+        'authen_name': {
+            'type': 'str',
+        },
+        'ldap_base_dn_from_cert': {
+            'type': 'bool',
+        },
+        'ldap_search_filter': {
+            'type': 'str',
+        },
+        'auth_sg': {
+            'type': 'str',
+        },
+        'auth_sg_dn': {
+            'type': 'bool',
+        },
+        'auth_sg_filter': {
+            'type': 'str',
+        },
+        'auth_username_attribute': {
+            'type': 'str',
+        },
+        'non_ssl_bypass_service_group': {
+            'type': 'str',
+        },
+        'non_ssl_bypass_l4session': {
+            'type': 'bool',
+        },
+        'enable_ssli_ftp_alg': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -2031,1042 +3262,292 @@ def get_argspec():
                 ]
             }
         },
-        'renegotiation_disable': {
-            'type': 'bool',
-        },
-        'exception_ad_group_list': {
-            'type': 'str',
-        },
-        'key_alternate': {
-            'type': 'str',
-        },
-        'fp_alt_key': {
-            'type': 'str',
-        },
-        'server_name_auto_map': {
-            'type': 'bool',
-        },
-        'disable_sslv3': {
-            'type': 'bool',
-        },
-        'bypass_cert_issuer_multi_class_list': {
-            'type': 'list',
-            'bypass_cert_issuer_multi_class_list_name': {
-                'type': 'str',
-            }
-        },
-        'client_auth_equals_list': {
-            'type': 'list',
-            'client_auth_equals': {
-                'type': 'str',
-            }
-        },
-        'forward_proxy_no_sni_action': {
-            'type': 'str',
-            'choices': ['intercept', 'bypass', 'reset']
-        },
-        'certificate_issuer_equals_list': {
-            'type': 'list',
-            'certificate_issuer_equals': {
-                'type': 'str',
-            }
-        },
-        'fp_alt_passphrase': {
-            'type': 'str',
-        },
-        'certificate_subject_starts_with_list': {
-            'type': 'list',
-            'certificate_subject_starts': {
-                'type': 'str',
-            }
-        },
-        'certificate_san_ends_with_list': {
-            'type': 'list',
-            'certificate_san_ends_with': {
-                'type': 'str',
-            }
-        },
-        'forward_proxy_cert_cache_timeout': {
-            'type': 'int',
-        },
-        'fp_cert_fetch_natpool_name_shared': {
-            'type': 'str',
-        },
-        'crl_certs': {
-            'type': 'list',
-            'crl_shared': {
-                'type': 'bool',
-            },
-            'crl': {
-                'type': 'str',
-            }
-        },
-        'notafterday': {
-            'type': 'int',
-        },
-        'ocspst_srvr_hours': {
-            'type': 'int',
-        },
-        'local_logging': {
-            'type': 'bool',
-        },
-        'fp_cert_fetch_autonat_precedence': {
-            'type': 'bool',
-        },
-        'cert_str': {
-            'type': 'str',
-        },
-        'cert_shared_str': {
-            'type': 'str',
-        },
-        'cert_revoke_action': {
-            'type': 'str',
-            'choices': ['bypass', 'continue', 'drop', 'block']
-        },
-        'version': {
-            'type': 'int',
-        },
-        'multi_class_list': {
-            'type': 'list',
-            'multi_clist_name': {
-                'type': 'str',
-            }
-        },
-        'user_name_list': {
-            'type': 'str',
-        },
-        'session_ticket_lifetime': {
-            'type': 'int',
-        },
-        'certificate_issuer_ends_with_list': {
-            'type': 'list',
-            'certificate_issuer_ends_with': {
-                'type': 'str',
-            }
-        },
-        'ssli_logging': {
-            'type': 'bool',
-        },
-        'session_cache_size': {
-            'type': 'int',
-        },
-        'handshake_logging_enable': {
-            'type': 'bool',
-        },
-        'non_ssl_bypass_service_group': {
-            'type': 'str',
-        },
-        'forward_proxy_failsafe_disable': {
-            'type': 'bool',
-        },
-        'session_cache_timeout': {
-            'type': 'int',
-        },
-        'sslv2_bypass_service_group': {
-            'type': 'str',
-        },
-        'forward_proxy_decrypted_dscp': {
-            'type': 'int',
-        },
-        'auth_sg': {
-            'type': 'str',
-        },
-        'ocspst_ca_cert': {
-            'type': 'str',
-        },
-        'forward_proxy_selfsign_redir': {
-            'type': 'bool',
-        },
-        'auth_sg_dn': {
-            'type': 'bool',
-        },
-        'hsm_type': {
-            'type': 'str',
-            'choices': ['thales-embed', 'thales-hwcrhk']
-        },
-        'forward_proxy_log_disable': {
-            'type': 'bool',
-        },
-        'fp_alt_encrypted': {
-            'type': 'str',
-        },
-        'inspect_certificate_san_cl_name': {
-            'type': 'str',
-        },
-        'web_category': {
+        'oper': {
             'type': 'dict',
-            'philosophy_and_politics': {
-                'type': 'bool',
-            },
-            'stock_advice_and_tools': {
-                'type': 'bool',
-            },
-            'news_and_media': {
-                'type': 'bool',
-            },
-            'business_and_economy': {
-                'type': 'bool',
-            },
-            'peer_to_peer': {
-                'type': 'bool',
-            },
-            'phishing_and_other_fraud': {
-                'type': 'bool',
-            },
-            'nudity': {
-                'type': 'bool',
-            },
-            'weapons': {
-                'type': 'bool',
-            },
-            'health_and_medicine': {
-                'type': 'bool',
-            },
-            'marijuana': {
-                'type': 'bool',
-            },
-            'home_and_garden': {
-                'type': 'bool',
-            },
-            'cult_and_occult': {
-                'type': 'bool',
-            },
-            'society': {
-                'type': 'bool',
-            },
-            'personal_storage': {
-                'type': 'bool',
-            },
-            'computer_and_internet_security': {
-                'type': 'bool',
-            },
-            'food_and_dining': {
-                'type': 'bool',
-            },
-            'motor_vehicles': {
-                'type': 'bool',
-            },
-            'swimsuits_and_intimate_apparel': {
-                'type': 'bool',
-            },
-            'dead_sites': {
-                'type': 'bool',
-            },
-            'translation': {
-                'type': 'bool',
-            },
-            'proxy_avoid_and_anonymizers': {
-                'type': 'bool',
-            },
-            'financial_services': {
-                'type': 'bool',
-            },
-            'gross': {
-                'type': 'bool',
-            },
-            'cheating': {
-                'type': 'bool',
-            },
-            'entertainment_and_arts': {
-                'type': 'bool',
-            },
-            'sex_education': {
-                'type': 'bool',
-            },
-            'illegal': {
-                'type': 'bool',
-            },
-            'travel': {
-                'type': 'bool',
-            },
-            'cdns': {
-                'type': 'bool',
-            },
-            'local_information': {
-                'type': 'bool',
-            },
-            'legal': {
-                'type': 'bool',
-            },
-            'sports': {
-                'type': 'bool',
-            },
-            'bot_nets': {
-                'type': 'bool',
-            },
-            'religion': {
-                'type': 'bool',
-            },
-            'private_ip_addresses': {
-                'type': 'bool',
-            },
-            'music': {
-                'type': 'bool',
-            },
-            'hate_and_racism': {
-                'type': 'bool',
-            },
-            'open_http_proxies': {
-                'type': 'bool',
-            },
-            'internet_communications': {
-                'type': 'bool',
-            },
-            'shareware_and_freeware': {
-                'type': 'bool',
-            },
-            'dating': {
-                'type': 'bool',
-            },
-            'spyware_and_adware': {
-                'type': 'bool',
-            },
-            'uncategorized': {
-                'type': 'bool',
-            },
-            'questionable': {
-                'type': 'bool',
-            },
-            'reference_and_research': {
-                'type': 'bool',
-            },
-            'web_advertisements': {
-                'type': 'bool',
-            },
-            'streaming_media': {
-                'type': 'bool',
-            },
-            'social_network': {
-                'type': 'bool',
-            },
-            'government': {
-                'type': 'bool',
-            },
-            'drugs': {
-                'type': 'bool',
-            },
-            'web_hosting_sites': {
-                'type': 'bool',
-            },
-            'malware_sites': {
-                'type': 'bool',
-            },
-            'pay_to_surf': {
-                'type': 'bool',
-            },
-            'spam_urls': {
-                'type': 'bool',
-            },
-            'kids': {
-                'type': 'bool',
-            },
-            'gambling': {
-                'type': 'bool',
-            },
-            'online_greeting_cards': {
-                'type': 'bool',
-            },
-            'confirmed_spam_sources': {
-                'type': 'bool',
-            },
-            'image_and_video_search': {
-                'type': 'bool',
-            },
-            'educational_institutions': {
-                'type': 'bool',
-            },
-            'keyloggers_and_monitoring': {
-                'type': 'bool',
-            },
-            'hunting_and_fishing': {
-                'type': 'bool',
-            },
-            'search_engines': {
-                'type': 'bool',
-            },
-            'fashion_and_beauty': {
-                'type': 'bool',
-            },
-            'dynamic_comment': {
-                'type': 'bool',
-            },
-            'computer_and_internet_info': {
-                'type': 'bool',
-            },
-            'real_estate': {
-                'type': 'bool',
-            },
-            'internet_portals': {
-                'type': 'bool',
-            },
-            'shopping': {
-                'type': 'bool',
-            },
-            'violence': {
-                'type': 'bool',
-            },
-            'abortion': {
-                'type': 'bool',
-            },
-            'training_and_tools': {
-                'type': 'bool',
-            },
-            'web_based_email': {
-                'type': 'bool',
-            },
-            'personal_sites_and_blogs': {
-                'type': 'bool',
-            },
-            'unconfirmed_spam_sources': {
-                'type': 'bool',
-            },
-            'games': {
-                'type': 'bool',
-            },
-            'parked_domains': {
-                'type': 'bool',
-            },
-            'auctions': {
-                'type': 'bool',
-            },
-            'job_search': {
-                'type': 'bool',
-            },
-            'recreation_and_hobbies': {
-                'type': 'bool',
-            },
-            'hacking': {
-                'type': 'bool',
-            },
-            'alcohol_and_tobacco': {
-                'type': 'bool',
-            },
-            'adult_and_pornography': {
-                'type': 'bool',
-            },
-            'military': {
-                'type': 'bool',
-            }
-        },
-        'certificate_san_equals_list': {
-            'type': 'list',
-            'certificate_san_equals': {
+            'cert_status_list': {
+                'type': 'list',
+                'cert_status_name': {
+                    'type': 'str',
+                },
+                'cert_status_status': {
+                    'type': 'str',
+                },
+                'cert_status_age': {
+                    'type': 'int',
+                },
+                'cert_status_next_update': {
+                    'type': 'str',
+                },
+                'cert_status_responder': {
+                    'type': 'str',
+                }
+            },
+            'name': {
                 'type': 'str',
+                'required': True,
             }
-        },
-        'template_cipher': {
-            'type': 'str',
-        },
-        'notbeforemonth': {
-            'type': 'int',
-        },
-        'bypass_cert_san_class_list_name': {
-            'type': 'str',
-        },
-        'chain_cert': {
-            'type': 'str',
-        },
-        'forward_proxy_cert_unknown_action': {
-            'type': 'bool',
-        },
-        'exception_certificate_san_cl_name': {
-            'type': 'str',
-        },
-        'ocspst_sg': {
-            'type': 'str',
-        },
-        'key_alt_encrypted': {
-            'type': 'str',
-        },
-        'fp_cert_ext_aia_ca_issuers': {
-            'type': 'str',
-        },
-        'authen_name': {
-            'type': 'str',
-        },
-        'expire_hours': {
-            'type': 'int',
-        },
-        'client_auth_case_insensitive': {
-            'type': 'bool',
-        },
-        'ocsp_stapling': {
-            'type': 'bool',
-        },
-        'notbeforeyear': {
-            'type': 'int',
-        },
-        'forward_encrypted': {
-            'type': 'str',
         },
         'stats': {
             'type': 'dict',
+            'real_estate': {
+                'type': 'str',
+            },
+            'computer_and_internet_security': {
+                'type': 'str',
+            },
+            'financial_services': {
+                'type': 'str',
+            },
+            'business_and_economy': {
+                'type': 'str',
+            },
+            'computer_and_internet_info': {
+                'type': 'str',
+            },
+            'auctions': {
+                'type': 'str',
+            },
+            'shopping': {
+                'type': 'str',
+            },
+            'cult_and_occult': {
+                'type': 'str',
+            },
+            'travel': {
+                'type': 'str',
+            },
+            'drugs': {
+                'type': 'str',
+            },
+            'adult_and_pornography': {
+                'type': 'str',
+            },
+            'home_and_garden': {
+                'type': 'str',
+            },
+            'military': {
+                'type': 'str',
+            },
+            'social_network': {
+                'type': 'str',
+            },
+            'dead_sites': {
+                'type': 'str',
+            },
             'stock_advice_and_tools': {
                 'type': 'str',
             },
+            'training_and_tools': {
+                'type': 'str',
+            },
+            'dating': {
+                'type': 'str',
+            },
+            'sex_education': {
+                'type': 'str',
+            },
+            'religion': {
+                'type': 'str',
+            },
+            'entertainment_and_arts': {
+                'type': 'str',
+            },
+            'personal_sites_and_blogs': {
+                'type': 'str',
+            },
+            'legal': {
+                'type': 'str',
+            },
+            'local_information': {
+                'type': 'str',
+            },
+            'streaming_media': {
+                'type': 'str',
+            },
+            'job_search': {
+                'type': 'str',
+            },
+            'gambling': {
+                'type': 'str',
+            },
+            'translation': {
+                'type': 'str',
+            },
+            'reference_and_research': {
+                'type': 'str',
+            },
+            'shareware_and_freeware': {
+                'type': 'str',
+            },
+            'peer_to_peer': {
+                'type': 'str',
+            },
+            'marijuana': {
+                'type': 'str',
+            },
+            'hacking': {
+                'type': 'str',
+            },
+            'games': {
+                'type': 'str',
+            },
+            'philosophy_and_politics': {
+                'type': 'str',
+            },
+            'weapons': {
+                'type': 'str',
+            },
+            'pay_to_surf': {
+                'type': 'str',
+            },
+            'hunting_and_fishing': {
+                'type': 'str',
+            },
+            'society': {
+                'type': 'str',
+            },
+            'educational_institutions': {
+                'type': 'str',
+            },
+            'online_greeting_cards': {
+                'type': 'str',
+            },
+            'sports': {
+                'type': 'str',
+            },
+            'swimsuits_and_intimate_apparel': {
+                'type': 'str',
+            },
+            'questionable': {
+                'type': 'str',
+            },
+            'kids': {
+                'type': 'str',
+            },
+            'hate_and_racism': {
+                'type': 'str',
+            },
+            'personal_storage': {
+                'type': 'str',
+            },
+            'violence': {
+                'type': 'str',
+            },
+            'keyloggers_and_monitoring': {
+                'type': 'str',
+            },
+            'search_engines': {
+                'type': 'str',
+            },
+            'internet_portals': {
+                'type': 'str',
+            },
+            'web_advertisements': {
+                'type': 'str',
+            },
+            'cheating': {
+                'type': 'str',
+            },
+            'gross': {
+                'type': 'str',
+            },
+            'web_based_email': {
+                'type': 'str',
+            },
+            'malware_sites': {
+                'type': 'str',
+            },
+            'phishing_and_other_fraud': {
+                'type': 'str',
+            },
+            'proxy_avoid_and_anonymizers': {
+                'type': 'str',
+            },
+            'spyware_and_adware': {
+                'type': 'str',
+            },
+            'music': {
+                'type': 'str',
+            },
+            'government': {
+                'type': 'str',
+            },
+            'nudity': {
+                'type': 'str',
+            },
             'news_and_media': {
+                'type': 'str',
+            },
+            'illegal': {
                 'type': 'str',
             },
             'CDNs': {
                 'type': 'str',
             },
-            'cult_and_occult': {
-                'type': 'str',
-            },
-            'fashion_and_beauty': {
-                'type': 'str',
-            },
-            'food_and_dining': {
-                'type': 'str',
-            },
-            'SPAM_URLs': {
-                'type': 'str',
-            },
-            'streaming_media': {
+            'internet_communications': {
                 'type': 'str',
             },
             'bot_nets': {
                 'type': 'str',
             },
-            'cheating': {
-                'type': 'str',
-            },
-            'entertainment_and_arts': {
-                'type': 'str',
-            },
-            'illegal': {
-                'type': 'str',
-            },
-            'local_information': {
-                'type': 'str',
-            },
-            'sports': {
-                'type': 'str',
-            },
-            'confirmed_SPAM_sources': {
-                'type': 'str',
-            },
-            'private_IP_addresses': {
-                'type': 'str',
-            },
-            'music': {
-                'type': 'str',
-            },
-            'open_HTTP_proxies': {
-                'type': 'str',
-            },
-            'shareware_and_freeware': {
-                'type': 'str',
-            },
-            'spyware_and_adware': {
-                'type': 'str',
-            },
-            'questionable': {
-                'type': 'str',
-            },
-            'financial_services': {
-                'type': 'str',
-            },
-            'social_network': {
-                'type': 'str',
-            },
-            'government': {
-                'type': 'str',
-            },
-            'drugs': {
-                'type': 'str',
-            },
-            'web_hosting_sites': {
-                'type': 'str',
-            },
-            'web_advertisements': {
-                'type': 'str',
-            },
-            'educational_institutions': {
-                'type': 'str',
-            },
-            'dynamic_comment': {
-                'type': 'str',
-            },
-            'translation': {
-                'type': 'str',
-            },
-            'job_search': {
-                'type': 'str',
-            },
-            'hunting_and_fishing': {
-                'type': 'str',
-            },
-            'search_engines': {
-                'type': 'str',
-            },
-            'peer_to_peer': {
-                'type': 'str',
-            },
-            'computer_and_internet_security': {
-                'type': 'str',
-            },
-            'real_estate': {
-                'type': 'str',
-            },
-            'computer_and_internet_info': {
-                'type': 'str',
-            },
-            'internet_portals': {
-                'type': 'str',
-            },
-            'shopping': {
-                'type': 'str',
-            },
-            'philosophy_and_politics': {
-                'type': 'str',
-            },
-            'web_based_email': {
-                'type': 'str',
-            },
-            'recreation_and_hobbies': {
-                'type': 'str',
-            },
-            'hacking': {
-                'type': 'str',
-            },
-            'adult_and_pornography': {
-                'type': 'str',
-            },
-            'business_and_economy': {
-                'type': 'str',
-            },
-            'phishing_and_other_fraud': {
-                'type': 'str',
-            },
-            'nudity': {
+            'abortion': {
                 'type': 'str',
             },
             'health_and_medicine': {
                 'type': 'str',
             },
-            'marijuana': {
+            'confirmed_SPAM_sources': {
                 'type': 'str',
             },
-            'home_and_garden': {
-                'type': 'str',
-            },
-            'society': {
+            'SPAM_URLs': {
                 'type': 'str',
             },
             'unconfirmed_SPAM_sources': {
                 'type': 'str',
             },
-            'personal_storage': {
+            'open_HTTP_proxies': {
                 'type': 'str',
             },
-            'motor_vehicles': {
-                'type': 'str',
-            },
-            'swimsuits_and_intimate_apparel': {
-                'type': 'str',
-            },
-            'dead_sites': {
-                'type': 'str',
-            },
-            'other_category': {
-                'type': 'str',
-            },
-            'proxy_avoid_and_anonymizers': {
-                'type': 'str',
-            },
-            'gross': {
-                'type': 'str',
-            },
-            'uncategorised': {
-                'type': 'str',
-            },
-            'travel': {
-                'type': 'str',
-            },
-            'legal': {
-                'type': 'str',
-            },
-            'weapons': {
-                'type': 'str',
-            },
-            'religion': {
-                'type': 'str',
-            },
-            'hate_and_racism': {
-                'type': 'str',
-            },
-            'internet_communications': {
-                'type': 'str',
-            },
-            'gambling': {
-                'type': 'str',
-            },
-            'dating': {
-                'type': 'str',
-            },
-            'malware_sites': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'pay_to_surf': {
-                'type': 'str',
-            },
-            'military': {
-                'type': 'str',
-            },
-            'image_and_video_search': {
-                'type': 'str',
-            },
-            'reference_and_research': {
-                'type': 'str',
-            },
-            'keyloggers_and_monitoring': {
-                'type': 'str',
-            },
-            'kids': {
-                'type': 'str',
-            },
-            'online_greeting_cards': {
-                'type': 'str',
-            },
-            'violence': {
-                'type': 'str',
-            },
-            'training_and_tools': {
-                'type': 'str',
-            },
-            'sex_education': {
-                'type': 'str',
-            },
-            'personal_sites_and_blogs': {
-                'type': 'str',
-            },
-            'games': {
+            'dynamic_comment': {
                 'type': 'str',
             },
             'parked_domains': {
                 'type': 'str',
             },
-            'auctions': {
-                'type': 'str',
-            },
-            'abortion': {
-                'type': 'str',
-            },
             'alcohol_and_tobacco': {
                 'type': 'str',
+            },
+            'private_IP_addresses': {
+                'type': 'str',
+            },
+            'image_and_video_search': {
+                'type': 'str',
+            },
+            'fashion_and_beauty': {
+                'type': 'str',
+            },
+            'recreation_and_hobbies': {
+                'type': 'str',
+            },
+            'motor_vehicles': {
+                'type': 'str',
+            },
+            'web_hosting_sites': {
+                'type': 'str',
+            },
+            'food_and_dining': {
+                'type': 'str',
+            },
+            'uncategorised': {
+                'type': 'str',
+            },
+            'other_category': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
-        },
-        'sni_enable_log': {
-            'type': 'bool',
-        },
-        'key_shared_str': {
-            'type': 'str',
-        },
-        'notaftermonth': {
-            'type': 'int',
-        },
-        'cache_persistence_list_name': {
-            'type': 'str',
-        },
-        'ocspst_sg_timeout': {
-            'type': 'int',
-        },
-        'key_passphrase': {
-            'type': 'str',
-        },
-        'ocspst_srvr': {
-            'type': 'str',
-        },
-        'ocspst_srvr_minutes': {
-            'type': 'int',
-        },
-        'certificate_issuer_contains_list': {
-            'type': 'list',
-            'certificate_issuer_contains': {
-                'type': 'str',
-            }
-        },
-        'require_web_category': {
-            'type': 'bool',
-        },
-        'bypass_cert_san_multi_class_list': {
-            'type': 'list',
-            'bypass_cert_san_multi_class_list_name': {
-                'type': 'str',
-            }
-        },
-        'client_auth_starts_with_list': {
-            'type': 'list',
-            'client_auth_starts_with': {
-                'type': 'str',
-            }
-        },
-        'certificate_subject_ends_with_list': {
-            'type': 'list',
-            'certificate_subject_ends_with': {
-                'type': 'str',
-            }
-        },
-        'authorization': {
-            'type': 'bool',
-        },
-        'forward_proxy_verify_cert_fail_action': {
-            'type': 'bool',
-        },
-        'ocspst_srvr_days': {
-            'type': 'int',
-        },
-        'ec_list': {
-            'type': 'list',
-            'ec': {
-                'type': 'str',
-                'choices': ['secp256r1', 'secp384r1']
-            }
-        },
-        'forward_proxy_decrypted_dscp_bypass': {
-            'type': 'int',
-        },
-        'alert_type': {
-            'type': 'str',
-            'choices': ['fatal']
-        },
-        'forward_proxy_cert_not_ready_action': {
-            'type': 'str',
-            'choices': ['bypass', 'reset', 'intercept']
-        },
-        'server_name_list': {
-            'type': 'list',
-            'server_shared': {
-                'type': 'bool',
-            },
-            'server_passphrase_regex': {
-                'type': 'str',
-            },
-            'server_chain': {
-                'type': 'str',
-            },
-            'server_cert_regex': {
-                'type': 'str',
-            },
-            'server_name': {
-                'type': 'str',
-            },
-            'server_key_regex': {
-                'type': 'str',
-            },
-            'server_name_regex_alternate': {
-                'type': 'bool',
-            },
-            'server_encrypted_regex': {
-                'type': 'str',
-            },
-            'server_shared_regex': {
-                'type': 'bool',
-            },
-            'server_name_regex': {
-                'type': 'str',
-            },
-            'server_passphrase': {
-                'type': 'str',
-            },
-            'server_key': {
-                'type': 'str',
-            },
-            'server_chain_regex': {
-                'type': 'str',
-            },
-            'server_name_alternate': {
-                'type': 'bool',
-            },
-            'server_encrypted': {
-                'type': 'str',
-            },
-            'server_cert': {
-                'type': 'str',
-            }
-        },
-        'bypass_cert_issuer_class_list_name': {
-            'type': 'str',
-        },
-        'fp_cert_ext_crldp': {
-            'type': 'str',
-        },
-        'shared_partition_cipher_template': {
-            'type': 'bool',
-        },
-        'fp_cert_fetch_natpool_precedence': {
-            'type': 'bool',
-        },
-        'cert_alternate': {
-            'type': 'str',
-        },
-        'forward_proxy_cert_cache_limit': {
-            'type': 'int',
-        },
-        'non_ssl_bypass_l4session': {
-            'type': 'bool',
-        },
-        'certificate_issuer_starts_with_list': {
-            'type': 'list',
-            'certificate_issuer_starts': {
-                'type': 'str',
-            }
-        },
-        'certificate_san_starts_with_list': {
-            'type': 'list',
-            'certificate_san_starts': {
-                'type': 'str',
-            }
-        },
-        'client_auth_ends_with_list': {
-            'type': 'list',
-            'client_auth_ends_with': {
-                'type': 'str',
-            }
-        },
-        'close_notify': {
-            'type': 'bool',
-        },
-        'forward_proxy_no_shared_cipher_action': {
-            'type': 'bool',
-        },
-        'forward_proxy_ocsp_disable': {
-            'type': 'bool',
-        },
-        'sslilogging': {
-            'type': 'str',
-            'choices': ['disable', 'all']
-        },
-        'auth_username': {
-            'type': 'str',
-        },
-        'exception_user_name_list': {
-            'type': 'str',
-        },
-        'ocspst_sg_days': {
-            'type': 'int',
-        },
-        'key_str': {
-            'type': 'str',
-        },
-        'inspect_list_name': {
-            'type': 'str',
-        },
-        'auth_username_attribute': {
-            'type': 'str',
-        },
-        'fp_cert_fetch_natpool_name': {
-            'type': 'str',
-        },
-        'exception_sni_cl_name': {
-            'type': 'str',
-        },
-        'inspect_certificate_subject_cl_name': {
-            'type': 'str',
-        },
-        'ldap_base_dn_from_cert': {
-            'type': 'bool',
-        },
-        'ad_group_list': {
-            'type': 'str',
-        },
-        'client_certificate': {
-            'type': 'str',
-            'choices': ['Ignore', 'Require', 'Request']
-        },
-        'forward_proxy_cert_expiry': {
-            'type': 'bool',
-        },
-        'forward_proxy_enable': {
-            'type': 'bool',
-        },
-        'shared_partition_pool': {
-            'type': 'bool',
-        },
-        'ldap_search_filter': {
-            'type': 'str',
-        },
-        'key_shared_encrypted': {
-            'type': 'str',
-        },
-        'auth_sg_filter': {
-            'type': 'str',
-        },
-        'ocspst_srvr_timeout': {
-            'type': 'int',
-        },
-        'certificate_subject_equals_list': {
-            'type': 'list',
-            'certificate_subject_equals': {
-                'type': 'str',
-            }
-        },
-        'chain_cert_shared_str': {
-            'type': 'str',
-        },
-        'enable_tls_alert_logging': {
-            'type': 'bool',
-        },
-        'dh_type': {
-            'type': 'str',
-            'choices': ['1024', '1024-dsa', '2048']
-        },
-        'fp_alt_cert': {
-            'type': 'str',
-        },
-        'case_insensitive': {
-            'type': 'bool',
-        },
-        'cipher_without_prio_list': {
-            'type': 'list',
-            'cipher_wo_prio': {
-                'type':
-                'str',
-                'choices': [
-                    'SSL3_RSA_DES_192_CBC3_SHA', 'SSL3_RSA_RC4_128_MD5',
-                    'SSL3_RSA_RC4_128_SHA', 'TLS1_RSA_AES_128_SHA',
-                    'TLS1_RSA_AES_256_SHA', 'TLS1_RSA_AES_128_SHA256',
-                    'TLS1_RSA_AES_256_SHA256',
-                    'TLS1_DHE_RSA_AES_128_GCM_SHA256',
-                    'TLS1_DHE_RSA_AES_128_SHA', 'TLS1_DHE_RSA_AES_128_SHA256',
-                    'TLS1_DHE_RSA_AES_256_GCM_SHA384',
-                    'TLS1_DHE_RSA_AES_256_SHA', 'TLS1_DHE_RSA_AES_256_SHA256',
-                    'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256',
-                    'TLS1_ECDHE_ECDSA_AES_128_SHA',
-                    'TLS1_ECDHE_ECDSA_AES_128_SHA256',
-                    'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384',
-                    'TLS1_ECDHE_ECDSA_AES_256_SHA',
-                    'TLS1_ECDHE_RSA_AES_128_GCM_SHA256',
-                    'TLS1_ECDHE_RSA_AES_128_SHA',
-                    'TLS1_ECDHE_RSA_AES_128_SHA256',
-                    'TLS1_ECDHE_RSA_AES_256_GCM_SHA384',
-                    'TLS1_ECDHE_RSA_AES_256_SHA',
-                    'TLS1_RSA_AES_128_GCM_SHA256',
-                    'TLS1_RSA_AES_256_GCM_SHA384',
-                    'TLS1_ECDHE_RSA_AES_256_SHA384',
-                    'TLS1_ECDHE_ECDSA_AES_256_SHA384',
-                    'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256',
-                    'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256',
-                    'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'
-                ]
-            }
-        },
-        'ocspst_sg_minutes': {
-            'type': 'int',
-        },
-        'starts_with_list': {
-            'type': 'list',
-            'starts_with': {
-                'type': 'str',
-            }
-        },
-        'key_shared_passphrase': {
-            'type': 'str',
         }
     })
     return rv

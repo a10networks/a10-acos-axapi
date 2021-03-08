@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_auth_log
 description:
     - Authentication Log Info
-short_description: Configures A10 aam.auth-log
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,62 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            last:
-                description:
-                - "Field last"
-            target:
-                description:
-                - "Field target"
-            top:
-                description:
-                - "Field top"
-            log_list:
-                description:
-                - "Field log_list"
             tail:
                 description:
                 - "Field tail"
+                type: int
+            last:
+                description:
+                - "Field last"
+                type: int
+            top:
+                description:
+                - "Field top"
+                type: int
+            target:
+                description:
+                - "Field target"
+                type: str
             auth_status:
                 description:
                 - "Field auth_status"
+                type: str
             total:
                 description:
                 - "Field total"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            log_list:
+                description:
+                - "Field log_list"
+                type: list
 
 '''
 
@@ -133,62 +147,62 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'last': {
+            'tail': {
                 'type': 'int',
             },
-            'target': {
-                'type': 'str',
+            'last': {
+                'type': 'int',
             },
             'top': {
                 'type': 'int',
             },
-            'log_list': {
-                'type': 'list',
-                'destination_port': {
-                    'type': 'int',
-                },
-                'user_domain': {
-                    'type': 'str',
-                },
-                'user_name': {
-                    'type': 'str',
-                },
-                'auth_result': {
-                    'type': 'str',
-                },
-                'client_ip': {
-                    'type': 'str',
-                },
-                'counter': {
-                    'type': 'int',
-                },
-                'destination_ip': {
-                    'type': 'str',
-                },
-                'time': {
-                    'type': 'str',
-                },
-                'source_port': {
-                    'type': 'int',
-                },
-                'record_id': {
-                    'type': 'int',
-                }
-            },
-            'tail': {
-                'type': 'int',
+            'target': {
+                'type': 'str',
             },
             'auth_status': {
                 'type': 'str',
             },
             'total': {
                 'type': 'int',
+            },
+            'log_list': {
+                'type': 'list',
+                'record_id': {
+                    'type': 'int',
+                },
+                'time': {
+                    'type': 'str',
+                },
+                'user_name': {
+                    'type': 'str',
+                },
+                'user_domain': {
+                    'type': 'str',
+                },
+                'client_ip': {
+                    'type': 'str',
+                },
+                'destination_ip': {
+                    'type': 'str',
+                },
+                'source_port': {
+                    'type': 'int',
+                },
+                'destination_port': {
+                    'type': 'int',
+                },
+                'auth_result': {
+                    'type': 'str',
+                },
+                'counter': {
+                    'type': 'int',
+                }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

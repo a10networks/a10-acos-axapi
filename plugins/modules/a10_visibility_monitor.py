@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitor
 description:
     - Configure monitoring keys
-short_description: Configures A10 visibility.monitor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,190 +22,241 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     primary_monitor:
         description:
         - "'traffic'= Mointor traffic;"
+        type: str
         required: True
-    mon_entity_topk:
-        description:
-        - "Enable topk for primary entities"
-        required: False
     monitor_key:
         description:
         - "'source'= Monitor traffic from all sources; 'dest'= Monitor traffic to any
           destination; 'service'= Monitor traffic to any service; 'source-nat-ip'=
           Monitor traffic to all source nat IPs;"
+        type: str
         required: False
-    debug_list:
+    mon_entity_topk:
         description:
-        - "Field debug_list"
-        required: False
-        suboptions:
-            debug_port:
-                description:
-                - "Specify port"
-            debug_ip_addr:
-                description:
-                - "Specify source/dest ip addr"
-            debug_protocol:
-                description:
-                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    sflow:
-        description:
-        - "Field sflow"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            listening_port:
-                description:
-                - "sFlow port to receive packets (sFlow port number(default 6343))"
-    delete_debug_file:
-        description:
-        - "Field delete_debug_file"
-        required: False
-        suboptions:
-            debug_port:
-                description:
-                - "Specify port"
-            debug_ip_addr:
-                description:
-                - "Specify source/dest ip addr"
-            debug_protocol:
-                description:
-                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
-    index_sessions:
-        description:
-        - "Start indexing associated sessions"
+        - "Enable topk for primary entities"
+        type: bool
         required: False
     source_entity_topk:
         description:
         - "Enable topk for sources to primary-entities"
+        type: bool
+        required: False
+    index_sessions:
+        description:
+        - "Start indexing associated sessions"
+        type: bool
+        required: False
+    index_sessions_type:
+        description:
+        - "'per-cpu'= Use per cpu list;"
+        type: str
         required: False
     template:
         description:
         - "Field template"
+        type: dict
         required: False
         suboptions:
             notification:
                 description:
                 - "Field notification"
-    replay_debug_file:
+                type: list
+    uuid:
         description:
-        - "Field replay_debug_file"
+        - "uuid of the object"
+        type: str
+        required: False
+    agent_list:
+        description:
+        - "Field agent_list"
+        type: list
         required: False
         suboptions:
-            debug_port:
+            agent_name:
                 description:
-                - "Specify port"
-            debug_ip_addr:
+                - "Specify name for the agent"
+                type: str
+            agent_v4_addr:
                 description:
-                - "Specify source/dest ip addr"
-            debug_protocol:
+                - "Configure agent's IPv4 address"
+                type: str
+            agent_v6_addr:
                 description:
-                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+                - "Configure agent's IPv6 address"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    sflow:
+        description:
+        - "Field sflow"
+        type: dict
+        required: False
+        suboptions:
+            listening_port:
+                description:
+                - "sFlow port to receive packets (sFlow port number(default 6343))"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     netflow:
         description:
         - "Field netflow"
+        type: dict
         required: False
         suboptions:
+            listening_port:
+                description:
+                - "Netflow port to receive packets (Netflow port number(default 9996))"
+                type: int
             template_active_timeout:
                 description:
                 - "Configure active timeout of the netflow templates received in mins (Template
           active timeout(mins)(default 30mins))"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
-            listening_port:
-                description:
-                - "Netflow port to receive packets (Netflow port number(default 9996))"
-    index_sessions_type:
+                type: str
+    debug_list:
         description:
-        - "'per-cpu'= Use per cpu list;"
+        - "Field debug_list"
+        type: list
         required: False
+        suboptions:
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+                type: str
+            debug_port:
+                description:
+                - "Specify port"
+                type: int
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    replay_debug_file:
+        description:
+        - "Field replay_debug_file"
+        type: dict
+        required: False
+        suboptions:
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+                type: str
+            debug_port:
+                description:
+                - "Specify port"
+                type: int
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+                type: str
+    delete_debug_file:
+        description:
+        - "Field delete_debug_file"
+        type: dict
+        required: False
+        suboptions:
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+                type: str
+            debug_port:
+                description:
+                - "Specify port"
+                type: int
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+                type: str
     secondary_monitor:
         description:
         - "Field secondary_monitor"
+        type: dict
         required: False
         suboptions:
-            mon_entity_topk:
-                description:
-                - "Enable topk for secondary entities"
-            debug_list:
-                description:
-                - "Field debug_list"
-            uuid:
-                description:
-                - "uuid of the object"
             secondary_monitoring_key:
                 description:
                 - "'service'= Monitor traffic to any service;"
-            delete_debug_file:
+                type: str
+            mon_entity_topk:
                 description:
-                - "Field delete_debug_file"
+                - "Enable topk for secondary entities"
+                type: bool
             source_entity_topk:
                 description:
                 - "Enable topk for sources to secondary-entities"
-            replay_debug_file:
-                description:
-                - "Field replay_debug_file"
-    agent_list:
-        description:
-        - "Field agent_list"
-        required: False
-        suboptions:
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
-            agent_v4_addr:
+                type: str
+            debug_list:
                 description:
-                - "Configure agent's IPv4 address"
-            agent_v6_addr:
+                - "Field debug_list"
+                type: list
+            delete_debug_file:
                 description:
-                - "Configure agent's IPv6 address"
-            user_tag:
+                - "Field delete_debug_file"
+                type: dict
+            replay_debug_file:
                 description:
-                - "Customized tag"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            agent_name:
-                description:
-                - "Specify name for the agent"
+                - "Field replay_debug_file"
+                type: dict
 
 '''
 
@@ -279,62 +328,22 @@ def get_argspec():
             'required': True,
             'choices': ['traffic']
         },
-        'mon_entity_topk': {
-            'type': 'bool',
-        },
         'monitor_key': {
             'type': 'str',
             'choices': ['source', 'dest', 'service', 'source-nat-ip']
         },
-        'debug_list': {
-            'type': 'list',
-            'debug_port': {
-                'type': 'int',
-                'required': True,
-            },
-            'debug_ip_addr': {
-                'type': 'str',
-                'required': True,
-            },
-            'debug_protocol': {
-                'type': 'str',
-                'required': True,
-                'choices': ['TCP', 'UDP', 'ICMP']
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'sflow': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'listening_port': {
-                'type': 'int',
-            }
-        },
-        'delete_debug_file': {
-            'type': 'dict',
-            'debug_port': {
-                'type': 'int',
-            },
-            'debug_ip_addr': {
-                'type': 'str',
-            },
-            'debug_protocol': {
-                'type': 'str',
-                'choices': ['TCP', 'UDP', 'ICMP']
-            }
-        },
-        'index_sessions': {
+        'mon_entity_topk': {
             'type': 'bool',
         },
         'source_entity_topk': {
             'type': 'bool',
+        },
+        'index_sessions': {
+            'type': 'bool',
+        },
+        'index_sessions_type': {
+            'type': 'str',
+            'choices': ['per-cpu']
         },
         'template': {
             'type': 'dict',
@@ -345,105 +354,22 @@ def get_argspec():
                 }
             }
         },
-        'replay_debug_file': {
-            'type': 'dict',
-            'debug_port': {
-                'type': 'int',
-            },
-            'debug_ip_addr': {
-                'type': 'str',
-            },
-            'debug_protocol': {
-                'type': 'str',
-                'choices': ['TCP', 'UDP', 'ICMP']
-            }
-        },
-        'netflow': {
-            'type': 'dict',
-            'template_active_timeout': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'listening_port': {
-                'type': 'int',
-            }
-        },
-        'index_sessions_type': {
+        'uuid': {
             'type': 'str',
-            'choices': ['per-cpu']
-        },
-        'secondary_monitor': {
-            'type': 'dict',
-            'mon_entity_topk': {
-                'type': 'bool',
-            },
-            'debug_list': {
-                'type': 'list',
-                'debug_port': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'debug_ip_addr': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'secondary_monitoring_key': {
-                'type': 'str',
-                'choices': ['service']
-            },
-            'delete_debug_file': {
-                'type': 'dict',
-                'debug_port': {
-                    'type': 'int',
-                },
-                'debug_ip_addr': {
-                    'type': 'str',
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                }
-            },
-            'source_entity_topk': {
-                'type': 'bool',
-            },
-            'replay_debug_file': {
-                'type': 'dict',
-                'debug_port': {
-                    'type': 'int',
-                },
-                'debug_ip_addr': {
-                    'type': 'str',
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                }
-            }
         },
         'agent_list': {
             'type': 'list',
-            'uuid': {
+            'agent_name': {
                 'type': 'str',
+                'required': True,
             },
             'agent_v4_addr': {
                 'type': 'str',
             },
             'agent_v6_addr': {
+                'type': 'str',
+            },
+            'uuid': {
                 'type': 'str',
             },
             'user_tag': {
@@ -486,10 +412,133 @@ def get_argspec():
                         'netflow-sample-flow-dur-error'
                     ]
                 }
+            }
+        },
+        'sflow': {
+            'type': 'dict',
+            'listening_port': {
+                'type': 'int',
             },
-            'agent_name': {
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'netflow': {
+            'type': 'dict',
+            'listening_port': {
+                'type': 'int',
+            },
+            'template_active_timeout': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'debug_list': {
+            'type': 'list',
+            'debug_ip_addr': {
                 'type': 'str',
                 'required': True,
+            },
+            'debug_port': {
+                'type': 'int',
+                'required': True,
+            },
+            'debug_protocol': {
+                'type': 'str',
+                'required': True,
+                'choices': ['TCP', 'UDP', 'ICMP']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'replay_debug_file': {
+            'type': 'dict',
+            'debug_ip_addr': {
+                'type': 'str',
+            },
+            'debug_port': {
+                'type': 'int',
+            },
+            'debug_protocol': {
+                'type': 'str',
+                'choices': ['TCP', 'UDP', 'ICMP']
+            }
+        },
+        'delete_debug_file': {
+            'type': 'dict',
+            'debug_ip_addr': {
+                'type': 'str',
+            },
+            'debug_port': {
+                'type': 'int',
+            },
+            'debug_protocol': {
+                'type': 'str',
+                'choices': ['TCP', 'UDP', 'ICMP']
+            }
+        },
+        'secondary_monitor': {
+            'type': 'dict',
+            'secondary_monitoring_key': {
+                'type': 'str',
+                'choices': ['service']
+            },
+            'mon_entity_topk': {
+                'type': 'bool',
+            },
+            'source_entity_topk': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'debug_list': {
+                'type': 'list',
+                'debug_ip_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'debug_port': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'debug_protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['TCP', 'UDP', 'ICMP']
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'delete_debug_file': {
+                'type': 'dict',
+                'debug_ip_addr': {
+                    'type': 'str',
+                },
+                'debug_port': {
+                    'type': 'int',
+                },
+                'debug_protocol': {
+                    'type': 'str',
+                    'choices': ['TCP', 'UDP', 'ICMP']
+                }
+            },
+            'replay_debug_file': {
+                'type': 'dict',
+                'debug_ip_addr': {
+                    'type': 'str',
+                },
+                'debug_port': {
+                    'type': 'int',
+                },
+                'debug_protocol': {
+                    'type': 'str',
+                    'choices': ['TCP', 'UDP', 'ICMP']
+                }
             }
         }
     })

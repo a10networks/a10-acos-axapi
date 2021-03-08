@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_database
 description:
     - DATABASE type
-short_description: Configures A10 health.monitor.method.database
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,95 +22,120 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    db_send:
-        description:
-        - "Specify the SQL query"
-        required: False
-    db_password:
-        description:
-        - "Specify the user password"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    db_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     database:
         description:
         - "DATABASE type"
+        type: bool
         required: False
     database_name:
         description:
         - "'mssql'= Specify MSSQL database; 'mysql'= Specify MySQL database; 'oracle'=
           Specify Oracle database; 'postgresql'= Specify PostgreSQL database;"
-        required: False
-    db_row_integer:
-        description:
-        - "Specify the row number for receiving"
-        required: False
-    db_receive:
-        description:
-        - "Specify the response string"
-        required: False
-    db_receive_integer:
-        description:
-        - "Specify the response integer"
-        required: False
-    db_password_str:
-        description:
-        - "Configure password"
-        required: False
-    db_column:
-        description:
-        - "Specify the column number for receiving"
+        type: str
         required: False
     db_name:
         description:
         - "Specify the database name"
-        required: False
-    db_column_integer:
-        description:
-        - "Specify the column number for receiving"
+        type: str
         required: False
     db_username:
         description:
         - "Specify the username"
+        type: str
+        required: False
+    db_password:
+        description:
+        - "Specify the user password"
+        type: bool
+        required: False
+    db_password_str:
+        description:
+        - "Configure password"
+        type: str
+        required: False
+    db_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    db_send:
+        description:
+        - "Specify the SQL query"
+        type: str
+        required: False
+    db_receive:
+        description:
+        - "Specify the response string"
+        type: str
         required: False
     db_row:
         description:
         - "Specify the row number for receiving"
+        type: int
+        required: False
+    db_column:
+        description:
+        - "Specify the column number for receiving"
+        type: int
+        required: False
+    db_receive_integer:
+        description:
+        - "Specify the response integer"
+        type: int
+        required: False
+    db_row_integer:
+        description:
+        - "Specify the row number for receiving"
+        type: int
+        required: False
+    db_column_integer:
+        description:
+        - "Specify the column number for receiving"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -180,18 +203,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'db_send': {
-            'type': 'str',
-        },
-        'db_password': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'db_encrypted': {
-            'type': 'str',
-        },
         'database': {
             'type': 'bool',
         },
@@ -199,32 +210,44 @@ def get_argspec():
             'type': 'str',
             'choices': ['mssql', 'mysql', 'oracle', 'postgresql']
         },
-        'db_row_integer': {
-            'type': 'int',
-        },
-        'db_receive': {
-            'type': 'str',
-        },
-        'db_receive_integer': {
-            'type': 'int',
-        },
-        'db_password_str': {
-            'type': 'str',
-        },
-        'db_column': {
-            'type': 'int',
-        },
         'db_name': {
             'type': 'str',
-        },
-        'db_column_integer': {
-            'type': 'int',
         },
         'db_username': {
             'type': 'str',
         },
+        'db_password': {
+            'type': 'bool',
+        },
+        'db_password_str': {
+            'type': 'str',
+        },
+        'db_encrypted': {
+            'type': 'str',
+        },
+        'db_send': {
+            'type': 'str',
+        },
+        'db_receive': {
+            'type': 'str',
+        },
         'db_row': {
             'type': 'int',
+        },
+        'db_column': {
+            'type': 'int',
+        },
+        'db_receive_integer': {
+            'type': 'int',
+        },
+        'db_row_integer': {
+            'type': 'int',
+        },
+        'db_column_integer': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

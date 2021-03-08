@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_file_inspection
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.file-inspection
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
-        - Key to identify parent object    port_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - Key to identify parent object    virtual_server_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    virtual_server_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             file_inspection:
                 description:
                 - "Field file_inspection"
+                type: dict
 
 '''
 
@@ -120,169 +136,76 @@ def get_argspec():
             'type': 'dict',
             'file_inspection': {
                 'type': 'dict',
-                'icap_200': {
-                    'type': 'str',
-                },
-                'bypass_service_down': {
-                    'type': 'str',
-                },
-                'upload_good_ext_inspect': {
-                    'type': 'str',
-                },
-                'upload_bad_blocked': {
-                    'type': 'str',
-                },
-                'bad_file_size_less_1m': {
-                    'type': 'str',
-                },
-                'suspect_file_size_1_5m': {
-                    'type': 'str',
-                },
-                'orig_conn_bytes_bypassed': {
-                    'type': 'str',
-                },
-                'upload_suspect_allowed': {
-                    'type': 'str',
-                },
-                'suspect_file_size_5_8m': {
-                    'type': 'str',
-                },
-                'total_file_size_less_1m': {
-                    'type': 'str',
-                },
-                'upload_bad_ext_inspect': {
-                    'type': 'str',
-                },
-                'orig_conn_bytes_sent': {
-                    'type': 'str',
-                },
-                'total_file_size_1_5m': {
-                    'type': 'str',
-                },
-                'download_suspect_allowed': {
-                    'type': 'str',
-                },
-                'non_supported_file': {
-                    'type': 'str',
-                },
-                'icap_204': {
-                    'type': 'str',
-                },
-                'suspect_file_size_8_32m': {
-                    'type': 'str',
-                },
-                'total_file_size_5_8m': {
-                    'type': 'str',
-                },
-                'icap_connect_fail': {
-                    'type': 'str',
-                },
-                'upload_good_blocked': {
-                    'type': 'str',
-                },
-                'icap_other_status_code': {
-                    'type': 'str',
-                },
-                'bypass_aflex': {
-                    'type': 'str',
-                },
-                'good_file_size_over_32m': {
-                    'type': 'str',
-                },
-                'total_suspect_bandwidth': {
-                    'type': 'str',
-                },
-                'orig_conn_bytes_received': {
-                    'type': 'str',
-                },
-                'download_suspect_ext_inspect': {
-                    'type': 'str',
-                },
-                'good_file_size_8_32m': {
-                    'type': 'str',
-                },
-                'reset_service_down': {
-                    'type': 'str',
-                },
-                'icap_500': {
-                    'type': 'str',
-                },
-                'bad_file_size_5_8m': {
-                    'type': 'str',
-                },
-                'upload_suspect_ext_inspect': {
-                    'type': 'str',
-                },
-                'bypass_large_file': {
-                    'type': 'str',
-                },
-                'icap_bytes_sent': {
-                    'type': 'str',
-                },
-                'download_good_allowed': {
-                    'type': 'str',
-                },
                 'download_bad_blocked': {
-                    'type': 'str',
-                },
-                'total_bad_bandwidth': {
-                    'type': 'str',
-                },
-                'bad_file_size_over_32m': {
-                    'type': 'str',
-                },
-                'download_bad_ext_inspect': {
-                    'type': 'str',
-                },
-                'transactions_aborted': {
-                    'type': 'str',
-                },
-                'total_good_bandwidth': {
-                    'type': 'str',
-                },
-                'bypass_non_inspection': {
-                    'type': 'str',
-                },
-                'download_good_blocked': {
-                    'type': 'str',
-                },
-                'total_bandwidth': {
                     'type': 'str',
                 },
                 'download_bad_allowed': {
                     'type': 'str',
                 },
-                'bypass_buffered_overlimit': {
-                    'type': 'str',
-                },
-                'download_good_ext_inspect': {
+                'download_bad_ext_inspect': {
                     'type': 'str',
                 },
                 'download_suspect_blocked': {
                     'type': 'str',
                 },
+                'download_suspect_ext_inspect': {
+                    'type': 'str',
+                },
+                'download_suspect_allowed': {
+                    'type': 'str',
+                },
+                'download_good_blocked': {
+                    'type': 'str',
+                },
+                'download_good_ext_inspect': {
+                    'type': 'str',
+                },
+                'download_good_allowed': {
+                    'type': 'str',
+                },
+                'upload_bad_blocked': {
+                    'type': 'str',
+                },
+                'upload_bad_allowed': {
+                    'type': 'str',
+                },
+                'upload_bad_ext_inspect': {
+                    'type': 'str',
+                },
                 'upload_suspect_blocked': {
                     'type': 'str',
                 },
-                'good_file_size_less_1m': {
+                'upload_suspect_ext_inspect': {
                     'type': 'str',
                 },
-                'bad_file_size_8_32m': {
+                'upload_suspect_allowed': {
                     'type': 'str',
                 },
-                'icap_connection_rst': {
+                'upload_good_blocked': {
                     'type': 'str',
                 },
-                'total_file_size_over_32m': {
+                'upload_good_ext_inspect': {
                     'type': 'str',
                 },
-                'good_file_size_1_5m': {
+                'upload_good_allowed': {
                     'type': 'str',
                 },
-                'suspect_file_size_less_1m': {
+                'icap_200': {
                     'type': 'str',
                 },
-                'icap_bytes_received': {
+                'icap_204': {
+                    'type': 'str',
+                },
+                'icap_500': {
+                    'type': 'str',
+                },
+                'icap_other_status_code': {
+                    'type': 'str',
+                },
+                'icap_connect_fail': {
+                    'type': 'str',
+                },
+                'icap_connection_created': {
                     'type': 'str',
                 },
                 'icap_connection_established': {
@@ -291,40 +214,133 @@ def get_argspec():
                 'icap_connection_closed': {
                     'type': 'str',
                 },
-                'good_file_size_5_8m': {
+                'icap_connection_rst': {
                     'type': 'str',
                 },
-                'transactions_alloc': {
+                'icap_bytes_sent': {
                     'type': 'str',
                 },
-                'upload_bad_allowed': {
+                'icap_bytes_received': {
                     'type': 'str',
                 },
-                'icap_connection_created': {
+                'bypass_aflex': {
                     'type': 'str',
                 },
-                'bypass_max_concurrent_files_reached': {
-                    'type': 'str',
-                },
-                'total_file_size_8_32m': {
-                    'type': 'str',
-                },
-                'transactions_free': {
+                'bypass_large_file': {
                     'type': 'str',
                 },
                 'bypass_service_disabled': {
                     'type': 'str',
                 },
-                'upload_good_allowed': {
+                'bypass_service_down': {
+                    'type': 'str',
+                },
+                'reset_service_down': {
+                    'type': 'str',
+                },
+                'bypass_max_concurrent_files_reached': {
+                    'type': 'str',
+                },
+                'bypass_non_inspection': {
+                    'type': 'str',
+                },
+                'non_supported_file': {
+                    'type': 'str',
+                },
+                'transactions_alloc': {
+                    'type': 'str',
+                },
+                'transactions_free': {
                     'type': 'str',
                 },
                 'transactions_failure': {
                     'type': 'str',
                 },
+                'transactions_aborted': {
+                    'type': 'str',
+                },
+                'orig_conn_bytes_received': {
+                    'type': 'str',
+                },
+                'orig_conn_bytes_sent': {
+                    'type': 'str',
+                },
+                'orig_conn_bytes_bypassed': {
+                    'type': 'str',
+                },
+                'bypass_buffered_overlimit': {
+                    'type': 'str',
+                },
+                'total_bandwidth': {
+                    'type': 'str',
+                },
+                'total_suspect_bandwidth': {
+                    'type': 'str',
+                },
+                'total_bad_bandwidth': {
+                    'type': 'str',
+                },
+                'total_good_bandwidth': {
+                    'type': 'str',
+                },
+                'total_file_size_less_1m': {
+                    'type': 'str',
+                },
+                'total_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'total_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'total_file_size_8_32m': {
+                    'type': 'str',
+                },
+                'total_file_size_over_32m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_less_1m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_8_32m': {
+                    'type': 'str',
+                },
                 'suspect_file_size_over_32m': {
                     'type': 'str',
                 },
+                'good_file_size_less_1m': {
+                    'type': 'str',
+                },
+                'good_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'good_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'good_file_size_8_32m': {
+                    'type': 'str',
+                },
+                'good_file_size_over_32m': {
+                    'type': 'str',
+                },
+                'bad_file_size_less_1m': {
+                    'type': 'str',
+                },
                 'bad_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'bad_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'bad_file_size_8_32m': {
+                    'type': 'str',
+                },
+                'bad_file_size_over_32m': {
                     'type': 'str',
                 }
             }

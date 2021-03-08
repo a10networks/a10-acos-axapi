@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_service_ip_port
 description:
     - Server Port
-short_description: Configures A10 gslb.service.ip.port
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,138 +22,177 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     service_ip_node_name:
         description:
-        - Key to identify parent object    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            use_gslb_state:
-                description:
-                - "Field use_gslb_state"
-            port_proto:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            gslb_protocol:
-                description:
-                - "Field gslb_protocol"
-            port_num:
-                description:
-                - "Port Number"
-            service_port:
-                description:
-                - "Field service_port"
-            dynamic:
-                description:
-                - "Field dynamic"
-            tcp:
-                description:
-                - "Field tcp"
-            disabled:
-                description:
-                - "Field disabled"
-            state:
-                description:
-                - "Field state"
-            local_protocol:
-                description:
-                - "Field local_protocol"
-            manually_health_check:
-                description:
-                - "Field manually_health_check"
-    port_proto:
-        description:
-        - "'tcp'= TCP Port; 'udp'= UDP Port;"
+        - Key to identify parent object
+        type: str
         required: True
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            active:
-                description:
-                - "Active Servers"
-            current:
-                description:
-                - "Current Connections"
-            port_proto:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            port_num:
-                description:
-                - "Port Number"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     port_num:
         description:
         - "Port Number"
+        type: int
         required: True
-    health_check_disable:
+    port_proto:
         description:
-        - "Disable Health Check Monitor"
+        - "'tcp'= TCP Port; 'udp'= UDP Port;"
+        type: str
+        required: True
+    action:
+        description:
+        - "'enable'= Enable this GSLB server port; 'disable'= Disable this GSLB server
+          port;"
+        type: str
         required: False
-    user_tag:
+    health_check:
         description:
-        - "Customized tag"
+        - "Health Check Monitor (Monitor Name)"
+        type: str
+        required: False
+    health_check_follow_port:
+        description:
+        - "Specify which port to follow for health status (Port Number)"
+        type: int
         required: False
     follow_port_protocol:
         description:
         - "'tcp'= TCP Port; 'udp'= UDP Port;"
+        type: str
+        required: False
+    health_check_protocol_disable:
+        description:
+        - "Disable GSLB Protocol Health Monitor"
+        type: bool
+        required: False
+    health_check_disable:
+        description:
+        - "Disable Health Check Monitor"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'active'= Active Servers; 'current'= Current Connections;"
-    action:
+                type: str
+    oper:
         description:
-        - "'enable'= Enable this GSLB server port; 'disable'= Disable this GSLB server
-          port;"
+        - "Field oper"
+        type: dict
         required: False
-    health_check_follow_port:
+        suboptions:
+            service_port:
+                description:
+                - "Field service_port"
+                type: int
+            state:
+                description:
+                - "Field state"
+                type: str
+            disabled:
+                description:
+                - "Field disabled"
+                type: int
+            gslb_protocol:
+                description:
+                - "Field gslb_protocol"
+                type: int
+            local_protocol:
+                description:
+                - "Field local_protocol"
+                type: int
+            tcp:
+                description:
+                - "Field tcp"
+                type: int
+            manually_health_check:
+                description:
+                - "Field manually_health_check"
+                type: int
+            use_gslb_state:
+                description:
+                - "Field use_gslb_state"
+                type: int
+            dynamic:
+                description:
+                - "Field dynamic"
+                type: int
+            port_num:
+                description:
+                - "Port Number"
+                type: int
+            port_proto:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+    stats:
         description:
-        - "Specify which port to follow for health status (Port Number)"
+        - "Field stats"
+        type: dict
         required: False
-    health_check_protocol_disable:
-        description:
-        - "Disable GSLB Protocol Health Monitor"
-        required: False
-    health_check:
-        description:
-        - "Health Check Monitor (Monitor Name)"
-        required: False
+        suboptions:
+            active:
+                description:
+                - "Active Servers"
+                type: str
+            current:
+                description:
+                - "Current Connections"
+                type: str
+            port_num:
+                description:
+                - "Port Number"
+                type: int
+            port_proto:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
 
 '''
 
@@ -220,49 +257,86 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'port_num': {
+            'type': 'int',
+            'required': True,
+        },
+        'port_proto': {
+            'type': 'str',
+            'required': True,
+            'choices': ['tcp', 'udp']
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'health_check_follow_port': {
+            'type': 'int',
+        },
+        'follow_port_protocol': {
+            'type': 'str',
+            'choices': ['tcp', 'udp']
+        },
+        'health_check_protocol_disable': {
+            'type': 'bool',
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'active', 'current']
+            }
+        },
         'oper': {
             'type': 'dict',
+            'service_port': {
+                'type': 'int',
+            },
+            'state': {
+                'type': 'str',
+            },
+            'disabled': {
+                'type': 'int',
+            },
+            'gslb_protocol': {
+                'type': 'int',
+            },
+            'local_protocol': {
+                'type': 'int',
+            },
+            'tcp': {
+                'type': 'int',
+            },
+            'manually_health_check': {
+                'type': 'int',
+            },
             'use_gslb_state': {
                 'type': 'int',
             },
-            'port_proto': {
-                'type': 'str',
-                'required': True,
-                'choices': ['tcp', 'udp']
-            },
-            'gslb_protocol': {
+            'dynamic': {
                 'type': 'int',
             },
             'port_num': {
                 'type': 'int',
                 'required': True,
             },
-            'service_port': {
-                'type': 'int',
-            },
-            'dynamic': {
-                'type': 'int',
-            },
-            'tcp': {
-                'type': 'int',
-            },
-            'disabled': {
-                'type': 'int',
-            },
-            'state': {
+            'port_proto': {
                 'type': 'str',
-            },
-            'local_protocol': {
-                'type': 'int',
-            },
-            'manually_health_check': {
-                'type': 'int',
+                'required': True,
+                'choices': ['tcp', 'udp']
             }
-        },
-        'port_proto': {
-            'type': 'str',
-            'required': True,
-            'choices': ['tcp', 'udp']
         },
         'stats': {
             'type': 'dict',
@@ -272,52 +346,15 @@ def get_argspec():
             'current': {
                 'type': 'str',
             },
+            'port_num': {
+                'type': 'int',
+                'required': True,
+            },
             'port_proto': {
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
-            },
-            'port_num': {
-                'type': 'int',
-                'required': True,
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'port_num': {
-            'type': 'int',
-            'required': True,
-        },
-        'health_check_disable': {
-            'type': 'bool',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'follow_port_protocol': {
-            'type': 'str',
-            'choices': ['tcp', 'udp']
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'active', 'current']
-            }
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'health_check_follow_port': {
-            'type': 'int',
-        },
-        'health_check_protocol_disable': {
-            'type': 'bool',
-        },
-        'health_check': {
-            'type': 'str',
         }
     })
     # Parent keys

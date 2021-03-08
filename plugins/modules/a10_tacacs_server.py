@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_tacacs_server
 description:
     - Configure TACACS+ servers
-short_description: Configures A10 tacacs-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,58 +22,72 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    host:
-        description:
-        - "Field host"
-        required: False
-        suboptions:
-            tacacs_hostname_list:
-                description:
-                - "Field tacacs_hostname_list"
-            ipv4_list:
-                description:
-                - "Field ipv4_list"
-            ipv6_list:
-                description:
-                - "Field ipv6_list"
-    interval:
-        description:
-        - "The moniter interval in seconds (default 60)"
+        type: str
         required: False
     monitor:
         description:
         - "Configure TACACS+ servers"
+        type: bool
+        required: False
+    interval:
+        description:
+        - "The moniter interval in seconds (default 60)"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    host:
+        description:
+        - "Field host"
+        type: dict
+        required: False
+        suboptions:
+            ipv4_list:
+                description:
+                - "Field ipv4_list"
+                type: list
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
+                type: list
+            tacacs_hostname_list:
+                description:
+                - "Field tacacs_hostname_list"
+                type: list
 
 '''
 
@@ -131,72 +143,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'monitor': {
+            'type': 'bool',
+        },
+        'interval': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'host': {
             'type': 'dict',
-            'tacacs_hostname_list': {
-                'type': 'list',
-                'secret': {
-                    'type': 'dict',
-                    'source_ipv6': {
-                        'type': 'str',
-                    },
-                    'source_trunk': {
-                        'type': 'str',
-                    },
-                    'source_ve': {
-                        'type': 'str',
-                    },
-                    'encrypted': {
-                        'type': 'str',
-                    },
-                    'source_ip': {
-                        'type': 'str',
-                    },
-                    'source_eth': {
-                        'type': 'str',
-                    },
-                    'port_cfg': {
-                        'type': 'dict',
-                        'username': {
-                            'type': 'str',
-                        },
-                        'monitor': {
-                            'type': 'bool',
-                        },
-                        'encrypted': {
-                            'type': 'str',
-                        },
-                        'timeout': {
-                            'type': 'int',
-                        },
-                        'password_value': {
-                            'type': 'str',
-                        },
-                        'password': {
-                            'type': 'bool',
-                        },
-                        'port': {
-                            'type': 'int',
-                        }
-                    },
-                    'source_lif': {
-                        'type': 'int',
-                    },
-                    'source_loopback': {
-                        'type': 'str',
-                    },
-                    'secret_value': {
-                        'type': 'str',
-                    }
-                },
-                'hostname': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
             'ipv4_list': {
                 'type': 'list',
                 'ipv4_addr': {
@@ -205,10 +162,7 @@ def get_argspec():
                 },
                 'secret': {
                     'type': 'dict',
-                    'source_trunk': {
-                        'type': 'str',
-                    },
-                    'source_ve': {
+                    'secret_value': {
                         'type': 'str',
                     },
                     'encrypted': {
@@ -217,41 +171,44 @@ def get_argspec():
                     'source_ip': {
                         'type': 'str',
                     },
+                    'source_loopback': {
+                        'type': 'str',
+                    },
                     'source_eth': {
                         'type': 'str',
                     },
+                    'source_ve': {
+                        'type': 'str',
+                    },
+                    'source_trunk': {
+                        'type': 'str',
+                    },
+                    'source_lif': {
+                        'type': 'int',
+                    },
                     'port_cfg': {
                         'type': 'dict',
-                        'username': {
-                            'type': 'str',
-                        },
-                        'monitor': {
-                            'type': 'bool',
-                        },
-                        'encrypted': {
-                            'type': 'str',
+                        'port': {
+                            'type': 'int',
                         },
                         'timeout': {
                             'type': 'int',
                         },
-                        'password_value': {
+                        'monitor': {
+                            'type': 'bool',
+                        },
+                        'username': {
                             'type': 'str',
                         },
                         'password': {
                             'type': 'bool',
                         },
-                        'port': {
-                            'type': 'int',
+                        'password_value': {
+                            'type': 'str',
+                        },
+                        'encrypted': {
+                            'type': 'str',
                         }
-                    },
-                    'source_lif': {
-                        'type': 'int',
-                    },
-                    'source_loopback': {
-                        'type': 'str',
-                    },
-                    'secret_value': {
-                        'type': 'str',
                     }
                 },
                 'uuid': {
@@ -260,74 +217,129 @@ def get_argspec():
             },
             'ipv6_list': {
                 'type': 'list',
+                'ipv6_addr': {
+                    'type': 'str',
+                    'required': True,
+                },
                 'secret': {
                     'type': 'dict',
-                    'source_ipv6': {
-                        'type': 'str',
-                    },
-                    'source_trunk': {
-                        'type': 'str',
-                    },
-                    'source_ve': {
+                    'secret_value': {
                         'type': 'str',
                     },
                     'encrypted': {
                         'type': 'str',
                     },
+                    'source_ipv6': {
+                        'type': 'str',
+                    },
+                    'source_loopback': {
+                        'type': 'str',
+                    },
                     'source_eth': {
                         'type': 'str',
                     },
+                    'source_ve': {
+                        'type': 'str',
+                    },
+                    'source_trunk': {
+                        'type': 'str',
+                    },
+                    'source_lif': {
+                        'type': 'int',
+                    },
                     'port_cfg': {
                         'type': 'dict',
-                        'username': {
-                            'type': 'str',
-                        },
-                        'monitor': {
-                            'type': 'bool',
-                        },
-                        'encrypted': {
-                            'type': 'str',
+                        'port': {
+                            'type': 'int',
                         },
                         'timeout': {
                             'type': 'int',
                         },
-                        'password_value': {
+                        'monitor': {
+                            'type': 'bool',
+                        },
+                        'username': {
                             'type': 'str',
                         },
                         'password': {
                             'type': 'bool',
                         },
-                        'port': {
-                            'type': 'int',
+                        'password_value': {
+                            'type': 'str',
+                        },
+                        'encrypted': {
+                            'type': 'str',
                         }
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'tacacs_hostname_list': {
+                'type': 'list',
+                'hostname': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'secret': {
+                    'type': 'dict',
+                    'secret_value': {
+                        'type': 'str',
                     },
-                    'source_lif': {
-                        'type': 'int',
+                    'encrypted': {
+                        'type': 'str',
+                    },
+                    'source_ip': {
+                        'type': 'str',
+                    },
+                    'source_ipv6': {
+                        'type': 'str',
                     },
                     'source_loopback': {
                         'type': 'str',
                     },
-                    'secret_value': {
+                    'source_eth': {
                         'type': 'str',
+                    },
+                    'source_ve': {
+                        'type': 'str',
+                    },
+                    'source_trunk': {
+                        'type': 'str',
+                    },
+                    'source_lif': {
+                        'type': 'int',
+                    },
+                    'port_cfg': {
+                        'type': 'dict',
+                        'port': {
+                            'type': 'int',
+                        },
+                        'timeout': {
+                            'type': 'int',
+                        },
+                        'monitor': {
+                            'type': 'bool',
+                        },
+                        'username': {
+                            'type': 'str',
+                        },
+                        'password': {
+                            'type': 'bool',
+                        },
+                        'password_value': {
+                            'type': 'str',
+                        },
+                        'encrypted': {
+                            'type': 'str',
+                        }
                     }
-                },
-                'ipv6_addr': {
-                    'type': 'str',
-                    'required': True,
                 },
                 'uuid': {
                     'type': 'str',
                 }
             }
-        },
-        'interval': {
-            'type': 'int',
-        },
-        'monitor': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

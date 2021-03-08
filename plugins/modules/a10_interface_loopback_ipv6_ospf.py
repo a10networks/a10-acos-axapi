@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_loopback_ipv6_ospf
 description:
     - Open Shortest Path First for IPv6 (OSPFv3)
-short_description: Configures A10 interface.loopback.ipv6.ospf
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,123 +22,157 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     loopback_ifnum:
         description:
-        - Key to identify parent object    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     bfd:
         description:
         - "Bidirectional Forwarding Detection (BFD)"
+        type: bool
+        required: False
+    disable:
+        description:
+        - "Disable BFD"
+        type: bool
         required: False
     cost_cfg:
         description:
         - "Field cost_cfg"
+        type: list
         required: False
         suboptions:
             cost:
                 description:
                 - "Interface cost"
+                type: int
             instance_id:
                 description:
                 - "Specify the interface instance ID"
-    hello_interval_cfg:
-        description:
-        - "Field hello_interval_cfg"
-        required: False
-        suboptions:
-            hello_interval:
-                description:
-                - "Time between HELLO packets (Seconds)"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    priority_cfg:
-        description:
-        - "Field priority_cfg"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "Router priority"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    mtu_ignore_cfg:
-        description:
-        - "Field mtu_ignore_cfg"
-        required: False
-        suboptions:
-            mtu_ignore:
-                description:
-                - "Ignores the MTU in DBD packets"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    retransmit_interval_cfg:
-        description:
-        - "Field retransmit_interval_cfg"
-        required: False
-        suboptions:
-            retransmit_interval:
-                description:
-                - "Time between retransmitting lost link state advertisements (Seconds)"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
-    disable:
-        description:
-        - "Disable BFD"
-        required: False
-    transmit_delay_cfg:
-        description:
-        - "Field transmit_delay_cfg"
-        required: False
-        suboptions:
-            transmit_delay:
-                description:
-                - "Link state transmit delay (Seconds)"
-            instance_id:
-                description:
-                - "Specify the interface instance ID"
+                type: int
     dead_interval_cfg:
         description:
         - "Field dead_interval_cfg"
+        type: list
         required: False
         suboptions:
             dead_interval:
                 description:
                 - "Interval after which a neighbor is declared dead (Seconds)"
+                type: int
             instance_id:
                 description:
                 - "Specify the interface instance ID"
+                type: int
+    hello_interval_cfg:
+        description:
+        - "Field hello_interval_cfg"
+        type: list
+        required: False
+        suboptions:
+            hello_interval:
+                description:
+                - "Time between HELLO packets (Seconds)"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    mtu_ignore_cfg:
+        description:
+        - "Field mtu_ignore_cfg"
+        type: list
+        required: False
+        suboptions:
+            mtu_ignore:
+                description:
+                - "Ignores the MTU in DBD packets"
+                type: bool
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    priority_cfg:
+        description:
+        - "Field priority_cfg"
+        type: list
+        required: False
+        suboptions:
+            priority:
+                description:
+                - "Router priority"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    retransmit_interval_cfg:
+        description:
+        - "Field retransmit_interval_cfg"
+        type: list
+        required: False
+        suboptions:
+            retransmit_interval:
+                description:
+                - "Time between retransmitting lost link state advertisements (Seconds)"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    transmit_delay_cfg:
+        description:
+        - "Field transmit_delay_cfg"
+        type: list
+        required: False
+        suboptions:
+            transmit_delay:
+                description:
+                - "Link state transmit delay (Seconds)"
+                type: int
+            instance_id:
+                description:
+                - "Specify the interface instance ID"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -202,15 +234,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'bfd': {
+            'type': 'bool',
+        },
+        'disable': {
             'type': 'bool',
         },
         'cost_cfg': {
             'type': 'list',
             'cost': {
+                'type': 'int',
+            },
+            'instance_id': {
+                'type': 'int',
+            }
+        },
+        'dead_interval_cfg': {
+            'type': 'list',
+            'dead_interval': {
                 'type': 'int',
             },
             'instance_id': {
@@ -226,19 +267,19 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'priority_cfg': {
+        'mtu_ignore_cfg': {
             'type': 'list',
-            'priority': {
-                'type': 'int',
+            'mtu_ignore': {
+                'type': 'bool',
             },
             'instance_id': {
                 'type': 'int',
             }
         },
-        'mtu_ignore_cfg': {
+        'priority_cfg': {
             'type': 'list',
-            'mtu_ignore': {
-                'type': 'bool',
+            'priority': {
+                'type': 'int',
             },
             'instance_id': {
                 'type': 'int',
@@ -253,9 +294,6 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'disable': {
-            'type': 'bool',
-        },
         'transmit_delay_cfg': {
             'type': 'list',
             'transmit_delay': {
@@ -265,14 +303,8 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'dead_interval_cfg': {
-            'type': 'list',
-            'dead_interval': {
-                'type': 'int',
-            },
-            'instance_id': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

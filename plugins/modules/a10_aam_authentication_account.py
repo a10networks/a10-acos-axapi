@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_account
 description:
     - Authentication account configuration
-short_description: Configures A10 aam.authentication.account
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -62,68 +73,83 @@ options:
           failure'= Total Failure Response; 'response-error'= Total Error Response;
           'response-timeout'= Total Timeout Response; 'response-other'= Total Other
           Response;"
+                type: str
     kerberos_spn_list:
         description:
         - "Field kerberos_spn_list"
+        type: list
         required: False
         suboptions:
-            account:
-                description:
-                - "Specify domain account for SPN"
-            realm:
-                description:
-                - "Specify Kerberos realm"
             name:
                 description:
                 - "Specify AD account name"
-            encrypted:
+                type: str
+            realm:
                 description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.)"
-            user_tag:
+                - "Specify Kerberos realm"
+                type: str
+            account:
                 description:
-                - "Customized tag"
-            secret_string:
-                description:
-                - "Password of AD account"
-            password:
-                description:
-                - "Specify password of domain account"
+                - "Specify domain account for SPN"
+                type: str
             service_principal_name:
                 description:
                 - "Specify service principal name"
+                type: str
+            password:
+                description:
+                - "Specify password of domain account"
+                type: bool
+            secret_string:
+                description:
+                - "Password of AD account"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.)"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             request_normal:
                 description:
                 - "Total Normal Request"
-            response_success:
-                description:
-                - "Total Success Response"
-            response_other:
-                description:
-                - "Total Other Response"
-            response_failure:
-                description:
-                - "Total Failure Response"
+                type: str
             request_dropped:
                 description:
                 - "Total Dropped Request"
-            response_timeout:
+                type: str
+            response_success:
                 description:
-                - "Total Timeout Response"
+                - "Total Success Response"
+                type: str
+            response_failure:
+                description:
+                - "Total Failure Response"
+                type: str
             response_error:
                 description:
                 - "Total Error Response"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            response_timeout:
+                description:
+                - "Total Timeout Response"
+                type: str
+            response_other:
+                description:
+                - "Total Other Response"
+                type: str
 
 '''
 
@@ -179,6 +205,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -193,32 +222,32 @@ def get_argspec():
         },
         'kerberos_spn_list': {
             'type': 'list',
-            'account': {
-                'type': 'str',
-            },
-            'realm': {
-                'type': 'str',
-            },
             'name': {
                 'type': 'str',
                 'required': True,
             },
-            'encrypted': {
+            'realm': {
                 'type': 'str',
             },
-            'user_tag': {
+            'account': {
                 'type': 'str',
             },
-            'secret_string': {
+            'service_principal_name': {
                 'type': 'str',
             },
             'password': {
                 'type': 'bool',
             },
-            'service_principal_name': {
+            'secret_string': {
+                'type': 'str',
+            },
+            'encrypted': {
                 'type': 'str',
             },
             'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
                 'type': 'str',
             }
         },
@@ -227,27 +256,24 @@ def get_argspec():
             'request_normal': {
                 'type': 'str',
             },
-            'response_success': {
+            'request_dropped': {
                 'type': 'str',
             },
-            'response_other': {
+            'response_success': {
                 'type': 'str',
             },
             'response_failure': {
                 'type': 'str',
             },
-            'request_dropped': {
+            'response_error': {
                 'type': 'str',
             },
             'response_timeout': {
                 'type': 'str',
             },
-            'response_error': {
+            'response_other': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

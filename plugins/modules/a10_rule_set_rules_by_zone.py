@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rule_set_rules_by_zone
 description:
     - Field rules_by_zone
-short_description: Configures A10 rule.set.rules-by-zone
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,62 +21,79 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     rule_set_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            group_list:
-                description:
-                - "Field group_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'dummy'= Entry for a10countergen;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            group_list:
+                description:
+                - "Field group_list"
+                type: list
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             dummy:
                 description:
                 - "Entry for a10countergen"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -132,23 +147,30 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'dummy']
+            }
+        },
         'oper': {
             'type': 'dict',
             'group_list': {
                 'type': 'list',
-                'to': {
+                'from': {
                     'type': 'str',
                 },
-                'from': {
+                'to': {
                     'type': 'str',
                 },
                 'rule_list': {
                     'type': 'list',
-                    'dest_list': {
-                        'type': 'list',
-                        'dest': {
-                            'type': 'str',
-                        }
+                    'name': {
+                        'type': 'str',
                     },
                     'action': {
                         'type': 'str',
@@ -159,8 +181,11 @@ def get_argspec():
                             'type': 'str',
                         }
                     },
-                    'name': {
-                        'type': 'str',
+                    'dest_list': {
+                        'type': 'list',
+                        'dest': {
+                            'type': 'str',
+                        }
                     },
                     'service_list': {
                         'type': 'list',
@@ -171,21 +196,11 @@ def get_argspec():
                 }
             }
         },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'dummy']
-            }
-        },
         'stats': {
             'type': 'dict',
             'dummy': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_persist_cookie
 description:
     - Cookie persistence
-short_description: Configures A10 slb.template.persist.cookie
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,113 +22,153 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Cookie persistence (Cookie persistence template name)"
+        type: str
+        required: True
+    dont_honor_conn_rules:
+        description:
+        - "Do not observe connection rate rules"
+        type: bool
+        required: False
+    expire:
+        description:
+        - "Set cookie expiration time (Expiration in seconds)"
+        type: int
+        required: False
+    insert_always:
+        description:
+        - "Insert persist cookie to every reponse"
+        type: bool
+        required: False
+    encrypt_level:
+        description:
+        - "Encryption level for cookie name / value"
+        type: int
         required: False
     pass_phrase:
         description:
         - "Set passphrase for encryption"
-        required: False
-    domain:
-        description:
-        - "Set cookie domain"
-        required: False
-    cookie_name:
-        description:
-        - "Set cookie name"
-        required: False
-    secure:
-        description:
-        - "Enable secure attribute"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        type: str
         required: False
-    dont_honor_conn_rules:
+    cookie_name:
         description:
-        - "Do not observe connection rate rules"
+        - "Set cookie name"
+        type: str
         required: False
-    encrypt_level:
+    prefix:
         description:
-        - "Encryption level for cookie name / value"
+        - "'host'= the cookie will have been set with a Secure attribute, a Path attribute
+          with a value of /, and no Domain attribute; 'secure'= the cookie will have been
+          set with a Secure attribute; 'check'= check server prefix and enforce prefix
+          format;"
+        type: str
         required: False
-    uuid:
+    domain:
         description:
-        - "uuid of the object"
+        - "Set cookie domain"
+        type: str
         required: False
-    user_tag:
+    samesite:
         description:
-        - "Customized tag"
-        required: False
-    server:
-        description:
-        - "Persist to the same server, default is port"
-        required: False
-    server_service_group:
-        description:
-        - "Persist to the same server and within the same service group"
-        required: False
-    service_group:
-        description:
-        - "Persist within the same service group"
-        required: False
-    expire:
-        description:
-        - "Set cookie expiration time (Expiration in seconds)"
-        required: False
-    httponly:
-        description:
-        - "Enable HttpOnly attribute"
+        - "'none'= none; 'lax'= lax; 'strict'= strict;"
+        type: str
         required: False
     path:
         description:
         - "Set cookie path"
+        type: str
         required: False
     pass_thru:
         description:
         - "Pass thru mode - Server sends the persist cookie"
+        type: bool
         required: False
-    scan_all_members:
+    secure:
         description:
-        - "Persist within the same server SCAN"
+        - "Enable secure attribute"
+        type: bool
         required: False
-    insert_always:
+    httponly:
         description:
-        - "Insert persist cookie to every reponse"
+        - "Enable HttpOnly attribute"
+        type: bool
         required: False
     match_type:
         description:
         - "Persist for server, default is port"
+        type: bool
         required: False
-    name:
+    server:
         description:
-        - "Cookie persistence (Cookie persistence template name)"
-        required: True
+        - "Persist to the same server, default is port"
+        type: bool
+        required: False
+    server_service_group:
+        description:
+        - "Persist to the same server and within the same service group"
+        type: bool
+        required: False
+    scan_all_members:
+        description:
+        - "Persist within the same server SCAN"
+        type: bool
+        required: False
+    service_group:
+        description:
+        - "Persist within the same service group"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -158,6 +196,8 @@ AVAILABLE_PROPERTIES = [
     "pass_phrase",
     "pass_thru",
     "path",
+    "prefix",
+    "samesite",
     "scan_all_members",
     "secure",
     "server",
@@ -202,47 +242,41 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'pass_phrase': {
+        'name': {
             'type': 'str',
-        },
-        'domain': {
-            'type': 'str',
-        },
-        'cookie_name': {
-            'type': 'str',
-        },
-        'secure': {
-            'type': 'bool',
-        },
-        'encrypted': {
-            'type': 'str',
+            'required': True,
         },
         'dont_honor_conn_rules': {
-            'type': 'bool',
-        },
-        'encrypt_level': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'server': {
-            'type': 'bool',
-        },
-        'server_service_group': {
-            'type': 'bool',
-        },
-        'service_group': {
             'type': 'bool',
         },
         'expire': {
             'type': 'int',
         },
-        'httponly': {
+        'insert_always': {
             'type': 'bool',
+        },
+        'encrypt_level': {
+            'type': 'int',
+        },
+        'pass_phrase': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'cookie_name': {
+            'type': 'str',
+        },
+        'prefix': {
+            'type': 'str',
+            'choices': ['host', 'secure', 'check']
+        },
+        'domain': {
+            'type': 'str',
+        },
+        'samesite': {
+            'type': 'str',
+            'choices': ['none', 'lax', 'strict']
         },
         'path': {
             'type': 'str',
@@ -250,18 +284,32 @@ def get_argspec():
         'pass_thru': {
             'type': 'bool',
         },
-        'scan_all_members': {
+        'secure': {
             'type': 'bool',
         },
-        'insert_always': {
+        'httponly': {
             'type': 'bool',
         },
         'match_type': {
             'type': 'bool',
         },
-        'name': {
+        'server': {
+            'type': 'bool',
+        },
+        'server_service_group': {
+            'type': 'bool',
+        },
+        'scan_all_members': {
+            'type': 'bool',
+        },
+        'service_group': {
+            'type': 'bool',
+        },
+        'uuid': {
             'type': 'str',
-            'required': True,
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

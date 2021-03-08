@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_license_manager
 description:
     - Configure license manager
-short_description: Configures A10 license-manager
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,131 +22,166 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    use_mgmt_port:
+        description:
+        - "Use management port to connect license server"
+        type: bool
+        required: False
+    sn:
+        description:
+        - "serial number"
+        type: str
+        required: False
+    interval:
+        description:
+        - "Configure interval profile (1 monthly, 2 daily, 3 hourly)"
+        type: int
+        required: False
+    instance_name:
+        description:
+        - "Configure instance name [format= (string).(string).(string).(string)]"
+        type: str
+        required: False
+    bandwidth_base:
+        description:
+        - "Configure feature bandwidth base (Mb)"
+        type: int
+        required: False
+    bandwidth_unrestricted:
+        description:
+        - "Set the bandwidth to maximum"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    host_list:
+        description:
+        - "Field host_list"
+        type: list
+        required: False
+        suboptions:
+            host_ipv4:
+                description:
+                - "license server ip address (length=1-31)"
+                type: str
+            host_ipv6:
+                description:
+                - "Configure license manager server ipv6-address"
+                type: str
+            port:
+                description:
+                - "Configure the license manager port, default is 443"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     reminder_list:
         description:
         - "Field reminder_list"
+        type: list
         required: False
         suboptions:
             reminder_value:
                 description:
                 - "Configure reminder for grace time (Hour)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
-    bandwidth_base:
-        description:
-        - "Configure feature bandwidth base (Mb)"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port to connect license server"
-        required: False
-    interval:
-        description:
-        - "Configure interval profile (1 monthly, 2 daily, 3 hourly)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
     overage:
         description:
         - "Field overage"
+        type: dict
         required: False
         suboptions:
-            kb:
-                description:
-                - "Number of KB"
-            uuid:
-                description:
-                - "uuid of the object"
-            mb:
-                description:
-                - "Number of MB"
-            seconds:
-                description:
-                - "Number of seconds"
-            bytes:
-                description:
-                - "Number of bytes"
             days:
                 description:
                 - "Number of days"
+                type: int
             hours:
                 description:
                 - "Number of hours"
-            gb:
-                description:
-                - "Number of GB"
+                type: int
             minutes:
                 description:
                 - "Number of minutes"
+                type: int
+            seconds:
+                description:
+                - "Number of seconds"
+                type: int
+            gb:
+                description:
+                - "Number of GB"
+                type: int
+            mb:
+                description:
+                - "Number of MB"
+                type: int
+            kb:
+                description:
+                - "Number of KB"
+                type: int
+            bytes:
+                description:
+                - "Number of bytes"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
     connect:
         description:
         - "Field connect"
+        type: dict
         required: False
         suboptions:
             connect:
                 description:
                 - "Connect to license manager to activate"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
-    host_list:
-        description:
-        - "Field host_list"
-        required: False
-        suboptions:
-            host_ipv6:
-                description:
-                - "Configure license manager server ipv6-address"
-            host_ipv4:
-                description:
-                - "license server ip address (length=1-31)"
-            port:
-                description:
-                - "Configure the license manager port, default is 443"
-            uuid:
-                description:
-                - "uuid of the object"
-    bandwidth_unrestricted:
-        description:
-        - "Set the bandwidth to maximum"
-        required: False
-    instance_name:
-        description:
-        - "Configure instance name [format= (string).(string).(string).(string)]"
-        required: False
-    sn:
-        description:
-        - "serial number"
-        required: False
+                type: str
 
 '''
 
@@ -211,74 +244,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'reminder_list': {
-            'type': 'list',
-            'reminder_value': {
-                'type': 'int',
-                'required': True,
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'bandwidth_base': {
-            'type': 'int',
-        },
         'use_mgmt_port': {
             'type': 'bool',
+        },
+        'sn': {
+            'type': 'str',
         },
         'interval': {
             'type': 'int',
         },
+        'instance_name': {
+            'type': 'str',
+        },
+        'bandwidth_base': {
+            'type': 'int',
+        },
+        'bandwidth_unrestricted': {
+            'type': 'bool',
+        },
         'uuid': {
             'type': 'str',
         },
-        'overage': {
-            'type': 'dict',
-            'kb': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'mb': {
-                'type': 'int',
-            },
-            'seconds': {
-                'type': 'int',
-            },
-            'bytes': {
-                'type': 'int',
-            },
-            'days': {
-                'type': 'int',
-            },
-            'hours': {
-                'type': 'int',
-            },
-            'gb': {
-                'type': 'int',
-            },
-            'minutes': {
-                'type': 'int',
-            }
-        },
-        'connect': {
-            'type': 'dict',
-            'connect': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
         'host_list': {
             'type': 'list',
-            'host_ipv6': {
+            'host_ipv4': {
                 'type': 'str',
                 'required': True,
             },
-            'host_ipv4': {
+            'host_ipv6': {
                 'type': 'str',
                 'required': True,
             },
@@ -289,14 +282,54 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'bandwidth_unrestricted': {
-            'type': 'bool',
+        'reminder_list': {
+            'type': 'list',
+            'reminder_value': {
+                'type': 'int',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            }
         },
-        'instance_name': {
-            'type': 'str',
+        'overage': {
+            'type': 'dict',
+            'days': {
+                'type': 'int',
+            },
+            'hours': {
+                'type': 'int',
+            },
+            'minutes': {
+                'type': 'int',
+            },
+            'seconds': {
+                'type': 'int',
+            },
+            'gb': {
+                'type': 'int',
+            },
+            'mb': {
+                'type': 'int',
+            },
+            'kb': {
+                'type': 'int',
+            },
+            'bytes': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         },
-        'sn': {
-            'type': 'str',
+        'connect': {
+            'type': 'dict',
+            'connect': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
         }
     })
     return rv

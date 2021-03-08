@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_host_ipv6_host
 description:
     - Specify IPV6 hosts to receive SNMP traps
-short_description: Configures A10 snmp-server.host.ipv6-host
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     ipv6_addr:
         description:
         - "IPV6 address of SNMP trap host"
+        type: str
         required: True
-    udp_port:
+    version:
         description:
-        - "The trap host's UDP port number(default= 162)"
+        - "'v1'= Use SNMPv1; 'v2c'= Use SNMPv2c; 'v3'= User SNMPv3;"
+        type: str
+        required: True
+    user:
+        description:
+        - "SNMPv3 user to send traps (User Name)"
+        type: str
         required: False
     v1_v2c_comm:
         description:
         - "SNMPv1/v2c community string"
+        type: str
         required: False
-    user:
+    udp_port:
         description:
-        - "SNMPv3 user to send traps (User Name)"
+        - "The trap host's UDP port number(default= 162)"
+        type: int
         required: False
-    version:
+    uuid:
         description:
-        - "'v1'= Use SNMPv1; 'v2c'= Use SNMPv2c; 'v3'= User SNMPv3;"
-        required: True
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -131,26 +142,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
-        },
         'ipv6_addr': {
             'type': 'str',
             'required': True,
-        },
-        'udp_port': {
-            'type': 'int',
-        },
-        'v1_v2c_comm': {
-            'type': 'str',
-        },
-        'user': {
-            'type': 'str',
         },
         'version': {
             'type': 'str',
             'required': True,
             'choices': ['v1', 'v2c', 'v3']
+        },
+        'user': {
+            'type': 'str',
+        },
+        'v1_v2c_comm': {
+            'type': 'str',
+        },
+        'udp_port': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

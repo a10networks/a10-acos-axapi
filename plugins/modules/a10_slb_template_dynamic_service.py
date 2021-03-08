@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_dynamic_service
 description:
     - Dynamic service template
-short_description: Configures A10 slb.template.dynamic-service
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,54 +22,67 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    dns_server:
-        description:
-        - "Field dns_server"
-        required: False
-        suboptions:
-            ipv6_dns_server:
-                description:
-                - "DNS Server IPv6 Address"
-            ipv4_dns_server:
-                description:
-                - "DNS Server IPv4 Address"
     name:
         description:
         - "Dynamic Service Template Name"
+        type: str
         required: True
-    user_tag:
+    dns_server:
         description:
-        - "Customized tag"
+        - "Field dns_server"
+        type: list
         required: False
+        suboptions:
+            ipv4_dns_server:
+                description:
+                - "DNS Server IPv4 Address"
+                type: str
+            ipv6_dns_server:
+                description:
+                - "DNS Server IPv6 Address"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -128,23 +139,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'dns_server': {
-            'type': 'list',
-            'ipv6_dns_server': {
-                'type': 'str',
-            },
-            'ipv4_dns_server': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'user_tag': {
-            'type': 'str',
+        'dns_server': {
+            'type': 'list',
+            'ipv4_dns_server': {
+                'type': 'str',
+            },
+            'ipv6_dns_server': {
+                'type': 'str',
+            }
         },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

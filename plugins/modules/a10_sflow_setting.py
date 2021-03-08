@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_sflow_setting
 description:
     - Configure sFlow
-short_description: Configures A10 sflow.setting
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    source_ip_use_mgmt:
-        description:
-        - "Use management interface's IP address for source IP of sFlow packets"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    counter_polling_interval:
-        description:
-        - "sFlow counter polling interval, default is 10"
-        required: False
-    packet_sampling_rate:
-        description:
-        - "sFlow packet sampling rate, default is 1000"
-        required: False
-    local_collection:
-        description:
-        - "Enable local sflow collection"
+        type: str
         required: False
     max_header:
         description:
         - "Configure maximum number of bytes that should be copied from a sampled packet
           (default= 128) (The maximum number of bytes (Default= 128))"
+        type: int
+        required: False
+    source_ip_use_mgmt:
+        description:
+        - "Use management interface's IP address for source IP of sFlow packets"
+        type: bool
+        required: False
+    packet_sampling_rate:
+        description:
+        - "sFlow packet sampling rate, default is 1000"
+        type: int
+        required: False
+    counter_polling_interval:
+        description:
+        - "sFlow counter polling interval, default is 10"
+        type: int
+        required: False
+    local_collection:
+        description:
+        - "Enable local sflow collection"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -132,23 +143,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'max_header': {
+            'type': 'int',
+        },
         'source_ip_use_mgmt': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'counter_polling_interval': {
+        'packet_sampling_rate': {
             'type': 'int',
         },
-        'packet_sampling_rate': {
+        'counter_polling_interval': {
             'type': 'int',
         },
         'local_collection': {
             'type': 'bool',
         },
-        'max_header': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

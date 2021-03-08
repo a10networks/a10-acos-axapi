@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_hsm_template
 description:
     - HSM Template
-short_description: Configures A10 hsm.template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,119 +22,148 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    health_check_interval:
-        description:
-        - "Specify Thales HSM Health Check Interval"
-        required: False
-    protection_ocs:
-        description:
-        - "Operator Card Set"
-        required: False
-    protection_module:
-        description:
-        - "Module"
-        required: False
-    enroll_timeout:
-        description:
-        - "Specify Enroll Timeout"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    encrypted:
-        description:
-        - "Do NOT use this option manually (This is an A10 reserved keyword) (The
-          ENCRYPTED password string)"
-        required: False
-    worker:
-        description:
-        - "Specify number of workers for each data CPU"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        type: str
         required: False
     template_name:
         description:
         - "Specify Template name"
+        type: str
         required: True
-    password_string:
-        description:
-        - "Password (minimum 4 characters)"
-        required: False
-    protection_softcard_hash:
-        description:
-        - "Hash"
-        required: False
     softhsm_enum:
         description:
         - "'softHSM'= software implementation of a cryptographic store; 'thalesHSM'=
           Thales HSM;"
-        required: False
-    protection:
-        description:
-        - "Specify Protection Method"
-        required: False
-    rfs_port:
-        description:
-        - "Specify Port"
-        required: False
-    rfs_ip:
-        description:
-        - "Specify Thales Remote File System"
+        type: str
         required: False
     hsm_dev:
         description:
         - "Field hsm_dev"
+        type: list
         required: False
         suboptions:
             hsm_ip:
                 description:
                 - "Specify HSM Device IP Address"
+                type: str
             hsm_port:
                 description:
                 - "Specify Port"
+                type: int
             hsm_priority:
                 description:
                 - "Specify Priority"
-    softcard:
+                type: int
+    rfs_ip:
         description:
-        - "Softcard"
+        - "Specify Thales Remote File System"
+        type: str
         required: False
-    password:
+    rfs_port:
         description:
-        - "Specify HSM Passphrase"
+        - "Specify Port"
+        type: int
         required: False
     sec_world:
         description:
         - "Security World Name"
+        type: str
+        required: False
+    protection:
+        description:
+        - "Specify Protection Method"
+        type: bool
+        required: False
+    protection_module:
+        description:
+        - "Module"
+        type: bool
+        required: False
+    protection_ocs:
+        description:
+        - "Operator Card Set"
+        type: bool
+        required: False
+    softcard:
+        description:
+        - "Softcard"
+        type: bool
+        required: False
+    protection_softcard_hash:
+        description:
+        - "Hash"
+        type: str
+        required: False
+    password:
+        description:
+        - "Specify HSM Passphrase"
+        type: bool
+        required: False
+    password_string:
+        description:
+        - "Password (minimum 4 characters)"
+        type: str
+        required: False
+    encrypted:
+        description:
+        - "Do NOT use this option manually (This is an A10 reserved keyword) (The
+          ENCRYPTED password string)"
+        type: str
+        required: False
+    worker:
+        description:
+        - "Specify number of workers for each data CPU"
+        type: int
+        required: False
+    health_check_interval:
+        description:
+        - "Specify Thales HSM Health Check Interval"
+        type: int
+        required: False
+    enroll_timeout:
+        description:
+        - "Specify Enroll Timeout"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -208,52 +235,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'health_check_interval': {
-            'type': 'int',
-        },
-        'protection_ocs': {
-            'type': 'bool',
-        },
-        'protection_module': {
-            'type': 'bool',
-        },
-        'enroll_timeout': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'encrypted': {
-            'type': 'str',
-        },
-        'worker': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
         'template_name': {
             'type': 'str',
             'required': True,
         },
-        'password_string': {
-            'type': 'str',
-        },
-        'protection_softcard_hash': {
-            'type': 'str',
-        },
         'softhsm_enum': {
             'type': 'str',
             'choices': ['softHSM', 'thalesHSM']
-        },
-        'protection': {
-            'type': 'bool',
-        },
-        'rfs_port': {
-            'type': 'int',
-        },
-        'rfs_ip': {
-            'type': 'str',
         },
         'hsm_dev': {
             'type': 'list',
@@ -267,13 +255,52 @@ def get_argspec():
                 'type': 'int',
             }
         },
+        'rfs_ip': {
+            'type': 'str',
+        },
+        'rfs_port': {
+            'type': 'int',
+        },
+        'sec_world': {
+            'type': 'str',
+        },
+        'protection': {
+            'type': 'bool',
+        },
+        'protection_module': {
+            'type': 'bool',
+        },
+        'protection_ocs': {
+            'type': 'bool',
+        },
         'softcard': {
             'type': 'bool',
+        },
+        'protection_softcard_hash': {
+            'type': 'str',
         },
         'password': {
             'type': 'bool',
         },
-        'sec_world': {
+        'password_string': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'worker': {
+            'type': 'int',
+        },
+        'health_check_interval': {
+            'type': 'int',
+        },
+        'enroll_timeout': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

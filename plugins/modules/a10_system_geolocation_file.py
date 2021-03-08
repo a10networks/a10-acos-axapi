@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_geolocation_file
 description:
     - Geolocation File
-short_description: Configures A10 system.geolocation-file
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,55 +22,68 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            geofiles:
-                description:
-                - "Field geofiles"
-            error_info:
-                description:
-                - "Field error_info"
     error_info:
         description:
         - "Field error_info"
+        type: dict
         required: False
         suboptions:
             uuid:
                 description:
                 - "uuid of the object"
-    uuid:
+                type: str
+    oper:
         description:
-        - "uuid of the object"
+        - "Field oper"
+        type: dict
         required: False
+        suboptions:
+            geofiles:
+                description:
+                - "Field geofiles"
+                type: list
+            error_info:
+                description:
+                - "Field error_info"
+                type: dict
 
 '''
 
@@ -127,11 +138,33 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'error_info': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'oper': {
             'type': 'dict',
             'geofiles': {
                 'type': 'list',
-                'comment': {
+                'filename': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type': 'str',
+                    'choices': ['template', 'builtin']
+                },
+                'template': {
+                    'type': 'str',
+                },
+                'percentage_loaded': {
+                    'type': 'int',
+                },
+                'lines': {
                     'type': 'int',
                 },
                 'success': {
@@ -140,21 +173,8 @@ def get_argspec():
                 'error_warning': {
                     'type': 'int',
                 },
-                'lines': {
+                'comment': {
                     'type': 'int',
-                },
-                'filename': {
-                    'type': 'str',
-                },
-                'template': {
-                    'type': 'str',
-                },
-                'percentage_loaded': {
-                    'type': 'int',
-                },
-                'ntype': {
-                    'type': 'str',
-                    'choices': ['template', 'builtin']
                 }
             },
             'error_info': {
@@ -178,15 +198,6 @@ def get_argspec():
                     }
                 }
             }
-        },
-        'error_info': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

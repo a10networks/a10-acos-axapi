@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_health_stat
 description:
     - Configure health monitor
-short_description: Configures A10 slb.health-stat
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,43 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            health_check_list:
-                description:
-                - "Field health_check_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -82,99 +85,135 @@ options:
           status downs; 'status_unkn'= Number of status unknowns; 'status_other'= Number
           of other status; 'running_time'= Running time; 'config_health_rate'= Config
           health rate;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            health_check_list:
+                description:
+                - "Field health_check_list"
+                type: list
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            min_jiffie:
-                description:
-                - "Minimum number of jiffies"
-            unexpected_error:
-                description:
-                - "Number of unexpected errors"
-            avg_jiffie:
-                description:
-                - "Average number of jiffies"
             num_burst:
                 description:
                 - "Number of burst"
-            status_unkn:
-                description:
-                - "Number of status unknowns"
-            retry_times:
-                description:
-                - "Retry times"
-            send_packet:
-                description:
-                - "Number of packets sent"
-            status_other:
-                description:
-                - "Number of other status"
-            curr_health_rate:
-                description:
-                - "Current health rate"
-            config_health_rate:
-                description:
-                - "Config health rate"
-            status_down:
-                description:
-                - "Number of status downs"
-            recv_packet_failed:
-                description:
-                - "Number of failed packet receives"
-            close_socket:
-                description:
-                - "Number of closed sockets"
-            conn_imdt_succ:
-                description:
-                - "Number of connection immediete success"
-            recv_packet:
-                description:
-                - "Number of received packets"
-            send_packet_failed:
-                description:
-                - "Number of packet send failures"
-            open_socket_failed:
-                description:
-                - "Number of failed open sockets"
-            sock_close_before_17:
-                description:
-                - "Number of sockets closed before l7"
-            total_number:
-                description:
-                - "Total number"
-            ext_health_rate_val:
-                description:
-                - "External health rate value"
-            open_socket:
-                description:
-                - "Number of open sockets"
-            sock_close_without_notify:
-                description:
-                - "Number of sockets closed without notify"
-            status_up:
-                description:
-                - "Number of status ups"
-            running_time:
-                description:
-                - "Running time"
-            connect_failed:
-                description:
-                - "Number of failed connections"
+                type: str
             max_jiffie:
                 description:
                 - "Maximum number of jiffies"
-            ext_health_rate:
+                type: str
+            min_jiffie:
                 description:
-                - "External health rate"
+                - "Minimum number of jiffies"
+                type: str
+            avg_jiffie:
+                description:
+                - "Average number of jiffies"
+                type: str
+            open_socket:
+                description:
+                - "Number of open sockets"
+                type: str
+            open_socket_failed:
+                description:
+                - "Number of failed open sockets"
+                type: str
+            close_socket:
+                description:
+                - "Number of closed sockets"
+                type: str
+            connect_failed:
+                description:
+                - "Number of failed connections"
+                type: str
+            send_packet:
+                description:
+                - "Number of packets sent"
+                type: str
+            send_packet_failed:
+                description:
+                - "Number of packet send failures"
+                type: str
+            recv_packet:
+                description:
+                - "Number of received packets"
+                type: str
+            recv_packet_failed:
+                description:
+                - "Number of failed packet receives"
+                type: str
+            retry_times:
+                description:
+                - "Retry times"
+                type: str
             timeout:
                 description:
                 - "Timouet value"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            unexpected_error:
+                description:
+                - "Number of unexpected errors"
+                type: str
+            conn_imdt_succ:
+                description:
+                - "Number of connection immediete success"
+                type: str
+            sock_close_before_17:
+                description:
+                - "Number of sockets closed before l7"
+                type: str
+            sock_close_without_notify:
+                description:
+                - "Number of sockets closed without notify"
+                type: str
+            curr_health_rate:
+                description:
+                - "Current health rate"
+                type: str
+            ext_health_rate:
+                description:
+                - "External health rate"
+                type: str
+            ext_health_rate_val:
+                description:
+                - "External health rate value"
+                type: str
+            total_number:
+                description:
+                - "Total number"
+                type: str
+            status_up:
+                description:
+                - "Number of status ups"
+                type: str
+            status_down:
+                description:
+                - "Number of status downs"
+                type: str
+            status_unkn:
+                description:
+                - "Number of status unknowns"
+                type: str
+            status_other:
+                description:
+                - "Number of other status"
+                type: str
+            running_time:
+                description:
+                - "Running time"
+                type: str
+            config_health_rate:
+                description:
+                - "Config health rate"
+                type: str
 
 '''
 
@@ -230,50 +269,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'health_check_list': {
-                'type': 'list',
-                'status': {
-                    'type': 'str',
-                },
-                'retries': {
-                    'type': 'int',
-                },
-                'down_state': {
-                    'type': 'int',
-                },
-                'down_cause': {
-                    'type': 'int',
-                },
-                'up_retries': {
-                    'type': 'int',
-                },
-                'server': {
-                    'type': 'str',
-                },
-                'partition_id': {
-                    'type': 'int',
-                },
-                'up_cause': {
-                    'type': 'int',
-                },
-                'reason': {
-                    'type': 'str',
-                },
-                'ip_address': {
-                    'type': 'str',
-                },
-                'total_retry': {
-                    'type': 'int',
-                },
-                'health_monitor': {
-                    'type': 'str',
-                },
-                'port': {
-                    'type': 'str',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -294,95 +291,137 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'health_check_list': {
+                'type': 'list',
+                'ip_address': {
+                    'type': 'str',
+                },
+                'port': {
+                    'type': 'str',
+                },
+                'health_monitor': {
+                    'type': 'str',
+                },
+                'status': {
+                    'type': 'str',
+                },
+                'up_cause': {
+                    'type': 'int',
+                },
+                'down_cause': {
+                    'type': 'int',
+                },
+                'down_state': {
+                    'type': 'int',
+                },
+                'reason': {
+                    'type': 'str',
+                },
+                'total_retry': {
+                    'type': 'int',
+                },
+                'retries': {
+                    'type': 'int',
+                },
+                'up_retries': {
+                    'type': 'int',
+                },
+                'partition_id': {
+                    'type': 'int',
+                },
+                'server': {
+                    'type': 'str',
+                }
+            }
+        },
         'stats': {
             'type': 'dict',
-            'min_jiffie': {
-                'type': 'str',
-            },
-            'unexpected_error': {
-                'type': 'str',
-            },
-            'avg_jiffie': {
-                'type': 'str',
-            },
             'num_burst': {
-                'type': 'str',
-            },
-            'status_unkn': {
-                'type': 'str',
-            },
-            'retry_times': {
-                'type': 'str',
-            },
-            'send_packet': {
-                'type': 'str',
-            },
-            'status_other': {
-                'type': 'str',
-            },
-            'curr_health_rate': {
-                'type': 'str',
-            },
-            'config_health_rate': {
-                'type': 'str',
-            },
-            'status_down': {
-                'type': 'str',
-            },
-            'recv_packet_failed': {
-                'type': 'str',
-            },
-            'close_socket': {
-                'type': 'str',
-            },
-            'conn_imdt_succ': {
-                'type': 'str',
-            },
-            'recv_packet': {
-                'type': 'str',
-            },
-            'send_packet_failed': {
-                'type': 'str',
-            },
-            'open_socket_failed': {
-                'type': 'str',
-            },
-            'sock_close_before_17': {
-                'type': 'str',
-            },
-            'total_number': {
-                'type': 'str',
-            },
-            'ext_health_rate_val': {
-                'type': 'str',
-            },
-            'open_socket': {
-                'type': 'str',
-            },
-            'sock_close_without_notify': {
-                'type': 'str',
-            },
-            'status_up': {
-                'type': 'str',
-            },
-            'running_time': {
-                'type': 'str',
-            },
-            'connect_failed': {
                 'type': 'str',
             },
             'max_jiffie': {
                 'type': 'str',
             },
-            'ext_health_rate': {
+            'min_jiffie': {
+                'type': 'str',
+            },
+            'avg_jiffie': {
+                'type': 'str',
+            },
+            'open_socket': {
+                'type': 'str',
+            },
+            'open_socket_failed': {
+                'type': 'str',
+            },
+            'close_socket': {
+                'type': 'str',
+            },
+            'connect_failed': {
+                'type': 'str',
+            },
+            'send_packet': {
+                'type': 'str',
+            },
+            'send_packet_failed': {
+                'type': 'str',
+            },
+            'recv_packet': {
+                'type': 'str',
+            },
+            'recv_packet_failed': {
+                'type': 'str',
+            },
+            'retry_times': {
                 'type': 'str',
             },
             'timeout': {
                 'type': 'str',
+            },
+            'unexpected_error': {
+                'type': 'str',
+            },
+            'conn_imdt_succ': {
+                'type': 'str',
+            },
+            'sock_close_before_17': {
+                'type': 'str',
+            },
+            'sock_close_without_notify': {
+                'type': 'str',
+            },
+            'curr_health_rate': {
+                'type': 'str',
+            },
+            'ext_health_rate': {
+                'type': 'str',
+            },
+            'ext_health_rate_val': {
+                'type': 'str',
+            },
+            'total_number': {
+                'type': 'str',
+            },
+            'status_up': {
+                'type': 'str',
+            },
+            'status_down': {
+                'type': 'str',
+            },
+            'status_unkn': {
+                'type': 'str',
+            },
+            'status_other': {
+                'type': 'str',
+            },
+            'running_time': {
+                'type': 'str',
+            },
+            'config_health_rate': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

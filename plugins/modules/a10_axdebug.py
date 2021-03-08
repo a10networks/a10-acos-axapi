@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_axdebug
 description:
     - Packet Trace Options
-short_description: Configures A10 axdebug
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,260 +22,358 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     count:
         description:
-        - "Maximum packets to capture. Default is 3000. (Maximum packets to capture. For
-          umlimited, specify 0)"
+        - "Maximum packets to capture per cpu. Default is 3000. (Maximum packets to
+          capture. For umlimited, specify 0)"
+        type: int
         required: False
-    save_config:
+    incoming:
         description:
-        - "Save AXDebug config file to target filename"
+        - "Incoming interface. (For all ports, don't specify port number.)"
+        type: bool
+        required: False
+    inc_port_num:
+        description:
+        - "Port Numbers separated by commas(,) and hyphens(-) without spaces. ex=
+          4,5,10-30, or separated by spaces and double-quoted(')"
+        type: str
+        required: False
+    outgoing:
+        description:
+        - "Outgoing interface (For all ports, don't specify port number.)"
+        type: bool
+        required: False
+    out_port_num:
+        description:
+        - "Port Numbers separated by commas(,) and hyphens(-) without spaces. ex=
+          4,5,10-30, or separated by spaces and double-quoted(')"
+        type: str
+        required: False
+    length:
+        description:
+        - "Packet length to capture"
+        type: int
+        required: False
+    maxfile:
+        description:
+        - "Maximum number of debug packet files. Default is 100"
+        type: int
+        required: False
+    sess_filter_dis:
+        description:
+        - "Disable session based filter"
+        type: bool
         required: False
     timeout:
         description:
         - "Maximum number of minutes for a capture. Default is 5 minutes. For unlimited,
           specify 0"
+        type: int
         required: False
-    sess_filter_dis:
+    uuid:
         description:
-        - "Disable session based filter"
+        - "uuid of the object"
+        type: str
         required: False
-    outgoing_list:
+    apply_config:
         description:
-        - "Field outgoing_list"
+        - "Field apply_config"
+        type: dict
         required: False
         suboptions:
-            outgoing:
+            config_file:
                 description:
-                - "Outgoing interface (For all ports, don't specify port number.)"
-            out_port_num:
-                description:
-                - "Port Numbers separated by commas(,) and hyphens(-) without spaces. ex=
-          4,5,10-30, or separated by spaces and double-quoted(')"
-    maxfile:
+                - "config file name"
+                type: str
+    save_config:
         description:
-        - "Maximum number of debug packet files. Default is 100"
+        - "Field save_config"
+        type: dict
         required: False
+        suboptions:
+            config_file:
+                description:
+                - "config file name"
+                type: str
+            default:
+                description:
+                - "save to default config file"
+                type: bool
+    delete:
+        description:
+        - "Field delete"
+        type: dict
+        required: False
+        suboptions:
+            capture_file:
+                description:
+                - "Delete a capture file (Specify target filename to change)"
+                type: str
+            config_file:
+                description:
+                - "Delete AXDebug config file (Specify target filename to change)"
+                type: str
+    exit:
+        description:
+        - "Field exit"
+        type: dict
+        required: False
+        suboptions:
+            stop_capture:
+                description:
+                - "stop capture traffic"
+                type: bool
     capture:
         description:
         - "Field capture"
+        type: dict
         required: False
         suboptions:
-            current_slot:
-                description:
-                - "Only for current-slot of chassis"
-            outgoing:
-                description:
-                - "Outgoing interface"
-            non_display:
-                description:
-                - "Do not print to screen"
-            incoming:
-                description:
-                - "Incoming interface"
-            port_num:
-                description:
-                - "Port Numbers separated by commas(,) and hyphens(-) without spaces (ex=
-          4,5,10-30), or separated by spaces and double-quoted(')"
             brief:
                 description:
                 - "Print basic packet information"
+                type: bool
             detail:
                 description:
                 - "Include packet payload"
+                type: bool
             save:
                 description:
                 - "Save packets into file (Specify filename to save packets)"
-            max_packets:
+                type: str
+            current_slot:
                 description:
-                - "Maximum packets to capture for each data cpu."
-    length:
+                - "Only for current-slot of chassis"
+                type: bool
+    filter_config_list:
         description:
-        - "Packet length to capture, enable jumbo to capture more than 1518 bytes"
-        required: False
-    exit:
-        description:
-        - "Exit from axdebug mode"
-        required: False
-    delete_file_list:
-        description:
-        - "Field delete_file_list"
+        - "Field filter_config_list"
+        type: list
         required: False
         suboptions:
-            delete_config:
-                description:
-                - "Delete AXDebug config file (Specify target filename to change)"
-            delete_capture:
-                description:
-                - "Delete a capture file (Specify target filename to change)"
-            delete:
-                description:
-                - "Delete AXDebug capture / config file"
-    filter_config:
-        description:
-        - "Field filter_config"
-        required: False
-        suboptions:
-            arp:
-                description:
-                - "ARP"
-            ip:
-                description:
-                - "IP"
-            offset:
-                description:
-                - "byte offset"
             number:
                 description:
                 - "Specify filter id"
-            tcp:
-                description:
-                - "Field tcp"
+                type: int
             l3_proto:
                 description:
-                - "Layer 3 protocol"
-            ipv4_address:
-                description:
-                - "ip address"
-            port:
-                description:
-                - "port number"
-            port_num_min:
-                description:
-                - "min port number"
-            oper_range:
-                description:
-                - "'gt'= greater than; 'gte'= greater than or equal to; 'se'= smaller than or
-          equal to; 'st'= smaller than; 'eq'= equal to;"
-            ipv6_adddress:
-                description:
-                - "ipv6 address"
-            WORD:
-                description:
-                - "WORD to compare"
-            comp_hex:
-                description:
-                - "value to compare"
-            proto:
-                description:
-                - "ip protocol number"
+                - "'arp'= arp; 'neighbor'= neighbor;"
+                type: str
             dst:
                 description:
                 - "Destination"
-            hex:
-                description:
-                - "Define hex value"
-            integer_comp:
-                description:
-                - "value to compare"
-            port_num_max:
-                description:
-                - "max port number"
-            exit:
-                description:
-                - "Exit from axdebug mode"
-            ipv6:
-                description:
-                - "IPV6"
-            length:
-                description:
-                - "byte length"
-            udp:
-                description:
-                - "Field udp"
-            neighbor:
-                description:
-                - "IPv6 Neighbor/Router"
-            port_num:
-                description:
-                - "Port number"
-            max_hex:
-                description:
-                - "max value"
-            mac:
-                description:
-                - "mac address"
-            min_hex:
-                description:
-                - "min value"
-            WORD1:
-                description:
-                - "WORD min value"
-            WORD2:
-                description:
-                - "WORD max value"
-            integer_max:
-                description:
-                - "max value"
-            integer:
-                description:
-                - "Define decimal value"
-            icmp:
-                description:
-                - "Field icmp"
+                type: bool
             src:
                 description:
-                - "Source"
-            mac_addr:
+                - "Src"
+                type: bool
+            ip:
                 description:
-                - "mac address"
+                - "IP"
+                type: bool
+            ipv4_address:
+                description:
+                - "ip address"
+                type: str
             ipv4_netmask:
                 description:
                 - "IP subnet mask"
-            icmpv6:
+                type: str
+            ipv6:
                 description:
-                - "Field icmpv6"
-            range:
+                - "IPV6"
+                type: bool
+            ipv6_address:
                 description:
-                - "select a range"
-            integer_min:
+                - "ipv6 address"
+                type: str
+            mac:
                 description:
-                - "min value"
+                - "mac address"
+                type: bool
+            mac_addr:
+                description:
+                - "mac address"
+                type: str
+            port:
+                description:
+                - "port configurations"
+                type: bool
+            dst_ip:
+                description:
+                - "dest IP"
+                type: bool
+            dst_ipv4_address:
+                description:
+                - "dest ip address"
+                type: str
+            src_ip:
+                description:
+                - "src IP"
+                type: bool
+            src_ipv4_address:
+                description:
+                - "src ip address"
+                type: str
+            dst_mac:
+                description:
+                - "dest mac address"
+                type: bool
+            dst_mac_addr:
+                description:
+                - "dest mac address"
+                type: str
+            src_mac:
+                description:
+                - "src mac address"
+                type: bool
+            src_mac_addr:
+                description:
+                - "src mac address"
+                type: str
+            dst_port:
+                description:
+                - "dest port number"
+                type: bool
+            dst_port_num:
+                description:
+                - "dest Port number"
+                type: int
+            src_port:
+                description:
+                - "src port number"
+                type: bool
+            src_port_num:
+                description:
+                - "src Port number"
+                type: int
+            port_num_min:
+                description:
+                - "min port number"
+                type: int
+            port_num_max:
+                description:
+                - "max port number"
+                type: int
+            proto:
+                description:
+                - "ip protocol number"
+                type: bool
+            proto_val:
+                description:
+                - "'icmp'= icmp; 'icmpv6'= icmpv6; 'tcp'= tcp; 'udp'= udp;"
+                type: str
             prot_num:
                 description:
                 - "protocol number"
-    incoming_list:
-        description:
-        - "Field incoming_list"
-        required: False
-        suboptions:
-            incoming:
+                type: int
+            offset:
                 description:
-                - "Incoming interface. (For all ports, don't specify port number.)"
-            inc_port_num:
+                - "byte offset"
+                type: int
+            length:
                 description:
-                - "Port Numbers separated by commas(,) and hyphens(-) without spaces. ex=
-          4,5,10-30, or separated by spaces and double-quoted(')"
-    apply_config:
-        description:
-        - "Apply AXDebug config file"
-        required: False
+                - "byte length"
+                type: int
+            oper_range:
+                description:
+                - "'gt'= greater than; 'gte'= greater than or equal to; 'se'= smaller than or
+          equal to; 'st'= smaller than; 'eq'= equal to; 'range'= select a range;"
+                type: str
+            hex:
+                description:
+                - "Define hex value"
+                type: bool
+            min_hex:
+                description:
+                - " min value"
+                type: str
+            max_hex:
+                description:
+                - " max value"
+                type: str
+            comp_hex:
+                description:
+                - "value to compare"
+                type: str
+            integer:
+                description:
+                - "Define decimal value"
+                type: bool
+            integer_min:
+                description:
+                - "min value"
+                type: int
+            integer_max:
+                description:
+                - "max value"
+                type: int
+            integer_comp:
+                description:
+                - "value to compare"
+                type: int
+            word:
+                description:
+                - "Define hex value"
+                type: bool
+            WORD0:
+                description:
+                - "WORD0 to compare"
+                type: str
+            WORD1:
+                description:
+                - "WORD min value"
+                type: str
+            WORD2:
+                description:
+                - "WORD max value"
+                type: str
+            exit:
+                description:
+                - "Exit from axdebug mode"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -295,16 +391,19 @@ AVAILABLE_PROPERTIES = [
     "apply_config",
     "capture",
     "count",
-    "delete_file_list",
+    "delete",
     "exit",
-    "filter_config",
-    "incoming_list",
+    "filter_config_list",
+    "inc_port_num",
+    "incoming",
     "length",
     "maxfile",
-    "outgoing_list",
+    "out_port_num",
+    "outgoing",
     "save_config",
     "sess_filter_dis",
     "timeout",
+    "uuid",
 ]
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -345,44 +444,65 @@ def get_argspec():
         'count': {
             'type': 'int',
         },
-        'save_config': {
+        'incoming': {
+            'type': 'bool',
+        },
+        'inc_port_num': {
             'type': 'str',
         },
-        'timeout': {
+        'outgoing': {
+            'type': 'bool',
+        },
+        'out_port_num': {
+            'type': 'str',
+        },
+        'length': {
+            'type': 'int',
+        },
+        'maxfile': {
             'type': 'int',
         },
         'sess_filter_dis': {
             'type': 'bool',
         },
-        'outgoing_list': {
+        'timeout': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'apply_config': {
             'type': 'dict',
-            'outgoing': {
-                'type': 'bool',
-            },
-            'out_port_num': {
+            'config_file': {
                 'type': 'str',
             }
         },
-        'maxfile': {
-            'type': 'int',
+        'save_config': {
+            'type': 'dict',
+            'config_file': {
+                'type': 'str',
+            },
+            'default': {
+                'type': 'bool',
+            }
+        },
+        'delete': {
+            'type': 'dict',
+            'capture_file': {
+                'type': 'str',
+            },
+            'config_file': {
+                'type': 'str',
+            }
+        },
+        'exit': {
+            'type': 'dict',
+            'stop_capture': {
+                'type': 'bool',
+            }
         },
         'capture': {
             'type': 'dict',
-            'current_slot': {
-                'type': 'bool',
-            },
-            'outgoing': {
-                'type': 'bool',
-            },
-            'non_display': {
-                'type': 'bool',
-            },
-            'incoming': {
-                'type': 'bool',
-            },
-            'port_num': {
-                'type': 'str',
-            },
             'brief': {
                 'type': 'bool',
             },
@@ -392,110 +512,140 @@ def get_argspec():
             'save': {
                 'type': 'str',
             },
-            'max_packets': {
-                'type': 'int',
-            }
-        },
-        'length': {
-            'type': 'int',
-        },
-        'exit': {
-            'type': 'bool',
-        },
-        'delete_file_list': {
-            'type': 'dict',
-            'delete_config': {
-                'type': 'str',
-            },
-            'delete_capture': {
-                'type': 'str',
-            },
-            'delete': {
+            'current_slot': {
                 'type': 'bool',
             }
         },
-        'filter_config': {
-            'type': 'dict',
-            'arp': {
+        'filter_config_list': {
+            'type': 'list',
+            'number': {
+                'type': 'int',
+                'required': True,
+            },
+            'l3_proto': {
+                'type': 'str',
+                'choices': ['arp', 'neighbor']
+            },
+            'dst': {
+                'type': 'bool',
+            },
+            'src': {
                 'type': 'bool',
             },
             'ip': {
                 'type': 'bool',
             },
-            'offset': {
-                'type': 'int',
-            },
-            'number': {
-                'type': 'int',
-            },
-            'tcp': {
-                'type': 'bool',
-            },
-            'l3_proto': {
-                'type': 'bool',
-            },
             'ipv4_address': {
                 'type': 'str',
             },
-            'port': {
-                'type': 'bool',
-            },
-            'port_num_min': {
-                'type': 'int',
-            },
-            'oper_range': {
+            'ipv4_netmask': {
                 'type': 'str',
-                'choices': ['gt', 'gte', 'se', 'st', 'eq']
-            },
-            'ipv6_adddress': {
-                'type': 'str',
-            },
-            'WORD': {
-                'type': 'str',
-            },
-            'comp_hex': {
-                'type': 'str',
-            },
-            'proto': {
-                'type': 'bool',
-            },
-            'dst': {
-                'type': 'bool',
-            },
-            'hex': {
-                'type': 'bool',
-            },
-            'integer_comp': {
-                'type': 'int',
-            },
-            'port_num_max': {
-                'type': 'int',
-            },
-            'exit': {
-                'type': 'bool',
             },
             'ipv6': {
                 'type': 'bool',
             },
-            'length': {
-                'type': 'int',
-            },
-            'udp': {
-                'type': 'bool',
-            },
-            'neighbor': {
-                'type': 'bool',
-            },
-            'port_num': {
-                'type': 'int',
-            },
-            'max_hex': {
+            'ipv6_address': {
                 'type': 'str',
             },
             'mac': {
                 'type': 'bool',
             },
+            'mac_addr': {
+                'type': 'str',
+            },
+            'port': {
+                'type': 'bool',
+            },
+            'dst_ip': {
+                'type': 'bool',
+            },
+            'dst_ipv4_address': {
+                'type': 'str',
+            },
+            'src_ip': {
+                'type': 'bool',
+            },
+            'src_ipv4_address': {
+                'type': 'str',
+            },
+            'dst_mac': {
+                'type': 'bool',
+            },
+            'dst_mac_addr': {
+                'type': 'str',
+            },
+            'src_mac': {
+                'type': 'bool',
+            },
+            'src_mac_addr': {
+                'type': 'str',
+            },
+            'dst_port': {
+                'type': 'bool',
+            },
+            'dst_port_num': {
+                'type': 'int',
+            },
+            'src_port': {
+                'type': 'bool',
+            },
+            'src_port_num': {
+                'type': 'int',
+            },
+            'port_num_min': {
+                'type': 'int',
+            },
+            'port_num_max': {
+                'type': 'int',
+            },
+            'proto': {
+                'type': 'bool',
+            },
+            'proto_val': {
+                'type': 'str',
+                'choices': ['icmp', 'icmpv6', 'tcp', 'udp']
+            },
+            'prot_num': {
+                'type': 'int',
+            },
+            'offset': {
+                'type': 'int',
+            },
+            'length': {
+                'type': 'int',
+            },
+            'oper_range': {
+                'type': 'str',
+                'choices': ['gt', 'gte', 'se', 'st', 'eq', 'range']
+            },
+            'hex': {
+                'type': 'bool',
+            },
             'min_hex': {
+                'type': 'str',
+            },
+            'max_hex': {
+                'type': 'str',
+            },
+            'comp_hex': {
+                'type': 'str',
+            },
+            'integer': {
+                'type': 'bool',
+            },
+            'integer_min': {
+                'type': 'int',
+            },
+            'integer_max': {
+                'type': 'int',
+            },
+            'integer_comp': {
+                'type': 'int',
+            },
+            'word': {
+                'type': 'bool',
+            },
+            'WORD0': {
                 'type': 'str',
             },
             'WORD1': {
@@ -504,48 +654,15 @@ def get_argspec():
             'WORD2': {
                 'type': 'str',
             },
-            'integer_max': {
-                'type': 'int',
-            },
-            'integer': {
+            'exit': {
                 'type': 'bool',
             },
-            'icmp': {
-                'type': 'bool',
-            },
-            'src': {
-                'type': 'bool',
-            },
-            'mac_addr': {
+            'uuid': {
                 'type': 'str',
             },
-            'ipv4_netmask': {
-                'type': 'str',
-            },
-            'icmpv6': {
-                'type': 'bool',
-            },
-            'range': {
-                'type': 'bool',
-            },
-            'integer_min': {
-                'type': 'int',
-            },
-            'prot_num': {
-                'type': 'int',
-            }
-        },
-        'incoming_list': {
-            'type': 'dict',
-            'incoming': {
-                'type': 'bool',
-            },
-            'inc_port_num': {
+            'user_tag': {
                 'type': 'str',
             }
-        },
-        'apply_config': {
-            'type': 'str',
         }
     })
     return rv
@@ -753,6 +870,22 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
+
+def replace(module, result, existing_config, payload):
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 
 def run_command(module):

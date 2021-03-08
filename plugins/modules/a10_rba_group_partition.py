@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_rba_group_partition
 description:
     - RBA configuration for the access privilege of a group within one partition
-short_description: Configures A10 rba.group.partition
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,65 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     group_name:
         description:
-        - Key to identify parent object    partition_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    partition_name:
         description:
         - "partition name"
+        type: str
         required: True
     role_list:
         description:
         - "Field role_list"
+        type: list
         required: False
         suboptions:
             role:
                 description:
                 - "Role in a given partition"
+                type: str
+    rule_list:
+        description:
+        - "Field rule_list"
+        type: list
+        required: False
+        suboptions:
+            object:
+                description:
+                - "Lineage of object class for permitted operation"
+                type: str
+            operation:
+                description:
+                - "'no-access'= no-access; 'read'= read; 'oper'= oper; 'write'= write;"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
-    rule_list:
-        description:
-        - "Field rule_list"
-        required: False
-        suboptions:
-            operation:
-                description:
-                - "'no-access'= no-access; 'read'= read; 'oper'= oper; 'write'= write;"
-            object:
-                description:
-                - "Lineage of object class for permitted operation"
 
 '''
 
@@ -149,21 +165,21 @@ def get_argspec():
                 'type': 'str',
             }
         },
+        'rule_list': {
+            'type': 'list',
+            'object': {
+                'type': 'str',
+            },
+            'operation': {
+                'type': 'str',
+                'choices': ['no-access', 'read', 'oper', 'write']
+            }
+        },
         'uuid': {
             'type': 'str',
         },
         'user_tag': {
             'type': 'str',
-        },
-        'rule_list': {
-            'type': 'list',
-            'operation': {
-                'type': 'str',
-                'choices': ['no-access', 'read', 'oper', 'write']
-            },
-            'object': {
-                'type': 'str',
-            }
         }
     })
     # Parent keys

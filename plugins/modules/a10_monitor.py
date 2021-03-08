@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_monitor
 description:
     - System monitor configuration
-short_description: Configures A10 monitor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,104 +22,129 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    data_cpu:
+    disk:
         description:
-        - "Monitor data CPU threshold (Threshold value in percentage, default 90)"
+        - "Monitor hard disk usage threshold (Threshold value in percentage, default 85)"
+        type: int
         required: False
-    smp_type1:
+    memory:
         description:
-        - "SMP resource type 1 (Threshold value, default 32767)"
-        required: False
-    buffer_usage:
-        description:
-        - "Monitor IO buffer usage threshold (Threshold value)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    buffer_drop:
-        description:
-        - "Monitor buffer drop threshold (Threshold value)"
+        - "Monitor memory usage threshold (Threshold value in percentage, default 95)"
+        type: int
         required: False
     ctrl_cpu:
         description:
         - "Monitor control CPU threshold (Threshold value in percentage, default 90)"
+        type: int
+        required: False
+    data_cpu:
+        description:
+        - "Monitor data CPU threshold (Threshold value in percentage, default 90)"
+        type: int
+        required: False
+    buffer_usage:
+        description:
+        - "Monitor IO buffer usage threshold (Threshold value)"
+        type: int
+        required: False
+    buffer_drop:
+        description:
+        - "Monitor buffer drop threshold (Threshold value)"
+        type: int
         required: False
     warn_temp:
         description:
         - "Monitor warning system temperature threshold (Threshold value in Celsius,
           default 68)"
-        required: False
-    disk:
-        description:
-        - "Monitor hard disk usage threshold (Threshold value in percentage, default 85)"
-        required: False
-    conn_type3:
-        description:
-        - "Conn resource type 3 (Threshold value, default 32767)"
-        required: False
-    conn_type2:
-        description:
-        - "Conn resource type 2 (Threshold value, default 32767)"
-        required: False
-    memory:
-        description:
-        - "Monitor memory usage threshold (Threshold value in percentage, default 95)"
-        required: False
-    smp_type2:
-        description:
-        - "SMP resource type 2 (Threshold value, default 32767)"
-        required: False
-    smp_type3:
-        description:
-        - "SMP resource type 3 (Threshold value, default 32767)"
-        required: False
-    conn_type1:
-        description:
-        - "Conn resource type 1 (Threshold value, default 32767)"
+        type: int
         required: False
     conn_type0:
         description:
         - "Conn resource type 0 (Threshold value, default 32767)"
+        type: int
         required: False
-    smp_type0:
+    conn_type1:
         description:
-        - "SMP resource type 0 (Threshold value, default 32767)"
+        - "Conn resource type 1 (Threshold value, default 32767)"
+        type: int
         required: False
-    smp_type4:
+    conn_type2:
         description:
-        - "SMP resource type 4 (Threshold value, default 32767)"
+        - "Conn resource type 2 (Threshold value, default 32767)"
+        type: int
+        required: False
+    conn_type3:
+        description:
+        - "Conn resource type 3 (Threshold value, default 32767)"
+        type: int
         required: False
     conn_type4:
         description:
         - "Conn resource type 4 (Threshold value, default 32767)"
+        type: int
+        required: False
+    smp_type0:
+        description:
+        - "SMP resource type 0 (Threshold value, default 32767)"
+        type: int
+        required: False
+    smp_type1:
+        description:
+        - "SMP resource type 1 (Threshold value, default 32767)"
+        type: int
+        required: False
+    smp_type2:
+        description:
+        - "SMP resource type 2 (Threshold value, default 32767)"
+        type: int
+        required: False
+    smp_type3:
+        description:
+        - "SMP resource type 3 (Threshold value, default 32767)"
+        type: int
+        required: False
+    smp_type4:
+        description:
+        - "SMP resource type 4 (Threshold value, default 32767)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -192,37 +215,46 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'data_cpu': {
+        'disk': {
             'type': 'int',
         },
-        'smp_type1': {
-            'type': 'int',
-        },
-        'buffer_usage': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'buffer_drop': {
+        'memory': {
             'type': 'int',
         },
         'ctrl_cpu': {
             'type': 'int',
         },
+        'data_cpu': {
+            'type': 'int',
+        },
+        'buffer_usage': {
+            'type': 'int',
+        },
+        'buffer_drop': {
+            'type': 'int',
+        },
         'warn_temp': {
             'type': 'int',
         },
-        'disk': {
+        'conn_type0': {
             'type': 'int',
         },
-        'conn_type3': {
+        'conn_type1': {
             'type': 'int',
         },
         'conn_type2': {
             'type': 'int',
         },
-        'memory': {
+        'conn_type3': {
+            'type': 'int',
+        },
+        'conn_type4': {
+            'type': 'int',
+        },
+        'smp_type0': {
+            'type': 'int',
+        },
+        'smp_type1': {
             'type': 'int',
         },
         'smp_type2': {
@@ -231,20 +263,11 @@ def get_argspec():
         'smp_type3': {
             'type': 'int',
         },
-        'conn_type1': {
-            'type': 'int',
-        },
-        'conn_type0': {
-            'type': 'int',
-        },
-        'smp_type0': {
-            'type': 'int',
-        },
         'smp_type4': {
             'type': 'int',
         },
-        'conn_type4': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

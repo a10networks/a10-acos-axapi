@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_backup_log
 description:
     - Backup log files
-short_description: Configures A10 backup.log
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,79 +22,98 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    week:
-        description:
-        - "Most recent week"
-        required: False
-    all:
-        description:
-        - "all log"
-        required: False
-    password:
-        description:
-        - "password for the remote site"
-        required: False
-    remote_file:
-        description:
-        - "profile name for remote url"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
-    period:
-        description:
-        - "Specify backup period"
-        required: False
-    month:
-        description:
-        - " Most recent month"
-        required: False
-    stats_data:
-        description:
-        - "Backup web statistical data"
-        required: False
-    date:
-        description:
-        - "specify number of days"
-        required: False
-    store_name:
-        description:
-        - "Save backup store information"
-        required: False
-    day:
-        description:
-        - "Most recent day"
+        type: str
         required: False
     expedite:
         description:
         - "Expedite the Backup"
+        type: bool
+        required: False
+    period:
+        description:
+        - "Specify backup period"
+        type: bool
+        required: False
+    date:
+        description:
+        - "specify number of days"
+        type: int
+        required: False
+    day:
+        description:
+        - "Most recent day"
+        type: bool
+        required: False
+    month:
+        description:
+        - " Most recent month"
+        type: bool
+        required: False
+    week:
+        description:
+        - "Most recent week"
+        type: bool
+        required: False
+    all:
+        description:
+        - "all log"
+        type: bool
+        required: False
+    stats_data:
+        description:
+        - "Backup web statistical data"
+        type: bool
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
+        required: False
+    remote_file:
+        description:
+        - "profile name for remote url"
+        type: str
+        required: False
+    password:
+        description:
+        - "password for the remote site"
+        type: str
+        required: False
+    store_name:
+        description:
+        - "Save backup store information"
+        type: str
         required: False
 
 '''
@@ -161,41 +178,41 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'expedite': {
+            'type': 'bool',
+        },
+        'period': {
+            'type': 'bool',
+        },
+        'date': {
+            'type': 'int',
+        },
+        'day': {
+            'type': 'bool',
+        },
+        'month': {
+            'type': 'bool',
+        },
         'week': {
             'type': 'bool',
         },
         'all': {
             'type': 'bool',
         },
-        'password': {
-            'type': 'str',
-        },
-        'remote_file': {
-            'type': 'str',
+        'stats_data': {
+            'type': 'bool',
         },
         'use_mgmt_port': {
             'type': 'bool',
         },
-        'period': {
-            'type': 'bool',
+        'remote_file': {
+            'type': 'str',
         },
-        'month': {
-            'type': 'bool',
-        },
-        'stats_data': {
-            'type': 'bool',
-        },
-        'date': {
-            'type': 'int',
+        'password': {
+            'type': 'str',
         },
         'store_name': {
             'type': 'str',
-        },
-        'day': {
-            'type': 'bool',
-        },
-        'expedite': {
-            'type': 'bool',
         }
     })
     return rv

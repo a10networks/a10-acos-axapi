@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_lid
 description:
     - Create an LSN Lid
-short_description: Configures A10 cgnv6.lsn-lid
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,127 +22,158 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    user_quota_prefix_length:
-        description:
-        - "NAT64/DS-Lite user quota prefix length (Prefix Length (Default= Uses the global
-          NAT64/DS-Lite configured value))"
-        required: False
-    extended_user_quota:
-        description:
-        - "Field extended_user_quota"
-        required: False
-        suboptions:
-            udp:
-                description:
-                - "Field udp"
-            tcp:
-                description:
-                - "Field tcp"
     lid_number:
         description:
         - "LSN Lid"
+        type: int
         required: True
-    ds_lite:
-        description:
-        - "Field ds_lite"
-        required: False
-        suboptions:
-            inside_src_permit_list:
-                description:
-                - "Class-List of IPv4 addresses permitted (Class-list to match for DS-Lite)"
-    user_quota:
-        description:
-        - "Field user_quota"
-        required: False
-        suboptions:
-            quota_udp:
-                description:
-                - "Field quota_udp"
-            icmp:
-                description:
-                - "User Quota for ICMP identifiers (NAT port quota per user (default= not
-          configured))"
-            session:
-                description:
-                - "User Quota for number of data sessions"
-            quota_tcp:
-                description:
-                - "Field quota_tcp"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     name:
         description:
         - "LSN Lid Name"
+        type: str
         required: False
     respond_to_user_mac:
         description:
         - "Use the user's source MAC for the next hop rather than the routing table
           (default= off)"
+        type: bool
         required: False
-    source_nat_pool:
-        description:
-        - "Field source_nat_pool"
-        required: False
-        suboptions:
-            shared:
-                description:
-                - "Use a shared source NAT pool or pool-group"
-            pool_name:
-                description:
-                - "Source NAT Pool or Pool-Group"
-    conn_rate_limit:
-        description:
-        - "Field conn_rate_limit"
-        required: False
-        suboptions:
-            conn_rate_limit_val:
-                description:
-                - "Maximum connections per second (Default= No limit)"
-    lsn_rule_list:
-        description:
-        - "Field lsn_rule_list"
-        required: False
-        suboptions:
-            destination:
-                description:
-                - "Apply LSN Rule-List on Destination (LSN Rule-List Name)"
     override:
         description:
         - "'none'= Apply source NAT if configured (default); 'drop'= Drop packets that
           match this LSN lid; 'pass-through'= Layer-3 route packets that match this LSN
           lid and do not apply source NAT;"
+        type: str
         required: False
+    user_quota_prefix_length:
+        description:
+        - "NAT64/DS-Lite user quota prefix length (Prefix Length (Default= Uses the global
+          NAT64/DS-Lite configured value))"
+        type: int
+        required: False
+    ds_lite:
+        description:
+        - "Field ds_lite"
+        type: dict
+        required: False
+        suboptions:
+            inside_src_permit_list:
+                description:
+                - "Class-List of IPv4 addresses permitted (Class-list to match for DS-Lite)"
+                type: str
+    lsn_rule_list:
+        description:
+        - "Field lsn_rule_list"
+        type: dict
+        required: False
+        suboptions:
+            destination:
+                description:
+                - "Apply LSN Rule-List on Destination (LSN Rule-List Name)"
+                type: str
+    source_nat_pool:
+        description:
+        - "Field source_nat_pool"
+        type: dict
+        required: False
+        suboptions:
+            pool_name:
+                description:
+                - "Source NAT Pool or Pool-Group"
+                type: str
+            shared:
+                description:
+                - "Use a shared source NAT pool or pool-group"
+                type: bool
+    extended_user_quota:
+        description:
+        - "Field extended_user_quota"
+        type: dict
+        required: False
+        suboptions:
+            tcp:
+                description:
+                - "Field tcp"
+                type: list
+            udp:
+                description:
+                - "Field udp"
+                type: list
+    conn_rate_limit:
+        description:
+        - "Field conn_rate_limit"
+        type: dict
+        required: False
+        suboptions:
+            conn_rate_limit_val:
+                description:
+                - "Maximum connections per second (Default= No limit)"
+                type: int
+    user_quota:
+        description:
+        - "Field user_quota"
+        type: dict
+        required: False
+        suboptions:
+            icmp:
+                description:
+                - "User Quota for ICMP identifiers (NAT port quota per user (default= not
+          configured))"
+                type: int
+            quota_udp:
+                description:
+                - "Field quota_udp"
+                type: dict
+            quota_tcp:
+                description:
+                - "Field quota_tcp"
+                type: dict
+            session:
+                description:
+                - "User Quota for number of data sessions"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -210,20 +239,46 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'lid_number': {
+            'type': 'int',
+            'required': True,
+        },
+        'name': {
+            'type': 'str',
+        },
+        'respond_to_user_mac': {
+            'type': 'bool',
+        },
+        'override': {
+            'type': 'str',
+            'choices': ['none', 'drop', 'pass-through']
+        },
         'user_quota_prefix_length': {
             'type': 'int',
         },
+        'ds_lite': {
+            'type': 'dict',
+            'inside_src_permit_list': {
+                'type': 'str',
+            }
+        },
+        'lsn_rule_list': {
+            'type': 'dict',
+            'destination': {
+                'type': 'str',
+            }
+        },
+        'source_nat_pool': {
+            'type': 'dict',
+            'pool_name': {
+                'type': 'str',
+            },
+            'shared': {
+                'type': 'bool',
+            }
+        },
         'extended_user_quota': {
             'type': 'dict',
-            'udp': {
-                'type': 'list',
-                'udp_sessions': {
-                    'type': 'int',
-                },
-                'udp_service_port': {
-                    'type': 'int',
-                }
-            },
             'tcp': {
                 'type': 'list',
                 'tcp_service_port': {
@@ -232,34 +287,36 @@ def get_argspec():
                 'tcp_sessions': {
                     'type': 'int',
                 }
+            },
+            'udp': {
+                'type': 'list',
+                'udp_service_port': {
+                    'type': 'int',
+                },
+                'udp_sessions': {
+                    'type': 'int',
+                }
             }
         },
-        'lid_number': {
-            'type': 'int',
-            'required': True,
-        },
-        'ds_lite': {
+        'conn_rate_limit': {
             'type': 'dict',
-            'inside_src_permit_list': {
-                'type': 'str',
+            'conn_rate_limit_val': {
+                'type': 'int',
             }
         },
         'user_quota': {
             'type': 'dict',
-            'quota_udp': {
-                'type': 'dict',
-                'udp_reserve': {
-                    'type': 'int',
-                },
-                'udp_quota': {
-                    'type': 'int',
-                }
-            },
             'icmp': {
                 'type': 'int',
             },
-            'session': {
-                'type': 'int',
+            'quota_udp': {
+                'type': 'dict',
+                'udp_quota': {
+                    'type': 'int',
+                },
+                'udp_reserve': {
+                    'type': 'int',
+                }
             },
             'quota_tcp': {
                 'type': 'dict',
@@ -269,43 +326,15 @@ def get_argspec():
                 'tcp_reserve': {
                     'type': 'int',
                 }
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-        },
-        'respond_to_user_mac': {
-            'type': 'bool',
-        },
-        'source_nat_pool': {
-            'type': 'dict',
-            'shared': {
-                'type': 'bool',
             },
-            'pool_name': {
-                'type': 'str',
-            }
-        },
-        'conn_rate_limit': {
-            'type': 'dict',
-            'conn_rate_limit_val': {
+            'session': {
                 'type': 'int',
             }
         },
-        'lsn_rule_list': {
-            'type': 'dict',
-            'destination': {
-                'type': 'str',
-            }
-        },
-        'override': {
-            'type': 'str',
-            'choices': ['none', 'drop', 'pass-through']
-        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

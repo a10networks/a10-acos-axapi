@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_icap
 description:
     - Configure ICAP
-short_description: Configures A10 slb.icap
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -124,327 +124,443 @@ options:
           Err Stats; 'http_resp_line_parse_err'= HTTP Response Line Parse Err Stats;
           'http_resp_hdr_err'= HTTP Resp Hdr Err Stats; 'recv_option_resp'= Send Option
           Req Stats;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            status_449:
-                description:
-                - "Status 449 Stats"
-            no_payload_buff_err:
-                description:
-                - "No Payload Buff Err Stats"
-            prep_req_fail_err:
-                description:
-                - "Prepare ICAP req fail Err Stats"
-            icap_ver_err:
-                description:
-                - "ICAP Ver Err Stats"
-            resp_line_parse_err:
-                description:
-                - "Resp Line Parse Err Stats"
-            app_serv_conn_no_pcb_err:
-                description:
-                - "App Server Conn no ES PCB Err Stats"
-            status_450:
-                description:
-                - "Status 450 Stats"
-            status_510:
-                description:
-                - "Status 510 Stats"
-            encap_hdr_incomplete_err:
-                description:
-                - "Encap HDR Incomplete Err Stats"
-            chunk_no_allow_204:
-                description:
-                - "Chunk so no Allow 204 Stats"
-            http_resp_line_parse_err:
-                description:
-                - "HTTP Response Line Parse Err Stats"
-            status_207:
-                description:
-                - "Status 207 Stats"
-            status_206:
-                description:
-                - "Status 206 Stats"
-            status_205:
-                description:
-                - "Status 205 Stats"
-            status_204:
-                description:
-                - "Status 204 Stats"
-            status_203:
-                description:
-                - "Status 203 Stats"
-            status_202:
-                description:
-                - "Status 202 Stats"
-            status_201:
-                description:
-                - "Status 201 Stats"
-            status_200:
-                description:
-                - "Status 200 Stats"
-            no_status_code_err:
-                description:
-                - "No Status Code Err Stats"
-            resp_hdr_incomplete_err:
-                description:
-                - "Resp Hdr Incomplete Err Stats"
-            respmod_request_after_100:
-                description:
-                - "Respmod Request Sent After 100 Cont Stats"
-            reqmod_response:
-                description:
-                - "Reqmod Response Stats"
-            status_406:
-                description:
-                - "Status 406 Stats"
-            reqmod_response_after_100:
-                description:
-                - "Reqmod Response After 100 Cont Stats"
-            status_4xx:
-                description:
-                - "Status 4xx Stats"
-            no_payload_next_buff_err:
-                description:
-                - "No Payload In Next Buff Err Stats"
-            status_3xx:
-                description:
-                - "Status 3xx Stats"
             reqmod_request:
                 description:
                 - "Reqmod Request Stats"
-            recv_option_resp:
-                description:
-                - "Send Option Req Stats"
-            no_icap_resp_err:
-                description:
-                - "No ICAP Resp Err Stats"
+                type: str
             respmod_request:
                 description:
                 - "Respmod Request Stats"
-            app_serv_conn_err:
-                description:
-                - "App Server Conn Err Stats"
-            result_continue:
-                description:
-                - "Result Continue Stats"
-            len_exceed_no_allow_204:
-                description:
-                - "Length Exceeded so no Allow 204 Stats"
-            status_306:
-                description:
-                - "Status 306 Stats"
-            status_307:
-                description:
-                - "Status 307 Stats"
-            status_304:
-                description:
-                - "Status 304 Stats"
-            status_305:
-                description:
-                - "Status 305 Stats"
-            status_302:
-                description:
-                - "Status 302 Stats"
-            status_303:
-                description:
-                - "Status 303 Stats"
-            status_300:
-                description:
-                - "Status 300 Stats"
-            status_301:
-                description:
-                - "Status 301 Stats"
-            start_icap_conn_fail_err:
-                description:
-                - "Start ICAP conn fail Stats"
-            status_418:
-                description:
-                - "Status 418 Stats"
-            result_100_continue:
-                description:
-                - "Result 100 Continue Stats"
-            status_419:
-                description:
-                - "Status 419 Stats"
-            result_other:
-                description:
-                - "Result Other Stats"
-            chunk_bad_trail_err:
-                description:
-                - "Chunk Bad Trail Err Stats"
-            respmod_response_after_100:
-                description:
-                - "Respmod Response After 100 Cont Stats"
-            status_412:
-                description:
-                - "Status 412 Stats"
-            status_413:
-                description:
-                - "Status 413 Stats"
-            status_410:
-                description:
-                - "Status 410 Stats"
-            status_411:
-                description:
-                - "Status 411 Stats"
-            status_416:
-                description:
-                - "Status 416 Stats"
-            status_417:
-                description:
-                - "Status 417 Stats"
-            status_414:
-                description:
-                - "Status 414 Stats"
-            status_415:
-                description:
-                - "Status 415 Stats"
-            chunk2_hdr_err:
-                description:
-                - "Chunk Hdr Err2 Stats"
-            status_unknown:
-                description:
-                - "Status Unknown Stats"
-            status_100:
-                description:
-                - "Status 100 Stats"
-            status_101:
-                description:
-                - "Status 101 Stats"
-            status_102:
-                description:
-                - "Status 102 Stats"
-            status_509:
-                description:
-                - "Status 509 Stats"
-            send_option_req:
-                description:
-                - "Send Option Req Stats"
-            http_resp_line_read_err:
-                description:
-                - "HTTP Response Line Read Err Stats"
-            status_6xx:
-                description:
-                - "Status 6xx Stats"
-            status_5xx:
-                description:
-                - "Status 5xx Stats"
-            http_resp_hdr_err:
-                description:
-                - "HTTP Resp Hdr Err Stats"
-            status_401:
-                description:
-                - "Status 401 Stats"
-            status_400:
-                description:
-                - "Status 400 Stats"
-            status_403:
-                description:
-                - "Status 403 Stats"
-            status_402:
-                description:
-                - "Status 402 Stats"
-            status_405:
-                description:
-                - "Status 405 Stats"
-            status_404:
-                description:
-                - "Status 404 Stats"
-            status_407:
-                description:
-                - "Status 407 Stats"
-            status_2xx:
-                description:
-                - "Status 2xx Stats"
-            status_409:
-                description:
-                - "Status 409 Stats"
-            status_408:
-                description:
-                - "Status 408 Stats"
-            respmod_response:
-                description:
-                - "Respmod Response Stats"
-            status_505:
-                description:
-                - "Status 505 Stats"
-            resp_line_read_err:
-                description:
-                - "Resp Line Read Err Stats"
-            req_hdr_incomplete_err:
-                description:
-                - "Req Hdr Incomplete Err Stats"
-            status_1xx:
-                description:
-                - "Status 1xx Stats"
-            resp_hdr_err:
-                description:
-                - "Resp Hdr Err Stats"
-            serv_sel_fail_err:
-                description:
-                - "Server Select Fail Err Stats"
-            chunk1_hdr_err:
-                description:
-                - "Chunk Hdr Err1 Stats"
-            status_423:
-                description:
-                - "Status 423 Stats"
-            status_422:
-                description:
-                - "Status 422 Stats"
-            status_420:
-                description:
-                - "Status 420 Stats"
-            status_426:
-                description:
-                - "Status 426 Stats"
-            status_425:
-                description:
-                - "Status 425 Stats"
-            status_424:
-                description:
-                - "Status 424 Stats"
-            status_508:
-                description:
-                - "Status 508 Stats"
-            result_icap_response:
-                description:
-                - "Result ICAP Response Stats"
-            status_500:
-                description:
-                - "Status 500 Stats"
-            status_501:
-                description:
-                - "Status 501 Stats"
-            status_502:
-                description:
-                - "Status 502 Stats"
-            status_503:
-                description:
-                - "Status 503 Stats"
-            status_504:
-                description:
-                - "Status 504 Stats"
+                type: str
             reqmod_request_after_100:
                 description:
                 - "Reqmod Request Sent After 100 Cont Stats"
+                type: str
+            respmod_request_after_100:
+                description:
+                - "Respmod Request Sent After 100 Cont Stats"
+                type: str
+            reqmod_response:
+                description:
+                - "Reqmod Response Stats"
+                type: str
+            respmod_response:
+                description:
+                - "Respmod Response Stats"
+                type: str
+            reqmod_response_after_100:
+                description:
+                - "Reqmod Response After 100 Cont Stats"
+                type: str
+            respmod_response_after_100:
+                description:
+                - "Respmod Response After 100 Cont Stats"
+                type: str
+            chunk_no_allow_204:
+                description:
+                - "Chunk so no Allow 204 Stats"
+                type: str
+            len_exceed_no_allow_204:
+                description:
+                - "Length Exceeded so no Allow 204 Stats"
+                type: str
+            result_continue:
+                description:
+                - "Result Continue Stats"
+                type: str
+            result_icap_response:
+                description:
+                - "Result ICAP Response Stats"
+                type: str
+            result_100_continue:
+                description:
+                - "Result 100 Continue Stats"
+                type: str
+            result_other:
+                description:
+                - "Result Other Stats"
+                type: str
+            status_2xx:
+                description:
+                - "Status 2xx Stats"
+                type: str
+            status_200:
+                description:
+                - "Status 200 Stats"
+                type: str
+            status_201:
+                description:
+                - "Status 201 Stats"
+                type: str
+            status_202:
+                description:
+                - "Status 202 Stats"
+                type: str
+            status_203:
+                description:
+                - "Status 203 Stats"
+                type: str
+            status_204:
+                description:
+                - "Status 204 Stats"
+                type: str
+            status_205:
+                description:
+                - "Status 205 Stats"
+                type: str
+            status_206:
+                description:
+                - "Status 206 Stats"
+                type: str
+            status_207:
+                description:
+                - "Status 207 Stats"
+                type: str
+            status_1xx:
+                description:
+                - "Status 1xx Stats"
+                type: str
+            status_100:
+                description:
+                - "Status 100 Stats"
+                type: str
+            status_101:
+                description:
+                - "Status 101 Stats"
+                type: str
+            status_102:
+                description:
+                - "Status 102 Stats"
+                type: str
+            status_3xx:
+                description:
+                - "Status 3xx Stats"
+                type: str
+            status_300:
+                description:
+                - "Status 300 Stats"
+                type: str
+            status_301:
+                description:
+                - "Status 301 Stats"
+                type: str
+            status_302:
+                description:
+                - "Status 302 Stats"
+                type: str
+            status_303:
+                description:
+                - "Status 303 Stats"
+                type: str
+            status_304:
+                description:
+                - "Status 304 Stats"
+                type: str
+            status_305:
+                description:
+                - "Status 305 Stats"
+                type: str
+            status_306:
+                description:
+                - "Status 306 Stats"
+                type: str
+            status_307:
+                description:
+                - "Status 307 Stats"
+                type: str
+            status_4xx:
+                description:
+                - "Status 4xx Stats"
+                type: str
+            status_400:
+                description:
+                - "Status 400 Stats"
+                type: str
+            status_401:
+                description:
+                - "Status 401 Stats"
+                type: str
+            status_402:
+                description:
+                - "Status 402 Stats"
+                type: str
+            status_403:
+                description:
+                - "Status 403 Stats"
+                type: str
+            status_404:
+                description:
+                - "Status 404 Stats"
+                type: str
+            status_405:
+                description:
+                - "Status 405 Stats"
+                type: str
+            status_406:
+                description:
+                - "Status 406 Stats"
+                type: str
+            status_407:
+                description:
+                - "Status 407 Stats"
+                type: str
+            status_408:
+                description:
+                - "Status 408 Stats"
+                type: str
+            status_409:
+                description:
+                - "Status 409 Stats"
+                type: str
+            status_410:
+                description:
+                - "Status 410 Stats"
+                type: str
+            status_411:
+                description:
+                - "Status 411 Stats"
+                type: str
+            status_412:
+                description:
+                - "Status 412 Stats"
+                type: str
+            status_413:
+                description:
+                - "Status 413 Stats"
+                type: str
+            status_414:
+                description:
+                - "Status 414 Stats"
+                type: str
+            status_415:
+                description:
+                - "Status 415 Stats"
+                type: str
+            status_416:
+                description:
+                - "Status 416 Stats"
+                type: str
+            status_417:
+                description:
+                - "Status 417 Stats"
+                type: str
+            status_418:
+                description:
+                - "Status 418 Stats"
+                type: str
+            status_419:
+                description:
+                - "Status 419 Stats"
+                type: str
+            status_420:
+                description:
+                - "Status 420 Stats"
+                type: str
+            status_422:
+                description:
+                - "Status 422 Stats"
+                type: str
+            status_423:
+                description:
+                - "Status 423 Stats"
+                type: str
+            status_424:
+                description:
+                - "Status 424 Stats"
+                type: str
+            status_425:
+                description:
+                - "Status 425 Stats"
+                type: str
+            status_426:
+                description:
+                - "Status 426 Stats"
+                type: str
+            status_449:
+                description:
+                - "Status 449 Stats"
+                type: str
+            status_450:
+                description:
+                - "Status 450 Stats"
+                type: str
+            status_5xx:
+                description:
+                - "Status 5xx Stats"
+                type: str
+            status_500:
+                description:
+                - "Status 500 Stats"
+                type: str
+            status_501:
+                description:
+                - "Status 501 Stats"
+                type: str
+            status_502:
+                description:
+                - "Status 502 Stats"
+                type: str
+            status_503:
+                description:
+                - "Status 503 Stats"
+                type: str
+            status_504:
+                description:
+                - "Status 504 Stats"
+                type: str
+            status_505:
+                description:
+                - "Status 505 Stats"
+                type: str
             status_506:
                 description:
                 - "Status 506 Stats"
+                type: str
             status_507:
                 description:
                 - "Status 507 Stats"
+                type: str
+            status_508:
+                description:
+                - "Status 508 Stats"
+                type: str
+            status_509:
+                description:
+                - "Status 509 Stats"
+                type: str
+            status_510:
+                description:
+                - "Status 510 Stats"
+                type: str
+            status_6xx:
+                description:
+                - "Status 6xx Stats"
+                type: str
+            status_unknown:
+                description:
+                - "Status Unknown Stats"
+                type: str
+            send_option_req:
+                description:
+                - "Send Option Req Stats"
+                type: str
+            app_serv_conn_no_pcb_err:
+                description:
+                - "App Server Conn no ES PCB Err Stats"
+                type: str
+            app_serv_conn_err:
+                description:
+                - "App Server Conn Err Stats"
+                type: str
+            chunk1_hdr_err:
+                description:
+                - "Chunk Hdr Err1 Stats"
+                type: str
+            chunk2_hdr_err:
+                description:
+                - "Chunk Hdr Err2 Stats"
+                type: str
+            chunk_bad_trail_err:
+                description:
+                - "Chunk Bad Trail Err Stats"
+                type: str
+            no_payload_next_buff_err:
+                description:
+                - "No Payload In Next Buff Err Stats"
+                type: str
+            no_payload_buff_err:
+                description:
+                - "No Payload Buff Err Stats"
+                type: str
+            resp_hdr_incomplete_err:
+                description:
+                - "Resp Hdr Incomplete Err Stats"
+                type: str
+            serv_sel_fail_err:
+                description:
+                - "Server Select Fail Err Stats"
+                type: str
+            start_icap_conn_fail_err:
+                description:
+                - "Start ICAP conn fail Stats"
+                type: str
+            prep_req_fail_err:
+                description:
+                - "Prepare ICAP req fail Err Stats"
+                type: str
+            icap_ver_err:
+                description:
+                - "ICAP Ver Err Stats"
+                type: str
             icap_line_err:
                 description:
                 - "ICAP Line Err Stats"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            encap_hdr_incomplete_err:
+                description:
+                - "Encap HDR Incomplete Err Stats"
+                type: str
+            no_icap_resp_err:
+                description:
+                - "No ICAP Resp Err Stats"
+                type: str
+            resp_line_read_err:
+                description:
+                - "Resp Line Read Err Stats"
+                type: str
+            resp_line_parse_err:
+                description:
+                - "Resp Line Parse Err Stats"
+                type: str
+            resp_hdr_err:
+                description:
+                - "Resp Hdr Err Stats"
+                type: str
+            req_hdr_incomplete_err:
+                description:
+                - "Req Hdr Incomplete Err Stats"
+                type: str
+            no_status_code_err:
+                description:
+                - "No Status Code Err Stats"
+                type: str
+            http_resp_line_read_err:
+                description:
+                - "HTTP Response Line Read Err Stats"
+                type: str
+            http_resp_line_parse_err:
+                description:
+                - "HTTP Response Line Parse Err Stats"
+                type: str
+            http_resp_hdr_err:
+                description:
+                - "HTTP Resp Hdr Err Stats"
+                type: str
+            recv_option_resp:
+                description:
+                - "Send Option Req Stats"
+                type: str
 
 '''
 
@@ -500,326 +616,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'status_449': {
-                    'type': 'int',
-                },
-                'no_payload_buff_err': {
-                    'type': 'int',
-                },
-                'prep_req_fail_err': {
-                    'type': 'int',
-                },
-                'icap_ver_err': {
-                    'type': 'int',
-                },
-                'resp_line_parse_err': {
-                    'type': 'int',
-                },
-                'app_serv_conn_no_pcb_err': {
-                    'type': 'int',
-                },
-                'status_450': {
-                    'type': 'int',
-                },
-                'status_510': {
-                    'type': 'int',
-                },
-                'encap_hdr_incomplete_err': {
-                    'type': 'int',
-                },
-                'chunk_no_allow_204': {
-                    'type': 'int',
-                },
-                'http_resp_line_parse_err': {
-                    'type': 'int',
-                },
-                'status_207': {
-                    'type': 'int',
-                },
-                'status_206': {
-                    'type': 'int',
-                },
-                'status_205': {
-                    'type': 'int',
-                },
-                'status_204': {
-                    'type': 'int',
-                },
-                'status_203': {
-                    'type': 'int',
-                },
-                'status_202': {
-                    'type': 'int',
-                },
-                'status_201': {
-                    'type': 'int',
-                },
-                'status_200': {
-                    'type': 'int',
-                },
-                'no_status_code_err': {
-                    'type': 'int',
-                },
-                'resp_hdr_incomplete_err': {
-                    'type': 'int',
-                },
-                'respmod_request_after_100': {
-                    'type': 'int',
-                },
-                'reqmod_response': {
-                    'type': 'int',
-                },
-                'status_406': {
-                    'type': 'int',
-                },
-                'reqmod_response_after_100': {
-                    'type': 'int',
-                },
-                'status_4xx': {
-                    'type': 'int',
-                },
-                'no_payload_next_buff_err': {
-                    'type': 'int',
-                },
-                'status_3xx': {
-                    'type': 'int',
-                },
-                'reqmod_request': {
-                    'type': 'int',
-                },
-                'recv_option_resp': {
-                    'type': 'int',
-                },
-                'no_icap_resp_err': {
-                    'type': 'int',
-                },
-                'respmod_request': {
-                    'type': 'int',
-                },
-                'app_serv_conn_err': {
-                    'type': 'int',
-                },
-                'result_continue': {
-                    'type': 'int',
-                },
-                'len_exceed_no_allow_204': {
-                    'type': 'int',
-                },
-                'status_306': {
-                    'type': 'int',
-                },
-                'status_307': {
-                    'type': 'int',
-                },
-                'status_304': {
-                    'type': 'int',
-                },
-                'status_305': {
-                    'type': 'int',
-                },
-                'status_302': {
-                    'type': 'int',
-                },
-                'status_303': {
-                    'type': 'int',
-                },
-                'status_300': {
-                    'type': 'int',
-                },
-                'status_301': {
-                    'type': 'int',
-                },
-                'start_icap_conn_fail_err': {
-                    'type': 'int',
-                },
-                'status_418': {
-                    'type': 'int',
-                },
-                'result_100_continue': {
-                    'type': 'int',
-                },
-                'status_419': {
-                    'type': 'int',
-                },
-                'result_other': {
-                    'type': 'int',
-                },
-                'chunk_bad_trail_err': {
-                    'type': 'int',
-                },
-                'respmod_response_after_100': {
-                    'type': 'int',
-                },
-                'status_412': {
-                    'type': 'int',
-                },
-                'status_413': {
-                    'type': 'int',
-                },
-                'status_410': {
-                    'type': 'int',
-                },
-                'status_411': {
-                    'type': 'int',
-                },
-                'status_416': {
-                    'type': 'int',
-                },
-                'status_417': {
-                    'type': 'int',
-                },
-                'status_414': {
-                    'type': 'int',
-                },
-                'status_415': {
-                    'type': 'int',
-                },
-                'chunk2_hdr_err': {
-                    'type': 'int',
-                },
-                'status_unknown': {
-                    'type': 'int',
-                },
-                'status_100': {
-                    'type': 'int',
-                },
-                'status_101': {
-                    'type': 'int',
-                },
-                'status_102': {
-                    'type': 'int',
-                },
-                'status_509': {
-                    'type': 'int',
-                },
-                'send_option_req': {
-                    'type': 'int',
-                },
-                'http_resp_line_read_err': {
-                    'type': 'int',
-                },
-                'status_6xx': {
-                    'type': 'int',
-                },
-                'status_5xx': {
-                    'type': 'int',
-                },
-                'http_resp_hdr_err': {
-                    'type': 'int',
-                },
-                'status_401': {
-                    'type': 'int',
-                },
-                'status_400': {
-                    'type': 'int',
-                },
-                'status_403': {
-                    'type': 'int',
-                },
-                'status_402': {
-                    'type': 'int',
-                },
-                'status_405': {
-                    'type': 'int',
-                },
-                'status_404': {
-                    'type': 'int',
-                },
-                'status_407': {
-                    'type': 'int',
-                },
-                'status_2xx': {
-                    'type': 'int',
-                },
-                'status_409': {
-                    'type': 'int',
-                },
-                'status_408': {
-                    'type': 'int',
-                },
-                'respmod_response': {
-                    'type': 'int',
-                },
-                'status_505': {
-                    'type': 'int',
-                },
-                'resp_line_read_err': {
-                    'type': 'int',
-                },
-                'req_hdr_incomplete_err': {
-                    'type': 'int',
-                },
-                'status_1xx': {
-                    'type': 'int',
-                },
-                'resp_hdr_err': {
-                    'type': 'int',
-                },
-                'serv_sel_fail_err': {
-                    'type': 'int',
-                },
-                'chunk1_hdr_err': {
-                    'type': 'int',
-                },
-                'status_423': {
-                    'type': 'int',
-                },
-                'status_422': {
-                    'type': 'int',
-                },
-                'status_420': {
-                    'type': 'int',
-                },
-                'status_426': {
-                    'type': 'int',
-                },
-                'status_425': {
-                    'type': 'int',
-                },
-                'status_424': {
-                    'type': 'int',
-                },
-                'status_508': {
-                    'type': 'int',
-                },
-                'result_icap_response': {
-                    'type': 'int',
-                },
-                'status_500': {
-                    'type': 'int',
-                },
-                'status_501': {
-                    'type': 'int',
-                },
-                'status_502': {
-                    'type': 'int',
-                },
-                'status_503': {
-                    'type': 'int',
-                },
-                'status_504': {
-                    'type': 'int',
-                },
-                'reqmod_request_after_100': {
-                    'type': 'int',
-                },
-                'status_506': {
-                    'type': 'int',
-                },
-                'status_507': {
-                    'type': 'int',
-                },
-                'icap_line_err': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -865,69 +663,336 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'reqmod_request': {
+                    'type': 'int',
+                },
+                'respmod_request': {
+                    'type': 'int',
+                },
+                'reqmod_request_after_100': {
+                    'type': 'int',
+                },
+                'respmod_request_after_100': {
+                    'type': 'int',
+                },
+                'reqmod_response': {
+                    'type': 'int',
+                },
+                'respmod_response': {
+                    'type': 'int',
+                },
+                'reqmod_response_after_100': {
+                    'type': 'int',
+                },
+                'respmod_response_after_100': {
+                    'type': 'int',
+                },
+                'chunk_no_allow_204': {
+                    'type': 'int',
+                },
+                'len_exceed_no_allow_204': {
+                    'type': 'int',
+                },
+                'result_continue': {
+                    'type': 'int',
+                },
+                'result_icap_response': {
+                    'type': 'int',
+                },
+                'result_100_continue': {
+                    'type': 'int',
+                },
+                'result_other': {
+                    'type': 'int',
+                },
+                'status_2xx': {
+                    'type': 'int',
+                },
+                'status_200': {
+                    'type': 'int',
+                },
+                'status_201': {
+                    'type': 'int',
+                },
+                'status_202': {
+                    'type': 'int',
+                },
+                'status_203': {
+                    'type': 'int',
+                },
+                'status_204': {
+                    'type': 'int',
+                },
+                'status_205': {
+                    'type': 'int',
+                },
+                'status_206': {
+                    'type': 'int',
+                },
+                'status_207': {
+                    'type': 'int',
+                },
+                'status_1xx': {
+                    'type': 'int',
+                },
+                'status_100': {
+                    'type': 'int',
+                },
+                'status_101': {
+                    'type': 'int',
+                },
+                'status_102': {
+                    'type': 'int',
+                },
+                'status_3xx': {
+                    'type': 'int',
+                },
+                'status_300': {
+                    'type': 'int',
+                },
+                'status_301': {
+                    'type': 'int',
+                },
+                'status_302': {
+                    'type': 'int',
+                },
+                'status_303': {
+                    'type': 'int',
+                },
+                'status_304': {
+                    'type': 'int',
+                },
+                'status_305': {
+                    'type': 'int',
+                },
+                'status_306': {
+                    'type': 'int',
+                },
+                'status_307': {
+                    'type': 'int',
+                },
+                'status_4xx': {
+                    'type': 'int',
+                },
+                'status_400': {
+                    'type': 'int',
+                },
+                'status_401': {
+                    'type': 'int',
+                },
+                'status_402': {
+                    'type': 'int',
+                },
+                'status_403': {
+                    'type': 'int',
+                },
+                'status_404': {
+                    'type': 'int',
+                },
+                'status_405': {
+                    'type': 'int',
+                },
+                'status_406': {
+                    'type': 'int',
+                },
+                'status_407': {
+                    'type': 'int',
+                },
+                'status_408': {
+                    'type': 'int',
+                },
+                'status_409': {
+                    'type': 'int',
+                },
+                'status_410': {
+                    'type': 'int',
+                },
+                'status_411': {
+                    'type': 'int',
+                },
+                'status_412': {
+                    'type': 'int',
+                },
+                'status_413': {
+                    'type': 'int',
+                },
+                'status_414': {
+                    'type': 'int',
+                },
+                'status_415': {
+                    'type': 'int',
+                },
+                'status_416': {
+                    'type': 'int',
+                },
+                'status_417': {
+                    'type': 'int',
+                },
+                'status_418': {
+                    'type': 'int',
+                },
+                'status_419': {
+                    'type': 'int',
+                },
+                'status_420': {
+                    'type': 'int',
+                },
+                'status_422': {
+                    'type': 'int',
+                },
+                'status_423': {
+                    'type': 'int',
+                },
+                'status_424': {
+                    'type': 'int',
+                },
+                'status_425': {
+                    'type': 'int',
+                },
+                'status_426': {
+                    'type': 'int',
+                },
+                'status_449': {
+                    'type': 'int',
+                },
+                'status_450': {
+                    'type': 'int',
+                },
+                'status_5xx': {
+                    'type': 'int',
+                },
+                'status_500': {
+                    'type': 'int',
+                },
+                'status_501': {
+                    'type': 'int',
+                },
+                'status_502': {
+                    'type': 'int',
+                },
+                'status_503': {
+                    'type': 'int',
+                },
+                'status_504': {
+                    'type': 'int',
+                },
+                'status_505': {
+                    'type': 'int',
+                },
+                'status_506': {
+                    'type': 'int',
+                },
+                'status_507': {
+                    'type': 'int',
+                },
+                'status_508': {
+                    'type': 'int',
+                },
+                'status_509': {
+                    'type': 'int',
+                },
+                'status_510': {
+                    'type': 'int',
+                },
+                'status_6xx': {
+                    'type': 'int',
+                },
+                'status_unknown': {
+                    'type': 'int',
+                },
+                'send_option_req': {
+                    'type': 'int',
+                },
+                'app_serv_conn_no_pcb_err': {
+                    'type': 'int',
+                },
+                'app_serv_conn_err': {
+                    'type': 'int',
+                },
+                'chunk1_hdr_err': {
+                    'type': 'int',
+                },
+                'chunk2_hdr_err': {
+                    'type': 'int',
+                },
+                'chunk_bad_trail_err': {
+                    'type': 'int',
+                },
+                'no_payload_next_buff_err': {
+                    'type': 'int',
+                },
+                'no_payload_buff_err': {
+                    'type': 'int',
+                },
+                'resp_hdr_incomplete_err': {
+                    'type': 'int',
+                },
+                'serv_sel_fail_err': {
+                    'type': 'int',
+                },
+                'start_icap_conn_fail_err': {
+                    'type': 'int',
+                },
+                'prep_req_fail_err': {
+                    'type': 'int',
+                },
+                'icap_ver_err': {
+                    'type': 'int',
+                },
+                'icap_line_err': {
+                    'type': 'int',
+                },
+                'encap_hdr_incomplete_err': {
+                    'type': 'int',
+                },
+                'no_icap_resp_err': {
+                    'type': 'int',
+                },
+                'resp_line_read_err': {
+                    'type': 'int',
+                },
+                'resp_line_parse_err': {
+                    'type': 'int',
+                },
+                'resp_hdr_err': {
+                    'type': 'int',
+                },
+                'req_hdr_incomplete_err': {
+                    'type': 'int',
+                },
+                'no_status_code_err': {
+                    'type': 'int',
+                },
+                'http_resp_line_read_err': {
+                    'type': 'int',
+                },
+                'http_resp_line_parse_err': {
+                    'type': 'int',
+                },
+                'http_resp_hdr_err': {
+                    'type': 'int',
+                },
+                'recv_option_resp': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'status_449': {
+            'reqmod_request': {
                 'type': 'str',
             },
-            'no_payload_buff_err': {
+            'respmod_request': {
                 'type': 'str',
             },
-            'prep_req_fail_err': {
-                'type': 'str',
-            },
-            'icap_ver_err': {
-                'type': 'str',
-            },
-            'resp_line_parse_err': {
-                'type': 'str',
-            },
-            'app_serv_conn_no_pcb_err': {
-                'type': 'str',
-            },
-            'status_450': {
-                'type': 'str',
-            },
-            'status_510': {
-                'type': 'str',
-            },
-            'encap_hdr_incomplete_err': {
-                'type': 'str',
-            },
-            'chunk_no_allow_204': {
-                'type': 'str',
-            },
-            'http_resp_line_parse_err': {
-                'type': 'str',
-            },
-            'status_207': {
-                'type': 'str',
-            },
-            'status_206': {
-                'type': 'str',
-            },
-            'status_205': {
-                'type': 'str',
-            },
-            'status_204': {
-                'type': 'str',
-            },
-            'status_203': {
-                'type': 'str',
-            },
-            'status_202': {
-                'type': 'str',
-            },
-            'status_201': {
-                'type': 'str',
-            },
-            'status_200': {
-                'type': 'str',
-            },
-            'no_status_code_err': {
-                'type': 'str',
-            },
-            'resp_hdr_incomplete_err': {
+            'reqmod_request_after_100': {
                 'type': 'str',
             },
             'respmod_request_after_100': {
@@ -936,115 +1001,61 @@ def get_argspec():
             'reqmod_response': {
                 'type': 'str',
             },
-            'status_406': {
+            'respmod_response': {
                 'type': 'str',
             },
             'reqmod_response_after_100': {
                 'type': 'str',
             },
-            'status_4xx': {
+            'respmod_response_after_100': {
                 'type': 'str',
             },
-            'no_payload_next_buff_err': {
-                'type': 'str',
-            },
-            'status_3xx': {
-                'type': 'str',
-            },
-            'reqmod_request': {
-                'type': 'str',
-            },
-            'recv_option_resp': {
-                'type': 'str',
-            },
-            'no_icap_resp_err': {
-                'type': 'str',
-            },
-            'respmod_request': {
-                'type': 'str',
-            },
-            'app_serv_conn_err': {
-                'type': 'str',
-            },
-            'result_continue': {
+            'chunk_no_allow_204': {
                 'type': 'str',
             },
             'len_exceed_no_allow_204': {
                 'type': 'str',
             },
-            'status_306': {
+            'result_continue': {
                 'type': 'str',
             },
-            'status_307': {
-                'type': 'str',
-            },
-            'status_304': {
-                'type': 'str',
-            },
-            'status_305': {
-                'type': 'str',
-            },
-            'status_302': {
-                'type': 'str',
-            },
-            'status_303': {
-                'type': 'str',
-            },
-            'status_300': {
-                'type': 'str',
-            },
-            'status_301': {
-                'type': 'str',
-            },
-            'start_icap_conn_fail_err': {
-                'type': 'str',
-            },
-            'status_418': {
+            'result_icap_response': {
                 'type': 'str',
             },
             'result_100_continue': {
                 'type': 'str',
             },
-            'status_419': {
-                'type': 'str',
-            },
             'result_other': {
                 'type': 'str',
             },
-            'chunk_bad_trail_err': {
+            'status_2xx': {
                 'type': 'str',
             },
-            'respmod_response_after_100': {
+            'status_200': {
                 'type': 'str',
             },
-            'status_412': {
+            'status_201': {
                 'type': 'str',
             },
-            'status_413': {
+            'status_202': {
                 'type': 'str',
             },
-            'status_410': {
+            'status_203': {
                 'type': 'str',
             },
-            'status_411': {
+            'status_204': {
                 'type': 'str',
             },
-            'status_416': {
+            'status_205': {
                 'type': 'str',
             },
-            'status_417': {
+            'status_206': {
                 'type': 'str',
             },
-            'status_414': {
+            'status_207': {
                 'type': 'str',
             },
-            'status_415': {
-                'type': 'str',
-            },
-            'chunk2_hdr_err': {
-                'type': 'str',
-            },
-            'status_unknown': {
+            'status_1xx': {
                 'type': 'str',
             },
             'status_100': {
@@ -1056,100 +1067,121 @@ def get_argspec():
             'status_102': {
                 'type': 'str',
             },
-            'status_509': {
+            'status_3xx': {
                 'type': 'str',
             },
-            'send_option_req': {
+            'status_300': {
                 'type': 'str',
             },
-            'http_resp_line_read_err': {
+            'status_301': {
                 'type': 'str',
             },
-            'status_6xx': {
+            'status_302': {
                 'type': 'str',
             },
-            'status_5xx': {
+            'status_303': {
                 'type': 'str',
             },
-            'http_resp_hdr_err': {
+            'status_304': {
                 'type': 'str',
             },
-            'status_401': {
+            'status_305': {
+                'type': 'str',
+            },
+            'status_306': {
+                'type': 'str',
+            },
+            'status_307': {
+                'type': 'str',
+            },
+            'status_4xx': {
                 'type': 'str',
             },
             'status_400': {
                 'type': 'str',
             },
-            'status_403': {
+            'status_401': {
                 'type': 'str',
             },
             'status_402': {
                 'type': 'str',
             },
-            'status_405': {
+            'status_403': {
                 'type': 'str',
             },
             'status_404': {
                 'type': 'str',
             },
+            'status_405': {
+                'type': 'str',
+            },
+            'status_406': {
+                'type': 'str',
+            },
             'status_407': {
-                'type': 'str',
-            },
-            'status_2xx': {
-                'type': 'str',
-            },
-            'status_409': {
                 'type': 'str',
             },
             'status_408': {
                 'type': 'str',
             },
-            'respmod_response': {
+            'status_409': {
                 'type': 'str',
             },
-            'status_505': {
+            'status_410': {
                 'type': 'str',
             },
-            'resp_line_read_err': {
+            'status_411': {
                 'type': 'str',
             },
-            'req_hdr_incomplete_err': {
+            'status_412': {
                 'type': 'str',
             },
-            'status_1xx': {
+            'status_413': {
                 'type': 'str',
             },
-            'resp_hdr_err': {
+            'status_414': {
                 'type': 'str',
             },
-            'serv_sel_fail_err': {
+            'status_415': {
                 'type': 'str',
             },
-            'chunk1_hdr_err': {
+            'status_416': {
                 'type': 'str',
             },
-            'status_423': {
+            'status_417': {
                 'type': 'str',
             },
-            'status_422': {
+            'status_418': {
+                'type': 'str',
+            },
+            'status_419': {
                 'type': 'str',
             },
             'status_420': {
                 'type': 'str',
             },
-            'status_426': {
+            'status_422': {
                 'type': 'str',
             },
-            'status_425': {
+            'status_423': {
                 'type': 'str',
             },
             'status_424': {
                 'type': 'str',
             },
-            'status_508': {
+            'status_425': {
                 'type': 'str',
             },
-            'result_icap_response': {
+            'status_426': {
+                'type': 'str',
+            },
+            'status_449': {
+                'type': 'str',
+            },
+            'status_450': {
+                'type': 'str',
+            },
+            'status_5xx': {
                 'type': 'str',
             },
             'status_500': {
@@ -1167,7 +1199,7 @@ def get_argspec():
             'status_504': {
                 'type': 'str',
             },
-            'reqmod_request_after_100': {
+            'status_505': {
                 'type': 'str',
             },
             'status_506': {
@@ -1176,12 +1208,96 @@ def get_argspec():
             'status_507': {
                 'type': 'str',
             },
+            'status_508': {
+                'type': 'str',
+            },
+            'status_509': {
+                'type': 'str',
+            },
+            'status_510': {
+                'type': 'str',
+            },
+            'status_6xx': {
+                'type': 'str',
+            },
+            'status_unknown': {
+                'type': 'str',
+            },
+            'send_option_req': {
+                'type': 'str',
+            },
+            'app_serv_conn_no_pcb_err': {
+                'type': 'str',
+            },
+            'app_serv_conn_err': {
+                'type': 'str',
+            },
+            'chunk1_hdr_err': {
+                'type': 'str',
+            },
+            'chunk2_hdr_err': {
+                'type': 'str',
+            },
+            'chunk_bad_trail_err': {
+                'type': 'str',
+            },
+            'no_payload_next_buff_err': {
+                'type': 'str',
+            },
+            'no_payload_buff_err': {
+                'type': 'str',
+            },
+            'resp_hdr_incomplete_err': {
+                'type': 'str',
+            },
+            'serv_sel_fail_err': {
+                'type': 'str',
+            },
+            'start_icap_conn_fail_err': {
+                'type': 'str',
+            },
+            'prep_req_fail_err': {
+                'type': 'str',
+            },
+            'icap_ver_err': {
+                'type': 'str',
+            },
             'icap_line_err': {
                 'type': 'str',
+            },
+            'encap_hdr_incomplete_err': {
+                'type': 'str',
+            },
+            'no_icap_resp_err': {
+                'type': 'str',
+            },
+            'resp_line_read_err': {
+                'type': 'str',
+            },
+            'resp_line_parse_err': {
+                'type': 'str',
+            },
+            'resp_hdr_err': {
+                'type': 'str',
+            },
+            'req_hdr_incomplete_err': {
+                'type': 'str',
+            },
+            'no_status_code_err': {
+                'type': 'str',
+            },
+            'http_resp_line_read_err': {
+                'type': 'str',
+            },
+            'http_resp_line_parse_err': {
+                'type': 'str',
+            },
+            'http_resp_hdr_err': {
+                'type': 'str',
+            },
+            'recv_option_resp': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

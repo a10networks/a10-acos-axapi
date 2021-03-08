@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv4_in_ipv6_frag
 description:
     - IPv4-in-IPv6 fragmentation parameters
-short_description: Configures A10 ipv4.in.ipv6.frag
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -62,171 +73,214 @@ options:
           UDP Received; 'tcp-rcv'= TCP Received; 'ipip-rcv'= IP-in-IP Received; 'ipv6ip-
           rcv'= IPv6-in-IP Received; 'other-rcv'= Other Received; 'icmp-dropped'= ICMP
           Dropped; 'icmpv6-dropped'= ICMPv6 Dropped; 'udp-dropped'= UDP Dropped; 'tcp-
-          dropped'= TCP Dropped; 'ipip-dropped'= IP-in-IP Dropped; 'ipv6ip-dropped'= IPv6
-          -in-IP Dropped; 'other-dropped'= Other Dropped; 'overlap-error'= Overlapping
-          Fragment Dropped; 'bad-ip-len'= Bad IP Length; 'too-small'= Fragment Too Small
-          Drop; 'first-tcp-too-small'= First TCP Fragment Too Small Drop; 'first-l4-too-
-          small'= First L4 Fragment Too Small Drop; 'total-sessions-exceeded'= Total
-          Sessions Exceeded Drop; 'no-session-memory'= Out of Session Memory; 'fast-
-          aging-set'= Fragmentation Fast Aging Set; 'fast-aging-unset'= Fragmentation
-          Fast Aging Unset; 'fragment-queue-success'= Fragment Queue Success; 'unaligned-
-          len'= Payload Length Unaligned; 'exceeded-len'= Payload Length Out of Bounds;
-          'duplicate-first-frag'= Duplicate First Fragment; 'duplicate-last-frag'=
-          Duplicate Last Fragment; 'total-fragments-exceeded'= Total Queued Fragments
-          Exceeded; 'fragment-queue-failure'= Fragment Queue Failure; 'reassembly-
-          success'= Fragment Reassembly Success; 'max-len-exceeded'= Fragment Max Data
-          Length Exceeded; 'reassembly-failure'= Fragment Reassembly Failure; 'policy-
-          drop'= MTU Exceeded Policy Drop; 'error-drop'= Fragment Processing Drop; 'high-
-          cpu-threshold'= High CPU Threshold Reached; 'low-cpu-threshold'= Low CPU
-          Threshold Reached; 'cpu-threshold-drop'= High CPU Drop; 'ipd-entry-drop'= DDoS
-          Protection Drop; 'max-packets-exceeded'= Too Many Packets Per Reassembly Drop;
-          'session-packets-exceeded'= Session Max Packets Exceeded; 'frag-session-count'=
-          Fragmentation Session Count; 'sctp-rcv'= SCTP Received; 'sctp-dropped'= SCTP
-          Dropped;"
+          dropped'= TCP Dropped; 'ipip-dropped'= IP-in-IP Dropped; 'ipv6ip-dropped'=
+          IPv6-in-IP Dropped; 'other-dropped'= Other Dropped; 'overlap-error'=
+          Overlapping Fragment Dropped; 'bad-ip-len'= Bad IP Length; 'too-small'=
+          Fragment Too Small Drop; 'first-tcp-too-small'= First TCP Fragment Too Small
+          Drop; 'first-l4-too-small'= First L4 Fragment Too Small Drop; 'total-sessions-
+          exceeded'= Total Sessions Exceeded Drop; 'no-session-memory'= Out of Session
+          Memory; 'fast-aging-set'= Fragmentation Fast Aging Set; 'fast-aging-unset'=
+          Fragmentation Fast Aging Unset; 'fragment-queue-success'= Fragment Queue
+          Success; 'unaligned-len'= Payload Length Unaligned; 'exceeded-len'= Payload
+          Length Out of Bounds; 'duplicate-first-frag'= Duplicate First Fragment;
+          'duplicate-last-frag'= Duplicate Last Fragment; 'total-fragments-exceeded'=
+          Total Queued Fragments Exceeded; 'fragment-queue-failure'= Fragment Queue
+          Failure; 'reassembly-success'= Fragment Reassembly Success; 'max-len-exceeded'=
+          Fragment Max Data Length Exceeded; 'reassembly-failure'= Fragment Reassembly
+          Failure; 'policy-drop'= MTU Exceeded Policy Drop; 'error-drop'= Fragment
+          Processing Drop; 'high-cpu-threshold'= High CPU Threshold Reached; 'low-cpu-
+          threshold'= Low CPU Threshold Reached; 'cpu-threshold-drop'= High CPU Drop;
+          'ipd-entry-drop'= DDoS Protection Drop; 'max-packets-exceeded'= Too Many
+          Packets Per Reassembly Drop; 'session-packets-exceeded'= Session Max Packets
+          Exceeded; 'frag-session-count'= Fragmentation Session Count; 'sctp-rcv'= SCTP
+          Received; 'sctp-dropped'= SCTP Dropped;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            cpu_threshold_drop:
-                description:
-                - "High CPU Drop"
-            tcp_rcv:
-                description:
-                - "TCP Received"
-            other_rcv:
-                description:
-                - "Other Received"
-            udp_dropped:
-                description:
-                - "UDP Dropped"
-            bad_ip_len:
-                description:
-                - "Bad IP Length"
-            first_l4_too_small:
-                description:
-                - "First L4 Fragment Too Small Drop"
-            no_session_memory:
-                description:
-                - "Out of Session Memory"
-            unaligned_len:
-                description:
-                - "Payload Length Unaligned"
-            icmp_dropped:
-                description:
-                - "ICMP Dropped"
-            udp_rcv:
-                description:
-                - "UDP Received"
-            exceeded_len:
-                description:
-                - "Payload Length Out of Bounds"
-            fragment_queue_success:
-                description:
-                - "Fragment Queue Success"
-            fragment_queue_failure:
-                description:
-                - "Fragment Queue Failure"
-            tcp_dropped:
-                description:
-                - "TCP Dropped"
-            low_cpu_threshold:
-                description:
-                - "Low CPU Threshold Reached"
-            ipip_dropped:
-                description:
-                - "IP-in-IP Dropped"
-            total_sessions_exceeded:
-                description:
-                - "Total Sessions Exceeded Drop"
-            error_drop:
-                description:
-                - "Fragment Processing Drop"
-            icmp_rcv:
-                description:
-                - "ICMP Received"
-            ipv6ip_rcv:
-                description:
-                - "IPv6-in-IP Received"
-            total_fragments_exceeded:
-                description:
-                - "Total Queued Fragments Exceeded"
-            icmpv6_rcv:
-                description:
-                - "ICMPv6 Received"
-            sctp_rcv:
-                description:
-                - "SCTP Received"
-            policy_drop:
-                description:
-                - "MTU Exceeded Policy Drop"
-            overlap_error:
-                description:
-                - "Overlapping Fragment Dropped"
-            session_packets_exceeded:
-                description:
-                - "Session Max Packets Exceeded"
-            duplicate_first_frag:
-                description:
-                - "Duplicate First Fragment"
-            reassembly_success:
-                description:
-                - "Fragment Reassembly Success"
-            sctp_dropped:
-                description:
-                - "SCTP Dropped"
-            ipd_entry_drop:
-                description:
-                - "DDoS Protection Drop"
-            too_small:
-                description:
-                - "Fragment Too Small Drop"
-            session_expired:
-                description:
-                - "Session Expired"
             session_inserted:
                 description:
                 - "Session Inserted"
-            max_len_exceeded:
+                type: str
+            session_expired:
                 description:
-                - "Fragment Max Data Length Exceeded"
-            max_packets_exceeded:
+                - "Session Expired"
+                type: str
+            icmp_rcv:
                 description:
-                - "Too Many Packets Per Reassembly Drop"
-            other_dropped:
+                - "ICMP Received"
+                type: str
+            icmpv6_rcv:
                 description:
-                - "Other Dropped"
-            ipv6ip_dropped:
+                - "ICMPv6 Received"
+                type: str
+            udp_rcv:
                 description:
-                - "IPv6-in-IP Dropped"
-            first_tcp_too_small:
+                - "UDP Received"
+                type: str
+            tcp_rcv:
                 description:
-                - "First TCP Fragment Too Small Drop"
-            high_cpu_threshold:
-                description:
-                - "High CPU Threshold Reached"
-            fast_aging_set:
-                description:
-                - "Fragmentation Fast Aging Set"
+                - "TCP Received"
+                type: str
             ipip_rcv:
                 description:
                 - "IP-in-IP Received"
+                type: str
+            ipv6ip_rcv:
+                description:
+                - "IPv6-in-IP Received"
+                type: str
+            other_rcv:
+                description:
+                - "Other Received"
+                type: str
+            icmp_dropped:
+                description:
+                - "ICMP Dropped"
+                type: str
             icmpv6_dropped:
                 description:
                 - "ICMPv6 Dropped"
+                type: str
+            udp_dropped:
+                description:
+                - "UDP Dropped"
+                type: str
+            tcp_dropped:
+                description:
+                - "TCP Dropped"
+                type: str
+            ipip_dropped:
+                description:
+                - "IP-in-IP Dropped"
+                type: str
+            ipv6ip_dropped:
+                description:
+                - "IPv6-in-IP Dropped"
+                type: str
+            other_dropped:
+                description:
+                - "Other Dropped"
+                type: str
+            overlap_error:
+                description:
+                - "Overlapping Fragment Dropped"
+                type: str
+            bad_ip_len:
+                description:
+                - "Bad IP Length"
+                type: str
+            too_small:
+                description:
+                - "Fragment Too Small Drop"
+                type: str
+            first_tcp_too_small:
+                description:
+                - "First TCP Fragment Too Small Drop"
+                type: str
+            first_l4_too_small:
+                description:
+                - "First L4 Fragment Too Small Drop"
+                type: str
+            total_sessions_exceeded:
+                description:
+                - "Total Sessions Exceeded Drop"
+                type: str
+            no_session_memory:
+                description:
+                - "Out of Session Memory"
+                type: str
+            fast_aging_set:
+                description:
+                - "Fragmentation Fast Aging Set"
+                type: str
             fast_aging_unset:
                 description:
                 - "Fragmentation Fast Aging Unset"
-            reassembly_failure:
+                type: str
+            fragment_queue_success:
                 description:
-                - "Fragment Reassembly Failure"
+                - "Fragment Queue Success"
+                type: str
+            unaligned_len:
+                description:
+                - "Payload Length Unaligned"
+                type: str
+            exceeded_len:
+                description:
+                - "Payload Length Out of Bounds"
+                type: str
+            duplicate_first_frag:
+                description:
+                - "Duplicate First Fragment"
+                type: str
             duplicate_last_frag:
                 description:
                 - "Duplicate Last Fragment"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            total_fragments_exceeded:
+                description:
+                - "Total Queued Fragments Exceeded"
+                type: str
+            fragment_queue_failure:
+                description:
+                - "Fragment Queue Failure"
+                type: str
+            reassembly_success:
+                description:
+                - "Fragment Reassembly Success"
+                type: str
+            max_len_exceeded:
+                description:
+                - "Fragment Max Data Length Exceeded"
+                type: str
+            reassembly_failure:
+                description:
+                - "Fragment Reassembly Failure"
+                type: str
+            policy_drop:
+                description:
+                - "MTU Exceeded Policy Drop"
+                type: str
+            error_drop:
+                description:
+                - "Fragment Processing Drop"
+                type: str
+            high_cpu_threshold:
+                description:
+                - "High CPU Threshold Reached"
+                type: str
+            low_cpu_threshold:
+                description:
+                - "Low CPU Threshold Reached"
+                type: str
+            cpu_threshold_drop:
+                description:
+                - "High CPU Drop"
+                type: str
+            ipd_entry_drop:
+                description:
+                - "DDoS Protection Drop"
+                type: str
+            max_packets_exceeded:
+                description:
+                - "Too Many Packets Per Reassembly Drop"
+                type: str
+            session_packets_exceeded:
+                description:
+                - "Session Max Packets Exceeded"
+                type: str
+            sctp_rcv:
+                description:
+                - "SCTP Received"
+                type: str
+            sctp_dropped:
+                description:
+                - "SCTP Dropped"
+                type: str
 
 '''
 
@@ -281,6 +335,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -310,144 +367,141 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'cpu_threshold_drop': {
-                'type': 'str',
-            },
-            'tcp_rcv': {
-                'type': 'str',
-            },
-            'other_rcv': {
-                'type': 'str',
-            },
-            'udp_dropped': {
-                'type': 'str',
-            },
-            'bad_ip_len': {
-                'type': 'str',
-            },
-            'first_l4_too_small': {
-                'type': 'str',
-            },
-            'no_session_memory': {
-                'type': 'str',
-            },
-            'unaligned_len': {
-                'type': 'str',
-            },
-            'icmp_dropped': {
-                'type': 'str',
-            },
-            'udp_rcv': {
-                'type': 'str',
-            },
-            'exceeded_len': {
-                'type': 'str',
-            },
-            'fragment_queue_success': {
-                'type': 'str',
-            },
-            'fragment_queue_failure': {
-                'type': 'str',
-            },
-            'tcp_dropped': {
-                'type': 'str',
-            },
-            'low_cpu_threshold': {
-                'type': 'str',
-            },
-            'ipip_dropped': {
-                'type': 'str',
-            },
-            'total_sessions_exceeded': {
-                'type': 'str',
-            },
-            'error_drop': {
-                'type': 'str',
-            },
-            'icmp_rcv': {
-                'type': 'str',
-            },
-            'ipv6ip_rcv': {
-                'type': 'str',
-            },
-            'total_fragments_exceeded': {
-                'type': 'str',
-            },
-            'icmpv6_rcv': {
-                'type': 'str',
-            },
-            'sctp_rcv': {
-                'type': 'str',
-            },
-            'policy_drop': {
-                'type': 'str',
-            },
-            'overlap_error': {
-                'type': 'str',
-            },
-            'session_packets_exceeded': {
-                'type': 'str',
-            },
-            'duplicate_first_frag': {
-                'type': 'str',
-            },
-            'reassembly_success': {
-                'type': 'str',
-            },
-            'sctp_dropped': {
-                'type': 'str',
-            },
-            'ipd_entry_drop': {
-                'type': 'str',
-            },
-            'too_small': {
+            'session_inserted': {
                 'type': 'str',
             },
             'session_expired': {
                 'type': 'str',
             },
-            'session_inserted': {
+            'icmp_rcv': {
                 'type': 'str',
             },
-            'max_len_exceeded': {
+            'icmpv6_rcv': {
                 'type': 'str',
             },
-            'max_packets_exceeded': {
+            'udp_rcv': {
                 'type': 'str',
             },
-            'other_dropped': {
-                'type': 'str',
-            },
-            'ipv6ip_dropped': {
-                'type': 'str',
-            },
-            'first_tcp_too_small': {
-                'type': 'str',
-            },
-            'high_cpu_threshold': {
-                'type': 'str',
-            },
-            'fast_aging_set': {
+            'tcp_rcv': {
                 'type': 'str',
             },
             'ipip_rcv': {
                 'type': 'str',
             },
+            'ipv6ip_rcv': {
+                'type': 'str',
+            },
+            'other_rcv': {
+                'type': 'str',
+            },
+            'icmp_dropped': {
+                'type': 'str',
+            },
             'icmpv6_dropped': {
+                'type': 'str',
+            },
+            'udp_dropped': {
+                'type': 'str',
+            },
+            'tcp_dropped': {
+                'type': 'str',
+            },
+            'ipip_dropped': {
+                'type': 'str',
+            },
+            'ipv6ip_dropped': {
+                'type': 'str',
+            },
+            'other_dropped': {
+                'type': 'str',
+            },
+            'overlap_error': {
+                'type': 'str',
+            },
+            'bad_ip_len': {
+                'type': 'str',
+            },
+            'too_small': {
+                'type': 'str',
+            },
+            'first_tcp_too_small': {
+                'type': 'str',
+            },
+            'first_l4_too_small': {
+                'type': 'str',
+            },
+            'total_sessions_exceeded': {
+                'type': 'str',
+            },
+            'no_session_memory': {
+                'type': 'str',
+            },
+            'fast_aging_set': {
                 'type': 'str',
             },
             'fast_aging_unset': {
                 'type': 'str',
             },
-            'reassembly_failure': {
+            'fragment_queue_success': {
+                'type': 'str',
+            },
+            'unaligned_len': {
+                'type': 'str',
+            },
+            'exceeded_len': {
+                'type': 'str',
+            },
+            'duplicate_first_frag': {
                 'type': 'str',
             },
             'duplicate_last_frag': {
                 'type': 'str',
+            },
+            'total_fragments_exceeded': {
+                'type': 'str',
+            },
+            'fragment_queue_failure': {
+                'type': 'str',
+            },
+            'reassembly_success': {
+                'type': 'str',
+            },
+            'max_len_exceeded': {
+                'type': 'str',
+            },
+            'reassembly_failure': {
+                'type': 'str',
+            },
+            'policy_drop': {
+                'type': 'str',
+            },
+            'error_drop': {
+                'type': 'str',
+            },
+            'high_cpu_threshold': {
+                'type': 'str',
+            },
+            'low_cpu_threshold': {
+                'type': 'str',
+            },
+            'cpu_threshold_drop': {
+                'type': 'str',
+            },
+            'ipd_entry_drop': {
+                'type': 'str',
+            },
+            'max_packets_exceeded': {
+                'type': 'str',
+            },
+            'session_packets_exceeded': {
+                'type': 'str',
+            },
+            'sctp_rcv': {
+                'type': 'str',
+            },
+            'sctp_dropped': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

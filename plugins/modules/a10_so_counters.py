@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_so_counters
 description:
     - Show scaleout statistics
-short_description: Configures A10 so-counters
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -78,87 +89,109 @@ options:
           'so_fw_internal_rule_count'= FW internal rule count;
           'so_pkts_redirect_table_error'= Redirect Table Error; 'so_pkts_mac_zero_drop'=
           MAC Address zero Drop;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            so_pkts_conn_l7_sync:
-                description:
-                - "Total L7 connection syncs"
-            so_pkts_traffic_map_not_found_drop:
-                description:
-                - "Traffic MAP Not Found Drop"
-            so_pkts_dropped:
-                description:
-                - "Total packets dropped"
-            so_pkts_conn_xparent_fw_sync:
-                description:
-                - "Total Xparent FW connection syncs"
-            so_pkts_in:
-                description:
-                - "Total packets in-coming"
-            so_pkts_errors:
-                description:
-                - "Total packet errors"
-            so_pkts_conn_sync_fail:
-                description:
-                - "Total connection sync failures"
-            so_pkts_redirect_table_error:
-                description:
-                - "Redirect Table Error"
-            so_pkts_conn_nat_sync:
-                description:
-                - "Total NAT connection syncs"
-            so_fw_internal_rule_count:
-                description:
-                - "FW internal rule count"
-            so_pkts_dest_mac_mistmatch_drop:
-                description:
-                - "Destination MAC Mistmatch Drop"
-            so_pkts_l2redirect_interface_not_up:
-                description:
-                - "L2redirect Intf is not UP"
             so_pkts_conn_in:
                 description:
                 - "Total packets processed for an established connection"
-            so_pkts_scaleout_not_active_drop:
-                description:
-                - "Scaleout Not Active Drop"
+                type: str
             so_pkts_conn_redirect:
                 description:
                 - "Total packets redirected for an established connection"
-            so_pkts_redirect_conn_aged_out:
+                type: str
+            so_pkts_dropped:
                 description:
-                - "Total redirect conns aged out"
-            so_pkts_nat_reserve_fail:
+                - "Total packets dropped"
+                type: str
+            so_pkts_errors:
                 description:
-                - "Total NAT reserve failures"
-            so_pkts_redirect:
+                - "Total packet errors"
+                type: str
+            so_pkts_in:
                 description:
-                - "Total packets redirected"
-            so_pkts_mac_zero_drop:
-                description:
-                - "MAC Address zero Drop"
-            so_pkts_out:
-                description:
-                - "Total packets sent out"
+                - "Total packets in-coming"
+                type: str
             so_pkts_new_conn_in:
                 description:
                 - "Total packets processed for a new connection"
-            so_pkts_nat_release_fail:
-                description:
-                - "Total NAT release failures"
+                type: str
             so_pkts_new_conn_redirect:
                 description:
                 - "Total packets redirected for a new connection"
+                type: str
+            so_pkts_out:
+                description:
+                - "Total packets sent out"
+                type: str
+            so_pkts_redirect:
+                description:
+                - "Total packets redirected"
+                type: str
+            so_pkts_conn_sync_fail:
+                description:
+                - "Total connection sync failures"
+                type: str
+            so_pkts_nat_reserve_fail:
+                description:
+                - "Total NAT reserve failures"
+                type: str
+            so_pkts_nat_release_fail:
+                description:
+                - "Total NAT release failures"
+                type: str
+            so_pkts_conn_l7_sync:
+                description:
+                - "Total L7 connection syncs"
+                type: str
             so_pkts_conn_l4_sync:
                 description:
                 - "Total L4 connection syncs"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            so_pkts_conn_nat_sync:
+                description:
+                - "Total NAT connection syncs"
+                type: str
+            so_pkts_conn_xparent_fw_sync:
+                description:
+                - "Total Xparent FW connection syncs"
+                type: str
+            so_pkts_redirect_conn_aged_out:
+                description:
+                - "Total redirect conns aged out"
+                type: str
+            so_pkts_traffic_map_not_found_drop:
+                description:
+                - "Traffic MAP Not Found Drop"
+                type: str
+            so_pkts_scaleout_not_active_drop:
+                description:
+                - "Scaleout Not Active Drop"
+                type: str
+            so_pkts_dest_mac_mistmatch_drop:
+                description:
+                - "Destination MAC Mistmatch Drop"
+                type: str
+            so_pkts_l2redirect_interface_not_up:
+                description:
+                - "L2redirect Intf is not UP"
+                type: str
+            so_fw_internal_rule_count:
+                description:
+                - "FW internal rule count"
+                type: str
+            so_pkts_redirect_table_error:
+                description:
+                - "Redirect Table Error"
+                type: str
+            so_pkts_mac_zero_drop:
+                description:
+                - "MAC Address zero Drop"
+                type: str
 
 '''
 
@@ -213,6 +246,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -239,34 +275,61 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'so_pkts_conn_l7_sync': {
+            'so_pkts_conn_in': {
                 'type': 'str',
             },
-            'so_pkts_traffic_map_not_found_drop': {
+            'so_pkts_conn_redirect': {
                 'type': 'str',
             },
             'so_pkts_dropped': {
                 'type': 'str',
             },
-            'so_pkts_conn_xparent_fw_sync': {
+            'so_pkts_errors': {
                 'type': 'str',
             },
             'so_pkts_in': {
                 'type': 'str',
             },
-            'so_pkts_errors': {
+            'so_pkts_new_conn_in': {
+                'type': 'str',
+            },
+            'so_pkts_new_conn_redirect': {
+                'type': 'str',
+            },
+            'so_pkts_out': {
+                'type': 'str',
+            },
+            'so_pkts_redirect': {
                 'type': 'str',
             },
             'so_pkts_conn_sync_fail': {
                 'type': 'str',
             },
-            'so_pkts_redirect_table_error': {
+            'so_pkts_nat_reserve_fail': {
+                'type': 'str',
+            },
+            'so_pkts_nat_release_fail': {
+                'type': 'str',
+            },
+            'so_pkts_conn_l7_sync': {
+                'type': 'str',
+            },
+            'so_pkts_conn_l4_sync': {
                 'type': 'str',
             },
             'so_pkts_conn_nat_sync': {
                 'type': 'str',
             },
-            'so_fw_internal_rule_count': {
+            'so_pkts_conn_xparent_fw_sync': {
+                'type': 'str',
+            },
+            'so_pkts_redirect_conn_aged_out': {
+                'type': 'str',
+            },
+            'so_pkts_traffic_map_not_found_drop': {
+                'type': 'str',
+            },
+            'so_pkts_scaleout_not_active_drop': {
                 'type': 'str',
             },
             'so_pkts_dest_mac_mistmatch_drop': {
@@ -275,45 +338,15 @@ def get_argspec():
             'so_pkts_l2redirect_interface_not_up': {
                 'type': 'str',
             },
-            'so_pkts_conn_in': {
+            'so_fw_internal_rule_count': {
                 'type': 'str',
             },
-            'so_pkts_scaleout_not_active_drop': {
-                'type': 'str',
-            },
-            'so_pkts_conn_redirect': {
-                'type': 'str',
-            },
-            'so_pkts_redirect_conn_aged_out': {
-                'type': 'str',
-            },
-            'so_pkts_nat_reserve_fail': {
-                'type': 'str',
-            },
-            'so_pkts_redirect': {
+            'so_pkts_redirect_table_error': {
                 'type': 'str',
             },
             'so_pkts_mac_zero_drop': {
                 'type': 'str',
-            },
-            'so_pkts_out': {
-                'type': 'str',
-            },
-            'so_pkts_new_conn_in': {
-                'type': 'str',
-            },
-            'so_pkts_nat_release_fail': {
-                'type': 'str',
-            },
-            'so_pkts_new_conn_redirect': {
-                'type': 'str',
-            },
-            'so_pkts_conn_l4_sync': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ddos_protection_l4_entries
 description:
     - Field l4_entries
-short_description: Configures A10 cgnv6.ddos.protection.l4-entries
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            all:
-                description:
-                - "Field all"
             ddos_l4_entries_list:
                 description:
                 - "Field ddos_l4_entries_list"
-            nat_pool:
-                description:
-                - "Field nat_pool"
-            not_in_hardware:
-                description:
-                - "Field not_in_hardware"
-            v4_netmask:
-                description:
-                - "Field v4_netmask"
+                type: list
             total_entries:
                 description:
                 - "Field total_entries"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            all:
+                description:
+                - "Field all"
+                type: bool
+            nat_pool:
+                description:
+                - "Field nat_pool"
+                type: str
+            v4_netmask:
+                description:
+                - "Field v4_netmask"
+                type: str
+            not_in_hardware:
+                description:
+                - "Field not_in_hardware"
+                type: bool
 
 '''
 
@@ -130,50 +143,50 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'all': {
-                'type': 'bool',
-            },
             'ddos_l4_entries_list': {
                 'type': 'list',
-                'is_deleted': {
+                'v4_address': {
+                    'type': 'str',
+                },
+                'l4_protocol': {
+                    'type': 'str',
+                },
+                'port': {
+                    'type': 'int',
+                },
+                'in_hardware': {
                     'type': 'int',
                 },
                 'hardware_index': {
                     'type': 'int',
                 },
-                'l4_protocol': {
-                    'type': 'str',
-                },
-                'in_hardware': {
-                    'type': 'int',
-                },
                 'pps': {
                     'type': 'int',
                 },
-                'v4_address': {
-                    'type': 'str',
-                },
-                'port': {
+                'is_deleted': {
                     'type': 'int',
                 }
+            },
+            'total_entries': {
+                'type': 'int',
+            },
+            'all': {
+                'type': 'bool',
             },
             'nat_pool': {
                 'type': 'str',
             },
-            'not_in_hardware': {
-                'type': 'bool',
-            },
             'v4_netmask': {
                 'type': 'str',
             },
-            'total_entries': {
-                'type': 'int',
+            'not_in_hardware': {
+                'type': 'bool',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

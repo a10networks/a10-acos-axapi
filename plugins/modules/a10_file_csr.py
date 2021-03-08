@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_csr
 description:
     - ssl certificate signing request file
-short_description: Configures A10 file.csr
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,73 +22,90 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
+        required: False
+    file:
+        description:
+        - "Specify the File Name"
+        type: str
+        required: False
+    size:
+        description:
+        - "CSR file size in byte"
+        type: int
+        required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
+        type: str
+        required: False
+    action:
+        description:
+        - "'export'= export;"
+        type: str
+        required: False
+    dst_file:
+        description:
+        - "destination file name for copy and rename action"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             ssl_csr:
                 description:
                 - "Field ssl_csr"
+                type: list
             sortby_name:
                 description:
                 - "Field sortby_name"
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    file:
-        description:
-        - "Specify the File Name"
-        required: False
-    action:
-        description:
-        - "'export'= export;"
-        required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
-        required: False
-    size:
-        description:
-        - "CSR file size in byte"
-        required: False
+                type: bool
 
 '''
 
@@ -152,14 +167,33 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
+        'file': {
+            'type': 'str',
+        },
+        'size': {
+            'type': 'int',
+        },
+        'file_handle': {
+            'type': 'str',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['export']
+        },
+        'dst_file': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'ssl_csr': {
                 'type': 'list',
-                'status': {
+                'name': {
                     'type': 'str',
                 },
-                'name': {
+                'ntype': {
                     'type': 'str',
                 },
                 'common_name': {
@@ -168,35 +202,16 @@ def get_argspec():
                 'organization': {
                     'type': 'str',
                 },
-                'ntype': {
+                'subject': {
                     'type': 'str',
                 },
-                'subject': {
+                'status': {
                     'type': 'str',
                 }
             },
             'sortby_name': {
                 'type': 'bool',
             }
-        },
-        'dst_file': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'file': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['export']
-        },
-        'file_handle': {
-            'type': 'str',
-        },
-        'size': {
-            'type': 'int',
         }
     })
     return rv

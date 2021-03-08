@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_sport_rate_limit
 description:
     - Configure source port rate-limit
-short_description: Configures A10 slb.sport-rate-limit
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -61,36 +72,41 @@ options:
           port-ip entry; 'freed_sport'= Freed src port entry; 'freed_sportip'= Freed src
           port-ip entry; 'total_drop'= Total rate exceed drop; 'total_reset'= Total rate
           exceed reset; 'total_log'= Total log sent;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            total_reset:
-                description:
-                - "Total rate exceed reset"
-            freed_sportip:
-                description:
-                - "Freed src port-ip entry"
-            freed_sport:
-                description:
-                - "Freed src port entry"
-            alloc_sportip:
-                description:
-                - "Alloc'd src port-ip entry"
-            total_drop:
-                description:
-                - "Total rate exceed drop"
             alloc_sport:
                 description:
                 - "Alloc'd src port entry"
+                type: str
+            alloc_sportip:
+                description:
+                - "Alloc'd src port-ip entry"
+                type: str
+            freed_sport:
+                description:
+                - "Freed src port entry"
+                type: str
+            freed_sportip:
+                description:
+                - "Freed src port-ip entry"
+                type: str
+            total_drop:
+                description:
+                - "Total rate exceed drop"
+                type: str
+            total_reset:
+                description:
+                - "Total rate exceed reset"
+                type: str
             total_log:
                 description:
                 - "Total log sent"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -145,6 +161,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -158,30 +177,27 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'total_reset': {
-                'type': 'str',
-            },
-            'freed_sportip': {
-                'type': 'str',
-            },
-            'freed_sport': {
+            'alloc_sport': {
                 'type': 'str',
             },
             'alloc_sportip': {
                 'type': 'str',
             },
+            'freed_sport': {
+                'type': 'str',
+            },
+            'freed_sportip': {
+                'type': 'str',
+            },
             'total_drop': {
                 'type': 'str',
             },
-            'alloc_sport': {
+            'total_reset': {
                 'type': 'str',
             },
             'total_log': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

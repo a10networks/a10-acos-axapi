@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_glm_license
 description:
     - glm license file information and management commands
-short_description: Configures A10 file.glm-license
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
         required: False
     device:
         description:
         - "Device (Device ID)"
-        required: False
-    action:
-        description:
-        - "'import'= import;"
-        required: False
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
+        type: int
         required: False
     file:
         description:
         - "glm license local file name"
+        type: str
         required: False
     file_handle:
         description:
         - "full path of the uploaded file"
+        type: str
+        required: False
+    action:
+        description:
+        - "'import'= import;"
+        type: str
+        required: False
+    dst_file:
+        description:
+        - "destination file name for copy and rename action"
+        type: str
         required: False
 
 '''
@@ -138,17 +149,17 @@ def get_argspec():
         'device': {
             'type': 'int',
         },
+        'file': {
+            'type': 'str',
+        },
+        'file_handle': {
+            'type': 'str',
+        },
         'action': {
             'type': 'str',
             'choices': ['import']
         },
         'dst_file': {
-            'type': 'str',
-        },
-        'file': {
-            'type': 'str',
-        },
-        'file_handle': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_status
 description:
     - Field status
-short_description: Configures A10 scaleout.status
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,68 +22,86 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            l2redirect_trunk:
-                description:
-                - "Field l2redirect_trunk"
-            device_list:
-                description:
-                - "Field device_list"
-            l2redirect_operational:
-                description:
-                - "Field l2redirect_operational"
-            role:
-                description:
-                - "Field role"
             db_role:
                 description:
                 - "Field db_role"
+                type: str
+            role:
+                description:
+                - "Field role"
+                type: str
+            device_list:
+                description:
+                - "Field device_list"
+                type: list
             l2redirect:
                 description:
                 - "Field l2redirect"
+                type: int
             l2redirect_valid:
                 description:
                 - "Field l2redirect_valid"
+                type: int
+            l2redirect_operational:
+                description:
+                - "Field l2redirect_operational"
+                type: int
             l2redirect_eth:
                 description:
                 - "Field l2redirect_eth"
+                type: int
+            l2redirect_trunk:
+                description:
+                - "Field l2redirect_trunk"
+                type: int
             l2redirect_vlan:
                 description:
                 - "Field l2redirect_vlan"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
 
 '''
 
@@ -139,34 +155,31 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'l2redirect_trunk': {
-                'type': 'int',
+            'db_role': {
+                'type': 'str',
+            },
+            'role': {
+                'type': 'str',
             },
             'device_list': {
                 'type': 'list',
-                'is_local': {
+                'id': {
                     'type': 'int',
                 },
                 'state': {
                     'type': 'str',
                 },
-                'is_master': {
+                'is_local': {
                     'type': 'int',
                 },
-                'id': {
+                'is_master': {
                     'type': 'int',
                 }
-            },
-            'l2redirect_operational': {
-                'type': 'int',
-            },
-            'role': {
-                'type': 'str',
-            },
-            'db_role': {
-                'type': 'str',
             },
             'l2redirect': {
                 'type': 'int',
@@ -174,15 +187,18 @@ def get_argspec():
             'l2redirect_valid': {
                 'type': 'int',
             },
+            'l2redirect_operational': {
+                'type': 'int',
+            },
             'l2redirect_eth': {
+                'type': 'int',
+            },
+            'l2redirect_trunk': {
                 'type': 'int',
             },
             'l2redirect_vlan': {
                 'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

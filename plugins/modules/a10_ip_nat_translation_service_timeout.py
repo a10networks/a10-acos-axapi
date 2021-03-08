@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_translation_service_timeout
 description:
     - Specify any custom service timeout
-short_description: Configures A10 ip.nat.translation.service-timeout
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,52 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    timeout_val:
-        description:
-        - "Timeout in seconds (Interval of 60 seconds)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     service_type:
         description:
         - "'tcp'= TCP Protocol; 'udp'= UDP Protocol;"
+        type: str
+        required: True
+    port:
+        description:
+        - "Port Number"
+        type: int
         required: True
     timeout_type:
         description:
         - "'age'= Expiration time; 'fast'= Use Fast aging;"
+        type: str
         required: False
-    port:
+    timeout_val:
         description:
-        - "Port Number"
-        required: True
+        - "Timeout in seconds (Interval of 60 seconds)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -126,24 +136,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'timeout_val': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'service_type': {
             'type': 'str',
             'required': True,
             'choices': ['tcp', 'udp']
         },
+        'port': {
+            'type': 'int',
+            'required': True,
+        },
         'timeout_type': {
             'type': 'str',
             'choices': ['age', 'fast']
         },
-        'port': {
+        'timeout_val': {
             'type': 'int',
-            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

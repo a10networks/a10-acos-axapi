@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_vrid
 description:
     - Specify VRRP-A vrid
-short_description: Configures A10 vrrp-a.vrid
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,121 +22,104 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            weight:
-                description:
-                - "Field weight"
-            peer_list:
-                description:
-                - "Field peer_list"
-            vrid_val:
-                description:
-                - "Specify ha VRRP-A vrid"
-            priority:
-                description:
-                - "Field priority"
-            state:
-                description:
-                - "Field state"
-            became_active:
-                description:
-                - "Field became_active"
-            force_standby:
-                description:
-                - "Field force_standby"
-            unit:
-                description:
-                - "Field unit"
-    blade_parameters:
-        description:
-        - "Field blade_parameters"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "VRRP-A priorty (Priority, default is 150)"
-            fail_over_policy_template:
-                description:
-                - "Apply a fail over policy template (VRRP-A fail over policy template name)"
-            uuid:
-                description:
-                - "uuid of the object"
-            tracking_options:
-                description:
-                - "Field tracking_options"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            associated_natpool_count:
-                description:
-                - "Number of nat pools associated to vrid"
-            associated_vip_count:
-                description:
-                - "Number of vips associated to vrid"
-            associated_vport_count:
-                description:
-                - "Number of vports associated to vrid"
-            vrid_val:
-                description:
-                - "Specify ha VRRP-A vrid"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     vrid_val:
         description:
         - "Specify ha VRRP-A vrid"
+        type: int
         required: True
-    user_tag:
+    floating_ip:
         description:
-        - "Customized tag"
+        - "Field floating_ip"
+        type: dict
         required: False
+        suboptions:
+            ip_address_cfg:
+                description:
+                - "Field ip_address_cfg"
+                type: list
+            ip_address_part_cfg:
+                description:
+                - "Field ip_address_part_cfg"
+                type: list
+            ipv6_address_cfg:
+                description:
+                - "Field ipv6_address_cfg"
+                type: list
+            ipv6_address_part_cfg:
+                description:
+                - "Field ipv6_address_part_cfg"
+                type: list
     preempt_mode:
         description:
         - "Field preempt_mode"
+        type: dict
         required: False
         suboptions:
             threshold:
                 description:
                 - "preemption threshold (preemption threshhold (0-255), default 0)"
+                type: int
             disable:
                 description:
                 - "disable preemption"
+                type: bool
+    follow:
+        description:
+        - "Field follow"
+        type: dict
+        required: False
+        suboptions:
+            vrid_lead:
+                description:
+                - "Define a VRRP-A VRID leader"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -146,31 +127,89 @@ options:
                 - "'all'= all; 'associated_vip_count'= Number of vips associated to vrid;
           'associated_vport_count'= Number of vports associated to vrid;
           'associated_natpool_count'= Number of nat pools associated to vrid;"
-    floating_ip:
+                type: str
+    blade_parameters:
         description:
-        - "Field floating_ip"
+        - "Field blade_parameters"
+        type: dict
         required: False
         suboptions:
-            ipv6_address_part_cfg:
+            priority:
                 description:
-                - "Field ipv6_address_part_cfg"
-            ip_address_cfg:
+                - "VRRP-A priorty (Priority, default is 150)"
+                type: int
+            fail_over_policy_template:
                 description:
-                - "Field ip_address_cfg"
-            ip_address_part_cfg:
+                - "Apply a fail over policy template (VRRP-A fail over policy template name)"
+                type: str
+            uuid:
                 description:
-                - "Field ip_address_part_cfg"
-            ipv6_address_cfg:
+                - "uuid of the object"
+                type: str
+            tracking_options:
                 description:
-                - "Field ipv6_address_cfg"
-    follow:
+                - "Field tracking_options"
+                type: dict
+    oper:
         description:
-        - "Field follow"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            vrid_lead:
+            unit:
                 description:
-                - "Define a VRRP-A VRID leader"
+                - "Field unit"
+                type: int
+            state:
+                description:
+                - "Field state"
+                type: str
+            weight:
+                description:
+                - "Field weight"
+                type: int
+            priority:
+                description:
+                - "Field priority"
+                type: int
+            force_standby:
+                description:
+                - "Field force_standby"
+                type: int
+            became_active:
+                description:
+                - "Field became_active"
+                type: str
+            peer_list:
+                description:
+                - "Field peer_list"
+                type: list
+            vrid_val:
+                description:
+                - "Specify ha VRRP-A vrid"
+                type: int
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            associated_vip_count:
+                description:
+                - "Number of vips associated to vrid"
+                type: str
+            associated_vport_count:
+                description:
+                - "Number of vports associated to vrid"
+                type: str
+            associated_natpool_count:
+                description:
+                - "Number of nat pools associated to vrid"
+                type: str
+            vrid_val:
+                description:
+                - "Specify ha VRRP-A vrid"
+                type: int
 
 '''
 
@@ -232,46 +271,85 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
+        'vrid_val': {
+            'type': 'int',
+            'required': True,
+        },
+        'floating_ip': {
             'type': 'dict',
-            'weight': {
-                'type': 'int',
-            },
-            'peer_list': {
+            'ip_address_cfg': {
                 'type': 'list',
-                'peer_unit': {
-                    'type': 'int',
-                },
-                'peer_state': {
+                'ip_address': {
                     'type': 'str',
-                    'choices': ['Active', 'Standby']
+                }
+            },
+            'ip_address_part_cfg': {
+                'type': 'list',
+                'ip_address_partition': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_address_cfg': {
+                'type': 'list',
+                'ipv6_address': {
+                    'type': 'str',
                 },
-                'peer_priority': {
+                'ethernet': {
+                    'type': 'str',
+                },
+                'trunk': {
                     'type': 'int',
                 },
-                'peer_weight': {
+                've': {
                     'type': 'int',
                 }
             },
-            'vrid_val': {
+            'ipv6_address_part_cfg': {
+                'type': 'list',
+                'ipv6_address_partition': {
+                    'type': 'str',
+                },
+                'ethernet': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'int',
+                },
+                've': {
+                    'type': 'int',
+                }
+            }
+        },
+        'preempt_mode': {
+            'type': 'dict',
+            'threshold': {
                 'type': 'int',
-                'required': True,
             },
-            'priority': {
-                'type': 'int',
-            },
-            'state': {
+            'disable': {
+                'type': 'bool',
+            }
+        },
+        'follow': {
+            'type': 'dict',
+            'vrid_lead': {
                 'type': 'str',
-                'choices': ['Active', 'Standby']
-            },
-            'became_active': {
-                'type': 'str',
-            },
-            'force_standby': {
-                'type': 'int',
-            },
-            'unit': {
-                'type': 'int',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'associated_vip_count', 'associated_vport_count',
+                    'associated_natpool_count'
+                ]
             }
         },
         'blade_parameters': {
@@ -287,50 +365,21 @@ def get_argspec():
             },
             'tracking_options': {
                 'type': 'dict',
-                'vlan_cfg': {
+                'interface': {
                     'type': 'list',
-                    'vlan': {
-                        'type': 'int',
-                    },
-                    'timeout': {
-                        'type': 'int',
+                    'ethernet': {
+                        'type': 'str',
                     },
                     'priority_cost': {
                         'type': 'int',
                     }
                 },
-                'uuid': {
-                    'type': 'str',
-                },
                 'route': {
                     'type': 'dict',
-                    'ipv6_destination_cfg': {
-                        'type': 'list',
-                        'ipv6_destination': {
-                            'type': 'str',
-                        },
-                        'distance': {
-                            'type': 'int',
-                        },
-                        'gatewayv6': {
-                            'type': 'str',
-                        },
-                        'protocol': {
-                            'type': 'str',
-                            'choices': ['any', 'static', 'dynamic']
-                        },
-                        'priority_cost': {
-                            'type': 'int',
-                        }
-                    },
                     'ip_destination_cfg': {
                         'type': 'list',
-                        'distance': {
-                            'type': 'int',
-                        },
-                        'protocol': {
+                        'ip_destination': {
                             'type': 'str',
-                            'choices': ['any', 'static', 'dynamic']
                         },
                         'mask': {
                             'type': 'str',
@@ -338,12 +387,47 @@ def get_argspec():
                         'priority_cost': {
                             'type': 'int',
                         },
-                        'ip_destination': {
-                            'type': 'str',
-                        },
                         'gateway': {
                             'type': 'str',
+                        },
+                        'distance': {
+                            'type': 'int',
+                        },
+                        'protocol': {
+                            'type': 'str',
+                            'choices': ['any', 'static', 'dynamic']
                         }
+                    },
+                    'ipv6_destination_cfg': {
+                        'type': 'list',
+                        'ipv6_destination': {
+                            'type': 'str',
+                        },
+                        'priority_cost': {
+                            'type': 'int',
+                        },
+                        'gatewayv6': {
+                            'type': 'str',
+                        },
+                        'distance': {
+                            'type': 'int',
+                        },
+                        'protocol': {
+                            'type': 'str',
+                            'choices': ['any', 'static', 'dynamic']
+                        }
+                    }
+                },
+                'trunk_cfg': {
+                    'type': 'list',
+                    'trunk': {
+                        'type': 'int',
+                    },
+                    'priority_cost': {
+                        'type': 'int',
+                    },
+                    'per_port_pri': {
+                        'type': 'int',
                     }
                 },
                 'bgp': {
@@ -367,28 +451,34 @@ def get_argspec():
                         }
                     }
                 },
-                'interface': {
+                'vlan_cfg': {
                     'type': 'list',
-                    'ethernet': {
-                        'type': 'str',
+                    'vlan': {
+                        'type': 'int',
+                    },
+                    'timeout': {
+                        'type': 'int',
                     },
                     'priority_cost': {
                         'type': 'int',
                     }
                 },
+                'uuid': {
+                    'type': 'str',
+                },
                 'gateway': {
                     'type': 'dict',
                     'ipv4_gateway_list': {
                         'type': 'list',
-                        'uuid': {
-                            'type': 'str',
-                        },
                         'ip_address': {
                             'type': 'str',
                             'required': True,
                         },
                         'priority_cost': {
                             'type': 'int',
+                        },
+                        'uuid': {
+                            'type': 'str',
                         }
                     },
                     'ipv6_gateway_list': {
@@ -397,123 +487,72 @@ def get_argspec():
                             'type': 'str',
                             'required': True,
                         },
-                        'uuid': {
-                            'type': 'str',
-                        },
                         'priority_cost': {
                             'type': 'int',
+                        },
+                        'uuid': {
+                            'type': 'str',
                         }
-                    }
-                },
-                'trunk_cfg': {
-                    'type': 'list',
-                    'priority_cost': {
-                        'type': 'int',
-                    },
-                    'trunk': {
-                        'type': 'int',
-                    },
-                    'per_port_pri': {
-                        'type': 'int',
                     }
                 }
             }
         },
-        'stats': {
+        'oper': {
             'type': 'dict',
-            'associated_natpool_count': {
+            'unit': {
+                'type': 'int',
+            },
+            'state': {
+                'type': 'str',
+                'choices': ['Active', 'Standby']
+            },
+            'weight': {
+                'type': 'int',
+            },
+            'priority': {
+                'type': 'int',
+            },
+            'force_standby': {
+                'type': 'int',
+            },
+            'became_active': {
                 'type': 'str',
             },
-            'associated_vip_count': {
-                'type': 'str',
-            },
-            'associated_vport_count': {
-                'type': 'str',
+            'peer_list': {
+                'type': 'list',
+                'peer_unit': {
+                    'type': 'int',
+                },
+                'peer_state': {
+                    'type': 'str',
+                    'choices': ['Active', 'Standby']
+                },
+                'peer_weight': {
+                    'type': 'int',
+                },
+                'peer_priority': {
+                    'type': 'int',
+                }
             },
             'vrid_val': {
                 'type': 'int',
                 'required': True,
             }
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'vrid_val': {
-            'type': 'int',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'preempt_mode': {
+        'stats': {
             'type': 'dict',
-            'threshold': {
-                'type': 'int',
-            },
-            'disable': {
-                'type': 'bool',
-            }
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'associated_vip_count', 'associated_vport_count',
-                    'associated_natpool_count'
-                ]
-            }
-        },
-        'floating_ip': {
-            'type': 'dict',
-            'ipv6_address_part_cfg': {
-                'type': 'list',
-                'ethernet': {
-                    'type': 'str',
-                },
-                'ipv6_address_partition': {
-                    'type': 'str',
-                },
-                've': {
-                    'type': 'int',
-                },
-                'trunk': {
-                    'type': 'int',
-                }
-            },
-            'ip_address_cfg': {
-                'type': 'list',
-                'ip_address': {
-                    'type': 'str',
-                }
-            },
-            'ip_address_part_cfg': {
-                'type': 'list',
-                'ip_address_partition': {
-                    'type': 'str',
-                }
-            },
-            'ipv6_address_cfg': {
-                'type': 'list',
-                'ipv6_address': {
-                    'type': 'str',
-                },
-                'ethernet': {
-                    'type': 'str',
-                },
-                've': {
-                    'type': 'int',
-                },
-                'trunk': {
-                    'type': 'int',
-                }
-            }
-        },
-        'follow': {
-            'type': 'dict',
-            'vrid_lead': {
+            'associated_vip_count': {
                 'type': 'str',
+            },
+            'associated_vport_count': {
+                'type': 'str',
+            },
+            'associated_natpool_count': {
+                'type': 'str',
+            },
+            'vrid_val': {
+                'type': 'int',
+                'required': True,
             }
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_health_check_details
 description:
     - Display Health Monitor Information for a given PIN and PID
-short_description: Configures A10 slb.health-check-details
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,251 +22,330 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            rcv_integer:
-                description:
-                - "Field rcv_integer"
-            domain:
-                description:
-                - "Field domain"
-            curr_tcp_rtt:
-                description:
-                - "Field curr_tcp_rtt"
-            force_up:
-                description:
-                - "Field force_up"
-            postdata:
-                description:
-                - "Field postdata"
-            starttls:
-                description:
-                - "Field starttls"
-            received_fail:
-                description:
-                - "Field received_fail"
-            sip_register:
-                description:
-                - "Field sip_register"
-            community:
-                description:
-                - "Field community"
-            dns_expect_type:
-                description:
-                - "Field dns_expect_type"
-            attr_program:
-                description:
-                - "Field attr_program"
-            avg_tcp_rtt:
-                description:
-                - "Field avg_tcp_rtt"
-            pass:
-                description:
-                - "Field pass"
-            query:
-                description:
-                - "Field query"
-            rcpt_to:
-                description:
-                - "Field rcpt_to"
-            response_timeout:
-                description:
-                - "Field response_timeout"
-            health_state:
-                description:
-                - "Field health_state"
-            expect_text_regex:
-                description:
-                - "Field expect_text_regex"
-            state_reason:
-                description:
-                - "Field state_reason"
-            dns_expect:
-                description:
-                - "Field dns_expect"
-            attr_type:
-                description:
-                - "Field attr_type"
-            user:
-                description:
-                - "Field user"
-            ldap_tls:
-                description:
-                - "Field ldap_tls"
-            ipaddr:
-                description:
-                - "Field ipaddr"
-            monitor_name:
-                description:
-                - "Field monitor_name"
-            send:
-                description:
-                - "Field send"
-            half_open:
-                description:
-                - "Field half_open"
-            kerberos_port:
-                description:
-                - "Field kerberos_port"
-            secret:
-                description:
-                - "Field secret"
-            curr_interval:
-                description:
-                - "Field curr_interval"
-            dns_qtype:
-                description:
-                - "Field dns_qtype"
-            mail_from:
-                description:
-                - "Field mail_from"
-            kerberos_kdc:
-                description:
-                - "Field kerberos_kdc"
-            method:
-                description:
-                - "Field method"
-            arguments:
-                description:
-                - "Field arguments"
-            expect_resp_code:
-                description:
-                - "Field expect_resp_code"
-            kerberos_realm:
-                description:
-                - "Field kerberos_realm"
-            l4_conn_num:
-                description:
-                - "Field l4_conn_num"
-            oid:
-                description:
-                - "Field oid"
-            attr_rpn:
-                description:
-                - "Field attr_rpn"
-            http_errors:
-                description:
-                - "Field http_errors"
-            expect_text:
-                description:
-                - "Field expect_text"
-            db_column:
-                description:
-                - "Field db_column"
-            attr_port:
-                description:
-                - "Field attr_port"
-            expect_resp_regex_code:
-                description:
-                - "Field expect_resp_regex_code"
-            status_code_rcv:
-                description:
-                - "Field status_code_rcv"
             pin_id:
                 description:
                 - "Field pin_id"
-            ldap_ssl:
-                description:
-                - "Field ldap_ssl"
-            tcp_only:
-                description:
-                - "Field tcp_only"
-            maintenance_code:
-                description:
-                - "Field maintenance_code"
-            resp_cont:
-                description:
-                - "Field resp_cont"
-            url:
-                description:
-                - "Field url"
+                type: int
             process_index:
                 description:
                 - "Field process_index"
-            snmp_operation:
+                type: int
+            health_state:
                 description:
-                - "Field snmp_operation"
-            mac_addr:
+                - "Field health_state"
+                type: str
+            state_reason:
                 description:
-                - "Field mac_addr"
-            host:
+                - "Field state_reason"
+                type: str
+            monitor_name:
                 description:
-                - "Field host"
-            curr_rtt:
-                description:
-                - "Field curr_rtt"
-            receive:
-                description:
-                - "Field receive"
-            avg_rtt:
-                description:
-                - "Field avg_rtt"
-            http_wait_resp:
-                description:
-                - "Field http_wait_resp"
-            l4_errors:
-                description:
-                - "Field l4_errors"
-            db_name:
-                description:
-                - "Field db_name"
-            http_req_sent:
-                description:
-                - "Field http_req_sent"
-            pname:
-                description:
-                - "Field pname"
-            transport_proto:
-                description:
-                - "Field transport_proto"
-            dns_recurse:
-                description:
-                - "Field dns_recurse"
-            db_row:
-                description:
-                - "Field db_row"
-            base_dn:
-                description:
-                - "Field base_dn"
+                - "Field monitor_name"
+                type: str
             received_success:
                 description:
                 - "Field received_success"
+                type: int
+            received_fail:
+                description:
+                - "Field received_fail"
+                type: int
+            response_timeout:
+                description:
+                - "Field response_timeout"
+                type: int
+            curr_interval:
+                description:
+                - "Field curr_interval"
+                type: int
+            method:
+                description:
+                - "Field method"
+                type: str
             attr_alias_addr:
                 description:
                 - "Field attr_alias_addr"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            attr_port:
+                description:
+                - "Field attr_port"
+                type: int
+            half_open:
+                description:
+                - "Field half_open"
+                type: int
+            send:
+                description:
+                - "Field send"
+                type: str
+            resp_cont:
+                description:
+                - "Field resp_cont"
+                type: str
+            force_up:
+                description:
+                - "Field force_up"
+                type: int
+            url:
+                description:
+                - "Field url"
+                type: str
+            expect_text:
+                description:
+                - "Field expect_text"
+                type: str
+            expect_resp_code:
+                description:
+                - "Field expect_resp_code"
+                type: str
+            expect_text_regex:
+                description:
+                - "Field expect_text_regex"
+                type: str
+            expect_resp_regex_code:
+                description:
+                - "Field expect_resp_regex_code"
+                type: str
+            maintenance_code:
+                description:
+                - "Field maintenance_code"
+                type: str
+            user:
+                description:
+                - "Field user"
+                type: str
+            pass:
+                description:
+                - "Field pass"
+                type: str
+            postdata:
+                description:
+                - "Field postdata"
+                type: str
+            host:
+                description:
+                - "Field host"
+                type: str
+            kerberos_realm:
+                description:
+                - "Field kerberos_realm"
+                type: str
+            kerberos_kdc:
+                description:
+                - "Field kerberos_kdc"
+                type: str
+            kerberos_port:
+                description:
+                - "Field kerberos_port"
+                type: int
+            snmp_operation:
+                description:
+                - "Field snmp_operation"
+                type: int
+            community:
+                description:
+                - "Field community"
+                type: str
+            oid:
+                description:
+                - "Field oid"
+                type: str
+            domain:
+                description:
+                - "Field domain"
+                type: str
+            starttls:
+                description:
+                - "Field starttls"
+                type: int
+            mail_from:
+                description:
+                - "Field mail_from"
+                type: str
+            rcpt_to:
+                description:
+                - "Field rcpt_to"
+                type: str
+            ipaddr:
+                description:
+                - "Field ipaddr"
+                type: str
+            dns_qtype:
+                description:
+                - "Field dns_qtype"
+                type: int
+            dns_recurse:
+                description:
+                - "Field dns_recurse"
+                type: int
+            dns_expect_type:
+                description:
+                - "Field dns_expect_type"
+                type: int
+            dns_expect:
+                description:
+                - "Field dns_expect"
+                type: str
+            transport_proto:
+                description:
+                - "Field transport_proto"
+                type: int
+            sip_register:
+                description:
+                - "Field sip_register"
+                type: int
+            secret:
+                description:
+                - "Field secret"
+                type: str
+            query:
+                description:
+                - "Field query"
+                type: str
+            base_dn:
+                description:
+                - "Field base_dn"
+                type: str
+            ldap_ssl:
+                description:
+                - "Field ldap_ssl"
+                type: int
+            ldap_tls:
+                description:
+                - "Field ldap_tls"
+                type: int
+            attr_type:
+                description:
+                - "Field attr_type"
+                type: str
+            db_name:
+                description:
+                - "Field db_name"
+                type: str
+            receive:
+                description:
+                - "Field receive"
+                type: str
+            rcv_integer:
+                description:
+                - "Field rcv_integer"
+                type: int
+            db_row:
+                description:
+                - "Field db_row"
+                type: int
+            db_column:
+                description:
+                - "Field db_column"
+                type: int
+            pname:
+                description:
+                - "Field pname"
+                type: str
+            tcp_only:
+                description:
+                - "Field tcp_only"
+                type: int
+            attr_program:
+                description:
+                - "Field attr_program"
+                type: str
+            arguments:
+                description:
+                - "Field arguments"
+                type: str
+            attr_rpn:
+                description:
+                - "Field attr_rpn"
+                type: str
+            http_wait_resp:
+                description:
+                - "Field http_wait_resp"
+                type: int
+            l4_conn_num:
+                description:
+                - "Field l4_conn_num"
+                type: int
+            l4_errors:
+                description:
+                - "Field l4_errors"
+                type: int
+            avg_rtt:
+                description:
+                - "Field avg_rtt"
+                type: int
+            curr_rtt:
+                description:
+                - "Field curr_rtt"
+                type: int
+            avg_tcp_rtt:
+                description:
+                - "Field avg_tcp_rtt"
+                type: int
+            curr_tcp_rtt:
+                description:
+                - "Field curr_tcp_rtt"
+                type: int
+            status_code_rcv:
+                description:
+                - "Field status_code_rcv"
+                type: int
+            http_req_sent:
+                description:
+                - "Field http_req_sent"
+                type: int
+            http_errors:
+                description:
+                - "Field http_errors"
+                type: int
+            mac_addr:
+                description:
+                - "Field mac_addr"
+                type: str
 
 '''
 
@@ -322,221 +399,221 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'rcv_integer': {
+            'pin_id': {
                 'type': 'int',
             },
-            'domain': {
-                'type': 'str',
-            },
-            'curr_tcp_rtt': {
-                'type': 'int',
-            },
-            'force_up': {
-                'type': 'int',
-            },
-            'postdata': {
-                'type': 'str',
-            },
-            'starttls': {
-                'type': 'int',
-            },
-            'received_fail': {
-                'type': 'int',
-            },
-            'sip_register': {
-                'type': 'int',
-            },
-            'community': {
-                'type': 'str',
-            },
-            'dns_expect_type': {
-                'type': 'int',
-            },
-            'attr_program': {
-                'type': 'str',
-            },
-            'avg_tcp_rtt': {
-                'type': 'int',
-            },
-            'pass': {
-                'type': 'str',
-            },
-            'query': {
-                'type': 'str',
-            },
-            'rcpt_to': {
-                'type': 'str',
-            },
-            'response_timeout': {
+            'process_index': {
                 'type': 'int',
             },
             'health_state': {
                 'type': 'str',
             },
-            'expect_text_regex': {
-                'type': 'str',
-            },
             'state_reason': {
-                'type': 'str',
-            },
-            'dns_expect': {
-                'type': 'str',
-            },
-            'attr_type': {
-                'type': 'str',
-            },
-            'user': {
-                'type': 'str',
-            },
-            'ldap_tls': {
-                'type': 'int',
-            },
-            'ipaddr': {
                 'type': 'str',
             },
             'monitor_name': {
                 'type': 'str',
             },
-            'send': {
-                'type': 'str',
-            },
-            'half_open': {
+            'received_success': {
                 'type': 'int',
             },
-            'kerberos_port': {
+            'received_fail': {
                 'type': 'int',
             },
-            'secret': {
-                'type': 'str',
+            'response_timeout': {
+                'type': 'int',
             },
             'curr_interval': {
                 'type': 'int',
             },
-            'dns_qtype': {
-                'type': 'int',
-            },
-            'mail_from': {
-                'type': 'str',
-            },
-            'kerberos_kdc': {
-                'type': 'str',
-            },
             'method': {
                 'type': 'str',
             },
-            'arguments': {
+            'attr_alias_addr': {
                 'type': 'str',
-            },
-            'expect_resp_code': {
-                'type': 'str',
-            },
-            'kerberos_realm': {
-                'type': 'str',
-            },
-            'l4_conn_num': {
-                'type': 'int',
-            },
-            'oid': {
-                'type': 'str',
-            },
-            'attr_rpn': {
-                'type': 'str',
-            },
-            'http_errors': {
-                'type': 'int',
-            },
-            'expect_text': {
-                'type': 'str',
-            },
-            'db_column': {
-                'type': 'int',
             },
             'attr_port': {
                 'type': 'int',
             },
-            'expect_resp_regex_code': {
-                'type': 'str',
-            },
-            'status_code_rcv': {
+            'half_open': {
                 'type': 'int',
             },
-            'pin_id': {
-                'type': 'int',
-            },
-            'ldap_ssl': {
-                'type': 'int',
-            },
-            'tcp_only': {
-                'type': 'int',
-            },
-            'maintenance_code': {
+            'send': {
                 'type': 'str',
             },
             'resp_cont': {
                 'type': 'str',
             },
+            'force_up': {
+                'type': 'int',
+            },
             'url': {
                 'type': 'str',
             },
-            'process_index': {
-                'type': 'int',
+            'expect_text': {
+                'type': 'str',
             },
-            'snmp_operation': {
-                'type': 'int',
+            'expect_resp_code': {
+                'type': 'str',
             },
-            'mac_addr': {
+            'expect_text_regex': {
+                'type': 'str',
+            },
+            'expect_resp_regex_code': {
+                'type': 'str',
+            },
+            'maintenance_code': {
+                'type': 'str',
+            },
+            'user': {
+                'type': 'str',
+            },
+            'pass': {
+                'type': 'str',
+            },
+            'postdata': {
                 'type': 'str',
             },
             'host': {
                 'type': 'str',
             },
-            'curr_rtt': {
-                'type': 'int',
-            },
-            'receive': {
+            'kerberos_realm': {
                 'type': 'str',
             },
-            'avg_rtt': {
-                'type': 'int',
-            },
-            'http_wait_resp': {
-                'type': 'int',
-            },
-            'l4_errors': {
-                'type': 'int',
-            },
-            'db_name': {
+            'kerberos_kdc': {
                 'type': 'str',
             },
-            'http_req_sent': {
+            'kerberos_port': {
                 'type': 'int',
             },
-            'pname': {
+            'snmp_operation': {
+                'type': 'int',
+            },
+            'community': {
                 'type': 'str',
             },
-            'transport_proto': {
+            'oid': {
+                'type': 'str',
+            },
+            'domain': {
+                'type': 'str',
+            },
+            'starttls': {
+                'type': 'int',
+            },
+            'mail_from': {
+                'type': 'str',
+            },
+            'rcpt_to': {
+                'type': 'str',
+            },
+            'ipaddr': {
+                'type': 'str',
+            },
+            'dns_qtype': {
                 'type': 'int',
             },
             'dns_recurse': {
                 'type': 'int',
             },
-            'db_row': {
+            'dns_expect_type': {
                 'type': 'int',
+            },
+            'dns_expect': {
+                'type': 'str',
+            },
+            'transport_proto': {
+                'type': 'int',
+            },
+            'sip_register': {
+                'type': 'int',
+            },
+            'secret': {
+                'type': 'str',
+            },
+            'query': {
+                'type': 'str',
             },
             'base_dn': {
                 'type': 'str',
             },
-            'received_success': {
+            'ldap_ssl': {
                 'type': 'int',
             },
-            'attr_alias_addr': {
+            'ldap_tls': {
+                'type': 'int',
+            },
+            'attr_type': {
+                'type': 'str',
+            },
+            'db_name': {
+                'type': 'str',
+            },
+            'receive': {
+                'type': 'str',
+            },
+            'rcv_integer': {
+                'type': 'int',
+            },
+            'db_row': {
+                'type': 'int',
+            },
+            'db_column': {
+                'type': 'int',
+            },
+            'pname': {
+                'type': 'str',
+            },
+            'tcp_only': {
+                'type': 'int',
+            },
+            'attr_program': {
+                'type': 'str',
+            },
+            'arguments': {
+                'type': 'str',
+            },
+            'attr_rpn': {
+                'type': 'str',
+            },
+            'http_wait_resp': {
+                'type': 'int',
+            },
+            'l4_conn_num': {
+                'type': 'int',
+            },
+            'l4_errors': {
+                'type': 'int',
+            },
+            'avg_rtt': {
+                'type': 'int',
+            },
+            'curr_rtt': {
+                'type': 'int',
+            },
+            'avg_tcp_rtt': {
+                'type': 'int',
+            },
+            'curr_tcp_rtt': {
+                'type': 'int',
+            },
+            'status_code_rcv': {
+                'type': 'int',
+            },
+            'http_req_sent': {
+                'type': 'int',
+            },
+            'http_errors': {
+                'type': 'int',
+            },
+            'mac_addr': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

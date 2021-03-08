@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_network_resources
 description:
     - Enter the network resource limits
-short_description: Configures A10 system.resource.accounting.template.network-resources
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,147 +21,186 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    static_ipv6_route_cfg:
-        description:
-        - "Field static_ipv6_route_cfg"
-        required: False
-        suboptions:
-            static_ipv6_route_max:
-                description:
-                - "Enter the number of static ipv6 routes allowed (Static ipv6 routes (default is
-          max-value))"
-            static_ipv6_route_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ipv4_acl_line_cfg:
-        description:
-        - "Field ipv4_acl_line_cfg"
-        required: False
-        suboptions:
-            ipv4_acl_line_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-            ipv4_acl_line_max:
-                description:
-                - "Enter the number of ACL lines allowed (IPV4 ACL lines (default is max-value))"
+        - Key to identify parent object
+        type: str
+        required: True
     static_ipv4_route_cfg:
         description:
         - "Field static_ipv4_route_cfg"
+        type: dict
         required: False
         suboptions:
             static_ipv4_route_max:
                 description:
                 - "Enter the number of static ipv4 routes allowed (Static ipv4 routes (default is
           max-value))"
+                type: int
             static_ipv4_route_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    static_ipv6_route_cfg:
+        description:
+        - "Field static_ipv6_route_cfg"
+        type: dict
+        required: False
+        suboptions:
+            static_ipv6_route_max:
+                description:
+                - "Enter the number of static ipv6 routes allowed (Static ipv6 routes (default is
+          max-value))"
+                type: int
+            static_ipv6_route_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    ipv4_acl_line_cfg:
+        description:
+        - "Field ipv4_acl_line_cfg"
+        type: dict
+        required: False
+        suboptions:
+            ipv4_acl_line_max:
+                description:
+                - "Enter the number of ACL lines allowed (IPV4 ACL lines (default is max-value))"
+                type: int
+            ipv4_acl_line_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    ipv6_acl_line_cfg:
+        description:
+        - "Field ipv6_acl_line_cfg"
+        type: dict
+        required: False
+        suboptions:
+            ipv6_acl_line_max:
+                description:
+                - "Enter the number of ACL lines allowed (IPV6 ACL lines (default is max-value))"
+                type: int
+            ipv6_acl_line_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
     static_arp_cfg:
         description:
         - "Field static_arp_cfg"
+        type: dict
         required: False
         suboptions:
-            static_arp_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
             static_arp_max:
                 description:
                 - "Enter the number of static arp entries allowed (Static arp (default is max-
           value))"
-    object_group_clause_cfg:
-        description:
-        - "Field object_group_clause_cfg"
-        required: False
-        suboptions:
-            object_group_clause_min_guarantee:
+                type: int
+            static_arp_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
-            object_group_clause_max:
-                description:
-                - "Enter the number of object group clauses allowed (Object group clauses (default
-          is max-value))"
-    static_mac_cfg:
-        description:
-        - "Field static_mac_cfg"
-        required: False
-        suboptions:
-            static_mac_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-            static_mac_max:
-                description:
-                - "Enter the number of static MAC entries allowed (Static MACs (default is max-
-          value))"
-    object_group_cfg:
-        description:
-        - "Field object_group_cfg"
-        required: False
-        suboptions:
-            object_group_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
-            object_group_max:
-                description:
-                - "Enter the number of object groups allowed (Object group (default is max-value))"
+                type: int
     static_neighbor_cfg:
         description:
         - "Field static_neighbor_cfg"
+        type: dict
         required: False
         suboptions:
             static_neighbor_max:
                 description:
                 - "Enter the number of static neighbor entries allowed (Static neighbors (default
           is max-value))"
+                type: int
             static_neighbor_min_guarantee:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    static_mac_cfg:
+        description:
+        - "Field static_mac_cfg"
+        type: dict
+        required: False
+        suboptions:
+            static_mac_max:
+                description:
+                - "Enter the number of static MAC entries allowed (Static MACs (default is max-
+          value))"
+                type: int
+            static_mac_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    object_group_cfg:
+        description:
+        - "Field object_group_cfg"
+        type: dict
+        required: False
+        suboptions:
+            object_group_max:
+                description:
+                - "Enter the number of object groups allowed (Object group (default is max-value))"
+                type: int
+            object_group_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    object_group_clause_cfg:
+        description:
+        - "Field object_group_clause_cfg"
+        type: dict
+        required: False
+        suboptions:
+            object_group_clause_max:
+                description:
+                - "Enter the number of object group clauses allowed (Object group clauses (default
+          is max-value))"
+                type: int
+            object_group_clause_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
     threshold:
         description:
         - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
+        type: int
         required: False
-    ipv6_acl_line_cfg:
+    uuid:
         description:
-        - "Field ipv6_acl_line_cfg"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            ipv6_acl_line_max:
-                description:
-                - "Enter the number of ACL lines allowed (IPV6 ACL lines (default is max-value))"
-            ipv6_acl_line_min_guarantee:
-                description:
-                - "Minimum guaranteed value ( Minimum guaranteed value)"
 
 '''
 
@@ -224,27 +261,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'static_ipv6_route_cfg': {
-            'type': 'dict',
-            'static_ipv6_route_max': {
-                'type': 'int',
-            },
-            'static_ipv6_route_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'ipv4_acl_line_cfg': {
-            'type': 'dict',
-            'ipv4_acl_line_min_guarantee': {
-                'type': 'int',
-            },
-            'ipv4_acl_line_max': {
-                'type': 'int',
-            }
-        },
         'static_ipv4_route_cfg': {
             'type': 'dict',
             'static_ipv4_route_max': {
@@ -254,39 +270,39 @@ def get_argspec():
                 'type': 'int',
             }
         },
+        'static_ipv6_route_cfg': {
+            'type': 'dict',
+            'static_ipv6_route_max': {
+                'type': 'int',
+            },
+            'static_ipv6_route_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'ipv4_acl_line_cfg': {
+            'type': 'dict',
+            'ipv4_acl_line_max': {
+                'type': 'int',
+            },
+            'ipv4_acl_line_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'ipv6_acl_line_cfg': {
+            'type': 'dict',
+            'ipv6_acl_line_max': {
+                'type': 'int',
+            },
+            'ipv6_acl_line_min_guarantee': {
+                'type': 'int',
+            }
+        },
         'static_arp_cfg': {
             'type': 'dict',
-            'static_arp_min_guarantee': {
-                'type': 'int',
-            },
             'static_arp_max': {
                 'type': 'int',
-            }
-        },
-        'object_group_clause_cfg': {
-            'type': 'dict',
-            'object_group_clause_min_guarantee': {
-                'type': 'int',
             },
-            'object_group_clause_max': {
-                'type': 'int',
-            }
-        },
-        'static_mac_cfg': {
-            'type': 'dict',
-            'static_mac_min_guarantee': {
-                'type': 'int',
-            },
-            'static_mac_max': {
-                'type': 'int',
-            }
-        },
-        'object_group_cfg': {
-            'type': 'dict',
-            'object_group_min_guarantee': {
-                'type': 'int',
-            },
-            'object_group_max': {
+            'static_arp_min_guarantee': {
                 'type': 'int',
             }
         },
@@ -299,17 +315,38 @@ def get_argspec():
                 'type': 'int',
             }
         },
+        'static_mac_cfg': {
+            'type': 'dict',
+            'static_mac_max': {
+                'type': 'int',
+            },
+            'static_mac_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'object_group_cfg': {
+            'type': 'dict',
+            'object_group_max': {
+                'type': 'int',
+            },
+            'object_group_min_guarantee': {
+                'type': 'int',
+            }
+        },
+        'object_group_clause_cfg': {
+            'type': 'dict',
+            'object_group_clause_max': {
+                'type': 'int',
+            },
+            'object_group_clause_min_guarantee': {
+                'type': 'int',
+            }
+        },
         'threshold': {
             'type': 'int',
         },
-        'ipv6_acl_line_cfg': {
-            'type': 'dict',
-            'ipv6_acl_line_max': {
-                'type': 'int',
-            },
-            'ipv6_acl_line_min_guarantee': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

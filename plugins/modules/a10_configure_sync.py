@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_configure_sync
 description:
     - Sync operation
-short_description: Configures A10 configure.sync
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,73 +22,90 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    all_partitions:
-        description:
-        - "All partition configurations"
-        required: False
-    private_key:
-        description:
-        - "Use private key for authentication"
-        required: False
-    partition_name:
-        description:
-        - "Partition name"
-        required: False
-    pwd:
-        description:
-        - "Field pwd"
-        required: False
-    auto_authentication:
-        description:
-        - "Authenticate with local username and password"
-        required: False
-    address:
-        description:
-        - "Specify the destination ip address to sync"
-        required: False
-    shared:
-        description:
-        - "Shared partition"
+        type: str
         required: False
     ntype:
         description:
         - "'running'= Sync local running to peer's running configuration; 'all'= Sync
           local running to peer's running configuration, and local startup to peer's
           startup configuration;"
+        type: str
         required: False
-    pwd_enc:
+    all_partitions:
         description:
-        - "Field pwd_enc"
+        - "All partition configurations"
+        type: bool
+        required: False
+    shared:
+        description:
+        - "Shared partition"
+        type: bool
+        required: False
+    partition_name:
+        description:
+        - "Partition name"
+        type: str
+        required: False
+    address:
+        description:
+        - "Specify the destination ip address to sync"
+        type: str
+        required: False
+    auto_authentication:
+        description:
+        - "Authenticate with local username and password"
+        type: bool
+        required: False
+    private_key:
+        description:
+        - "Use private key for authentication"
+        type: str
         required: False
     usr:
         description:
         - "Field usr"
+        type: str
+        required: False
+    pwd:
+        description:
+        - "Field pwd"
+        type: str
+        required: False
+    pwd_enc:
+        description:
+        - "Field pwd_enc"
+        type: str
         required: False
 
 '''
@@ -153,35 +168,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ntype': {
+            'type': 'str',
+            'choices': ['running', 'all']
+        },
         'all_partitions': {
             'type': 'bool',
         },
-        'private_key': {
-            'type': 'str',
+        'shared': {
+            'type': 'bool',
         },
         'partition_name': {
             'type': 'str',
         },
-        'pwd': {
+        'address': {
             'type': 'str',
         },
         'auto_authentication': {
             'type': 'bool',
         },
-        'address': {
-            'type': 'str',
-        },
-        'shared': {
-            'type': 'bool',
-        },
-        'ntype': {
-            'type': 'str',
-            'choices': ['running', 'all']
-        },
-        'pwd_enc': {
+        'private_key': {
             'type': 'str',
         },
         'usr': {
+            'type': 'str',
+        },
+        'pwd': {
+            'type': 'str',
+        },
+        'pwd_enc': {
             'type': 'str',
         }
     })

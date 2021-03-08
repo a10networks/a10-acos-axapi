@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_site_ip_server
 description:
     - Specify a real server for the GSLB site
-short_description: Configures A10 gslb.site.ip-server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,81 +22,104 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     site_name:
         description:
-        - Key to identify parent object    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            ip_server_name:
-                description:
-                - "Specify the real server name"
-            state:
-                description:
-                - "Field state"
-            ip_server:
-                description:
-                - "Field ip_server"
-            ip_server_port:
-                description:
-                - "Field ip_server_port"
-            ip_address:
-                description:
-                - "Field ip_address"
+        - Key to identify parent object
+        type: str
+        required: True
     ip_server_name:
         description:
         - "Specify the real server name"
+        type: str
         required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Number of times the IP was selected;"
-    stats:
+                type: str
+    oper:
         description:
-        - "Field stats"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
+            ip_server:
+                description:
+                - "Field ip_server"
+                type: str
+            ip_address:
+                description:
+                - "Field ip_address"
+                type: str
+            state:
+                description:
+                - "Field state"
+                type: str
+            ip_server_port:
+                description:
+                - "Field ip_server_port"
+                type: list
             ip_server_name:
                 description:
                 - "Specify the real server name"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
             hits:
                 description:
                 - "Number of times the IP was selected"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ip_server_name:
+                description:
+                - "Specify the real server name"
+                type: str
 
 '''
 
@@ -155,16 +176,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ip_server_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits']
+            }
+        },
         'oper': {
             'type': 'dict',
-            'ip_server_name': {
+            'ip_server': {
                 'type': 'str',
-                'required': True,
+            },
+            'ip_address': {
+                'type': 'str',
             },
             'state': {
-                'type': 'str',
-            },
-            'ip_server': {
                 'type': 'str',
             },
             'ip_server_port': {
@@ -176,33 +210,20 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'ip_address': {
+            'ip_server_name': {
                 'type': 'str',
-            }
-        },
-        'ip_server_name': {
-            'type': 'str',
-            'required': True,
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
+                'required': True,
             }
         },
         'stats': {
             'type': 'dict',
+            'hits': {
+                'type': 'str',
+            },
             'ip_server_name': {
                 'type': 'str',
                 'required': True,
-            },
-            'hits': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

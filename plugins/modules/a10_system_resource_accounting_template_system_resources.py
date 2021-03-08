@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_system_resources
 description:
     - Enter the system resource limits
-short_description: Configures A10 system.resource.accounting.template.system-resources
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,129 +21,162 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     template_name:
         description:
-        - Key to identify parent object    l4_session_limit_cfg:
-        description:
-        - "Field l4_session_limit_cfg"
-        required: False
-        suboptions:
-            l4_session_limit_max:
-                description:
-                - "Enter the l4 session limit in % (0.01% to 99.99%) (Enter a number from 0.01 to
-          99.99 (up to 2 digits precision))"
-            l4_session_limit_min_guarantee:
-                description:
-                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0
-          to 99.99)"
-    l7cps_limit_cfg:
-        description:
-        - "Field l7cps_limit_cfg"
-        required: False
-        suboptions:
-            l7cps_limit_max:
-                description:
-                - "L7cps-limit (L7 cps limit (no limits applied by default))"
-    l4cps_limit_cfg:
-        description:
-        - "Field l4cps_limit_cfg"
-        required: False
-        suboptions:
-            l4cps_limit_max:
-                description:
-                - "Enter the L4 cps limit (L4 cps limit (no limits applied by default))"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    natcps_limit_cfg:
-        description:
-        - "Field natcps_limit_cfg"
-        required: False
-        suboptions:
-            natcps_limit_max:
-                description:
-                - "Enter the Nat cps limit (NAT cps limit (no limits applied by default))"
-    sslcps_limit_cfg:
-        description:
-        - "Field sslcps_limit_cfg"
-        required: False
-        suboptions:
-            sslcps_limit_max:
-                description:
-                - "Enter the SSL cps limit (SSL cps limit (no limits applied by default))"
-    fwcps_limit_cfg:
-        description:
-        - "Field fwcps_limit_cfg"
-        required: False
-        suboptions:
-            fwcps_limit_max:
-                description:
-                - "Enter the Firewall cps limit (Firewall cps limit (no limits applied by
-          default))"
-    ssl_throughput_limit_cfg:
-        description:
-        - "Field ssl_throughput_limit_cfg"
-        required: False
-        suboptions:
-            ssl_throughput_limit_watermark_disable:
-                description:
-                - "Disable watermark (90% drop, keep existing sessions, drop  new sessions)"
-            ssl_throughput_limit_max:
-                description:
-                - "Enter the ssl throughput limit in mbps (SSL Througput limit in Mbit/s (no
-          limits applied by default))"
-    threshold:
-        description:
-        - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     bw_limit_cfg:
         description:
         - "Field bw_limit_cfg"
+        type: dict
         required: False
         suboptions:
             bw_limit_max:
                 description:
                 - "Enter the bandwidth limit in mbps (Bandwidth limit in Mbit/s (no limits applied
           by default))"
+                type: int
             bw_limit_watermark_disable:
                 description:
                 - "Disable watermark (90% drop, keep existing sessions, drop  new sessions)"
+                type: bool
     concurrent_session_limit_cfg:
         description:
         - "Field concurrent_session_limit_cfg"
+        type: dict
         required: False
         suboptions:
             concurrent_session_limit_max:
                 description:
                 - "Enter the Concurrent Session limit (cps) (Concurrent-Session cps limit (no
           limits applied by default))"
+                type: int
+    l4_session_limit_cfg:
+        description:
+        - "Field l4_session_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            l4_session_limit_max:
+                description:
+                - "Enter the l4 session limit in % (0.01% to 99.99%) (Enter a number from 0.01 to
+          99.99 (up to 2 digits precision))"
+                type: str
+            l4_session_limit_min_guarantee:
+                description:
+                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0
+          to 99.99)"
+                type: str
+    l4cps_limit_cfg:
+        description:
+        - "Field l4cps_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            l4cps_limit_max:
+                description:
+                - "Enter the L4 cps limit (L4 cps limit (no limits applied by default))"
+                type: int
+    l7cps_limit_cfg:
+        description:
+        - "Field l7cps_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            l7cps_limit_max:
+                description:
+                - "L7cps-limit (L7 cps limit (no limits applied by default))"
+                type: int
+    natcps_limit_cfg:
+        description:
+        - "Field natcps_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            natcps_limit_max:
+                description:
+                - "Enter the Nat cps limit (NAT cps limit (no limits applied by default))"
+                type: int
+    fwcps_limit_cfg:
+        description:
+        - "Field fwcps_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fwcps_limit_max:
+                description:
+                - "Enter the Firewall cps limit (Firewall cps limit (no limits applied by
+          default))"
+                type: int
+    ssl_throughput_limit_cfg:
+        description:
+        - "Field ssl_throughput_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            ssl_throughput_limit_max:
+                description:
+                - "Enter the ssl throughput limit in mbps (SSL Througput limit in Mbit/s (no
+          limits applied by default))"
+                type: int
+            ssl_throughput_limit_watermark_disable:
+                description:
+                - "Disable watermark (90% drop, keep existing sessions, drop  new sessions)"
+                type: bool
+    sslcps_limit_cfg:
+        description:
+        - "Field sslcps_limit_cfg"
+        type: dict
+        required: False
+        suboptions:
+            sslcps_limit_max:
+                description:
+                - "Enter the SSL cps limit (SSL cps limit (no limits applied by default))"
+                type: int
+    threshold:
+        description:
+        - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -206,60 +237,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'l4_session_limit_cfg': {
-            'type': 'dict',
-            'l4_session_limit_max': {
-                'type': 'str',
-            },
-            'l4_session_limit_min_guarantee': {
-                'type': 'str',
-            }
-        },
-        'l7cps_limit_cfg': {
-            'type': 'dict',
-            'l7cps_limit_max': {
-                'type': 'int',
-            }
-        },
-        'l4cps_limit_cfg': {
-            'type': 'dict',
-            'l4cps_limit_max': {
-                'type': 'int',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'natcps_limit_cfg': {
-            'type': 'dict',
-            'natcps_limit_max': {
-                'type': 'int',
-            }
-        },
-        'sslcps_limit_cfg': {
-            'type': 'dict',
-            'sslcps_limit_max': {
-                'type': 'int',
-            }
-        },
-        'fwcps_limit_cfg': {
-            'type': 'dict',
-            'fwcps_limit_max': {
-                'type': 'int',
-            }
-        },
-        'ssl_throughput_limit_cfg': {
-            'type': 'dict',
-            'ssl_throughput_limit_watermark_disable': {
-                'type': 'bool',
-            },
-            'ssl_throughput_limit_max': {
-                'type': 'int',
-            }
-        },
-        'threshold': {
-            'type': 'int',
-        },
         'bw_limit_cfg': {
             'type': 'dict',
             'bw_limit_max': {
@@ -274,6 +251,60 @@ def get_argspec():
             'concurrent_session_limit_max': {
                 'type': 'int',
             }
+        },
+        'l4_session_limit_cfg': {
+            'type': 'dict',
+            'l4_session_limit_max': {
+                'type': 'str',
+            },
+            'l4_session_limit_min_guarantee': {
+                'type': 'str',
+            }
+        },
+        'l4cps_limit_cfg': {
+            'type': 'dict',
+            'l4cps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'l7cps_limit_cfg': {
+            'type': 'dict',
+            'l7cps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'natcps_limit_cfg': {
+            'type': 'dict',
+            'natcps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'fwcps_limit_cfg': {
+            'type': 'dict',
+            'fwcps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'ssl_throughput_limit_cfg': {
+            'type': 'dict',
+            'ssl_throughput_limit_max': {
+                'type': 'int',
+            },
+            'ssl_throughput_limit_watermark_disable': {
+                'type': 'bool',
+            }
+        },
+        'sslcps_limit_cfg': {
+            'type': 'dict',
+            'sslcps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'threshold': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

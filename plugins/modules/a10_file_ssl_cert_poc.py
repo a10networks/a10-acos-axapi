@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_ssl_cert_poc
 description:
     - ssl certificate file information and management commands
-short_description: Configures A10 file.ssl-cert-poc
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,66 +22,81 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
-        required: False
-    pfx_password:
-        description:
-        - "The password for certificate file (pfx type only)"
-        required: False
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
         required: False
     file:
         description:
         - "ssl certificate local file name"
+        type: str
+        required: False
+    size:
+        description:
+        - "ssl certificate file size in byte"
+        type: int
+        required: False
+    file_handle:
+        description:
+        - "public-key"
+        type: str
+        required: False
+    certificate_type:
+        description:
+        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b;"
+        type: str
+        required: False
+    pfx_password:
+        description:
+        - "The password for certificate file (pfx type only)"
+        type: str
         required: False
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
           rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
         required: False
-    certificate_type:
+    dst_file:
         description:
-        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b;"
-        required: False
-    file_handle:
-        description:
-        - "public-key"
-        required: False
-    size:
-        description:
-        - "ssl certificate file size in byte"
+        - "destination file name for copy and rename action"
+        type: str
         required: False
 
 '''
@@ -146,13 +159,20 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
-        'pfx_password': {
-            'type': 'str',
-        },
-        'dst_file': {
-            'type': 'str',
-        },
         'file': {
+            'type': 'str',
+        },
+        'size': {
+            'type': 'int',
+        },
+        'file_handle': {
+            'type': 'str',
+        },
+        'certificate_type': {
+            'type': 'str',
+            'choices': ['pem', 'der', 'pfx', 'p7b']
+        },
+        'pfx_password': {
             'type': 'str',
         },
         'action': {
@@ -163,15 +183,8 @@ def get_argspec():
                 'replace', 'delete'
             ]
         },
-        'certificate_type': {
+        'dst_file': {
             'type': 'str',
-            'choices': ['pem', 'der', 'pfx', 'p7b']
-        },
-        'file_handle': {
-            'type': 'str',
-        },
-        'size': {
-            'type': 'int',
         }
     })
     return rv

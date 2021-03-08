@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_nat_inside_source_static
 description:
     - Static Address Translations
-short_description: Configures A10 cgnv6.nat.inside.source.static
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,51 +22,63 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    nat_address:
-        description:
-        - "NAT Address"
-        required: False
-    partition:
-        description:
-        - "Inside User Partition (Partition Name)"
-        required: True
-    vrid:
-        description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: str
         required: False
     src_address:
         description:
         - "Original Source Address"
+        type: str
         required: True
+    partition:
+        description:
+        - "Inside User Partition (Partition Name)"
+        type: str
+        required: True
+    nat_address:
+        description:
+        - "NAT Address"
+        type: str
+        required: False
+    vrid:
+        description:
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -126,19 +136,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'nat_address': {
+        'src_address': {
             'type': 'str',
+            'required': True,
         },
         'partition': {
             'type': 'str',
             'required': True,
         },
+        'nat_address': {
+            'type': 'str',
+        },
         'vrid': {
             'type': 'int',
-        },
-        'src_address': {
-            'type': 'str',
-            'required': True,
         },
         'uuid': {
             'type': 'str',

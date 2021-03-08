@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_bootimage
 description:
     - Set next Boot Image
-short_description: Configures A10 bootimage
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,84 +22,106 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    cf_cfg:
+        description:
+        - "Field cf_cfg"
+        type: dict
+        required: False
+        suboptions:
+            cf:
+                description:
+                - "Compact flash"
+                type: bool
+            cf_pri:
+                description:
+                - "Primary image"
+                type: bool
+    hd_cfg:
+        description:
+        - "Field hd_cfg"
+        type: dict
+        required: False
+        suboptions:
+            hd:
+                description:
+                - "Hard disk"
+                type: bool
+            pri:
+                description:
+                - "Primary image"
+                type: bool
+            sec:
+                description:
+                - "Secondary image"
+                type: bool
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            hd_sec:
-                description:
-                - "Field hd_sec"
-            cf_default:
-                description:
-                - "Field cf_default"
             hd_pri:
                 description:
                 - "Field hd_pri"
+                type: str
+            hd_sec:
+                description:
+                - "Field hd_sec"
+                type: str
             cf_pri:
                 description:
                 - "Field cf_pri"
+                type: str
             cf_sec:
                 description:
                 - "Field cf_sec"
+                type: str
             hd_default:
                 description:
                 - "Field hd_default"
-    hd_cfg:
-        description:
-        - "Field hd_cfg"
-        required: False
-        suboptions:
-            pri:
+                type: str
+            cf_default:
                 description:
-                - "Primary image"
-            sec:
-                description:
-                - "Secondary image"
-            hd:
-                description:
-                - "Hard disk"
-    cf_cfg:
-        description:
-        - "Field cf_cfg"
-        required: False
-        suboptions:
-            cf_pri:
-                description:
-                - "Primary image"
-            cf:
-                description:
-                - "Compact flash"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                - "Field cf_default"
+                type: str
 
 '''
 
@@ -157,15 +177,36 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'cf_cfg': {
+            'type': 'dict',
+            'cf': {
+                'type': 'bool',
+            },
+            'cf_pri': {
+                'type': 'bool',
+            }
+        },
+        'hd_cfg': {
+            'type': 'dict',
+            'hd': {
+                'type': 'bool',
+            },
+            'pri': {
+                'type': 'bool',
+            },
+            'sec': {
+                'type': 'bool',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'hd_sec': {
-                'type': 'str',
-            },
-            'cf_default': {
-                'type': 'str',
-            },
             'hd_pri': {
+                'type': 'str',
+            },
+            'hd_sec': {
                 'type': 'str',
             },
             'cf_pri': {
@@ -176,31 +217,10 @@ def get_argspec():
             },
             'hd_default': {
                 'type': 'str',
-            }
-        },
-        'hd_cfg': {
-            'type': 'dict',
-            'pri': {
-                'type': 'bool',
             },
-            'sec': {
-                'type': 'bool',
-            },
-            'hd': {
-                'type': 'bool',
+            'cf_default': {
+                'type': 'str',
             }
-        },
-        'cf_cfg': {
-            'type': 'dict',
-            'cf_pri': {
-                'type': 'bool',
-            },
-            'cf': {
-                'type': 'bool',
-            }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

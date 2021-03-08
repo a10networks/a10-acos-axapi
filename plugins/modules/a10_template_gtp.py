@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_template_gtp
 description:
     - Define a GTP template
-short_description: Configures A10 template.gtp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,43 +22,94 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    mandatory_ie_filtering:
-        description:
-        - "'disable'= Disable  Mandatory Information Element Filtering;"
+        type: str
         required: False
     name:
         description:
         - "GTP Template Name"
+        type: str
         required: True
+    log:
+        description:
+        - "Field log"
+        type: dict
+        required: False
+        suboptions:
+            message_filtering:
+                description:
+                - "Log Packet Drop due to Message Filtering"
+                type: bool
+            information_filtering:
+                description:
+                - "Log Packet Drop due to Information Filtering"
+                type: bool
+            invalid_teid:
+                description:
+                - "Log Packet Drop due to Invalid Tunnel Endpoint Identifier"
+                type: bool
+            reserved_ie_present:
+                description:
+                - "Log Packet Drop due to Presence of Reserved Information Element"
+                type: bool
+            mandatory_ie_missing:
+                description:
+                - "Log Packet Drop due to Missing Mandatory Information Element"
+                type: bool
+    protocol_anomaly_filtering:
+        description:
+        - "'disable'= Disable Anomaly Filtering;"
+        type: str
+        required: False
+    mandatory_ie_filtering:
+        description:
+        - "'disable'= Disable  Mandatory Information Element Filtering;"
+        type: str
+        required: False
+    tunnel_timeout:
+        description:
+        - "Idle Timeout in minutes (default= 60 mins)"
+        type: int
+        required: False
+    maximum_message_length:
+        description:
+        - "Maximum message length for a GTP message"
+        type: int
+        required: False
     message_type:
         description:
         - "Field message_type"
+        type: list
         required: False
         suboptions:
             message_type_v2:
@@ -89,23 +138,7 @@ options:
           Activation/Deactivation; 'update-bearer'= Update Bearer Request/Response;
           'update-pdn'= Update PDN Connection Request/Response; 'version-not-supported'=
           Version Not Supported;"
-            drop_value:
-                description:
-                - "'drop'= Drop the Message Type;"
-            message_type_v0:
-                description:
-                - "'create-pdp'= Create PDP Context Request/Response; 'data-record'= Data Record
-          Request/Response; 'delete-pdp'= Delete PDP Context Request/Response; 'echo'=
-          Echo Request/Response; 'error-indication'= Error Indication; 'failure-report'=
-          Failure Report Request/Response; 'identification'= Identification
-          Request/Response; 'node-alive'= Node Alive Request/Response; 'note-ms-present'=
-          Note MS GPRS present Request/Response; 'pdu-notification'= PDU Notification
-          Request/Response/Reject Request/Reject Response; 'redirection'= Redirection
-          Request/Response; 'send-route'= Send Route Info Request/Response; 'sgsn-
-          context'= Sgsn Context Request/Response/Acknowledge; 'gtp-pdu'= T-PDU; 'update-
-          pdp'= Update PDP Context Request/Response; 'create-aa-pdp'= Create AA PDP
-          Context Request/Response; 'delete-aa-pdp'= Delete AA PDP Context
-          Request/Response; 'version-not-supported'= Version Not Supported;"
+                type: str
             message_type_v1:
                 description:
                 - "'create-pdp'= Create PDP Context Request/Response; 'data-record'= Data Record
@@ -123,49 +156,40 @@ options:
           Supported Extension Headers Notification; 'gtp-pdu'= G-PDU; 'update-pdp'=
           Update PDP Context Request/Response; 'version-not-supported'= Version Not
           Supported;"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    log:
-        description:
-        - "Field log"
-        required: False
-        suboptions:
-            message_filtering:
+                type: str
+            message_type_v0:
                 description:
-                - "Log Packet Drop due to Message Filtering"
-            information_filtering:
+                - "'create-pdp'= Create PDP Context Request/Response; 'data-record'= Data Record
+          Request/Response; 'delete-pdp'= Delete PDP Context Request/Response; 'echo'=
+          Echo Request/Response; 'error-indication'= Error Indication; 'failure-report'=
+          Failure Report Request/Response; 'identification'= Identification
+          Request/Response; 'node-alive'= Node Alive Request/Response; 'note-ms-present'=
+          Note MS GPRS present Request/Response; 'pdu-notification'= PDU Notification
+          Request/Response/Reject Request/Reject Response; 'redirection'= Redirection
+          Request/Response; 'send-route'= Send Route Info Request/Response; 'sgsn-
+          context'= Sgsn Context Request/Response/Acknowledge; 'gtp-pdu'= T-PDU; 'update-
+          pdp'= Update PDP Context Request/Response; 'create-aa-pdp'= Create AA PDP
+          Context Request/Response; 'delete-aa-pdp'= Delete AA PDP Context
+          Request/Response; 'version-not-supported'= Version Not Supported;"
+                type: str
+            drop_value:
                 description:
-                - "Log Packet Drop due to Information Filtering"
-            mandatory_ie_missing:
-                description:
-                - "Log Packet Drop due to Missing Mandatory Information Element"
-            invalid_teid:
-                description:
-                - "Log Packet Drop due to Invalid Tunnel Endpoint Identifier"
-            reserved_ie_present:
-                description:
-                - "Log Packet Drop due to Presence of Reserved Information Element"
-    tunnel_timeout:
-        description:
-        - "Idle Timeout in minutes (default= 60 mins)"
-        required: False
+                - "'drop'= Drop the Message Type;"
+                type: str
     gtp_filter_list:
         description:
         - "Specify a GTP Filter-List (GTP Filter-List Value)"
-        required: False
-    maximum_message_length:
-        description:
-        - "Maximum message length for a GTP message"
-        required: False
-    protocol_anomaly_filtering:
-        description:
-        - "'disable'= Disable Anomaly Filtering;"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -228,13 +252,41 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'log': {
+            'type': 'dict',
+            'message_filtering': {
+                'type': 'bool',
+            },
+            'information_filtering': {
+                'type': 'bool',
+            },
+            'invalid_teid': {
+                'type': 'bool',
+            },
+            'reserved_ie_present': {
+                'type': 'bool',
+            },
+            'mandatory_ie_missing': {
+                'type': 'bool',
+            }
+        },
+        'protocol_anomaly_filtering': {
+            'type': 'str',
+            'choices': ['disable']
+        },
         'mandatory_ie_filtering': {
             'type': 'str',
             'choices': ['disable']
         },
-        'name': {
-            'type': 'str',
-            'required': True,
+        'tunnel_timeout': {
+            'type': 'int',
+        },
+        'maximum_message_length': {
+            'type': 'int',
         },
         'message_type': {
             'type': 'list',
@@ -256,9 +308,18 @@ def get_argspec():
                     'update-pdn', 'version-not-supported'
                 ]
             },
-            'drop_value': {
-                'type': 'str',
-                'choices': ['drop']
+            'message_type_v1': {
+                'type':
+                'str',
+                'choices': [
+                    'create-pdp', 'data-record', 'delete-pdp', 'echo',
+                    'error-indication', 'failure-report', 'fwd-relocation',
+                    'fwd-srns-context', 'identification', 'node-alive',
+                    'note-ms-present', 'pdu-notification', 'ran-info',
+                    'redirection', 'relocation-cancel', 'send-route',
+                    'sgsn-context', 'supported-extension', 'gtp-pdu',
+                    'update-pdp', 'version-not-supported'
+                ]
             },
             'message_type_v0': {
                 'type':
@@ -272,55 +333,18 @@ def get_argspec():
                     'version-not-supported'
                 ]
             },
-            'message_type_v1': {
-                'type':
-                'str',
-                'choices': [
-                    'create-pdp', 'data-record', 'delete-pdp', 'echo',
-                    'error-indication', 'failure-report', 'fwd-relocation',
-                    'fwd-srns-context', 'identification', 'node-alive',
-                    'note-ms-present', 'pdu-notification', 'ran-info',
-                    'redirection', 'relocation-cancel', 'send-route',
-                    'sgsn-context', 'supported-extension', 'gtp-pdu',
-                    'update-pdp', 'version-not-supported'
-                ]
+            'drop_value': {
+                'type': 'str',
+                'choices': ['drop']
             }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'log': {
-            'type': 'dict',
-            'message_filtering': {
-                'type': 'bool',
-            },
-            'information_filtering': {
-                'type': 'bool',
-            },
-            'mandatory_ie_missing': {
-                'type': 'bool',
-            },
-            'invalid_teid': {
-                'type': 'bool',
-            },
-            'reserved_ie_present': {
-                'type': 'bool',
-            }
-        },
-        'tunnel_timeout': {
-            'type': 'int',
         },
         'gtp_filter_list': {
             'type': 'str',
         },
-        'maximum_message_length': {
-            'type': 'int',
-        },
-        'protocol_anomaly_filtering': {
-            'type': 'str',
-            'choices': ['disable']
-        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

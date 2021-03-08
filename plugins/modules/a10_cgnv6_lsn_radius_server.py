@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_radius_server
 description:
     - Configure system as a RADIUS server
-short_description: Configures A10 cgnv6.lsn.radius.server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,159 +22,177 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    accounting_start:
+    listen_port:
         description:
-        - "'ignore'= Ignore; 'append-entry'= Append the AVPs to existing entry (default);
-          'replace-entry'= Replace the AVPs of existing entry;"
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            radius_table_entries_list:
-                description:
-                - "Field radius_table_entries_list"
-            custom_attr_value:
-                description:
-                - "Field custom_attr_value"
-            starts_with:
-                description:
-                - "Field starts_with"
-            custom_attr_name:
-                description:
-                - "Field custom_attr_name"
-            case_insensitive:
-                description:
-                - "Field case_insensitive"
-            total_entries:
-                description:
-                - "Field total_entries"
-    attribute_name:
-        description:
-        - "'msisdn'= Clear using MSISDN; 'imei'= Clear using IMEI; 'imsi'= Clear using
-          IMSI;"
-        required: False
-    vrid:
-        description:
-        - "Join a VRRP-A failover group"
+        - "Configure the listen port of RADIUS server (Port number)"
+        type: int
         required: False
     remote:
         description:
         - "Field remote"
+        type: dict
         required: False
         suboptions:
             ip_list:
                 description:
                 - "Field ip_list"
-    uuid:
+                type: list
+    secret:
         description:
-        - "uuid of the object"
+        - "Configure shared secret"
+        type: bool
+        required: False
+    secret_string:
+        description:
+        - "The RADIUS secret"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
+    vrid:
+        description:
+        - "Join a VRRP-A failover group"
+        type: int
+        required: False
+    attribute:
+        description:
+        - "Field attribute"
+        type: list
+        required: False
+        suboptions:
+            attribute_value:
+                description:
+                - "'inside-ipv6-prefix'= Framed IPv6 Prefix; 'inside-ip'= Inside IP address;
+          'inside-ipv6'= Inside IPv6 address; 'imei'= International Mobile Equipment
+          Identity (IMEI); 'imsi'= International Mobile Subscriber Identity (IMSI);
+          'msisdn'= Mobile Subscriber Integrated Services Digital Network-Number
+          (MSISDN); 'custom1'= Customized attribute 1; 'custom2'= Customized attribute 2;
+          'custom3'= Customized attribute 3;"
+                type: str
+            prefix_length:
+                description:
+                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'=
+          Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112;"
+                type: str
+            prefix_vendor:
+                description:
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
+                type: int
+            prefix_number:
+                description:
+                - "RADIUS attribute number"
+                type: int
+            name:
+                description:
+                - "Customized attribute name"
+                type: str
+            value:
+                description:
+                - "'hexadecimal'= Type of attribute value is hexadecimal;"
+                type: str
+            custom_vendor:
+                description:
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
+                type: int
+            custom_number:
+                description:
+                - "RADIUS attribute number"
+                type: int
+            vendor:
+                description:
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
+                type: int
+            number:
+                description:
+                - "RADIUS attribute number"
+                type: int
     disable_reply:
         description:
         - "Toggle option for RADIUS reply packet(Default= Accounting response will be
           sent)"
+        type: bool
+        required: False
+    accounting_start:
+        description:
+        - "'ignore'= Ignore; 'append-entry'= Append the AVPs to existing entry (default);
+          'replace-entry'= Replace the AVPs of existing entry;"
+        type: str
+        required: False
+    accounting_stop:
+        description:
+        - "'ignore'= Ignore; 'delete-entry'= Delete the entry (default); 'delete-entry-
+          and-sessions'= Delete the entry and data sessions associated;"
+        type: str
         required: False
     accounting_interim_update:
         description:
         - "'ignore'= Ignore (default); 'append-entry'= Append the AVPs to existing entry;
           'replace-entry'= Replace the AVPs of existing entry;"
+        type: str
         required: False
-    secret:
+    accounting_on:
         description:
-        - "Configure shared secret"
+        - "'ignore'= Ignore (default); 'delete-entries-using-attribute'= Delete entries
+          matching attribute in RADIUS Table;"
+        type: str
         required: False
-    stats:
+    attribute_name:
         description:
-        - "Field stats"
+        - "'msisdn'= Clear using MSISDN; 'imei'= Clear using IMEI; 'imsi'= Clear using
+          IMSI;"
+        type: str
         required: False
-        suboptions:
-            secret_not_configured_dropped:
-                description:
-                - "RADIUS Secret Not Configured Dropped"
-            smp_created:
-                description:
-                - "RADIUS SMP Created"
-            radius_request_dropped:
-                description:
-                - "RADIUS Request Dropped (Malformed Packet)"
-            imsi_received:
-                description:
-                - "IMSI Received"
-            invalid_key:
-                description:
-                - "Radius Request has Invalid Key Field"
-            request_bad_secret_dropped:
-                description:
-                - "RADIUS Request Bad Secret Dropped"
-            ha_standby_dropped:
-                description:
-                - "HA Standby Dropped"
-            custom_received:
-                description:
-                - "Custom attribute Received"
-            radius_request_received:
-                description:
-                - "RADIUS Request Received"
-            imei_received:
-                description:
-                - "IMEI Received"
-            request_no_key_vap_dropped:
-                description:
-                - "RADIUS Request No Key Attribute Dropped"
-            smp_deleted:
-                description:
-                - "RADIUS SMP Deleted"
-            radius_table_full:
-                description:
-                - "RADIUS Request Dropped (Table Full)"
-            msisdn_received:
-                description:
-                - "MSISDN Received"
-            request_ignored:
-                description:
-                - "RADIUS Request Ignored"
-            ipv6_prefix_length_mismatch:
-                description:
-                - "Framed IPV6 Prefix Length Mismatch"
-            request_malformed_dropped:
-                description:
-                - "RADIUS Request Malformed Dropped"
+    custom_attribute_name:
+        description:
+        - "Clear using customized attribute"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -203,70 +219,116 @@ options:
           'acct-on-dup-request'= Duplicate RADIUS Acct On Request; 'ip-mismatch-delete'=
           Radius Entry IP Mismatch Delete; 'ip-add-race-drop'= Radius Entry IP Add Race
           Drop; 'ha-sync-no-key-vap-dropped'= HA Record Sync No key dropped; 'inter-card-
-          msg-fail-drop'= Inter-Card Message Fail Drop;"
-    accounting_stop:
+          msg-fail-drop'= Inter-Card Message Fail Drop; 'radius-packets-redirected'=
+          RADIUS packets redirected (SO); 'radius-packets-redirect-fail-dropped'= RADIUS
+          packets dropped due to redirect failure (SO); 'radius-packets-process-local'=
+          RADIUS packets processed locally without redirection (SO); 'radius-packets-
+          dropped-not-lo'= RADIUS packets dropped dest not loopback (SO);"
+                type: str
+    oper:
         description:
-        - "'ignore'= Ignore; 'delete-entry'= Delete the entry (default); 'delete-entry-
-          and-sessions'= Delete the entry and data sessions associated;"
-        required: False
-    custom_attribute_name:
-        description:
-        - "Clear using customized attribute"
-        required: False
-    attribute:
-        description:
-        - "Field attribute"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            prefix_number:
+            radius_table_entries_list:
                 description:
-                - "RADIUS attribute number"
-            prefix_length:
+                - "Field radius_table_entries_list"
+                type: list
+            total_entries:
                 description:
-                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'=
-          Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112;"
-            name:
+                - "Field total_entries"
+                type: int
+            custom_attr_name:
                 description:
-                - "Customized attribute name"
-            prefix_vendor:
+                - "Field custom_attr_name"
+                type: str
+            custom_attr_value:
                 description:
-                - "RADIUS vendor attribute information (RADIUS vendor ID)"
-            number:
+                - "Field custom_attr_value"
+                type: str
+            starts_with:
                 description:
-                - "RADIUS attribute number"
-            value:
+                - "Field starts_with"
+                type: bool
+            case_insensitive:
                 description:
-                - "'hexadecimal'= Type of attribute value is hexadecimal;"
-            custom_vendor:
-                description:
-                - "RADIUS vendor attribute information (RADIUS vendor ID)"
-            custom_number:
-                description:
-                - "RADIUS attribute number"
-            vendor:
-                description:
-                - "RADIUS vendor attribute information (RADIUS vendor ID)"
-            attribute_value:
-                description:
-                - "'inside-ipv6-prefix'= Framed IPv6 Prefix; 'inside-ip'= Inside IP address;
-          'inside-ipv6'= Inside IPv6 address; 'imei'= International Mobile Equipment
-          Identity (IMEI); 'imsi'= International Mobile Subscriber Identity (IMSI);
-          'msisdn'= Mobile Subscriber Integrated Services Digital Network-Number
-          (MSISDN); 'custom1'= Customized attribute 1; 'custom2'= Customized attribute 2;
-          'custom3'= Customized attribute 3;"
-    listen_port:
+                - "Field case_insensitive"
+                type: bool
+    stats:
         description:
-        - "Configure the listen port of RADIUS server (Port number)"
+        - "Field stats"
+        type: dict
         required: False
-    accounting_on:
-        description:
-        - "'ignore'= Ignore (default); 'delete-entries-using-attribute'= Delete entries
-          matching attribute in RADIUS Table;"
-        required: False
-    secret_string:
-        description:
-        - "The RADIUS secret"
-        required: False
+        suboptions:
+            msisdn_received:
+                description:
+                - "MSISDN Received"
+                type: str
+            imei_received:
+                description:
+                - "IMEI Received"
+                type: str
+            imsi_received:
+                description:
+                - "IMSI Received"
+                type: str
+            custom_received:
+                description:
+                - "Custom attribute Received"
+                type: str
+            radius_request_received:
+                description:
+                - "RADIUS Request Received"
+                type: str
+            radius_request_dropped:
+                description:
+                - "RADIUS Request Dropped (Malformed Packet)"
+                type: str
+            request_bad_secret_dropped:
+                description:
+                - "RADIUS Request Bad Secret Dropped"
+                type: str
+            request_no_key_vap_dropped:
+                description:
+                - "RADIUS Request No Key Attribute Dropped"
+                type: str
+            request_malformed_dropped:
+                description:
+                - "RADIUS Request Malformed Dropped"
+                type: str
+            request_ignored:
+                description:
+                - "RADIUS Request Ignored"
+                type: str
+            radius_table_full:
+                description:
+                - "RADIUS Request Dropped (Table Full)"
+                type: str
+            secret_not_configured_dropped:
+                description:
+                - "RADIUS Secret Not Configured Dropped"
+                type: str
+            ha_standby_dropped:
+                description:
+                - "HA Standby Dropped"
+                type: str
+            ipv6_prefix_length_mismatch:
+                description:
+                - "Framed IPV6 Prefix Length Mismatch"
+                type: str
+            invalid_key:
+                description:
+                - "Radius Request has Invalid Key Field"
+                type: str
+            smp_created:
+                description:
+                - "RADIUS SMP Created"
+                type: str
+            smp_deleted:
+                description:
+                - "RADIUS SMP Deleted"
+                type: str
 
 '''
 
@@ -336,66 +398,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'accounting_start': {
-            'type': 'str',
-            'choices': ['ignore', 'append-entry', 'replace-entry']
-        },
-        'oper': {
-            'type': 'dict',
-            'radius_table_entries_list': {
-                'type': 'list',
-                'msisdn': {
-                    'type': 'str',
-                },
-                'is_obsolete': {
-                    'type': 'bool',
-                },
-                'prefix_len': {
-                    'type': 'int',
-                },
-                'custom2_attr_value': {
-                    'type': 'str',
-                },
-                'custom3_attr_value': {
-                    'type': 'str',
-                },
-                'inside_ip': {
-                    'type': 'str',
-                },
-                'inside_ipv6': {
-                    'type': 'str',
-                },
-                'imei': {
-                    'type': 'str',
-                },
-                'custom1_attr_value': {
-                    'type': 'str',
-                },
-                'imsi': {
-                    'type': 'str',
-                }
-            },
-            'custom_attr_value': {
-                'type': 'str',
-            },
-            'starts_with': {
-                'type': 'bool',
-            },
-            'custom_attr_name': {
-                'type': 'str',
-            },
-            'case_insensitive': {
-                'type': 'bool',
-            },
-            'total_entries': {
-                'type': 'int',
-            }
-        },
-        'attribute_name': {
-            'type': 'str',
-            'choices': ['msisdn', 'imei', 'imsi']
-        },
-        'vrid': {
+        'listen_port': {
             'type': 'int',
         },
         'remote': {
@@ -405,86 +408,97 @@ def get_argspec():
                 'ip_list_name': {
                     'type': 'str',
                 },
-                'ip_list_encrypted': {
-                    'type': 'str',
+                'ip_list_secret': {
+                    'type': 'bool',
                 },
                 'ip_list_secret_string': {
                     'type': 'str',
                 },
-                'ip_list_secret': {
-                    'type': 'bool',
+                'ip_list_encrypted': {
+                    'type': 'str',
                 }
             }
         },
-        'uuid': {
+        'secret': {
+            'type': 'bool',
+        },
+        'secret_string': {
             'type': 'str',
         },
         'encrypted': {
             'type': 'str',
         },
+        'vrid': {
+            'type': 'int',
+        },
+        'attribute': {
+            'type': 'list',
+            'attribute_value': {
+                'type':
+                'str',
+                'choices': [
+                    'inside-ipv6-prefix', 'inside-ip', 'inside-ipv6', 'imei',
+                    'imsi', 'msisdn', 'custom1', 'custom2', 'custom3'
+                ]
+            },
+            'prefix_length': {
+                'type': 'str',
+                'choices': ['32', '48', '64', '80', '96', '112']
+            },
+            'prefix_vendor': {
+                'type': 'int',
+            },
+            'prefix_number': {
+                'type': 'int',
+            },
+            'name': {
+                'type': 'str',
+            },
+            'value': {
+                'type': 'str',
+                'choices': ['hexadecimal']
+            },
+            'custom_vendor': {
+                'type': 'int',
+            },
+            'custom_number': {
+                'type': 'int',
+            },
+            'vendor': {
+                'type': 'int',
+            },
+            'number': {
+                'type': 'int',
+            }
+        },
         'disable_reply': {
             'type': 'bool',
+        },
+        'accounting_start': {
+            'type': 'str',
+            'choices': ['ignore', 'append-entry', 'replace-entry']
+        },
+        'accounting_stop': {
+            'type': 'str',
+            'choices': ['ignore', 'delete-entry', 'delete-entry-and-sessions']
         },
         'accounting_interim_update': {
             'type': 'str',
             'choices': ['ignore', 'append-entry', 'replace-entry']
         },
-        'secret': {
-            'type': 'bool',
+        'accounting_on': {
+            'type': 'str',
+            'choices': ['ignore', 'delete-entries-using-attribute']
         },
-        'stats': {
-            'type': 'dict',
-            'secret_not_configured_dropped': {
-                'type': 'str',
-            },
-            'smp_created': {
-                'type': 'str',
-            },
-            'radius_request_dropped': {
-                'type': 'str',
-            },
-            'imsi_received': {
-                'type': 'str',
-            },
-            'invalid_key': {
-                'type': 'str',
-            },
-            'request_bad_secret_dropped': {
-                'type': 'str',
-            },
-            'ha_standby_dropped': {
-                'type': 'str',
-            },
-            'custom_received': {
-                'type': 'str',
-            },
-            'radius_request_received': {
-                'type': 'str',
-            },
-            'imei_received': {
-                'type': 'str',
-            },
-            'request_no_key_vap_dropped': {
-                'type': 'str',
-            },
-            'smp_deleted': {
-                'type': 'str',
-            },
-            'radius_table_full': {
-                'type': 'str',
-            },
-            'msisdn_received': {
-                'type': 'str',
-            },
-            'request_ignored': {
-                'type': 'str',
-            },
-            'ipv6_prefix_length_mismatch': {
-                'type': 'str',
-            },
-            'request_malformed_dropped': {
-                'type': 'str',
-            }
+        'attribute_name': {
+            'type': 'str',
+            'choices': ['msisdn', 'imei', 'imsi']
+        },
+        'custom_attribute_name': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -506,66 +520,118 @@ def get_argspec():
                     'ha-sync-create-recv', 'ha-sync-delete-recv',
                     'acct-on-filters-full', 'acct-on-dup-request',
                     'ip-mismatch-delete', 'ip-add-race-drop',
-                    'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop'
+                    'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop',
+                    'radius-packets-redirected',
+                    'radius-packets-redirect-fail-dropped',
+                    'radius-packets-process-local',
+                    'radius-packets-dropped-not-lo'
                 ]
             }
         },
-        'accounting_stop': {
-            'type': 'str',
-            'choices': ['ignore', 'delete-entry', 'delete-entry-and-sessions']
-        },
-        'custom_attribute_name': {
-            'type': 'str',
-        },
-        'attribute': {
-            'type': 'list',
-            'prefix_number': {
+        'oper': {
+            'type': 'dict',
+            'radius_table_entries_list': {
+                'type': 'list',
+                'inside_ip': {
+                    'type': 'str',
+                },
+                'inside_ipv6': {
+                    'type': 'str',
+                },
+                'prefix_len': {
+                    'type': 'int',
+                },
+                'msisdn': {
+                    'type': 'str',
+                },
+                'imei': {
+                    'type': 'str',
+                },
+                'imsi': {
+                    'type': 'str',
+                },
+                'custom1_attr_value': {
+                    'type': 'str',
+                },
+                'custom2_attr_value': {
+                    'type': 'str',
+                },
+                'custom3_attr_value': {
+                    'type': 'str',
+                },
+                'is_obsolete': {
+                    'type': 'bool',
+                }
+            },
+            'total_entries': {
                 'type': 'int',
             },
-            'prefix_length': {
+            'custom_attr_name': {
                 'type': 'str',
-                'choices': ['32', '48', '64', '80', '96', '112']
             },
-            'name': {
+            'custom_attr_value': {
                 'type': 'str',
             },
-            'prefix_vendor': {
-                'type': 'int',
+            'starts_with': {
+                'type': 'bool',
             },
-            'number': {
-                'type': 'int',
-            },
-            'value': {
-                'type': 'str',
-                'choices': ['hexadecimal']
-            },
-            'custom_vendor': {
-                'type': 'int',
-            },
-            'custom_number': {
-                'type': 'int',
-            },
-            'vendor': {
-                'type': 'int',
-            },
-            'attribute_value': {
-                'type':
-                'str',
-                'choices': [
-                    'inside-ipv6-prefix', 'inside-ip', 'inside-ipv6', 'imei',
-                    'imsi', 'msisdn', 'custom1', 'custom2', 'custom3'
-                ]
+            'case_insensitive': {
+                'type': 'bool',
             }
         },
-        'listen_port': {
-            'type': 'int',
-        },
-        'accounting_on': {
-            'type': 'str',
-            'choices': ['ignore', 'delete-entries-using-attribute']
-        },
-        'secret_string': {
-            'type': 'str',
+        'stats': {
+            'type': 'dict',
+            'msisdn_received': {
+                'type': 'str',
+            },
+            'imei_received': {
+                'type': 'str',
+            },
+            'imsi_received': {
+                'type': 'str',
+            },
+            'custom_received': {
+                'type': 'str',
+            },
+            'radius_request_received': {
+                'type': 'str',
+            },
+            'radius_request_dropped': {
+                'type': 'str',
+            },
+            'request_bad_secret_dropped': {
+                'type': 'str',
+            },
+            'request_no_key_vap_dropped': {
+                'type': 'str',
+            },
+            'request_malformed_dropped': {
+                'type': 'str',
+            },
+            'request_ignored': {
+                'type': 'str',
+            },
+            'radius_table_full': {
+                'type': 'str',
+            },
+            'secret_not_configured_dropped': {
+                'type': 'str',
+            },
+            'ha_standby_dropped': {
+                'type': 'str',
+            },
+            'ipv6_prefix_length_mismatch': {
+                'type': 'str',
+            },
+            'invalid_key': {
+                'type': 'str',
+            },
+            'smp_created': {
+                'type': 'str',
+            },
+            'smp_deleted': {
+                'type': 'str',
+            }
         }
     })
     return rv

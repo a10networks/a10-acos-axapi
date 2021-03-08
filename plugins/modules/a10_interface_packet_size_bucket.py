@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_packet_size_bucket
 description:
     - display packet sized buckets from Hardware
-short_description: Configures A10 interface.packet-size-bucket
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             interfaces:
                 description:
                 - "Field interfaces"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -115,32 +123,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'interfaces': {
                 'type': 'list',
-                'rxpkts256to511_counts': {
-                    'type': 'int',
-                },
-                'rxpkts4096to9216_counts': {
-                    'type': 'int',
-                },
-                'txpkts1519to2047_counts': {
-                    'type': 'int',
-                },
-                'txpkts2048to4095_counts': {
-                    'type': 'int',
-                },
-                'rxpkts1519to2047_counts': {
-                    'type': 'int',
+                'IF_Type': {
+                    'type': 'str',
                 },
                 'port_num': {
-                    'type': 'int',
-                },
-                'rxpkts1024to1518_counts': {
-                    'type': 'int',
-                },
-                'rxpkts512to1023_counts': {
                     'type': 'int',
                 },
                 'rxpkts64_counts': {
@@ -149,40 +142,55 @@ def get_argspec():
                 'rxpkts65to127_counts': {
                     'type': 'int',
                 },
-                'txpkts512to1023_counts': {
-                    'type': 'int',
-                },
-                'txpkts65to127_counts': {
-                    'type': 'int',
-                },
                 'rxpkts128to255_counts': {
                     'type': 'int',
                 },
-                'txpkts128to255_counts': {
+                'rxpkts256to511_counts': {
+                    'type': 'int',
+                },
+                'rxpkts512to1023_counts': {
+                    'type': 'int',
+                },
+                'rxpkts1024to1518_counts': {
+                    'type': 'int',
+                },
+                'rxpkts1519to2047_counts': {
                     'type': 'int',
                 },
                 'rxpkts2048to4095_counts': {
                     'type': 'int',
                 },
-                'txpkts1024to1518_counts': {
+                'rxpkts4096to9216_counts': {
                     'type': 'int',
                 },
                 'txpkts64_counts': {
                     'type': 'int',
                 },
+                'txpkts65to127_counts': {
+                    'type': 'int',
+                },
+                'txpkts128to255_counts': {
+                    'type': 'int',
+                },
                 'txpkts256to511_counts': {
                     'type': 'int',
                 },
-                'IF_Type': {
-                    'type': 'str',
+                'txpkts512to1023_counts': {
+                    'type': 'int',
+                },
+                'txpkts1024to1518_counts': {
+                    'type': 'int',
+                },
+                'txpkts1519to2047_counts': {
+                    'type': 'int',
+                },
+                'txpkts2048to4095_counts': {
+                    'type': 'int',
                 },
                 'txpkts4096to9216_counts': {
                     'type': 'int',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

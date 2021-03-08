@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_tcp
 description:
     - tcp counters
-short_description: Configures A10 system.tcp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            tcp_cpu_list:
-                description:
-                - "Field tcp_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -84,21 +84,35 @@ options:
           TCP rexmit SYN; 'tcpabortontimeout'= TCP abort on timeout; 'noroute'= TCPIP out
           noroute; 'exceedmss'= MSS exceeded pkt dropped; 'tfo_conns'= TFO Total
           Connections; 'tfo_actives'= TFO Current Actives; 'tfo_denied'= TFO Denied;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            tcp_cpu_list:
+                description:
+                - "Field tcp_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: str
         required: False
         suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
             uuid:
                 description:
                 - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
 
 '''
 
@@ -154,122 +168,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'tcp_cpu_list': {
-                'type': 'list',
-                'tfo_conns': {
-                    'type': 'int',
-                },
-                'pawsactiverejected': {
-                    'type': 'int',
-                },
-                'currlack': {
-                    'type': 'int',
-                },
-                'send_mem': {
-                    'type': 'int',
-                },
-                'outrsts': {
-                    'type': 'int',
-                },
-                'currclose': {
-                    'type': 'int',
-                },
-                'outsegs': {
-                    'type': 'int',
-                },
-                'syn_rcv_rst': {
-                    'type': 'int',
-                },
-                'currfinw2': {
-                    'type': 'int',
-                },
-                'currfinw1': {
-                    'type': 'int',
-                },
-                'inerrs': {
-                    'type': 'int',
-                },
-                'currestab': {
-                    'type': 'int',
-                },
-                'syn_rcv_rstack': {
-                    'type': 'int',
-                },
-                'retranssegs': {
-                    'type': 'int',
-                },
-                'estabresets': {
-                    'type': 'int',
-                },
-                'orphan_count': {
-                    'type': 'int',
-                },
-                'noroute': {
-                    'type': 'int',
-                },
-                'exceedmss': {
-                    'type': 'int',
-                },
-                'currclsw': {
-                    'type': 'int',
-                },
-                'tfo_denied': {
-                    'type': 'int',
-                },
-                'mem_alloc': {
-                    'type': 'int',
-                },
-                'passiveopens': {
-                    'type': 'int',
-                },
-                'sock_alloc': {
-                    'type': 'int',
-                },
-                'insegs': {
-                    'type': 'int',
-                },
-                'currclsg': {
-                    'type': 'int',
-                },
-                'attemptfails': {
-                    'type': 'int',
-                },
-                'syn_rcv_ack': {
-                    'type': 'int',
-                },
-                'currtimew': {
-                    'type': 'int',
-                },
-                'tcpabortontimeout': {
-                    'type': 'int',
-                },
-                'currsyssnt': {
-                    'type': 'int',
-                },
-                'currsynrcv': {
-                    'type': 'int',
-                },
-                'ax_rexmit_syn': {
-                    'type': 'int',
-                },
-                'recv_mem': {
-                    'type': 'int',
-                },
-                'activeopens': {
-                    'type': 'int',
-                },
-                'tfo_actives': {
-                    'type': 'int',
-                },
-                'currlstn': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -290,9 +190,129 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'tcp_cpu_list': {
+                'type': 'list',
+                'currestab': {
+                    'type': 'int',
+                },
+                'activeopens': {
+                    'type': 'int',
+                },
+                'passiveopens': {
+                    'type': 'int',
+                },
+                'attemptfails': {
+                    'type': 'int',
+                },
+                'insegs': {
+                    'type': 'int',
+                },
+                'outsegs': {
+                    'type': 'int',
+                },
+                'retranssegs': {
+                    'type': 'int',
+                },
+                'estabresets': {
+                    'type': 'int',
+                },
+                'outrsts': {
+                    'type': 'int',
+                },
+                'noroute': {
+                    'type': 'int',
+                },
+                'tfo_conns': {
+                    'type': 'int',
+                },
+                'tfo_actives': {
+                    'type': 'int',
+                },
+                'tfo_denied': {
+                    'type': 'int',
+                },
+                'inerrs': {
+                    'type': 'int',
+                },
+                'sock_alloc': {
+                    'type': 'int',
+                },
+                'orphan_count': {
+                    'type': 'int',
+                },
+                'mem_alloc': {
+                    'type': 'int',
+                },
+                'recv_mem': {
+                    'type': 'int',
+                },
+                'send_mem': {
+                    'type': 'int',
+                },
+                'currsyssnt': {
+                    'type': 'int',
+                },
+                'currsynrcv': {
+                    'type': 'int',
+                },
+                'currfinw1': {
+                    'type': 'int',
+                },
+                'currfinw2': {
+                    'type': 'int',
+                },
+                'currtimew': {
+                    'type': 'int',
+                },
+                'currclose': {
+                    'type': 'int',
+                },
+                'currclsw': {
+                    'type': 'int',
+                },
+                'currlack': {
+                    'type': 'int',
+                },
+                'currlstn': {
+                    'type': 'int',
+                },
+                'currclsg': {
+                    'type': 'int',
+                },
+                'pawsactiverejected': {
+                    'type': 'int',
+                },
+                'syn_rcv_rstack': {
+                    'type': 'int',
+                },
+                'syn_rcv_rst': {
+                    'type': 'int',
+                },
+                'syn_rcv_ack': {
+                    'type': 'int',
+                },
+                'tcpabortontimeout': {
+                    'type': 'int',
+                },
+                'ax_rexmit_syn': {
+                    'type': 'int',
+                },
+                'exceedmss': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'str',
             'required': False,
+            'uuid': {
+                'type': 'str',
+            },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
@@ -324,16 +344,11 @@ def get_argspec():
                         'atcpforward', 'atcpsent', 'atcprexmitsadrop',
                         'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail',
                         'a2bappbuffering', 'atcpsendfail', 'earlyrexmit',
-                        'mburstlim', 'a2bsndwnd'
+                        'mburstlim', 'a2bsndwnd', 'proxyheaderv1',
+                        'proxyheaderv2'
                     ]
                 }
-            },
-            'uuid': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

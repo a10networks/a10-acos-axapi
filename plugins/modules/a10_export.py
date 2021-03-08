@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_export
 description:
     - Put files to remote site
-short_description: Configures A10 export
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,225 +21,281 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    geo_location:
-        description:
-        - "Geo-location CSV File"
-        required: False
-    ssl_cert_key:
-        description:
-        - "Local SSL Key/Certificate file name"
-        required: False
-    bw_list:
-        description:
-        - "Black white List File"
-        required: False
-    lw_4o6:
-        description:
-        - "LW-4over6 Binding Table File"
-        required: False
-    tgz:
-        description:
-        - "Export the merged pcap in .tgz format"
-        required: False
-    merged_pcap:
-        description:
-        - "Export the merged pcap file when there are multiple Export sessions"
-        required: False
-    ip_map_list:
-        description:
-        - "IP Map List File"
-        required: False
-    syslog:
-        description:
-        - "Enter 'messages' as the default syslog file name"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
-    auth_portal:
-        description:
-        - "Portal file for http authentication"
-        required: False
-    auth_jwks:
-        description:
-        - "Json web key"
-        required: False
-    fixed_nat_archive:
-        description:
-        - "Fixed NAT Port Mapping Archive File"
-        required: False
-    aflex:
-        description:
-        - "aFleX Script Source File"
-        required: False
-    fixed_nat:
-        description:
-        - "Fixed NAT Port Mapping File"
-        required: False
-    saml_idp_name:
-        description:
-        - "SAML metadata of identity provider"
-        required: False
-    thales_kmdata:
-        description:
-        - "Thales Kmdata files"
-        required: False
-    per_cpu:
-        description:
-        - "Export the per-cpu files along with the merged pcap file in .tgz format"
-        required: False
-    debug_monitor:
-        description:
-        - "Debug Monitor Output"
-        required: False
-    policy:
-        description:
-        - "WAF policy File"
-        required: False
-    lw_4o6_binding_table_validation_log:
-        description:
-        - "LW-4over6 Binding Table Validation Log File"
-        required: False
-    file_inspection_bw_list:
-        description:
-        - "Black white List File"
-        required: False
-    running_config:
-        description:
-        - "Running Config"
-        required: False
-    csr:
-        description:
-        - "Certificate Signing Request"
-        required: False
-    auth_portal_image:
-        description:
-        - "Image file for default portal"
-        required: False
-    ssl_crl:
-        description:
-        - "SSL Crl File"
-        required: False
-    class_list:
-        description:
-        - "Class List File"
-        required: False
-    status_check:
-        description:
-        - "check export task status"
-        required: False
-    visibility:
-        description:
-        - "Export Visibility module related files"
-        required: False
-    dnssec_ds:
-        description:
-        - "DNSSEC DS file for child zone"
-        required: False
-    profile:
-        description:
-        - "Startup-config Profile"
-        required: False
-    mon_entity_debug_file:
-        description:
-        - "Enter Mon entity debug file name"
-        required: False
-    local_uri_file:
-        description:
-        - "Local URI files for http response"
-        required: False
-    wsdl:
-        description:
-        - "Web Services Definition Language File"
-        required: False
-    ssl_key:
-        description:
-        - "SSL Key File"
-        required: False
-    store:
-        description:
-        - "Field store"
-        required: False
-        suboptions:
-            create:
-                description:
-                - "Create an export store profile"
-            name:
-                description:
-                - "profile name to store remote url"
-            remote_file:
-                description:
-                - "Field remote_file"
-            delete:
-                description:
-                - "Delete an export store profile"
-    externalfilename:
-        description:
-        - "Export the External Program from the System"
-        required: False
-    remote_file:
-        description:
-        - "profile name for remote url"
-        required: False
-    store_name:
-        description:
-        - "Export store name"
-        required: False
-    ca_cert:
-        description:
-        - "CA Cert File"
+        type: str
         required: False
     axdebug:
         description:
         - "AX Debug Packet File"
+        type: str
         required: False
-    thales_secworld:
+    ssl_key:
         description:
-        - "Thales security world files"
+        - "SSL Key File"
+        type: str
+        required: False
+    ssl_crl:
+        description:
+        - "SSL Crl File"
+        type: str
+        required: False
+    ssl_cert_key:
+        description:
+        - "Local SSL Key/Certificate file name"
+        type: str
+        required: False
+    aflex:
+        description:
+        - "aFleX Script Source File"
+        type: str
         required: False
     xml_schema:
         description:
         - "XML-Schema File"
+        type: str
         required: False
-    startup_config:
+    wsdl:
         description:
-        - "Startup Config"
+        - "Web Services Definition Language File"
+        type: str
         required: False
-    ssl_cert:
+    policy:
         description:
-        - "SSL Cert File"
+        - "WAF policy File"
+        type: str
+        required: False
+    bw_list:
+        description:
+        - "Black white List File"
+        type: str
+        required: False
+    file_inspection_bw_list:
+        description:
+        - "Black white List File"
+        type: str
+        required: False
+    class_list:
+        description:
+        - "Class List File"
+        type: str
+        required: False
+    lw_4o6:
+        description:
+        - "LW-4over6 Binding Table File"
+        type: str
+        required: False
+    lw_4o6_binding_table_validation_log:
+        description:
+        - "LW-4over6 Binding Table Validation Log File"
+        type: str
+        required: False
+    fixed_nat:
+        description:
+        - "Fixed NAT Port Mapping File"
+        type: str
+        required: False
+    fixed_nat_archive:
+        description:
+        - "Fixed NAT Port Mapping Archive File"
+        type: str
+        required: False
+    geo_location:
+        description:
+        - "Geo-location CSV File"
+        type: str
         required: False
     dnssec_dnskey:
         description:
         - "DNSSEC DNSKEY(KSK) file for child zone"
+        type: str
         required: False
+    dnssec_ds:
+        description:
+        - "DNSSEC DS file for child zone"
+        type: str
+        required: False
+    thales_secworld:
+        description:
+        - "Thales security world files"
+        type: str
+        required: False
+    thales_kmdata:
+        description:
+        - "Thales Kmdata files"
+        type: str
+        required: False
+    auth_portal:
+        description:
+        - "Portal file for http authentication"
+        type: str
+        required: False
+    auth_portal_image:
+        description:
+        - "Image file for default portal"
+        type: str
+        required: False
+    saml_idp_name:
+        description:
+        - "SAML metadata of identity provider"
+        type: str
+        required: False
+    auth_jwks:
+        description:
+        - "Json web key"
+        type: str
+        required: False
+    ip_map_list:
+        description:
+        - "IP Map List File"
+        type: str
+        required: False
+    local_uri_file:
+        description:
+        - "Local URI files for http response"
+        type: str
+        required: False
+    ssl_cert:
+        description:
+        - "SSL Cert File"
+        type: str
+        required: False
+    ca_cert:
+        description:
+        - "CA Cert File"
+        type: str
+        required: False
+    csr:
+        description:
+        - "Certificate Signing Request"
+        type: str
+        required: False
+    debug_monitor:
+        description:
+        - "Debug Monitor Output"
+        type: str
+        required: False
+    syslog:
+        description:
+        - "Enter 'messages' as the default syslog file name"
+        type: str
+        required: False
+    running_config:
+        description:
+        - "Running Config"
+        type: bool
+        required: False
+    startup_config:
+        description:
+        - "Startup Config"
+        type: bool
+        required: False
+    visibility:
+        description:
+        - "Export Visibility module related files"
+        type: bool
+        required: False
+    mon_entity_debug_file:
+        description:
+        - "Enter Mon entity debug file name"
+        type: str
+        required: False
+    profile:
+        description:
+        - "Startup-config Profile"
+        type: str
+        required: False
+    status_check:
+        description:
+        - "check export task status"
+        type: bool
+        required: False
+    merged_pcap:
+        description:
+        - "Export the merged pcap file when there are multiple Export sessions"
+        type: bool
+        required: False
+    per_cpu:
+        description:
+        - "Export the per-cpu files along with the merged pcap file in .tgz format"
+        type: bool
+        required: False
+    tgz:
+        description:
+        - "Export the merged pcap in .tgz format"
+        type: bool
+        required: False
+    externalfilename:
+        description:
+        - "Export the External Program from the System"
+        type: str
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
+        required: False
+    remote_file:
+        description:
+        - "profile name for remote url"
+        type: str
+        required: False
+    store_name:
+        description:
+        - "Export store name"
+        type: str
+        required: False
+    store:
+        description:
+        - "Field store"
+        type: dict
+        required: False
+        suboptions:
+            delete:
+                description:
+                - "Delete an export store profile"
+                type: bool
+            create:
+                description:
+                - "Create an export store profile"
+                type: bool
+            name:
+                description:
+                - "profile name to store remote url"
+                type: str
+            remote_file:
+                description:
+                - "Field remote_file"
+                type: str
 
 '''
 
@@ -336,110 +390,143 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'geo_location': {
-            'type': 'str',
-        },
-        'ssl_cert_key': {
-            'type': 'str',
-        },
-        'bw_list': {
-            'type': 'str',
-        },
-        'lw_4o6': {
-            'type': 'str',
-        },
-        'tgz': {
-            'type': 'bool',
-        },
-        'merged_pcap': {
-            'type': 'bool',
-        },
-        'ip_map_list': {
-            'type': 'str',
-        },
-        'syslog': {
-            'type': 'str',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
-        'auth_portal': {
-            'type': 'str',
-        },
-        'auth_jwks': {
-            'type': 'str',
-        },
-        'fixed_nat_archive': {
-            'type': 'str',
-        },
-        'aflex': {
-            'type': 'str',
-        },
-        'fixed_nat': {
-            'type': 'str',
-        },
-        'saml_idp_name': {
-            'type': 'str',
-        },
-        'thales_kmdata': {
-            'type': 'str',
-        },
-        'per_cpu': {
-            'type': 'bool',
-        },
-        'debug_monitor': {
-            'type': 'str',
-        },
-        'policy': {
-            'type': 'str',
-        },
-        'lw_4o6_binding_table_validation_log': {
-            'type': 'str',
-        },
-        'file_inspection_bw_list': {
-            'type': 'str',
-        },
-        'running_config': {
-            'type': 'bool',
-        },
-        'csr': {
-            'type': 'str',
-        },
-        'auth_portal_image': {
-            'type': 'str',
-        },
-        'ssl_crl': {
-            'type': 'str',
-        },
-        'class_list': {
-            'type': 'str',
-        },
-        'status_check': {
-            'type': 'bool',
-        },
-        'visibility': {
-            'type': 'bool',
-        },
-        'dnssec_ds': {
-            'type': 'str',
-        },
-        'profile': {
-            'type': 'str',
-        },
-        'mon_entity_debug_file': {
-            'type': 'str',
-        },
-        'local_uri_file': {
-            'type': 'str',
-        },
-        'wsdl': {
+        'axdebug': {
             'type': 'str',
         },
         'ssl_key': {
             'type': 'str',
         },
+        'ssl_crl': {
+            'type': 'str',
+        },
+        'ssl_cert_key': {
+            'type': 'str',
+        },
+        'aflex': {
+            'type': 'str',
+        },
+        'xml_schema': {
+            'type': 'str',
+        },
+        'wsdl': {
+            'type': 'str',
+        },
+        'policy': {
+            'type': 'str',
+        },
+        'bw_list': {
+            'type': 'str',
+        },
+        'file_inspection_bw_list': {
+            'type': 'str',
+        },
+        'class_list': {
+            'type': 'str',
+        },
+        'lw_4o6': {
+            'type': 'str',
+        },
+        'lw_4o6_binding_table_validation_log': {
+            'type': 'str',
+        },
+        'fixed_nat': {
+            'type': 'str',
+        },
+        'fixed_nat_archive': {
+            'type': 'str',
+        },
+        'geo_location': {
+            'type': 'str',
+        },
+        'dnssec_dnskey': {
+            'type': 'str',
+        },
+        'dnssec_ds': {
+            'type': 'str',
+        },
+        'thales_secworld': {
+            'type': 'str',
+        },
+        'thales_kmdata': {
+            'type': 'str',
+        },
+        'auth_portal': {
+            'type': 'str',
+        },
+        'auth_portal_image': {
+            'type': 'str',
+        },
+        'saml_idp_name': {
+            'type': 'str',
+        },
+        'auth_jwks': {
+            'type': 'str',
+        },
+        'ip_map_list': {
+            'type': 'str',
+        },
+        'local_uri_file': {
+            'type': 'str',
+        },
+        'ssl_cert': {
+            'type': 'str',
+        },
+        'ca_cert': {
+            'type': 'str',
+        },
+        'csr': {
+            'type': 'str',
+        },
+        'debug_monitor': {
+            'type': 'str',
+        },
+        'syslog': {
+            'type': 'str',
+        },
+        'running_config': {
+            'type': 'bool',
+        },
+        'startup_config': {
+            'type': 'bool',
+        },
+        'visibility': {
+            'type': 'bool',
+        },
+        'mon_entity_debug_file': {
+            'type': 'str',
+        },
+        'profile': {
+            'type': 'str',
+        },
+        'status_check': {
+            'type': 'bool',
+        },
+        'merged_pcap': {
+            'type': 'bool',
+        },
+        'per_cpu': {
+            'type': 'bool',
+        },
+        'tgz': {
+            'type': 'bool',
+        },
+        'externalfilename': {
+            'type': 'str',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'remote_file': {
+            'type': 'str',
+        },
+        'store_name': {
+            'type': 'str',
+        },
         'store': {
             'type': 'dict',
+            'delete': {
+                'type': 'bool',
+            },
             'create': {
                 'type': 'bool',
             },
@@ -448,40 +535,7 @@ def get_argspec():
             },
             'remote_file': {
                 'type': 'str',
-            },
-            'delete': {
-                'type': 'bool',
             }
-        },
-        'externalfilename': {
-            'type': 'str',
-        },
-        'remote_file': {
-            'type': 'str',
-        },
-        'store_name': {
-            'type': 'str',
-        },
-        'ca_cert': {
-            'type': 'str',
-        },
-        'axdebug': {
-            'type': 'str',
-        },
-        'thales_secworld': {
-            'type': 'str',
-        },
-        'xml_schema': {
-            'type': 'str',
-        },
-        'startup_config': {
-            'type': 'bool',
-        },
-        'ssl_cert': {
-            'type': 'str',
-        },
-        'dnssec_dnskey': {
-            'type': 'str',
         }
     })
     return rv

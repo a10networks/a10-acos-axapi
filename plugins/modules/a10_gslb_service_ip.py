@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_service_ip
 description:
     - Service IP
-short_description: Configures A10 gslb.service-ip
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,185 +22,236 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            use_gslb_state:
-                description:
-                - "Field use_gslb_state"
-            port_list:
-                description:
-                - "Field port_list"
-            gslb_protocol:
-                description:
-                - "Field gslb_protocol"
-            virtual_server:
-                description:
-                - "Field virtual_server"
-            ip:
-                description:
-                - "Field ip"
-            dynamic:
-                description:
-                - "Field dynamic"
-            disabled:
-                description:
-                - "Field disabled"
-            node_name:
-                description:
-                - "Service-IP Name"
-            state:
-                description:
-                - "Field state"
-            service_ip:
-                description:
-                - "Field service_ip"
-            port_count:
-                description:
-                - "Field port_count"
-            local_protocol:
-                description:
-                - "Field local_protocol"
-            manually_health_check:
-                description:
-                - "Field manually_health_check"
-    health_check_disable:
-        description:
-        - "Disable Health Check Monitor"
-        required: False
-    port_list:
-        description:
-        - "Field port_list"
-        required: False
-        suboptions:
-            port_proto:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            uuid:
-                description:
-                - "uuid of the object"
-            port_num:
-                description:
-                - "Port Number"
-            health_check_disable:
-                description:
-                - "Disable Health Check Monitor"
-            user_tag:
-                description:
-                - "Customized tag"
-            follow_port_protocol:
-                description:
-                - "'tcp'= TCP Port; 'udp'= UDP Port;"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            action:
-                description:
-                - "'enable'= Enable this GSLB server port; 'disable'= Disable this GSLB server
-          port;"
-            health_check_follow_port:
-                description:
-                - "Specify which port to follow for health status (Port Number)"
-            health_check_protocol_disable:
-                description:
-                - "Disable GSLB Protocol Health Monitor"
-            health_check:
-                description:
-                - "Health Check Monitor (Monitor Name)"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            node_name:
-                description:
-                - "Service-IP Name"
-            hits:
-                description:
-                - "Number of times the service IP has been selected"
-            port_list:
-                description:
-                - "Field port_list"
-            recent:
-                description:
-                - "Recent hits"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    external_ip:
-        description:
-        - "External IP address for NAT"
+        type: str
         required: False
     node_name:
         description:
         - "Service-IP Name"
+        type: str
         required: True
+    ipv6_address:
+        description:
+        - "IPV6 address"
+        type: str
+        required: False
+    ip_address:
+        description:
+        - "IP address"
+        type: str
+        required: False
+    action:
+        description:
+        - "'enable'= Enable this GSLB server; 'disable'= Disable this GSLB server;"
+        type: str
+        required: False
+    external_ip:
+        description:
+        - "External IP address for NAT"
+        type: str
+        required: False
+    ipv6:
+        description:
+        - "IPv6 address Mapping (Applicable only when service-ip has an IPv4 Address)"
+        type: str
+        required: False
+    health_check:
+        description:
+        - "Health Check Monitor (Monitor Name)"
+        type: str
+        required: False
+    health_check_protocol_disable:
+        description:
+        - "Disable GSLB Protocol Health Monitor"
+        type: bool
+        required: False
+    health_check_disable:
+        description:
+        - "Disable Health Check Monitor"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Number of times the service IP has been selected; 'recent'=
           Recent hits;"
-    action:
+                type: str
+    port_list:
         description:
-        - "'enable'= Enable this GSLB server; 'disable'= Disable this GSLB server;"
+        - "Field port_list"
+        type: list
         required: False
-    user_tag:
+        suboptions:
+            port_num:
+                description:
+                - "Port Number"
+                type: int
+            port_proto:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            action:
+                description:
+                - "'enable'= Enable this GSLB server port; 'disable'= Disable this GSLB server
+          port;"
+                type: str
+            health_check:
+                description:
+                - "Health Check Monitor (Monitor Name)"
+                type: str
+            health_check_follow_port:
+                description:
+                - "Specify which port to follow for health status (Port Number)"
+                type: int
+            follow_port_protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port;"
+                type: str
+            health_check_protocol_disable:
+                description:
+                - "Disable GSLB Protocol Health Monitor"
+                type: bool
+            health_check_disable:
+                description:
+                - "Disable Health Check Monitor"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    oper:
         description:
-        - "Customized tag"
+        - "Field oper"
+        type: dict
         required: False
-    ip_address:
+        suboptions:
+            service_ip:
+                description:
+                - "Field service_ip"
+                type: str
+            ip:
+                description:
+                - "Field ip"
+                type: str
+            state:
+                description:
+                - "Field state"
+                type: str
+            port_count:
+                description:
+                - "Field port_count"
+                type: int
+            virtual_server:
+                description:
+                - "Field virtual_server"
+                type: int
+            disabled:
+                description:
+                - "Field disabled"
+                type: int
+            gslb_protocol:
+                description:
+                - "Field gslb_protocol"
+                type: int
+            local_protocol:
+                description:
+                - "Field local_protocol"
+                type: int
+            manually_health_check:
+                description:
+                - "Field manually_health_check"
+                type: int
+            use_gslb_state:
+                description:
+                - "Field use_gslb_state"
+                type: int
+            dynamic:
+                description:
+                - "Field dynamic"
+                type: int
+            node_name:
+                description:
+                - "Service-IP Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
+    stats:
         description:
-        - "IP address"
+        - "Field stats"
+        type: dict
         required: False
-    ipv6:
-        description:
-        - "IPv6 address Mapping (Applicable only when service-ip has an IPv4 Address)"
-        required: False
-    ipv6_address:
-        description:
-        - "IPV6 address"
-        required: False
-    health_check_protocol_disable:
-        description:
-        - "Disable GSLB Protocol Health Monitor"
-        required: False
-    health_check:
-        description:
-        - "Health Check Monitor (Monitor Name)"
-        required: False
+        suboptions:
+            hits:
+                description:
+                - "Number of times the service IP has been selected"
+                type: str
+            recent:
+                description:
+                - "Recent hits"
+                type: str
+            node_name:
+                description:
+                - "Service-IP Name"
+                type: str
+            port_list:
+                description:
+                - "Field port_list"
+                type: list
 
 '''
 
@@ -269,114 +318,84 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'use_gslb_state': {
-                'type': 'int',
-            },
-            'port_list': {
-                'type': 'list',
-                'oper': {
-                    'type': 'dict',
-                    'use_gslb_state': {
-                        'type': 'int',
-                    },
-                    'gslb_protocol': {
-                        'type': 'int',
-                    },
-                    'service_port': {
-                        'type': 'int',
-                    },
-                    'dynamic': {
-                        'type': 'int',
-                    },
-                    'tcp': {
-                        'type': 'int',
-                    },
-                    'disabled': {
-                        'type': 'int',
-                    },
-                    'state': {
-                        'type': 'str',
-                    },
-                    'local_protocol': {
-                        'type': 'int',
-                    },
-                    'manually_health_check': {
-                        'type': 'int',
-                    }
-                },
-                'port_proto': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['tcp', 'udp']
-                },
-                'port_num': {
-                    'type': 'int',
-                    'required': True,
-                }
-            },
-            'gslb_protocol': {
-                'type': 'int',
-            },
-            'virtual_server': {
-                'type': 'int',
-            },
-            'ip': {
-                'type': 'str',
-            },
-            'dynamic': {
-                'type': 'int',
-            },
-            'disabled': {
-                'type': 'int',
-            },
-            'node_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'state': {
-                'type': 'str',
-            },
-            'service_ip': {
-                'type': 'str',
-            },
-            'port_count': {
-                'type': 'int',
-            },
-            'local_protocol': {
-                'type': 'int',
-            },
-            'manually_health_check': {
-                'type': 'int',
-            }
+        'node_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'ipv6_address': {
+            'type': 'str',
+        },
+        'ip_address': {
+            'type': 'str',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'external_ip': {
+            'type': 'str',
+        },
+        'ipv6': {
+            'type': 'str',
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'health_check_protocol_disable': {
+            'type': 'bool',
         },
         'health_check_disable': {
             'type': 'bool',
         },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits', 'recent']
+            }
+        },
         'port_list': {
             'type': 'list',
+            'port_num': {
+                'type': 'int',
+                'required': True,
+            },
             'port_proto': {
                 'type': 'str',
                 'required': True,
                 'choices': ['tcp', 'udp']
             },
-            'uuid': {
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'health_check': {
                 'type': 'str',
             },
-            'port_num': {
+            'health_check_follow_port': {
                 'type': 'int',
-                'required': True,
-            },
-            'health_check_disable': {
-                'type': 'bool',
-            },
-            'user_tag': {
-                'type': 'str',
             },
             'follow_port_protocol': {
                 'type': 'str',
                 'choices': ['tcp', 'udp']
+            },
+            'health_check_protocol_disable': {
+                'type': 'bool',
+            },
+            'health_check_disable': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             },
             'sampling_enable': {
                 'type': 'list',
@@ -384,32 +403,108 @@ def get_argspec():
                     'type': 'str',
                     'choices': ['all', 'active', 'current']
                 }
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'health_check_follow_port': {
-                'type': 'int',
-            },
-            'health_check_protocol_disable': {
-                'type': 'bool',
-            },
-            'health_check': {
-                'type': 'str',
             }
         },
-        'stats': {
+        'oper': {
             'type': 'dict',
+            'service_ip': {
+                'type': 'str',
+            },
+            'ip': {
+                'type': 'str',
+            },
+            'state': {
+                'type': 'str',
+            },
+            'port_count': {
+                'type': 'int',
+            },
+            'virtual_server': {
+                'type': 'int',
+            },
+            'disabled': {
+                'type': 'int',
+            },
+            'gslb_protocol': {
+                'type': 'int',
+            },
+            'local_protocol': {
+                'type': 'int',
+            },
+            'manually_health_check': {
+                'type': 'int',
+            },
+            'use_gslb_state': {
+                'type': 'int',
+            },
+            'dynamic': {
+                'type': 'int',
+            },
             'node_name': {
                 'type': 'str',
                 'required': True,
             },
+            'port_list': {
+                'type': 'list',
+                'port_num': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'port_proto': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['tcp', 'udp']
+                },
+                'oper': {
+                    'type': 'dict',
+                    'service_port': {
+                        'type': 'int',
+                    },
+                    'state': {
+                        'type': 'str',
+                    },
+                    'disabled': {
+                        'type': 'int',
+                    },
+                    'gslb_protocol': {
+                        'type': 'int',
+                    },
+                    'local_protocol': {
+                        'type': 'int',
+                    },
+                    'tcp': {
+                        'type': 'int',
+                    },
+                    'manually_health_check': {
+                        'type': 'int',
+                    },
+                    'use_gslb_state': {
+                        'type': 'int',
+                    },
+                    'dynamic': {
+                        'type': 'int',
+                    }
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
             'hits': {
                 'type': 'str',
             },
+            'recent': {
+                'type': 'str',
+            },
+            'node_name': {
+                'type': 'str',
+                'required': True,
+            },
             'port_list': {
                 'type': 'list',
+                'port_num': {
+                    'type': 'int',
+                    'required': True,
+                },
                 'port_proto': {
                     'type': 'str',
                     'required': True,
@@ -423,54 +518,8 @@ def get_argspec():
                     'current': {
                         'type': 'str',
                     }
-                },
-                'port_num': {
-                    'type': 'int',
-                    'required': True,
                 }
-            },
-            'recent': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'external_ip': {
-            'type': 'str',
-        },
-        'node_name': {
-            'type': 'str',
-            'required': True,
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits', 'recent']
-            }
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'ip_address': {
-            'type': 'str',
-        },
-        'ipv6': {
-            'type': 'str',
-        },
-        'ipv6_address': {
-            'type': 'str',
-        },
-        'health_check_protocol_disable': {
-            'type': 'bool',
-        },
-        'health_check': {
-            'type': 'str',
         }
     })
     return rv

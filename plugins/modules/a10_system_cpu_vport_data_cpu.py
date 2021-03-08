@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_cpu_vport_data_cpu
 description:
     - Data CPU usage
-short_description: Configures A10 system.cpu.vport-data-cpu
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             vport_cpu_usage:
                 description:
                 - "Field vport_cpu_usage"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -115,47 +123,47 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'vport_cpu_usage': {
                 'type': 'list',
-                'vport_type': {
+                'vserver_name': {
                     'type': 'str',
+                },
+                'portNumber': {
+                    'type': 'int',
                 },
                 'protocol': {
-                    'type': 'str',
-                },
-                'vserver_name': {
                     'type': 'str',
                 },
                 'cpu_id': {
                     'type': 'int',
                 },
-                '30_sec': {
-                    'type': 'int',
+                'vport_type': {
+                    'type': 'str',
                 },
                 'dcpu_str': {
                     'type': 'str',
                 },
-                '60_sec': {
-                    'type': 'int',
-                },
-                '10_sec': {
-                    'type': 'int',
-                },
-                'portNumber': {
+                '1_sec': {
                     'type': 'int',
                 },
                 '5_sec': {
                     'type': 'int',
                 },
-                '1_sec': {
+                '10_sec': {
+                    'type': 'int',
+                },
+                '30_sec': {
+                    'type': 'int',
+                },
+                '60_sec': {
                     'type': 'int',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

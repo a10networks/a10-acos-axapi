@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_http_vport
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.http-vport
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
-        - Key to identify parent object    port_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - Key to identify parent object    virtual_server_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    virtual_server_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             http_vport:
                 description:
                 - "Field http_vport"
+                type: dict
 
 '''
 
@@ -120,202 +136,28 @@ def get_argspec():
             'type': 'dict',
             'http_vport': {
                 'type': 'dict',
-                'jsi_api_no_token': {
-                    'type': 'str',
-                },
-                'REQ_50u': {
-                    'type': 'str',
-                },
-                'http2_control_bytes': {
-                    'type': 'str',
-                },
-                'ws_server_switch': {
-                    'type': 'str',
-                },
-                'REQ_50m': {
-                    'type': 'str',
-                },
-                'status_450': {
-                    'type': 'str',
-                },
-                'http2_reset_received': {
-                    'type': 'str',
-                },
-                'jsi_hash_add_fails': {
-                    'type': 'str',
-                },
-                'jsi_requests': {
-                    'type': 'str',
-                },
-                'ws_handshake_request': {
-                    'type': 'str',
-                },
-                'jsi_api_responses': {
-                    'type': 'str',
-                },
-                'http2_header_bytes': {
-                    'type': 'str',
-                },
-                'status_207': {
-                    'type': 'str',
-                },
-                'status_206': {
-                    'type': 'str',
-                },
-                'status_205': {
-                    'type': 'str',
-                },
-                'status_204': {
-                    'type': 'str',
-                },
-                'status_203': {
-                    'type': 'str',
-                },
-                'status_202': {
+                'status_200': {
                     'type': 'str',
                 },
                 'status_201': {
                     'type': 'str',
                 },
-                'status_200': {
+                'status_202': {
                     'type': 'str',
                 },
-                'jsi_api_no_auth_hdr': {
+                'status_203': {
                     'type': 'str',
                 },
-                'ws_client_switch': {
+                'status_204': {
                     'type': 'str',
                 },
-                'status_2xx': {
+                'status_205': {
                     'type': 'str',
                 },
-                'http2_goaway_received': {
+                'status_206': {
                     'type': 'str',
                 },
-                'REQ_500u': {
-                    'type': 'str',
-                },
-                'status_4xx': {
-                    'type': 'str',
-                },
-                'total_requests': {
-                    'type': 'str',
-                },
-                'status_3xx': {
-                    'type': 'str',
-                },
-                'REQ_2s': {
-                    'type': 'str',
-                },
-                'stream_closed': {
-                    'type': 'str',
-                },
-                'REQ_100m': {
-                    'type': 'str',
-                },
-                'REQ_5m': {
-                    'type': 'str',
-                },
-                'REQ_100u': {
-                    'type': 'str',
-                },
-                'REQ_5s': {
-                    'type': 'str',
-                },
-                'jsi_hash_lookup_fails': {
-                    'type': 'str',
-                },
-                'REQ_500m': {
-                    'type': 'str',
-                },
-                'header_length_long': {
-                    'type': 'str',
-                },
-                'REQ_20u': {
-                    'type': 'str',
-                },
-                'REQ_200u': {
-                    'type': 'str',
-                },
-                'status_412': {
-                    'type': 'str',
-                },
-                'total_http2_bytes': {
-                    'type': 'str',
-                },
-                'status_411': {
-                    'type': 'str',
-                },
-                'status_306': {
-                    'type': 'str',
-                },
-                'status_307': {
-                    'type': 'str',
-                },
-                'status_304': {
-                    'type': 'str',
-                },
-                'status_305': {
-                    'type': 'str',
-                },
-                'status_302': {
-                    'type': 'str',
-                },
-                'status_303': {
-                    'type': 'str',
-                },
-                'REQ_2m': {
-                    'type': 'str',
-                },
-                'status_301': {
-                    'type': 'str',
-                },
-                'REQ_10u': {
-                    'type': 'str',
-                },
-                'total_http2_conn': {
-                    'type': 'str',
-                },
-                'REQ_10m': {
-                    'type': 'str',
-                },
-                'REQ_200m': {
-                    'type': 'str',
-                },
-                'peak_http2_conn': {
-                    'type': 'str',
-                },
-                'status_510': {
-                    'type': 'str',
-                },
-                'jsi_api_requests': {
-                    'type': 'str',
-                },
-                'status_413': {
-                    'type': 'str',
-                },
-                'status_410': {
-                    'type': 'str',
-                },
-                'http2_reset_sent': {
-                    'type': 'str',
-                },
-                'status_416': {
-                    'type': 'str',
-                },
-                'status_417': {
-                    'type': 'str',
-                },
-                'status_414': {
-                    'type': 'str',
-                },
-                'status_415': {
-                    'type': 'str',
-                },
-                'status_418': {
-                    'type': 'str',
-                },
-                'status_unknown': {
+                'status_207': {
                     'type': 'str',
                 },
                 'status_100': {
@@ -330,109 +172,106 @@ def get_argspec():
                 'status_103': {
                     'type': 'str',
                 },
-                'jsi_responses': {
-                    'type': 'str',
-                },
                 'status_300': {
                     'type': 'str',
                 },
-                'status_424': {
+                'status_301': {
                     'type': 'str',
                 },
-                'status_508': {
+                'status_302': {
                     'type': 'str',
                 },
-                'curr_http2_conn': {
+                'status_303': {
                     'type': 'str',
                 },
-                'ws_handshake_success': {
+                'status_304': {
                     'type': 'str',
                 },
-                'status_504_ax': {
+                'status_305': {
                     'type': 'str',
                 },
-                'status_6xx': {
+                'status_306': {
                     'type': 'str',
                 },
-                'status_5xx': {
-                    'type': 'str',
-                },
-                'http2_data_bytes': {
-                    'type': 'str',
-                },
-                'status_401': {
+                'status_307': {
                     'type': 'str',
                 },
                 'status_400': {
                     'type': 'str',
                 },
-                'status_403': {
+                'status_401': {
                     'type': 'str',
                 },
                 'status_402': {
                     'type': 'str',
                 },
-                'status_405': {
+                'status_403': {
                     'type': 'str',
                 },
                 'status_404': {
                     'type': 'str',
                 },
-                'status_407': {
+                'status_405': {
                     'type': 'str',
                 },
                 'status_406': {
                     'type': 'str',
                 },
-                'status_409': {
+                'status_407': {
                     'type': 'str',
                 },
                 'status_408': {
                     'type': 'str',
                 },
-                'jsi_skip_not_browser': {
+                'status_409': {
                     'type': 'str',
                 },
-                'http2_goaway_sent': {
+                'status_410': {
                     'type': 'str',
                 },
-                'REQ_1m': {
+                'status_411': {
                     'type': 'str',
                 },
-                'jsi_skip_no_ua': {
+                'status_412': {
                     'type': 'str',
                 },
-                'REQ_1s': {
+                'status_413': {
                     'type': 'str',
                 },
-                'status_1xx': {
+                'status_414': {
                     'type': 'str',
                 },
-                'jsi_pri_requests': {
+                'status_415': {
                     'type': 'str',
                 },
-                'status_423': {
+                'status_416': {
+                    'type': 'str',
+                },
+                'status_417': {
+                    'type': 'str',
+                },
+                'status_418': {
                     'type': 'str',
                 },
                 'status_422': {
                     'type': 'str',
                 },
-                'status_426': {
+                'status_423': {
+                    'type': 'str',
+                },
+                'status_424': {
                     'type': 'str',
                 },
                 'status_425': {
                     'type': 'str',
                 },
-                'REQ_20m': {
+                'status_426': {
                     'type': 'str',
                 },
-                'jsi_skip_no_fi': {
+                'status_449': {
                     'type': 'str',
                 },
-                'status_509': {
-                    'type': 'str',
-                },
-                'REQ_OVER_5s': {
+                'status_450': {
                     'type': 'str',
                 },
                 'status_500': {
@@ -450,6 +289,9 @@ def get_argspec():
                 'status_504': {
                     'type': 'str',
                 },
+                'status_504_ax': {
+                    'type': 'str',
+                },
                 'status_505': {
                     'type': 'str',
                 },
@@ -459,7 +301,181 @@ def get_argspec():
                 'status_507': {
                     'type': 'str',
                 },
-                'status_449': {
+                'status_508': {
+                    'type': 'str',
+                },
+                'status_509': {
+                    'type': 'str',
+                },
+                'status_510': {
+                    'type': 'str',
+                },
+                'status_1xx': {
+                    'type': 'str',
+                },
+                'status_2xx': {
+                    'type': 'str',
+                },
+                'status_3xx': {
+                    'type': 'str',
+                },
+                'status_4xx': {
+                    'type': 'str',
+                },
+                'status_5xx': {
+                    'type': 'str',
+                },
+                'status_6xx': {
+                    'type': 'str',
+                },
+                'status_unknown': {
+                    'type': 'str',
+                },
+                'ws_handshake_request': {
+                    'type': 'str',
+                },
+                'ws_handshake_success': {
+                    'type': 'str',
+                },
+                'ws_client_switch': {
+                    'type': 'str',
+                },
+                'ws_server_switch': {
+                    'type': 'str',
+                },
+                'REQ_10u': {
+                    'type': 'str',
+                },
+                'REQ_20u': {
+                    'type': 'str',
+                },
+                'REQ_50u': {
+                    'type': 'str',
+                },
+                'REQ_100u': {
+                    'type': 'str',
+                },
+                'REQ_200u': {
+                    'type': 'str',
+                },
+                'REQ_500u': {
+                    'type': 'str',
+                },
+                'REQ_1m': {
+                    'type': 'str',
+                },
+                'REQ_2m': {
+                    'type': 'str',
+                },
+                'REQ_5m': {
+                    'type': 'str',
+                },
+                'REQ_10m': {
+                    'type': 'str',
+                },
+                'REQ_20m': {
+                    'type': 'str',
+                },
+                'REQ_50m': {
+                    'type': 'str',
+                },
+                'REQ_100m': {
+                    'type': 'str',
+                },
+                'REQ_200m': {
+                    'type': 'str',
+                },
+                'REQ_500m': {
+                    'type': 'str',
+                },
+                'REQ_1s': {
+                    'type': 'str',
+                },
+                'REQ_2s': {
+                    'type': 'str',
+                },
+                'REQ_5s': {
+                    'type': 'str',
+                },
+                'REQ_OVER_5s': {
+                    'type': 'str',
+                },
+                'total_requests': {
+                    'type': 'str',
+                },
+                'curr_http2_conn': {
+                    'type': 'str',
+                },
+                'total_http2_conn': {
+                    'type': 'str',
+                },
+                'peak_http2_conn': {
+                    'type': 'str',
+                },
+                'total_http2_bytes': {
+                    'type': 'str',
+                },
+                'http2_control_bytes': {
+                    'type': 'str',
+                },
+                'http2_header_bytes': {
+                    'type': 'str',
+                },
+                'http2_data_bytes': {
+                    'type': 'str',
+                },
+                'http2_reset_received': {
+                    'type': 'str',
+                },
+                'http2_reset_sent': {
+                    'type': 'str',
+                },
+                'http2_goaway_received': {
+                    'type': 'str',
+                },
+                'http2_goaway_sent': {
+                    'type': 'str',
+                },
+                'stream_closed': {
+                    'type': 'str',
+                },
+                'jsi_requests': {
+                    'type': 'str',
+                },
+                'jsi_responses': {
+                    'type': 'str',
+                },
+                'jsi_pri_requests': {
+                    'type': 'str',
+                },
+                'jsi_api_requests': {
+                    'type': 'str',
+                },
+                'jsi_api_responses': {
+                    'type': 'str',
+                },
+                'jsi_api_no_auth_hdr': {
+                    'type': 'str',
+                },
+                'jsi_api_no_token': {
+                    'type': 'str',
+                },
+                'jsi_skip_no_fi': {
+                    'type': 'str',
+                },
+                'jsi_skip_no_ua': {
+                    'type': 'str',
+                },
+                'jsi_skip_not_browser': {
+                    'type': 'str',
+                },
+                'jsi_hash_add_fails': {
+                    'type': 'str',
+                },
+                'jsi_hash_lookup_fails': {
+                    'type': 'str',
+                },
+                'header_length_long': {
                     'type': 'str',
                 }
             }

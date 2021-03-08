@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_player_id_ep
 description:
     - Player-id endpoint
-short_description: Configures A10 slb.player-id-ep
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,53 +22,66 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             player_id_ep_list:
                 description:
                 - "Field player_id_ep_list"
+                type: list
             total_players:
                 description:
                 - "Field total_players"
+                type: int
             filter_type:
                 description:
                 - "Field filter_type"
+                type: str
             player_id:
                 description:
                 - "Field player_id"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
 
 '''
 
@@ -124,26 +135,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'player_id_ep_list': {
                 'type': 'list',
-                'age': {
-                    'type': 'int',
-                },
-                'game_server_port': {
-                    'type': 'int',
-                },
-                'idle_time': {
+                'player_id': {
                     'type': 'int',
                 },
                 'game_server_address': {
                     'type': 'str',
                 },
+                'game_server_port': {
+                    'type': 'int',
+                },
+                'age': {
+                    'type': 'int',
+                },
                 'user_session_count': {
                     'type': 'int',
                 },
-                'player_id': {
+                'idle_time': {
                     'type': 'int',
                 }
             },
@@ -157,9 +171,6 @@ def get_argspec():
             'player_id': {
                 'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

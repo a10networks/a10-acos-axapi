@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_flow_collector_netflow
 description:
     - NetFlow/IPFIX collector
-short_description: Configures A10 visibility.flow.collector.netflow
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -66,65 +77,79 @@ options:
           fragment packets droppped; 'agent-not-found'= nflow pkts from not configured
           agents; 'version-not-supported'= nflow version not supported; 'unknown-dir'=
           nflow sample direction is unknown;"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            template_drop_exceeded:
-                description:
-                - "Total templates dropped because of maximum limit"
-            pkts_rcvd:
-                description:
-                - "Total nflow packets received"
-            agent_not_found:
-                description:
-                - "nflow pkts from not configured agents"
-            v10_templates_deleted:
-                description:
-                - "Total v10(IPFIX) templates deleted"
-            template_drop_out_of_memory:
-                description:
-                - "Total templates dropped becuase of out of memory"
-            template:
-                description:
-                - "Field template"
-            v9_templates_deleted:
-                description:
-                - "Total v9 templates deleted"
-            version_not_supported:
-                description:
-                - "nflow version not supported"
-            frag_dropped:
-                description:
-                - "Total nflow fragment packets droppped"
-            v9_templates_created:
-                description:
-                - "Total v9 templates created"
-            v10_templates_created:
-                description:
-                - "Total v10(IPFIX) templates created"
-            unknown_dir:
-                description:
-                - "nflow sample direction is unknown"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
     template:
         description:
         - "Field template"
+        type: dict
         required: False
         suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
             detail:
                 description:
                 - "Field detail"
+                type: dict
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            pkts_rcvd:
+                description:
+                - "Total nflow packets received"
+                type: str
+            v9_templates_created:
+                description:
+                - "Total v9 templates created"
+                type: str
+            v9_templates_deleted:
+                description:
+                - "Total v9 templates deleted"
+                type: str
+            v10_templates_created:
+                description:
+                - "Total v10(IPFIX) templates created"
+                type: str
+            v10_templates_deleted:
+                description:
+                - "Total v10(IPFIX) templates deleted"
+                type: str
+            template_drop_exceeded:
+                description:
+                - "Total templates dropped because of maximum limit"
+                type: str
+            template_drop_out_of_memory:
+                description:
+                - "Total templates dropped becuase of out of memory"
+                type: str
+            frag_dropped:
+                description:
+                - "Total nflow fragment packets droppped"
+                type: str
+            agent_not_found:
+                description:
+                - "nflow pkts from not configured agents"
+                type: str
+            version_not_supported:
+                description:
+                - "nflow version not supported"
+                type: str
+            unknown_dir:
+                description:
+                - "nflow sample direction is unknown"
+                type: str
+            template:
+                description:
+                - "Field template"
+                type: dict
 
 '''
 
@@ -180,6 +205,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -194,59 +222,11 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'template_drop_exceeded': {
-                'type': 'str',
-            },
-            'pkts_rcvd': {
-                'type': 'str',
-            },
-            'agent_not_found': {
-                'type': 'str',
-            },
-            'v10_templates_deleted': {
-                'type': 'str',
-            },
-            'template_drop_out_of_memory': {
-                'type': 'str',
-            },
-            'template': {
-                'type': 'dict',
-                'stats': {
-                    'type': 'dict',
-                    'templates_removed_from_delq': {
-                        'type': 'str',
-                    },
-                    'templates_added_to_delq': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'v9_templates_deleted': {
-                'type': 'str',
-            },
-            'version_not_supported': {
-                'type': 'str',
-            },
-            'frag_dropped': {
-                'type': 'str',
-            },
-            'v9_templates_created': {
-                'type': 'str',
-            },
-            'v10_templates_created': {
-                'type': 'str',
-            },
-            'unknown_dir': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'template': {
             'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
             'sampling_enable': {
                 'type': 'list',
                 'counters1': {
@@ -258,13 +238,58 @@ def get_argspec():
                     ]
                 }
             },
-            'uuid': {
-                'type': 'str',
-            },
             'detail': {
                 'type': 'dict',
                 'uuid': {
                     'type': 'str',
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'pkts_rcvd': {
+                'type': 'str',
+            },
+            'v9_templates_created': {
+                'type': 'str',
+            },
+            'v9_templates_deleted': {
+                'type': 'str',
+            },
+            'v10_templates_created': {
+                'type': 'str',
+            },
+            'v10_templates_deleted': {
+                'type': 'str',
+            },
+            'template_drop_exceeded': {
+                'type': 'str',
+            },
+            'template_drop_out_of_memory': {
+                'type': 'str',
+            },
+            'frag_dropped': {
+                'type': 'str',
+            },
+            'agent_not_found': {
+                'type': 'str',
+            },
+            'version_not_supported': {
+                'type': 'str',
+            },
+            'unknown_dir': {
+                'type': 'str',
+            },
+            'template': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'templates_added_to_delq': {
+                        'type': 'str',
+                    },
+                    'templates_removed_from_delq': {
+                        'type': 'str',
+                    }
                 }
             }
         }

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_dns
 description:
     - DNS Global Options
-short_description: Configures A10 gslb.dns
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,65 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    action:
+        description:
+        - "'none'= No action (default); 'drop'= Drop query; 'reject'= Send refuse
+          response; 'ignore'= Send empty response;"
+        type: str
+        required: False
+    logging:
+        description:
+        - "'none'= No logging (default); 'query'= DNS Query; 'response'= DNS Response;
+          'both'= Both DNS Query and Response;"
+        type: str
+        required: False
+    template:
+        description:
+        - "Logging template (Logging Template Name)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -82,128 +110,145 @@ options:
           Metric User Hit; 'metric_least_reponse'= Metric Least Reponse Hit;
           'metric_admin_ip'= Metric Admin IP Hit; 'metric_round_robin'= Metric Round
           Robin Hit;"
-    logging:
-        description:
-        - "'none'= No logging (default); 'query'= DNS Query; 'response'= DNS Response;
-          'both'= Both DNS Query and Response;"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    template:
-        description:
-        - "Logging template (Logging Template Name)"
-        required: False
-    action:
-        description:
-        - "'none'= No action (default); 'drop'= Drop query; 'reject'= Send refuse
-          response; 'ignore'= Send empty response;"
-        required: False
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            metric_capacity:
-                description:
-                - "Metric Capacity Hit"
-            metric_admin_ip:
-                description:
-                - "Metric Admin IP Hit"
-            no_answer:
-                description:
-                - "Number of replies with unknown server IP"
-            bad_format_query:
-                description:
-                - "Number of queries with incorrect format"
-            metric_active_server:
-                description:
-                - "Metric Active Server Hit"
-            metric_active_rdt:
-                description:
-                - "Metric Active RDT Hit"
-            metric_connection_load:
-                description:
-                - "Metric Connection Load Hit"
-            bad_service_response:
-                description:
-                - "Number of replies with unknown service"
-            metric_user:
-                description:
-                - "Metric User Hit"
-            bad_packet_query:
-                description:
-                - "Number of queries with incorrect data length"
             total_query:
                 description:
                 - "Total number of DNS queries received"
-            metric_bandwidth_cost:
-                description:
-                - "Metric Bandwidth Cost Hit"
-            bad_class_query:
-                description:
-                - "Number of queries with incorrect class"
-            metric_bandwidth_quality:
-                description:
-                - "Metric Bandwidth Quality Hit"
-            bad_service_query:
-                description:
-                - "Number of queries with unknown service"
-            bad_header_response:
-                description:
-                - "Number of replies with incorrect header"
-            metric_least_reponse:
-                description:
-                - "Metric Least Reponse Hit"
-            metric_weighted_site:
-                description:
-                - "Metric Weighted Site Hit"
+                type: str
             total_response:
                 description:
                 - "Total number of DNS replies sent to clients"
-            metric_health_check:
+                type: str
+            bad_packet_query:
                 description:
-                - "Metric Health Check Hit"
-            metric_round_robin:
-                description:
-                - "Metric Round Robin Hit"
-            metric_easy_rdt:
-                description:
-                - "Metric Easy RDT Hit"
-            bad_type_query:
-                description:
-                - "Number of queries with incorrect type"
+                - "Number of queries with incorrect data length"
+                type: str
             bad_packet_response:
                 description:
                 - "Number of replies with incorrect data length"
-            metric_weighted_ip:
-                description:
-                - "Metric Weighted IP Hit"
-            bad_class_response:
-                description:
-                - "Number of replies with incorrect class"
-            bad_format_response:
-                description:
-                - "Number of replies with incorrect format"
-            metric_geographic:
-                description:
-                - "Metric Geographic Hit"
+                type: str
             bad_header_query:
                 description:
                 - "Number of queries with incorrect header"
-            metric_active_weight:
+                type: str
+            bad_header_response:
                 description:
-                - "Metric Active Weight Hit"
-            metric_admin_preference:
+                - "Number of replies with incorrect header"
+                type: str
+            bad_format_query:
                 description:
-                - "Metric Admin Preference Hit"
-            metric_number_of_sessions:
+                - "Number of queries with incorrect format"
+                type: str
+            bad_format_response:
                 description:
-                - "Metric Number of Sessions Hit"
+                - "Number of replies with incorrect format"
+                type: str
+            bad_service_query:
+                description:
+                - "Number of queries with unknown service"
+                type: str
+            bad_service_response:
+                description:
+                - "Number of replies with unknown service"
+                type: str
+            bad_class_query:
+                description:
+                - "Number of queries with incorrect class"
+                type: str
+            bad_class_response:
+                description:
+                - "Number of replies with incorrect class"
+                type: str
+            bad_type_query:
+                description:
+                - "Number of queries with incorrect type"
+                type: str
             bad_type_response:
                 description:
                 - "Number of replies with incorrect type"
+                type: str
+            no_answer:
+                description:
+                - "Number of replies with unknown server IP"
+                type: str
+            metric_health_check:
+                description:
+                - "Metric Health Check Hit"
+                type: str
+            metric_weighted_ip:
+                description:
+                - "Metric Weighted IP Hit"
+                type: str
+            metric_weighted_site:
+                description:
+                - "Metric Weighted Site Hit"
+                type: str
+            metric_capacity:
+                description:
+                - "Metric Capacity Hit"
+                type: str
+            metric_active_server:
+                description:
+                - "Metric Active Server Hit"
+                type: str
+            metric_easy_rdt:
+                description:
+                - "Metric Easy RDT Hit"
+                type: str
+            metric_active_rdt:
+                description:
+                - "Metric Active RDT Hit"
+                type: str
+            metric_geographic:
+                description:
+                - "Metric Geographic Hit"
+                type: str
+            metric_connection_load:
+                description:
+                - "Metric Connection Load Hit"
+                type: str
+            metric_number_of_sessions:
+                description:
+                - "Metric Number of Sessions Hit"
+                type: str
+            metric_active_weight:
+                description:
+                - "Metric Active Weight Hit"
+                type: str
+            metric_admin_preference:
+                description:
+                - "Metric Admin Preference Hit"
+                type: str
+            metric_bandwidth_quality:
+                description:
+                - "Metric Bandwidth Quality Hit"
+                type: str
+            metric_bandwidth_cost:
+                description:
+                - "Metric Bandwidth Cost Hit"
+                type: str
+            metric_user:
+                description:
+                - "Metric User Hit"
+                type: str
+            metric_least_reponse:
+                description:
+                - "Metric Least Reponse Hit"
+                type: str
+            metric_admin_ip:
+                description:
+                - "Metric Admin IP Hit"
+                type: str
+            metric_round_robin:
+                description:
+                - "Metric Round Robin Hit"
+                type: str
 
 '''
 
@@ -261,6 +306,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'action': {
+            'type': 'str',
+            'choices': ['none', 'drop', 'reject', 'ignore']
+        },
+        'logging': {
+            'type': 'str',
+            'choices': ['none', 'query', 'response', 'both']
+        },
+        'template': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -286,107 +345,81 @@ def get_argspec():
                 ]
             }
         },
-        'logging': {
-            'type': 'str',
-            'choices': ['none', 'query', 'response', 'both']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'template': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['none', 'drop', 'reject', 'ignore']
-        },
         'stats': {
             'type': 'dict',
-            'metric_capacity': {
-                'type': 'str',
-            },
-            'metric_admin_ip': {
-                'type': 'str',
-            },
-            'no_answer': {
-                'type': 'str',
-            },
-            'bad_format_query': {
-                'type': 'str',
-            },
-            'metric_active_server': {
-                'type': 'str',
-            },
-            'metric_active_rdt': {
-                'type': 'str',
-            },
-            'metric_connection_load': {
-                'type': 'str',
-            },
-            'bad_service_response': {
-                'type': 'str',
-            },
-            'metric_user': {
-                'type': 'str',
-            },
-            'bad_packet_query': {
-                'type': 'str',
-            },
             'total_query': {
-                'type': 'str',
-            },
-            'metric_bandwidth_cost': {
-                'type': 'str',
-            },
-            'bad_class_query': {
-                'type': 'str',
-            },
-            'metric_bandwidth_quality': {
-                'type': 'str',
-            },
-            'bad_service_query': {
-                'type': 'str',
-            },
-            'bad_header_response': {
-                'type': 'str',
-            },
-            'metric_least_reponse': {
-                'type': 'str',
-            },
-            'metric_weighted_site': {
                 'type': 'str',
             },
             'total_response': {
                 'type': 'str',
             },
-            'metric_health_check': {
-                'type': 'str',
-            },
-            'metric_round_robin': {
-                'type': 'str',
-            },
-            'metric_easy_rdt': {
-                'type': 'str',
-            },
-            'bad_type_query': {
+            'bad_packet_query': {
                 'type': 'str',
             },
             'bad_packet_response': {
                 'type': 'str',
             },
-            'metric_weighted_ip': {
+            'bad_header_query': {
                 'type': 'str',
             },
-            'bad_class_response': {
+            'bad_header_response': {
+                'type': 'str',
+            },
+            'bad_format_query': {
                 'type': 'str',
             },
             'bad_format_response': {
                 'type': 'str',
             },
+            'bad_service_query': {
+                'type': 'str',
+            },
+            'bad_service_response': {
+                'type': 'str',
+            },
+            'bad_class_query': {
+                'type': 'str',
+            },
+            'bad_class_response': {
+                'type': 'str',
+            },
+            'bad_type_query': {
+                'type': 'str',
+            },
+            'bad_type_response': {
+                'type': 'str',
+            },
+            'no_answer': {
+                'type': 'str',
+            },
+            'metric_health_check': {
+                'type': 'str',
+            },
+            'metric_weighted_ip': {
+                'type': 'str',
+            },
+            'metric_weighted_site': {
+                'type': 'str',
+            },
+            'metric_capacity': {
+                'type': 'str',
+            },
+            'metric_active_server': {
+                'type': 'str',
+            },
+            'metric_easy_rdt': {
+                'type': 'str',
+            },
+            'metric_active_rdt': {
+                'type': 'str',
+            },
             'metric_geographic': {
                 'type': 'str',
             },
-            'bad_header_query': {
+            'metric_connection_load': {
+                'type': 'str',
+            },
+            'metric_number_of_sessions': {
                 'type': 'str',
             },
             'metric_active_weight': {
@@ -395,10 +428,22 @@ def get_argspec():
             'metric_admin_preference': {
                 'type': 'str',
             },
-            'metric_number_of_sessions': {
+            'metric_bandwidth_quality': {
                 'type': 'str',
             },
-            'bad_type_response': {
+            'metric_bandwidth_cost': {
+                'type': 'str',
+            },
+            'metric_user': {
+                'type': 'str',
+            },
+            'metric_least_reponse': {
+                'type': 'str',
+            },
+            'metric_admin_ip': {
+                'type': 'str',
+            },
+            'metric_round_robin': {
                 'type': 'str',
             }
         }

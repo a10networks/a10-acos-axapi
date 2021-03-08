@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_extcommunity_list_expanded_num
 description:
     - Configure Expanded number Community-list
-short_description: Configures A10 ip.extcommunity.list.expanded-num
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,62 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ext_list_num:
         description:
         - "Extended Community list number (expanded)"
+        type: int
         required: True
     rules_list:
         description:
         - "Field rules_list"
+        type: list
         required: False
         suboptions:
-            ext_list_value:
-                description:
-                - "An ordered list as a regular-expression"
             ext_list_action:
                 description:
                 - "'deny'= Specify community to reject; 'permit'= Specify community to accept;"
+                type: str
+            ext_list_value:
+                description:
+                - "An ordered list as a regular-expression"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -129,12 +139,12 @@ def get_argspec():
         },
         'rules_list': {
             'type': 'list',
-            'ext_list_value': {
-                'type': 'str',
-            },
             'ext_list_action': {
                 'type': 'str',
                 'choices': ['deny', 'permit']
+            },
+            'ext_list_value': {
+                'type': 'str',
             }
         },
         'uuid': {

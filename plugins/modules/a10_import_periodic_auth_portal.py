@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_import_periodic_auth_portal
 description:
     - Portal file for http authentication
-short_description: Configures A10 import-periodic.auth-portal
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,51 +22,63 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
+        type: str
         required: False
     auth_portal:
         description:
         - "Portal file for http authentication"
+        type: str
         required: True
-    uuid:
+    use_mgmt_port:
         description:
-        - "uuid of the object"
+        - "Use management port as source port"
+        type: bool
         required: False
     remote_file:
         description:
         - "profile name for remote url"
+        type: str
         required: False
     period:
         description:
         - "Specify the period in second"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -126,21 +136,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
         'auth_portal': {
             'type': 'str',
             'required': True,
         },
-        'uuid': {
-            'type': 'str',
+        'use_mgmt_port': {
+            'type': 'bool',
         },
         'remote_file': {
             'type': 'str',
         },
         'period': {
             'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

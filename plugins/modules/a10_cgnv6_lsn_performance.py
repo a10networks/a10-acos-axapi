@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_performance
 description:
     - Large-Scale NAT performance statistics
-short_description: Configures A10 cgnv6.lsn.performance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,49 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            user_quotas:
-                description:
-                - "Field user_quotas"
-            data_sessions:
-                description:
-                - "Field data_sessions"
-            full_cone_sessions:
-                description:
-                - "Field full_cone_sessions"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -80,42 +77,67 @@ options:
           sessions-previous-epoch-last'= data-sessions-previous-epoch-last; 'fullcone-
           created-previous-epoch-last'= fullcone-created-previous-epoch-last; 'user-
           quote-created-previous-epoch-last'= user-quote-created-previous-epoch-last;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            data_sessions:
+                description:
+                - "Field data_sessions"
+                type: int
+            full_cone_sessions:
+                description:
+                - "Field full_cone_sessions"
+                type: int
+            user_quotas:
+                description:
+                - "Field user_quotas"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            fullcone_created_previous_epoch_first:
-                description:
-                - "Field fullcone_created_previous_epoch_first"
-            fullcone_created_previous_epoch_last:
-                description:
-                - "Field fullcone_created_previous_epoch_last"
-            data_sessions_previous_epoch_first:
-                description:
-                - "Field data_sessions_previous_epoch_first"
-            user_quote_created_current_epoch:
-                description:
-                - "Field user_quote_created_current_epoch"
-            user_quote_created_previous_epoch_first:
-                description:
-                - "Field user_quote_created_previous_epoch_first"
-            data_sessions_previous_epoch_last:
-                description:
-                - "Field data_sessions_previous_epoch_last"
-            fullcone_created_current_epoch:
-                description:
-                - "Field fullcone_created_current_epoch"
-            user_quote_created_previous_epoch_last:
-                description:
-                - "Field user_quote_created_previous_epoch_last"
             data_sessions_current_epoch:
                 description:
                 - "Field data_sessions_current_epoch"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            fullcone_created_current_epoch:
+                description:
+                - "Field fullcone_created_current_epoch"
+                type: str
+            user_quote_created_current_epoch:
+                description:
+                - "Field user_quote_created_current_epoch"
+                type: str
+            data_sessions_previous_epoch_first:
+                description:
+                - "Field data_sessions_previous_epoch_first"
+                type: str
+            fullcone_created_previous_epoch_first:
+                description:
+                - "Field fullcone_created_previous_epoch_first"
+                type: str
+            user_quote_created_previous_epoch_first:
+                description:
+                - "Field user_quote_created_previous_epoch_first"
+                type: str
+            data_sessions_previous_epoch_last:
+                description:
+                - "Field data_sessions_previous_epoch_last"
+                type: str
+            fullcone_created_previous_epoch_last:
+                description:
+                - "Field fullcone_created_previous_epoch_last"
+                type: str
+            user_quote_created_previous_epoch_last:
+                description:
+                - "Field user_quote_created_previous_epoch_last"
+                type: str
 
 '''
 
@@ -171,17 +193,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'user_quotas': {
-                'type': 'int',
-            },
-            'data_sessions': {
-                'type': 'int',
-            },
-            'full_cone_sessions': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -201,18 +214,33 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'data_sessions': {
+                'type': 'int',
+            },
+            'full_cone_sessions': {
+                'type': 'int',
+            },
+            'user_quotas': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'fullcone_created_previous_epoch_first': {
+            'data_sessions_current_epoch': {
                 'type': 'str',
             },
-            'fullcone_created_previous_epoch_last': {
+            'fullcone_created_current_epoch': {
+                'type': 'str',
+            },
+            'user_quote_created_current_epoch': {
                 'type': 'str',
             },
             'data_sessions_previous_epoch_first': {
                 'type': 'str',
             },
-            'user_quote_created_current_epoch': {
+            'fullcone_created_previous_epoch_first': {
                 'type': 'str',
             },
             'user_quote_created_previous_epoch_first': {
@@ -221,18 +249,12 @@ def get_argspec():
             'data_sessions_previous_epoch_last': {
                 'type': 'str',
             },
-            'fullcone_created_current_epoch': {
+            'fullcone_created_previous_epoch_last': {
                 'type': 'str',
             },
             'user_quote_created_previous_epoch_last': {
                 'type': 'str',
-            },
-            'data_sessions_current_epoch': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

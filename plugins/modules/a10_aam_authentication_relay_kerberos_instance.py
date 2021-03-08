@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_kerberos_instance
 description:
     - Kerberos Authentication Relay
-short_description: Configures A10 aam.authentication.relay.kerberos.instance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,93 +22,100 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    name:
         description:
-        - "Field oper"
+        - "Specify Kerberos authentication relay name"
+        type: str
+        required: True
+    kerberos_realm:
+        description:
+        - "Specify the kerberos realm"
+        type: str
         required: False
-        suboptions:
-            ticket_cache:
-                description:
-                - "Field ticket_cache"
-            default_principal:
-                description:
-                - "Field default_principal"
-            name:
-                description:
-                - "Specify Kerberos authentication relay name"
-            item_list:
-                description:
-                - "Field item_list"
+    kerberos_kdc:
+        description:
+        - "Specify the kerberos kdc ip or host name"
+        type: str
+        required: False
+    kerberos_kdc_service_group:
+        description:
+        - "Specify an authentication service group as multiple KDCs"
+        type: str
+        required: False
     kerberos_account:
         description:
         - "Specify the kerberos account name"
+        type: str
         required: False
-    stats:
+    password:
         description:
-        - "Field stats"
+        - "Specify password of Kerberos password"
+        type: bool
         required: False
-        suboptions:
-            current_requests_of_user:
-                description:
-                - "Current Pending Requests of User"
-            response_receive:
-                description:
-                - "Response Receive"
-            request_send:
-                description:
-                - "Request Send"
-            name:
-                description:
-                - "Specify Kerberos authentication relay name"
-            tickets:
-                description:
-                - "Tickets"
-    uuid:
+    secret_string:
         description:
-        - "uuid of the object"
+        - "The kerberos client password"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
         required: False
-    kerberos_realm:
+    port:
         description:
-        - "Specify the kerberos realm"
+        - "Specify The KDC port, default is 88"
+        type: int
         required: False
-    kerberos_kdc_service_group:
+    timeout:
         description:
-        - "Specify an authentication service group as multiple KDCs"
+        - "Specify timeout for kerberos transport, default is 10 seconds (The timeout,
+          default is 10 seconds)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -118,31 +123,55 @@ options:
                 - "'all'= all; 'request-send'= Request Send; 'response-receive'= Response Receive;
           'current-requests-of-user'= Current Pending Requests of User; 'tickets'=
           Tickets;"
-    timeout:
+                type: str
+    oper:
         description:
-        - "Specify timeout for kerberos transport, default is 10 seconds (The timeout,
-          default is 10 seconds)"
+        - "Field oper"
+        type: dict
         required: False
-    password:
+        suboptions:
+            ticket_cache:
+                description:
+                - "Field ticket_cache"
+                type: str
+            default_principal:
+                description:
+                - "Field default_principal"
+                type: str
+            item_list:
+                description:
+                - "Field item_list"
+                type: list
+            name:
+                description:
+                - "Specify Kerberos authentication relay name"
+                type: str
+    stats:
         description:
-        - "Specify password of Kerberos password"
+        - "Field stats"
+        type: dict
         required: False
-    kerberos_kdc:
-        description:
-        - "Specify the kerberos kdc ip or host name"
-        required: False
-    port:
-        description:
-        - "Specify The KDC port, default is 88"
-        required: False
-    secret_string:
-        description:
-        - "The kerberos client password"
-        required: False
-    name:
-        description:
-        - "Specify Kerberos authentication relay name"
-        required: True
+        suboptions:
+            request_send:
+                description:
+                - "Request Send"
+                type: str
+            response_receive:
+                description:
+                - "Response Receive"
+                type: str
+            current_requests_of_user:
+                description:
+                - "Current Pending Requests of User"
+                type: str
+            tickets:
+                description:
+                - "Tickets"
+                type: str
+            name:
+                description:
+                - "Specify Kerberos authentication relay name"
+                type: str
 
 '''
 
@@ -208,72 +237,38 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'ticket_cache': {
-                'type': 'str',
-            },
-            'default_principal': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'item_list': {
-                'type': 'list',
-                'client_principal': {
-                    'type': 'str',
-                },
-                'end_time': {
-                    'type': 'str',
-                },
-                'start_time': {
-                    'type': 'str',
-                },
-                'service_principal': {
-                    'type': 'str',
-                },
-                'renew_time': {
-                    'type': 'str',
-                },
-                'flags': {
-                    'type': 'str',
-                }
-            }
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'kerberos_realm': {
+            'type': 'str',
+        },
+        'kerberos_kdc': {
+            'type': 'str',
+        },
+        'kerberos_kdc_service_group': {
+            'type': 'str',
         },
         'kerberos_account': {
             'type': 'str',
         },
-        'stats': {
-            'type': 'dict',
-            'current_requests_of_user': {
-                'type': 'str',
-            },
-            'response_receive': {
-                'type': 'str',
-            },
-            'request_send': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'tickets': {
-                'type': 'str',
-            }
+        'password': {
+            'type': 'bool',
         },
-        'uuid': {
+        'secret_string': {
             'type': 'str',
         },
         'encrypted': {
             'type': 'str',
         },
-        'kerberos_realm': {
-            'type': 'str',
+        'port': {
+            'type': 'int',
         },
-        'kerberos_kdc_service_group': {
+        'timeout': {
+            'type': 'int',
+        },
+        'uuid': {
             'type': 'str',
         },
         'sampling_enable': {
@@ -287,24 +282,58 @@ def get_argspec():
                 ]
             }
         },
-        'timeout': {
-            'type': 'int',
+        'oper': {
+            'type': 'dict',
+            'ticket_cache': {
+                'type': 'str',
+            },
+            'default_principal': {
+                'type': 'str',
+            },
+            'item_list': {
+                'type': 'list',
+                'service_principal': {
+                    'type': 'str',
+                },
+                'client_principal': {
+                    'type': 'str',
+                },
+                'start_time': {
+                    'type': 'str',
+                },
+                'end_time': {
+                    'type': 'str',
+                },
+                'renew_time': {
+                    'type': 'str',
+                },
+                'flags': {
+                    'type': 'str',
+                }
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         },
-        'password': {
-            'type': 'bool',
-        },
-        'kerberos_kdc': {
-            'type': 'str',
-        },
-        'port': {
-            'type': 'int',
-        },
-        'secret_string': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
+        'stats': {
+            'type': 'dict',
+            'request_send': {
+                'type': 'str',
+            },
+            'response_receive': {
+                'type': 'str',
+            },
+            'current_requests_of_user': {
+                'type': 'str',
+            },
+            'tickets': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

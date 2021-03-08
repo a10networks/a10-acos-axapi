@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_ipv6_ospf_redistribute
 description:
     - Redistribute information from another routing protocol
-short_description: Configures A10 router.ipv6.ospf.redistribute
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,137 +22,174 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ospf_process_id:
         description:
-        - Key to identify parent object    redist_list:
+        - Key to identify parent object
+        type: str
+        required: True
+    redist_list:
         description:
         - "Field redist_list"
+        type: list
         required: False
         suboptions:
-            metric:
-                description:
-                - "OSPFV3 default metric (OSPFV3 metric)"
-            route_map:
-                description:
-                - "Route map reference (Pointer to route-map entries)"
             ntype:
                 description:
                 - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'=
-          Floating IP; 'ip-nat-list'= IP NAT list; 'nat-map'= NAT MAP Prefix; 'nat64'=
-          NAT64 Prefix; 'lw4o6'= LW4O6 Prefix; 'isis'= ISO IS-IS; 'rip'= Routing
-          Information Protocol (RIP); 'static'= Static routes;"
+          Floating IP; 'ip-nat-list'= IP NAT list; 'nat-map'= NAT MAP Prefix; 'static-
+          nat'= Static NAT; 'nat64'= NAT64 Prefix; 'lw4o6'= LW4O6 Prefix; 'isis'= ISO IS-
+          IS; 'rip'= Routing Information Protocol (RIP); 'static'= Static routes;"
+                type: str
+            metric:
+                description:
+                - "OSPFV3 default metric (OSPFV3 metric)"
+                type: int
             metric_type:
                 description:
                 - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
           metrics;"
+                type: str
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
     ospf_list:
         description:
         - "Field ospf_list"
+        type: list
         required: False
         suboptions:
-            route_map_ospf:
+            ospf:
                 description:
-                - "Route map reference (Pointer to route-map entries)"
+                - "Open Shortest Path First (OSPF)"
+                type: bool
+            process_id:
+                description:
+                - "OSPFV3 process tag"
+                type: str
             metric_ospf:
                 description:
                 - "OSPFV3 default metric (OSPFV3 metric)"
+                type: int
             metric_type_ospf:
                 description:
                 - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
           metrics;"
-            ospf:
-                description:
-                - "Open Shortest Path First (OSPF)"
-            process_id:
-                description:
-                - "OSPFV3 process tag"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ip_nat_floating_list:
-        description:
-        - "Field ip_nat_floating_list"
-        required: False
-        suboptions:
-            ip_nat_floating_IP_forward:
-                description:
-                - "Floating-IP as forward address"
-            ip_nat_prefix:
-                description:
-                - "Address"
-    vip_list:
-        description:
-        - "Field vip_list"
-        required: False
-        suboptions:
-            metric_vip:
-                description:
-                - "OSPFV3 default metric (OSPFV3 metric)"
-            metric_type_vip:
-                description:
-                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
-          metrics;"
-            type_vip:
-                description:
-                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not
-          flagged;"
-            route_map_vip:
+                type: str
+            route_map_ospf:
                 description:
                 - "Route map reference (Pointer to route-map entries)"
+                type: str
     ip_nat:
         description:
         - "IP-NAT"
+        type: bool
         required: False
     metric_ip_nat:
         description:
         - "OSPFV3 default metric (OSPFV3 metric)"
+        type: int
+        required: False
+    metric_type_ip_nat:
+        description:
+        - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
+          metrics;"
+        type: str
         required: False
     route_map_ip_nat:
         description:
         - "Route map reference (Pointer to route-map entries)"
+        type: str
         required: False
+    ip_nat_floating_list:
+        description:
+        - "Field ip_nat_floating_list"
+        type: list
+        required: False
+        suboptions:
+            ip_nat_prefix:
+                description:
+                - "Address"
+                type: str
+            ip_nat_floating_IP_forward:
+                description:
+                - "Floating-IP as forward address"
+                type: str
+    vip_list:
+        description:
+        - "Field vip_list"
+        type: list
+        required: False
+        suboptions:
+            type_vip:
+                description:
+                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not
+          flagged;"
+                type: str
+            metric_vip:
+                description:
+                - "OSPFV3 default metric (OSPFV3 metric)"
+                type: int
+            metric_type_vip:
+                description:
+                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
+          metrics;"
+                type: str
+            route_map_vip:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+                type: str
     vip_floating_list:
         description:
         - "Field vip_floating_list"
+        type: list
         required: False
         suboptions:
             vip_address:
                 description:
                 - "Address"
+                type: str
             vip_floating_IP_forward:
                 description:
                 - "Floating-IP as forward address"
-    metric_type_ip_nat:
+                type: str
+    uuid:
         description:
-        - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2
-          metrics;"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -219,28 +254,32 @@ def get_argspec():
     rv.update({
         'redist_list': {
             'type': 'list',
-            'metric': {
-                'type': 'int',
-            },
-            'route_map': {
-                'type': 'str',
-            },
             'ntype': {
                 'type':
                 'str',
                 'choices': [
                     'bgp', 'connected', 'floating-ip', 'ip-nat-list',
-                    'nat-map', 'nat64', 'lw4o6', 'isis', 'rip', 'static'
+                    'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis', 'rip',
+                    'static'
                 ]
+            },
+            'metric': {
+                'type': 'int',
             },
             'metric_type': {
                 'type': 'str',
                 'choices': ['1', '2']
+            },
+            'route_map': {
+                'type': 'str',
             }
         },
         'ospf_list': {
             'type': 'list',
-            'route_map_ospf': {
+            'ospf': {
+                'type': 'bool',
+            },
+            'process_id': {
                 'type': 'str',
             },
             'metric_ospf': {
@@ -250,39 +289,7 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['1', '2']
             },
-            'ospf': {
-                'type': 'bool',
-            },
-            'process_id': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'ip_nat_floating_list': {
-            'type': 'list',
-            'ip_nat_floating_IP_forward': {
-                'type': 'str',
-            },
-            'ip_nat_prefix': {
-                'type': 'str',
-            }
-        },
-        'vip_list': {
-            'type': 'list',
-            'metric_vip': {
-                'type': 'int',
-            },
-            'metric_type_vip': {
-                'type': 'str',
-                'choices': ['1', '2']
-            },
-            'type_vip': {
-                'type': 'str',
-                'choices': ['only-flagged', 'only-not-flagged']
-            },
-            'route_map_vip': {
+            'route_map_ospf': {
                 'type': 'str',
             }
         },
@@ -292,8 +299,38 @@ def get_argspec():
         'metric_ip_nat': {
             'type': 'int',
         },
+        'metric_type_ip_nat': {
+            'type': 'str',
+            'choices': ['1', '2']
+        },
         'route_map_ip_nat': {
             'type': 'str',
+        },
+        'ip_nat_floating_list': {
+            'type': 'list',
+            'ip_nat_prefix': {
+                'type': 'str',
+            },
+            'ip_nat_floating_IP_forward': {
+                'type': 'str',
+            }
+        },
+        'vip_list': {
+            'type': 'list',
+            'type_vip': {
+                'type': 'str',
+                'choices': ['only-flagged', 'only-not-flagged']
+            },
+            'metric_vip': {
+                'type': 'int',
+            },
+            'metric_type_vip': {
+                'type': 'str',
+                'choices': ['1', '2']
+            },
+            'route_map_vip': {
+                'type': 'str',
+            }
         },
         'vip_floating_list': {
             'type': 'list',
@@ -304,9 +341,8 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'metric_type_ip_nat': {
+        'uuid': {
             'type': 'str',
-            'choices': ['1', '2']
         }
     })
     # Parent keys

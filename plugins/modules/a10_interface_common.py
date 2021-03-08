@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_common
 description:
     - Interface statistics information
-short_description: Configures A10 interface.common
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             interfaces:
                 description:
                 - "Field interfaces"
-            interval:
-                description:
-                - "Field interval"
-            tot_num_phy_intf:
-                description:
-                - "Field tot_num_phy_intf"
-            vnp_id:
-                description:
-                - "Field vnp_id"
+                type: list
             time:
                 description:
                 - "Field time"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            interval:
+                description:
+                - "Field interval"
+                type: int
+            vnp_id:
+                description:
+                - "Field vnp_id"
+                type: int
+            tot_num_phy_intf:
+                description:
+                - "Field tot_num_phy_intf"
+                type: int
 
 '''
 
@@ -127,25 +139,52 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'interfaces': {
                 'type': 'list',
-                'type_vendor_part': {
-                    'type': 'str',
-                },
                 'port_num': {
                     'type': 'str',
                 },
+                'port_type': {
+                    'type': 'str',
+                },
+                'is_part_default_vlan': {
+                    'type': 'str',
+                },
+                'rate_pkt_sent': {
+                    'type': 'int',
+                },
+                'rate_byte_sent': {
+                    'type': 'int',
+                },
+                'rate_pkt_rcvd': {
+                    'type': 'int',
+                },
+                'rate_byte_rcvd': {
+                    'type': 'int',
+                },
+                'type_vendor_part': {
+                    'type': 'str',
+                },
+                'total_lane': {
+                    'type': 'int',
+                },
                 'transceivers_info': {
                     'type': 'list',
+                    'transceiver_type': {
+                        'type': 'str',
+                    },
                     'lane': {
                         'type': 'int',
                     },
-                    'hi_alarm': {
+                    'curr': {
                         'type': 'str',
                     },
-                    'curr': {
+                    'hi_alarm': {
                         'type': 'str',
                     },
                     'hi_warn': {
@@ -156,48 +195,21 @@ def get_argspec():
                     },
                     'lo_alarm': {
                         'type': 'str',
-                    },
-                    'transceiver_type': {
-                        'type': 'str',
                     }
-                },
-                'is_part_default_vlan': {
-                    'type': 'str',
-                },
-                'rate_pkt_rcvd': {
-                    'type': 'int',
-                },
-                'rate_byte_sent': {
-                    'type': 'int',
-                },
-                'total_lane': {
-                    'type': 'int',
-                },
-                'rate_pkt_sent': {
-                    'type': 'int',
-                },
-                'rate_byte_rcvd': {
-                    'type': 'int',
-                },
-                'port_type': {
-                    'type': 'str',
                 }
             },
-            'interval': {
-                'type': 'int',
+            'time': {
+                'type': 'str',
             },
-            'tot_num_phy_intf': {
+            'interval': {
                 'type': 'int',
             },
             'vnp_id': {
                 'type': 'int',
             },
-            'time': {
-                'type': 'str',
+            'tot_num_phy_intf': {
+                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_ipmi_user
 description:
     - Add, Change or Disable IPMI users
-short_description: Configures A10 system.ipmi.user
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,79 +22,98 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    administrator:
-        description:
-        - "Full control"
-        required: False
-    setname:
-        description:
-        - "Change User Name (Current IPMI User Name)"
-        required: False
-    newname:
-        description:
-        - "New IPMI User Name"
-        required: False
-    newpass:
-        description:
-        - "New Password"
-        required: False
-    callback:
-        description:
-        - "Lowest privilege level"
+        type: str
         required: False
     add:
         description:
         - "Add a new IPMI user (IPMI User Name)"
-        required: False
-    disable:
-        description:
-        - "Disable an existing IPMI user (IPMI User Name)"
-        required: False
-    setpass:
-        description:
-        - "Change Password (IPMI User Name)"
-        required: False
-    user:
-        description:
-        - "Only 'benign' commands are allowed"
-        required: False
-    operator:
-        description:
-        - "Most BMC commands are allowed"
+        type: str
         required: False
     password:
         description:
         - "Password"
+        type: str
+        required: False
+    administrator:
+        description:
+        - "Full control"
+        type: bool
+        required: False
+    callback:
+        description:
+        - "Lowest privilege level"
+        type: bool
+        required: False
+    operator:
+        description:
+        - "Most BMC commands are allowed"
+        type: bool
+        required: False
+    user:
+        description:
+        - "Only 'benign' commands are allowed"
+        type: bool
+        required: False
+    disable:
+        description:
+        - "Disable an existing IPMI user (IPMI User Name)"
+        type: str
         required: False
     privilege:
         description:
         - "Change an existing IPMI user privilege (IPMI User Name)"
+        type: str
+        required: False
+    setname:
+        description:
+        - "Change User Name (Current IPMI User Name)"
+        type: str
+        required: False
+    newname:
+        description:
+        - "New IPMI User Name"
+        type: str
+        required: False
+    setpass:
+        description:
+        - "Change Password (IPMI User Name)"
+        type: str
+        required: False
+    newpass:
+        description:
+        - "New Password"
+        type: str
         required: False
 
 '''
@@ -161,8 +178,29 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'add': {
+            'type': 'str',
+        },
+        'password': {
+            'type': 'str',
+        },
         'administrator': {
             'type': 'bool',
+        },
+        'callback': {
+            'type': 'bool',
+        },
+        'operator': {
+            'type': 'bool',
+        },
+        'user': {
+            'type': 'bool',
+        },
+        'disable': {
+            'type': 'str',
+        },
+        'privilege': {
+            'type': 'str',
         },
         'setname': {
             'type': 'str',
@@ -170,31 +208,10 @@ def get_argspec():
         'newname': {
             'type': 'str',
         },
-        'newpass': {
-            'type': 'str',
-        },
-        'callback': {
-            'type': 'bool',
-        },
-        'add': {
-            'type': 'str',
-        },
-        'disable': {
-            'type': 'str',
-        },
         'setpass': {
             'type': 'str',
         },
-        'user': {
-            'type': 'bool',
-        },
-        'operator': {
-            'type': 'bool',
-        },
-        'password': {
-            'type': 'str',
-        },
-        'privilege': {
+        'newpass': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_map_encapsulation_domain_basic_mapping_rule
 description:
     - Basic mapping rule (BMR)
-short_description: Configures A10 cgnv6.map.encapsulation.domain.basic-mapping-rule
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,93 +22,119 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     domain_name:
         description:
-        - Key to identify parent object    rule_ipv4_address_port_settings:
+        - Key to identify parent object
+        type: str
+        required: True
+    rule_ipv4_address_port_settings:
         description:
         - "'prefix-addr'= Each CE is assigned an IPv4 prefix; 'single-addr'= Each CE is
           assigned an IPv4 address; 'shared-addr'= Each CE is assigned a shared IPv4
           address;"
+        type: str
         required: False
-    port_start:
+    ea_length:
         description:
-        - "Starting Port, Must be Power of 2 value"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        - "Length of Embedded Address (EA) bits"
+        type: int
         required: False
     share_ratio:
         description:
         - "Port sharing ratio for each NAT IP. Must be Power of 2 value"
+        type: int
+        required: False
+    port_start:
+        description:
+        - "Starting Port, Must be Power of 2 value"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     prefix_rule_list:
         description:
         - "Field prefix_rule_list"
+        type: list
         required: False
         suboptions:
-            port_start:
-                description:
-                - "Starting Port, Must be Power of 2 value"
             name:
                 description:
                 - "MAP BMR prefix rule name"
+                type: str
+            rule_ipv6_prefix:
+                description:
+                - "IPv6 prefix of BMR"
+                type: str
+            rule_ipv4_prefix:
+                description:
+                - "IPv4 prefix of BMR"
+                type: str
+            ipv4_netmask:
+                description:
+                - "Subnet mask (subnet bigger than /8 is not allowed)"
+                type: str
             ipv4_address_port_settings:
                 description:
                 - "'prefix-addr'= Each CE is assigned an IPv4 prefix; 'single-addr'= Each CE is
           assigned an IPv4 address; 'shared-addr'= Each CE is assigned a shared IPv4
           address;"
-            ipv4_netmask:
-                description:
-                - "Subnet mask (subnet bigger than /8 is not allowed)"
-            rule_ipv4_prefix:
-                description:
-                - "IPv4 prefix of BMR"
-            user_tag:
-                description:
-                - "Customized tag"
-            share_ratio:
-                description:
-                - "Port sharing ratio for each NAT IP. Must be Power of 2 value"
-            rule_ipv6_prefix:
-                description:
-                - "IPv6 prefix of BMR"
+                type: str
             ea_length:
                 description:
                 - "Length of Embedded Address (EA) bits"
+                type: int
+            share_ratio:
+                description:
+                - "Port sharing ratio for each NAT IP. Must be Power of 2 value"
+                type: int
+            port_start:
+                description:
+                - "Starting Port, Must be Power of 2 value"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
-    ea_length:
-        description:
-        - "Length of Embedded Address (EA) bits"
-        required: False
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -172,52 +196,52 @@ def get_argspec():
             'type': 'str',
             'choices': ['prefix-addr', 'single-addr', 'shared-addr']
         },
+        'ea_length': {
+            'type': 'int',
+        },
+        'share_ratio': {
+            'type': 'int',
+        },
         'port_start': {
             'type': 'int',
         },
         'uuid': {
             'type': 'str',
         },
-        'share_ratio': {
-            'type': 'int',
-        },
         'prefix_rule_list': {
             'type': 'list',
-            'port_start': {
-                'type': 'int',
-            },
             'name': {
                 'type': 'str',
                 'required': True,
             },
-            'ipv4_address_port_settings': {
-                'type': 'str',
-                'choices': ['prefix-addr', 'single-addr', 'shared-addr']
-            },
-            'ipv4_netmask': {
+            'rule_ipv6_prefix': {
                 'type': 'str',
             },
             'rule_ipv4_prefix': {
                 'type': 'str',
             },
-            'user_tag': {
+            'ipv4_netmask': {
                 'type': 'str',
             },
-            'share_ratio': {
-                'type': 'int',
-            },
-            'rule_ipv6_prefix': {
+            'ipv4_address_port_settings': {
                 'type': 'str',
+                'choices': ['prefix-addr', 'single-addr', 'shared-addr']
             },
             'ea_length': {
                 'type': 'int',
             },
+            'share_ratio': {
+                'type': 'int',
+            },
+            'port_start': {
+                'type': 'int',
+            },
             'uuid': {
                 'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
             }
-        },
-        'ea_length': {
-            'type': 'int',
         }
     })
     # Parent keys

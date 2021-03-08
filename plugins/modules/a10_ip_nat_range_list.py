@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_nat_range_list
 description:
     - IP Source NAT Static range list
-short_description: Configures A10 ip.nat.range-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,113 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    global_start_ipv6_addr:
-        description:
-        - "Global Start IPv6 Address of this list"
-        required: False
-    v4_vrid:
-        description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    v4_count:
-        description:
-        - "Number of addresses to be translated in this range"
-        required: False
-    local_start_ipv6_addr:
-        description:
-        - "Local Start IPv6 Address of this list"
+        type: str
         required: False
     name:
         description:
         - "Name for this Static List"
+        type: str
         required: True
-    global_start_ipv4_addr:
+    local_start_ipv4_addr:
         description:
-        - "Global Start IPv4 Address of this list"
+        - "Local Start IPv4 Address of this list"
+        type: str
         required: False
     local_netmaskv4:
         description:
         - "Mask for this Address range"
+        type: str
         required: False
-    local_start_ipv4_addr:
+    global_start_ipv4_addr:
         description:
-        - "Local Start IPv4 Address of this list"
-        required: False
-    v4_acl_name:
-        description:
-        - "Access list name"
-        required: False
-    v6_vrid:
-        description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    v6_acl_name:
-        description:
-        - "Access list name"
-        required: False
-    v4_acl_id:
-        description:
-        - "Access list ID"
-        required: False
-    v6_count:
-        description:
-        - "Number of addresses to be translated in this range"
+        - "Global Start IPv4 Address of this list"
+        type: str
         required: False
     global_netmaskv4:
         description:
         - "Mask for this Address range"
+        type: str
+        required: False
+    v4_count:
+        description:
+        - "Number of addresses to be translated in this range"
+        type: int
+        required: False
+    v4_acl_id:
+        description:
+        - "Access list ID"
+        type: int
+        required: False
+    v4_acl_name:
+        description:
+        - "Access list name"
+        type: str
+        required: False
+    v4_vrid:
+        description:
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
+        required: False
+    local_start_ipv6_addr:
+        description:
+        - "Local Start IPv6 Address of this list"
+        type: str
+        required: False
+    global_start_ipv6_addr:
+        description:
+        - "Global Start IPv6 Address of this list"
+        type: str
+        required: False
+    v6_count:
+        description:
+        - "Number of addresses to be translated in this range"
+        type: int
+        required: False
+    v6_acl_name:
+        description:
+        - "Access list name"
+        type: str
+        required: False
+    v6_vrid:
+        description:
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -176,50 +196,50 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'global_start_ipv6_addr': {
-            'type': 'str',
-        },
-        'v4_vrid': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'v4_count': {
-            'type': 'int',
-        },
-        'local_start_ipv6_addr': {
-            'type': 'str',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'global_start_ipv4_addr': {
+        'local_start_ipv4_addr': {
             'type': 'str',
         },
         'local_netmaskv4': {
             'type': 'str',
         },
-        'local_start_ipv4_addr': {
+        'global_start_ipv4_addr': {
             'type': 'str',
+        },
+        'global_netmaskv4': {
+            'type': 'str',
+        },
+        'v4_count': {
+            'type': 'int',
+        },
+        'v4_acl_id': {
+            'type': 'int',
         },
         'v4_acl_name': {
             'type': 'str',
         },
-        'v6_vrid': {
+        'v4_vrid': {
+            'type': 'int',
+        },
+        'local_start_ipv6_addr': {
+            'type': 'str',
+        },
+        'global_start_ipv6_addr': {
+            'type': 'str',
+        },
+        'v6_count': {
             'type': 'int',
         },
         'v6_acl_name': {
             'type': 'str',
         },
-        'v4_acl_id': {
+        'v6_vrid': {
             'type': 'int',
         },
-        'v6_count': {
-            'type': 'int',
-        },
-        'global_netmaskv4': {
+        'uuid': {
             'type': 'str',
         }
     })

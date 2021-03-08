@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_threat_intel_webroot_global
 description:
     - Global counters for webroot module
-short_description: Configures A10 threat.intel.webroot-global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -65,57 +76,69 @@ options:
           tor-proxy; 'rtu-lookup'= Number of lookups in RTU cache; 'database-lookup'=
           Number of lookups in database; 'non-malicious-ips'= IP's not found in database
           or RTU cache;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            web_attacks:
-                description:
-                - "Hits for web attacks"
-            botnets:
-                description:
-                - "Hits for botnets"
             spam_sources:
                 description:
                 - "Hits for spam sources"
+                type: str
             windows_exploits:
                 description:
                 - "Hits for windows exploits"
-            phishing:
+                type: str
+            web_attacks:
                 description:
-                - "Hits for phishing"
-            dos_attacks:
+                - "Hits for web attacks"
+                type: str
+            botnets:
                 description:
-                - "Hits for dos attacks"
-            mobile_threats:
-                description:
-                - "Hits for mobile threats"
-            non_malicious_ips:
-                description:
-                - "IP's not found in database or RTU cache"
-            reputation:
-                description:
-                - "Hits for reputation"
-            proxy:
-                description:
-                - "Hits for proxy"
-            rtu_lookup:
-                description:
-                - "Number of lookups in RTU cache"
+                - "Hits for botnets"
+                type: str
             scanners:
                 description:
                 - "Hits for scanners"
-            database_lookup:
+                type: str
+            dos_attacks:
                 description:
-                - "Number of lookups in database"
+                - "Hits for dos attacks"
+                type: str
+            reputation:
+                description:
+                - "Hits for reputation"
+                type: str
+            phishing:
+                description:
+                - "Hits for phishing"
+                type: str
+            proxy:
+                description:
+                - "Hits for proxy"
+                type: str
+            mobile_threats:
+                description:
+                - "Hits for mobile threats"
+                type: str
             tor_proxy:
                 description:
                 - "Hits for tor-proxy"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            rtu_lookup:
+                description:
+                - "Number of lookups in RTU cache"
+                type: str
+            database_lookup:
+                description:
+                - "Number of lookups in database"
+                type: str
+            non_malicious_ips:
+                description:
+                - "IP's not found in database or RTU cache"
+                type: str
 
 '''
 
@@ -170,6 +193,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -185,51 +211,48 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'web_attacks': {
-                'type': 'str',
-            },
-            'botnets': {
-                'type': 'str',
-            },
             'spam_sources': {
                 'type': 'str',
             },
             'windows_exploits': {
                 'type': 'str',
             },
-            'phishing': {
+            'web_attacks': {
                 'type': 'str',
             },
-            'dos_attacks': {
-                'type': 'str',
-            },
-            'mobile_threats': {
-                'type': 'str',
-            },
-            'non_malicious_ips': {
-                'type': 'str',
-            },
-            'reputation': {
-                'type': 'str',
-            },
-            'proxy': {
-                'type': 'str',
-            },
-            'rtu_lookup': {
+            'botnets': {
                 'type': 'str',
             },
             'scanners': {
                 'type': 'str',
             },
-            'database_lookup': {
+            'dos_attacks': {
+                'type': 'str',
+            },
+            'reputation': {
+                'type': 'str',
+            },
+            'phishing': {
+                'type': 'str',
+            },
+            'proxy': {
+                'type': 'str',
+            },
+            'mobile_threats': {
                 'type': 'str',
             },
             'tor_proxy': {
                 'type': 'str',
+            },
+            'rtu_lookup': {
+                'type': 'str',
+            },
+            'database_lookup': {
+                'type': 'str',
+            },
+            'non_malicious_ips': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

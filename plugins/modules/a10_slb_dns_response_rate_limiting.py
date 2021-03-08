@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_dns_response_rate_limiting
 description:
     - Configure DNS Response-Rate-Limiting
-short_description: Configures A10 slb.dns-response-rate-limiting
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            dnsrrl_cpu_list:
-                description:
-                - "Field dnsrrl_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -78,63 +78,91 @@ options:
           Entry Creation Out of Memory; 'err_entry_ext_create_oom'= Entry Extension
           Creation Out of Memory; 'err_entry_insert_failed'= Entry Insert Failed;
           'err_vport_fail_match'= Failed to Match Vport;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            dnsrrl_cpu_list:
+                description:
+                - "Field dnsrrl_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            total_ready_to_free:
-                description:
-                - "Total Entry Ready To Free"
-            total_withdrew:
-                description:
-                - "Total Entry Withdrew"
             curr_entries:
                 description:
                 - "Current Entry Count"
-            total_logs:
-                description:
-                - "Total Logs"
-            err_entry_create_oom:
-                description:
-                - "Entry Creation Out of Memory"
-            total_credit_exceeded:
-                description:
-                - "Total Credit Exceeded"
-            err_vport_fail_match:
-                description:
-                - "Failed to Match Vport"
-            total_freed:
-                description:
-                - "Total Entry Freed"
-            total_inserted:
-                description:
-                - "Total Entry Inserted"
-            total_refill:
-                description:
-                - "Total Refills"
-            total_overflow_entry_hits:
-                description:
-                - "Total Overflow Entry Hits"
-            other_thread_refill:
-                description:
-                - "Other Thread Refilling"
+                type: str
             total_created:
                 description:
                 - "Total Entry Created"
-            err_entry_ext_create_oom:
+                type: str
+            total_inserted:
                 description:
-                - "Entry Extension Creation Out of Memory"
+                - "Total Entry Inserted"
+                type: str
+            total_withdrew:
+                description:
+                - "Total Entry Withdrew"
+                type: str
+            total_ready_to_free:
+                description:
+                - "Total Entry Ready To Free"
+                type: str
+            total_freed:
+                description:
+                - "Total Entry Freed"
+                type: str
+            total_logs:
+                description:
+                - "Total Logs"
+                type: str
+            total_overflow_entry_hits:
+                description:
+                - "Total Overflow Entry Hits"
+                type: str
+            total_refill:
+                description:
+                - "Total Refills"
+                type: str
+            total_credit_exceeded:
+                description:
+                - "Total Credit Exceeded"
+                type: str
+            other_thread_refill:
+                description:
+                - "Other Thread Refilling"
+                type: str
             err_entry_create_failed:
                 description:
                 - "Entry Creation Failure"
+                type: str
+            err_entry_create_oom:
+                description:
+                - "Entry Creation Out of Memory"
+                type: str
+            err_entry_ext_create_oom:
+                description:
+                - "Entry Extension Creation Out of Memory"
+                type: str
             err_entry_insert_failed:
                 description:
                 - "Entry Insert Failed"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            err_vport_fail_match:
+                description:
+                - "Failed to Match Vport"
+                type: str
 
 '''
 
@@ -190,59 +218,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'dnsrrl_cpu_list': {
-                'type': 'list',
-                'total_ready_to_free': {
-                    'type': 'int',
-                },
-                'total_withdrew': {
-                    'type': 'int',
-                },
-                'total_logs': {
-                    'type': 'int',
-                },
-                'err_entry_create_oom': {
-                    'type': 'int',
-                },
-                'total_credit_exceeded': {
-                    'type': 'int',
-                },
-                'err_vport_fail_match': {
-                    'type': 'int',
-                },
-                'total_freed': {
-                    'type': 'int',
-                },
-                'total_inserted': {
-                    'type': 'int',
-                },
-                'total_refill': {
-                    'type': 'int',
-                },
-                'total_overflow_entry_hits': {
-                    'type': 'int',
-                },
-                'other_thread_refill': {
-                    'type': 'int',
-                },
-                'err_entry_insert_failed': {
-                    'type': 'int',
-                },
-                'err_entry_ext_create_oom': {
-                    'type': 'int',
-                },
-                'err_entry_create_failed': {
-                    'type': 'int',
-                },
-                'total_created': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -260,59 +237,110 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'dnsrrl_cpu_list': {
+                'type': 'list',
+                'total_created': {
+                    'type': 'int',
+                },
+                'total_inserted': {
+                    'type': 'int',
+                },
+                'total_withdrew': {
+                    'type': 'int',
+                },
+                'total_ready_to_free': {
+                    'type': 'int',
+                },
+                'total_freed': {
+                    'type': 'int',
+                },
+                'total_logs': {
+                    'type': 'int',
+                },
+                'total_overflow_entry_hits': {
+                    'type': 'int',
+                },
+                'total_refill': {
+                    'type': 'int',
+                },
+                'total_credit_exceeded': {
+                    'type': 'int',
+                },
+                'other_thread_refill': {
+                    'type': 'int',
+                },
+                'err_entry_create_failed': {
+                    'type': 'int',
+                },
+                'err_entry_create_oom': {
+                    'type': 'int',
+                },
+                'err_entry_ext_create_oom': {
+                    'type': 'int',
+                },
+                'err_entry_insert_failed': {
+                    'type': 'int',
+                },
+                'err_vport_fail_match': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'total_ready_to_free': {
-                'type': 'str',
-            },
-            'total_withdrew': {
-                'type': 'str',
-            },
             'curr_entries': {
-                'type': 'str',
-            },
-            'total_logs': {
-                'type': 'str',
-            },
-            'err_entry_create_oom': {
-                'type': 'str',
-            },
-            'total_credit_exceeded': {
-                'type': 'str',
-            },
-            'err_vport_fail_match': {
-                'type': 'str',
-            },
-            'total_freed': {
-                'type': 'str',
-            },
-            'total_inserted': {
-                'type': 'str',
-            },
-            'total_refill': {
-                'type': 'str',
-            },
-            'total_overflow_entry_hits': {
-                'type': 'str',
-            },
-            'other_thread_refill': {
                 'type': 'str',
             },
             'total_created': {
                 'type': 'str',
             },
-            'err_entry_ext_create_oom': {
+            'total_inserted': {
+                'type': 'str',
+            },
+            'total_withdrew': {
+                'type': 'str',
+            },
+            'total_ready_to_free': {
+                'type': 'str',
+            },
+            'total_freed': {
+                'type': 'str',
+            },
+            'total_logs': {
+                'type': 'str',
+            },
+            'total_overflow_entry_hits': {
+                'type': 'str',
+            },
+            'total_refill': {
+                'type': 'str',
+            },
+            'total_credit_exceeded': {
+                'type': 'str',
+            },
+            'other_thread_refill': {
                 'type': 'str',
             },
             'err_entry_create_failed': {
                 'type': 'str',
             },
+            'err_entry_create_oom': {
+                'type': 'str',
+            },
+            'err_entry_ext_create_oom': {
+                'type': 'str',
+            },
             'err_entry_insert_failed': {
                 'type': 'str',
+            },
+            'err_vport_fail_match': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_acos_events_message_id_property_severity
 description:
     - Configure Serverity of log message(s)
-short_description: Configures A10 acos.events.message.id.property.severity
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,45 +22,57 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     message_id_log_msg:
         description:
-        - Key to identify parent object    severity_val:
+        - Key to identify parent object
+        type: str
+        required: True
+    severity_val:
         description:
         - "'emergency'= System unusable log messages (Most Important); 'alert'= Action
           must be taken immediately; 'critical'= Critical conditions; 'error'= Error
           conditions; 'warning'= Warning conditions; 'notification'= Normal but
           significant conditions; 'information'= Informational messages; 'debugging'=
           Debug level messages (Least Important);"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ip_prefix_list
 description:
     - Configure Prefix-list
-short_description: Configures A10 ip.prefix-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,66 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    name:
+        description:
+        - "Name of a prefix list"
+        type: str
+        required: True
     rules:
         description:
         - "Field rules"
+        type: list
         required: False
         suboptions:
-            le:
+            seq:
                 description:
-                - "Maximum prefix length to be matched"
+                - "Sequence number of an entry"
+                type: int
             description:
                 description:
                 - "Prefix-list specific description (Up to 80 characters describing this prefix-
           list)"
-            seq:
-                description:
-                - "Sequence number of an entry"
-            ipaddr:
-                description:
-                - "IP prefix, e.g., 35.0.0.0/8"
-            ge:
-                description:
-                - "Minimum prefix length to be matched"
+                type: str
             action:
                 description:
                 - "'deny'= Specify packets to reject; 'permit'= Specify packets to forward;"
+                type: str
             any:
                 description:
                 - "Any prefix match. Same as '0.0.0.0/0 le 32'"
-    name:
-        description:
-        - "Name of a prefix list"
-        required: True
+                type: bool
+            ipaddr:
+                description:
+                - "IP prefix, e.g., 35.0.0.0/8"
+                type: str
+            ge:
+                description:
+                - "Minimum prefix length to be matched"
+                type: int
+            le:
+                description:
+                - "Maximum prefix length to be matched"
+                type: int
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -139,22 +154,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
         'rules': {
             'type': 'list',
-            'le': {
+            'seq': {
                 'type': 'int',
             },
             'description': {
                 'type': 'str',
-            },
-            'seq': {
-                'type': 'int',
-            },
-            'ipaddr': {
-                'type': 'str',
-            },
-            'ge': {
-                'type': 'int',
             },
             'action': {
                 'type': 'str',
@@ -162,11 +172,16 @@ def get_argspec():
             },
             'any': {
                 'type': 'bool',
+            },
+            'ipaddr': {
+                'type': 'str',
+            },
+            'ge': {
+                'type': 'int',
+            },
+            'le': {
+                'type': 'int',
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         },
         'uuid': {
             'type': 'str',

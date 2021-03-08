@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_auth
 description:
     - Debug authentication
-short_description: Configures A10 debug.auth
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,73 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    username:
-        description:
-        - "Show the logs of specific username (User name)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     level:
         description:
         - "'1'= Diagnose Problems; '2'= Detail packet flow;"
-        required: False
-    saml_sp:
-        description:
-        - "Filter SAML logs by SAML service provider name (SAML SP name)"
+        type: str
         required: False
     saml:
         description:
         - "Enable debug SAML authentication logs"
+        type: bool
         required: False
     client_addr:
         description:
         - "Filter SAML logs by client IP address"
+        type: str
+        required: False
+    saml_sp:
+        description:
+        - "Filter SAML logs by SAML service provider name (SAML SP name)"
+        type: str
+        required: False
+    username:
+        description:
+        - "Show the logs of specific username (User name)"
+        type: str
         required: False
     virtual_server:
         description:
         - "Show the logs of specific virtual-server (Virtual-server name)"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -136,18 +148,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'username': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'level': {
             'type': 'str',
             'choices': ['1', '2']
-        },
-        'saml_sp': {
-            'type': 'str',
         },
         'saml': {
             'type': 'bool',
@@ -155,7 +158,16 @@ def get_argspec():
         'client_addr': {
             'type': 'str',
         },
+        'saml_sp': {
+            'type': 'str',
+        },
+        'username': {
+            'type': 'str',
+        },
         'virtual_server': {
+            'type': 'str',
+        },
+        'uuid': {
             'type': 'str',
         }
     })

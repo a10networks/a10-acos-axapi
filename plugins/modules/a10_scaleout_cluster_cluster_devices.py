@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_cluster_devices
 description:
     - Configure devices in the cluster
-short_description: Configures A10 scaleout.cluster.cluster-devices
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,69 +21,103 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     cluster_id:
         description:
-        - Key to identify parent object    cluster_discovery_timeout:
+        - Key to identify parent object
+        type: str
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    minimum_nodes:
+        description:
+        - "Field minimum_nodes"
+        type: dict
+        required: False
+        suboptions:
+            minimum_nodes_num:
+                description:
+                - "Specify the minimum number of the node required to start service"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    cluster_discovery_timeout:
         description:
         - "Field cluster_discovery_timeout"
+        type: dict
         required: False
         suboptions:
             timer_val:
                 description:
                 - "Cluster node discovery timeout value (secs (Default= 120))"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
     device_id_list:
         description:
         - "Field device_id_list"
+        type: list
         required: False
         suboptions:
-            action:
-                description:
-                - "'enable'= enable; 'disable'= disable;"
             device_id:
                 description:
                 - "scaleout device id"
-            uuid:
-                description:
-                - "uuid of the object"
-            user_tag:
-                description:
-                - "Customized tag"
+                type: int
             ip:
                 description:
                 - "Field ip"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            action:
+                description:
+                - "'enable'= enable; 'disable'= disable;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -102,6 +134,7 @@ ANSIBLE_METADATA = {
 AVAILABLE_PROPERTIES = [
     "cluster_discovery_timeout",
     "device_id_list",
+    "minimum_nodes",
     "uuid",
 ]
 
@@ -138,6 +171,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'minimum_nodes': {
+            'type': 'dict',
+            'minimum_nodes_num': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
         'cluster_discovery_timeout': {
             'type': 'dict',
             'timer_val': {
@@ -149,26 +194,23 @@ def get_argspec():
         },
         'device_id_list': {
             'type': 'list',
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
             'device_id': {
                 'type': 'int',
                 'required': True,
+            },
+            'ip': {
+                'type': 'str',
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
             },
             'uuid': {
                 'type': 'str',
             },
             'user_tag': {
                 'type': 'str',
-            },
-            'ip': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     # Parent keys

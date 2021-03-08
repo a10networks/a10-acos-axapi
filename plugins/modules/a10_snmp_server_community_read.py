@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_community_read
 description:
     - Define a read only community string
-short_description: Configures A10 snmp-server.community.read
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,75 +22,94 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    uuid:
+    user:
         description:
-        - "uuid of the object"
-        required: False
+        - "SNMPv1/v2c community string"
+        type: str
+        required: True
     remote:
         description:
         - "Field remote"
+        type: dict
         required: False
         suboptions:
             host_list:
                 description:
                 - "Field host_list"
+                type: list
             ipv4_list:
                 description:
                 - "Field ipv4_list"
+                type: list
             ipv6_list:
                 description:
                 - "Field ipv6_list"
-    oid_list:
+                type: list
+    uuid:
         description:
-        - "Field oid_list"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            remote:
-                description:
-                - "Field remote"
-            oid_val:
-                description:
-                - "specific the oid (The oid value, object-key)"
-            user_tag:
-                description:
-                - "Customized tag"
-            uuid:
-                description:
-                - "uuid of the object"
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
-    user:
+    oid_list:
         description:
-        - "SNMPv1/v2c community string"
-        required: True
+        - "Field oid_list"
+        type: list
+        required: False
+        suboptions:
+            oid_val:
+                description:
+                - "specific the oid (The oid value, object-key)"
+                type: str
+            remote:
+                description:
+                - "Field remote"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -149,8 +166,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
+        'user': {
             'type': 'str',
+            'required': True,
         },
         'remote': {
             'type': 'dict',
@@ -182,8 +200,18 @@ def get_argspec():
                 }
             }
         },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'oid_list': {
             'type': 'list',
+            'oid_val': {
+                'type': 'str',
+                'required': True,
+            },
             'remote': {
                 'type': 'dict',
                 'host_list': {
@@ -214,23 +242,12 @@ def get_argspec():
                     }
                 }
             },
-            'oid_val': {
+            'uuid': {
                 'type': 'str',
-                'required': True,
             },
             'user_tag': {
                 'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
             }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'user': {
-            'type': 'str',
-            'required': True,
         }
     })
     return rv

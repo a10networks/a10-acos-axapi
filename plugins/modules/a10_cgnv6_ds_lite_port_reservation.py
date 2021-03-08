@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_port_reservation
 description:
     - DS-Lite Static Port Reservation
-short_description: Configures A10 cgnv6.ds.lite.port-reservation
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,69 +22,85 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    nat_end_port:
-        description:
-        - "NAT End Port"
-        required: True
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     inside:
         description:
         - "Inside User Address and Port Range (DS-Lite Inside User's Tunnel Source IPv6
           Address)"
+        type: str
         required: True
     tunnel_dest_address:
         description:
         - "DS-Lite Inside User's Tunnel Destination IPv6 Address"
-        required: True
-    inside_start_port:
-        description:
-        - "Inside Start Port"
-        required: True
-    nat:
-        description:
-        - "NAT Port Range (NAT IP address)"
-        required: True
-    inside_end_port:
-        description:
-        - "Inside End Port"
-        required: True
-    nat_start_port:
-        description:
-        - "NAT Start Port"
+        type: str
         required: True
     inside_addr:
         description:
         - "Inside User IP address"
+        type: str
         required: True
+    inside_start_port:
+        description:
+        - "Inside Start Port"
+        type: int
+        required: True
+    inside_end_port:
+        description:
+        - "Inside End Port"
+        type: int
+        required: True
+    nat:
+        description:
+        - "NAT Port Range (NAT IP address)"
+        type: str
+        required: True
+    nat_start_port:
+        description:
+        - "NAT Start Port"
+        type: int
+        required: True
+    nat_end_port:
+        description:
+        - "NAT End Port"
+        type: int
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -147,13 +161,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'nat_end_port': {
-            'type': 'int',
-            'required': True,
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'inside': {
             'type': 'str',
             'required': True,
@@ -162,7 +169,15 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
+        'inside_addr': {
+            'type': 'str',
+            'required': True,
+        },
         'inside_start_port': {
+            'type': 'int',
+            'required': True,
+        },
+        'inside_end_port': {
             'type': 'int',
             'required': True,
         },
@@ -170,17 +185,16 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'inside_end_port': {
-            'type': 'int',
-            'required': True,
-        },
         'nat_start_port': {
             'type': 'int',
             'required': True,
         },
-        'inside_addr': {
-            'type': 'str',
+        'nat_end_port': {
+            'type': 'int',
             'required': True,
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv
@@ -189,8 +203,7 @@ def get_argspec():
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+"\
-               "{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
+    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
 
     f_dict = {}
     f_dict["inside"] = module.params["inside"]
@@ -254,8 +267,7 @@ def build_envelope(title, data):
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+"\
-               "{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
+    url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
 
     f_dict = {}
     f_dict["inside"] = ""

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_local_log_global
 description:
     - Field global
-short_description: Configures A10 logging.local.log.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -85,120 +96,153 @@ options:
           erro'= Total local-log database create error; 'query'= Total local-log axapi
           query; 'response'= Total local-log axapi response; 'query-error'= Total local-
           log axapi query error;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            l1_log_summarized:
-                description:
-                - "Total layer 1 log summarized"
-            dequeue_error:
-                description:
-                - "Total local-log dequeue processing error"
-            dequeue:
-                description:
-                - "Total local-log dequeue"
-            fw_top_app_db:
-                description:
-                - "Total local-log Friewall top application summary database"
-            log_summarized_error:
-                description:
-                - "Total local-log summarization error"
-            query:
-                description:
-                - "Total local-log axapi query"
-            fi_top_file_ext_db:
-                description:
-                - "Total local-log File-Inspection top file extension summary database"
-            raw_log_error:
-                description:
-                - "Total raw log logging error"
-            fi_top_dst_db:
-                description:
-                - "Total local-log File-Inspection top destination summary database"
-            fi_top_src_db:
-                description:
-                - "Total local-log File-Inspection top source summary database"
-            fw_top_app_src_db:
-                description:
-                - "Total local-log Friewall top application and source summary database"
-            enqueue_full:
-                description:
-                - "Total local-log queue full"
-            ep_top_web_category_db:
-                description:
-                - "Total local-log EP top web-category summary database"
-            fw_top_src_db:
-                description:
-                - "Total local-log Friewall top source summary database"
-            ep_db:
-                description:
-                - "Total local-log EP raw database"
-            enqueue_error:
-                description:
-                - "Total local-log enqueue error"
-            aam_db:
-                description:
-                - "Total local-log AAM raw database"
-            log_summarized:
-                description:
-                - "Total raw log summarized"
-            fi_top_url_db:
-                description:
-                - "Total local-log File-Inspection top URL summary database"
-            ep_top_dst_db:
-                description:
-                - "Total local-log EP top destination summary database"
-            aam_top_user_db:
-                description:
-                - "Total local-log AAM top user summary database"
             enqueue:
                 description:
                 - "Total local-log enqueue"
-            fi_top_filename_db:
+                type: str
+            enqueue_full:
                 description:
-                - "Total local-log File-Inspection top file name summary database"
-            db_erro:
+                - "Total local-log queue full"
+                type: str
+            enqueue_error:
                 description:
-                - "Total local-log database create error"
-            fi_db:
+                - "Total local-log enqueue error"
+                type: str
+            dequeue:
                 description:
-                - "Total local-log File-Inspection raw database"
-            ep_top_host_db:
+                - "Total local-log dequeue"
+                type: str
+            dequeue_error:
                 description:
-                - "Total local-log EP top host summary database"
-            response:
-                description:
-                - "Total local-log axapi response"
-            fw_db:
-                description:
-                - "Total local-log Firewall raw database"
-            fw_top_category_db:
-                description:
-                - "Total local-log Friewall top category summary database"
+                - "Total local-log dequeue processing error"
+                type: str
             raw_log:
                 description:
                 - "Total local-log raw logs"
-            ep_top_domain_db:
+                type: str
+            raw_log_error:
                 description:
-                - "Total local-log EP top domain summary database"
+                - "Total raw log logging error"
+                type: str
+            log_summarized:
+                description:
+                - "Total raw log summarized"
+                type: str
+            l1_log_summarized:
+                description:
+                - "Total layer 1 log summarized"
+                type: str
             l2_log_summarized:
                 description:
                 - "Total layer 2 log summarized"
-            ep_top_src_db:
+                type: str
+            log_summarized_error:
                 description:
-                - "Total local-log EP top client summary database"
+                - "Total local-log summarization error"
+                type: str
+            aam_db:
+                description:
+                - "Total local-log AAM raw database"
+                type: str
+            ep_db:
+                description:
+                - "Total local-log EP raw database"
+                type: str
+            fi_db:
+                description:
+                - "Total local-log File-Inspection raw database"
+                type: str
+            fw_db:
+                description:
+                - "Total local-log Firewall raw database"
+                type: str
+            aam_top_user_db:
+                description:
+                - "Total local-log AAM top user summary database"
+                type: str
             ep_top_user_db:
                 description:
                 - "Total local-log EP top user summary database"
+                type: str
+            ep_top_src_db:
+                description:
+                - "Total local-log EP top client summary database"
+                type: str
+            ep_top_dst_db:
+                description:
+                - "Total local-log EP top destination summary database"
+                type: str
+            ep_top_domain_db:
+                description:
+                - "Total local-log EP top domain summary database"
+                type: str
+            ep_top_web_category_db:
+                description:
+                - "Total local-log EP top web-category summary database"
+                type: str
+            ep_top_host_db:
+                description:
+                - "Total local-log EP top host summary database"
+                type: str
+            fi_top_src_db:
+                description:
+                - "Total local-log File-Inspection top source summary database"
+                type: str
+            fi_top_dst_db:
+                description:
+                - "Total local-log File-Inspection top destination summary database"
+                type: str
+            fi_top_filename_db:
+                description:
+                - "Total local-log File-Inspection top file name summary database"
+                type: str
+            fi_top_file_ext_db:
+                description:
+                - "Total local-log File-Inspection top file extension summary database"
+                type: str
+            fi_top_url_db:
+                description:
+                - "Total local-log File-Inspection top URL summary database"
+                type: str
+            fw_top_app_db:
+                description:
+                - "Total local-log Friewall top application summary database"
+                type: str
+            fw_top_src_db:
+                description:
+                - "Total local-log Friewall top source summary database"
+                type: str
+            fw_top_app_src_db:
+                description:
+                - "Total local-log Friewall top application and source summary database"
+                type: str
+            fw_top_category_db:
+                description:
+                - "Total local-log Friewall top category summary database"
+                type: str
+            db_erro:
+                description:
+                - "Total local-log database create error"
+                type: str
+            query:
+                description:
+                - "Total local-log axapi query"
+                type: str
+            response:
+                description:
+                - "Total local-log axapi response"
+                type: str
             query_error:
                 description:
                 - "Total local-log axapi query error"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -253,6 +297,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -275,114 +322,111 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'l1_log_summarized': {
-                'type': 'str',
-            },
-            'dequeue_error': {
-                'type': 'str',
-            },
-            'dequeue': {
-                'type': 'str',
-            },
-            'fw_top_app_db': {
-                'type': 'str',
-            },
-            'log_summarized_error': {
-                'type': 'str',
-            },
-            'query': {
-                'type': 'str',
-            },
-            'fi_top_file_ext_db': {
-                'type': 'str',
-            },
-            'raw_log_error': {
-                'type': 'str',
-            },
-            'fi_top_dst_db': {
-                'type': 'str',
-            },
-            'fi_top_src_db': {
-                'type': 'str',
-            },
-            'fw_top_app_src_db': {
+            'enqueue': {
                 'type': 'str',
             },
             'enqueue_full': {
                 'type': 'str',
             },
-            'ep_top_web_category_db': {
-                'type': 'str',
-            },
-            'fw_top_src_db': {
-                'type': 'str',
-            },
-            'ep_db': {
-                'type': 'str',
-            },
             'enqueue_error': {
                 'type': 'str',
             },
-            'aam_db': {
+            'dequeue': {
                 'type': 'str',
             },
-            'log_summarized': {
-                'type': 'str',
-            },
-            'fi_top_url_db': {
-                'type': 'str',
-            },
-            'ep_top_dst_db': {
-                'type': 'str',
-            },
-            'aam_top_user_db': {
-                'type': 'str',
-            },
-            'enqueue': {
-                'type': 'str',
-            },
-            'fi_top_filename_db': {
-                'type': 'str',
-            },
-            'db_erro': {
-                'type': 'str',
-            },
-            'fi_db': {
-                'type': 'str',
-            },
-            'ep_top_host_db': {
-                'type': 'str',
-            },
-            'response': {
-                'type': 'str',
-            },
-            'fw_db': {
-                'type': 'str',
-            },
-            'fw_top_category_db': {
+            'dequeue_error': {
                 'type': 'str',
             },
             'raw_log': {
                 'type': 'str',
             },
-            'ep_top_domain_db': {
+            'raw_log_error': {
+                'type': 'str',
+            },
+            'log_summarized': {
+                'type': 'str',
+            },
+            'l1_log_summarized': {
                 'type': 'str',
             },
             'l2_log_summarized': {
                 'type': 'str',
             },
-            'ep_top_src_db': {
+            'log_summarized_error': {
+                'type': 'str',
+            },
+            'aam_db': {
+                'type': 'str',
+            },
+            'ep_db': {
+                'type': 'str',
+            },
+            'fi_db': {
+                'type': 'str',
+            },
+            'fw_db': {
+                'type': 'str',
+            },
+            'aam_top_user_db': {
                 'type': 'str',
             },
             'ep_top_user_db': {
                 'type': 'str',
             },
+            'ep_top_src_db': {
+                'type': 'str',
+            },
+            'ep_top_dst_db': {
+                'type': 'str',
+            },
+            'ep_top_domain_db': {
+                'type': 'str',
+            },
+            'ep_top_web_category_db': {
+                'type': 'str',
+            },
+            'ep_top_host_db': {
+                'type': 'str',
+            },
+            'fi_top_src_db': {
+                'type': 'str',
+            },
+            'fi_top_dst_db': {
+                'type': 'str',
+            },
+            'fi_top_filename_db': {
+                'type': 'str',
+            },
+            'fi_top_file_ext_db': {
+                'type': 'str',
+            },
+            'fi_top_url_db': {
+                'type': 'str',
+            },
+            'fw_top_app_db': {
+                'type': 'str',
+            },
+            'fw_top_src_db': {
+                'type': 'str',
+            },
+            'fw_top_app_src_db': {
+                'type': 'str',
+            },
+            'fw_top_category_db': {
+                'type': 'str',
+            },
+            'db_erro': {
+                'type': 'str',
+            },
+            'query': {
+                'type': 'str',
+            },
+            'response': {
+                'type': 'str',
+            },
             'query_error': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

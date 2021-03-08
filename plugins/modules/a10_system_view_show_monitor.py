@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_view_show_monitor
 description:
     - Show monitor threshold configuration
-short_description: Configures A10 system.view.show-monitor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,92 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            data_cpu:
-                description:
-                - "Field data_cpu"
-            buff_drop:
-                description:
-                - "Field buff_drop"
-            mem_value:
-                description:
-                - "Field mem_value"
             disk_value:
                 description:
                 - "Field disk_value"
+                type: int
+            mem_value:
+                description:
+                - "Field mem_value"
+                type: int
             ctrl_cpu:
                 description:
                 - "Field ctrl_cpu"
-            spm4:
+                type: int
+            data_cpu:
                 description:
-                - "Field spm4"
-            warn_temp:
-                description:
-                - "Field warn_temp"
-            smp0:
-                description:
-                - "Field smp0"
-            smp1:
-                description:
-                - "Field smp1"
-            smp2:
-                description:
-                - "Field smp2"
-            smp3:
-                description:
-                - "Field smp3"
-            spm2:
-                description:
-                - "Field spm2"
+                - "Field data_cpu"
+                type: int
             buff_value:
                 description:
                 - "Field buff_value"
+                type: int
+            buff_drop:
+                description:
+                - "Field buff_drop"
+                type: int
+            warn_temp:
+                description:
+                - "Field warn_temp"
+                type: int
             spm0:
                 description:
                 - "Field spm0"
+                type: int
             spm1:
                 description:
                 - "Field spm1"
-            smp4:
+                type: int
+            spm2:
                 description:
-                - "Field smp4"
+                - "Field spm2"
+                type: int
             spm3:
                 description:
                 - "Field spm3"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            spm4:
+                description:
+                - "Field spm4"
+                type: int
+            smp0:
+                description:
+                - "Field smp0"
+                type: int
+            smp1:
+                description:
+                - "Field smp1"
+                type: int
+            smp2:
+                description:
+                - "Field smp2"
+                type: int
+            smp3:
+                description:
+                - "Field smp3"
+                type: int
+            smp4:
+                description:
+                - "Field smp4"
+                type: int
 
 '''
 
@@ -163,27 +187,45 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'data_cpu': {
-                'type': 'int',
-            },
-            'buff_drop': {
+            'disk_value': {
                 'type': 'int',
             },
             'mem_value': {
                 'type': 'int',
             },
-            'disk_value': {
-                'type': 'int',
-            },
             'ctrl_cpu': {
                 'type': 'int',
             },
-            'spm4': {
+            'data_cpu': {
+                'type': 'int',
+            },
+            'buff_value': {
+                'type': 'int',
+            },
+            'buff_drop': {
                 'type': 'int',
             },
             'warn_temp': {
+                'type': 'int',
+            },
+            'spm0': {
+                'type': 'int',
+            },
+            'spm1': {
+                'type': 'int',
+            },
+            'spm2': {
+                'type': 'int',
+            },
+            'spm3': {
+                'type': 'int',
+            },
+            'spm4': {
                 'type': 'int',
             },
             'smp0': {
@@ -198,27 +240,9 @@ def get_argspec():
             'smp3': {
                 'type': 'int',
             },
-            'spm2': {
-                'type': 'int',
-            },
-            'buff_value': {
-                'type': 'int',
-            },
-            'spm0': {
-                'type': 'int',
-            },
-            'spm1': {
-                'type': 'int',
-            },
             'smp4': {
                 'type': 'int',
-            },
-            'spm3': {
-                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

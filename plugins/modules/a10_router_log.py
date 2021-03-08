@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_log
 description:
     - Router log options
-short_description: Configures A10 router.log
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,60 +22,75 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     log_buffer:
         description:
         - "Logging goes to log-buffer"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     file:
         description:
         - "Field file"
+        type: dict
         required: False
         suboptions:
-            size:
-                description:
-                - "Log file maximum size (File size in MBytes)"
-            rotate:
-                description:
-                - "Log file rotation (Number of backup files)"
-            uuid:
-                description:
-                - "uuid of the object"
             per_protocol:
                 description:
                 - "Per protocol"
+                type: bool
             name:
                 description:
                 - "Logging filename (File name)"
+                type: str
+            rotate:
+                description:
+                - "Log file rotation (Number of backup files)"
+                type: int
+            size:
+                description:
+                - "Log file maximum size (File size in MBytes)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -140,19 +153,19 @@ def get_argspec():
         },
         'file': {
             'type': 'dict',
-            'size': {
-                'type': 'int',
-            },
-            'rotate': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
             'per_protocol': {
                 'type': 'bool',
             },
             'name': {
+                'type': 'str',
+            },
+            'rotate': {
+                'type': 'int',
+            },
+            'size': {
+                'type': 'int',
+            },
+            'uuid': {
                 'type': 'str',
             }
         }

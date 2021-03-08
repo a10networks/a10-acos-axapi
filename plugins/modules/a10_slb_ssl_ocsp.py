@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_ocsp
 description:
     - SSL Online Certificate Status Protocol
-short_description: Configures A10 slb.ssl-ocsp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,47 +22,58 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             total_entries:
                 description:
                 - "Total Entries"
+                type: int
             cached_entries:
                 description:
                 - "Field cached_entries"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -118,6 +127,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'total_entries': {
@@ -125,31 +137,28 @@ def get_argspec():
             },
             'cached_entries': {
                 'type': 'list',
-                'status': {
-                    'type': 'str',
-                },
-                'hits': {
-                    'type': 'int',
-                },
                 'name': {
                     'type': 'str',
                 },
-                'uri': {
+                'status': {
+                    'type': 'str',
+                },
+                'subject': {
                     'type': 'str',
                 },
                 'length': {
                     'type': 'int',
                 },
+                'uri': {
+                    'type': 'str',
+                },
                 'expire': {
                     'type': 'int',
                 },
-                'subject': {
-                    'type': 'str',
+                'hits': {
+                    'type': 'int',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

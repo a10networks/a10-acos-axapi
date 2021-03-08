@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_naptr_record
 description:
     - Specify DNS NAPTR Record
-short_description: Configures A10 gslb.zone.service.dns-naptr-record
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,95 +22,126 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    service-name:
+    service_name:
         description:
-        - Key to identify parent object    service_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_port:
         description:
-        - Key to identify parent object    zone_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    zone_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    naptr_target:
         description:
-        - "Field stats"
+        - "Specify the replacement or regular expression"
+        type: str
+        required: True
+    service_proto:
+        description:
+        - "Specify Service and Protocol"
+        type: str
+        required: True
+    flag:
+        description:
+        - "Specify the flag (e.g., a, s). Default is empty flag"
+        type: str
+        required: True
+    order:
+        description:
+        - "Specify Order"
+        type: int
         required: False
-        suboptions:
-            flag:
-                description:
-                - "Specify the flag (e.g., a, s). Default is empty flag"
-            naptr_hits:
-                description:
-                - "Number of times the NAPTR has been used"
-            service_proto:
-                description:
-                - "Specify Service and Protocol"
-            naptr_target:
-                description:
-                - "Specify the replacement or regular expression"
+    preference:
+        description:
+        - "Specify Preference"
+        type: int
+        required: False
+    regexp:
+        description:
+        - "Return the regular expression"
+        type: bool
+        required: False
+    ttl:
+        description:
+        - "Specify TTL"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'naptr-hits'= Number of times the NAPTR has been used;"
-    naptr_target:
+                type: str
+    stats:
         description:
-        - "Specify the replacement or regular expression"
-        required: True
-    service_proto:
-        description:
-        - "Specify Service and Protocol"
-        required: True
-    flag:
-        description:
-        - "Specify the flag (e.g., a, s). Default is empty flag"
-        required: True
-    preference:
-        description:
-        - "Specify Preference"
+        - "Field stats"
+        type: dict
         required: False
-    ttl:
-        description:
-        - "Specify TTL"
-        required: False
-    regexp:
-        description:
-        - "Return the regular expression"
-        required: False
-    order:
-        description:
-        - "Specify Order"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+        suboptions:
+            naptr_hits:
+                description:
+                - "Number of times the NAPTR has been used"
+                type: str
+            naptr_target:
+                description:
+                - "Specify the replacement or regular expression"
+                type: str
+            service_proto:
+                description:
+                - "Specify Service and Protocol"
+                type: str
+            flag:
+                description:
+                - "Specify the flag (e.g., a, s). Default is empty flag"
+                type: str
 
 '''
 
@@ -174,31 +203,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'stats': {
-            'type': 'dict',
-            'flag': {
-                'type': 'str',
-                'required': True,
-            },
-            'naptr_hits': {
-                'type': 'str',
-            },
-            'service_proto': {
-                'type': 'str',
-                'required': True,
-            },
-            'naptr_target': {
-                'type': 'str',
-                'required': True,
-            }
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'naptr-hits']
-            }
-        },
         'naptr_target': {
             'type': 'str',
             'required': True,
@@ -211,26 +215,51 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'preference': {
+        'order': {
             'type': 'int',
         },
-        'ttl': {
+        'preference': {
             'type': 'int',
         },
         'regexp': {
             'type': 'bool',
         },
-        'order': {
+        'ttl': {
             'type': 'int',
         },
         'uuid': {
             'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'naptr-hits']
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'naptr_hits': {
+                'type': 'str',
+            },
+            'naptr_target': {
+                'type': 'str',
+                'required': True,
+            },
+            'service_proto': {
+                'type': 'str',
+                'required': True,
+            },
+            'flag': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     # Parent keys
     rv.update(
         dict(
-            service - name=dict(type='str', required=True),
+            service_name=dict(type='str', required=True),
             service_port=dict(type='str', required=True),
             zone_name=dict(type='str', required=True),
         ))
@@ -246,7 +275,7 @@ def existing_url(module):
     f_dict["naptr-target"] = module.params["naptr_target"]
     f_dict["service-proto"] = module.params["service_proto"]
     f_dict["flag"] = module.params["flag"]
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 
@@ -323,7 +352,7 @@ def new_url(module):
     f_dict["naptr-target"] = ""
     f_dict["service-proto"] = ""
     f_dict["flag"] = ""
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 

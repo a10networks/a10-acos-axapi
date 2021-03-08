@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ldap_server_host_ipv4
 description:
     - Specify the hostname of ldap server
-short_description: Configures A10 ldap-server.host.ipv4
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,88 +22,128 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    domain:
-        description:
-        - "Configure AD domain name"
-        required: False
-    group:
-        description:
-        - "Configure the group DN which user belongs to"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     ipv4_addr:
         description:
         - "IPV4 address of ldap server"
+        type: str
         required: True
-    cn_value:
+    domain:
         description:
-        - "LDAP common name identifier (i.e.= cn, uid)"
+        - "Configure AD domain name"
+        type: str
         required: False
-    port_cfg:
+    ipv4_addr_cfg:
         description:
-        - "Field port_cfg"
+        - "Field ipv4_addr_cfg"
+        type: dict
         required: False
         suboptions:
+            port:
+                description:
+                - "Specify the LDAP server's port (default 3268 without ssl or 3269 with ssl)"
+                type: int
             ssl:
                 description:
                 - "Use SSL"
-            port:
-                description:
-                - "Specify the LDAP server's port (default 389 without ssl or 636 with ssl)"
+                type: bool
             timeout:
                 description:
                 - "Specify the LDAP server's timeout (default 3)"
-    dn_value:
+                type: int
+    cn_value:
         description:
-        - "LDAP distinguished name (dn)"
+        - "LDAP common name identifier (i.e.= cn, uid)"
+        type: str
+        required: False
+    group:
+        description:
+        - "Configure the group DN which user belongs to"
+        type: str
         required: False
     base:
         description:
         - "Configure the group DN which user belongs to"
+        type: str
+        required: False
+    dn_value:
+        description:
+        - "LDAP distinguished name (dn)"
+        type: str
         required: False
     domain_cfg:
         description:
         - "Field domain_cfg"
+        type: dict
         required: False
         suboptions:
-            ssl:
-                description:
-                - "Use SSL"
             port:
                 description:
                 - "Specify the LDAP server's port (default 389 without ssl or 636 with ssl)"
+                type: int
+            ssl:
+                description:
+                - "Use SSL"
+                type: bool
             timeout:
                 description:
                 - "Specify the LDAP server's timeout (default 3)"
+                type: int
+    port_cfg:
+        description:
+        - "Field port_cfg"
+        type: dict
+        required: False
+        suboptions:
+            port:
+                description:
+                - "Specify the LDAP server's port (default 389 without ssl or 636 with ssl)"
+                type: int
+            ssl:
+                description:
+                - "Use SSL"
+                type: bool
+            timeout:
+                description:
+                - "Specify the LDAP server's timeout (default 3)"
+                type: int
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -127,6 +165,7 @@ AVAILABLE_PROPERTIES = [
     "domain_cfg",
     "group",
     "ipv4_addr",
+    "ipv4_addr_cfg",
     "port_cfg",
     "uuid",
 ]
@@ -166,51 +205,63 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'ipv4_addr': {
+            'type': 'str',
+            'required': True,
+        },
         'domain': {
+            'type': 'str',
+        },
+        'ipv4_addr_cfg': {
+            'type': 'dict',
+            'port': {
+                'type': 'int',
+            },
+            'ssl': {
+                'type': 'bool',
+            },
+            'timeout': {
+                'type': 'int',
+            }
+        },
+        'cn_value': {
             'type': 'str',
         },
         'group': {
             'type': 'str',
         },
-        'uuid': {
+        'base': {
             'type': 'str',
-        },
-        'ipv4_addr': {
-            'type': 'str',
-            'required': True,
-        },
-        'cn_value': {
-            'type': 'str',
-        },
-        'port_cfg': {
-            'type': 'dict',
-            'ssl': {
-                'type': 'bool',
-            },
-            'port': {
-                'type': 'int',
-            },
-            'timeout': {
-                'type': 'int',
-            }
         },
         'dn_value': {
             'type': 'str',
         },
-        'base': {
-            'type': 'str',
-        },
         'domain_cfg': {
             'type': 'dict',
-            'ssl': {
-                'type': 'bool',
-            },
             'port': {
                 'type': 'int',
+            },
+            'ssl': {
+                'type': 'bool',
             },
             'timeout': {
                 'type': 'int',
             }
+        },
+        'port_cfg': {
+            'type': 'dict',
+            'port': {
+                'type': 'int',
+            },
+            'ssl': {
+                'type': 'bool',
+            },
+            'timeout': {
+                'type': 'int',
+            }
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

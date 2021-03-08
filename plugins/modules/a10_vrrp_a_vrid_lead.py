@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_vrid_lead
 description:
     - Define a vrid-lead
-short_description: Configures A10 vrrp-a.vrid-lead
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,57 +22,71 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     vrid_lead_str:
         description:
         - "VRRP-A VRID leader name"
+        type: str
         required: True
     partition:
         description:
         - "Field partition"
+        type: dict
         required: False
         suboptions:
-            shared_cfg:
-                description:
-                - "Field shared_cfg"
-            name_cfg:
-                description:
-                - "Field name_cfg"
             partition:
                 description:
                 - "Partition name"
+                type: bool
+            shared_cfg:
+                description:
+                - "Field shared_cfg"
+                type: dict
+            name_cfg:
+                description:
+                - "Field name_cfg"
+                type: dict
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -137,6 +149,9 @@ def get_argspec():
         },
         'partition': {
             'type': 'dict',
+            'partition': {
+                'type': 'bool',
+            },
             'shared_cfg': {
                 'type': 'dict',
                 'shared': {
@@ -151,18 +166,15 @@ def get_argspec():
             },
             'name_cfg': {
                 'type': 'dict',
-                'vrid_value': {
-                    'type': 'int',
+                'name': {
+                    'type': 'str',
                 },
                 'vrid': {
                     'type': 'bool',
                 },
-                'name': {
-                    'type': 'str',
+                'vrid_value': {
+                    'type': 'int',
                 }
-            },
-            'partition': {
-                'type': 'bool',
             }
         },
         'uuid': {

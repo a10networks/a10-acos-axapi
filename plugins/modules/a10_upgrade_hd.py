@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_upgrade_hd
 description:
     - Hard Disk
-short_description: Configures A10 upgrade.hd
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,68 +22,84 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    rollback:
-        description:
-        - "Field rollback"
-        required: False
-    reboot_after_upgrade:
-        description:
-        - "reboot system after upgrade is done"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
+        type: str
         required: False
     image:
         description:
         - "'pri'= Primary image; 'sec'= Secondary image;"
-        required: False
-    source_ip_address:
-        description:
-        - "Source ip address"
-        required: False
-    Device:
-        description:
-        - "Field Device"
+        type: str
         required: False
     local:
         description:
         - "Use image from local VCS image repository (Specify an image name, format=
           aximage_XX_XX_XX_XX.tar.gz)"
+        type: str
         required: False
-    staggered_upgrade_mode:
+    rollback:
         description:
-        - "in staggered upgrade mode"
+        - "Field rollback"
+        type: bool
+        required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        type: bool
+        required: False
+    source_ip_address:
+        description:
+        - "Source ip address"
+        type: str
         required: False
     file_url:
         description:
         - "File URL"
+        type: str
+        required: False
+    staggered_upgrade_mode:
+        description:
+        - "in staggered upgrade mode"
+        type: bool
+        required: False
+    Device:
+        description:
+        - "Field Device"
+        type: int
+        required: False
+    reboot_after_upgrade:
+        description:
+        - "reboot system after upgrade is done"
+        type: bool
         required: False
 
 '''
@@ -147,33 +161,33 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'rollback': {
-            'type': 'bool',
+        'image': {
+            'type': 'str',
+            'choices': ['pri', 'sec']
         },
-        'reboot_after_upgrade': {
+        'local': {
+            'type': 'str',
+        },
+        'rollback': {
             'type': 'bool',
         },
         'use_mgmt_port': {
             'type': 'bool',
         },
-        'image': {
-            'type': 'str',
-            'choices': ['pri', 'sec']
-        },
         'source_ip_address': {
             'type': 'str',
         },
-        'Device': {
-            'type': 'int',
-        },
-        'local': {
+        'file_url': {
             'type': 'str',
         },
         'staggered_upgrade_mode': {
             'type': 'bool',
         },
-        'file_url': {
-            'type': 'str',
+        'Device': {
+            'type': 'int',
+        },
+        'reboot_after_upgrade': {
+            'type': 'bool',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_waf_global
 description:
     - WAF global stats
-short_description: Configures A10 waf.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -146,414 +157,545 @@ options:
           force checks failed; 'challenge_cookie_sent'= Cookie challenge sent;
           'challenge_javascript_sent'= JavaScript challenge sent;
           'challenge_captcha_sent'= Captcha challenge sent;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            redirect_wlist_fail:
-                description:
-                - "Redirect Whitelist Failure"
-            cookie_encrypt_limit_exceeded:
-                description:
-                - "Cookie Encrypt Limit Exceeded"
-            wsdl_succ:
-                description:
-                - "WSDL Success"
-            sqlia_chk_url_succ:
-                description:
-                - "SQLIA Check URL Success"
-            bot_check_succ:
-                description:
-                - "Botnet Check Success"
-            cookie_encrypt_skip_rcache:
-                description:
-                - "Cookie Encrypt Skip RCache"
-            redirect_wlist_learn:
-                description:
-                - "Redirect Whitelist Learn"
-            xml_limit_elem_child:
-                description:
-                - "XML Limit Element Child"
-            buf_ovf_parameter_value_len_fail:
-                description:
-                - "Buffer Overflow - HTML Parameter Value Length Failure"
-            ccn_mask_visa:
-                description:
-                - "Credit Card Number Mask Visa"
-            xss_chk_cookie_succ:
-                description:
-                - "XSS Check Cookie Success"
-            buf_ovf_cookies_len_fail:
-                description:
-                - "Buffer Overflow - Cookies Length Failure"
-            req_denied:
-                description:
-                - "Requests Denied"
-            json_check_failure:
-                description:
-                - "JSON Check Failure"
-            xss_chk_post_reject:
-                description:
-                - "XSS Check Post Rejected"
-            http_check_succ:
-                description:
-                - "Http Check Success"
-            form_consistency_succ:
-                description:
-                - "Form Consistency Success"
-            xml_limit_cdata_len:
-                description:
-                - "XML Limit CData Length"
-            xml_check_failure:
-                description:
-                - "XML Check Failure"
-            buf_ovf_hdrs_len_fail:
-                description:
-                - "Buffer Overflow - Headers length Failure"
-            referer_check_succ:
-                description:
-                - "Referer Check Success"
-            sqlia_chk_post_succ:
-                description:
-                - "SQLIA Check Post Success"
-            xss_chk_url_sanitize:
-                description:
-                - "XSS Check URL Sanitized"
-            cookie_encrypt_succ:
-                description:
-                - "Cookie Encrypt Success"
-            buf_ovf_parameter_total_len_fail:
-                description:
-                - "Buffer Overflow - HTML Parameter Total Length Failure"
-            soap_check_succ:
-                description:
-                - "Soap Check Success"
-            max_cookies_fail:
-                description:
-                - "Max Cookies Failure"
-            json_limit_array_value_count:
-                description:
-                - "JSON Limit Array Value Count"
-            uri_wlist_succ:
-                description:
-                - "URI White List Success"
-            brute_force_success:
-                description:
-                - "Brute-force checks passed"
-            resp_code_hidden:
-                description:
-                - "Response Code Hidden"
-            xml_sqlia_chk_fail:
-                description:
-                - "XML Sqlia Check Failure"
-            xss_chk_post_succ:
-                description:
-                - "XSS Check Post Success"
-            pcre_mask:
-                description:
-                - "PCRE Mask"
-            form_consistency_fail:
-                description:
-                - "Form Consistency Failure"
-            http_check_fail:
-                description:
-                - "Http Check Failure"
-            url_check_succ:
-                description:
-                - "URL Check Success"
-            sqlia_chk_url_reject:
-                description:
-                - "SQLIA Check URL Rejected"
-            sqlia_chk_url_sanitize:
-                description:
-                - "SQLIA Check URL Sanitized"
-            xss_chk_cookie_reject:
-                description:
-                - "XSS Check Cookie Rejected"
-            json_check_succ:
-                description:
-                - "JSON Check Success"
-            max_entities_fail:
-                description:
-                - "Max Entities Failure"
-            http_method_check_fail:
-                description:
-                - "Http Method Check Failure"
-            form_non_ssl_reject:
-                description:
-                - "Form Non SSL Rejected"
-            xss_chk_post_sanitize:
-                description:
-                - "XSS Check Post Sanitized"
-            form_set_no_cache:
-                description:
-                - "Form Set No Cache"
-            xml_schema_succ:
-                description:
-                - "XML Schema Success"
-            xml_limit_attr:
-                description:
-                - "XML Limit Attribue"
-            xml_check_succ:
-                description:
-                - "XML Check Success"
-            sess_check_none:
-                description:
-                - "Session Check None"
-            xml_limit_namespace:
-                description:
-                - "XML Limit Namespace"
-            wsdl_fail:
-                description:
-                - "WSDL Failure"
-            post_form_check_succ:
-                description:
-                - "Post Form Check Success"
-            buf_ovf_query_len_fail:
-                description:
-                - "Buffer Overflow - Query Length Failure"
-            sqlia_chk_post_reject:
-                description:
-                - "SQLIA Check Post Rejected"
-            form_password_autocomplete:
-                description:
-                - "Form Password Autocomplete"
-            permitted:
-                description:
-                - "Honor threshold  count"
-            xml_xss_chk_fail:
-                description:
-                - "XML XSS Check Failure"
-            buf_ovf_url_len_fail:
-                description:
-                - "Buffer Overflow - URL Length Failure"
-            buf_ovf_cookie_len_fail:
-                description:
-                - "Buffer Overflow - Cookie Length Failure"
-            form_csrf_tag_succ:
-                description:
-                - "Form CSRF tag Success"
-            xss_chk_cookie_sanitize:
-                description:
-                - "XSS Check Cookie Sanitized"
-            sessions_alloc:
-                description:
-                - "Sessions allocated"
-            xml_limit_entity_exp:
-                description:
-                - "XML Limit Entity Exp"
-            ccn_mask_diners:
-                description:
-                - "Credit Card Number Mask Diners"
-            sess_check_succ:
-                description:
-                - "Session Check Success"
-            json_limit_depth:
-                description:
-                - "JSON Limit Depth"
-            buf_ovf_cookie_name_len_fail:
-                description:
-                - "Buffer Overflow - Cookie Name Length Failure"
-            learn_updates:
-                description:
-                - "Learning Updates"
-            redirect_wlist_succ:
-                description:
-                - "Redirect Whitelist Success"
-            challenge_javascript_sent:
-                description:
-                - "JavaScript challenge sent"
-            req_allowed:
-                description:
-                - "Requests Allowed"
-            json_limit_object_member_count:
-                description:
-                - "JSON Limit Object Number Count"
-            bot_check_fail:
-                description:
-                - "Botnet Check Failure"
-            uri_wlist_fail:
-                description:
-                - "URI White List Failure"
-            uri_blist_fail:
-                description:
-                - "URI Black List Failure"
-            referer_check_redirect:
-                description:
-                - "Referer Check Redirect"
-            challenge_cookie_sent:
-                description:
-                - "Cookie challenge sent"
-            sqlia_chk_post_sanitize:
-                description:
-                - "SQLIA Check Post Sanitized"
-            ccn_mask_amex:
-                description:
-                - "Credit Card Number Mask Amex"
-            num_drops:
-                description:
-                - "Number Drops"
-            referer_check_fail:
-                description:
-                - "Referer Check Failure"
-            post_form_check_sanitize:
-                description:
-                - "Post Form Check Sanitized"
-            cookie_decrypt_succ:
-                description:
-                - "Cookie Decrypt Success"
-            xss_chk_url_reject:
-                description:
-                - "XSS Check URL Rejected"
-            max_parameters_fail:
-                description:
-                - "Max Parameters Failure"
-            url_check_fail:
-                description:
-                - "URL Check Failure"
-            xml_schema_fail:
-                description:
-                - "XML Schema Failure"
-            form_non_post_reject:
-                description:
-                - "Form Non Post Rejected"
-            num_resets:
-                description:
-                - "Number Resets"
-            xml_limit_entity_exp_depth:
-                description:
-                - "XML Limit Entity Exp Depth"
-            form_non_masked_password:
-                description:
-                - "Form Non Masked Password"
-            buf_ovf_line_len_fail:
-                description:
-                - "Buffer Overflow - Line Length Failure"
-            ccn_mask_discover:
-                description:
-                - "Credit Card Number Mask Discover"
-            ssn_mask:
-                description:
-                - "Social Security Number Mask"
-            json_limit_string:
-                description:
-                - "JSON Limit String"
-            resp_hdrs_filtered:
-                description:
-                - "Response Headers Filtered"
-            called:
-                description:
-                - "Threshold check count"
-            ccn_mask_mastercard:
-                description:
-                - "Credit Card Number Mask Mastercard"
-            xml_sqlia_chk_succ:
-                description:
-                - "XML Sqlia Check Success"
-            brute_force_fail:
-                description:
-                - "Brute-force checks failed"
-            max_hdrs_fail:
-                description:
-                - "Max Headers Failure"
-            xml_limit_attr_name_len:
-                description:
-                - "XML Limit Name Length"
-            form_non_ssl_password:
-                description:
-                - "Form Non SSL Password"
-            too_many_sessions:
-                description:
-                - "Too many sessions consumed"
-            buf_ovf_hdr_value_len_fail:
-                description:
-                - "Buffer Overflow - Header Value Length Failure"
-            uri_blist_succ:
-                description:
-                - "URI Black List Success"
-            sess_check_fail:
-                description:
-                - "Session Check Failure"
-            buf_ovf_hdr_name_len_fail:
-                description:
-                - "Buffer Overflow - Header Name Length Failure"
-            resp_denied:
-                description:
-                - "Responses Denied"
-            sessions_freed:
-                description:
-                - "Sessions freed"
-            out_of_sessions:
-                description:
-                - "Out of sessions"
-            xml_limit_elem:
-                description:
-                - "XML Limit Element"
-            buf_ovf_parameter_name_len_fail:
-                description:
-                - "Buffer Overflow - HTML Parameter Name Length Failure"
-            xml_limit_attr_value_len:
-                description:
-                - "XML Limit Value Length"
-            xml_limit_elem_depth:
-                description:
-                - "XML Limit Element Depth"
-            ccn_mask_jcb:
-                description:
-                - "Credit Card Number Mask Jcb"
-            cookie_decrypt_fail:
-                description:
-                - "Cookie Decrypt Failure"
-            buf_ovf_cookie_value_len_fail:
-                description:
-                - "Buffer Overflow - Cookie Value Length Failure"
-            buf_ovf_post_size_fail:
-                description:
-                - "Buffer Overflow - Post size Failure"
             total_req:
                 description:
                 - "Total Requests"
-            xml_limit_elem_name_len:
+                type: str
+            req_allowed:
                 description:
-                - "XML Limit Element Name Length"
-            url_check_learn:
+                - "Requests Allowed"
+                type: str
+            req_denied:
                 description:
-                - "URL Check Learn"
-            http_method_check_succ:
+                - "Requests Denied"
+                type: str
+            bot_check_succ:
                 description:
-                - "Http Method Check Success"
-            xss_chk_url_succ:
+                - "Botnet Check Success"
+                type: str
+            bot_check_fail:
                 description:
-                - "XSS Check URL Success"
-            xml_limit_namespace_uri_len:
+                - "Botnet Check Failure"
+                type: str
+            form_consistency_succ:
                 description:
-                - "XML Limit Namespace URI Length"
-            post_form_check_reject:
+                - "Form Consistency Success"
+                type: str
+            form_consistency_fail:
                 description:
-                - "Post Form Check Rejected"
-            cookie_encrypt_fail:
+                - "Form Consistency Failure"
+                type: str
+            form_csrf_tag_succ:
                 description:
-                - "Cookie Encrypt Failure"
-            soap_check_failure:
-                description:
-                - "Soap Check Failure"
-            challenge_captcha_sent:
-                description:
-                - "Captcha challenge sent"
+                - "Form CSRF tag Success"
+                type: str
             form_csrf_tag_fail:
                 description:
                 - "Form CSRF tag Failure"
+                type: str
+            url_check_succ:
+                description:
+                - "URL Check Success"
+                type: str
+            url_check_fail:
+                description:
+                - "URL Check Failure"
+                type: str
+            url_check_learn:
+                description:
+                - "URL Check Learn"
+                type: str
+            buf_ovf_url_len_fail:
+                description:
+                - "Buffer Overflow - URL Length Failure"
+                type: str
+            buf_ovf_cookie_len_fail:
+                description:
+                - "Buffer Overflow - Cookie Length Failure"
+                type: str
+            buf_ovf_hdrs_len_fail:
+                description:
+                - "Buffer Overflow - Headers length Failure"
+                type: str
+            buf_ovf_post_size_fail:
+                description:
+                - "Buffer Overflow - Post size Failure"
+                type: str
+            max_cookies_fail:
+                description:
+                - "Max Cookies Failure"
+                type: str
+            max_hdrs_fail:
+                description:
+                - "Max Headers Failure"
+                type: str
+            http_method_check_succ:
+                description:
+                - "Http Method Check Success"
+                type: str
+            http_method_check_fail:
+                description:
+                - "Http Method Check Failure"
+                type: str
+            http_check_succ:
+                description:
+                - "Http Check Success"
+                type: str
+            http_check_fail:
+                description:
+                - "Http Check Failure"
+                type: str
+            referer_check_succ:
+                description:
+                - "Referer Check Success"
+                type: str
+            referer_check_fail:
+                description:
+                - "Referer Check Failure"
+                type: str
+            referer_check_redirect:
+                description:
+                - "Referer Check Redirect"
+                type: str
+            uri_wlist_succ:
+                description:
+                - "URI White List Success"
+                type: str
+            uri_wlist_fail:
+                description:
+                - "URI White List Failure"
+                type: str
+            uri_blist_succ:
+                description:
+                - "URI Black List Success"
+                type: str
+            uri_blist_fail:
+                description:
+                - "URI Black List Failure"
+                type: str
+            post_form_check_succ:
+                description:
+                - "Post Form Check Success"
+                type: str
+            post_form_check_sanitize:
+                description:
+                - "Post Form Check Sanitized"
+                type: str
+            post_form_check_reject:
+                description:
+                - "Post Form Check Rejected"
+                type: str
+            ccn_mask_amex:
+                description:
+                - "Credit Card Number Mask Amex"
+                type: str
+            ccn_mask_diners:
+                description:
+                - "Credit Card Number Mask Diners"
+                type: str
+            ccn_mask_visa:
+                description:
+                - "Credit Card Number Mask Visa"
+                type: str
+            ccn_mask_mastercard:
+                description:
+                - "Credit Card Number Mask Mastercard"
+                type: str
+            ccn_mask_discover:
+                description:
+                - "Credit Card Number Mask Discover"
+                type: str
+            ccn_mask_jcb:
+                description:
+                - "Credit Card Number Mask Jcb"
+                type: str
+            ssn_mask:
+                description:
+                - "Social Security Number Mask"
+                type: str
+            pcre_mask:
+                description:
+                - "PCRE Mask"
+                type: str
+            cookie_encrypt_succ:
+                description:
+                - "Cookie Encrypt Success"
+                type: str
+            cookie_encrypt_fail:
+                description:
+                - "Cookie Encrypt Failure"
+                type: str
+            cookie_encrypt_limit_exceeded:
+                description:
+                - "Cookie Encrypt Limit Exceeded"
+                type: str
+            cookie_encrypt_skip_rcache:
+                description:
+                - "Cookie Encrypt Skip RCache"
+                type: str
+            cookie_decrypt_succ:
+                description:
+                - "Cookie Decrypt Success"
+                type: str
+            cookie_decrypt_fail:
+                description:
+                - "Cookie Decrypt Failure"
+                type: str
+            sqlia_chk_url_succ:
+                description:
+                - "SQLIA Check URL Success"
+                type: str
+            sqlia_chk_url_sanitize:
+                description:
+                - "SQLIA Check URL Sanitized"
+                type: str
+            sqlia_chk_url_reject:
+                description:
+                - "SQLIA Check URL Rejected"
+                type: str
+            sqlia_chk_post_succ:
+                description:
+                - "SQLIA Check Post Success"
+                type: str
+            sqlia_chk_post_sanitize:
+                description:
+                - "SQLIA Check Post Sanitized"
+                type: str
+            sqlia_chk_post_reject:
+                description:
+                - "SQLIA Check Post Rejected"
+                type: str
+            xss_chk_cookie_succ:
+                description:
+                - "XSS Check Cookie Success"
+                type: str
+            xss_chk_cookie_sanitize:
+                description:
+                - "XSS Check Cookie Sanitized"
+                type: str
+            xss_chk_cookie_reject:
+                description:
+                - "XSS Check Cookie Rejected"
+                type: str
+            xss_chk_url_succ:
+                description:
+                - "XSS Check URL Success"
+                type: str
+            xss_chk_url_sanitize:
+                description:
+                - "XSS Check URL Sanitized"
+                type: str
+            xss_chk_url_reject:
+                description:
+                - "XSS Check URL Rejected"
+                type: str
+            xss_chk_post_succ:
+                description:
+                - "XSS Check Post Success"
+                type: str
+            xss_chk_post_sanitize:
+                description:
+                - "XSS Check Post Sanitized"
+                type: str
+            xss_chk_post_reject:
+                description:
+                - "XSS Check Post Rejected"
+                type: str
+            resp_code_hidden:
+                description:
+                - "Response Code Hidden"
+                type: str
+            resp_hdrs_filtered:
+                description:
+                - "Response Headers Filtered"
+                type: str
+            learn_updates:
+                description:
+                - "Learning Updates"
+                type: str
+            num_drops:
+                description:
+                - "Number Drops"
+                type: str
+            num_resets:
+                description:
+                - "Number Resets"
+                type: str
+            form_non_ssl_reject:
+                description:
+                - "Form Non SSL Rejected"
+                type: str
+            form_non_post_reject:
+                description:
+                - "Form Non Post Rejected"
+                type: str
+            sess_check_none:
+                description:
+                - "Session Check None"
+                type: str
+            sess_check_succ:
+                description:
+                - "Session Check Success"
+                type: str
+            sess_check_fail:
+                description:
+                - "Session Check Failure"
+                type: str
+            soap_check_succ:
+                description:
+                - "Soap Check Success"
+                type: str
+            soap_check_failure:
+                description:
+                - "Soap Check Failure"
+                type: str
+            wsdl_fail:
+                description:
+                - "WSDL Failure"
+                type: str
+            wsdl_succ:
+                description:
+                - "WSDL Success"
+                type: str
+            xml_schema_fail:
+                description:
+                - "XML Schema Failure"
+                type: str
+            xml_schema_succ:
+                description:
+                - "XML Schema Success"
+                type: str
+            xml_sqlia_chk_fail:
+                description:
+                - "XML Sqlia Check Failure"
+                type: str
+            xml_sqlia_chk_succ:
+                description:
+                - "XML Sqlia Check Success"
+                type: str
+            xml_xss_chk_fail:
+                description:
+                - "XML XSS Check Failure"
+                type: str
             xml_xss_chk_succ:
                 description:
                 - "XML XSS Check Success"
+                type: str
+            json_check_failure:
+                description:
+                - "JSON Check Failure"
+                type: str
+            json_check_succ:
+                description:
+                - "JSON Check Success"
+                type: str
+            xml_check_failure:
+                description:
+                - "XML Check Failure"
+                type: str
+            xml_check_succ:
+                description:
+                - "XML Check Success"
+                type: str
+            buf_ovf_cookie_value_len_fail:
+                description:
+                - "Buffer Overflow - Cookie Value Length Failure"
+                type: str
+            buf_ovf_cookies_len_fail:
+                description:
+                - "Buffer Overflow - Cookies Length Failure"
+                type: str
+            buf_ovf_hdr_name_len_fail:
+                description:
+                - "Buffer Overflow - Header Name Length Failure"
+                type: str
+            buf_ovf_hdr_value_len_fail:
+                description:
+                - "Buffer Overflow - Header Value Length Failure"
+                type: str
             buf_ovf_max_data_parse_fail:
                 description:
                 - "Buffer Overflow - Max Data Parse Failure"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            buf_ovf_line_len_fail:
+                description:
+                - "Buffer Overflow - Line Length Failure"
+                type: str
+            buf_ovf_parameter_name_len_fail:
+                description:
+                - "Buffer Overflow - HTML Parameter Name Length Failure"
+                type: str
+            buf_ovf_parameter_value_len_fail:
+                description:
+                - "Buffer Overflow - HTML Parameter Value Length Failure"
+                type: str
+            buf_ovf_parameter_total_len_fail:
+                description:
+                - "Buffer Overflow - HTML Parameter Total Length Failure"
+                type: str
+            buf_ovf_query_len_fail:
+                description:
+                - "Buffer Overflow - Query Length Failure"
+                type: str
+            max_entities_fail:
+                description:
+                - "Max Entities Failure"
+                type: str
+            max_parameters_fail:
+                description:
+                - "Max Parameters Failure"
+                type: str
+            buf_ovf_cookie_name_len_fail:
+                description:
+                - "Buffer Overflow - Cookie Name Length Failure"
+                type: str
+            xml_limit_attr:
+                description:
+                - "XML Limit Attribue"
+                type: str
+            xml_limit_attr_name_len:
+                description:
+                - "XML Limit Name Length"
+                type: str
+            xml_limit_attr_value_len:
+                description:
+                - "XML Limit Value Length"
+                type: str
+            xml_limit_cdata_len:
+                description:
+                - "XML Limit CData Length"
+                type: str
+            xml_limit_elem:
+                description:
+                - "XML Limit Element"
+                type: str
+            xml_limit_elem_child:
+                description:
+                - "XML Limit Element Child"
+                type: str
+            xml_limit_elem_depth:
+                description:
+                - "XML Limit Element Depth"
+                type: str
+            xml_limit_elem_name_len:
+                description:
+                - "XML Limit Element Name Length"
+                type: str
+            xml_limit_entity_exp:
+                description:
+                - "XML Limit Entity Exp"
+                type: str
+            xml_limit_entity_exp_depth:
+                description:
+                - "XML Limit Entity Exp Depth"
+                type: str
+            xml_limit_namespace:
+                description:
+                - "XML Limit Namespace"
+                type: str
+            xml_limit_namespace_uri_len:
+                description:
+                - "XML Limit Namespace URI Length"
+                type: str
+            json_limit_array_value_count:
+                description:
+                - "JSON Limit Array Value Count"
+                type: str
+            json_limit_depth:
+                description:
+                - "JSON Limit Depth"
+                type: str
+            json_limit_object_member_count:
+                description:
+                - "JSON Limit Object Number Count"
+                type: str
+            json_limit_string:
+                description:
+                - "JSON Limit String"
+                type: str
+            form_non_masked_password:
+                description:
+                - "Form Non Masked Password"
+                type: str
+            form_non_ssl_password:
+                description:
+                - "Form Non SSL Password"
+                type: str
+            form_password_autocomplete:
+                description:
+                - "Form Password Autocomplete"
+                type: str
+            redirect_wlist_succ:
+                description:
+                - "Redirect Whitelist Success"
+                type: str
+            redirect_wlist_fail:
+                description:
+                - "Redirect Whitelist Failure"
+                type: str
+            redirect_wlist_learn:
+                description:
+                - "Redirect Whitelist Learn"
+                type: str
+            form_set_no_cache:
+                description:
+                - "Form Set No Cache"
+                type: str
+            resp_denied:
+                description:
+                - "Responses Denied"
+                type: str
+            sessions_alloc:
+                description:
+                - "Sessions allocated"
+                type: str
+            sessions_freed:
+                description:
+                - "Sessions freed"
+                type: str
+            out_of_sessions:
+                description:
+                - "Out of sessions"
+                type: str
+            too_many_sessions:
+                description:
+                - "Too many sessions consumed"
+                type: str
+            called:
+                description:
+                - "Threshold check count"
+                type: str
+            permitted:
+                description:
+                - "Honor threshold  count"
+                type: str
+            brute_force_success:
+                description:
+                - "Brute-force checks passed"
+                type: str
+            brute_force_fail:
+                description:
+                - "Brute-force checks failed"
+                type: str
+            challenge_cookie_sent:
+                description:
+                - "Cookie challenge sent"
+                type: str
+            challenge_javascript_sent:
+                description:
+                - "JavaScript challenge sent"
+                type: str
+            challenge_captcha_sent:
+                description:
+                - "Captcha challenge sent"
+                type: str
 
 '''
 
@@ -608,6 +750,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -680,178 +825,40 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'redirect_wlist_fail': {
+            'total_req': {
                 'type': 'str',
             },
-            'cookie_encrypt_limit_exceeded': {
-                'type': 'str',
-            },
-            'wsdl_succ': {
-                'type': 'str',
-            },
-            'sqlia_chk_url_succ': {
-                'type': 'str',
-            },
-            'bot_check_succ': {
-                'type': 'str',
-            },
-            'cookie_encrypt_skip_rcache': {
-                'type': 'str',
-            },
-            'redirect_wlist_learn': {
-                'type': 'str',
-            },
-            'xml_limit_elem_child': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_value_len_fail': {
-                'type': 'str',
-            },
-            'ccn_mask_visa': {
-                'type': 'str',
-            },
-            'xss_chk_cookie_succ': {
-                'type': 'str',
-            },
-            'buf_ovf_cookies_len_fail': {
+            'req_allowed': {
                 'type': 'str',
             },
             'req_denied': {
                 'type': 'str',
             },
-            'json_check_failure': {
+            'bot_check_succ': {
                 'type': 'str',
             },
-            'xss_chk_post_reject': {
-                'type': 'str',
-            },
-            'http_check_succ': {
+            'bot_check_fail': {
                 'type': 'str',
             },
             'form_consistency_succ': {
                 'type': 'str',
             },
-            'xml_limit_cdata_len': {
-                'type': 'str',
-            },
-            'xml_check_failure': {
-                'type': 'str',
-            },
-            'buf_ovf_hdrs_len_fail': {
-                'type': 'str',
-            },
-            'referer_check_succ': {
-                'type': 'str',
-            },
-            'sqlia_chk_post_succ': {
-                'type': 'str',
-            },
-            'xss_chk_url_sanitize': {
-                'type': 'str',
-            },
-            'cookie_encrypt_succ': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_total_len_fail': {
-                'type': 'str',
-            },
-            'soap_check_succ': {
-                'type': 'str',
-            },
-            'max_cookies_fail': {
-                'type': 'str',
-            },
-            'json_limit_array_value_count': {
-                'type': 'str',
-            },
-            'uri_wlist_succ': {
-                'type': 'str',
-            },
-            'brute_force_success': {
-                'type': 'str',
-            },
-            'resp_code_hidden': {
-                'type': 'str',
-            },
-            'xml_sqlia_chk_fail': {
-                'type': 'str',
-            },
-            'xss_chk_post_succ': {
-                'type': 'str',
-            },
-            'pcre_mask': {
-                'type': 'str',
-            },
             'form_consistency_fail': {
                 'type': 'str',
             },
-            'http_check_fail': {
+            'form_csrf_tag_succ': {
+                'type': 'str',
+            },
+            'form_csrf_tag_fail': {
                 'type': 'str',
             },
             'url_check_succ': {
                 'type': 'str',
             },
-            'sqlia_chk_url_reject': {
+            'url_check_fail': {
                 'type': 'str',
             },
-            'sqlia_chk_url_sanitize': {
-                'type': 'str',
-            },
-            'xss_chk_cookie_reject': {
-                'type': 'str',
-            },
-            'json_check_succ': {
-                'type': 'str',
-            },
-            'max_entities_fail': {
-                'type': 'str',
-            },
-            'http_method_check_fail': {
-                'type': 'str',
-            },
-            'form_non_ssl_reject': {
-                'type': 'str',
-            },
-            'xss_chk_post_sanitize': {
-                'type': 'str',
-            },
-            'form_set_no_cache': {
-                'type': 'str',
-            },
-            'xml_schema_succ': {
-                'type': 'str',
-            },
-            'xml_limit_attr': {
-                'type': 'str',
-            },
-            'xml_check_succ': {
-                'type': 'str',
-            },
-            'sess_check_none': {
-                'type': 'str',
-            },
-            'xml_limit_namespace': {
-                'type': 'str',
-            },
-            'wsdl_fail': {
-                'type': 'str',
-            },
-            'post_form_check_succ': {
-                'type': 'str',
-            },
-            'buf_ovf_query_len_fail': {
-                'type': 'str',
-            },
-            'sqlia_chk_post_reject': {
-                'type': 'str',
-            },
-            'form_password_autocomplete': {
-                'type': 'str',
-            },
-            'permitted': {
-                'type': 'str',
-            },
-            'xml_xss_chk_fail': {
+            'url_check_learn': {
                 'type': 'str',
             },
             'buf_ovf_url_len_fail': {
@@ -860,154 +867,331 @@ def get_argspec():
             'buf_ovf_cookie_len_fail': {
                 'type': 'str',
             },
-            'form_csrf_tag_succ': {
+            'buf_ovf_hdrs_len_fail': {
                 'type': 'str',
             },
-            'xss_chk_cookie_sanitize': {
+            'buf_ovf_post_size_fail': {
                 'type': 'str',
             },
-            'sessions_alloc': {
-                'type': 'str',
-            },
-            'xml_limit_entity_exp': {
-                'type': 'str',
-            },
-            'ccn_mask_diners': {
-                'type': 'str',
-            },
-            'sess_check_succ': {
-                'type': 'str',
-            },
-            'json_limit_depth': {
-                'type': 'str',
-            },
-            'buf_ovf_cookie_name_len_fail': {
-                'type': 'str',
-            },
-            'learn_updates': {
-                'type': 'str',
-            },
-            'redirect_wlist_succ': {
-                'type': 'str',
-            },
-            'challenge_javascript_sent': {
-                'type': 'str',
-            },
-            'req_allowed': {
-                'type': 'str',
-            },
-            'json_limit_object_member_count': {
-                'type': 'str',
-            },
-            'bot_check_fail': {
-                'type': 'str',
-            },
-            'uri_wlist_fail': {
-                'type': 'str',
-            },
-            'uri_blist_fail': {
-                'type': 'str',
-            },
-            'referer_check_redirect': {
-                'type': 'str',
-            },
-            'challenge_cookie_sent': {
-                'type': 'str',
-            },
-            'sqlia_chk_post_sanitize': {
-                'type': 'str',
-            },
-            'ccn_mask_amex': {
-                'type': 'str',
-            },
-            'num_drops': {
-                'type': 'str',
-            },
-            'referer_check_fail': {
-                'type': 'str',
-            },
-            'post_form_check_sanitize': {
-                'type': 'str',
-            },
-            'cookie_decrypt_succ': {
-                'type': 'str',
-            },
-            'xss_chk_url_reject': {
-                'type': 'str',
-            },
-            'max_parameters_fail': {
-                'type': 'str',
-            },
-            'url_check_fail': {
-                'type': 'str',
-            },
-            'xml_schema_fail': {
-                'type': 'str',
-            },
-            'form_non_post_reject': {
-                'type': 'str',
-            },
-            'num_resets': {
-                'type': 'str',
-            },
-            'xml_limit_entity_exp_depth': {
-                'type': 'str',
-            },
-            'form_non_masked_password': {
-                'type': 'str',
-            },
-            'buf_ovf_line_len_fail': {
-                'type': 'str',
-            },
-            'ccn_mask_discover': {
-                'type': 'str',
-            },
-            'ssn_mask': {
-                'type': 'str',
-            },
-            'json_limit_string': {
-                'type': 'str',
-            },
-            'resp_hdrs_filtered': {
-                'type': 'str',
-            },
-            'called': {
-                'type': 'str',
-            },
-            'ccn_mask_mastercard': {
-                'type': 'str',
-            },
-            'xml_sqlia_chk_succ': {
-                'type': 'str',
-            },
-            'brute_force_fail': {
+            'max_cookies_fail': {
                 'type': 'str',
             },
             'max_hdrs_fail': {
                 'type': 'str',
             },
-            'xml_limit_attr_name_len': {
+            'http_method_check_succ': {
                 'type': 'str',
             },
-            'form_non_ssl_password': {
+            'http_method_check_fail': {
                 'type': 'str',
             },
-            'too_many_sessions': {
+            'http_check_succ': {
                 'type': 'str',
             },
-            'buf_ovf_hdr_value_len_fail': {
+            'http_check_fail': {
+                'type': 'str',
+            },
+            'referer_check_succ': {
+                'type': 'str',
+            },
+            'referer_check_fail': {
+                'type': 'str',
+            },
+            'referer_check_redirect': {
+                'type': 'str',
+            },
+            'uri_wlist_succ': {
+                'type': 'str',
+            },
+            'uri_wlist_fail': {
                 'type': 'str',
             },
             'uri_blist_succ': {
                 'type': 'str',
             },
+            'uri_blist_fail': {
+                'type': 'str',
+            },
+            'post_form_check_succ': {
+                'type': 'str',
+            },
+            'post_form_check_sanitize': {
+                'type': 'str',
+            },
+            'post_form_check_reject': {
+                'type': 'str',
+            },
+            'ccn_mask_amex': {
+                'type': 'str',
+            },
+            'ccn_mask_diners': {
+                'type': 'str',
+            },
+            'ccn_mask_visa': {
+                'type': 'str',
+            },
+            'ccn_mask_mastercard': {
+                'type': 'str',
+            },
+            'ccn_mask_discover': {
+                'type': 'str',
+            },
+            'ccn_mask_jcb': {
+                'type': 'str',
+            },
+            'ssn_mask': {
+                'type': 'str',
+            },
+            'pcre_mask': {
+                'type': 'str',
+            },
+            'cookie_encrypt_succ': {
+                'type': 'str',
+            },
+            'cookie_encrypt_fail': {
+                'type': 'str',
+            },
+            'cookie_encrypt_limit_exceeded': {
+                'type': 'str',
+            },
+            'cookie_encrypt_skip_rcache': {
+                'type': 'str',
+            },
+            'cookie_decrypt_succ': {
+                'type': 'str',
+            },
+            'cookie_decrypt_fail': {
+                'type': 'str',
+            },
+            'sqlia_chk_url_succ': {
+                'type': 'str',
+            },
+            'sqlia_chk_url_sanitize': {
+                'type': 'str',
+            },
+            'sqlia_chk_url_reject': {
+                'type': 'str',
+            },
+            'sqlia_chk_post_succ': {
+                'type': 'str',
+            },
+            'sqlia_chk_post_sanitize': {
+                'type': 'str',
+            },
+            'sqlia_chk_post_reject': {
+                'type': 'str',
+            },
+            'xss_chk_cookie_succ': {
+                'type': 'str',
+            },
+            'xss_chk_cookie_sanitize': {
+                'type': 'str',
+            },
+            'xss_chk_cookie_reject': {
+                'type': 'str',
+            },
+            'xss_chk_url_succ': {
+                'type': 'str',
+            },
+            'xss_chk_url_sanitize': {
+                'type': 'str',
+            },
+            'xss_chk_url_reject': {
+                'type': 'str',
+            },
+            'xss_chk_post_succ': {
+                'type': 'str',
+            },
+            'xss_chk_post_sanitize': {
+                'type': 'str',
+            },
+            'xss_chk_post_reject': {
+                'type': 'str',
+            },
+            'resp_code_hidden': {
+                'type': 'str',
+            },
+            'resp_hdrs_filtered': {
+                'type': 'str',
+            },
+            'learn_updates': {
+                'type': 'str',
+            },
+            'num_drops': {
+                'type': 'str',
+            },
+            'num_resets': {
+                'type': 'str',
+            },
+            'form_non_ssl_reject': {
+                'type': 'str',
+            },
+            'form_non_post_reject': {
+                'type': 'str',
+            },
+            'sess_check_none': {
+                'type': 'str',
+            },
+            'sess_check_succ': {
+                'type': 'str',
+            },
             'sess_check_fail': {
+                'type': 'str',
+            },
+            'soap_check_succ': {
+                'type': 'str',
+            },
+            'soap_check_failure': {
+                'type': 'str',
+            },
+            'wsdl_fail': {
+                'type': 'str',
+            },
+            'wsdl_succ': {
+                'type': 'str',
+            },
+            'xml_schema_fail': {
+                'type': 'str',
+            },
+            'xml_schema_succ': {
+                'type': 'str',
+            },
+            'xml_sqlia_chk_fail': {
+                'type': 'str',
+            },
+            'xml_sqlia_chk_succ': {
+                'type': 'str',
+            },
+            'xml_xss_chk_fail': {
+                'type': 'str',
+            },
+            'xml_xss_chk_succ': {
+                'type': 'str',
+            },
+            'json_check_failure': {
+                'type': 'str',
+            },
+            'json_check_succ': {
+                'type': 'str',
+            },
+            'xml_check_failure': {
+                'type': 'str',
+            },
+            'xml_check_succ': {
+                'type': 'str',
+            },
+            'buf_ovf_cookie_value_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_cookies_len_fail': {
                 'type': 'str',
             },
             'buf_ovf_hdr_name_len_fail': {
                 'type': 'str',
             },
+            'buf_ovf_hdr_value_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_max_data_parse_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_line_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_parameter_name_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_parameter_value_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_parameter_total_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_query_len_fail': {
+                'type': 'str',
+            },
+            'max_entities_fail': {
+                'type': 'str',
+            },
+            'max_parameters_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_cookie_name_len_fail': {
+                'type': 'str',
+            },
+            'xml_limit_attr': {
+                'type': 'str',
+            },
+            'xml_limit_attr_name_len': {
+                'type': 'str',
+            },
+            'xml_limit_attr_value_len': {
+                'type': 'str',
+            },
+            'xml_limit_cdata_len': {
+                'type': 'str',
+            },
+            'xml_limit_elem': {
+                'type': 'str',
+            },
+            'xml_limit_elem_child': {
+                'type': 'str',
+            },
+            'xml_limit_elem_depth': {
+                'type': 'str',
+            },
+            'xml_limit_elem_name_len': {
+                'type': 'str',
+            },
+            'xml_limit_entity_exp': {
+                'type': 'str',
+            },
+            'xml_limit_entity_exp_depth': {
+                'type': 'str',
+            },
+            'xml_limit_namespace': {
+                'type': 'str',
+            },
+            'xml_limit_namespace_uri_len': {
+                'type': 'str',
+            },
+            'json_limit_array_value_count': {
+                'type': 'str',
+            },
+            'json_limit_depth': {
+                'type': 'str',
+            },
+            'json_limit_object_member_count': {
+                'type': 'str',
+            },
+            'json_limit_string': {
+                'type': 'str',
+            },
+            'form_non_masked_password': {
+                'type': 'str',
+            },
+            'form_non_ssl_password': {
+                'type': 'str',
+            },
+            'form_password_autocomplete': {
+                'type': 'str',
+            },
+            'redirect_wlist_succ': {
+                'type': 'str',
+            },
+            'redirect_wlist_fail': {
+                'type': 'str',
+            },
+            'redirect_wlist_learn': {
+                'type': 'str',
+            },
+            'form_set_no_cache': {
+                'type': 'str',
+            },
             'resp_denied': {
+                'type': 'str',
+            },
+            'sessions_alloc': {
                 'type': 'str',
             },
             'sessions_freed': {
@@ -1016,72 +1200,30 @@ def get_argspec():
             'out_of_sessions': {
                 'type': 'str',
             },
-            'xml_limit_elem': {
+            'too_many_sessions': {
                 'type': 'str',
             },
-            'buf_ovf_parameter_name_len_fail': {
+            'called': {
                 'type': 'str',
             },
-            'xml_limit_attr_value_len': {
+            'permitted': {
                 'type': 'str',
             },
-            'xml_limit_elem_depth': {
+            'brute_force_success': {
                 'type': 'str',
             },
-            'ccn_mask_jcb': {
+            'brute_force_fail': {
                 'type': 'str',
             },
-            'cookie_decrypt_fail': {
+            'challenge_cookie_sent': {
                 'type': 'str',
             },
-            'buf_ovf_cookie_value_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_post_size_fail': {
-                'type': 'str',
-            },
-            'total_req': {
-                'type': 'str',
-            },
-            'xml_limit_elem_name_len': {
-                'type': 'str',
-            },
-            'url_check_learn': {
-                'type': 'str',
-            },
-            'http_method_check_succ': {
-                'type': 'str',
-            },
-            'xss_chk_url_succ': {
-                'type': 'str',
-            },
-            'xml_limit_namespace_uri_len': {
-                'type': 'str',
-            },
-            'post_form_check_reject': {
-                'type': 'str',
-            },
-            'cookie_encrypt_fail': {
-                'type': 'str',
-            },
-            'soap_check_failure': {
+            'challenge_javascript_sent': {
                 'type': 'str',
             },
             'challenge_captcha_sent': {
                 'type': 'str',
-            },
-            'form_csrf_tag_fail': {
-                'type': 'str',
-            },
-            'xml_xss_chk_succ': {
-                'type': 'str',
-            },
-            'buf_ovf_max_data_parse_fail': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

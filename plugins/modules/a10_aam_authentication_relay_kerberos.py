@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_kerberos
 description:
     - Kerberos Authentication Relay
-short_description: Configures A10 aam.authentication.relay.kerberos
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -65,100 +76,125 @@ options:
           Total Timeout Response; 'response-other'= Total Other Response; 'job-start-
           error'= Total Job Start Error; 'polling-control-error'= Total Polling Control
           Error;"
+                type: str
+    instance_list:
+        description:
+        - "Field instance_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Specify Kerberos authentication relay name"
+                type: str
+            kerberos_realm:
+                description:
+                - "Specify the kerberos realm"
+                type: str
+            kerberos_kdc:
+                description:
+                - "Specify the kerberos kdc ip or host name"
+                type: str
+            kerberos_kdc_service_group:
+                description:
+                - "Specify an authentication service group as multiple KDCs"
+                type: str
+            kerberos_account:
+                description:
+                - "Specify the kerberos account name"
+                type: str
+            password:
+                description:
+                - "Specify password of Kerberos password"
+                type: bool
+            secret_string:
+                description:
+                - "The kerberos client password"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
+                type: str
+            port:
+                description:
+                - "Specify The KDC port, default is 88"
+                type: int
+            timeout:
+                description:
+                - "Specify timeout for kerberos transport, default is 10 seconds (The timeout,
+          default is 10 seconds)"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             request_send:
                 description:
                 - "Total Request Send"
-            request_normal:
-                description:
-                - "Total Normal Request"
-            response_success:
-                description:
-                - "Total Success Response"
-            timeout_error:
-                description:
-                - "Total Timeout"
-            instance_list:
-                description:
-                - "Field instance_list"
-            response_other:
-                description:
-                - "Total Other Response"
-            response_failure:
-                description:
-                - "Total Failure Response"
-            polling_control_error:
-                description:
-                - "Total Polling Control Error"
-            other_error:
-                description:
-                - "Total Other Error"
-            request_dropped:
-                description:
-                - "Total Dropped Request"
+                type: str
             response_get:
                 description:
                 - "Total Response Get"
-            response_timeout:
+                type: str
+            timeout_error:
                 description:
-                - "Total Timeout Response"
-            job_start_error:
+                - "Total Timeout"
+                type: str
+            other_error:
                 description:
-                - "Total Job Start Error"
+                - "Total Other Error"
+                type: str
+            request_normal:
+                description:
+                - "Total Normal Request"
+                type: str
+            request_dropped:
+                description:
+                - "Total Dropped Request"
+                type: str
+            response_success:
+                description:
+                - "Total Success Response"
+                type: str
+            response_failure:
+                description:
+                - "Total Failure Response"
+                type: str
             response_error:
                 description:
                 - "Total Error Response"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    instance_list:
-        description:
-        - "Field instance_list"
-        required: False
-        suboptions:
-            kerberos_account:
+                type: str
+            response_timeout:
                 description:
-                - "Specify the kerberos account name"
-            uuid:
+                - "Total Timeout Response"
+                type: str
+            response_other:
                 description:
-                - "uuid of the object"
-            encrypted:
+                - "Total Other Response"
+                type: str
+            job_start_error:
                 description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED secret string)"
-            kerberos_realm:
+                - "Total Job Start Error"
+                type: str
+            polling_control_error:
                 description:
-                - "Specify the kerberos realm"
-            kerberos_kdc_service_group:
+                - "Total Polling Control Error"
+                type: str
+            instance_list:
                 description:
-                - "Specify an authentication service group as multiple KDCs"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            timeout:
-                description:
-                - "Specify timeout for kerberos transport, default is 10 seconds (The timeout,
-          default is 10 seconds)"
-            password:
-                description:
-                - "Specify password of Kerberos password"
-            kerberos_kdc:
-                description:
-                - "Specify the kerberos kdc ip or host name"
-            port:
-                description:
-                - "Specify The KDC port, default is 88"
-            secret_string:
-                description:
-                - "The kerberos client password"
-            name:
-                description:
-                - "Specify Kerberos authentication relay name"
+                - "Field instance_list"
+                type: list
 
 '''
 
@@ -214,6 +250,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -228,88 +267,40 @@ def get_argspec():
                 ]
             }
         },
-        'stats': {
-            'type': 'dict',
-            'request_send': {
-                'type': 'str',
-            },
-            'request_normal': {
-                'type': 'str',
-            },
-            'response_success': {
-                'type': 'str',
-            },
-            'timeout_error': {
-                'type': 'str',
-            },
-            'instance_list': {
-                'type': 'list',
-                'stats': {
-                    'type': 'dict',
-                    'current_requests_of_user': {
-                        'type': 'str',
-                    },
-                    'response_receive': {
-                        'type': 'str',
-                    },
-                    'request_send': {
-                        'type': 'str',
-                    },
-                    'tickets': {
-                        'type': 'str',
-                    }
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'response_other': {
-                'type': 'str',
-            },
-            'response_failure': {
-                'type': 'str',
-            },
-            'polling_control_error': {
-                'type': 'str',
-            },
-            'other_error': {
-                'type': 'str',
-            },
-            'request_dropped': {
-                'type': 'str',
-            },
-            'response_get': {
-                'type': 'str',
-            },
-            'response_timeout': {
-                'type': 'str',
-            },
-            'job_start_error': {
-                'type': 'str',
-            },
-            'response_error': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'instance_list': {
             'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'kerberos_realm': {
+                'type': 'str',
+            },
+            'kerberos_kdc': {
+                'type': 'str',
+            },
+            'kerberos_kdc_service_group': {
+                'type': 'str',
+            },
             'kerberos_account': {
                 'type': 'str',
             },
-            'uuid': {
+            'password': {
+                'type': 'bool',
+            },
+            'secret_string': {
                 'type': 'str',
             },
             'encrypted': {
                 'type': 'str',
             },
-            'kerberos_realm': {
-                'type': 'str',
+            'port': {
+                'type': 'int',
             },
-            'kerberos_kdc_service_group': {
+            'timeout': {
+                'type': 'int',
+            },
+            'uuid': {
                 'type': 'str',
             },
             'sampling_enable': {
@@ -322,25 +313,70 @@ def get_argspec():
                         'current-requests-of-user', 'tickets'
                     ]
                 }
-            },
-            'timeout': {
-                'type': 'int',
-            },
-            'password': {
-                'type': 'bool',
-            },
-            'kerberos_kdc': {
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'request_send': {
                 'type': 'str',
             },
-            'port': {
-                'type': 'int',
-            },
-            'secret_string': {
+            'response_get': {
                 'type': 'str',
             },
-            'name': {
+            'timeout_error': {
                 'type': 'str',
-                'required': True,
+            },
+            'other_error': {
+                'type': 'str',
+            },
+            'request_normal': {
+                'type': 'str',
+            },
+            'request_dropped': {
+                'type': 'str',
+            },
+            'response_success': {
+                'type': 'str',
+            },
+            'response_failure': {
+                'type': 'str',
+            },
+            'response_error': {
+                'type': 'str',
+            },
+            'response_timeout': {
+                'type': 'str',
+            },
+            'response_other': {
+                'type': 'str',
+            },
+            'job_start_error': {
+                'type': 'str',
+            },
+            'polling_control_error': {
+                'type': 'str',
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'request_send': {
+                        'type': 'str',
+                    },
+                    'response_receive': {
+                        'type': 'str',
+                    },
+                    'current_requests_of_user': {
+                        'type': 'str',
+                    },
+                    'tickets': {
+                        'type': 'str',
+                    }
+                }
             }
         }
     })

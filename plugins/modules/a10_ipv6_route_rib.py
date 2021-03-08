@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_ipv6_route_rib
 description:
     - Establish static routes
-short_description: Configures A10 ipv6.route.rib
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,80 +22,101 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ipv6_address:
         description:
         - "IPV6 address"
+        type: str
         required: True
+    ipv6_nexthop_ipv6:
+        description:
+        - "Field ipv6_nexthop_ipv6"
+        type: list
+        required: False
+        suboptions:
+            ipv6_nexthop:
+                description:
+                - "Forwarding router's address"
+                type: str
+            ethernet:
+                description:
+                - "Ethernet interface (Ethernet interface number)"
+                type: str
+            ve:
+                description:
+                - "Virtual Ethernet interface (Virtual Ethernet interface number)"
+                type: str
+            trunk:
+                description:
+                - "Trunk interface (Trunk interface number)"
+                type: str
+            distance:
+                description:
+                - "Distance value for this route"
+                type: int
+            description:
+                description:
+                - "Description for static route"
+                type: str
     ipv6_nexthop_tunnel:
         description:
         - "Field ipv6_nexthop_tunnel"
+        type: list
         required: False
         suboptions:
             tunnel:
                 description:
                 - "Tunnel interface (Tunnel interface number)"
-            distance_nexthop_tunnel:
-                description:
-                - "Distance value for this route"
+                type: int
             ipv6_nexthop_tunnel_addr:
                 description:
                 - "Forwarding router's address"
+                type: str
+            distance_nexthop_tunnel:
+                description:
+                - "Distance value for this route"
+                type: int
             description:
                 description:
                 - "Description for static route"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
-    ipv6_nexthop_ipv6:
-        description:
-        - "Field ipv6_nexthop_ipv6"
-        required: False
-        suboptions:
-            distance:
-                description:
-                - "Distance value for this route"
-            ipv6_nexthop:
-                description:
-                - "Forwarding router's address"
-            ve:
-                description:
-                - "Virtual Ethernet interface (Virtual Ethernet interface number)"
-            trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
-            ethernet:
-                description:
-                - "Ethernet interface (Ethernet interface number)"
-            description:
-                description:
-                - "Description for static route"
 
 '''
 
@@ -157,30 +176,12 @@ def get_argspec():
             'type': 'str',
             'required': True,
         },
-        'ipv6_nexthop_tunnel': {
-            'type': 'list',
-            'tunnel': {
-                'type': 'int',
-            },
-            'distance_nexthop_tunnel': {
-                'type': 'int',
-            },
-            'ipv6_nexthop_tunnel_addr': {
-                'type': 'str',
-            },
-            'description': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'ipv6_nexthop_ipv6': {
             'type': 'list',
-            'distance': {
-                'type': 'int',
-            },
             'ipv6_nexthop': {
+                'type': 'str',
+            },
+            'ethernet': {
                 'type': 'str',
             },
             've': {
@@ -189,12 +190,30 @@ def get_argspec():
             'trunk': {
                 'type': 'str',
             },
-            'ethernet': {
-                'type': 'str',
+            'distance': {
+                'type': 'int',
             },
             'description': {
                 'type': 'str',
             }
+        },
+        'ipv6_nexthop_tunnel': {
+            'type': 'list',
+            'tunnel': {
+                'type': 'int',
+            },
+            'ipv6_nexthop_tunnel_addr': {
+                'type': 'str',
+            },
+            'distance_nexthop_tunnel': {
+                'type': 'int',
+            },
+            'description': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

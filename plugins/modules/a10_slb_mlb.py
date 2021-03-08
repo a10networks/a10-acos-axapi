@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_mlb
 description:
     - Configure mlb
-short_description: Configures A10 slb.mlb
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -77,60 +77,87 @@ options:
           'msg_dropped'= Message dropped; 'mlb_dcmsg_sent'= Dcmsg sent;
           'mlb_dcmsg_received'= Dcmsg received; 'mlb_dcmsg_error'= Dcmsg error;
           'mlb_dcmsg_alloc'= Dcmsg alloc; 'mlb_dcmsg_free'= Dcmsg free;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            server_conn_closed:
-                description:
-                - "Server connection closed"
-            msg_dropped:
-                description:
-                - "Message dropped"
-            server_conn_created:
-                description:
-                - "Server connection created"
-            mlb_dcmsg_alloc:
-                description:
-                - "Dcmsg alloc"
-            client_conn_not_found:
-                description:
-                - "Client connection not found"
-            server_conn_rst:
-                description:
-                - "Server connection reset"
-            mlb_dcmsg_received:
-                description:
-                - "Dcmsg received"
-            server_conn_failed:
-                description:
-                - "Server connection failed"
             client_msg_sent:
                 description:
                 - "Client message sent"
-            mlb_dcmsg_error:
-                description:
-                - "Dcmsg error"
-            client_conn_created:
-                description:
-                - "Client connection created"
-            mlb_dcmsg_free:
-                description:
-                - "Dcmsg free"
+                type: str
             server_msg_received:
                 description:
                 - "Server message received"
+                type: str
+            server_conn_created:
+                description:
+                - "Server connection created"
+                type: str
+            server_conn_rst:
+                description:
+                - "Server connection reset"
+                type: str
+            server_conn_failed:
+                description:
+                - "Server connection failed"
+                type: str
+            server_conn_closed:
+                description:
+                - "Server connection closed"
+                type: str
+            client_conn_created:
+                description:
+                - "Client connection created"
+                type: str
             client_conn_closed:
                 description:
                 - "Client connection closed"
+                type: str
+            client_conn_not_found:
+                description:
+                - "Client connection not found"
+                type: str
+            msg_dropped:
+                description:
+                - "Message dropped"
+                type: str
             mlb_dcmsg_sent:
                 description:
                 - "Dcmsg sent"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            mlb_dcmsg_received:
+                description:
+                - "Dcmsg received"
+                type: str
+            mlb_dcmsg_error:
+                description:
+                - "Dcmsg error"
+                type: str
+            mlb_dcmsg_alloc:
+                description:
+                - "Dcmsg alloc"
+                type: str
+            mlb_dcmsg_free:
+                description:
+                - "Dcmsg free"
+                type: str
 
 '''
 
@@ -186,59 +213,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'server_conn_closed': {
-                    'type': 'int',
-                },
-                'msg_dropped': {
-                    'type': 'int',
-                },
-                'server_conn_created': {
-                    'type': 'int',
-                },
-                'mlb_dcmsg_alloc': {
-                    'type': 'int',
-                },
-                'client_conn_not_found': {
-                    'type': 'int',
-                },
-                'server_conn_rst': {
-                    'type': 'int',
-                },
-                'mlb_dcmsg_received': {
-                    'type': 'int',
-                },
-                'server_conn_failed': {
-                    'type': 'int',
-                },
-                'client_msg_sent': {
-                    'type': 'int',
-                },
-                'mlb_dcmsg_error': {
-                    'type': 'int',
-                },
-                'client_conn_created': {
-                    'type': 'int',
-                },
-                'mlb_dcmsg_free': {
-                    'type': 'int',
-                },
-                'server_msg_received': {
-                    'type': 'int',
-                },
-                'client_conn_closed': {
-                    'type': 'int',
-                },
-                'mlb_dcmsg_sent': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -256,56 +232,107 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'client_msg_sent': {
+                    'type': 'int',
+                },
+                'server_msg_received': {
+                    'type': 'int',
+                },
+                'server_conn_created': {
+                    'type': 'int',
+                },
+                'server_conn_rst': {
+                    'type': 'int',
+                },
+                'server_conn_failed': {
+                    'type': 'int',
+                },
+                'server_conn_closed': {
+                    'type': 'int',
+                },
+                'client_conn_created': {
+                    'type': 'int',
+                },
+                'client_conn_closed': {
+                    'type': 'int',
+                },
+                'client_conn_not_found': {
+                    'type': 'int',
+                },
+                'msg_dropped': {
+                    'type': 'int',
+                },
+                'mlb_dcmsg_sent': {
+                    'type': 'int',
+                },
+                'mlb_dcmsg_received': {
+                    'type': 'int',
+                },
+                'mlb_dcmsg_error': {
+                    'type': 'int',
+                },
+                'mlb_dcmsg_alloc': {
+                    'type': 'int',
+                },
+                'mlb_dcmsg_free': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'server_conn_closed': {
-                'type': 'str',
-            },
-            'msg_dropped': {
-                'type': 'str',
-            },
-            'server_conn_created': {
-                'type': 'str',
-            },
-            'mlb_dcmsg_alloc': {
-                'type': 'str',
-            },
-            'client_conn_not_found': {
-                'type': 'str',
-            },
-            'server_conn_rst': {
-                'type': 'str',
-            },
-            'mlb_dcmsg_received': {
-                'type': 'str',
-            },
-            'server_conn_failed': {
-                'type': 'str',
-            },
             'client_msg_sent': {
-                'type': 'str',
-            },
-            'mlb_dcmsg_error': {
-                'type': 'str',
-            },
-            'client_conn_created': {
-                'type': 'str',
-            },
-            'mlb_dcmsg_free': {
                 'type': 'str',
             },
             'server_msg_received': {
                 'type': 'str',
             },
+            'server_conn_created': {
+                'type': 'str',
+            },
+            'server_conn_rst': {
+                'type': 'str',
+            },
+            'server_conn_failed': {
+                'type': 'str',
+            },
+            'server_conn_closed': {
+                'type': 'str',
+            },
+            'client_conn_created': {
+                'type': 'str',
+            },
             'client_conn_closed': {
+                'type': 'str',
+            },
+            'client_conn_not_found': {
+                'type': 'str',
+            },
+            'msg_dropped': {
                 'type': 'str',
             },
             'mlb_dcmsg_sent': {
                 'type': 'str',
+            },
+            'mlb_dcmsg_received': {
+                'type': 'str',
+            },
+            'mlb_dcmsg_error': {
+                'type': 'str',
+            },
+            'mlb_dcmsg_alloc': {
+                'type': 'str',
+            },
+            'mlb_dcmsg_free': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

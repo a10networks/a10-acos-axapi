@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_server_ssh
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.server.ssh
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,50 +22,69 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
-        - Key to identify parent object    port_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - Key to identify parent object    virtual_server_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    virtual_server_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    name:
+        description:
+        - "Server SSH Template Name"
+        type: str
+        required: True
+    stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             server_ssh:
                 description:
                 - "Field server_ssh"
-    name:
-        description:
-        - "Server SSH Template Name"
-        required: True
+                type: dict
 
 '''
 
@@ -121,24 +138,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
         'stats': {
             'type': 'dict',
             'server_ssh': {
                 'type': 'dict',
-                'forwarding_errors': {
-                    'type': 'str',
-                },
                 'successful_handshakes': {
                     'type': 'str',
                 },
                 'failed_handshakes': {
                     'type': 'str',
+                },
+                'forwarding_errors': {
+                    'type': 'str',
                 }
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
         }
     })
     # Parent keys

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_identity_provider
 description:
     - Authentication identity provider
-short_description: Configures A10 aam.authentication.saml.identity-provider
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,118 +22,150 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "SAML authentication identity provider name"
+        type: str
+        required: True
+    metadata:
+        description:
+        - "URL of SAML identity provider's metadata file"
+        type: str
         required: False
     reload_metadata:
         description:
         - "Reload IdP's metadata immediately"
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            md:
-                description:
-                - "Field md"
-            name:
-                description:
-                - "SAML authentication identity provider name"
-            sso_list:
-                description:
-                - "Field sso_list"
-            entity_id:
-                description:
-                - "Field entity_id"
-            slo_list:
-                description:
-                - "Field slo_list"
-            cert:
-                description:
-                - "Field cert"
-            ars_list:
-                description:
-                - "Field ars_list"
-            aqs_list:
-                description:
-                - "Field aqs_list"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            valid_status:
-                description:
-                - "Valid IdP status or not"
-            md_state:
-                description:
-                - "Metadata State"
-            name:
-                description:
-                - "SAML authentication identity provider name"
-            md_update:
-                description:
-                - "Metadata Update Success Count"
-            acs_fail:
-                description:
-                - "ACS Fail Count"
-            acs_pass:
-                description:
-                - "ACS Pass Count"
-            acs_state:
-                description:
-                - "ACS State"
-            md_fail:
-                description:
-                - "Metadata Update Fail Count"
-            acs_req:
-                description:
-                - "ACS Request Total Count"
-    name:
-        description:
-        - "SAML authentication identity provider name"
-        required: True
-    user_tag:
-        description:
-        - "Customized tag"
+        type: bool
         required: False
     reload_interval:
         description:
         - "Specify URI metadata reload period (Specify URI metadata reload period in
           seconds, default is 28800)"
-        required: False
-    metadata:
-        description:
-        - "URL of SAML identity provider's metadata file"
+        type: int
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            md:
+                description:
+                - "Field md"
+                type: str
+            cert:
+                description:
+                - "Field cert"
+                type: str
+            entity_id:
+                description:
+                - "Field entity_id"
+                type: str
+            sso_list:
+                description:
+                - "Field sso_list"
+                type: list
+            slo_list:
+                description:
+                - "Field slo_list"
+                type: list
+            ars_list:
+                description:
+                - "Field ars_list"
+                type: list
+            aqs_list:
+                description:
+                - "Field aqs_list"
+                type: list
+            name:
+                description:
+                - "SAML authentication identity provider name"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            valid_status:
+                description:
+                - "Valid IdP status or not"
+                type: str
+            md_state:
+                description:
+                - "Metadata State"
+                type: str
+            md_update:
+                description:
+                - "Metadata Update Success Count"
+                type: str
+            md_fail:
+                description:
+                - "Metadata Update Fail Count"
+                type: str
+            acs_state:
+                description:
+                - "ACS State"
+                type: str
+            acs_req:
+                description:
+                - "ACS Request Total Count"
+                type: str
+            acs_pass:
+                description:
+                - "ACS Pass Count"
+                type: str
+            acs_fail:
+                description:
+                - "ACS Fail Count"
+                type: str
+            name:
+                description:
+                - "SAML authentication identity provider name"
+                type: str
 
 '''
 
@@ -195,62 +225,78 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'metadata': {
+            'type': 'str',
+        },
         'reload_metadata': {
             'type': 'bool',
+        },
+        'reload_interval': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         },
         'oper': {
             'type': 'dict',
             'md': {
                 'type': 'str',
             },
-            'name': {
+            'cert': {
                 'type': 'str',
-                'required': True,
-            },
-            'sso_list': {
-                'type': 'list',
-                'sso_binding': {
-                    'type': 'str',
-                },
-                'sso_location': {
-                    'type': 'str',
-                }
             },
             'entity_id': {
                 'type': 'str',
             },
-            'slo_list': {
+            'sso_list': {
                 'type': 'list',
-                'slo_binding': {
+                'sso_location': {
                     'type': 'str',
                 },
-                'slo_location': {
+                'sso_binding': {
                     'type': 'str',
                 }
             },
-            'cert': {
-                'type': 'str',
+            'slo_list': {
+                'type': 'list',
+                'slo_location': {
+                    'type': 'str',
+                },
+                'slo_binding': {
+                    'type': 'str',
+                }
             },
             'ars_list': {
                 'type': 'list',
-                'ars_binding': {
-                    'type': 'str',
+                'ars_index': {
+                    'type': 'int',
                 },
                 'ars_location': {
                     'type': 'str',
                 },
-                'ars_index': {
-                    'type': 'int',
+                'ars_binding': {
+                    'type': 'str',
                 }
             },
             'aqs_list': {
                 'type': 'list',
-                'aqs_binding': {
-                    'type': 'str',
-                },
                 'aqs_location': {
                     'type': 'str',
+                },
+                'aqs_binding': {
+                    'type': 'str',
                 }
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
         },
         'stats': {
@@ -261,44 +307,28 @@ def get_argspec():
             'md_state': {
                 'type': 'str',
             },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
             'md_update': {
-                'type': 'str',
-            },
-            'acs_fail': {
-                'type': 'str',
-            },
-            'acs_pass': {
-                'type': 'str',
-            },
-            'acs_state': {
                 'type': 'str',
             },
             'md_fail': {
                 'type': 'str',
             },
+            'acs_state': {
+                'type': 'str',
+            },
             'acs_req': {
                 'type': 'str',
+            },
+            'acs_pass': {
+                'type': 'str',
+            },
+            'acs_fail': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'reload_interval': {
-            'type': 'int',
-        },
-        'metadata': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

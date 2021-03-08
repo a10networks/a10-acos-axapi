@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_template_policy_class_list_lid
 description:
     - Limit ID
-short_description: Configures A10 cgnv6.template.policy.class-list.lid
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,105 +22,133 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     policy_name:
         description:
-        - Key to identify parent object    request_limit:
-        description:
-        - "Request limit (Specify request limit)"
-        required: False
-    conn_limit:
-        description:
-        - "Connection limit"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     lidnum:
         description:
         - "Specify a limit ID"
+        type: int
         required: True
-    log:
+    conn_limit:
         description:
-        - "Log a message"
-        required: False
-    dns64:
-        description:
-        - "Field dns64"
-        required: False
-        suboptions:
-            prefix:
-                description:
-                - "IPv6 prefix"
-            exclusive_answer:
-                description:
-                - "Exclusive Answer in DNS Response"
-            disable:
-                description:
-                - "Disable"
-    interval:
-        description:
-        - "Specify log interval in minutes, by default system will log every over limit
-          instance"
-        required: False
-    request_rate_limit:
-        description:
-        - "Request rate limit (Specify request rate limit)"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    conn_per:
-        description:
-        - "Per (Specify interval in number of 100ms)"
-        required: False
-    request_per:
-        description:
-        - "Per (Specify interval in number of 100ms)"
+        - "Connection limit"
+        type: int
         required: False
     conn_rate_limit:
         description:
         - "Specify connection rate limit"
+        type: int
         required: False
-    lockout:
+    conn_per:
         description:
-        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+        - "Per (Specify interval in number of 100ms)"
+        type: int
+        required: False
+    request_limit:
+        description:
+        - "Request limit (Specify request limit)"
+        type: int
+        required: False
+    request_rate_limit:
+        description:
+        - "Request rate limit (Specify request rate limit)"
+        type: int
+        required: False
+    request_per:
+        description:
+        - "Per (Specify interval in number of 100ms)"
+        type: int
+        required: False
+    over_limit_action:
+        description:
+        - "Set action when exceeds limit"
+        type: bool
         required: False
     action_value:
         description:
         - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the
           connection when it exceeds limit;"
+        type: str
         required: False
-    over_limit_action:
+    lockout:
         description:
-        - "Set action when exceeds limit"
+        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+        type: int
         required: False
+    log:
+        description:
+        - "Log a message"
+        type: bool
+        required: False
+    interval:
+        description:
+        - "Specify log interval in minutes, by default system will log every over limit
+          instance"
+        type: int
+        required: False
+    dns64:
+        description:
+        - "Field dns64"
+        type: dict
+        required: False
+        suboptions:
+            disable:
+                description:
+                - "Disable"
+                type: bool
+            exclusive_answer:
+                description:
+                - "Exclusive Answer in DNS Response"
+                type: bool
+            prefix:
+                description:
+                - "IPv6 prefix"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -190,60 +216,60 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'request_limit': {
-            'type': 'int',
-        },
-        'conn_limit': {
-            'type': 'int',
-        },
         'lidnum': {
             'type': 'int',
             'required': True,
         },
-        'log': {
-            'type': 'bool',
-        },
-        'dns64': {
-            'type': 'dict',
-            'prefix': {
-                'type': 'str',
-            },
-            'exclusive_answer': {
-                'type': 'bool',
-            },
-            'disable': {
-                'type': 'bool',
-            }
-        },
-        'interval': {
-            'type': 'int',
-        },
-        'request_rate_limit': {
-            'type': 'int',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'conn_per': {
-            'type': 'int',
-        },
-        'request_per': {
+        'conn_limit': {
             'type': 'int',
         },
         'conn_rate_limit': {
             'type': 'int',
         },
-        'lockout': {
+        'conn_per': {
             'type': 'int',
+        },
+        'request_limit': {
+            'type': 'int',
+        },
+        'request_rate_limit': {
+            'type': 'int',
+        },
+        'request_per': {
+            'type': 'int',
+        },
+        'over_limit_action': {
+            'type': 'bool',
         },
         'action_value': {
             'type': 'str',
             'choices': ['forward', 'reset']
         },
-        'over_limit_action': {
+        'lockout': {
+            'type': 'int',
+        },
+        'log': {
             'type': 'bool',
         },
+        'interval': {
+            'type': 'int',
+        },
+        'dns64': {
+            'type': 'dict',
+            'disable': {
+                'type': 'bool',
+            },
+            'exclusive_answer': {
+                'type': 'bool',
+            },
+            'prefix': {
+                'type': 'str',
+            }
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

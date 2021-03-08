@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_partition
 description:
     - Create/unload a Network partition
-short_description: Configures A10 partition
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,94 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            partition_name:
-                description:
-                - "Object partition name"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
+        type: str
         required: False
     partition_name:
         description:
         - "Object partition name"
+        type: str
         required: True
+    id:
+        description:
+        - "Specify unique Partition id"
+        type: int
+        required: False
+    application_type:
+        description:
+        - "'adc'= Application type ADC; 'cgnv6'= Application type CGNv6;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     shared_vlan:
         description:
         - "Field shared_vlan"
+        type: dict
         required: False
         suboptions:
-            mgmt_floating_ip_address:
-                description:
-                - "IPv4 Address for Shared VLAN Mgmt IP Address"
-            allowable_ip_range:
-                description:
-                - "Field allowable_ip_range"
-            vrid:
-                description:
-                - "Specify VRRP-A vrid"
-            allowable_ipv6_range:
-                description:
-                - "Field allowable_ipv6_range"
             vlan:
                 description:
                 - "Field vlan"
+                type: int
+            allowable_ip_range:
+                description:
+                - "Field allowable_ip_range"
+                type: list
+            allowable_ipv6_range:
+                description:
+                - "Field allowable_ipv6_range"
+                type: list
+            mgmt_floating_ip_address:
+                description:
+                - "IPv4 Address for Shared VLAN Mgmt IP Address"
+                type: str
+            vrid:
+                description:
+                - "Specify VRRP-A vrid"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
     template:
         description:
         - "Field template"
+        type: dict
         required: False
         suboptions:
             resource_accounting:
                 description:
                 - "Attach a resource accounting template (Name of the template)"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
-    application_type:
+                type: str
+    stats:
         description:
-        - "'adc'= Application type ADC; 'cgnv6'= Application type CGNv6;"
+        - "Field stats"
+        type: dict
         required: False
-    id:
-        description:
-        - "Specify unique Partition id"
-        required: False
+        suboptions:
+            partition_name:
+                description:
+                - "Object partition name"
+                type: str
 
 '''
 
@@ -171,12 +193,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'stats': {
-            'type': 'dict',
-            'partition_name': {
-                'type': 'str',
-                'required': True,
-            }
+        'partition_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'id': {
+            'type': 'int',
+        },
+        'application_type': {
+            'type': 'str',
+            'choices': ['adc', 'cgnv6']
         },
         'uuid': {
             'type': 'str',
@@ -184,25 +210,21 @@ def get_argspec():
         'user_tag': {
             'type': 'str',
         },
-        'partition_name': {
-            'type': 'str',
-            'required': True,
-        },
         'shared_vlan': {
             'type': 'dict',
-            'mgmt_floating_ip_address': {
-                'type': 'str',
+            'vlan': {
+                'type': 'int',
             },
             'allowable_ip_range': {
                 'type': 'list',
             },
-            'vrid': {
-                'type': 'int',
-            },
             'allowable_ipv6_range': {
                 'type': 'list',
             },
-            'vlan': {
+            'mgmt_floating_ip_address': {
+                'type': 'str',
+            },
+            'vrid': {
                 'type': 'int',
             },
             'uuid': {
@@ -218,12 +240,12 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'application_type': {
-            'type': 'str',
-            'choices': ['adc', 'cgnv6']
-        },
-        'id': {
-            'type': 'int',
+        'stats': {
+            'type': 'dict',
+            'partition_name': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     return rv

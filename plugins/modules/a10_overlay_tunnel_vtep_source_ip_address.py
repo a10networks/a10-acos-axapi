@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_source_ip_address
 description:
     - IP Address of the local tunnel end point
-short_description: Configures A10 overlay.tunnel.vtep.source-ip-address
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,64 +22,82 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     vtep_id:
         description:
-        - Key to identify parent object    ip_address:
+        - Key to identify parent object
+        type: str
+        required: True
+    ip_address:
         description:
         - "Source Tunnel End Point IPv4 address"
+        type: str
         required: True
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     vni_list:
         description:
         - "Field vni_list"
+        type: list
         required: False
         suboptions:
-            lif:
+            segment:
                 description:
-                - "Logical interface binding the Provider Partition to the User Partition (logical
-          interface number)"
+                - "Id of the segment that is being extended"
+                type: int
             partition:
                 description:
                 - "Name of the Partition with the L2 segment being extended (Name of the User
           Partition with the L2 segment being extended)"
-            segment:
-                description:
-                - "Id of the segment that is being extended"
+                type: str
             gateway:
                 description:
                 - "This is a Gateway segment id"
+                type: bool
+            lif:
+                description:
+                - "Logical interface binding the Provider Partition to the User Partition (logical
+          interface number)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
 
 '''
 
@@ -145,18 +161,18 @@ def get_argspec():
         },
         'vni_list': {
             'type': 'list',
-            'lif': {
-                'type': 'int',
-            },
-            'partition': {
-                'type': 'str',
-            },
             'segment': {
                 'type': 'int',
                 'required': True,
             },
+            'partition': {
+                'type': 'str',
+            },
             'gateway': {
                 'type': 'bool',
+            },
+            'lif': {
+                'type': 'int',
             },
             'uuid': {
                 'type': 'str',

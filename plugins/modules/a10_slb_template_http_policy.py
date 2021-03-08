@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_http_policy
 description:
     - http-policy template
-short_description: Configures A10 slb.template.http-policy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,114 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    cookie_name:
-        description:
-        - "name of cookie to match (Cookie Name)"
+        type: str
         required: False
     name:
         description:
         - "http-policy template name"
+        type: str
         required: True
+    cookie_name:
+        description:
+        - "name of cookie to match (Cookie Name)"
+        type: str
+        required: False
     http_policy_match:
         description:
         - "Field http_policy_match"
+        type: list
         required: False
         suboptions:
-            match_string:
-                description:
-                - "URL String"
-            template_name:
-                description:
-                - "WAF template to be used (Template Name)"
-            service_group:
-                description:
-                - "Service Group to be used (Service Group Name)"
-            template:
-                description:
-                - "'waf'= waf;  (WAF template to be used)"
             ntype:
                 description:
                 - "'cookie'= cookie value match; 'host'= hostname match; 'url'= URL match;"
+                type: str
             match_type:
                 description:
                 - "'contains'= Select service group if URL string contains another string; 'ends-
           with'= Select service group if URL string ends with another string; 'equals'=
           Select service group if URL string equals another string; 'starts-with'= Select
           service group if URL string starts with another string;"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+                type: str
+            match_string:
+                description:
+                - "URL String"
+                type: str
+            service_group:
+                description:
+                - "Service Group to be used (Service Group Name)"
+                type: str
+            template:
+                description:
+                - "'waf'= waf;  (WAF template to be used)"
+                type: str
+            template_name:
+                description:
+                - "WAF template to be used (Template Name)"
+                type: str
     geo_location_match:
         description:
         - "Field geo_location_match"
+        type: list
         required: False
         suboptions:
             geo_location:
                 description:
                 - "Geolocation name"
+                type: str
             geo_location_service_group:
                 description:
                 - "Service Group to be used (Service Group Name)"
+                type: str
             geo_location_template:
                 description:
                 - "'waf'= waf;  (WAF template to be used)"
+                type: str
             geo_location_template_name:
                 description:
                 - "WAF template to be used (Template Name)"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
 
 '''
 
@@ -166,19 +187,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'cookie_name': {
-            'type': 'str',
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
+        'cookie_name': {
+            'type': 'str',
+        },
         'http_policy_match': {
             'type': 'list',
-            'match_string': {
+            'ntype': {
                 'type': 'str',
+                'choices': ['cookie', 'host', 'url']
             },
-            'template_name': {
+            'match_type': {
+                'type': 'str',
+                'choices': ['contains', 'ends-with', 'equals', 'starts-with']
+            },
+            'match_string': {
                 'type': 'str',
             },
             'service_group': {
@@ -188,20 +214,9 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['waf']
             },
-            'ntype': {
+            'template_name': {
                 'type': 'str',
-                'choices': ['cookie', 'host', 'url']
-            },
-            'match_type': {
-                'type': 'str',
-                'choices': ['contains', 'ends-with', 'equals', 'starts-with']
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
         },
         'geo_location_match': {
             'type': 'list',
@@ -218,6 +233,12 @@ def get_argspec():
             'geo_location_template_name': {
                 'type': 'str',
             }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
         }
     })
     return rv

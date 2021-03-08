@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_counter_lib_accounting
 description:
     - System Counter library accounting
-short_description: Configures A10 system.counter-lib-accounting
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,92 +22,118 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            total_memblocks_free_avro:
-                description:
-                - "Total memory blocks freed by avro lib"
             total_ctr_alloc:
                 description:
                 - "Total counters allocated"
-            total_blocks_in_rml_hash:
-                description:
-                - "Total blocks in rml in hash table"
+                type: str
             total_ctr_in_rml:
                 description:
                 - "Total counters put in rml queue"
-            total_oper_alloc:
-                description:
-                - "Total oper blocks allocated"
-            total_nodes_free:
-                description:
-                - "Total nodes freed(sflow/history/telemetry/cpu-compute)"
-            total_memblocks_alloc_avro:
-                description:
-                - "Total memory blocks allocated by avro lib"
-            total_blocks_in_hash:
-                description:
-                - "Total blocks in hash table"
-            total_nodes_unlink_failed:
-                description:
-                - "Total nodes unlink failed"
-            total_ctr_in_system:
-                description:
-                - "Total counters currently allocated in system"
-            total_nodes_free_failed:
-                description:
-                - "Total nodes free failed"
-            total_nodes_alloc:
-                description:
-                - "Total nodes allocated(sflow/history/telemetry/cpu-compute)"
-            total_oper_free:
-                description:
-                - "Total oper blocks freed"
-            total_nodes_in_rml:
-                description:
-                - "Total nodes put in rml queue"
-            total_memblocks_realloc_avro:
-                description:
-                - "Total memory blocks realloc by avro lib"
-            total_nodes_in_system:
-                description:
-                - "Total nodes currently allocated in system"
+                type: str
             total_ctr_freed:
                 description:
                 - "Total counters actually freed"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            total_ctr_in_system:
+                description:
+                - "Total counters currently allocated in system"
+                type: str
+            total_oper_alloc:
+                description:
+                - "Total oper blocks allocated"
+                type: str
+            total_oper_free:
+                description:
+                - "Total oper blocks freed"
+                type: str
+            total_blocks_in_hash:
+                description:
+                - "Total blocks in hash table"
+                type: str
+            total_blocks_in_rml_hash:
+                description:
+                - "Total blocks in rml in hash table"
+                type: str
+            total_nodes_alloc:
+                description:
+                - "Total nodes allocated(sflow/history/telemetry/cpu-compute)"
+                type: str
+            total_nodes_in_rml:
+                description:
+                - "Total nodes put in rml queue"
+                type: str
+            total_nodes_free:
+                description:
+                - "Total nodes freed(sflow/history/telemetry/cpu-compute)"
+                type: str
+            total_nodes_free_failed:
+                description:
+                - "Total nodes free failed"
+                type: str
+            total_nodes_unlink_failed:
+                description:
+                - "Total nodes unlink failed"
+                type: str
+            total_nodes_in_system:
+                description:
+                - "Total nodes currently allocated in system"
+                type: str
+            total_memblocks_alloc_avro:
+                description:
+                - "Total memory blocks allocated by avro lib"
+                type: str
+            total_memblocks_free_avro:
+                description:
+                - "Total memory blocks freed by avro lib"
+                type: str
+            total_memblocks_realloc_avro:
+                description:
+                - "Total memory blocks realloc by avro lib"
+                type: str
 
 '''
 
@@ -163,62 +187,62 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'stats': {
             'type': 'dict',
-            'total_memblocks_free_avro': {
-                'type': 'str',
-            },
             'total_ctr_alloc': {
-                'type': 'str',
-            },
-            'total_blocks_in_rml_hash': {
                 'type': 'str',
             },
             'total_ctr_in_rml': {
                 'type': 'str',
             },
-            'total_oper_alloc': {
-                'type': 'str',
-            },
-            'total_nodes_free': {
-                'type': 'str',
-            },
-            'total_memblocks_alloc_avro': {
-                'type': 'str',
-            },
-            'total_blocks_in_hash': {
-                'type': 'str',
-            },
-            'total_nodes_unlink_failed': {
+            'total_ctr_freed': {
                 'type': 'str',
             },
             'total_ctr_in_system': {
                 'type': 'str',
             },
-            'total_nodes_free_failed': {
-                'type': 'str',
-            },
-            'total_nodes_alloc': {
+            'total_oper_alloc': {
                 'type': 'str',
             },
             'total_oper_free': {
                 'type': 'str',
             },
+            'total_blocks_in_hash': {
+                'type': 'str',
+            },
+            'total_blocks_in_rml_hash': {
+                'type': 'str',
+            },
+            'total_nodes_alloc': {
+                'type': 'str',
+            },
             'total_nodes_in_rml': {
                 'type': 'str',
             },
-            'total_memblocks_realloc_avro': {
+            'total_nodes_free': {
+                'type': 'str',
+            },
+            'total_nodes_free_failed': {
+                'type': 'str',
+            },
+            'total_nodes_unlink_failed': {
                 'type': 'str',
             },
             'total_nodes_in_system': {
                 'type': 'str',
             },
-            'total_ctr_freed': {
+            'total_memblocks_alloc_avro': {
+                'type': 'str',
+            },
+            'total_memblocks_free_avro': {
+                'type': 'str',
+            },
+            'total_memblocks_realloc_avro': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

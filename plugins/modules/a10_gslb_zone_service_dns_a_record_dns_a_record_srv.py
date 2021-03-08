@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_a_record_dns_a_record_srv
 description:
     - Specify DNS Address Record
-short_description: Configures A10 gslb.zone.service.dns.a.record.dns-a-record-srv
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,97 +22,128 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    service-name:
+    service_name:
         description:
-        - Key to identify parent object    service_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    service_port:
         description:
-        - Key to identify parent object    zone_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    zone_name:
         description:
-        - Key to identify parent object    as_backup:
+        - Key to identify parent object
+        type: str
+        required: True
+    svrname:
+        description:
+        - "Specify name"
+        type: str
+        required: True
+    no_resp:
+        description:
+        - "Don't use this Service-IP as DNS response"
+        type: bool
+        required: False
+    as_backup:
         description:
         - "As backup when fail"
-        required: False
-    as_replace:
-        description:
-        - "Return this Service-IP when enable ip-replace"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            hits:
-                description:
-                - "Number of times the record has been used"
-            svrname:
-                description:
-                - "Specify name"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: bool
         required: False
     weight:
         description:
         - "Specify weight for Service-IP (Weight value)"
+        type: int
         required: False
-    svrname:
+    ttl:
         description:
-        - "Specify name"
-        required: True
+        - "Specify TTL for Service-IP"
+        type: int
+        required: False
+    as_replace:
+        description:
+        - "Return this Service-IP when enable ip-replace"
+        type: bool
+        required: False
+    disable:
+        description:
+        - "Disable this Service-IP"
+        type: bool
+        required: False
+    static:
+        description:
+        - "Return this Service-IP in DNS server mode"
+        type: bool
+        required: False
+    admin_ip:
+        description:
+        - "Specify admin priority of Service-IP (Specify the priority)"
+        type: int
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Number of times the record has been used;"
-    disable:
+                type: str
+    stats:
         description:
-        - "Disable this Service-IP"
+        - "Field stats"
+        type: dict
         required: False
-    static:
-        description:
-        - "Return this Service-IP in DNS server mode"
-        required: False
-    ttl:
-        description:
-        - "Specify TTL for Service-IP"
-        required: False
-    admin_ip:
-        description:
-        - "Specify admin priority of Service-IP (Specify the priority)"
-        required: False
-    no_resp:
-        description:
-        - "Don't use this Service-IP as DNS response"
-        required: False
+        suboptions:
+            hits:
+                description:
+                - "Number of times the record has been used"
+                type: str
+            svrname:
+                description:
+                - "Specify name"
+                type: str
 
 '''
 
@@ -178,11 +207,43 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'svrname': {
+            'type': 'str',
+            'required': True,
+        },
+        'no_resp': {
+            'type': 'bool',
+        },
         'as_backup': {
             'type': 'bool',
         },
+        'weight': {
+            'type': 'int',
+        },
+        'ttl': {
+            'type': 'int',
+        },
         'as_replace': {
             'type': 'bool',
+        },
+        'disable': {
+            'type': 'bool',
+        },
+        'static': {
+            'type': 'bool',
+        },
+        'admin_ip': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits']
+            }
         },
         'stats': {
             'type': 'dict',
@@ -193,44 +254,12 @@ def get_argspec():
                 'type': 'str',
                 'required': True,
             }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'weight': {
-            'type': 'int',
-        },
-        'svrname': {
-            'type': 'str',
-            'required': True,
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'hits']
-            }
-        },
-        'disable': {
-            'type': 'bool',
-        },
-        'static': {
-            'type': 'bool',
-        },
-        'ttl': {
-            'type': 'int',
-        },
-        'admin_ip': {
-            'type': 'int',
-        },
-        'no_resp': {
-            'type': 'bool',
         }
     })
     # Parent keys
     rv.update(
         dict(
-            service - name=dict(type='str', required=True),
+            service_name=dict(type='str', required=True),
             service_port=dict(type='str', required=True),
             zone_name=dict(type='str', required=True),
         ))
@@ -244,7 +273,7 @@ def existing_url(module):
 
     f_dict = {}
     f_dict["svrname"] = module.params["svrname"]
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 
@@ -319,7 +348,7 @@ def new_url(module):
 
     f_dict = {}
     f_dict["svrname"] = ""
-    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_name"] = module.params["service_name"]
     f_dict["service_port"] = module.params["service_port"]
     f_dict["zone_name"] = module.params["zone_name"]
 

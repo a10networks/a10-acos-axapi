@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ssl_forward_proxy_cert
 description:
     - Show hashed certificates
-short_description: Configures A10 slb.ssl-forward-proxy-cert
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            server_name:
-                description:
-                - "Name of the server"
-            hashed_certificate:
-                description:
-                - "Field hashed_certificate"
             vserver:
                 description:
                 - "virtual server name"
-            server_port:
-                description:
-                - "Port of the server"
-            server_ip:
-                description:
-                - "IPv4 or IPv6 address of the server"
+                type: str
             port:
                 description:
                 - "Virtual Port"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            server_ip:
+                description:
+                - "IPv4 or IPv6 address of the server"
+                type: str
+            server_port:
+                description:
+                - "Port of the server"
+                type: int
+            server_name:
+                description:
+                - "Name of the server"
+                type: str
+            hashed_certificate:
+                description:
+                - "Field hashed_certificate"
+                type: list
 
 '''
 
@@ -130,31 +143,40 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
+            'vserver': {
+                'type': 'str',
+            },
+            'port': {
+                'type': 'int',
+            },
+            'server_ip': {
+                'type': 'str',
+            },
+            'server_port': {
+                'type': 'int',
+            },
             'server_name': {
                 'type': 'str',
             },
             'hashed_certificate': {
                 'type': 'list',
+                'server_ip': {
+                    'type': 'str',
+                },
+                'server_ipv6': {
+                    'type': 'str',
+                },
+                'real_port': {
+                    'type': 'int',
+                },
                 'protocol': {
                     'type': 'str',
                     'choices': ['tcp', 'udp']
-                },
-                'idle_time': {
-                    'type': 'int',
-                },
-                'expire_time': {
-                    'type': 'str',
-                },
-                'serial': {
-                    'type': 'str',
-                },
-                'subject': {
-                    'type': 'str',
-                },
-                'locality': {
-                    'type': 'str',
                 },
                 'server_name': {
                     'type': 'str',
@@ -162,67 +184,58 @@ def get_argspec():
                 'state': {
                     'type': 'str',
                 },
-                'version': {
+                'hit_times': {
                     'type': 'int',
                 },
-                'issuer': {
-                    'type': 'str',
+                'idle_time': {
+                    'type': 'int',
                 },
                 'timeout_after': {
                     'type': 'int',
                 },
-                'division': {
-                    'type': 'str',
-                },
-                'start_time': {
-                    'type': 'str',
-                },
-                'server_ipv6': {
-                    'type': 'str',
-                },
                 'expires_after': {
                     'type': 'int',
                 },
-                'country': {
-                    'type': 'str',
-                },
-                'real_port': {
+                'version': {
                     'type': 'int',
                 },
-                'state_province': {
-                    'type': 'str',
-                },
-                'email': {
+                'subject': {
                     'type': 'str',
                 },
                 'common_name': {
                     'type': 'str',
                 },
-                'server_ip': {
+                'division': {
+                    'type': 'str',
+                },
+                'locality': {
+                    'type': 'str',
+                },
+                'state_province': {
+                    'type': 'str',
+                },
+                'country': {
                     'type': 'str',
                 },
                 'subject_alt_name': {
                     'type': 'str',
                 },
-                'hit_times': {
-                    'type': 'int',
+                'email': {
+                    'type': 'str',
+                },
+                'start_time': {
+                    'type': 'str',
+                },
+                'expire_time': {
+                    'type': 'str',
+                },
+                'issuer': {
+                    'type': 'str',
+                },
+                'serial': {
+                    'type': 'str',
                 }
-            },
-            'vserver': {
-                'type': 'str',
-            },
-            'server_port': {
-                'type': 'int',
-            },
-            'server_ip': {
-                'type': 'str',
-            },
-            'port': {
-                'type': 'int',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

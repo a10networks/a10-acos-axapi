@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vpn_error
 description:
     - Error counters
-short_description: Configures A10 vpn.error
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,155 +22,202 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             bad_opcode:
                 description:
                 - "Field bad_opcode"
+                type: str
             bad_sg_write_len:
                 description:
                 - "Field bad_sg_write_len"
-            ipv6_rh_length_error:
-                description:
-                - "Field ipv6_rh_length_error"
-            ah_not_supported_with_gcm_gmac_sha2:
-                description:
-                - "Field ah_not_supported_with_gcm_gmac_sha2"
-            bad_auth_type:
-                description:
-                - "Field bad_auth_type"
-            bad_gre_protocol:
-                description:
-                - "Field bad_gre_protocol"
-            ipv6_outbound_rh_copy_addr_error:
-                description:
-                - "Field ipv6_outbound_rh_copy_addr_error"
-            bad_ip_payload_type:
-                description:
-                - "Field bad_ip_payload_type"
-            ipv6_extension_headers_too_big:
-                description:
-                - "Field ipv6_extension_headers_too_big"
-            bad_encrypt_type:
-                description:
-                - "Field bad_encrypt_type"
-            bad_checksum:
-                description:
-                - "Field bad_checksum"
-            bad_gre_header:
-                description:
-                - "Field bad_gre_header"
-            bad_ipsec_context:
-                description:
-                - "Field bad_ipsec_context"
-            bad_min_frag_size_auth_sha384_512:
-                description:
-                - "Field bad_min_frag_size_auth_sha384_512"
-            bad_ipsec_padding:
-                description:
-                - "Field bad_ipsec_padding"
-            bad_inline_data:
-                description:
-                - "Field bad_inline_data"
-            dummy_payload:
-                description:
-                - "Field dummy_payload"
-            bad_ip_version:
-                description:
-                - "Field bad_ip_version"
-            bad_encrypt_type_ctr_gcm:
-                description:
-                - "Field bad_encrypt_type_ctr_gcm"
-            bad_fragment_size:
-                description:
-                - "Field bad_fragment_size"
-            bad_esp_next_header:
-                description:
-                - "Field bad_esp_next_header"
-            ipv6_hop_by_hop_error:
-                description:
-                - "Field ipv6_hop_by_hop_error"
-            error_ipv6_decrypt_rh_segs_left_error:
-                description:
-                - "Field error_ipv6_decrypt_rh_segs_left_error"
-            bad_ipsec_spi:
-                description:
-                - "Field bad_ipsec_spi"
-            bad_ipsec_context_flag_mismatch:
-                description:
-                - "Field bad_ipsec_context_flag_mismatch"
-            error_IPv6_extension_header_bad:
-                description:
-                - "Field error_IPv6_extension_header_bad"
-            bad_ipsec_protocol:
-                description:
-                - "Field bad_ipsec_protocol"
-            bad_frag_size_configuration:
-                description:
-                - "Field bad_frag_size_configuration"
-            bad_ipsec_auth:
-                description:
-                - "Field bad_ipsec_auth"
-            bad_ipcomp_configuration:
-                description:
-                - "Field bad_ipcomp_configuration"
+                type: str
             bad_len:
                 description:
                 - "Field bad_len"
+                type: str
+            bad_ipsec_protocol:
+                description:
+                - "Field bad_ipsec_protocol"
+                type: str
+            bad_ipsec_auth:
+                description:
+                - "Field bad_ipsec_auth"
+                type: str
+            bad_ipsec_padding:
+                description:
+                - "Field bad_ipsec_padding"
+                type: str
+            bad_ip_version:
+                description:
+                - "Field bad_ip_version"
+                type: str
+            bad_auth_type:
+                description:
+                - "Field bad_auth_type"
+                type: str
+            bad_encrypt_type:
+                description:
+                - "Field bad_encrypt_type"
+                type: str
+            bad_ipsec_spi:
+                description:
+                - "Field bad_ipsec_spi"
+                type: str
+            bad_checksum:
+                description:
+                - "Field bad_checksum"
+                type: str
+            bad_ipsec_context:
+                description:
+                - "Field bad_ipsec_context"
+                type: str
             bad_ipsec_context_direction:
                 description:
                 - "Field bad_ipsec_context_direction"
-            bad_ipsec_unknown:
+                type: str
+            bad_ipsec_context_flag_mismatch:
                 description:
-                - "Field bad_ipsec_unknown"
+                - "Field bad_ipsec_context_flag_mismatch"
+                type: str
             ipcomp_payload:
                 description:
                 - "Field ipcomp_payload"
-            bad_srtp_auth_tag:
-                description:
-                - "Field bad_srtp_auth_tag"
-            tfc_padding_with_prefrag_not_supported:
-                description:
-                - "Field tfc_padding_with_prefrag_not_supported"
-            dsiv_incorrect_param:
-                description:
-                - "Field dsiv_incorrect_param"
+                type: str
             bad_selector_match:
                 description:
                 - "Field bad_selector_match"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            bad_fragment_size:
+                description:
+                - "Field bad_fragment_size"
+                type: str
+            bad_inline_data:
+                description:
+                - "Field bad_inline_data"
+                type: str
+            bad_frag_size_configuration:
+                description:
+                - "Field bad_frag_size_configuration"
+                type: str
+            dummy_payload:
+                description:
+                - "Field dummy_payload"
+                type: str
+            bad_ip_payload_type:
+                description:
+                - "Field bad_ip_payload_type"
+                type: str
+            bad_min_frag_size_auth_sha384_512:
+                description:
+                - "Field bad_min_frag_size_auth_sha384_512"
+                type: str
+            bad_esp_next_header:
+                description:
+                - "Field bad_esp_next_header"
+                type: str
+            bad_gre_header:
+                description:
+                - "Field bad_gre_header"
+                type: str
+            bad_gre_protocol:
+                description:
+                - "Field bad_gre_protocol"
+                type: str
+            ipv6_extension_headers_too_big:
+                description:
+                - "Field ipv6_extension_headers_too_big"
+                type: str
+            ipv6_hop_by_hop_error:
+                description:
+                - "Field ipv6_hop_by_hop_error"
+                type: str
+            error_ipv6_decrypt_rh_segs_left_error:
+                description:
+                - "Field error_ipv6_decrypt_rh_segs_left_error"
+                type: str
+            ipv6_rh_length_error:
+                description:
+                - "Field ipv6_rh_length_error"
+                type: str
+            ipv6_outbound_rh_copy_addr_error:
+                description:
+                - "Field ipv6_outbound_rh_copy_addr_error"
+                type: str
+            error_IPv6_extension_header_bad:
+                description:
+                - "Field error_IPv6_extension_header_bad"
+                type: str
+            bad_encrypt_type_ctr_gcm:
+                description:
+                - "Field bad_encrypt_type_ctr_gcm"
+                type: str
+            ah_not_supported_with_gcm_gmac_sha2:
+                description:
+                - "Field ah_not_supported_with_gcm_gmac_sha2"
+                type: str
+            tfc_padding_with_prefrag_not_supported:
+                description:
+                - "Field tfc_padding_with_prefrag_not_supported"
+                type: str
+            bad_srtp_auth_tag:
+                description:
+                - "Field bad_srtp_auth_tag"
+                type: str
+            bad_ipcomp_configuration:
+                description:
+                - "Field bad_ipcomp_configuration"
+                type: str
+            dsiv_incorrect_param:
+                description:
+                - "Field dsiv_incorrect_param"
+                type: str
+            bad_ipsec_unknown:
+                description:
+                - "Field bad_ipsec_unknown"
+                type: str
 
 '''
 
@@ -226,6 +271,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'stats': {
             'type': 'dict',
             'bad_opcode': {
@@ -234,61 +282,76 @@ def get_argspec():
             'bad_sg_write_len': {
                 'type': 'str',
             },
-            'ipv6_rh_length_error': {
+            'bad_len': {
                 'type': 'str',
             },
-            'ah_not_supported_with_gcm_gmac_sha2': {
+            'bad_ipsec_protocol': {
                 'type': 'str',
             },
-            'bad_auth_type': {
-                'type': 'str',
-            },
-            'bad_gre_protocol': {
-                'type': 'str',
-            },
-            'ipv6_outbound_rh_copy_addr_error': {
-                'type': 'str',
-            },
-            'bad_ip_payload_type': {
-                'type': 'str',
-            },
-            'ipv6_extension_headers_too_big': {
-                'type': 'str',
-            },
-            'bad_encrypt_type': {
-                'type': 'str',
-            },
-            'bad_checksum': {
-                'type': 'str',
-            },
-            'bad_gre_header': {
-                'type': 'str',
-            },
-            'bad_ipsec_context': {
-                'type': 'str',
-            },
-            'bad_min_frag_size_auth_sha384_512': {
+            'bad_ipsec_auth': {
                 'type': 'str',
             },
             'bad_ipsec_padding': {
                 'type': 'str',
             },
-            'bad_inline_data': {
-                'type': 'str',
-            },
-            'dummy_payload': {
-                'type': 'str',
-            },
             'bad_ip_version': {
                 'type': 'str',
             },
-            'bad_encrypt_type_ctr_gcm': {
+            'bad_auth_type': {
+                'type': 'str',
+            },
+            'bad_encrypt_type': {
+                'type': 'str',
+            },
+            'bad_ipsec_spi': {
+                'type': 'str',
+            },
+            'bad_checksum': {
+                'type': 'str',
+            },
+            'bad_ipsec_context': {
+                'type': 'str',
+            },
+            'bad_ipsec_context_direction': {
+                'type': 'str',
+            },
+            'bad_ipsec_context_flag_mismatch': {
+                'type': 'str',
+            },
+            'ipcomp_payload': {
+                'type': 'str',
+            },
+            'bad_selector_match': {
                 'type': 'str',
             },
             'bad_fragment_size': {
                 'type': 'str',
             },
+            'bad_inline_data': {
+                'type': 'str',
+            },
+            'bad_frag_size_configuration': {
+                'type': 'str',
+            },
+            'dummy_payload': {
+                'type': 'str',
+            },
+            'bad_ip_payload_type': {
+                'type': 'str',
+            },
+            'bad_min_frag_size_auth_sha384_512': {
+                'type': 'str',
+            },
             'bad_esp_next_header': {
+                'type': 'str',
+            },
+            'bad_gre_header': {
+                'type': 'str',
+            },
+            'bad_gre_protocol': {
+                'type': 'str',
+            },
+            'ipv6_extension_headers_too_big': {
                 'type': 'str',
             },
             'ipv6_hop_by_hop_error': {
@@ -297,54 +360,36 @@ def get_argspec():
             'error_ipv6_decrypt_rh_segs_left_error': {
                 'type': 'str',
             },
-            'bad_ipsec_spi': {
+            'ipv6_rh_length_error': {
                 'type': 'str',
             },
-            'bad_ipsec_context_flag_mismatch': {
+            'ipv6_outbound_rh_copy_addr_error': {
                 'type': 'str',
             },
             'error_IPv6_extension_header_bad': {
                 'type': 'str',
             },
-            'bad_ipsec_protocol': {
+            'bad_encrypt_type_ctr_gcm': {
                 'type': 'str',
             },
-            'bad_frag_size_configuration': {
-                'type': 'str',
-            },
-            'bad_ipsec_auth': {
-                'type': 'str',
-            },
-            'bad_ipcomp_configuration': {
-                'type': 'str',
-            },
-            'bad_len': {
-                'type': 'str',
-            },
-            'bad_ipsec_context_direction': {
-                'type': 'str',
-            },
-            'bad_ipsec_unknown': {
-                'type': 'str',
-            },
-            'ipcomp_payload': {
-                'type': 'str',
-            },
-            'bad_srtp_auth_tag': {
+            'ah_not_supported_with_gcm_gmac_sha2': {
                 'type': 'str',
             },
             'tfc_padding_with_prefrag_not_supported': {
                 'type': 'str',
             },
+            'bad_srtp_auth_tag': {
+                'type': 'str',
+            },
+            'bad_ipcomp_configuration': {
+                'type': 'str',
+            },
             'dsiv_incorrect_param': {
                 'type': 'str',
             },
-            'bad_selector_match': {
+            'bad_ipsec_unknown': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

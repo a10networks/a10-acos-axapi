@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_debug_lacp
 description:
     - lacp - LACP commands
-short_description: Configures A10 debug.lacp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,67 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     all:
         description:
         - "all - turn on all debugging"
+        type: bool
         required: False
     cli:
         description:
         - "cli - echo commands to console"
-        required: False
-    detail:
-        description:
-        - "detail - echo timer start/stop to console"
-        required: False
-    timer:
-        description:
-        - "timer - echo timer expiry to console"
-        required: False
-    sync:
-        description:
-        - "sync - echo synchronization to console"
-        required: False
-    packet:
-        description:
-        - "packet - echo packet contents to console"
-        required: False
-    ha:
-        description:
-        - "ha - echo High availability events to console"
+        type: bool
         required: False
     event:
         description:
         - "event - echo events to console"
+        type: bool
+        required: False
+    ha:
+        description:
+        - "ha - echo High availability events to console"
+        type: bool
+        required: False
+    packet:
+        description:
+        - "packet - echo packet contents to console"
+        type: bool
+        required: False
+    sync:
+        description:
+        - "sync - echo synchronization to console"
+        type: bool
+        required: False
+    timer:
+        description:
+        - "timer - echo timer expiry to console"
+        type: bool
+        required: False
+    detail:
+        description:
+        - "detail - echo timer start/stop to console"
+        type: bool
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -152,22 +166,22 @@ def get_argspec():
         'cli': {
             'type': 'bool',
         },
-        'detail': {
-            'type': 'bool',
-        },
-        'timer': {
-            'type': 'bool',
-        },
-        'sync': {
-            'type': 'bool',
-        },
-        'packet': {
+        'event': {
             'type': 'bool',
         },
         'ha': {
             'type': 'bool',
         },
-        'event': {
+        'packet': {
+            'type': 'bool',
+        },
+        'sync': {
+            'type': 'bool',
+        },
+        'timer': {
+            'type': 'bool',
+        },
+        'detail': {
             'type': 'bool',
         },
         'uuid': {

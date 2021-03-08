@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_network_vlan
 description:
     - Configure VLAN
-short_description: Configures A10 network.vlan
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,137 +22,140 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    vlan_num:
         description:
-        - "Field oper"
+        - "VLAN number"
+        type: int
+        required: True
+    shared_vlan:
+        description:
+        - "Configure VLAN as a shared VLAN"
+        type: bool
+        required: False
+    untagged_eth_list:
+        description:
+        - "Field untagged_eth_list"
+        type: list
         required: False
         suboptions:
-            ve_num:
+            untagged_ethernet_start:
                 description:
-                - "Field ve_num"
-            vlan_name:
+                - "Ethernet port (Interface number)"
+                type: str
+            untagged_ethernet_end:
                 description:
-                - "Field vlan_name"
-            un_tagg_logical_ports:
-                description:
-                - "Field un_tagg_logical_ports"
-            tagg_logical_ports:
-                description:
-                - "Field tagg_logical_ports"
-            vlan_num:
-                description:
-                - "VLAN number"
-            tagg_eth_ports:
-                description:
-                - "Field tagg_eth_ports"
-            is_shared_vlan:
-                description:
-                - "Field is_shared_vlan"
-            un_tagg_eth_ports:
-                description:
-                - "Field un_tagg_eth_ports"
-    traffic_distribution_mode:
-        description:
-        - "'sip'= sip; 'dip'= dip; 'primary'= primary; 'blade'= blade; 'l4-src-port'= l4
-          -src-port; 'l4-dst-port'= l4-dst-port;"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            shared_vlan_partition_switched_counter:
-                description:
-                - "SVLAN Partition switched counter"
-            unknown_unicast_count:
-                description:
-                - "Unknown Unicast counter"
-            broadcast_count:
-                description:
-                - "Broadcast counter"
-            mac_movement_count:
-                description:
-                - "Mac Movement counter"
-            vlan_num:
-                description:
-                - "VLAN number"
-            multicast_count:
-                description:
-                - "Multicast counter"
-            ip_multicast_count:
-                description:
-                - "IP Multicast counter"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                - "Ethernet port"
+                type: str
     untagged_trunk_list:
         description:
         - "Field untagged_trunk_list"
+        type: list
         required: False
         suboptions:
             untagged_trunk_start:
                 description:
                 - "Trunk groups"
+                type: int
             untagged_trunk_end:
                 description:
                 - "Trunk Group"
+                type: int
     untagged_lif:
         description:
         - "Logical tunnel interface (Logical tunnel interface number)"
+        type: int
         required: False
-    untagged_eth_list:
+    tagged_eth_list:
         description:
-        - "Field untagged_eth_list"
+        - "Field tagged_eth_list"
+        type: list
         required: False
         suboptions:
-            untagged_ethernet_end:
-                description:
-                - "Ethernet port"
-            untagged_ethernet_start:
+            tagged_ethernet_start:
                 description:
                 - "Ethernet port (Interface number)"
-    user_tag:
+                type: str
+            tagged_ethernet_end:
+                description:
+                - "Ethernet port"
+                type: str
+    tagged_trunk_list:
         description:
-        - "Customized tag"
+        - "Field tagged_trunk_list"
+        type: list
+        required: False
+        suboptions:
+            tagged_trunk_start:
+                description:
+                - "Trunk groups"
+                type: int
+            tagged_trunk_end:
+                description:
+                - "Trunk Group"
+                type: int
+    ve:
+        description:
+        - "ve number"
+        type: int
         required: False
     name:
         description:
         - "VLAN name"
+        type: str
         required: False
-    vlan_num:
+    traffic_distribution_mode:
         description:
-        - "VLAN number"
-        required: True
+        - "'sip'= sip; 'dip'= dip; 'primary'= primary; 'blade'= blade; 'l4-src-port'=
+          l4-src-port; 'l4-dst-port'= l4-dst-port;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -163,36 +164,79 @@ options:
           counter; 'ip_multicast_count'= IP Multicast counter; 'unknown_unicast_count'=
           Unknown Unicast counter; 'mac_movement_count'= Mac Movement counter;
           'shared_vlan_partition_switched_counter'= SVLAN Partition switched counter;"
-    tagged_trunk_list:
+                type: str
+    oper:
         description:
-        - "Field tagged_trunk_list"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            tagged_trunk_start:
+            vlan_name:
                 description:
-                - "Trunk groups"
-            tagged_trunk_end:
+                - "Field vlan_name"
+                type: str
+            ve_num:
                 description:
-                - "Trunk Group"
-    shared_vlan:
+                - "Field ve_num"
+                type: int
+            is_shared_vlan:
+                description:
+                - "Field is_shared_vlan"
+                type: str
+            un_tagg_eth_ports:
+                description:
+                - "Field un_tagg_eth_ports"
+                type: dict
+            tagg_eth_ports:
+                description:
+                - "Field tagg_eth_ports"
+                type: dict
+            un_tagg_logical_ports:
+                description:
+                - "Field un_tagg_logical_ports"
+                type: dict
+            tagg_logical_ports:
+                description:
+                - "Field tagg_logical_ports"
+                type: dict
+            vlan_num:
+                description:
+                - "VLAN number"
+                type: int
+    stats:
         description:
-        - "Configure VLAN as a shared VLAN"
-        required: False
-    tagged_eth_list:
-        description:
-        - "Field tagged_eth_list"
+        - "Field stats"
+        type: dict
         required: False
         suboptions:
-            tagged_ethernet_end:
+            broadcast_count:
                 description:
-                - "Ethernet port"
-            tagged_ethernet_start:
+                - "Broadcast counter"
+                type: str
+            multicast_count:
                 description:
-                - "Ethernet port (Interface number)"
-    ve:
-        description:
-        - "ve number"
-        required: False
+                - "Multicast counter"
+                type: str
+            ip_multicast_count:
+                description:
+                - "IP Multicast counter"
+                type: str
+            unknown_unicast_count:
+                description:
+                - "Unknown Unicast counter"
+                type: str
+            mac_movement_count:
+                description:
+                - "Mac Movement counter"
+                type: str
+            shared_vlan_partition_switched_counter:
+                description:
+                - "SVLAN Partition switched counter"
+                type: str
+            vlan_num:
+                description:
+                - "VLAN number"
+                type: int
 
 '''
 
@@ -259,13 +303,105 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'vlan_num': {
+            'type': 'int',
+            'required': True,
+        },
+        'shared_vlan': {
+            'type': 'bool',
+        },
+        'untagged_eth_list': {
+            'type': 'list',
+            'untagged_ethernet_start': {
+                'type': 'str',
+            },
+            'untagged_ethernet_end': {
+                'type': 'str',
+            }
+        },
+        'untagged_trunk_list': {
+            'type': 'list',
+            'untagged_trunk_start': {
+                'type': 'int',
+            },
+            'untagged_trunk_end': {
+                'type': 'int',
+            }
+        },
+        'untagged_lif': {
+            'type': 'int',
+        },
+        'tagged_eth_list': {
+            'type': 'list',
+            'tagged_ethernet_start': {
+                'type': 'str',
+            },
+            'tagged_ethernet_end': {
+                'type': 'str',
+            }
+        },
+        'tagged_trunk_list': {
+            'type': 'list',
+            'tagged_trunk_start': {
+                'type': 'int',
+            },
+            'tagged_trunk_end': {
+                'type': 'int',
+            }
+        },
+        've': {
+            'type': 'int',
+        },
+        'name': {
+            'type': 'str',
+        },
+        'traffic_distribution_mode': {
+            'type':
+            'str',
+            'choices':
+            ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'broadcast_count', 'multicast_count',
+                    'ip_multicast_count', 'unknown_unicast_count',
+                    'mac_movement_count',
+                    'shared_vlan_partition_switched_counter'
+                ]
+            }
+        },
         'oper': {
             'type': 'dict',
+            'vlan_name': {
+                'type': 'str',
+            },
             've_num': {
                 'type': 'int',
             },
-            'vlan_name': {
+            'is_shared_vlan': {
                 'type': 'str',
+            },
+            'un_tagg_eth_ports': {
+                'type': 'dict',
+                'ports': {
+                    'type': 'int',
+                }
+            },
+            'tagg_eth_ports': {
+                'type': 'dict',
+                'ports': {
+                    'type': 'int',
+                }
             },
             'un_tagg_logical_ports': {
                 'type': 'dict',
@@ -282,124 +418,32 @@ def get_argspec():
             'vlan_num': {
                 'type': 'int',
                 'required': True,
-            },
-            'tagg_eth_ports': {
-                'type': 'dict',
-                'ports': {
-                    'type': 'int',
-                }
-            },
-            'is_shared_vlan': {
-                'type': 'str',
-            },
-            'un_tagg_eth_ports': {
-                'type': 'dict',
-                'ports': {
-                    'type': 'int',
-                }
             }
-        },
-        'traffic_distribution_mode': {
-            'type':
-            'str',
-            'choices':
-            ['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
         },
         'stats': {
             'type': 'dict',
-            'shared_vlan_partition_switched_counter': {
-                'type': 'str',
-            },
-            'unknown_unicast_count': {
-                'type': 'str',
-            },
             'broadcast_count': {
                 'type': 'str',
-            },
-            'mac_movement_count': {
-                'type': 'str',
-            },
-            'vlan_num': {
-                'type': 'int',
-                'required': True,
             },
             'multicast_count': {
                 'type': 'str',
             },
             'ip_multicast_count': {
                 'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'untagged_trunk_list': {
-            'type': 'list',
-            'untagged_trunk_start': {
-                'type': 'int',
             },
-            'untagged_trunk_end': {
-                'type': 'int',
-            }
-        },
-        'untagged_lif': {
-            'type': 'int',
-        },
-        'untagged_eth_list': {
-            'type': 'list',
-            'untagged_ethernet_end': {
+            'unknown_unicast_count': {
                 'type': 'str',
             },
-            'untagged_ethernet_start': {
-                'type': 'str',
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'name': {
-            'type': 'str',
-        },
-        'vlan_num': {
-            'type': 'int',
-            'required': True,
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'broadcast_count', 'multicast_count',
-                    'ip_multicast_count', 'unknown_unicast_count',
-                    'mac_movement_count',
-                    'shared_vlan_partition_switched_counter'
-                ]
-            }
-        },
-        'tagged_trunk_list': {
-            'type': 'list',
-            'tagged_trunk_start': {
-                'type': 'int',
-            },
-            'tagged_trunk_end': {
-                'type': 'int',
-            }
-        },
-        'shared_vlan': {
-            'type': 'bool',
-        },
-        'tagged_eth_list': {
-            'type': 'list',
-            'tagged_ethernet_end': {
+            'mac_movement_count': {
                 'type': 'str',
             },
-            'tagged_ethernet_start': {
+            'shared_vlan_partition_switched_counter': {
                 'type': 'str',
+            },
+            'vlan_num': {
+                'type': 'int',
+                'required': True,
             }
-        },
-        've': {
-            'type': 'int',
         }
     })
     return rv

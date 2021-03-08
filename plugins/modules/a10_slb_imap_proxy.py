@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_imap_proxy
 description:
     - Configure IMAP Proxy global
-short_description: Configures A10 slb.imap-proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -92,168 +92,231 @@ options:
           'data_serv_connected_err'= Data Serv CTED error; 'request'= Total FTP Request;
           'capability'= Capability cmd; 'start_tls'= Total Start TLS cmd; 'login'= Total
           Login cmd;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            ser_connecting_err:
-                description:
-                - "Serv CTNG state error"
-            svrsel_fail:
-                description:
-                - "Server selection failure"
-            curr:
-                description:
-                - "Current proxy conns"
-            client_auth_tls:
-                description:
-                - "client auth tls"
-            cc:
-                description:
-                - "clear ctrl port packet"
-            adat:
-                description:
-                - "adat cmd"
-            server_response_err:
-                description:
-                - "Serv RESP state error"
-            unsupported_pbsz_value:
-                description:
-                - "Unsupported PBSZ"
-            cant_find_pasv:
-                description:
-                - "cant find pasv"
-            pbsz:
-                description:
-                - "pbsz cmd"
-            pasv:
-                description:
-                - "pasv cmd"
             num:
                 description:
                 - "Num"
-            no_route:
+                type: str
+            curr:
                 description:
-                - "no route failure"
-            smp_v4_fail:
-                description:
-                - "Serv Sel SMPv4 fail"
+                - "Current proxy conns"
+                type: str
             total:
                 description:
                 - "Total proxy conns"
-            feat:
+                type: str
+            svrsel_fail:
                 description:
-                - "feat packet"
-            port:
+                - "Server selection failure"
+                type: str
+            no_route:
                 description:
-                - "port cmd"
-            cant_find_epsv:
-                description:
-                - "cant find epsv"
-            auth_tls:
-                description:
-                - "auth tls cmd"
-            unsupported_command:
-                description:
-                - "Unsupported cmd"
-            request_dont_care:
-                description:
-                - "other cmd"
-            cl_est_err:
-                description:
-                - "Client EST state erro"
-            prot:
-                description:
-                - "prot cmd"
-            insert_tuple_fail:
-                description:
-                - "Serv Sel insert tuple fail"
-            line_mem_freed:
-                description:
-                - "request line freed"
-            start_tls:
-                description:
-                - "Total Start TLS cmd"
-            data_conn_start_err:
-                description:
-                - "Data Start state error"
-            invalid_start_line:
-                description:
-                - "invalid start line"
-            epsv:
-                description:
-                - "epsv command"
-            rsv_persist_conn_fail:
-                description:
-                - "Serv Sel Persist fail"
-            cl_request_err:
-                description:
-                - "Client RQ state error"
-            data_total:
-                description:
-                - "Total Data Proxy"
-            smp_v6_fail:
-                description:
-                - "Serv Sel SMPv6 fail"
-            data_curr:
-                description:
-                - "Current Data Proxy"
+                - "no route failure"
+                type: str
             snat_fail:
                 description:
                 - "source nat failure"
+                type: str
+            feat:
+                description:
+                - "feat packet"
+                type: str
+            cc:
+                description:
+                - "clear ctrl port packet"
+                type: str
             data_ssl:
                 description:
                 - "data ssl force"
-            data_serv_connecting_err:
-                description:
-                - "Data Serv CTNG error"
-            auth_unsupported:
-                description:
-                - "Unsupported auth"
-            smp_create_fail:
-                description:
-                - "smp create fail"
-            control_to_clear:
-                description:
-                - "Control chn clear txt"
-            pasv_addr_ne_server:
-                description:
-                - "psv addr not equal to svr"
-            data_serv_connected_err:
-                description:
-                - "Data Serv CTED error"
-            unsupported_prot_value:
-                description:
-                - "Unsupported PROT"
-            request:
-                description:
-                - "Total FTP Request"
-            bad_sequence:
-                description:
-                - "Bad Sequence"
-            capability:
-                description:
-                - "Capability cmd"
-            data_send_fail:
-                description:
-                - "data send fail"
-            control_to_ssl:
-                description:
-                - "Control chn ssl"
+                type: str
             line_too_long:
                 description:
                 - "line too long"
-            login:
+                type: str
+            line_mem_freed:
                 description:
-                - "Total Login cmd"
+                - "request line freed"
+                type: str
+            invalid_start_line:
+                description:
+                - "invalid start line"
+                type: str
+            auth_tls:
+                description:
+                - "auth tls cmd"
+                type: str
+            prot:
+                description:
+                - "prot cmd"
+                type: str
+            pbsz:
+                description:
+                - "pbsz cmd"
+                type: str
+            pasv:
+                description:
+                - "pasv cmd"
+                type: str
+            port:
+                description:
+                - "port cmd"
+                type: str
+            request_dont_care:
+                description:
+                - "other cmd"
+                type: str
+            client_auth_tls:
+                description:
+                - "client auth tls"
+                type: str
+            cant_find_pasv:
+                description:
+                - "cant find pasv"
+                type: str
+            pasv_addr_ne_server:
+                description:
+                - "psv addr not equal to svr"
+                type: str
+            smp_create_fail:
+                description:
+                - "smp create fail"
+                type: str
             data_server_conn_fail:
                 description:
                 - "data svr conn fail"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            data_send_fail:
+                description:
+                - "data send fail"
+                type: str
+            epsv:
+                description:
+                - "epsv command"
+                type: str
+            cant_find_epsv:
+                description:
+                - "cant find epsv"
+                type: str
+            data_curr:
+                description:
+                - "Current Data Proxy"
+                type: str
+            data_total:
+                description:
+                - "Total Data Proxy"
+                type: str
+            auth_unsupported:
+                description:
+                - "Unsupported auth"
+                type: str
+            adat:
+                description:
+                - "adat cmd"
+                type: str
+            unsupported_pbsz_value:
+                description:
+                - "Unsupported PBSZ"
+                type: str
+            unsupported_prot_value:
+                description:
+                - "Unsupported PROT"
+                type: str
+            unsupported_command:
+                description:
+                - "Unsupported cmd"
+                type: str
+            control_to_clear:
+                description:
+                - "Control chn clear txt"
+                type: str
+            control_to_ssl:
+                description:
+                - "Control chn ssl"
+                type: str
+            bad_sequence:
+                description:
+                - "Bad Sequence"
+                type: str
+            rsv_persist_conn_fail:
+                description:
+                - "Serv Sel Persist fail"
+                type: str
+            smp_v6_fail:
+                description:
+                - "Serv Sel SMPv6 fail"
+                type: str
+            smp_v4_fail:
+                description:
+                - "Serv Sel SMPv4 fail"
+                type: str
+            insert_tuple_fail:
+                description:
+                - "Serv Sel insert tuple fail"
+                type: str
+            cl_est_err:
+                description:
+                - "Client EST state erro"
+                type: str
+            ser_connecting_err:
+                description:
+                - "Serv CTNG state error"
+                type: str
+            server_response_err:
+                description:
+                - "Serv RESP state error"
+                type: str
+            cl_request_err:
+                description:
+                - "Client RQ state error"
+                type: str
+            data_conn_start_err:
+                description:
+                - "Data Start state error"
+                type: str
+            data_serv_connecting_err:
+                description:
+                - "Data Serv CTNG error"
+                type: str
+            data_serv_connected_err:
+                description:
+                - "Data Serv CTED error"
+                type: str
+            request:
+                description:
+                - "Total FTP Request"
+                type: str
+            capability:
+                description:
+                - "Capability cmd"
+                type: str
+            start_tls:
+                description:
+                - "Total Start TLS cmd"
+                type: str
+            login:
+                description:
+                - "Total Login cmd"
+                type: str
 
 '''
 
@@ -309,83 +372,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'serv_sel_smpv4_fail': {
-                    'type': 'int',
-                },
-                'client_est_state_err': {
-                    'type': 'int',
-                },
-                'inv_start_line': {
-                    'type': 'int',
-                },
-                'server_selection_failure': {
-                    'type': 'int',
-                },
-                'imap_line_too_long': {
-                    'type': 'int',
-                },
-                'login_packet': {
-                    'type': 'int',
-                },
-                'serv_sel_smpv6_fail': {
-                    'type': 'int',
-                },
-                'other_cmd': {
-                    'type': 'int',
-                },
-                'capability_packet': {
-                    'type': 'int',
-                },
-                'serv_sel_ins_tpl_fail': {
-                    'type': 'int',
-                },
-                'total_imap_request': {
-                    'type': 'int',
-                },
-                'serv_sel_persist_fail': {
-                    'type': 'int',
-                },
-                'source_nat_failure': {
-                    'type': 'int',
-                },
-                'serv_resp_state_err': {
-                    'type': 'int',
-                },
-                'total_proxy_conns': {
-                    'type': 'int',
-                },
-                'no_route_failure': {
-                    'type': 'int',
-                },
-                'client_rq_state_err': {
-                    'type': 'int',
-                },
-                'control_chn_ssl': {
-                    'type': 'int',
-                },
-                'bad_seq': {
-                    'type': 'int',
-                },
-                'current_proxy_conns': {
-                    'type': 'int',
-                },
-                'request_line_freed': {
-                    'type': 'int',
-                },
-                'serv_ctng_state_err': {
-                    'type': 'int',
-                },
-                'start_tls_cmd': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -412,33 +400,126 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'current_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_imap_request': {
+                    'type': 'int',
+                },
+                'server_selection_failure': {
+                    'type': 'int',
+                },
+                'no_route_failure': {
+                    'type': 'int',
+                },
+                'source_nat_failure': {
+                    'type': 'int',
+                },
+                'start_tls_cmd': {
+                    'type': 'int',
+                },
+                'login_packet': {
+                    'type': 'int',
+                },
+                'capability_packet': {
+                    'type': 'int',
+                },
+                'request_line_freed': {
+                    'type': 'int',
+                },
+                'inv_start_line': {
+                    'type': 'int',
+                },
+                'other_cmd': {
+                    'type': 'int',
+                },
+                'imap_line_too_long': {
+                    'type': 'int',
+                },
+                'control_chn_ssl': {
+                    'type': 'int',
+                },
+                'bad_seq': {
+                    'type': 'int',
+                },
+                'serv_sel_persist_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_smpv6_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_smpv4_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_ins_tpl_fail': {
+                    'type': 'int',
+                },
+                'client_est_state_err': {
+                    'type': 'int',
+                },
+                'serv_ctng_state_err': {
+                    'type': 'int',
+                },
+                'serv_resp_state_err': {
+                    'type': 'int',
+                },
+                'client_rq_state_err': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'ser_connecting_err': {
-                'type': 'str',
-            },
-            'svrsel_fail': {
+            'num': {
                 'type': 'str',
             },
             'curr': {
                 'type': 'str',
             },
-            'client_auth_tls': {
+            'total': {
+                'type': 'str',
+            },
+            'svrsel_fail': {
+                'type': 'str',
+            },
+            'no_route': {
+                'type': 'str',
+            },
+            'snat_fail': {
+                'type': 'str',
+            },
+            'feat': {
                 'type': 'str',
             },
             'cc': {
                 'type': 'str',
             },
-            'adat': {
+            'data_ssl': {
                 'type': 'str',
             },
-            'server_response_err': {
+            'line_too_long': {
                 'type': 'str',
             },
-            'unsupported_pbsz_value': {
+            'line_mem_freed': {
                 'type': 'str',
             },
-            'cant_find_pasv': {
+            'invalid_start_line': {
+                'type': 'str',
+            },
+            'auth_tls': {
+                'type': 'str',
+            },
+            'prot': {
                 'type': 'str',
             },
             'pbsz': {
@@ -447,129 +528,111 @@ def get_argspec():
             'pasv': {
                 'type': 'str',
             },
-            'num': {
-                'type': 'str',
-            },
-            'no_route': {
-                'type': 'str',
-            },
-            'smp_v4_fail': {
-                'type': 'str',
-            },
-            'total': {
-                'type': 'str',
-            },
-            'feat': {
-                'type': 'str',
-            },
             'port': {
-                'type': 'str',
-            },
-            'cant_find_epsv': {
-                'type': 'str',
-            },
-            'auth_tls': {
-                'type': 'str',
-            },
-            'unsupported_command': {
                 'type': 'str',
             },
             'request_dont_care': {
                 'type': 'str',
             },
-            'cl_est_err': {
+            'client_auth_tls': {
                 'type': 'str',
             },
-            'prot': {
-                'type': 'str',
-            },
-            'insert_tuple_fail': {
-                'type': 'str',
-            },
-            'line_mem_freed': {
-                'type': 'str',
-            },
-            'start_tls': {
-                'type': 'str',
-            },
-            'data_conn_start_err': {
-                'type': 'str',
-            },
-            'invalid_start_line': {
-                'type': 'str',
-            },
-            'epsv': {
-                'type': 'str',
-            },
-            'rsv_persist_conn_fail': {
-                'type': 'str',
-            },
-            'cl_request_err': {
-                'type': 'str',
-            },
-            'data_total': {
-                'type': 'str',
-            },
-            'smp_v6_fail': {
-                'type': 'str',
-            },
-            'data_curr': {
-                'type': 'str',
-            },
-            'snat_fail': {
-                'type': 'str',
-            },
-            'data_ssl': {
-                'type': 'str',
-            },
-            'data_serv_connecting_err': {
-                'type': 'str',
-            },
-            'auth_unsupported': {
-                'type': 'str',
-            },
-            'smp_create_fail': {
-                'type': 'str',
-            },
-            'control_to_clear': {
+            'cant_find_pasv': {
                 'type': 'str',
             },
             'pasv_addr_ne_server': {
                 'type': 'str',
             },
-            'data_serv_connected_err': {
+            'smp_create_fail': {
                 'type': 'str',
             },
-            'unsupported_prot_value': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'bad_sequence': {
-                'type': 'str',
-            },
-            'capability': {
+            'data_server_conn_fail': {
                 'type': 'str',
             },
             'data_send_fail': {
                 'type': 'str',
             },
+            'epsv': {
+                'type': 'str',
+            },
+            'cant_find_epsv': {
+                'type': 'str',
+            },
+            'data_curr': {
+                'type': 'str',
+            },
+            'data_total': {
+                'type': 'str',
+            },
+            'auth_unsupported': {
+                'type': 'str',
+            },
+            'adat': {
+                'type': 'str',
+            },
+            'unsupported_pbsz_value': {
+                'type': 'str',
+            },
+            'unsupported_prot_value': {
+                'type': 'str',
+            },
+            'unsupported_command': {
+                'type': 'str',
+            },
+            'control_to_clear': {
+                'type': 'str',
+            },
             'control_to_ssl': {
                 'type': 'str',
             },
-            'line_too_long': {
+            'bad_sequence': {
+                'type': 'str',
+            },
+            'rsv_persist_conn_fail': {
+                'type': 'str',
+            },
+            'smp_v6_fail': {
+                'type': 'str',
+            },
+            'smp_v4_fail': {
+                'type': 'str',
+            },
+            'insert_tuple_fail': {
+                'type': 'str',
+            },
+            'cl_est_err': {
+                'type': 'str',
+            },
+            'ser_connecting_err': {
+                'type': 'str',
+            },
+            'server_response_err': {
+                'type': 'str',
+            },
+            'cl_request_err': {
+                'type': 'str',
+            },
+            'data_conn_start_err': {
+                'type': 'str',
+            },
+            'data_serv_connecting_err': {
+                'type': 'str',
+            },
+            'data_serv_connected_err': {
+                'type': 'str',
+            },
+            'request': {
+                'type': 'str',
+            },
+            'capability': {
+                'type': 'str',
+            },
+            'start_tls': {
                 'type': 'str',
             },
             'login': {
                 'type': 'str',
-            },
-            'data_server_conn_fail': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

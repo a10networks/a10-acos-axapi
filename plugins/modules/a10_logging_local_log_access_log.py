@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_logging_local_log_access_log
 description:
     - Access Log Info
-short_description: Configures A10 logging.local.log.access.log
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,59 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            interval:
-                description:
-                - "Field interval"
-            start_time:
-                description:
-                - "Field start_time"
-            log_list:
-                description:
-                - "Field log_list"
             max_entries:
                 description:
                 - "Field max_entries"
+                type: int
+            start_time:
+                description:
+                - "Field start_time"
+                type: str
+            interval:
+                description:
+                - "Field interval"
+                type: str
             interval_position:
                 description:
                 - "Field interval_position"
+                type: str
             total:
                 description:
                 - "Field total"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            log_list:
+                description:
+                - "Field log_list"
+                type: list
 
 '''
 
@@ -130,74 +143,74 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'interval': {
-                'type': 'str',
+            'max_entries': {
+                'type': 'int',
             },
             'start_time': {
                 'type': 'str',
             },
-            'log_list': {
-                'type': 'list',
-                'destination_port': {
-                    'type': 'int',
-                },
-                'user_domain': {
-                    'type': 'str',
-                },
-                'user_name': {
-                    'type': 'str',
-                },
-                'vip_name': {
-                    'type': 'str',
-                },
-                'client_ip': {
-                    'type': 'str',
-                },
-                'ssl_status': {
-                    'type': 'str',
-                },
-                'uri': {
-                    'type': 'str',
-                },
-                'policy': {
-                    'type': 'str',
-                },
-                'web_category': {
-                    'type': 'str',
-                },
-                'destination_ip': {
-                    'type': 'str',
-                },
-                'web_domain': {
-                    'type': 'str',
-                },
-                'time': {
-                    'type': 'str',
-                },
-                'action': {
-                    'type': 'str',
-                },
-                'source_port': {
-                    'type': 'int',
-                },
-                'vip_port': {
-                    'type': 'int',
-                }
-            },
-            'max_entries': {
-                'type': 'int',
+            'interval': {
+                'type': 'str',
             },
             'interval_position': {
                 'type': 'str',
             },
             'total': {
                 'type': 'int',
+            },
+            'log_list': {
+                'type': 'list',
+                'time': {
+                    'type': 'str',
+                },
+                'user_name': {
+                    'type': 'str',
+                },
+                'user_domain': {
+                    'type': 'str',
+                },
+                'client_ip': {
+                    'type': 'str',
+                },
+                'destination_ip': {
+                    'type': 'str',
+                },
+                'source_port': {
+                    'type': 'int',
+                },
+                'destination_port': {
+                    'type': 'int',
+                },
+                'policy': {
+                    'type': 'str',
+                },
+                'action': {
+                    'type': 'str',
+                },
+                'vip_name': {
+                    'type': 'str',
+                },
+                'vip_port': {
+                    'type': 'int',
+                },
+                'web_domain': {
+                    'type': 'str',
+                },
+                'uri': {
+                    'type': 'str',
+                },
+                'web_category': {
+                    'type': 'str',
+                },
+                'ssl_status': {
+                    'type': 'str',
+                }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_connection_reuse
 description:
     - Configure Connection Reuse
-short_description: Configures A10 slb.connection-reuse
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            connection_reuse_cpu_list:
-                description:
-                - "Field connection_reuse_cpu_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -75,60 +75,87 @@ options:
           resp; 'unbound_data_rcv'= Unbound data rcvd; 'pause_conn'= Pause request;
           'pause_conn_fail'= Pause request fail; 'resume_conn'= Resume request;
           'not_remove_from_rport'= Not remove from list;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            connection_reuse_cpu_list:
+                description:
+                - "Field connection_reuse_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            miss_resp:
-                description:
-                - "Missed resp"
-            nunbind:
-                description:
-                - "Total unbind"
-            ntermi_err:
-                description:
-                - "Total terminated by err"
-            nbind:
-                description:
-                - "Total bind"
-            current_active:
-                description:
-                - "Active persist"
-            pause_conn_fail:
-                description:
-                - "Pause request fail"
-            delay_unbind:
-                description:
-                - "Delayed unbind"
-            long_resp:
-                description:
-                - "Long resp"
-            ntermi:
-                description:
-                - "Total terminated"
-            pause_conn:
-                description:
-                - "Pause request"
-            unbound_data_rcv:
-                description:
-                - "Unbound data rcvd"
-            resume_conn:
-                description:
-                - "Resume request"
             current_open:
                 description:
                 - "Open persist"
-            not_remove_from_rport:
+                type: str
+            current_active:
                 description:
-                - "Not remove from list"
+                - "Active persist"
+                type: str
+            nbind:
+                description:
+                - "Total bind"
+                type: str
+            nunbind:
+                description:
+                - "Total unbind"
+                type: str
             nestab:
                 description:
                 - "Total established"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ntermi:
+                description:
+                - "Total terminated"
+                type: str
+            ntermi_err:
+                description:
+                - "Total terminated by err"
+                type: str
+            delay_unbind:
+                description:
+                - "Delayed unbind"
+                type: str
+            long_resp:
+                description:
+                - "Long resp"
+                type: str
+            miss_resp:
+                description:
+                - "Missed resp"
+                type: str
+            unbound_data_rcv:
+                description:
+                - "Unbound data rcvd"
+                type: str
+            pause_conn:
+                description:
+                - "Pause request"
+                type: str
+            pause_conn_fail:
+                description:
+                - "Pause request fail"
+                type: str
+            resume_conn:
+                description:
+                - "Resume request"
+                type: str
+            not_remove_from_rport:
+                description:
+                - "Not remove from list"
+                type: str
 
 '''
 
@@ -184,59 +211,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'cpu_count': {
-                'type': 'int',
-            },
-            'connection_reuse_cpu_list': {
-                'type': 'list',
-                'miss_resp': {
-                    'type': 'int',
-                },
-                'nunbind': {
-                    'type': 'int',
-                },
-                'ntermi_err': {
-                    'type': 'int',
-                },
-                'nbind': {
-                    'type': 'int',
-                },
-                'current_active': {
-                    'type': 'int',
-                },
-                'pause_conn_fail': {
-                    'type': 'int',
-                },
-                'delay_unbind': {
-                    'type': 'int',
-                },
-                'long_resp': {
-                    'type': 'int',
-                },
-                'ntermi': {
-                    'type': 'int',
-                },
-                'pause_conn': {
-                    'type': 'int',
-                },
-                'unbound_data_rcv': {
-                    'type': 'int',
-                },
-                'resume_conn': {
-                    'type': 'int',
-                },
-                'current_open': {
-                    'type': 'int',
-                },
-                'not_remove_from_rport': {
-                    'type': 'int',
-                },
-                'nestab': {
-                    'type': 'int',
-                }
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -252,24 +228,81 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'connection_reuse_cpu_list': {
+                'type': 'list',
+                'current_open': {
+                    'type': 'int',
+                },
+                'current_active': {
+                    'type': 'int',
+                },
+                'nbind': {
+                    'type': 'int',
+                },
+                'nunbind': {
+                    'type': 'int',
+                },
+                'nestab': {
+                    'type': 'int',
+                },
+                'ntermi': {
+                    'type': 'int',
+                },
+                'ntermi_err': {
+                    'type': 'int',
+                },
+                'delay_unbind': {
+                    'type': 'int',
+                },
+                'long_resp': {
+                    'type': 'int',
+                },
+                'miss_resp': {
+                    'type': 'int',
+                },
+                'unbound_data_rcv': {
+                    'type': 'int',
+                },
+                'pause_conn': {
+                    'type': 'int',
+                },
+                'pause_conn_fail': {
+                    'type': 'int',
+                },
+                'resume_conn': {
+                    'type': 'int',
+                },
+                'not_remove_from_rport': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'miss_resp': {
-                'type': 'str',
-            },
-            'nunbind': {
-                'type': 'str',
-            },
-            'ntermi_err': {
-                'type': 'str',
-            },
-            'nbind': {
+            'current_open': {
                 'type': 'str',
             },
             'current_active': {
                 'type': 'str',
             },
-            'pause_conn_fail': {
+            'nbind': {
+                'type': 'str',
+            },
+            'nunbind': {
+                'type': 'str',
+            },
+            'nestab': {
+                'type': 'str',
+            },
+            'ntermi': {
+                'type': 'str',
+            },
+            'ntermi_err': {
                 'type': 'str',
             },
             'delay_unbind': {
@@ -278,30 +311,24 @@ def get_argspec():
             'long_resp': {
                 'type': 'str',
             },
-            'ntermi': {
-                'type': 'str',
-            },
-            'pause_conn': {
+            'miss_resp': {
                 'type': 'str',
             },
             'unbound_data_rcv': {
                 'type': 'str',
             },
-            'resume_conn': {
+            'pause_conn': {
                 'type': 'str',
             },
-            'current_open': {
+            'pause_conn_fail': {
+                'type': 'str',
+            },
+            'resume_conn': {
                 'type': 'str',
             },
             'not_remove_from_rport': {
                 'type': 'str',
-            },
-            'nestab': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

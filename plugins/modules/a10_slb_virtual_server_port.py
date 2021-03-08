@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port
 description:
     - Virtual Port
-short_description: Configures A10 slb.virtual-server.port
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,113 +22,49 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     virtual_server_name:
         description:
-        - Key to identify parent object    oper:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - "Field oper"
-        required: False
-        suboptions:
-            http_host_hits:
-                description:
-                - "Field http_host_hits"
-            protocol:
-                description:
-                - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do
-          IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
-          'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
-          'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
-          Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'=
-          [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load
-          balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
-          'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
-          Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
-          'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
-          protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
-          'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
-          SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
-          Port; 'fast-fix'= Fast FIX port;"
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            port_number:
-                description:
-                - "Port"
-            loc_list:
-                description:
-                - "Field loc_list"
-            http_hits_list:
-                description:
-                - "Field http_hits_list"
-            http_vport:
-                description:
-                - "Field http_vport"
-            state:
-                description:
-                - "Field state"
-            loc_max_depth:
-                description:
-                - "Field loc_max_depth"
-            level_str:
-                description:
-                - "Field level_str"
-            loc_last:
-                description:
-                - "Field loc_last"
-            http_url_hits:
-                description:
-                - "Field http_url_hits"
-            geo_location:
-                description:
-                - "Field geo_location"
-            http_vport_cpu_list:
-                description:
-                - "Field http_vport_cpu_list"
-            real_curr_conn:
-                description:
-                - "Field real_curr_conn"
-            loc_success:
-                description:
-                - "Field loc_success"
-            loc_error:
-                description:
-                - "Field loc_error"
-            group_id:
-                description:
-                - "Field group_id"
-            loc_override:
-                description:
-                - "Field loc_override"
-    ha_conn_mirror:
-        description:
-        - "Enable for HA Conn sync"
-        required: False
+        - "Port"
+        type: int
+        required: True
     protocol:
         description:
         - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do
@@ -147,120 +81,398 @@ options:
           'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
           SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
           Port; 'fast-fix'= Fast FIX port;"
+        type: str
         required: True
-    cpu_compute:
+    range:
         description:
-        - "enable cpu compute on virtual port"
+        - "Virtual Port range (Virtual Port range value)"
+        type: int
         required: False
-    precedence:
+    alternate_port:
         description:
-        - "Set auto NAT pool as higher precedence for source NAT"
+        - "Alternate Virtual Port"
+        type: bool
         required: False
-    port_translation:
+    optimization_level:
         description:
-        - "Enable port translation under no-dest-nat"
+        - "'0'= No optimization; '1'= Optimization level 1 (Experimental);"
+        type: str
         required: False
-    ip_map_list:
+    support_http2:
         description:
-        - "Enter name of IP Map List to be bound (IP Map List Name)"
+        - "Support HTTP2"
+        type: bool
         required: False
-    template_reqmod_icap:
+    ip_only_lb:
         description:
-        - "ICAP reqmod template (reqmod-icap template name)"
+        - "Enable IP-Only LB mode"
+        type: bool
         required: False
-    acl_name_list:
+    name:
         description:
-        - "Field acl_name_list"
+        - "SLB Virtual Service Name"
+        type: str
         required: False
-        suboptions:
-            acl_name_src_nat_pool_shared:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            v_acl_name_src_nat_pool_shared:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            shared_partition_pool_name:
-                description:
-                - "Policy based Source NAT from shared partition"
-            acl_name_seq_num_shared:
-                description:
-                - "Specify ACL precedence (sequence-number)"
-            acl_name:
-                description:
-                - "Apply an access list name (Named Access List)"
-            v_shared_partition_pool_name:
-                description:
-                - "Policy based Source NAT from shared partition"
-            acl_name_src_nat_pool:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            v_acl_name_seq_num:
-                description:
-                - "Specify ACL precedence (sequence-number)"
-            acl_name_shared:
-                description:
-                - "Apply an access list name (Named Access List)"
-            acl_name_seq_num:
-                description:
-                - "Specify ACL precedence (sequence-number)"
-            v_acl_name_src_nat_pool:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            v_acl_name_seq_num_shared:
-                description:
-                - "Specify ACL precedence (sequence-number)"
-    stats_data_action:
+    conn_limit:
         description:
-        - "'stats-data-enable'= Enable statistical data collection for virtual port;
-          'stats-data-disable'= Disable statistical data collection for virtual port;"
+        - "Connection Limit"
+        type: int
         required: False
-    use_default_if_no_server:
+    reset:
         description:
-        - "Use default forwarding if server selection failed"
+        - "Send client reset when connection number over limit"
+        type: bool
         required: False
-    template_connection_reuse:
+    no_logging:
         description:
-        - "Connection Reuse Template (Connection Reuse Template Name)"
+        - "Do not log connection over limit event"
+        type: bool
         required: False
-    uuid:
+    use_alternate_port:
         description:
-        - "uuid of the object"
+        - "Use alternate virtual port"
+        type: bool
         required: False
-    template_tcp_shared:
+    alternate_port_number:
         description:
-        - "TCP Template Name"
+        - "Virtual Port"
+        type: int
         required: False
-    template_tcp:
+    alt_protocol1:
         description:
-        - "TCP Template Name"
+        - "'http'= HTTP Port;"
+        type: str
         required: False
-    template_persist_cookie:
+    serv_sel_fail:
         description:
-        - "Cookie persistence (Cookie persistence template name)"
-        required: False
-    shared_partition_dynamic_service_template:
-        description:
-        - "Reference a dynamic service template from shared partition"
-        required: False
-    shared_partition_connection_reuse_template:
-        description:
-        - "Reference a connection reuse template from shared partition"
+        - "Use alternate virtual port when server selection failure"
+        type: bool
         required: False
     when_down:
         description:
         - "Use alternate virtual port when down"
+        type: bool
         required: False
-    template_client_ssl_shared:
+    alt_protocol2:
         description:
-        - "Client SSL Template Name"
+        - "'tcp'= TCP LB service;"
+        type: str
         required: False
-    shared_partition_persist_destination_ip_template:
+    req_fail:
         description:
-        - "Reference a persist destination ip template from shared partition"
+        - "Use alternate virtual port when L7 request fail"
+        type: bool
         required: False
-    shared_partition_external_service_template:
+    when_down_protocol2:
         description:
-        - "Reference a external service template from shared partition"
+        - "Use alternate virtual port when down"
+        type: bool
+        required: False
+    action:
+        description:
+        - "'enable'= Enable; 'disable'= Disable;"
+        type: str
+        required: False
+    def_selection_if_pref_failed:
+        description:
+        - "'def-selection-if-pref-failed'= Use default server selection method if prefer
+          method failed; 'def-selection-if-pref-failed-disable'= Stop using default
+          server selection method if prefer method failed;"
+        type: str
+        required: False
+    ha_conn_mirror:
+        description:
+        - "Enable for HA Conn sync"
+        type: bool
+        required: False
+    on_syn:
+        description:
+        - "Enable for HA Conn sync for l4 tcp sessions on SYN"
+        type: bool
+        required: False
+    skip_rev_hash:
+        description:
+        - "Skip rev tuple hash insertion"
+        type: bool
+        required: False
+    message_switching:
+        description:
+        - "Message switching"
+        type: bool
+        required: False
+    force_routing_mode:
+        description:
+        - "Force routing mode"
+        type: bool
+        required: False
+    rate:
+        description:
+        - "Specify the log message rate"
+        type: int
+        required: False
+    secs:
+        description:
+        - "Specify the interval in seconds"
+        type: int
+        required: False
+    reset_on_server_selection_fail:
+        description:
+        - "Send client reset when server selection fails"
+        type: bool
+        required: False
+    clientip_sticky_nat:
+        description:
+        - "Prefer to use same source NAT address for a client"
+        type: bool
+        required: False
+    extended_stats:
+        description:
+        - "Enable extended statistics on virtual port"
+        type: bool
+        required: False
+    gslb_enable:
+        description:
+        - "Enable Global Server Load Balancing"
+        type: bool
+        required: False
+    view:
+        description:
+        - "Specify a GSLB View (ID)"
+        type: int
+        required: False
+    snat_on_vip:
+        description:
+        - "Enable source NAT traffic against VIP"
+        type: bool
+        required: False
+    stats_data_action:
+        description:
+        - "'stats-data-enable'= Enable statistical data collection for virtual port;
+          'stats-data-disable'= Disable statistical data collection for virtual port;"
+        type: str
+        required: False
+    syn_cookie:
+        description:
+        - "Enable syn-cookie"
+        type: bool
+        required: False
+    expand:
+        description:
+        - "expand syn-cookie with timestamp and wscale"
+        type: bool
+        required: False
+    acl_id_list:
+        description:
+        - "Field acl_id_list"
+        type: list
+        required: False
+        suboptions:
+            acl_id:
+                description:
+                - "ACL id VPORT"
+                type: int
+            acl_id_src_nat_pool:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            acl_id_seq_num:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+            shared_partition_pool_id:
+                description:
+                - "Policy based Source NAT from shared partition"
+                type: bool
+            acl_id_src_nat_pool_shared:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            acl_id_seq_num_shared:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+            acl_id_shared:
+                description:
+                - "acl id"
+                type: int
+            v_acl_id_src_nat_pool:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            v_acl_id_seq_num:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+            v_shared_partition_pool_id:
+                description:
+                - "Policy based Source NAT from shared partition"
+                type: bool
+            v_acl_id_src_nat_pool_shared:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            v_acl_id_seq_num_shared:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+    acl_name_list:
+        description:
+        - "Field acl_name_list"
+        type: list
+        required: False
+        suboptions:
+            acl_name:
+                description:
+                - "Apply an access list name (Named Access List)"
+                type: str
+            acl_name_src_nat_pool:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            acl_name_seq_num:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+            shared_partition_pool_name:
+                description:
+                - "Policy based Source NAT from shared partition"
+                type: bool
+            acl_name_src_nat_pool_shared:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            acl_name_seq_num_shared:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+            acl_name_shared:
+                description:
+                - "Apply an access list name (Named Access List)"
+                type: str
+            v_acl_name_src_nat_pool:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            v_acl_name_seq_num:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+            v_shared_partition_pool_name:
+                description:
+                - "Policy based Source NAT from shared partition"
+                type: bool
+            v_acl_name_src_nat_pool_shared:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+                type: str
+            v_acl_name_seq_num_shared:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+                type: int
+    template_policy:
+        description:
+        - "Policy Template (Policy template name)"
+        type: str
+        required: False
+    shared_partition_policy_template:
+        description:
+        - "Reference a policy template from shared partition"
+        type: bool
+        required: False
+    template_policy_shared:
+        description:
+        - "Policy Template Name"
+        type: str
+        required: False
+    aflex_scripts:
+        description:
+        - "Field aflex_scripts"
+        type: list
+        required: False
+        suboptions:
+            aflex:
+                description:
+                - "aFleX Script Name"
+                type: str
+            aflex_shared:
+                description:
+                - "aFleX Script Name"
+                type: str
+    no_auto_up_on_aflex:
+        description:
+        - "Don't automatically mark vport up when aFleX is bound"
+        type: bool
+        required: False
+    scaleout_bucket_count:
+        description:
+        - "Number of traffic buckets"
+        type: int
+        required: False
+    scaleout_device_group:
+        description:
+        - "Device group id"
+        type: int
+        required: False
+    pool:
+        description:
+        - "Specify NAT pool or pool group"
+        type: str
+        required: False
+    shared_partition_pool:
+        description:
+        - "Specify NAT pool or pool group from shared partition"
+        type: bool
+        required: False
+    pool_shared:
+        description:
+        - "Specify NAT pool or pool group"
+        type: str
+        required: False
+    auto:
+        description:
+        - "Configure auto NAT for the vport"
+        type: bool
+        required: False
+    precedence:
+        description:
+        - "Set auto NAT pool as higher precedence for source NAT"
+        type: bool
+        required: False
+    use_cgnv6:
+        description:
+        - "Follow CGNv6 source NAT configuration"
+        type: bool
+        required: False
+    enable_playerid_check:
+        description:
+        - "Enable playerid checks on UDP packets once the AX is in active mode"
+        type: bool
+        required: False
+    service_group:
+        description:
+        - "Bind a Service Group to this Virtual Server (Service Group Name)"
+        type: str
+        required: False
+    ipinip:
+        description:
+        - "Enable IP in IP"
+        type: bool
+        required: False
+    ip_map_list:
+        description:
+        - "Enter name of IP Map List to be bound (IP Map List Name)"
+        type: str
+        required: False
+    rtp_sip_call_id_match:
+        description:
+        - "rtp traffic try to match the real server of sip smp call-id session"
+        type: bool
+        required: False
+    use_rcv_hop_for_resp:
+        description:
+        - "Use receive hop for response to client(For packets on default-vlan, also config
+          'vlan-global enable-def-vlan-l2-forwarding'.)"
+        type: bool
         required: False
     persist_type:
         description:
@@ -268,52 +480,459 @@ options:
           destination IP swap; 'use-src-ip-for-dst-persist'= Use the source IP to create
           a destination persist session; 'use-dst-ip-for-src-persist'= Use the
           destination IP to create source IP persist session;"
+        type: str
+        required: False
+    use_rcv_hop_group:
+        description:
+        - "Set use-rcv-hop group"
+        type: bool
+        required: False
+    server_group:
+        description:
+        - "Bind a use-rcv-hop-for-resp Server Group to this Virtual Server (Server Group
+          Name)"
+        type: str
+        required: False
+    eth_fwd:
+        description:
+        - "Ethernet interface number"
+        type: str
+        required: False
+    trunk_fwd:
+        description:
+        - "Trunk interface number"
+        type: str
+        required: False
+    eth_rev:
+        description:
+        - "Ethernet interface number"
+        type: str
+        required: False
+    trunk_rev:
+        description:
+        - "Trunk interface number"
+        type: str
+        required: False
+    template_sip:
+        description:
+        - "SIP template"
+        type: str
+        required: False
+    template_smpp:
+        description:
+        - "SMPP template"
+        type: str
+        required: False
+    template_dblb:
+        description:
+        - "DBLB Template (DBLB template name)"
+        type: str
+        required: False
+    template_connection_reuse:
+        description:
+        - "Connection Reuse Template (Connection Reuse Template Name)"
+        type: str
+        required: False
+    shared_partition_connection_reuse_template:
+        description:
+        - "Reference a connection reuse template from shared partition"
+        type: bool
+        required: False
+    template_connection_reuse_shared:
+        description:
+        - "Connection Reuse Template Name"
+        type: str
+        required: False
+    template_dns:
+        description:
+        - "DNS template (DNS template name)"
+        type: str
+        required: False
+    shared_partition_dns_template:
+        description:
+        - "Reference a dns template from shared partition"
+        type: bool
+        required: False
+    template_dns_shared:
+        description:
+        - "DNS Template Name"
+        type: str
+        required: False
+    template_dynamic_service:
+        description:
+        - "Dynamic Service Template (dynamic-service template name)"
+        type: str
+        required: False
+    shared_partition_dynamic_service_template:
+        description:
+        - "Reference a dynamic service template from shared partition"
+        type: bool
+        required: False
+    template_dynamic_service_shared:
+        description:
+        - "Dynamic Service Template Name"
+        type: str
+        required: False
+    template_persist_source_ip:
+        description:
+        - "Source IP persistence (Source IP persistence template name)"
+        type: str
+        required: False
+    shared_partition_persist_source_ip_template:
+        description:
+        - "Reference a persist source ip template from shared partition"
+        type: bool
+        required: False
+    template_persist_source_ip_shared:
+        description:
+        - "Source IP Persistence Template Name"
+        type: str
+        required: False
+    template_persist_destination_ip:
+        description:
+        - "Destination IP persistence (Destination IP persistence template name)"
+        type: str
+        required: False
+    shared_partition_persist_destination_ip_template:
+        description:
+        - "Reference a persist destination ip template from shared partition"
+        type: bool
+        required: False
+    template_persist_destination_ip_shared:
+        description:
+        - "Destination IP Persistence Template Name"
+        type: str
+        required: False
+    template_persist_ssl_sid:
+        description:
+        - "SSL SID persistence (SSL SID persistence template name)"
+        type: str
+        required: False
+    shared_partition_persist_ssl_sid_template:
+        description:
+        - "Reference a persist SSL SID template from shared partition"
+        type: bool
+        required: False
+    template_persist_ssl_sid_shared:
+        description:
+        - "SSL SID Persistence Template Name"
+        type: str
+        required: False
+    template_persist_cookie:
+        description:
+        - "Cookie persistence (Cookie persistence template name)"
+        type: str
+        required: False
+    shared_partition_persist_cookie_template:
+        description:
+        - "Reference a persist cookie template from shared partition"
+        type: bool
+        required: False
+    template_persist_cookie_shared:
+        description:
+        - "Cookie Persistence Template Name"
+        type: str
+        required: False
+    template_imap_pop3:
+        description:
+        - "IMAP/POP3 Template (IMAP/POP3 Config Name)"
+        type: str
+        required: False
+    template_smtp:
+        description:
+        - "SMTP Template (SMTP Config Name)"
+        type: str
+        required: False
+    template_http:
+        description:
+        - "HTTP Template Name"
+        type: str
+        required: False
+    shared_partition_http_template:
+        description:
+        - "Reference a HTTP template from shared partition"
+        type: bool
+        required: False
+    template_http_shared:
+        description:
+        - "HTTP Template Name"
+        type: str
+        required: False
+    template_http_policy:
+        description:
+        - "http-policy template (http-policy template name)"
+        type: str
         required: False
     shared_partition_http_policy_template:
         description:
         - "Reference a http policy template from shared partition"
+        type: bool
         required: False
-    use_rcv_hop_for_resp:
+    template_http_policy_shared:
         description:
-        - "Use receive hop for response to client(For packets on default-vlan, also config
-          'vlan-global enable-def-vlan-l2-forwarding'.)"
+        - "Http Policy Template Name"
+        type: str
         required: False
-    scaleout_bucket_count:
+    redirect_to_https:
         description:
-        - "Number of traffic buckets"
+        - "Redirect HTTP to HTTPS"
+        type: bool
         required: False
-    optimization_level:
+    template_external_service:
         description:
-        - "'0'= No optimization; '1'= Optimization level 1 (Experimental);"
+        - "External service template (external-service template name)"
+        type: str
         required: False
-    req_fail:
+    shared_partition_external_service_template:
         description:
-        - "Use alternate virtual port when L7 request fail"
+        - "Reference a external service template from shared partition"
+        type: bool
+        required: False
+    template_external_service_shared:
+        description:
+        - "External Service Template Name"
+        type: str
+        required: False
+    template_reqmod_icap:
+        description:
+        - "ICAP reqmod template (reqmod-icap template name)"
+        type: str
+        required: False
+    template_respmod_icap:
+        description:
+        - "ICAP respmod service template (respmod-icap template name)"
+        type: str
+        required: False
+    template_file_inspection:
+        description:
+        - "File Inspection service template (file-inspection template name)"
+        type: str
+        required: False
+    template_server_ssl:
+        description:
+        - "Server Side SSL Template Name"
+        type: str
+        required: False
+    shared_partition_server_ssl_template:
+        description:
+        - "Reference a SSL Server template from shared partition"
+        type: bool
+        required: False
+    template_server_ssl_shared:
+        description:
+        - "Server SSL Template Name"
+        type: str
+        required: False
+    template_client_ssl:
+        description:
+        - "Client SSL Template Name"
+        type: str
+        required: False
+    shared_partition_client_ssl_template:
+        description:
+        - "Reference a Client SSL template from shared partition"
+        type: bool
+        required: False
+    template_client_ssl_shared:
+        description:
+        - "Client SSL Template Name"
+        type: str
+        required: False
+    template_server_ssh:
+        description:
+        - "Server SSH Template (Server SSH Config Name)"
+        type: str
+        required: False
+    template_client_ssh:
+        description:
+        - "Client SSH Template (Client SSH Config Name)"
+        type: str
+        required: False
+    template_udp:
+        description:
+        - "L4 UDP Template"
+        type: str
+        required: False
+    shared_partition_udp:
+        description:
+        - "Reference a UDP template from shared partition"
+        type: bool
+        required: False
+    template_udp_shared:
+        description:
+        - "UDP Template Name"
+        type: str
+        required: False
+    template_tcp:
+        description:
+        - "TCP Template Name"
+        type: str
+        required: False
+    shared_partition_tcp:
+        description:
+        - "Reference a tcp template from shared partition"
+        type: bool
+        required: False
+    template_tcp_shared:
+        description:
+        - "TCP Template Name"
+        type: str
+        required: False
+    template_virtual_port:
+        description:
+        - "Virtual port template (Virtual port template name)"
+        type: str
+        required: False
+    shared_partition_virtual_port_template:
+        description:
+        - "Reference a Virtual Port template from shared partition"
+        type: bool
+        required: False
+    template_virtual_port_shared:
+        description:
+        - "Virtual Port Template Name"
+        type: str
+        required: False
+    template_ftp:
+        description:
+        - "FTP port template (Ftp template name)"
+        type: str
+        required: False
+    template_diameter:
+        description:
+        - "Diameter Template (diameter template name)"
+        type: str
+        required: False
+    shared_partition_diameter_template:
+        description:
+        - "Reference a Diameter template from shared partition"
+        type: bool
+        required: False
+    template_diameter_shared:
+        description:
+        - "Diameter Template Name"
+        type: str
+        required: False
+    template_cache:
+        description:
+        - "RAM caching template (Cache Template Name)"
+        type: str
+        required: False
+    shared_partition_cache_template:
+        description:
+        - "Reference a Cache template from shared partition"
+        type: bool
+        required: False
+    template_cache_shared:
+        description:
+        - "Cache Template Name"
+        type: str
+        required: False
+    template_fix:
+        description:
+        - "FIX template (FIX Template Name)"
+        type: str
+        required: False
+    waf_template:
+        description:
+        - "WAF template (WAF Template Name)"
+        type: str
+        required: False
+    template_ssli:
+        description:
+        - "SSLi template (SSLi Template Name)"
+        type: str
+        required: False
+    template_tcp_proxy_client:
+        description:
+        - "TCP Proxy Config Client (TCP Proxy Config name)"
+        type: str
+        required: False
+    template_tcp_proxy_server:
+        description:
+        - "TCP Proxy Config Server (TCP Proxy Config name)"
+        type: str
+        required: False
+    template_tcp_proxy:
+        description:
+        - "TCP Proxy Template Name"
+        type: str
+        required: False
+    shared_partition_tcp_proxy_template:
+        description:
+        - "Reference a TCP Proxy template from shared partition"
+        type: bool
+        required: False
+    template_tcp_proxy_shared:
+        description:
+        - "TCP Proxy Template name"
+        type: str
+        required: False
+    use_default_if_no_server:
+        description:
+        - "Use default forwarding if server selection failed"
+        type: bool
+        required: False
+    template_scaleout:
+        description:
+        - "Scaleout template (Scaleout template name)"
+        type: str
         required: False
     no_dest_nat:
         description:
         - "Disable destination NAT, this option only supports in wildcard VIP or when a
           connection is operated in SSLi + EP mode"
+        type: bool
         required: False
-    name:
+    port_translation:
         description:
-        - "SLB Virtual Service Name"
+        - "Enable port translation under no-dest-nat"
+        type: bool
         required: False
-    template_smpp:
+    l7_hardware_assist:
         description:
-        - "SMPP template"
+        - "FPGA assist L7 packet parsing"
+        type: bool
+        required: False
+    auth_cfg:
+        description:
+        - "Field auth_cfg"
+        type: dict
+        required: False
+        suboptions:
+            aaa_policy:
+                description:
+                - "Specify AAA policy name to bind to the virtual port"
+                type: str
+    cpu_compute:
+        description:
+        - "enable cpu compute on virtual port"
+        type: bool
+        required: False
+    memory_compute:
+        description:
+        - "enable dynamic memory compute on virtual port"
+        type: bool
+        required: False
+    resolve_web_cat_list:
+        description:
+        - "Web Category List name"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
-        required: False
-    template_diameter:
-        description:
-        - "Diameter Template (diameter template name)"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -356,83 +975,90 @@ options:
           Bad FQDN; 'throughput-bits-per-sec'= Throughput in bits/sec; 'dynamic-memory-
           alloc'= dynamic memory (bytes) allocated by the vport; 'dynamic-memory-free'=
           dynamic memory (bytes) allocated by the vport; 'dynamic-memory'= dynamic memory
-          (bytes) used by the vport(alloc-free);"
-    template_ssli:
+          (bytes) used by the vport(alloc-free); 'ip_only_lb_fwd_bytes'= IP-Only-LB Bytes
+          processed in forward direction; 'ip_only_lb_rev_bytes'= IP-Only-LB Bytes
+          processed in reverse direction; 'ip_only_lb_fwd_pkts'= IP-Only-LB Packets
+          processed in forward direction; 'ip_only_lb_rev_pkts'= IP-Only-LB Packets
+          processed in reverse direction;"
+                type: str
+    oper:
         description:
-        - "SSLi template (SSLi Template Name)"
-        required: False
-    memory_compute:
-        description:
-        - "enable dynamic memory compute on virtual port"
-        required: False
-    shared_partition_policy_template:
-        description:
-        - "Reference a policy template from shared partition"
-        required: False
-    template_policy:
-        description:
-        - "Policy Template (Policy template name)"
-        required: False
-    no_logging:
-        description:
-        - "Do not log connection over limit event"
-        required: False
-    reset_on_server_selection_fail:
-        description:
-        - "Send client reset when server selection fails"
-        required: False
-    waf_template:
-        description:
-        - "WAF template (WAF Template Name)"
-        required: False
-    ipinip:
-        description:
-        - "Enable IP in IP"
-        required: False
-    no_auto_up_on_aflex:
-        description:
-        - "Don't automatically mark vport up when aFleX is bound"
-        required: False
-    rate:
-        description:
-        - "Specify the log message rate"
-        required: False
-    gslb_enable:
-        description:
-        - "Enable Global Server Load Balancing"
-        required: False
-    template_dns_shared:
-        description:
-        - "DNS Template Name"
-        required: False
-    template_persist_ssl_sid:
-        description:
-        - "SSL SID persistence (SSL SID persistence template name)"
-        required: False
-    template_dns:
-        description:
-        - "DNS template (DNS template name)"
-        required: False
-    shared_partition_dns_template:
-        description:
-        - "Reference a dns template from shared partition"
-        required: False
-    template_sip:
-        description:
-        - "SIP template"
-        required: False
-    template_dblb:
-        description:
-        - "DBLB Template (DBLB template name)"
-        required: False
-    stats:
-        description:
-        - "Field stats"
+        - "Field oper"
+        type: dict
         required: False
         suboptions:
-            curr_req:
+            state:
                 description:
-                - "Current requests"
+                - "Field state"
+                type: str
+            loc_list:
+                description:
+                - "Field loc_list"
+                type: str
+            geo_location:
+                description:
+                - "Field geo_location"
+                type: str
+            level_str:
+                description:
+                - "Field level_str"
+                type: str
+            group_id:
+                description:
+                - "Field group_id"
+                type: int
+            loc_max_depth:
+                description:
+                - "Field loc_max_depth"
+                type: int
+            loc_success:
+                description:
+                - "Field loc_success"
+                type: int
+            loc_error:
+                description:
+                - "Field loc_error"
+                type: int
+            loc_override:
+                description:
+                - "Field loc_override"
+                type: int
+            loc_last:
+                description:
+                - "Field loc_last"
+                type: str
+            http_hits_list:
+                description:
+                - "Field http_hits_list"
+                type: list
+            http_vport_cpu_list:
+                description:
+                - "Field http_vport_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
+            http_host_hits:
+                description:
+                - "Field http_host_hits"
+                type: bool
+            http_url_hits:
+                description:
+                - "Field http_url_hits"
+                type: bool
+            http_vport:
+                description:
+                - "Field http_vport"
+                type: bool
+            real_curr_conn:
+                description:
+                - "Field real_curr_conn"
+                type: int
+            port_number:
+                description:
+                - "Port"
+                type: int
             protocol:
                 description:
                 - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do
@@ -449,585 +1075,254 @@ options:
           'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
           SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
           Port; 'fast-fix'= Fast FIX port;"
-            curr_req_rate:
-                description:
-                - "Current request rate"
-            total_rev_pkts:
-                description:
-                - "Packets processed in reverse direction"
-            total_rev_pkts_out:
-                description:
-                - "Packets processed in reverse direction (outbound)"
-            curr_ssl_conn:
-                description:
-                - "Current SSL connections"
-            total_fwd_bytes_out:
-                description:
-                - "Bytes processed in forward direction (outbound)"
-            loc_deny:
-                description:
-                - "Geo-location Deny count"
-            curr_conn_rate:
-                description:
-                - "Current connection rate"
-            curr_resp:
-                description:
-                - "Current response"
-            total_resp_succ:
-                description:
-                - "Total successful responses"
-            curr_resp_rate:
-                description:
-                - "Current response rate"
-            backend_time_to_last_byte:
-                description:
-                - "Backend Time from Request to Response Last Byte"
-            dnsrrl_total_slipped:
-                description:
-                - "DNS Response-Rate-Limiting Total Responses Slipped"
-            total_fwd_bytes:
-                description:
-                - "Bytes processed in forward direction"
-            compression_miss:
-                description:
-                - "Number of requests NOT compressed"
-            loc_permit:
-                description:
-                - "Geo-location Permit count"
-            peak_conn:
-                description:
-                - "Peak connections"
-            fastest_rsp_time:
-                description:
-                - "Fastest response time"
-            total_fwd_pkts:
-                description:
-                - "Packets processed in forward direction"
-            total_tcp_conn:
-                description:
-                - "Total TCP connections established"
-            total_mf_dns_pkts:
-                description:
-                - "Total MF DNS packets"
-            curr_conn_overflow:
-                description:
-                - "Current connection counter overflow count"
-            dnsrrl_bad_fqdn:
-                description:
-                - "DNS Response-Rate-Limiting Bad FQDN"
-            in_latency:
-                description:
-                - "Request Latency at Thunder"
-            total_dns_pkts:
-                description:
-                - "Total DNS packets processed"
-            loc_conn:
-                description:
-                - "Geo-location Connection count"
-            compression_bytes_after:
-                description:
-                - "Data out of compression engine"
-            total_req:
-                description:
-                - "Total requests"
-            dnsrrl_total_dropped:
-                description:
-                - "DNS Response-Rate-Limiting Total Responses Dropped"
-            compression_bytes_before:
-                description:
-                - "Data into compression engine"
-            total_rev_bytes_out:
-                description:
-                - "Bytes processed in reverse direction (outbound)"
-            last_rsp_time:
-                description:
-                - "Last response time"
+                type: str
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
             curr_conn:
                 description:
                 - "Current established connections"
-            throughput_bits_per_sec:
-                description:
-                - "Throughput in bits/sec"
-            total_fwd_pkts_out:
-                description:
-                - "Packets processed in forward direction (outbound)"
-            total_rev_bytes:
-                description:
-                - "Bytes processed in reverse direction"
-            dnsrrl_total_allowed:
-                description:
-                - "DNS Response-Rate-Limiting Total Responses Allowed"
-            compression_miss_no_client:
-                description:
-                - "Compression miss no client"
-            es_total_failure_actions:
-                description:
-                - "Total failure actions"
-            port_number:
-                description:
-                - "Port"
-            total_ssl_conn:
-                description:
-                - "Total SSL connections"
-            compression_miss_template_exclusion:
-                description:
-                - "Compression miss template exclusion"
-            backend_time_to_first_byte:
-                description:
-                - "Backend Time from Request to Response First Byte"
-            total_l7_conn:
-                description:
-                - "Total L7 connections established"
-            slowest_rsp_time:
-                description:
-                - "Slowest response time"
-            total_req_succ:
-                description:
-                - "Total successful requests"
-            dynamic_memory:
-                description:
-                - "dynamic memory (bytes) used by the vport(alloc-free)"
-            total_resp:
-                description:
-                - "Total response"
-            total_conn:
-                description:
-                - "Total connections established"
-            compression_hit:
-                description:
-                - "Number of requests compressed"
-            out_latency:
-                description:
-                - "Response Latency at Thunder"
+                type: str
             total_l4_conn:
                 description:
                 - "Total L4 connections established"
-    shared_partition_server_ssl_template:
-        description:
-        - "Reference a SSL Server template from shared partition"
-        required: False
-    template_client_ssl:
-        description:
-        - "Client SSL Template Name"
-        required: False
-    support_http2:
-        description:
-        - "Support HTTP2"
-        required: False
-    template_client_ssh:
-        description:
-        - "Client SSH Template (Client SSH Config Name)"
-        required: False
-    shared_partition_tcp_proxy_template:
-        description:
-        - "Reference a TCP Proxy template from shared partition"
-        required: False
-    enable_playerid_check:
-        description:
-        - "Enable playerid checks on UDP packets once the AX is in active mode"
-        required: False
-    service_group:
-        description:
-        - "Bind a Service Group to this Virtual Server (Service Group Name)"
-        required: False
-    shared_partition_persist_ssl_sid_template:
-        description:
-        - "Reference a persist SSL SID template from shared partition"
-        required: False
-    def_selection_if_pref_failed:
-        description:
-        - "'def-selection-if-pref-failed'= Use default server selection method if prefer
-          method failed; 'def-selection-if-pref-failed-disable'= Stop using default
-          server selection method if prefer method failed;"
-        required: False
-    shared_partition_udp:
-        description:
-        - "Reference a UDP template from shared partition"
-        required: False
-    syn_cookie:
-        description:
-        - "Enable syn-cookie"
-        required: False
-    alternate_port:
-        description:
-        - "Alternate Virtual Port"
-        required: False
-    alternate_port_number:
-        description:
-        - "Virtual Port"
-        required: False
-    template_persist_source_ip_shared:
-        description:
-        - "Source IP Persistence Template Name"
-        required: False
-    template_cache:
-        description:
-        - "RAM caching template (Cache Template Name)"
-        required: False
-    template_persist_cookie_shared:
-        description:
-        - "Cookie Persistence Template Name"
-        required: False
-    rtp_sip_call_id_match:
-        description:
-        - "rtp traffic try to match the real server of sip smp call-id session"
-        required: False
-    shared_partition_persist_cookie_template:
-        description:
-        - "Reference a persist cookie template from shared partition"
-        required: False
-    template_file_inspection:
-        description:
-        - "File Inspection service template (file-inspection template name)"
-        required: False
-    template_ftp:
-        description:
-        - "FTP port template (Ftp template name)"
-        required: False
-    serv_sel_fail:
-        description:
-        - "Use alternate virtual port when server selection failure"
-        required: False
-    template_udp:
-        description:
-        - "L4 UDP Template"
-        required: False
-    template_virtual_port_shared:
-        description:
-        - "Virtual Port Template Name"
-        required: False
-    action:
-        description:
-        - "'enable'= Enable; 'disable'= Disable;"
-        required: False
-    template_http:
-        description:
-        - "HTTP Template Name"
-        required: False
-    view:
-        description:
-        - "Specify a GSLB View (ID)"
-        required: False
-    template_persist_source_ip:
-        description:
-        - "Source IP persistence (Source IP persistence template name)"
-        required: False
-    template_dynamic_service:
-        description:
-        - "Dynamic Service Template (dynamic-service template name)"
-        required: False
-    shared_partition_virtual_port_template:
-        description:
-        - "Reference a Virtual Port template from shared partition"
-        required: False
-    use_cgnv6:
-        description:
-        - "Follow CGNv6 source NAT configuration"
-        required: False
-    template_persist_destination_ip:
-        description:
-        - "Destination IP persistence (Destination IP persistence template name)"
-        required: False
-    template_virtual_port:
-        description:
-        - "Virtual port template (Virtual port template name)"
-        required: False
-    conn_limit:
-        description:
-        - "Connection Limit"
-        required: False
-    trunk_fwd:
-        description:
-        - "Trunk interface number"
-        required: False
-    template_udp_shared:
-        description:
-        - "UDP Template Name"
-        required: False
-    template_http_policy_shared:
-        description:
-        - "Http Policy Template Name"
-        required: False
-    pool:
-        description:
-        - "Specify NAT pool or pool group"
-        required: False
-    snat_on_vip:
-        description:
-        - "Enable source NAT traffic against VIP"
-        required: False
-    template_connection_reuse_shared:
-        description:
-        - "Connection Reuse Template Name"
-        required: False
-    shared_partition_tcp:
-        description:
-        - "Reference a tcp template from shared partition"
-        required: False
-    acl_id_list:
-        description:
-        - "Field acl_id_list"
-        required: False
-        suboptions:
-            v_acl_id_seq_num:
+                type: str
+            total_l7_conn:
                 description:
-                - "Specify ACL precedence (sequence-number)"
-            acl_id_seq_num:
+                - "Total L7 connections established"
+                type: str
+            total_tcp_conn:
                 description:
-                - "Specify ACL precedence (sequence-number)"
-            acl_id_src_nat_pool:
+                - "Total TCP connections established"
+                type: str
+            total_conn:
                 description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            acl_id_seq_num_shared:
+                - "Total connections established"
+                type: str
+            total_fwd_bytes:
                 description:
-                - "Specify ACL precedence (sequence-number)"
-            v_acl_id_src_nat_pool:
+                - "Bytes processed in forward direction"
+                type: str
+            total_fwd_pkts:
                 description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            acl_id_shared:
+                - "Packets processed in forward direction"
+                type: str
+            total_rev_bytes:
                 description:
-                - "acl id"
-            v_acl_id_src_nat_pool_shared:
+                - "Bytes processed in reverse direction"
+                type: str
+            total_rev_pkts:
                 description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            acl_id:
+                - "Packets processed in reverse direction"
+                type: str
+            total_dns_pkts:
                 description:
-                - "ACL id VPORT"
-            acl_id_src_nat_pool_shared:
+                - "Total DNS packets processed"
+                type: str
+            total_mf_dns_pkts:
                 description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            v_shared_partition_pool_id:
+                - "Total MF DNS packets"
+                type: str
+            es_total_failure_actions:
                 description:
-                - "Policy based Source NAT from shared partition"
-            shared_partition_pool_id:
+                - "Total failure actions"
+                type: str
+            compression_bytes_before:
                 description:
-                - "Policy based Source NAT from shared partition"
-            v_acl_id_seq_num_shared:
+                - "Data into compression engine"
+                type: str
+            compression_bytes_after:
                 description:
-                - "Specify ACL precedence (sequence-number)"
-    shared_partition_http_template:
-        description:
-        - "Reference a HTTP template from shared partition"
-        required: False
-    template_external_service:
-        description:
-        - "External service template (external-service template name)"
-        required: False
-    on_syn:
-        description:
-        - "Enable for HA Conn sync for l4 tcp sessions on SYN"
-        required: False
-    template_persist_ssl_sid_shared:
-        description:
-        - "SSL SID Persistence Template Name"
-        required: False
-    force_routing_mode:
-        description:
-        - "Force routing mode"
-        required: False
-    template_http_policy:
-        description:
-        - "http-policy template (http-policy template name)"
-        required: False
-    template_policy_shared:
-        description:
-        - "Policy Template Name"
-        required: False
-    template_scaleout:
-        description:
-        - "Scaleout template (Scaleout template name)"
-        required: False
-    when_down_protocol2:
-        description:
-        - "Use alternate virtual port when down"
-        required: False
-    template_fix:
-        description:
-        - "FIX template (FIX Template Name)"
-        required: False
-    template_smtp:
-        description:
-        - "SMTP Template (SMTP Config Name)"
-        required: False
-    redirect_to_https:
-        description:
-        - "Redirect HTTP to HTTPS"
-        required: False
-    alt_protocol2:
-        description:
-        - "'tcp'= TCP LB service;"
-        required: False
-    alt_protocol1:
-        description:
-        - "'http'= HTTP Port;"
-        required: False
-    message_switching:
-        description:
-        - "Message switching"
-        required: False
-    template_imap_pop3:
-        description:
-        - "IMAP/POP3 Template (IMAP/POP3 Config Name)"
-        required: False
-    scaleout_device_group:
-        description:
-        - "Device group id"
-        required: False
-    shared_partition_persist_source_ip_template:
-        description:
-        - "Reference a persist source ip template from shared partition"
-        required: False
-    l7_hardware_assist:
-        description:
-        - "FPGA assist L7 packet parsing"
-        required: False
-    template_tcp_proxy_shared:
-        description:
-        - "TCP Proxy Template name"
-        required: False
-    shared_partition_cache_template:
-        description:
-        - "Reference a Cache template from shared partition"
-        required: False
-    use_alternate_port:
-        description:
-        - "Use alternate virtual port"
-        required: False
-    template_tcp_proxy_server:
-        description:
-        - "TCP Proxy Config Server (TCP Proxy Config name)"
-        required: False
-    trunk_rev:
-        description:
-        - "Trunk interface number"
-        required: False
-    eth_fwd:
-        description:
-        - "Ethernet interface number"
-        required: False
-    pool_shared:
-        description:
-        - "Specify NAT pool or pool group"
-        required: False
-    template_respmod_icap:
-        description:
-        - "ICAP respmod service template (respmod-icap template name)"
-        required: False
-    range:
-        description:
-        - "Virtual Port range (Virtual Port range value)"
-        required: False
-    reset:
-        description:
-        - "Send client reset when connection number over limit"
-        required: False
-    template_external_service_shared:
-        description:
-        - "External Service Template Name"
-        required: False
-    auto:
-        description:
-        - "Configure auto NAT for the vport"
-        required: False
-    template_dynamic_service_shared:
-        description:
-        - "Dynamic Service Template Name"
-        required: False
-    template_server_ssh:
-        description:
-        - "Server SSH Template (Server SSH Config Name)"
-        required: False
-    aflex_scripts:
-        description:
-        - "Field aflex_scripts"
-        required: False
-        suboptions:
-            aflex:
+                - "Data out of compression engine"
+                type: str
+            compression_hit:
                 description:
-                - "aFleX Script Name"
-            aflex_shared:
+                - "Number of requests compressed"
+                type: str
+            compression_miss:
                 description:
-                - "aFleX Script Name"
-    template_http_shared:
-        description:
-        - "HTTP Template Name"
-        required: False
-    template_server_ssl:
-        description:
-        - "Server Side SSL Template Name"
-        required: False
-    shared_partition_diameter_template:
-        description:
-        - "Reference a Diameter template from shared partition"
-        required: False
-    template_server_ssl_shared:
-        description:
-        - "Server SSL Template Name"
-        required: False
-    template_persist_destination_ip_shared:
-        description:
-        - "Destination IP Persistence Template Name"
-        required: False
-    template_cache_shared:
-        description:
-        - "Cache Template Name"
-        required: False
-    port_number:
-        description:
-        - "Port"
-        required: True
-    template_tcp_proxy_client:
-        description:
-        - "TCP Proxy Config Client (TCP Proxy Config name)"
-        required: False
-    shared_partition_pool:
-        description:
-        - "Specify NAT pool or pool group from shared partition"
-        required: False
-    template_tcp_proxy:
-        description:
-        - "TCP Proxy Template Name"
-        required: False
-    extended_stats:
-        description:
-        - "Enable extended statistics on virtual port"
-        required: False
-    shared_partition_client_ssl_template:
-        description:
-        - "Reference a Client SSL template from shared partition"
-        required: False
-    expand:
-        description:
-        - "expand syn-cookie with timestamp and wscale"
-        required: False
-    skip_rev_hash:
-        description:
-        - "Skip rev tuple hash insertion"
-        required: False
-    template_diameter_shared:
-        description:
-        - "Diameter Template Name"
-        required: False
-    clientip_sticky_nat:
-        description:
-        - "Prefer to use same source NAT address for a client"
-        required: False
-    secs:
-        description:
-        - "Specify the interval in seconds"
-        required: False
-    auth_cfg:
-        description:
-        - "Field auth_cfg"
-        required: False
-        suboptions:
-            aaa_policy:
+                - "Number of requests NOT compressed"
+                type: str
+            compression_miss_no_client:
                 description:
-                - "Specify AAA policy name to bind to the virtual port"
-    eth_rev:
-        description:
-        - "Ethernet interface number"
-        required: False
+                - "Compression miss no client"
+                type: str
+            compression_miss_template_exclusion:
+                description:
+                - "Compression miss template exclusion"
+                type: str
+            curr_req:
+                description:
+                - "Current requests"
+                type: str
+            total_req:
+                description:
+                - "Total requests"
+                type: str
+            total_req_succ:
+                description:
+                - "Total successful requests"
+                type: str
+            peak_conn:
+                description:
+                - "Peak connections"
+                type: str
+            curr_conn_rate:
+                description:
+                - "Current connection rate"
+                type: str
+            last_rsp_time:
+                description:
+                - "Last response time"
+                type: str
+            fastest_rsp_time:
+                description:
+                - "Fastest response time"
+                type: str
+            slowest_rsp_time:
+                description:
+                - "Slowest response time"
+                type: str
+            loc_permit:
+                description:
+                - "Geo-location Permit count"
+                type: str
+            loc_deny:
+                description:
+                - "Geo-location Deny count"
+                type: str
+            loc_conn:
+                description:
+                - "Geo-location Connection count"
+                type: str
+            curr_ssl_conn:
+                description:
+                - "Current SSL connections"
+                type: str
+            total_ssl_conn:
+                description:
+                - "Total SSL connections"
+                type: str
+            backend_time_to_first_byte:
+                description:
+                - "Backend Time from Request to Response First Byte"
+                type: str
+            backend_time_to_last_byte:
+                description:
+                - "Backend Time from Request to Response Last Byte"
+                type: str
+            in_latency:
+                description:
+                - "Request Latency at Thunder"
+                type: str
+            out_latency:
+                description:
+                - "Response Latency at Thunder"
+                type: str
+            total_fwd_bytes_out:
+                description:
+                - "Bytes processed in forward direction (outbound)"
+                type: str
+            total_fwd_pkts_out:
+                description:
+                - "Packets processed in forward direction (outbound)"
+                type: str
+            total_rev_bytes_out:
+                description:
+                - "Bytes processed in reverse direction (outbound)"
+                type: str
+            total_rev_pkts_out:
+                description:
+                - "Packets processed in reverse direction (outbound)"
+                type: str
+            curr_req_rate:
+                description:
+                - "Current request rate"
+                type: str
+            curr_resp:
+                description:
+                - "Current response"
+                type: str
+            total_resp:
+                description:
+                - "Total response"
+                type: str
+            total_resp_succ:
+                description:
+                - "Total successful responses"
+                type: str
+            curr_resp_rate:
+                description:
+                - "Current response rate"
+                type: str
+            curr_conn_overflow:
+                description:
+                - "Current connection counter overflow count"
+                type: str
+            dnsrrl_total_allowed:
+                description:
+                - "DNS Response-Rate-Limiting Total Responses Allowed"
+                type: str
+            dnsrrl_total_dropped:
+                description:
+                - "DNS Response-Rate-Limiting Total Responses Dropped"
+                type: str
+            dnsrrl_total_slipped:
+                description:
+                - "DNS Response-Rate-Limiting Total Responses Slipped"
+                type: str
+            dnsrrl_bad_fqdn:
+                description:
+                - "DNS Response-Rate-Limiting Bad FQDN"
+                type: str
+            throughput_bits_per_sec:
+                description:
+                - "Throughput in bits/sec"
+                type: str
+            dynamic_memory:
+                description:
+                - "dynamic memory (bytes) used by the vport(alloc-free)"
+                type: str
+            ip_only_lb_fwd_bytes:
+                description:
+                - "IP-Only-LB Bytes processed in forward direction"
+                type: str
+            ip_only_lb_rev_bytes:
+                description:
+                - "IP-Only-LB Bytes processed in reverse direction"
+                type: str
+            ip_only_lb_fwd_pkts:
+                description:
+                - "IP-Only-LB Packets processed in forward direction"
+                type: str
+            ip_only_lb_rev_pkts:
+                description:
+                - "IP-Only-LB Packets processed in reverse direction"
+                type: str
+            port_number:
+                description:
+                - "Port"
+                type: int
+            protocol:
+                description:
+                - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do
+          IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP;
+          'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port;
+          'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP
+          Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'=
+          [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load
+          balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port;
+          'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real
+          Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP;
+          'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation
+          protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port;
+          'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'=
+          SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP
+          Port; 'fast-fix'= Fast FIX port;"
+                type: str
 
 '''
 
@@ -1065,6 +1360,7 @@ AVAILABLE_PROPERTIES = [
     "gslb_enable",
     "ha_conn_mirror",
     "ip_map_list",
+    "ip_only_lb",
     "ipinip",
     "l7_hardware_assist",
     "memory_compute",
@@ -1089,12 +1385,14 @@ AVAILABLE_PROPERTIES = [
     "req_fail",
     "reset",
     "reset_on_server_selection_fail",
+    "resolve_web_cat_list",
     "rtp_sip_call_id_match",
     "sampling_enable",
     "scaleout_bucket_count",
     "scaleout_device_group",
     "secs",
     "serv_sel_fail",
+    "server_group",
     "service_group",
     "shared_partition_cache_template",
     "shared_partition_client_ssl_template",
@@ -1182,6 +1480,7 @@ AVAILABLE_PROPERTIES = [
     "use_cgnv6",
     "use_default_if_no_server",
     "use_rcv_hop_for_resp",
+    "use_rcv_hop_group",
     "user_tag",
     "uuid",
     "view",
@@ -1225,387 +1524,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'http_host_hits': {
-                'type': 'bool',
-            },
-            'protocol': {
-                'type':
-                'str',
-                'required':
-                True,
-                'choices': [
-                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
-                    'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                    'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                    'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips',
-                    'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
-                    'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                ]
-            },
-            'cpu_count': {
-                'type': 'int',
-            },
-            'port_number': {
-                'type': 'int',
-                'required': True,
-            },
-            'loc_list': {
-                'type': 'str',
-            },
-            'http_hits_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                },
-                'hits_count': {
-                    'type': 'int',
-                }
-            },
-            'http_vport': {
-                'type': 'bool',
-            },
-            'state': {
-                'type': 'str',
-                'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
-            },
-            'loc_max_depth': {
-                'type': 'int',
-            },
-            'level_str': {
-                'type': 'str',
-            },
-            'loc_last': {
-                'type': 'str',
-            },
-            'http_url_hits': {
-                'type': 'bool',
-            },
-            'geo_location': {
-                'type': 'str',
-            },
-            'http_vport_cpu_list': {
-                'type': 'list',
-                'REQ_50u': {
-                    'type': 'int',
-                },
-                'http2_control_bytes': {
-                    'type': 'int',
-                },
-                'ws_server_switch': {
-                    'type': 'int',
-                },
-                'REQ_50m': {
-                    'type': 'int',
-                },
-                'status_450': {
-                    'type': 'int',
-                },
-                'http2_reset_received': {
-                    'type': 'int',
-                },
-                'status_510': {
-                    'type': 'int',
-                },
-                'ws_handshake_request': {
-                    'type': 'int',
-                },
-                'http2_header_bytes': {
-                    'type': 'int',
-                },
-                'status_207': {
-                    'type': 'int',
-                },
-                'status_206': {
-                    'type': 'int',
-                },
-                'status_205': {
-                    'type': 'int',
-                },
-                'status_204': {
-                    'type': 'int',
-                },
-                'status_203': {
-                    'type': 'int',
-                },
-                'status_202': {
-                    'type': 'int',
-                },
-                'status_201': {
-                    'type': 'int',
-                },
-                'status_200': {
-                    'type': 'int',
-                },
-                'ws_client_switch': {
-                    'type': 'int',
-                },
-                'status_2xx': {
-                    'type': 'int',
-                },
-                'http2_goaway_received': {
-                    'type': 'int',
-                },
-                'REQ_500u': {
-                    'type': 'int',
-                },
-                'status_4xx': {
-                    'type': 'int',
-                },
-                'status_3xx': {
-                    'type': 'int',
-                },
-                'REQ_200u': {
-                    'type': 'int',
-                },
-                'stream_closed': {
-                    'type': 'int',
-                },
-                'REQ_100m': {
-                    'type': 'int',
-                },
-                'REQ_5m': {
-                    'type': 'int',
-                },
-                'REQ_100u': {
-                    'type': 'int',
-                },
-                'REQ_5s': {
-                    'type': 'int',
-                },
-                'REQ_20m': {
-                    'type': 'int',
-                },
-                'header_length_long': {
-                    'type': 'int',
-                },
-                'REQ_20u': {
-                    'type': 'int',
-                },
-                'REQ_2s': {
-                    'type': 'int',
-                },
-                'total_http2_bytes': {
-                    'type': 'int',
-                },
-                'status_411': {
-                    'type': 'int',
-                },
-                'status_306': {
-                    'type': 'int',
-                },
-                'status_307': {
-                    'type': 'int',
-                },
-                'status_304': {
-                    'type': 'int',
-                },
-                'status_305': {
-                    'type': 'int',
-                },
-                'status_302': {
-                    'type': 'int',
-                },
-                'status_303': {
-                    'type': 'int',
-                },
-                'REQ_2m': {
-                    'type': 'int',
-                },
-                'status_301': {
-                    'type': 'int',
-                },
-                'REQ_10u': {
-                    'type': 'int',
-                },
-                'total_http2_conn': {
-                    'type': 'int',
-                },
-                'REQ_10m': {
-                    'type': 'int',
-                },
-                'REQ_200m': {
-                    'type': 'int',
-                },
-                'peak_http2_conn': {
-                    'type': 'int',
-                },
-                'status_412': {
-                    'type': 'int',
-                },
-                'status_413': {
-                    'type': 'int',
-                },
-                'status_410': {
-                    'type': 'int',
-                },
-                'http2_reset_sent': {
-                    'type': 'int',
-                },
-                'status_416': {
-                    'type': 'int',
-                },
-                'status_417': {
-                    'type': 'int',
-                },
-                'status_414': {
-                    'type': 'int',
-                },
-                'status_415': {
-                    'type': 'int',
-                },
-                'status_418': {
-                    'type': 'int',
-                },
-                'status_unknown': {
-                    'type': 'int',
-                },
-                'status_100': {
-                    'type': 'int',
-                },
-                'status_101': {
-                    'type': 'int',
-                },
-                'status_102': {
-                    'type': 'int',
-                },
-                'status_300': {
-                    'type': 'int',
-                },
-                'status_424': {
-                    'type': 'int',
-                },
-                'curr_http2_conn': {
-                    'type': 'int',
-                },
-                'ws_handshake_success': {
-                    'type': 'int',
-                },
-                'status_504_ax': {
-                    'type': 'int',
-                },
-                'status_6xx': {
-                    'type': 'int',
-                },
-                'status_5xx': {
-                    'type': 'int',
-                },
-                'status_401': {
-                    'type': 'int',
-                },
-                'status_400': {
-                    'type': 'int',
-                },
-                'status_403': {
-                    'type': 'int',
-                },
-                'status_402': {
-                    'type': 'int',
-                },
-                'status_405': {
-                    'type': 'int',
-                },
-                'status_404': {
-                    'type': 'int',
-                },
-                'status_407': {
-                    'type': 'int',
-                },
-                'status_406': {
-                    'type': 'int',
-                },
-                'status_409': {
-                    'type': 'int',
-                },
-                'status_408': {
-                    'type': 'int',
-                },
-                'http2_goaway_sent': {
-                    'type': 'int',
-                },
-                'REQ_1m': {
-                    'type': 'int',
-                },
-                'REQ_1s': {
-                    'type': 'int',
-                },
-                'status_1xx': {
-                    'type': 'int',
-                },
-                'http2_data_bytes': {
-                    'type': 'int',
-                },
-                'status_423': {
-                    'type': 'int',
-                },
-                'status_422': {
-                    'type': 'int',
-                },
-                'status_426': {
-                    'type': 'int',
-                },
-                'status_425': {
-                    'type': 'int',
-                },
-                'REQ_500m': {
-                    'type': 'int',
-                },
-                'status_508': {
-                    'type': 'int',
-                },
-                'status_509': {
-                    'type': 'int',
-                },
-                'REQ_OVER_5s': {
-                    'type': 'int',
-                },
-                'status_500': {
-                    'type': 'int',
-                },
-                'status_501': {
-                    'type': 'int',
-                },
-                'status_502': {
-                    'type': 'int',
-                },
-                'status_503': {
-                    'type': 'int',
-                },
-                'status_504': {
-                    'type': 'int',
-                },
-                'status_505': {
-                    'type': 'int',
-                },
-                'status_506': {
-                    'type': 'int',
-                },
-                'status_507': {
-                    'type': 'int',
-                },
-                'status_449': {
-                    'type': 'int',
-                }
-            },
-            'real_curr_conn': {
-                'type': 'int',
-            },
-            'loc_success': {
-                'type': 'int',
-            },
-            'loc_error': {
-                'type': 'int',
-            },
-            'group_id': {
-                'type': 'int',
-            },
-            'loc_override': {
-                'type': 'int',
-            }
-        },
-        'ha_conn_mirror': {
-            'type': 'bool',
+        'port_number': {
+            'type': 'int',
+            'required': True,
         },
         'protocol': {
             'type':
@@ -1621,98 +1542,260 @@ def get_argspec():
                 'tcp-proxy', 'tftp', 'fast-fix'
             ]
         },
-        'cpu_compute': {
+        'range': {
+            'type': 'int',
+        },
+        'alternate_port': {
             'type': 'bool',
         },
-        'precedence': {
+        'optimization_level': {
+            'type': 'str',
+            'choices': ['0', '1']
+        },
+        'support_http2': {
             'type': 'bool',
         },
-        'port_translation': {
+        'ip_only_lb': {
             'type': 'bool',
         },
-        'ip_map_list': {
+        'name': {
             'type': 'str',
         },
-        'template_reqmod_icap': {
+        'conn_limit': {
+            'type': 'int',
+        },
+        'reset': {
+            'type': 'bool',
+        },
+        'no_logging': {
+            'type': 'bool',
+        },
+        'use_alternate_port': {
+            'type': 'bool',
+        },
+        'alternate_port_number': {
+            'type': 'int',
+        },
+        'alt_protocol1': {
             'type': 'str',
+            'choices': ['http']
+        },
+        'serv_sel_fail': {
+            'type': 'bool',
+        },
+        'when_down': {
+            'type': 'bool',
+        },
+        'alt_protocol2': {
+            'type': 'str',
+            'choices': ['tcp']
+        },
+        'req_fail': {
+            'type': 'bool',
+        },
+        'when_down_protocol2': {
+            'type': 'bool',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'def_selection_if_pref_failed': {
+            'type':
+            'str',
+            'choices': [
+                'def-selection-if-pref-failed',
+                'def-selection-if-pref-failed-disable'
+            ]
+        },
+        'ha_conn_mirror': {
+            'type': 'bool',
+        },
+        'on_syn': {
+            'type': 'bool',
+        },
+        'skip_rev_hash': {
+            'type': 'bool',
+        },
+        'message_switching': {
+            'type': 'bool',
+        },
+        'force_routing_mode': {
+            'type': 'bool',
+        },
+        'rate': {
+            'type': 'int',
+        },
+        'secs': {
+            'type': 'int',
+        },
+        'reset_on_server_selection_fail': {
+            'type': 'bool',
+        },
+        'clientip_sticky_nat': {
+            'type': 'bool',
+        },
+        'extended_stats': {
+            'type': 'bool',
+        },
+        'gslb_enable': {
+            'type': 'bool',
+        },
+        'view': {
+            'type': 'int',
+        },
+        'snat_on_vip': {
+            'type': 'bool',
+        },
+        'stats_data_action': {
+            'type': 'str',
+            'choices': ['stats-data-enable', 'stats-data-disable']
+        },
+        'syn_cookie': {
+            'type': 'bool',
+        },
+        'expand': {
+            'type': 'bool',
+        },
+        'acl_id_list': {
+            'type': 'list',
+            'acl_id': {
+                'type': 'int',
+            },
+            'acl_id_src_nat_pool': {
+                'type': 'str',
+            },
+            'acl_id_seq_num': {
+                'type': 'int',
+            },
+            'shared_partition_pool_id': {
+                'type': 'bool',
+            },
+            'acl_id_src_nat_pool_shared': {
+                'type': 'str',
+            },
+            'acl_id_seq_num_shared': {
+                'type': 'int',
+            },
+            'acl_id_shared': {
+                'type': 'int',
+            },
+            'v_acl_id_src_nat_pool': {
+                'type': 'str',
+            },
+            'v_acl_id_seq_num': {
+                'type': 'int',
+            },
+            'v_shared_partition_pool_id': {
+                'type': 'bool',
+            },
+            'v_acl_id_src_nat_pool_shared': {
+                'type': 'str',
+            },
+            'v_acl_id_seq_num_shared': {
+                'type': 'int',
+            }
         },
         'acl_name_list': {
             'type': 'list',
-            'acl_name_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'v_acl_name_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'shared_partition_pool_name': {
-                'type': 'bool',
-            },
-            'acl_name_seq_num_shared': {
-                'type': 'int',
-            },
             'acl_name': {
                 'type': 'str',
             },
-            'v_shared_partition_pool_name': {
-                'type': 'bool',
-            },
             'acl_name_src_nat_pool': {
-                'type': 'str',
-            },
-            'v_acl_name_seq_num': {
-                'type': 'int',
-            },
-            'acl_name_shared': {
                 'type': 'str',
             },
             'acl_name_seq_num': {
                 'type': 'int',
             },
+            'shared_partition_pool_name': {
+                'type': 'bool',
+            },
+            'acl_name_src_nat_pool_shared': {
+                'type': 'str',
+            },
+            'acl_name_seq_num_shared': {
+                'type': 'int',
+            },
+            'acl_name_shared': {
+                'type': 'str',
+            },
             'v_acl_name_src_nat_pool': {
+                'type': 'str',
+            },
+            'v_acl_name_seq_num': {
+                'type': 'int',
+            },
+            'v_shared_partition_pool_name': {
+                'type': 'bool',
+            },
+            'v_acl_name_src_nat_pool_shared': {
                 'type': 'str',
             },
             'v_acl_name_seq_num_shared': {
                 'type': 'int',
             }
         },
-        'stats_data_action': {
+        'template_policy': {
             'type': 'str',
-            'choices': ['stats-data-enable', 'stats-data-disable']
         },
-        'use_default_if_no_server': {
+        'shared_partition_policy_template': {
             'type': 'bool',
         },
-        'template_connection_reuse': {
+        'template_policy_shared': {
             'type': 'str',
         },
-        'uuid': {
-            'type': 'str',
+        'aflex_scripts': {
+            'type': 'list',
+            'aflex': {
+                'type': 'str',
+            },
+            'aflex_shared': {
+                'type': 'str',
+            }
         },
-        'template_tcp_shared': {
-            'type': 'str',
-        },
-        'template_tcp': {
-            'type': 'str',
-        },
-        'template_persist_cookie': {
-            'type': 'str',
-        },
-        'shared_partition_dynamic_service_template': {
+        'no_auto_up_on_aflex': {
             'type': 'bool',
         },
-        'shared_partition_connection_reuse_template': {
-            'type': 'bool',
+        'scaleout_bucket_count': {
+            'type': 'int',
         },
-        'when_down': {
-            'type': 'bool',
+        'scaleout_device_group': {
+            'type': 'int',
         },
-        'template_client_ssl_shared': {
+        'pool': {
             'type': 'str',
         },
-        'shared_partition_persist_destination_ip_template': {
+        'shared_partition_pool': {
             'type': 'bool',
         },
-        'shared_partition_external_service_template': {
+        'pool_shared': {
+            'type': 'str',
+        },
+        'auto': {
+            'type': 'bool',
+        },
+        'precedence': {
+            'type': 'bool',
+        },
+        'use_cgnv6': {
+            'type': 'bool',
+        },
+        'enable_playerid_check': {
+            'type': 'bool',
+        },
+        'service_group': {
+            'type': 'str',
+        },
+        'ipinip': {
+            'type': 'bool',
+        },
+        'ip_map_list': {
+            'type': 'str',
+        },
+        'rtp_sip_call_id_match': {
+            'type': 'bool',
+        },
+        'use_rcv_hop_for_resp': {
             'type': 'bool',
         },
         'persist_type': {
@@ -1723,35 +1806,271 @@ def get_argspec():
                 'use-dst-ip-for-src-persist'
             ]
         },
-        'shared_partition_http_policy_template': {
+        'use_rcv_hop_group': {
             'type': 'bool',
         },
-        'use_rcv_hop_for_resp': {
-            'type': 'bool',
-        },
-        'scaleout_bucket_count': {
-            'type': 'int',
-        },
-        'optimization_level': {
+        'server_group': {
             'type': 'str',
-            'choices': ['0', '1']
         },
-        'req_fail': {
-            'type': 'bool',
+        'eth_fwd': {
+            'type': 'str',
         },
-        'no_dest_nat': {
-            'type': 'bool',
+        'trunk_fwd': {
+            'type': 'str',
         },
-        'name': {
+        'eth_rev': {
+            'type': 'str',
+        },
+        'trunk_rev': {
+            'type': 'str',
+        },
+        'template_sip': {
             'type': 'str',
         },
         'template_smpp': {
             'type': 'str',
         },
-        'user_tag': {
+        'template_dblb': {
+            'type': 'str',
+        },
+        'template_connection_reuse': {
+            'type': 'str',
+        },
+        'shared_partition_connection_reuse_template': {
+            'type': 'bool',
+        },
+        'template_connection_reuse_shared': {
+            'type': 'str',
+        },
+        'template_dns': {
+            'type': 'str',
+        },
+        'shared_partition_dns_template': {
+            'type': 'bool',
+        },
+        'template_dns_shared': {
+            'type': 'str',
+        },
+        'template_dynamic_service': {
+            'type': 'str',
+        },
+        'shared_partition_dynamic_service_template': {
+            'type': 'bool',
+        },
+        'template_dynamic_service_shared': {
+            'type': 'str',
+        },
+        'template_persist_source_ip': {
+            'type': 'str',
+        },
+        'shared_partition_persist_source_ip_template': {
+            'type': 'bool',
+        },
+        'template_persist_source_ip_shared': {
+            'type': 'str',
+        },
+        'template_persist_destination_ip': {
+            'type': 'str',
+        },
+        'shared_partition_persist_destination_ip_template': {
+            'type': 'bool',
+        },
+        'template_persist_destination_ip_shared': {
+            'type': 'str',
+        },
+        'template_persist_ssl_sid': {
+            'type': 'str',
+        },
+        'shared_partition_persist_ssl_sid_template': {
+            'type': 'bool',
+        },
+        'template_persist_ssl_sid_shared': {
+            'type': 'str',
+        },
+        'template_persist_cookie': {
+            'type': 'str',
+        },
+        'shared_partition_persist_cookie_template': {
+            'type': 'bool',
+        },
+        'template_persist_cookie_shared': {
+            'type': 'str',
+        },
+        'template_imap_pop3': {
+            'type': 'str',
+        },
+        'template_smtp': {
+            'type': 'str',
+        },
+        'template_http': {
+            'type': 'str',
+        },
+        'shared_partition_http_template': {
+            'type': 'bool',
+        },
+        'template_http_shared': {
+            'type': 'str',
+        },
+        'template_http_policy': {
+            'type': 'str',
+        },
+        'shared_partition_http_policy_template': {
+            'type': 'bool',
+        },
+        'template_http_policy_shared': {
+            'type': 'str',
+        },
+        'redirect_to_https': {
+            'type': 'bool',
+        },
+        'template_external_service': {
+            'type': 'str',
+        },
+        'shared_partition_external_service_template': {
+            'type': 'bool',
+        },
+        'template_external_service_shared': {
+            'type': 'str',
+        },
+        'template_reqmod_icap': {
+            'type': 'str',
+        },
+        'template_respmod_icap': {
+            'type': 'str',
+        },
+        'template_file_inspection': {
+            'type': 'str',
+        },
+        'template_server_ssl': {
+            'type': 'str',
+        },
+        'shared_partition_server_ssl_template': {
+            'type': 'bool',
+        },
+        'template_server_ssl_shared': {
+            'type': 'str',
+        },
+        'template_client_ssl': {
+            'type': 'str',
+        },
+        'shared_partition_client_ssl_template': {
+            'type': 'bool',
+        },
+        'template_client_ssl_shared': {
+            'type': 'str',
+        },
+        'template_server_ssh': {
+            'type': 'str',
+        },
+        'template_client_ssh': {
+            'type': 'str',
+        },
+        'template_udp': {
+            'type': 'str',
+        },
+        'shared_partition_udp': {
+            'type': 'bool',
+        },
+        'template_udp_shared': {
+            'type': 'str',
+        },
+        'template_tcp': {
+            'type': 'str',
+        },
+        'shared_partition_tcp': {
+            'type': 'bool',
+        },
+        'template_tcp_shared': {
+            'type': 'str',
+        },
+        'template_virtual_port': {
+            'type': 'str',
+        },
+        'shared_partition_virtual_port_template': {
+            'type': 'bool',
+        },
+        'template_virtual_port_shared': {
+            'type': 'str',
+        },
+        'template_ftp': {
             'type': 'str',
         },
         'template_diameter': {
+            'type': 'str',
+        },
+        'shared_partition_diameter_template': {
+            'type': 'bool',
+        },
+        'template_diameter_shared': {
+            'type': 'str',
+        },
+        'template_cache': {
+            'type': 'str',
+        },
+        'shared_partition_cache_template': {
+            'type': 'bool',
+        },
+        'template_cache_shared': {
+            'type': 'str',
+        },
+        'template_fix': {
+            'type': 'str',
+        },
+        'waf_template': {
+            'type': 'str',
+        },
+        'template_ssli': {
+            'type': 'str',
+        },
+        'template_tcp_proxy_client': {
+            'type': 'str',
+        },
+        'template_tcp_proxy_server': {
+            'type': 'str',
+        },
+        'template_tcp_proxy': {
+            'type': 'str',
+        },
+        'shared_partition_tcp_proxy_template': {
+            'type': 'bool',
+        },
+        'template_tcp_proxy_shared': {
+            'type': 'str',
+        },
+        'use_default_if_no_server': {
+            'type': 'bool',
+        },
+        'template_scaleout': {
+            'type': 'str',
+        },
+        'no_dest_nat': {
+            'type': 'bool',
+        },
+        'port_translation': {
+            'type': 'bool',
+        },
+        'l7_hardware_assist': {
+            'type': 'bool',
+        },
+        'auth_cfg': {
+            'type': 'dict',
+            'aaa_policy': {
+                'type': 'str',
+            }
+        },
+        'cpu_compute': {
+            'type': 'bool',
+        },
+        'memory_compute': {
+            'type': 'bool',
+        },
+        'resolve_web_cat_list': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         },
         'sampling_enable': {
@@ -1781,65 +2100,375 @@ def get_argspec():
                     'dnsrrl_total_dropped', 'dnsrrl_total_slipped',
                     'dnsrrl_bad_fqdn', 'throughput-bits-per-sec',
                     'dynamic-memory-alloc', 'dynamic-memory-free',
-                    'dynamic-memory'
+                    'dynamic-memory', 'ip_only_lb_fwd_bytes',
+                    'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts',
+                    'ip_only_lb_rev_pkts'
                 ]
             }
         },
-        'template_ssli': {
-            'type': 'str',
-        },
-        'memory_compute': {
-            'type': 'bool',
-        },
-        'shared_partition_policy_template': {
-            'type': 'bool',
-        },
-        'template_policy': {
-            'type': 'str',
-        },
-        'no_logging': {
-            'type': 'bool',
-        },
-        'reset_on_server_selection_fail': {
-            'type': 'bool',
-        },
-        'waf_template': {
-            'type': 'str',
-        },
-        'ipinip': {
-            'type': 'bool',
-        },
-        'no_auto_up_on_aflex': {
-            'type': 'bool',
-        },
-        'rate': {
-            'type': 'int',
-        },
-        'gslb_enable': {
-            'type': 'bool',
-        },
-        'template_dns_shared': {
-            'type': 'str',
-        },
-        'template_persist_ssl_sid': {
-            'type': 'str',
-        },
-        'template_dns': {
-            'type': 'str',
-        },
-        'shared_partition_dns_template': {
-            'type': 'bool',
-        },
-        'template_sip': {
-            'type': 'str',
-        },
-        'template_dblb': {
-            'type': 'str',
-        },
-        'stats': {
+        'oper': {
             'type': 'dict',
-            'curr_req': {
+            'state': {
                 'type': 'str',
+                'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
+            },
+            'loc_list': {
+                'type': 'str',
+            },
+            'geo_location': {
+                'type': 'str',
+            },
+            'level_str': {
+                'type': 'str',
+            },
+            'group_id': {
+                'type': 'int',
+            },
+            'loc_max_depth': {
+                'type': 'int',
+            },
+            'loc_success': {
+                'type': 'int',
+            },
+            'loc_error': {
+                'type': 'int',
+            },
+            'loc_override': {
+                'type': 'int',
+            },
+            'loc_last': {
+                'type': 'str',
+            },
+            'http_hits_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                },
+                'hits_count': {
+                    'type': 'int',
+                }
+            },
+            'http_vport_cpu_list': {
+                'type': 'list',
+                'status_200': {
+                    'type': 'int',
+                },
+                'status_201': {
+                    'type': 'int',
+                },
+                'status_202': {
+                    'type': 'int',
+                },
+                'status_203': {
+                    'type': 'int',
+                },
+                'status_204': {
+                    'type': 'int',
+                },
+                'status_205': {
+                    'type': 'int',
+                },
+                'status_206': {
+                    'type': 'int',
+                },
+                'status_207': {
+                    'type': 'int',
+                },
+                'status_100': {
+                    'type': 'int',
+                },
+                'status_101': {
+                    'type': 'int',
+                },
+                'status_102': {
+                    'type': 'int',
+                },
+                'status_300': {
+                    'type': 'int',
+                },
+                'status_301': {
+                    'type': 'int',
+                },
+                'status_302': {
+                    'type': 'int',
+                },
+                'status_303': {
+                    'type': 'int',
+                },
+                'status_304': {
+                    'type': 'int',
+                },
+                'status_305': {
+                    'type': 'int',
+                },
+                'status_306': {
+                    'type': 'int',
+                },
+                'status_307': {
+                    'type': 'int',
+                },
+                'status_400': {
+                    'type': 'int',
+                },
+                'status_401': {
+                    'type': 'int',
+                },
+                'status_402': {
+                    'type': 'int',
+                },
+                'status_403': {
+                    'type': 'int',
+                },
+                'status_404': {
+                    'type': 'int',
+                },
+                'status_405': {
+                    'type': 'int',
+                },
+                'status_406': {
+                    'type': 'int',
+                },
+                'status_407': {
+                    'type': 'int',
+                },
+                'status_408': {
+                    'type': 'int',
+                },
+                'status_409': {
+                    'type': 'int',
+                },
+                'status_410': {
+                    'type': 'int',
+                },
+                'status_411': {
+                    'type': 'int',
+                },
+                'status_412': {
+                    'type': 'int',
+                },
+                'status_413': {
+                    'type': 'int',
+                },
+                'status_414': {
+                    'type': 'int',
+                },
+                'status_415': {
+                    'type': 'int',
+                },
+                'status_416': {
+                    'type': 'int',
+                },
+                'status_417': {
+                    'type': 'int',
+                },
+                'status_418': {
+                    'type': 'int',
+                },
+                'status_422': {
+                    'type': 'int',
+                },
+                'status_423': {
+                    'type': 'int',
+                },
+                'status_424': {
+                    'type': 'int',
+                },
+                'status_425': {
+                    'type': 'int',
+                },
+                'status_426': {
+                    'type': 'int',
+                },
+                'status_449': {
+                    'type': 'int',
+                },
+                'status_450': {
+                    'type': 'int',
+                },
+                'status_500': {
+                    'type': 'int',
+                },
+                'status_501': {
+                    'type': 'int',
+                },
+                'status_502': {
+                    'type': 'int',
+                },
+                'status_503': {
+                    'type': 'int',
+                },
+                'status_504': {
+                    'type': 'int',
+                },
+                'status_504_ax': {
+                    'type': 'int',
+                },
+                'status_505': {
+                    'type': 'int',
+                },
+                'status_506': {
+                    'type': 'int',
+                },
+                'status_507': {
+                    'type': 'int',
+                },
+                'status_508': {
+                    'type': 'int',
+                },
+                'status_509': {
+                    'type': 'int',
+                },
+                'status_510': {
+                    'type': 'int',
+                },
+                'status_1xx': {
+                    'type': 'int',
+                },
+                'status_2xx': {
+                    'type': 'int',
+                },
+                'status_3xx': {
+                    'type': 'int',
+                },
+                'status_4xx': {
+                    'type': 'int',
+                },
+                'status_5xx': {
+                    'type': 'int',
+                },
+                'status_6xx': {
+                    'type': 'int',
+                },
+                'status_unknown': {
+                    'type': 'int',
+                },
+                'ws_handshake_request': {
+                    'type': 'int',
+                },
+                'ws_handshake_success': {
+                    'type': 'int',
+                },
+                'ws_client_switch': {
+                    'type': 'int',
+                },
+                'ws_server_switch': {
+                    'type': 'int',
+                },
+                'REQ_10u': {
+                    'type': 'int',
+                },
+                'REQ_20u': {
+                    'type': 'int',
+                },
+                'REQ_50u': {
+                    'type': 'int',
+                },
+                'REQ_100u': {
+                    'type': 'int',
+                },
+                'REQ_200u': {
+                    'type': 'int',
+                },
+                'REQ_500u': {
+                    'type': 'int',
+                },
+                'REQ_1m': {
+                    'type': 'int',
+                },
+                'REQ_2m': {
+                    'type': 'int',
+                },
+                'REQ_5m': {
+                    'type': 'int',
+                },
+                'REQ_10m': {
+                    'type': 'int',
+                },
+                'REQ_20m': {
+                    'type': 'int',
+                },
+                'REQ_50m': {
+                    'type': 'int',
+                },
+                'REQ_100m': {
+                    'type': 'int',
+                },
+                'REQ_200m': {
+                    'type': 'int',
+                },
+                'REQ_500m': {
+                    'type': 'int',
+                },
+                'REQ_1s': {
+                    'type': 'int',
+                },
+                'REQ_2s': {
+                    'type': 'int',
+                },
+                'REQ_5s': {
+                    'type': 'int',
+                },
+                'REQ_OVER_5s': {
+                    'type': 'int',
+                },
+                'curr_http2_conn': {
+                    'type': 'int',
+                },
+                'total_http2_conn': {
+                    'type': 'int',
+                },
+                'peak_http2_conn': {
+                    'type': 'int',
+                },
+                'total_http2_bytes': {
+                    'type': 'int',
+                },
+                'http2_control_bytes': {
+                    'type': 'int',
+                },
+                'http2_header_bytes': {
+                    'type': 'int',
+                },
+                'http2_data_bytes': {
+                    'type': 'int',
+                },
+                'http2_reset_received': {
+                    'type': 'int',
+                },
+                'http2_reset_sent': {
+                    'type': 'int',
+                },
+                'http2_goaway_received': {
+                    'type': 'int',
+                },
+                'http2_goaway_sent': {
+                    'type': 'int',
+                },
+                'stream_closed': {
+                    'type': 'int',
+                },
+                'header_length_long': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            },
+            'http_host_hits': {
+                'type': 'bool',
+            },
+            'http_url_hits': {
+                'type': 'bool',
+            },
+            'http_vport': {
+                'type': 'bool',
+            },
+            'real_curr_conn': {
+                'type': 'int',
+            },
+            'port_number': {
+                'type': 'int',
+                'required': True,
             },
             'protocol': {
                 'type':
@@ -1854,29 +2483,134 @@ def get_argspec():
                     'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
                     'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
                 ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'curr_conn': {
+                'type': 'str',
             },
-            'curr_req_rate': {
+            'total_l4_conn': {
+                'type': 'str',
+            },
+            'total_l7_conn': {
+                'type': 'str',
+            },
+            'total_tcp_conn': {
+                'type': 'str',
+            },
+            'total_conn': {
+                'type': 'str',
+            },
+            'total_fwd_bytes': {
+                'type': 'str',
+            },
+            'total_fwd_pkts': {
+                'type': 'str',
+            },
+            'total_rev_bytes': {
                 'type': 'str',
             },
             'total_rev_pkts': {
                 'type': 'str',
             },
-            'total_rev_pkts_out': {
+            'total_dns_pkts': {
                 'type': 'str',
             },
-            'curr_ssl_conn': {
+            'total_mf_dns_pkts': {
                 'type': 'str',
             },
-            'total_fwd_bytes_out': {
+            'es_total_failure_actions': {
                 'type': 'str',
             },
-            'loc_deny': {
+            'compression_bytes_before': {
+                'type': 'str',
+            },
+            'compression_bytes_after': {
+                'type': 'str',
+            },
+            'compression_hit': {
+                'type': 'str',
+            },
+            'compression_miss': {
+                'type': 'str',
+            },
+            'compression_miss_no_client': {
+                'type': 'str',
+            },
+            'compression_miss_template_exclusion': {
+                'type': 'str',
+            },
+            'curr_req': {
+                'type': 'str',
+            },
+            'total_req': {
+                'type': 'str',
+            },
+            'total_req_succ': {
+                'type': 'str',
+            },
+            'peak_conn': {
                 'type': 'str',
             },
             'curr_conn_rate': {
                 'type': 'str',
             },
+            'last_rsp_time': {
+                'type': 'str',
+            },
+            'fastest_rsp_time': {
+                'type': 'str',
+            },
+            'slowest_rsp_time': {
+                'type': 'str',
+            },
+            'loc_permit': {
+                'type': 'str',
+            },
+            'loc_deny': {
+                'type': 'str',
+            },
+            'loc_conn': {
+                'type': 'str',
+            },
+            'curr_ssl_conn': {
+                'type': 'str',
+            },
+            'total_ssl_conn': {
+                'type': 'str',
+            },
+            'backend_time_to_first_byte': {
+                'type': 'str',
+            },
+            'backend_time_to_last_byte': {
+                'type': 'str',
+            },
+            'in_latency': {
+                'type': 'str',
+            },
+            'out_latency': {
+                'type': 'str',
+            },
+            'total_fwd_bytes_out': {
+                'type': 'str',
+            },
+            'total_fwd_pkts_out': {
+                'type': 'str',
+            },
+            'total_rev_bytes_out': {
+                'type': 'str',
+            },
+            'total_rev_pkts_out': {
+                'type': 'str',
+            },
+            'curr_req_rate': {
+                'type': 'str',
+            },
             'curr_resp': {
+                'type': 'str',
+            },
+            'total_resp': {
                 'type': 'str',
             },
             'total_resp_succ': {
@@ -1885,466 +2619,57 @@ def get_argspec():
             'curr_resp_rate': {
                 'type': 'str',
             },
-            'backend_time_to_last_byte': {
-                'type': 'str',
-            },
-            'dnsrrl_total_slipped': {
-                'type': 'str',
-            },
-            'total_fwd_bytes': {
-                'type': 'str',
-            },
-            'compression_miss': {
-                'type': 'str',
-            },
-            'loc_permit': {
-                'type': 'str',
-            },
-            'peak_conn': {
-                'type': 'str',
-            },
-            'fastest_rsp_time': {
-                'type': 'str',
-            },
-            'total_fwd_pkts': {
-                'type': 'str',
-            },
-            'total_tcp_conn': {
-                'type': 'str',
-            },
-            'total_mf_dns_pkts': {
-                'type': 'str',
-            },
             'curr_conn_overflow': {
-                'type': 'str',
-            },
-            'dnsrrl_bad_fqdn': {
-                'type': 'str',
-            },
-            'in_latency': {
-                'type': 'str',
-            },
-            'total_dns_pkts': {
-                'type': 'str',
-            },
-            'loc_conn': {
-                'type': 'str',
-            },
-            'compression_bytes_after': {
-                'type': 'str',
-            },
-            'total_req': {
-                'type': 'str',
-            },
-            'dnsrrl_total_dropped': {
-                'type': 'str',
-            },
-            'compression_bytes_before': {
-                'type': 'str',
-            },
-            'total_rev_bytes_out': {
-                'type': 'str',
-            },
-            'last_rsp_time': {
-                'type': 'str',
-            },
-            'curr_conn': {
-                'type': 'str',
-            },
-            'throughput_bits_per_sec': {
-                'type': 'str',
-            },
-            'total_fwd_pkts_out': {
-                'type': 'str',
-            },
-            'total_rev_bytes': {
                 'type': 'str',
             },
             'dnsrrl_total_allowed': {
                 'type': 'str',
             },
-            'compression_miss_no_client': {
+            'dnsrrl_total_dropped': {
                 'type': 'str',
             },
-            'es_total_failure_actions': {
+            'dnsrrl_total_slipped': {
+                'type': 'str',
+            },
+            'dnsrrl_bad_fqdn': {
+                'type': 'str',
+            },
+            'throughput_bits_per_sec': {
+                'type': 'str',
+            },
+            'dynamic_memory': {
+                'type': 'str',
+            },
+            'ip_only_lb_fwd_bytes': {
+                'type': 'str',
+            },
+            'ip_only_lb_rev_bytes': {
+                'type': 'str',
+            },
+            'ip_only_lb_fwd_pkts': {
+                'type': 'str',
+            },
+            'ip_only_lb_rev_pkts': {
                 'type': 'str',
             },
             'port_number': {
                 'type': 'int',
                 'required': True,
             },
-            'total_ssl_conn': {
-                'type': 'str',
-            },
-            'compression_miss_template_exclusion': {
-                'type': 'str',
-            },
-            'backend_time_to_first_byte': {
-                'type': 'str',
-            },
-            'total_l7_conn': {
-                'type': 'str',
-            },
-            'slowest_rsp_time': {
-                'type': 'str',
-            },
-            'total_req_succ': {
-                'type': 'str',
-            },
-            'dynamic_memory': {
-                'type': 'str',
-            },
-            'total_resp': {
-                'type': 'str',
-            },
-            'total_conn': {
-                'type': 'str',
-            },
-            'compression_hit': {
-                'type': 'str',
-            },
-            'out_latency': {
-                'type': 'str',
-            },
-            'total_l4_conn': {
-                'type': 'str',
+            'protocol': {
+                'type':
+                'str',
+                'required':
+                True,
+                'choices': [
+                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
+                    'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
+                    'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
+                    'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips',
+                    'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
+                    'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
+                ]
             }
-        },
-        'shared_partition_server_ssl_template': {
-            'type': 'bool',
-        },
-        'template_client_ssl': {
-            'type': 'str',
-        },
-        'support_http2': {
-            'type': 'bool',
-        },
-        'template_client_ssh': {
-            'type': 'str',
-        },
-        'shared_partition_tcp_proxy_template': {
-            'type': 'bool',
-        },
-        'enable_playerid_check': {
-            'type': 'bool',
-        },
-        'service_group': {
-            'type': 'str',
-        },
-        'shared_partition_persist_ssl_sid_template': {
-            'type': 'bool',
-        },
-        'def_selection_if_pref_failed': {
-            'type':
-            'str',
-            'choices': [
-                'def-selection-if-pref-failed',
-                'def-selection-if-pref-failed-disable'
-            ]
-        },
-        'shared_partition_udp': {
-            'type': 'bool',
-        },
-        'syn_cookie': {
-            'type': 'bool',
-        },
-        'alternate_port': {
-            'type': 'bool',
-        },
-        'alternate_port_number': {
-            'type': 'int',
-        },
-        'template_persist_source_ip_shared': {
-            'type': 'str',
-        },
-        'template_cache': {
-            'type': 'str',
-        },
-        'template_persist_cookie_shared': {
-            'type': 'str',
-        },
-        'rtp_sip_call_id_match': {
-            'type': 'bool',
-        },
-        'shared_partition_persist_cookie_template': {
-            'type': 'bool',
-        },
-        'template_file_inspection': {
-            'type': 'str',
-        },
-        'template_ftp': {
-            'type': 'str',
-        },
-        'serv_sel_fail': {
-            'type': 'bool',
-        },
-        'template_udp': {
-            'type': 'str',
-        },
-        'template_virtual_port_shared': {
-            'type': 'str',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'template_http': {
-            'type': 'str',
-        },
-        'view': {
-            'type': 'int',
-        },
-        'template_persist_source_ip': {
-            'type': 'str',
-        },
-        'template_dynamic_service': {
-            'type': 'str',
-        },
-        'shared_partition_virtual_port_template': {
-            'type': 'bool',
-        },
-        'use_cgnv6': {
-            'type': 'bool',
-        },
-        'template_persist_destination_ip': {
-            'type': 'str',
-        },
-        'template_virtual_port': {
-            'type': 'str',
-        },
-        'conn_limit': {
-            'type': 'int',
-        },
-        'trunk_fwd': {
-            'type': 'str',
-        },
-        'template_udp_shared': {
-            'type': 'str',
-        },
-        'template_http_policy_shared': {
-            'type': 'str',
-        },
-        'pool': {
-            'type': 'str',
-        },
-        'snat_on_vip': {
-            'type': 'bool',
-        },
-        'template_connection_reuse_shared': {
-            'type': 'str',
-        },
-        'shared_partition_tcp': {
-            'type': 'bool',
-        },
-        'acl_id_list': {
-            'type': 'list',
-            'v_acl_id_seq_num': {
-                'type': 'int',
-            },
-            'acl_id_seq_num': {
-                'type': 'int',
-            },
-            'acl_id_src_nat_pool': {
-                'type': 'str',
-            },
-            'acl_id_seq_num_shared': {
-                'type': 'int',
-            },
-            'v_acl_id_src_nat_pool': {
-                'type': 'str',
-            },
-            'acl_id_shared': {
-                'type': 'int',
-            },
-            'v_acl_id_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'acl_id': {
-                'type': 'int',
-            },
-            'acl_id_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'v_shared_partition_pool_id': {
-                'type': 'bool',
-            },
-            'shared_partition_pool_id': {
-                'type': 'bool',
-            },
-            'v_acl_id_seq_num_shared': {
-                'type': 'int',
-            }
-        },
-        'shared_partition_http_template': {
-            'type': 'bool',
-        },
-        'template_external_service': {
-            'type': 'str',
-        },
-        'on_syn': {
-            'type': 'bool',
-        },
-        'template_persist_ssl_sid_shared': {
-            'type': 'str',
-        },
-        'force_routing_mode': {
-            'type': 'bool',
-        },
-        'template_http_policy': {
-            'type': 'str',
-        },
-        'template_policy_shared': {
-            'type': 'str',
-        },
-        'template_scaleout': {
-            'type': 'str',
-        },
-        'when_down_protocol2': {
-            'type': 'bool',
-        },
-        'template_fix': {
-            'type': 'str',
-        },
-        'template_smtp': {
-            'type': 'str',
-        },
-        'redirect_to_https': {
-            'type': 'bool',
-        },
-        'alt_protocol2': {
-            'type': 'str',
-            'choices': ['tcp']
-        },
-        'alt_protocol1': {
-            'type': 'str',
-            'choices': ['http']
-        },
-        'message_switching': {
-            'type': 'bool',
-        },
-        'template_imap_pop3': {
-            'type': 'str',
-        },
-        'scaleout_device_group': {
-            'type': 'int',
-        },
-        'shared_partition_persist_source_ip_template': {
-            'type': 'bool',
-        },
-        'l7_hardware_assist': {
-            'type': 'bool',
-        },
-        'template_tcp_proxy_shared': {
-            'type': 'str',
-        },
-        'shared_partition_cache_template': {
-            'type': 'bool',
-        },
-        'use_alternate_port': {
-            'type': 'bool',
-        },
-        'template_tcp_proxy_server': {
-            'type': 'str',
-        },
-        'trunk_rev': {
-            'type': 'str',
-        },
-        'eth_fwd': {
-            'type': 'str',
-        },
-        'pool_shared': {
-            'type': 'str',
-        },
-        'template_respmod_icap': {
-            'type': 'str',
-        },
-        'range': {
-            'type': 'int',
-        },
-        'reset': {
-            'type': 'bool',
-        },
-        'template_external_service_shared': {
-            'type': 'str',
-        },
-        'auto': {
-            'type': 'bool',
-        },
-        'template_dynamic_service_shared': {
-            'type': 'str',
-        },
-        'template_server_ssh': {
-            'type': 'str',
-        },
-        'aflex_scripts': {
-            'type': 'list',
-            'aflex': {
-                'type': 'str',
-            },
-            'aflex_shared': {
-                'type': 'str',
-            }
-        },
-        'template_http_shared': {
-            'type': 'str',
-        },
-        'template_server_ssl': {
-            'type': 'str',
-        },
-        'shared_partition_diameter_template': {
-            'type': 'bool',
-        },
-        'template_server_ssl_shared': {
-            'type': 'str',
-        },
-        'template_persist_destination_ip_shared': {
-            'type': 'str',
-        },
-        'template_cache_shared': {
-            'type': 'str',
-        },
-        'port_number': {
-            'type': 'int',
-            'required': True,
-        },
-        'template_tcp_proxy_client': {
-            'type': 'str',
-        },
-        'shared_partition_pool': {
-            'type': 'bool',
-        },
-        'template_tcp_proxy': {
-            'type': 'str',
-        },
-        'extended_stats': {
-            'type': 'bool',
-        },
-        'shared_partition_client_ssl_template': {
-            'type': 'bool',
-        },
-        'expand': {
-            'type': 'bool',
-        },
-        'skip_rev_hash': {
-            'type': 'bool',
-        },
-        'template_diameter_shared': {
-            'type': 'str',
-        },
-        'clientip_sticky_nat': {
-            'type': 'bool',
-        },
-        'secs': {
-            'type': 'int',
-        },
-        'auth_cfg': {
-            'type': 'dict',
-            'aaa_policy': {
-                'type': 'str',
-            }
-        },
-        'eth_rev': {
-            'type': 'str',
         }
     })
     # Parent keys

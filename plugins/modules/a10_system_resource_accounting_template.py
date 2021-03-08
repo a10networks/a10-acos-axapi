@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template
 description:
     - Create resource accounting template
-short_description: Configures A10 system.resource.accounting.template
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,179 +22,232 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Enter template name"
+        type: str
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     app_resources:
         description:
         - "Field app_resources"
+        type: dict
         required: False
         suboptions:
-            gslb_site_cfg:
-                description:
-                - "Field gslb_site_cfg"
-            gslb_policy_cfg:
-                description:
-                - "Field gslb_policy_cfg"
-            gslb_service_cfg:
-                description:
-                - "Field gslb_service_cfg"
-            gslb_geo_location_cfg:
-                description:
-                - "Field gslb_geo_location_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-            real_server_cfg:
-                description:
-                - "Field real_server_cfg"
-            gslb_ip_list_cfg:
-                description:
-                - "Field gslb_ip_list_cfg"
-            gslb_template_cfg:
-                description:
-                - "Field gslb_template_cfg"
-            gslb_zone_cfg:
-                description:
-                - "Field gslb_zone_cfg"
             gslb_device_cfg:
                 description:
                 - "Field gslb_device_cfg"
-            virtual_server_cfg:
+                type: dict
+            gslb_geo_location_cfg:
                 description:
-                - "Field virtual_server_cfg"
-            real_port_cfg:
+                - "Field gslb_geo_location_cfg"
+                type: dict
+            gslb_ip_list_cfg:
                 description:
-                - "Field real_port_cfg"
-            health_monitor_cfg:
+                - "Field gslb_ip_list_cfg"
+                type: dict
+            gslb_policy_cfg:
                 description:
-                - "Field health_monitor_cfg"
-            threshold:
+                - "Field gslb_policy_cfg"
+                type: dict
+            gslb_service_cfg:
                 description:
-                - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
-            gslb_svc_group_cfg:
-                description:
-                - "Field gslb_svc_group_cfg"
-            service_group_cfg:
-                description:
-                - "Field service_group_cfg"
-            gslb_service_port_cfg:
-                description:
-                - "Field gslb_service_port_cfg"
+                - "Field gslb_service_cfg"
+                type: dict
             gslb_service_ip_cfg:
                 description:
                 - "Field gslb_service_ip_cfg"
-    name:
-        description:
-        - "Enter template name"
-        required: True
-    system_resources:
-        description:
-        - "Field system_resources"
-        required: False
-        suboptions:
-            l4_session_limit_cfg:
+                type: dict
+            gslb_service_port_cfg:
                 description:
-                - "Field l4_session_limit_cfg"
-            l7cps_limit_cfg:
+                - "Field gslb_service_port_cfg"
+                type: dict
+            gslb_site_cfg:
                 description:
-                - "Field l7cps_limit_cfg"
-            l4cps_limit_cfg:
+                - "Field gslb_site_cfg"
+                type: dict
+            gslb_svc_group_cfg:
                 description:
-                - "Field l4cps_limit_cfg"
-            uuid:
+                - "Field gslb_svc_group_cfg"
+                type: dict
+            gslb_template_cfg:
                 description:
-                - "uuid of the object"
-            natcps_limit_cfg:
+                - "Field gslb_template_cfg"
+                type: dict
+            gslb_zone_cfg:
                 description:
-                - "Field natcps_limit_cfg"
-            sslcps_limit_cfg:
+                - "Field gslb_zone_cfg"
+                type: dict
+            health_monitor_cfg:
                 description:
-                - "Field sslcps_limit_cfg"
-            fwcps_limit_cfg:
+                - "Field health_monitor_cfg"
+                type: dict
+            real_port_cfg:
                 description:
-                - "Field fwcps_limit_cfg"
-            ssl_throughput_limit_cfg:
+                - "Field real_port_cfg"
+                type: dict
+            real_server_cfg:
                 description:
-                - "Field ssl_throughput_limit_cfg"
+                - "Field real_server_cfg"
+                type: dict
+            service_group_cfg:
+                description:
+                - "Field service_group_cfg"
+                type: dict
+            virtual_server_cfg:
+                description:
+                - "Field virtual_server_cfg"
+                type: dict
             threshold:
                 description:
                 - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
-            bw_limit_cfg:
+                type: int
+            uuid:
                 description:
-                - "Field bw_limit_cfg"
-            concurrent_session_limit_cfg:
-                description:
-                - "Field concurrent_session_limit_cfg"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+                - "uuid of the object"
+                type: str
     network_resources:
         description:
         - "Field network_resources"
+        type: dict
         required: False
         suboptions:
-            static_ipv6_route_cfg:
-                description:
-                - "Field static_ipv6_route_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-            ipv4_acl_line_cfg:
-                description:
-                - "Field ipv4_acl_line_cfg"
             static_ipv4_route_cfg:
                 description:
                 - "Field static_ipv4_route_cfg"
-            static_arp_cfg:
+                type: dict
+            static_ipv6_route_cfg:
                 description:
-                - "Field static_arp_cfg"
-            object_group_clause_cfg:
+                - "Field static_ipv6_route_cfg"
+                type: dict
+            ipv4_acl_line_cfg:
                 description:
-                - "Field object_group_clause_cfg"
-            static_mac_cfg:
-                description:
-                - "Field static_mac_cfg"
-            object_group_cfg:
-                description:
-                - "Field object_group_cfg"
-            static_neighbor_cfg:
-                description:
-                - "Field static_neighbor_cfg"
-            threshold:
-                description:
-                - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
+                - "Field ipv4_acl_line_cfg"
+                type: dict
             ipv6_acl_line_cfg:
                 description:
                 - "Field ipv6_acl_line_cfg"
-    uuid:
+                type: dict
+            static_arp_cfg:
+                description:
+                - "Field static_arp_cfg"
+                type: dict
+            static_neighbor_cfg:
+                description:
+                - "Field static_neighbor_cfg"
+                type: dict
+            static_mac_cfg:
+                description:
+                - "Field static_mac_cfg"
+                type: dict
+            object_group_cfg:
+                description:
+                - "Field object_group_cfg"
+                type: dict
+            object_group_clause_cfg:
+                description:
+                - "Field object_group_clause_cfg"
+                type: dict
+            threshold:
+                description:
+                - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    system_resources:
         description:
-        - "uuid of the object"
+        - "Field system_resources"
+        type: dict
         required: False
+        suboptions:
+            bw_limit_cfg:
+                description:
+                - "Field bw_limit_cfg"
+                type: dict
+            concurrent_session_limit_cfg:
+                description:
+                - "Field concurrent_session_limit_cfg"
+                type: dict
+            l4_session_limit_cfg:
+                description:
+                - "Field l4_session_limit_cfg"
+                type: dict
+            l4cps_limit_cfg:
+                description:
+                - "Field l4cps_limit_cfg"
+                type: dict
+            l7cps_limit_cfg:
+                description:
+                - "Field l7cps_limit_cfg"
+                type: dict
+            natcps_limit_cfg:
+                description:
+                - "Field natcps_limit_cfg"
+                type: dict
+            fwcps_limit_cfg:
+                description:
+                - "Field fwcps_limit_cfg"
+                type: dict
+            ssl_throughput_limit_cfg:
+                description:
+                - "Field ssl_throughput_limit_cfg"
+                type: dict
+            sslcps_limit_cfg:
+                description:
+                - "Field sslcps_limit_cfg"
+                type: dict
+            threshold:
+                description:
+                - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
+                type: int
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -254,32 +305,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
         'app_resources': {
             'type': 'dict',
-            'gslb_site_cfg': {
+            'gslb_device_cfg': {
                 'type': 'dict',
-                'gslb_site_min_guarantee': {
+                'gslb_device_max': {
                     'type': 'int',
                 },
-                'gslb_site_max': {
-                    'type': 'int',
-                }
-            },
-            'gslb_policy_cfg': {
-                'type': 'dict',
-                'gslb_policy_min_guarantee': {
-                    'type': 'int',
-                },
-                'gslb_policy_max': {
-                    'type': 'int',
-                }
-            },
-            'gslb_service_cfg': {
-                'type': 'dict',
-                'gslb_service_min_guarantee': {
-                    'type': 'int',
-                },
-                'gslb_service_max': {
+                'gslb_device_min_guarantee': {
                     'type': 'int',
                 }
             },
@@ -292,24 +335,66 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'uuid': {
-                'type': 'str',
-            },
-            'real_server_cfg': {
-                'type': 'dict',
-                'real_server_max': {
-                    'type': 'int',
-                },
-                'real_server_min_guarantee': {
-                    'type': 'int',
-                }
-            },
             'gslb_ip_list_cfg': {
                 'type': 'dict',
                 'gslb_ip_list_max': {
                     'type': 'int',
                 },
                 'gslb_ip_list_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_policy_cfg': {
+                'type': 'dict',
+                'gslb_policy_max': {
+                    'type': 'int',
+                },
+                'gslb_policy_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_service_cfg': {
+                'type': 'dict',
+                'gslb_service_max': {
+                    'type': 'int',
+                },
+                'gslb_service_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_service_ip_cfg': {
+                'type': 'dict',
+                'gslb_service_ip_max': {
+                    'type': 'int',
+                },
+                'gslb_service_ip_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_service_port_cfg': {
+                'type': 'dict',
+                'gslb_service_port_max': {
+                    'type': 'int',
+                },
+                'gslb_service_port_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_site_cfg': {
+                'type': 'dict',
+                'gslb_site_max': {
+                    'type': 'int',
+                },
+                'gslb_site_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_svc_group_cfg': {
+                'type': 'dict',
+                'gslb_svc_group_max': {
+                    'type': 'int',
+                },
+                'gslb_svc_group_min_guarantee': {
                     'type': 'int',
                 }
             },
@@ -324,37 +409,10 @@ def get_argspec():
             },
             'gslb_zone_cfg': {
                 'type': 'dict',
-                'gslb_zone_min_guarantee': {
-                    'type': 'int',
-                },
                 'gslb_zone_max': {
                     'type': 'int',
-                }
-            },
-            'gslb_device_cfg': {
-                'type': 'dict',
-                'gslb_device_min_guarantee': {
-                    'type': 'int',
                 },
-                'gslb_device_max': {
-                    'type': 'int',
-                }
-            },
-            'virtual_server_cfg': {
-                'type': 'dict',
-                'virtual_server_max': {
-                    'type': 'int',
-                },
-                'virtual_server_min_guarantee': {
-                    'type': 'int',
-                }
-            },
-            'real_port_cfg': {
-                'type': 'dict',
-                'real_port_min_guarantee': {
-                    'type': 'int',
-                },
-                'real_port_max': {
+                'gslb_zone_min_guarantee': {
                     'type': 'int',
                 }
             },
@@ -367,15 +425,21 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'threshold': {
-                'type': 'int',
-            },
-            'gslb_svc_group_cfg': {
+            'real_port_cfg': {
                 'type': 'dict',
-                'gslb_svc_group_max': {
+                'real_port_max': {
                     'type': 'int',
                 },
-                'gslb_svc_group_min_guarantee': {
+                'real_port_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'real_server_cfg': {
+                'type': 'dict',
+                'real_server_max': {
+                    'type': 'int',
+                },
+                'real_server_min_guarantee': {
                     'type': 'int',
                 }
             },
@@ -388,85 +452,114 @@ def get_argspec():
                     'type': 'int',
                 }
             },
-            'gslb_service_port_cfg': {
+            'virtual_server_cfg': {
                 'type': 'dict',
-                'gslb_service_port_max': {
+                'virtual_server_max': {
                     'type': 'int',
                 },
-                'gslb_service_port_min_guarantee': {
-                    'type': 'int',
-                }
-            },
-            'gslb_service_ip_cfg': {
-                'type': 'dict',
-                'gslb_service_ip_max': {
-                    'type': 'int',
-                },
-                'gslb_service_ip_min_guarantee': {
-                    'type': 'int',
-                }
-            }
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'system_resources': {
-            'type': 'dict',
-            'l4_session_limit_cfg': {
-                'type': 'dict',
-                'l4_session_limit_max': {
-                    'type': 'str',
-                },
-                'l4_session_limit_min_guarantee': {
-                    'type': 'str',
-                }
-            },
-            'l7cps_limit_cfg': {
-                'type': 'dict',
-                'l7cps_limit_max': {
-                    'type': 'int',
-                }
-            },
-            'l4cps_limit_cfg': {
-                'type': 'dict',
-                'l4cps_limit_max': {
-                    'type': 'int',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'natcps_limit_cfg': {
-                'type': 'dict',
-                'natcps_limit_max': {
-                    'type': 'int',
-                }
-            },
-            'sslcps_limit_cfg': {
-                'type': 'dict',
-                'sslcps_limit_max': {
-                    'type': 'int',
-                }
-            },
-            'fwcps_limit_cfg': {
-                'type': 'dict',
-                'fwcps_limit_max': {
-                    'type': 'int',
-                }
-            },
-            'ssl_throughput_limit_cfg': {
-                'type': 'dict',
-                'ssl_throughput_limit_watermark_disable': {
-                    'type': 'bool',
-                },
-                'ssl_throughput_limit_max': {
+                'virtual_server_min_guarantee': {
                     'type': 'int',
                 }
             },
             'threshold': {
                 'type': 'int',
             },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'network_resources': {
+            'type': 'dict',
+            'static_ipv4_route_cfg': {
+                'type': 'dict',
+                'static_ipv4_route_max': {
+                    'type': 'int',
+                },
+                'static_ipv4_route_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_ipv6_route_cfg': {
+                'type': 'dict',
+                'static_ipv6_route_max': {
+                    'type': 'int',
+                },
+                'static_ipv6_route_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'ipv4_acl_line_cfg': {
+                'type': 'dict',
+                'ipv4_acl_line_max': {
+                    'type': 'int',
+                },
+                'ipv4_acl_line_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'ipv6_acl_line_cfg': {
+                'type': 'dict',
+                'ipv6_acl_line_max': {
+                    'type': 'int',
+                },
+                'ipv6_acl_line_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_arp_cfg': {
+                'type': 'dict',
+                'static_arp_max': {
+                    'type': 'int',
+                },
+                'static_arp_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_neighbor_cfg': {
+                'type': 'dict',
+                'static_neighbor_max': {
+                    'type': 'int',
+                },
+                'static_neighbor_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_mac_cfg': {
+                'type': 'dict',
+                'static_mac_max': {
+                    'type': 'int',
+                },
+                'static_mac_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'object_group_cfg': {
+                'type': 'dict',
+                'object_group_max': {
+                    'type': 'int',
+                },
+                'object_group_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'object_group_clause_cfg': {
+                'type': 'dict',
+                'object_group_clause_max': {
+                    'type': 'int',
+                },
+                'object_group_clause_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'threshold': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'system_resources': {
+            'type': 'dict',
             'bw_limit_cfg': {
                 'type': 'dict',
                 'bw_limit_max': {
@@ -481,103 +574,61 @@ def get_argspec():
                 'concurrent_session_limit_max': {
                     'type': 'int',
                 }
-            }
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'network_resources': {
-            'type': 'dict',
-            'static_ipv6_route_cfg': {
+            },
+            'l4_session_limit_cfg': {
                 'type': 'dict',
-                'static_ipv6_route_max': {
-                    'type': 'int',
+                'l4_session_limit_max': {
+                    'type': 'str',
                 },
-                'static_ipv6_route_min_guarantee': {
+                'l4_session_limit_min_guarantee': {
+                    'type': 'str',
+                }
+            },
+            'l4cps_limit_cfg': {
+                'type': 'dict',
+                'l4cps_limit_max': {
                     'type': 'int',
                 }
             },
-            'uuid': {
-                'type': 'str',
-            },
-            'ipv4_acl_line_cfg': {
+            'l7cps_limit_cfg': {
                 'type': 'dict',
-                'ipv4_acl_line_min_guarantee': {
-                    'type': 'int',
-                },
-                'ipv4_acl_line_max': {
+                'l7cps_limit_max': {
                     'type': 'int',
                 }
             },
-            'static_ipv4_route_cfg': {
+            'natcps_limit_cfg': {
                 'type': 'dict',
-                'static_ipv4_route_max': {
-                    'type': 'int',
-                },
-                'static_ipv4_route_min_guarantee': {
+                'natcps_limit_max': {
                     'type': 'int',
                 }
             },
-            'static_arp_cfg': {
+            'fwcps_limit_cfg': {
                 'type': 'dict',
-                'static_arp_min_guarantee': {
-                    'type': 'int',
-                },
-                'static_arp_max': {
+                'fwcps_limit_max': {
                     'type': 'int',
                 }
             },
-            'object_group_clause_cfg': {
+            'ssl_throughput_limit_cfg': {
                 'type': 'dict',
-                'object_group_clause_min_guarantee': {
+                'ssl_throughput_limit_max': {
                     'type': 'int',
                 },
-                'object_group_clause_max': {
-                    'type': 'int',
+                'ssl_throughput_limit_watermark_disable': {
+                    'type': 'bool',
                 }
             },
-            'static_mac_cfg': {
+            'sslcps_limit_cfg': {
                 'type': 'dict',
-                'static_mac_min_guarantee': {
-                    'type': 'int',
-                },
-                'static_mac_max': {
-                    'type': 'int',
-                }
-            },
-            'object_group_cfg': {
-                'type': 'dict',
-                'object_group_min_guarantee': {
-                    'type': 'int',
-                },
-                'object_group_max': {
-                    'type': 'int',
-                }
-            },
-            'static_neighbor_cfg': {
-                'type': 'dict',
-                'static_neighbor_max': {
-                    'type': 'int',
-                },
-                'static_neighbor_min_guarantee': {
+                'sslcps_limit_max': {
                     'type': 'int',
                 }
             },
             'threshold': {
                 'type': 'int',
             },
-            'ipv6_acl_line_cfg': {
-                'type': 'dict',
-                'ipv6_acl_line_max': {
-                    'type': 'int',
-                },
-                'ipv6_acl_line_min_guarantee': {
-                    'type': 'int',
-                }
+            'uuid': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_system_icmp_rate
 description:
     - Icmp rate limit statistics
-short_description: Configures A10 system.icmp-rate
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -65,51 +76,61 @@ options:
           'v6_limit_vserver_drop'= Virtual Server rate limit drops (v6);
           'v6_limit_total_drop'= Total rate limit drops (v6); 'v6_lockup_time_left'=
           Lockup time left (v6); 'v6_curr_rate'= Current rate (v6);"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            lockup_time_left:
-                description:
-                - "Lockup time left"
-            v6_limit_intf_drop:
-                description:
-                - "Interfaces rate limit drops (v6)"
-            limit_vserver_drop:
-                description:
-                - "Virtual Server rate limit drops"
-            v6_limit_vserver_drop:
-                description:
-                - "Virtual Server rate limit drops (v6)"
             over_limit_drop:
                 description:
                 - "Over limit drops"
-            v6_over_limit_drop:
-                description:
-                - "Over limit drops (v6)"
-            v6_lockup_time_left:
-                description:
-                - "Lockup time left (v6)"
-            v6_curr_rate:
-                description:
-                - "Current rate (v6)"
-            limit_total_drop:
-                description:
-                - "Total rate limit drops"
-            v6_limit_total_drop:
-                description:
-                - "Total rate limit drops (v6)"
-            curr_rate:
-                description:
-                - "Current rate"
+                type: str
             limit_intf_drop:
                 description:
                 - "Interfaces rate limit drops"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            limit_vserver_drop:
+                description:
+                - "Virtual Server rate limit drops"
+                type: str
+            limit_total_drop:
+                description:
+                - "Total rate limit drops"
+                type: str
+            lockup_time_left:
+                description:
+                - "Lockup time left"
+                type: str
+            curr_rate:
+                description:
+                - "Current rate"
+                type: str
+            v6_over_limit_drop:
+                description:
+                - "Over limit drops (v6)"
+                type: str
+            v6_limit_intf_drop:
+                description:
+                - "Interfaces rate limit drops (v6)"
+                type: str
+            v6_limit_vserver_drop:
+                description:
+                - "Virtual Server rate limit drops (v6)"
+                type: str
+            v6_limit_total_drop:
+                description:
+                - "Total rate limit drops (v6)"
+                type: str
+            v6_lockup_time_left:
+                description:
+                - "Lockup time left (v6)"
+                type: str
+            v6_curr_rate:
+                description:
+                - "Current rate (v6)"
+                type: str
 
 '''
 
@@ -164,6 +185,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -181,22 +205,34 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
-            'lockup_time_left': {
+            'over_limit_drop': {
                 'type': 'str',
             },
-            'v6_limit_intf_drop': {
+            'limit_intf_drop': {
                 'type': 'str',
             },
             'limit_vserver_drop': {
                 'type': 'str',
             },
-            'v6_limit_vserver_drop': {
+            'limit_total_drop': {
                 'type': 'str',
             },
-            'over_limit_drop': {
+            'lockup_time_left': {
+                'type': 'str',
+            },
+            'curr_rate': {
                 'type': 'str',
             },
             'v6_over_limit_drop': {
+                'type': 'str',
+            },
+            'v6_limit_intf_drop': {
+                'type': 'str',
+            },
+            'v6_limit_vserver_drop': {
+                'type': 'str',
+            },
+            'v6_limit_total_drop': {
                 'type': 'str',
             },
             'v6_lockup_time_left': {
@@ -204,22 +240,7 @@ def get_argspec():
             },
             'v6_curr_rate': {
                 'type': 'str',
-            },
-            'limit_total_drop': {
-                'type': 'str',
-            },
-            'v6_limit_total_drop': {
-                'type': 'str',
-            },
-            'curr_rate': {
-                'type': 'str',
-            },
-            'limit_intf_drop': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

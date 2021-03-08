@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_fix
 description:
     - FIX template
-short_description: Configures A10 slb.template.fix
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,67 +22,83 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    logging:
-        description:
-        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and
-          termination log;"
+        type: str
         required: False
     name:
         description:
         - "FIX Template Name"
+        type: str
         required: True
-    tag_switching:
+    logging:
         description:
-        - "Field tag_switching"
-        required: False
-        suboptions:
-            service_group:
-                description:
-                - "Create a Service Group comprising Servers (Service Group Name)"
-            equals:
-                description:
-                - "Equals (Tag String)"
-            switching_type:
-                description:
-                - "'sender-comp-id'= Select service group based on SenderCompID; 'target-comp-id'=
-          Select service group based on TargetCompID;"
-    user_tag:
-        description:
-        - "Customized tag"
+        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and
+          termination log;"
+        type: str
         required: False
     insert_client_ip:
         description:
         - "Insert client ip to tag 11447"
+        type: bool
         required: False
+    tag_switching:
+        description:
+        - "Field tag_switching"
+        type: list
+        required: False
+        suboptions:
+            switching_type:
+                description:
+                - "'sender-comp-id'= Select service group based on SenderCompID; 'target-comp-id'=
+          Select service group based on TargetCompID;"
+                type: str
+            equals:
+                description:
+                - "Equals (Tag String)"
+                type: str
+            service_group:
+                description:
+                - "Create a Service Group comprising Servers (Service Group Name)"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -143,34 +157,34 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'logging': {
-            'type': 'str',
-            'choices': ['init', 'term', 'both']
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
-        'tag_switching': {
-            'type': 'list',
-            'service_group': {
-                'type': 'str',
-            },
-            'equals': {
-                'type': 'str',
-            },
-            'switching_type': {
-                'type': 'str',
-                'choices': ['sender-comp-id', 'target-comp-id']
-            }
-        },
-        'user_tag': {
+        'logging': {
             'type': 'str',
+            'choices': ['init', 'term', 'both']
         },
         'insert_client_ip': {
             'type': 'bool',
         },
+        'tag_switching': {
+            'type': 'list',
+            'switching_type': {
+                'type': 'str',
+                'choices': ['sender-comp-id', 'target-comp-id']
+            },
+            'equals': {
+                'type': 'str',
+            },
+            'service_group': {
+                'type': 'str',
+            }
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

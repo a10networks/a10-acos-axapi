@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_rule_list_domain_name
 description:
     - Configure a Specific Rule-Set (Domain Name)
-short_description: Configures A10 cgnv6.lsn.rule.list.domain-name
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,97 +22,124 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     lsn_rule_list_name:
         description:
-        - Key to identify parent object    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            name_domain:
-                description:
-                - "Configure a Specific Rule-Set (Domain Name)"
-            rule_count:
-                description:
-                - "Field rule_count"
-            rule_list:
-                description:
-                - "Field rule_list"
+        - Key to identify parent object
+        type: str
+        required: True
     name_domain:
         description:
         - "Configure a Specific Rule-Set (Domain Name)"
+        type: str
         required: True
+    rule_cfg:
+        description:
+        - "Field rule_cfg"
+        type: list
+        required: False
+        suboptions:
+            proto:
+                description:
+                - "'tcp'= TCP L4 Protocol; 'udp'= UDP L4 Protocol; 'icmp'= ICMP L4 Protocol;
+          'others'= Other L4 Protocol; 'dscp'= Match dscp value;"
+                type: str
+            tcp_cfg:
+                description:
+                - "Field tcp_cfg"
+                type: dict
+            udp_cfg:
+                description:
+                - "Field udp_cfg"
+                type: dict
+            icmp_others_cfg:
+                description:
+                - "Field icmp_others_cfg"
+                type: dict
+            dscp_cfg:
+                description:
+                - "Field dscp_cfg"
+                type: dict
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
                 description:
                 - "'all'= all; 'placeholder'= placeholder;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            rule_list:
+                description:
+                - "Field rule_list"
+                type: list
+            rule_count:
+                description:
+                - "Field rule_count"
+                type: int
+            name_domain:
+                description:
+                - "Configure a Specific Rule-Set (Domain Name)"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             name_domain:
                 description:
                 - "Configure a Specific Rule-Set (Domain Name)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    rule_cfg:
-        description:
-        - "Field rule_cfg"
-        required: False
-        suboptions:
-            icmp_others_cfg:
-                description:
-                - "Field icmp_others_cfg"
-            udp_cfg:
-                description:
-                - "Field udp_cfg"
-            tcp_cfg:
-                description:
-                - "Field tcp_cfg"
-            dscp_cfg:
-                description:
-                - "Field dscp_cfg"
-            proto:
-                description:
-                - "'tcp'= TCP L4 Protoco; 'udp'= UDP L4 Protocol; 'icmp'= ICMP L4 Protocol;
-          'others'= Other L4 Protocl; 'dscp'= Match dscp value;"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+                type: str
 
 '''
 
@@ -173,243 +198,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'name_domain': {
-                'type': 'str',
-                'required': True,
-            },
-            'rule_count': {
-                'type': 'int',
-            },
-            'rule_list': {
-                'type': 'list',
-                'hits': {
-                    'type': 'int',
-                },
-                'port_list': {
-                    'type': 'str',
-                },
-                'action_type': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'dnat', 'drop', 'one-to-one-snat', 'pass-through',
-                        'snat', 'set-dscp', 'template', 'idle-timeout'
-                    ]
-                },
-                'no_snat': {
-                    'type': 'int',
-                },
-                'proto': {
-                    'type': 'str',
-                    'choices': ['tcp', 'udp', 'icmp', 'others', 'dscp']
-                },
-                'timeout_val': {
-                    'type': 'int',
-                },
-                'end_port': {
-                    'type': 'int',
-                },
-                'ipv4_list': {
-                    'type': 'str',
-                },
-                'fast': {
-                    'type': 'int',
-                },
-                'vrid': {
-                    'type': 'int',
-                },
-                'pool_shared': {
-                    'type': 'int',
-                },
-                'dscp_direction': {
-                    'type': 'str',
-                    'choices': ['inbound', 'outbound']
-                },
-                'start_port': {
-                    'type': 'int',
-                },
-                'action': {
-                    'type': 'str',
-                    'choices': ['action', 'no-action']
-                },
-                'dscp_value': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
-                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
-                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
-                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
-                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
-                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
-                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
-                        '56', '57', '58', '59', '60', '61', '62', '63'
-                    ]
-                },
-                'dscp_match': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
-                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
-                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
-                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
-                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
-                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
-                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
-                        '56', '57', '58', '59', '60', '61', '62', '63'
-                    ]
-                },
-                'pool': {
-                    'type': 'str',
-                },
-                'http_alg': {
-                    'type': 'str',
-                }
-            }
-        },
         'name_domain': {
             'type': 'str',
             'required': True,
         },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type': 'str',
-                'choices': ['all', 'placeholder']
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'name_domain': {
-                'type': 'str',
-                'required': True,
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'rule_cfg': {
             'type': 'list',
-            'icmp_others_cfg': {
-                'type': 'dict',
-                'ipv4_list': {
-                    'type': 'str',
-                },
-                'action_type': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'dnat', 'drop', 'one-to-one-snat', 'pass-through',
-                        'snat', 'set-dscp'
-                    ]
-                },
-                'no_snat': {
-                    'type': 'bool',
-                },
-                'dscp_value': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
-                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
-                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
-                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
-                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
-                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
-                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
-                        '56', '57', '58', '59', '60', '61', '62', '63'
-                    ]
-                },
-                'vrid': {
-                    'type': 'int',
-                },
-                'action_cfg': {
-                    'type': 'str',
-                    'choices': ['action', 'no-action']
-                },
-                'dscp_direction': {
-                    'type': 'str',
-                    'choices': ['inbound', 'outbound']
-                },
-                'shared': {
-                    'type': 'bool',
-                },
-                'pool': {
-                    'type': 'str',
-                }
+            'proto': {
+                'type': 'str',
+                'choices': ['tcp', 'udp', 'icmp', 'others', 'dscp']
             },
-            'udp_cfg': {
+            'tcp_cfg': {
                 'type': 'dict',
-                'port_list': {
-                    'type': 'str',
-                },
-                'action_type': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'dnat', 'drop', 'one-to-one-snat', 'pass-through',
-                        'snat', 'set-dscp'
-                    ]
-                },
-                'no_snat': {
-                    'type': 'bool',
-                },
-                'ipv4_list': {
-                    'type': 'str',
-                },
-                'dscp_value': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
-                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
-                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
-                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
-                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
-                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
-                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
-                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
-                        '56', '57', '58', '59', '60', '61', '62', '63'
-                    ]
+                'start_port': {
+                    'type': 'int',
                 },
                 'end_port': {
                     'type': 'int',
                 },
-                'vrid': {
-                    'type': 'int',
-                },
                 'action_cfg': {
                     'type': 'str',
                     'choices': ['action', 'no-action']
-                },
-                'dscp_direction': {
-                    'type': 'str',
-                    'choices': ['inbound', 'outbound']
-                },
-                'start_port': {
-                    'type': 'int',
-                },
-                'shared': {
-                    'type': 'bool',
-                },
-                'pool': {
-                    'type': 'str',
-                }
-            },
-            'tcp_cfg': {
-                'type': 'dict',
-                'port_list': {
-                    'type': 'str',
                 },
                 'action_type': {
                     'type':
@@ -419,11 +228,30 @@ def get_argspec():
                         'snat', 'set-dscp', 'template'
                     ]
                 },
+                'ipv4_list': {
+                    'type': 'str',
+                },
+                'port_list': {
+                    'type': 'str',
+                },
                 'no_snat': {
                     'type': 'bool',
                 },
-                'ipv4_list': {
+                'vrid': {
+                    'type': 'int',
+                },
+                'pool': {
                     'type': 'str',
+                },
+                'shared': {
+                    'type': 'bool',
+                },
+                'http_alg': {
+                    'type': 'str',
+                },
+                'dscp_direction': {
+                    'type': 'str',
+                    'choices': ['inbound', 'outbound']
                 },
                 'dscp_value': {
                     'type':
@@ -440,36 +268,50 @@ def get_argspec():
                         '47', '48', '49', '50', '51', '52', '53', '54', '55',
                         '56', '57', '58', '59', '60', '61', '62', '63'
                     ]
-                },
-                'end_port': {
+                }
+            },
+            'udp_cfg': {
+                'type': 'dict',
+                'start_port': {
                     'type': 'int',
                 },
-                'vrid': {
+                'end_port': {
                     'type': 'int',
                 },
                 'action_cfg': {
                     'type': 'str',
                     'choices': ['action', 'no-action']
                 },
-                'dscp_direction': {
+                'action_type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'dnat', 'drop', 'one-to-one-snat', 'pass-through',
+                        'snat', 'set-dscp'
+                    ]
+                },
+                'ipv4_list': {
                     'type': 'str',
-                    'choices': ['inbound', 'outbound']
                 },
-                'start_port': {
-                    'type': 'int',
+                'port_list': {
+                    'type': 'str',
                 },
-                'shared': {
+                'no_snat': {
                     'type': 'bool',
+                },
+                'vrid': {
+                    'type': 'int',
                 },
                 'pool': {
                     'type': 'str',
                 },
-                'http_alg': {
+                'shared': {
+                    'type': 'bool',
+                },
+                'dscp_direction': {
                     'type': 'str',
-                }
-            },
-            'dscp_cfg': {
-                'type': 'dict',
+                    'choices': ['inbound', 'outbound']
+                },
                 'dscp_value': {
                     'type':
                     'str',
@@ -485,19 +327,60 @@ def get_argspec():
                         '47', '48', '49', '50', '51', '52', '53', '54', '55',
                         '56', '57', '58', '59', '60', '61', '62', '63'
                     ]
-                },
+                }
+            },
+            'icmp_others_cfg': {
+                'type': 'dict',
                 'action_cfg': {
                     'type': 'str',
-                    'choices': ['action']
+                    'choices': ['action', 'no-action']
                 },
                 'action_type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'dnat', 'drop', 'one-to-one-snat', 'pass-through',
+                        'snat', 'set-dscp'
+                    ]
+                },
+                'ipv4_list': {
                     'type': 'str',
-                    'choices': ['set-dscp']
+                },
+                'no_snat': {
+                    'type': 'bool',
+                },
+                'vrid': {
+                    'type': 'int',
+                },
+                'pool': {
+                    'type': 'str',
+                },
+                'shared': {
+                    'type': 'bool',
                 },
                 'dscp_direction': {
                     'type': 'str',
                     'choices': ['inbound', 'outbound']
                 },
+                'dscp_value': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
+                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
+                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
+                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
+                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
+                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
+                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
+                        '56', '57', '58', '59', '60', '61', '62', '63'
+                    ]
+                }
+            },
+            'dscp_cfg': {
+                'type': 'dict',
                 'dscp_match': {
                     'type':
                     'str',
@@ -514,15 +397,157 @@ def get_argspec():
                         '54', '55', '56', '57', '58', '59', '60', '61', '62',
                         '63'
                     ]
+                },
+                'action_cfg': {
+                    'type': 'str',
+                    'choices': ['action']
+                },
+                'action_type': {
+                    'type': 'str',
+                    'choices': ['set-dscp']
+                },
+                'dscp_direction': {
+                    'type': 'str',
+                    'choices': ['inbound', 'outbound']
+                },
+                'dscp_value': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
+                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
+                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
+                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
+                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
+                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
+                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
+                        '56', '57', '58', '59', '60', '61', '62', '63'
+                    ]
                 }
-            },
-            'proto': {
-                'type': 'str',
-                'choices': ['tcp', 'udp', 'icmp', 'others', 'dscp']
             }
+        },
+        'uuid': {
+            'type': 'str',
         },
         'user_tag': {
             'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'placeholder']
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'rule_list': {
+                'type': 'list',
+                'hits': {
+                    'type': 'int',
+                },
+                'proto': {
+                    'type': 'str',
+                    'choices': ['tcp', 'udp', 'icmp', 'others', 'dscp']
+                },
+                'start_port': {
+                    'type': 'int',
+                },
+                'end_port': {
+                    'type': 'int',
+                },
+                'dscp_match': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
+                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
+                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
+                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
+                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
+                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
+                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
+                        '56', '57', '58', '59', '60', '61', '62', '63'
+                    ]
+                },
+                'action': {
+                    'type': 'str',
+                    'choices': ['action', 'no-action']
+                },
+                'action_type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'dnat', 'drop', 'one-to-one-snat', 'pass-through',
+                        'snat', 'set-dscp', 'template', 'idle-timeout'
+                    ]
+                },
+                'ipv4_list': {
+                    'type': 'str',
+                },
+                'port_list': {
+                    'type': 'str',
+                },
+                'no_snat': {
+                    'type': 'int',
+                },
+                'vrid': {
+                    'type': 'int',
+                },
+                'pool': {
+                    'type': 'str',
+                },
+                'pool_shared': {
+                    'type': 'int',
+                },
+                'http_alg': {
+                    'type': 'str',
+                },
+                'timeout_val': {
+                    'type': 'int',
+                },
+                'fast': {
+                    'type': 'int',
+                },
+                'dscp_direction': {
+                    'type': 'str',
+                    'choices': ['inbound', 'outbound']
+                },
+                'dscp_value': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'default', 'af11', 'af12', 'af13', 'af21', 'af22',
+                        'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43',
+                        'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef',
+                        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+                        '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                        '20', '21', '22', '23', '24', '25', '26', '27', '28',
+                        '29', '30', '31', '32', '33', '34', '35', '36', '37',
+                        '38', '39', '40', '41', '42', '43', '44', '45', '46',
+                        '47', '48', '49', '50', '51', '52', '53', '54', '55',
+                        '56', '57', '58', '59', '60', '61', '62', '63'
+                    ]
+                }
+            },
+            'rule_count': {
+                'type': 'int',
+            },
+            'name_domain': {
+                'type': 'str',
+                'required': True,
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'name_domain': {
+                'type': 'str',
+                'required': True,
+            }
         }
     })
     # Parent keys

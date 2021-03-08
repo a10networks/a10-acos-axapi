@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_net_mgmt
 description:
     - Network Management
-short_description: Configures A10 net-mgmt
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,43 +22,53 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     snmp:
         description:
         - "Field snmp"
+        type: dict
         required: False
         suboptions:
-            stats:
-                description:
-                - "Field stats"
             engineID:
                 description:
                 - "Field engineID"
+                type: dict
+            stats:
+                description:
+                - "Field stats"
+                type: dict
 
 '''
 
@@ -115,13 +123,13 @@ def get_argspec():
     rv.update({
         'snmp': {
             'type': 'dict',
-            'stats': {
+            'engineID': {
                 'type': 'dict',
                 'uuid': {
                     'type': 'str',
                 }
             },
-            'engineID': {
+            'stats': {
                 'type': 'dict',
                 'uuid': {
                     'type': 'str',

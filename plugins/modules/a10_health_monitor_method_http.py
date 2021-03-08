@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_http
 description:
     - HTTP type
-short_description: Configures A10 health.monitor.method.http
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,146 +22,184 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    http_url:
+        - Key to identify parent object
+        type: str
+        required: True
+    http:
         description:
-        - "Specify URL string, default is GET /"
+        - "HTTP type"
+        type: bool
         required: False
-    text_regex:
+    http_port:
         description:
-        - "Specify text expected  with Regex"
+        - "Specify HTTP Port (Specify port number (default 80))"
+        type: int
         required: False
-    http_maintenance_code:
+    http_expect:
         description:
-        - "Specify response code for maintenance (Format is xx,xx-xx (xx between [100,
-          899]))"
-        required: False
-    http_kerberos_auth:
-        description:
-        - "Http Kerberos Auth"
-        required: False
-    http_postfile:
-        description:
-        - "Specify the HTTP post data (Input post data file name here)"
-        required: False
-    response_code_regex:
-        description:
-        - "Specify response code range with Regex (code with Regex, such as
-          [2-5][0-9][0-9])"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    post_type:
-        description:
-        - "'postdata'= Specify the HTTP post data; 'postfile'= Specify the HTTP post data;"
-        required: False
-    http_password_string:
-        description:
-        - "Specify password, '' means empty password"
-        required: False
-    url_path:
-        description:
-        - "Specify URL path, default is '/'"
+        - "Specify what you expect from the response message"
+        type: bool
         required: False
     http_response_code:
         description:
         - "Specify response code range (e.g. 200,400-430) (Format is xx,xx-xx (xx between
           [100, 899]))"
+        type: str
         required: False
-    http_host:
+    response_code_regex:
         description:
-        - "Specify 'Host=' header used in request (enclose IPv6 address in [])"
-        required: False
-    http:
-        description:
-        - "HTTP type"
-        required: False
-    url_type:
-        description:
-        - "'GET'= HTTP GET method; 'POST'= HTTP POST method; 'HEAD'= HTTP HEAD method;"
-        required: False
-    http_postdata:
-        description:
-        - "Specify the HTTP post data (Input post data here)"
+        - "Specify response code range with Regex (code with Regex, such as
+          [2-5][0-9][0-9])"
+        type: str
         required: False
     http_text:
         description:
         - "Specify text expected"
+        type: str
+        required: False
+    text_regex:
+        description:
+        - "Specify text expected  with Regex"
+        type: str
+        required: False
+    http_host:
+        description:
+        - "Specify 'Host=' header used in request (enclose IPv6 address in [])"
+        type: str
+        required: False
+    http_maintenance_code:
+        description:
+        - "Specify response code for maintenance (Format is xx,xx-xx (xx between [100,
+          899]))"
+        type: str
+        required: False
+    http_url:
+        description:
+        - "Specify URL string, default is GET /"
+        type: bool
+        required: False
+    url_type:
+        description:
+        - "'GET'= HTTP GET method; 'POST'= HTTP POST method; 'HEAD'= HTTP HEAD method;"
+        type: str
+        required: False
+    url_path:
+        description:
+        - "Specify URL path, default is '/'"
+        type: str
+        required: False
+    post_path:
+        description:
+        - "Specify URL path, default is '/'"
+        type: str
+        required: False
+    post_type:
+        description:
+        - "'postdata'= Specify the HTTP post data; 'postfile'= Specify the HTTP post data;"
+        type: str
+        required: False
+    http_postdata:
+        description:
+        - "Specify the HTTP post data (Input post data here)"
+        type: str
+        required: False
+    http_postfile:
+        description:
+        - "Specify the HTTP post data (Input post data file name here)"
+        type: str
+        required: False
+    http_username:
+        description:
+        - "Specify the username"
+        type: str
+        required: False
+    http_password:
+        description:
+        - "Specify the user password"
+        type: bool
+        required: False
+    http_password_string:
+        description:
+        - "Specify password, '' means empty password"
+        type: str
         required: False
     http_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        type: str
+        required: False
+    http_kerberos_auth:
+        description:
+        - "Http Kerberos Auth"
+        type: bool
         required: False
     http_kerberos_realm:
         description:
         - "Specify realm of Kerberos server"
-        required: False
-    http_password:
-        description:
-        - "Specify the user password"
+        type: str
         required: False
     http_kerberos_kdc:
         description:
         - "Field http_kerberos_kdc"
+        type: dict
         required: False
         suboptions:
-            http_kerberos_hostipv6:
-                description:
-                - "Server's IPV6 address"
-            http_kerberos_port:
-                description:
-                - "Specify the kdc port"
-            http_kerberos_portv6:
-                description:
-                - "Specify the kdc port"
             http_kerberos_hostip:
                 description:
                 - "Kdc's hostname(length=1-31) or IP address"
-    http_expect:
+                type: str
+            http_kerberos_hostipv6:
+                description:
+                - "Server's IPV6 address"
+                type: str
+            http_kerberos_port:
+                description:
+                - "Specify the kdc port"
+                type: int
+            http_kerberos_portv6:
+                description:
+                - "Specify the kdc port"
+                type: int
+    uuid:
         description:
-        - "Specify what you expect from the response message"
-        required: False
-    post_path:
-        description:
-        - "Specify URL path, default is '/'"
-        required: False
-    http_username:
-        description:
-        - "Specify the username"
-        required: False
-    http_port:
-        description:
-        - "Specify HTTP Port (Specify port number (default 80))"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -240,67 +276,79 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'http_url': {
+        'http': {
             'type': 'bool',
         },
-        'text_regex': {
-            'type': 'str',
+        'http_port': {
+            'type': 'int',
         },
-        'http_maintenance_code': {
-            'type': 'str',
-        },
-        'http_kerberos_auth': {
+        'http_expect': {
             'type': 'bool',
         },
-        'http_postfile': {
+        'http_response_code': {
             'type': 'str',
         },
         'response_code_regex': {
             'type': 'str',
         },
-        'uuid': {
+        'http_text': {
             'type': 'str',
         },
-        'post_type': {
-            'type': 'str',
-            'choices': ['postdata', 'postfile']
-        },
-        'http_password_string': {
-            'type': 'str',
-        },
-        'url_path': {
-            'type': 'str',
-        },
-        'http_response_code': {
+        'text_regex': {
             'type': 'str',
         },
         'http_host': {
             'type': 'str',
         },
-        'http': {
+        'http_maintenance_code': {
+            'type': 'str',
+        },
+        'http_url': {
             'type': 'bool',
         },
         'url_type': {
             'type': 'str',
             'choices': ['GET', 'POST', 'HEAD']
         },
+        'url_path': {
+            'type': 'str',
+        },
+        'post_path': {
+            'type': 'str',
+        },
+        'post_type': {
+            'type': 'str',
+            'choices': ['postdata', 'postfile']
+        },
         'http_postdata': {
             'type': 'str',
         },
-        'http_text': {
+        'http_postfile': {
             'type': 'str',
         },
-        'http_encrypted': {
-            'type': 'str',
-        },
-        'http_kerberos_realm': {
+        'http_username': {
             'type': 'str',
         },
         'http_password': {
             'type': 'bool',
         },
+        'http_password_string': {
+            'type': 'str',
+        },
+        'http_encrypted': {
+            'type': 'str',
+        },
+        'http_kerberos_auth': {
+            'type': 'bool',
+        },
+        'http_kerberos_realm': {
+            'type': 'str',
+        },
         'http_kerberos_kdc': {
             'type': 'dict',
+            'http_kerberos_hostip': {
+                'type': 'str',
+            },
             'http_kerberos_hostipv6': {
                 'type': 'str',
             },
@@ -309,22 +357,10 @@ def get_argspec():
             },
             'http_kerberos_portv6': {
                 'type': 'int',
-            },
-            'http_kerberos_hostip': {
-                'type': 'str',
             }
         },
-        'http_expect': {
-            'type': 'bool',
-        },
-        'post_path': {
+        'uuid': {
             'type': 'str',
-        },
-        'http_username': {
-            'type': 'str',
-        },
-        'http_port': {
-            'type': 'int',
         }
     })
     # Parent keys

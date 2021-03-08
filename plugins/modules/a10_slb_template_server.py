@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_server
 description:
     - Server template
-short_description: Configures A10 slb.template.server
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,165 +22,209 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    health_check_disable:
+    name:
         description:
-        - "Disable configured health check configuration"
-        required: False
-    stats_data_action:
-        description:
-        - "'stats-data-enable'= Enable statistical data collection for real server;
-          'stats-data-disable'= Disable statistical data collection for real server;"
-        required: False
-    slow_start:
-        description:
-        - "Slowly ramp up the connection number after server is up"
-        required: False
-    weight:
-        description:
-        - "Weight for the Real Servers (Connection Weight (default is 1))"
-        required: False
-    bw_rate_limit:
-        description:
-        - "Configure bandwidth rate limit on real server (Bandwidth rate limit in Kbps)"
-        required: False
-    spoofing_cache:
-        description:
-        - "Servers under the template are spoofing cache"
-        required: False
+        - "Server template name"
+        type: str
+        required: True
     conn_limit:
         description:
         - "Connection limit"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: int
         required: False
     resume:
         description:
         - "Resume accepting new connection after connection number drops below threshold
           (Connection resume threshold)"
+        type: int
         required: False
-    max_dynamic_server:
+    conn_limit_no_logging:
         description:
-        - "Maximum dynamic server number (Maximum dynamic server number (default is 255))"
+        - "Do not log connection over limit event"
+        type: bool
+        required: False
+    conn_rate_limit:
+        description:
+        - "Connection rate limit"
+        type: int
         required: False
     rate_interval:
         description:
         - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling
           interval;"
+        type: str
         required: False
-    till:
+    conn_rate_limit_no_logging:
         description:
-        - "Slow start ends when slow start connection limit reaches a number (default
-          4096) (Slow start ends when connection limit reaches this number)"
+        - "Do not log connection over limit event"
+        type: bool
+        required: False
+    dns_query_interval:
+        description:
+        - "The interval to query DNS server for the hostname (DNS query interval (in
+          minute, default is 10))"
+        type: int
+        required: False
+    dns_fail_interval:
+        description:
+        - "The interval to retry when DNS failed to query (DNS failure interval (in
+          second, default is 30))"
+        type: int
+        required: False
+    dynamic_server_prefix:
+        description:
+        - "Prefix of dynamic server (Prefix of dynamic server (default is 'DRS'))"
+        type: str
+        required: False
+    extended_stats:
+        description:
+        - "Enable extended statistics on real server"
+        type: bool
+        required: False
+    log_selection_failure:
+        description:
+        - "Enable real-time logging for server selection failure event"
+        type: bool
+        required: False
+    health_check:
+        description:
+        - "Health Check Monitor (Health monitor name)"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable configured health check configuration"
+        type: bool
+        required: False
+    max_dynamic_server:
+        description:
+        - "Maximum dynamic server number (Maximum dynamic server number (default is 255))"
+        type: int
+        required: False
+    min_ttl_ratio:
+        description:
+        - "Minimum TTL to DNS query interval ratio (Minimum TTL ratio (default is 2))"
+        type: int
+        required: False
+    weight:
+        description:
+        - "Weight for the Real Servers (Connection Weight (default is 1))"
+        type: int
+        required: False
+    spoofing_cache:
+        description:
+        - "Servers under the template are spoofing cache"
+        type: bool
+        required: False
+    stats_data_action:
+        description:
+        - "'stats-data-enable'= Enable statistical data collection for real server;
+          'stats-data-disable'= Disable statistical data collection for real server;"
+        type: str
+        required: False
+    slow_start:
+        description:
+        - "Slowly ramp up the connection number after server is up"
+        type: bool
+        required: False
+    initial_slow_start:
+        description:
+        - "Initial slow start connection limit (default 128)"
+        type: int
         required: False
     add:
         description:
         - "Slow start connection limit add by a number every interval (Add by this number
           every interval)"
+        type: int
         required: False
-    min_ttl_ratio:
+    times:
         description:
-        - "Minimum TTL to DNS query interval ratio (Minimum TTL ratio (default is 2))"
-        required: False
-    bw_rate_limit_no_logging:
-        description:
-        - "Do not log bandwidth rate limit related state transitions"
-        required: False
-    dynamic_server_prefix:
-        description:
-        - "Prefix of dynamic server (Prefix of dynamic server (default is 'DRS'))"
-        required: False
-    initial_slow_start:
-        description:
-        - "Initial slow start connection limit (default 128)"
+        - "Slow start connection limit multiply by a number every interval (default 2)
+          (Multiply by this number every interval)"
+        type: int
         required: False
     every:
         description:
         - "Slow start connection limit increment interval (default 10)"
+        type: int
         required: False
-    conn_limit_no_logging:
+    till:
         description:
-        - "Do not log connection over limit event"
-        required: False
-    extended_stats:
-        description:
-        - "Enable extended statistics on real server"
-        required: False
-    conn_rate_limit_no_logging:
-        description:
-        - "Do not log connection over limit event"
-        required: False
-    name:
-        description:
-        - "Server template name"
-        required: True
-    bw_rate_limit_duration:
-        description:
-        - "Duration in seconds the observed rate needs to honor"
-        required: False
-    bw_rate_limit_resume:
-        description:
-        - "Resume server selection after bandwidth drops below this threshold (in Kbps)
-          (Bandwidth rate limit resume threshold (in Kbps))"
+        - "Slow start ends when slow start connection limit reaches a number (default
+          4096) (Slow start ends when connection limit reaches this number)"
+        type: int
         required: False
     bw_rate_limit_acct:
         description:
         - "'to-server-only'= Only account for traffic sent to server; 'from-server-only'=
           Only account for traffic received from server; 'all'= Account for all traffic
           sent to and received from server;"
+        type: str
+        required: False
+    bw_rate_limit:
+        description:
+        - "Configure bandwidth rate limit on real server (Bandwidth rate limit in Kbps)"
+        type: int
+        required: False
+    bw_rate_limit_resume:
+        description:
+        - "Resume server selection after bandwidth drops below this threshold (in Kbps)
+          (Bandwidth rate limit resume threshold (in Kbps))"
+        type: int
+        required: False
+    bw_rate_limit_duration:
+        description:
+        - "Duration in seconds the observed rate needs to honor"
+        type: int
+        required: False
+    bw_rate_limit_no_logging:
+        description:
+        - "Do not log bandwidth rate limit related state transitions"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
-        required: False
-    times:
-        description:
-        - "Slow start connection limit multiply by a number every interval (default 2)
-          (Multiply by this number every interval)"
-        required: False
-    log_selection_failure:
-        description:
-        - "Enable real-time logging for server selection failure event"
-        required: False
-    conn_rate_limit:
-        description:
-        - "Connection rate limit"
-        required: False
-    dns_query_interval:
-        description:
-        - "The interval to query DNS server for the hostname (DNS query interval (in
-          minute, default is 10))"
-        required: False
-    health_check:
-        description:
-        - "Health Check Monitor (Health monitor name)"
+        type: str
         required: False
 
 '''
@@ -208,6 +250,7 @@ AVAILABLE_PROPERTIES = [
     "conn_limit_no_logging",
     "conn_rate_limit",
     "conn_rate_limit_no_logging",
+    "dns_fail_interval",
     "dns_query_interval",
     "dynamic_server_prefix",
     "every",
@@ -266,7 +309,60 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'conn_limit': {
+            'type': 'int',
+        },
+        'resume': {
+            'type': 'int',
+        },
+        'conn_limit_no_logging': {
+            'type': 'bool',
+        },
+        'conn_rate_limit': {
+            'type': 'int',
+        },
+        'rate_interval': {
+            'type': 'str',
+            'choices': ['100ms', 'second']
+        },
+        'conn_rate_limit_no_logging': {
+            'type': 'bool',
+        },
+        'dns_query_interval': {
+            'type': 'int',
+        },
+        'dns_fail_interval': {
+            'type': 'int',
+        },
+        'dynamic_server_prefix': {
+            'type': 'str',
+        },
+        'extended_stats': {
+            'type': 'bool',
+        },
+        'log_selection_failure': {
+            'type': 'bool',
+        },
+        'health_check': {
+            'type': 'str',
+        },
         'health_check_disable': {
+            'type': 'bool',
+        },
+        'max_dynamic_server': {
+            'type': 'int',
+        },
+        'min_ttl_ratio': {
+            'type': 'int',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'spoofing_cache': {
             'type': 'bool',
         },
         'stats_data_action': {
@@ -276,91 +372,41 @@ def get_argspec():
         'slow_start': {
             'type': 'bool',
         },
-        'weight': {
-            'type': 'int',
-        },
-        'bw_rate_limit': {
-            'type': 'int',
-        },
-        'spoofing_cache': {
-            'type': 'bool',
-        },
-        'conn_limit': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'resume': {
-            'type': 'int',
-        },
-        'max_dynamic_server': {
-            'type': 'int',
-        },
-        'rate_interval': {
-            'type': 'str',
-            'choices': ['100ms', 'second']
-        },
-        'till': {
+        'initial_slow_start': {
             'type': 'int',
         },
         'add': {
             'type': 'int',
         },
-        'min_ttl_ratio': {
-            'type': 'int',
-        },
-        'bw_rate_limit_no_logging': {
-            'type': 'bool',
-        },
-        'dynamic_server_prefix': {
-            'type': 'str',
-        },
-        'initial_slow_start': {
+        'times': {
             'type': 'int',
         },
         'every': {
             'type': 'int',
         },
-        'conn_limit_no_logging': {
-            'type': 'bool',
-        },
-        'extended_stats': {
-            'type': 'bool',
-        },
-        'conn_rate_limit_no_logging': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'bw_rate_limit_duration': {
-            'type': 'int',
-        },
-        'bw_rate_limit_resume': {
+        'till': {
             'type': 'int',
         },
         'bw_rate_limit_acct': {
             'type': 'str',
             'choices': ['to-server-only', 'from-server-only', 'all']
         },
-        'user_tag': {
-            'type': 'str',
-        },
-        'times': {
+        'bw_rate_limit': {
             'type': 'int',
         },
-        'log_selection_failure': {
+        'bw_rate_limit_resume': {
+            'type': 'int',
+        },
+        'bw_rate_limit_duration': {
+            'type': 'int',
+        },
+        'bw_rate_limit_no_logging': {
             'type': 'bool',
         },
-        'conn_rate_limit': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
         },
-        'dns_query_interval': {
-            'type': 'int',
-        },
-        'health_check': {
+        'user_tag': {
             'type': 'str',
         }
     })

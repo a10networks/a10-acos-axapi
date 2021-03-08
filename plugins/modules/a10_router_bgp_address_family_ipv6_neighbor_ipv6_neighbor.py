@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_address_family_ipv6_neighbor_ipv6_neighbor
 description:
     - Specify a peer-group neighbor router
-short_description: Configures A10 router.bgp.address.family.ipv6-neighbor.ipv6.neighbor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,148 +21,187 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     bgp_as_number:
         description:
-        - Key to identify parent object    maximum_prefix:
-        description:
-        - "Maximum number of prefix accept from this peer (maximum no. of prefix limit
-          (various depends on model))"
-        required: False
-    neighbor_prefix_lists:
-        description:
-        - "Field neighbor_prefix_lists"
-        required: False
-        suboptions:
-            nbr_prefix_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
-            nbr_prefix_list:
-                description:
-                - "Filter updates to/from this neighbor (Name of a prefix list)"
-    allowas_in_count:
-        description:
-        - "Number of occurrences of AS number"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     neighbor_ipv6:
         description:
         - "Neighbor IPv6 address"
+        type: str
         required: True
-    send_community_val:
-        description:
-        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
-          Sending Community attributes; 'standard'= Send Standard Community attributes;
-          'extended'= Send Extended Community attributes;"
-        required: False
-    inbound:
-        description:
-        - "Allow inbound soft reconfiguration for this neighbor"
-        required: False
-    next_hop_self:
-        description:
-        - "Disable the next hop calculation for this neighbor"
-        required: False
-    maximum_prefix_thres:
-        description:
-        - "threshold-value, 1 to 100 percent"
-        required: False
-    route_map:
-        description:
-        - "Route-map to specify criteria to originate default (route-map name)"
-        required: False
     peer_group_name:
         description:
         - "Configure peer-group (peer-group name)"
-        required: False
-    weight:
-        description:
-        - "Set default weight for routes from this neighbor"
-        required: False
-    unsuppress_map:
-        description:
-        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
-        required: False
-    prefix_list_direction:
-        description:
-        - "'both'= both; 'receive'= receive; 'send'= send;"
-        required: False
-    default_originate:
-        description:
-        - "Originate default route to this neighbor"
+        type: str
         required: False
     activate:
         description:
         - "Enable the Address Family for this Neighbor"
+        type: bool
         required: False
-    remove_private_as:
+    allowas_in:
         description:
-        - "Remove private AS number from outbound updates"
+        - "Accept as-path with my AS present in it"
+        type: bool
+        required: False
+    allowas_in_count:
+        description:
+        - "Number of occurrences of AS number"
+        type: int
+        required: False
+    prefix_list_direction:
+        description:
+        - "'both'= both; 'receive'= receive; 'send'= send;"
+        type: str
+        required: False
+    default_originate:
+        description:
+        - "Originate default route to this neighbor"
+        type: bool
+        required: False
+    route_map:
+        description:
+        - "Route-map to specify criteria to originate default (route-map name)"
+        type: str
         required: False
     distribute_lists:
         description:
         - "Field distribute_lists"
+        type: list
         required: False
         suboptions:
-            distribute_list_direction:
-                description:
-                - "'in'= in; 'out'= out;"
             distribute_list:
                 description:
                 - "Filter updates to/from this neighbor (IP standard/extended/named access list)"
-    allowas_in:
-        description:
-        - "Accept as-path with my AS present in it"
-        required: False
-    neighbor_route_map_lists:
-        description:
-        - "Field neighbor_route_map_lists"
-        required: False
-        suboptions:
-            nbr_rmap_direction:
+                type: str
+            distribute_list_direction:
                 description:
                 - "'in'= in; 'out'= out;"
-            nbr_route_map:
-                description:
-                - "Apply route map to neighbor (Name of route map)"
+                type: str
     neighbor_filter_lists:
         description:
         - "Field neighbor_filter_lists"
+        type: list
         required: False
         suboptions:
             filter_list:
                 description:
                 - "Establish BGP filters (AS path access-list name)"
+                type: str
             filter_list_direction:
                 description:
                 - "'in'= in; 'out'= out;"
+                type: str
+    maximum_prefix:
+        description:
+        - "Maximum number of prefix accept from this peer (maximum no. of prefix limit
+          (various depends on model))"
+        type: int
+        required: False
+    maximum_prefix_thres:
+        description:
+        - "threshold-value, 1 to 100 percent"
+        type: int
+        required: False
+    next_hop_self:
+        description:
+        - "Disable the next hop calculation for this neighbor"
+        type: bool
+        required: False
+    neighbor_prefix_lists:
+        description:
+        - "Field neighbor_prefix_lists"
+        type: list
+        required: False
+        suboptions:
+            nbr_prefix_list:
+                description:
+                - "Filter updates to/from this neighbor (Name of a prefix list)"
+                type: str
+            nbr_prefix_list_direction:
+                description:
+                - "'in'= in; 'out'= out;"
+                type: str
+    remove_private_as:
+        description:
+        - "Remove private AS number from outbound updates"
+        type: bool
+        required: False
+    neighbor_route_map_lists:
+        description:
+        - "Field neighbor_route_map_lists"
+        type: list
+        required: False
+        suboptions:
+            nbr_route_map:
+                description:
+                - "Apply route map to neighbor (Name of route map)"
+                type: str
+            nbr_rmap_direction:
+                description:
+                - "'in'= in; 'out'= out;"
+                type: str
+    send_community_val:
+        description:
+        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable
+          Sending Community attributes; 'standard'= Send Standard Community attributes;
+          'extended'= Send Extended Community attributes;"
+        type: str
+        required: False
+    inbound:
+        description:
+        - "Allow inbound soft reconfiguration for this neighbor"
+        type: bool
+        required: False
+    unsuppress_map:
+        description:
+        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
+        type: str
+        required: False
+    weight:
+        description:
+        - "Set default weight for routes from this neighbor"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -236,50 +273,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'maximum_prefix': {
-            'type': 'int',
-        },
-        'neighbor_prefix_lists': {
-            'type': 'list',
-            'nbr_prefix_list_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-            },
-            'nbr_prefix_list': {
-                'type': 'str',
-            }
-        },
-        'allowas_in_count': {
-            'type': 'int',
-        },
         'neighbor_ipv6': {
             'type': 'str',
             'required': True,
         },
-        'send_community_val': {
-            'type': 'str',
-            'choices': ['both', 'none', 'standard', 'extended']
-        },
-        'inbound': {
-            'type': 'bool',
-        },
-        'next_hop_self': {
-            'type': 'bool',
-        },
-        'maximum_prefix_thres': {
-            'type': 'int',
-        },
-        'route_map': {
-            'type': 'str',
-        },
         'peer_group_name': {
             'type': 'str',
         },
-        'weight': {
-            'type': 'int',
+        'activate': {
+            'type': 'bool',
         },
-        'unsuppress_map': {
-            'type': 'str',
+        'allowas_in': {
+            'type': 'bool',
+        },
+        'allowas_in_count': {
+            'type': 'int',
         },
         'prefix_list_direction': {
             'type': 'str',
@@ -288,33 +296,17 @@ def get_argspec():
         'default_originate': {
             'type': 'bool',
         },
-        'activate': {
-            'type': 'bool',
-        },
-        'remove_private_as': {
-            'type': 'bool',
+        'route_map': {
+            'type': 'str',
         },
         'distribute_lists': {
             'type': 'list',
+            'distribute_list': {
+                'type': 'str',
+            },
             'distribute_list_direction': {
                 'type': 'str',
                 'choices': ['in', 'out']
-            },
-            'distribute_list': {
-                'type': 'str',
-            }
-        },
-        'allowas_in': {
-            'type': 'bool',
-        },
-        'neighbor_route_map_lists': {
-            'type': 'list',
-            'nbr_rmap_direction': {
-                'type': 'str',
-                'choices': ['in', 'out']
-            },
-            'nbr_route_map': {
-                'type': 'str',
             }
         },
         'neighbor_filter_lists': {
@@ -326,6 +318,51 @@ def get_argspec():
                 'type': 'str',
                 'choices': ['in', 'out']
             }
+        },
+        'maximum_prefix': {
+            'type': 'int',
+        },
+        'maximum_prefix_thres': {
+            'type': 'int',
+        },
+        'next_hop_self': {
+            'type': 'bool',
+        },
+        'neighbor_prefix_lists': {
+            'type': 'list',
+            'nbr_prefix_list': {
+                'type': 'str',
+            },
+            'nbr_prefix_list_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'remove_private_as': {
+            'type': 'bool',
+        },
+        'neighbor_route_map_lists': {
+            'type': 'list',
+            'nbr_route_map': {
+                'type': 'str',
+            },
+            'nbr_rmap_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'send_community_val': {
+            'type': 'str',
+            'choices': ['both', 'none', 'standard', 'extended']
+        },
+        'inbound': {
+            'type': 'bool',
+        },
+        'unsuppress_map': {
+            'type': 'str',
+        },
+        'weight': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

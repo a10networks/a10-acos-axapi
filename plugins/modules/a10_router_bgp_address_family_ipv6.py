@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_router_bgp_address_family_ipv6
 description:
     - ipv6 Address family
-short_description: Configures A10 router.bgp.address.family.ipv6
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,177 +21,233 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     bgp_as_number:
         description:
-        - Key to identify parent object    distance:
+        - Key to identify parent object
+        type: str
+        required: True
+    bgp:
+        description:
+        - "Field bgp"
+        type: dict
+        required: False
+        suboptions:
+            dampening:
+                description:
+                - "Enable route-flap dampening"
+                type: bool
+            dampening_half:
+                description:
+                - "Reachability Half-life time for the penalty(minutes)"
+                type: int
+            dampening_start_reuse:
+                description:
+                - "Value to start reusing a route"
+                type: int
+            dampening_start_supress:
+                description:
+                - "Value to start suppressing a route"
+                type: int
+            dampening_max_supress:
+                description:
+                - "Maximum duration to suppress a stable route(minutes)"
+                type: int
+            dampening_unreachability:
+                description:
+                - "Un-reachability Half-life time for the penalty(minutes)"
+                type: int
+            route_map:
+                description:
+                - "Route-map to specify criteria for dampening (Route-map name)"
+                type: str
+    distance:
         description:
         - "Field distance"
+        type: dict
         required: False
         suboptions:
             distance_ext:
                 description:
                 - "Distance for routes external to the AS"
-            distance_local:
-                description:
-                - "Distance for local routes"
+                type: int
             distance_int:
                 description:
                 - "Distance for routes internal to the AS"
-    redistribute:
-        description:
-        - "Field redistribute"
-        required: False
-        suboptions:
-            ip_nat_list_cfg:
+                type: int
+            distance_local:
                 description:
-                - "Field ip_nat_list_cfg"
-            lw4o6_cfg:
-                description:
-                - "Field lw4o6_cfg"
-            nat64_cfg:
-                description:
-                - "Field nat64_cfg"
-            uuid:
-                description:
-                - "uuid of the object"
-            connected_cfg:
-                description:
-                - "Field connected_cfg"
-            ip_nat_cfg:
-                description:
-                - "Field ip_nat_cfg"
-            floating_ip_cfg:
-                description:
-                - "Field floating_ip_cfg"
-            isis_cfg:
-                description:
-                - "Field isis_cfg"
-            vip:
-                description:
-                - "Field vip"
-            rip_cfg:
-                description:
-                - "Field rip_cfg"
-            ospf_cfg:
-                description:
-                - "Field ospf_cfg"
-            static_cfg:
-                description:
-                - "Field static_cfg"
-            nat_map_cfg:
-                description:
-                - "Field nat_map_cfg"
-    aggregate_address_list:
-        description:
-        - "Field aggregate_address_list"
-        required: False
-        suboptions:
-            as_set:
-                description:
-                - "Generate AS set path information"
-            aggregate_address:
-                description:
-                - "Configure BGP aggregate entries (Aggregate IPv6 prefix)"
-            summary_only:
-                description:
-                - "Filter more specific routes from updates"
-    originate:
-        description:
-        - "Distribute an IPv6 default route"
-        required: False
+                - "Distance for local routes"
+                type: int
     maximum_paths_value:
         description:
         - "Supported BGP multipath numbers"
+        type: int
         required: False
-    bgp:
+    originate:
         description:
-        - "Field bgp"
+        - "Distribute an IPv6 default route"
+        type: bool
+        required: False
+    aggregate_address_list:
+        description:
+        - "Field aggregate_address_list"
+        type: list
         required: False
         suboptions:
-            dampening_max_supress:
+            aggregate_address:
                 description:
-                - "Maximum duration to suppress a stable route(minutes)"
-            dampening:
+                - "Configure BGP aggregate entries (Aggregate IPv6 prefix)"
+                type: str
+            as_set:
                 description:
-                - "Enable route-flap dampening"
-            dampening_half:
+                - "Generate AS set path information"
+                type: bool
+            summary_only:
                 description:
-                - "Reachability Half-life time for the penalty(minutes)"
-            dampening_start_reuse:
-                description:
-                - "Value to start reusing a route"
-            route_map:
-                description:
-                - "Route-map to specify criteria for dampening (Route-map name)"
-            dampening_start_supress:
-                description:
-                - "Value to start suppressing a route"
-            dampening_unreachability:
-                description:
-                - "Un-reachability Half-life time for the penalty(minutes)"
+                - "Filter more specific routes from updates"
+                type: bool
     auto_summary:
         description:
         - "Enable automatic network number summarization"
+        type: bool
         required: False
     synchronization:
         description:
         - "Perform IGP synchronization"
+        type: bool
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    network:
+        description:
+        - "Field network"
+        type: dict
+        required: False
+        suboptions:
+            synchronization:
+                description:
+                - "Field synchronization"
+                type: dict
+            ipv6_network_list:
+                description:
+                - "Field ipv6_network_list"
+                type: list
     neighbor:
         description:
         - "Field neighbor"
+        type: dict
         required: False
         suboptions:
             peer_group_neighbor_list:
                 description:
                 - "Field peer_group_neighbor_list"
-            ipv6_neighbor_list:
-                description:
-                - "Field ipv6_neighbor_list"
+                type: list
             ipv4_neighbor_list:
                 description:
                 - "Field ipv4_neighbor_list"
-    uuid:
+                type: list
+            ipv6_neighbor_list:
+                description:
+                - "Field ipv6_neighbor_list"
+                type: list
+    redistribute:
         description:
-        - "uuid of the object"
-        required: False
-    network:
-        description:
-        - "Field network"
+        - "Field redistribute"
+        type: dict
         required: False
         suboptions:
-            ipv6_network_list:
+            connected_cfg:
                 description:
-                - "Field ipv6_network_list"
-            synchronization:
+                - "Field connected_cfg"
+                type: dict
+            floating_ip_cfg:
                 description:
-                - "Field synchronization"
+                - "Field floating_ip_cfg"
+                type: dict
+            nat64_cfg:
+                description:
+                - "Field nat64_cfg"
+                type: dict
+            nat_map_cfg:
+                description:
+                - "Field nat_map_cfg"
+                type: dict
+            lw4o6_cfg:
+                description:
+                - "Field lw4o6_cfg"
+                type: dict
+            static_nat_cfg:
+                description:
+                - "Field static_nat_cfg"
+                type: dict
+            ip_nat_cfg:
+                description:
+                - "Field ip_nat_cfg"
+                type: dict
+            ip_nat_list_cfg:
+                description:
+                - "Field ip_nat_list_cfg"
+                type: dict
+            isis_cfg:
+                description:
+                - "Field isis_cfg"
+                type: dict
+            ospf_cfg:
+                description:
+                - "Field ospf_cfg"
+                type: dict
+            rip_cfg:
+                description:
+                - "Field rip_cfg"
+                type: dict
+            static_cfg:
+                description:
+                - "Field static_cfg"
+                type: dict
+            vip:
+                description:
+                - "Field vip"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -254,66 +308,403 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'bgp': {
+            'type': 'dict',
+            'dampening': {
+                'type': 'bool',
+            },
+            'dampening_half': {
+                'type': 'int',
+            },
+            'dampening_start_reuse': {
+                'type': 'int',
+            },
+            'dampening_start_supress': {
+                'type': 'int',
+            },
+            'dampening_max_supress': {
+                'type': 'int',
+            },
+            'dampening_unreachability': {
+                'type': 'int',
+            },
+            'route_map': {
+                'type': 'str',
+            }
+        },
         'distance': {
             'type': 'dict',
             'distance_ext': {
                 'type': 'int',
             },
-            'distance_local': {
-                'type': 'int',
-            },
             'distance_int': {
                 'type': 'int',
+            },
+            'distance_local': {
+                'type': 'int',
+            }
+        },
+        'maximum_paths_value': {
+            'type': 'int',
+        },
+        'originate': {
+            'type': 'bool',
+        },
+        'aggregate_address_list': {
+            'type': 'list',
+            'aggregate_address': {
+                'type': 'str',
+            },
+            'as_set': {
+                'type': 'bool',
+            },
+            'summary_only': {
+                'type': 'bool',
+            }
+        },
+        'auto_summary': {
+            'type': 'bool',
+        },
+        'synchronization': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'network': {
+            'type': 'dict',
+            'synchronization': {
+                'type': 'dict',
+                'network_synchronization': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_network_list': {
+                'type': 'list',
+                'network_ipv6': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'backdoor': {
+                    'type': 'bool',
+                },
+                'description': {
+                    'type': 'str',
+                },
+                'comm_value': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'neighbor': {
+            'type': 'dict',
+            'peer_group_neighbor_list': {
+                'type': 'list',
+                'peer_group': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'activate': {
+                    'type': 'bool',
+                },
+                'allowas_in': {
+                    'type': 'bool',
+                },
+                'allowas_in_count': {
+                    'type': 'int',
+                },
+                'prefix_list_direction': {
+                    'type': 'str',
+                    'choices': ['both', 'receive', 'send']
+                },
+                'default_originate': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'distribute_lists': {
+                    'type': 'list',
+                    'distribute_list': {
+                        'type': 'str',
+                    },
+                    'distribute_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'neighbor_filter_lists': {
+                    'type': 'list',
+                    'filter_list': {
+                        'type': 'str',
+                    },
+                    'filter_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'maximum_prefix': {
+                    'type': 'int',
+                },
+                'maximum_prefix_thres': {
+                    'type': 'int',
+                },
+                'next_hop_self': {
+                    'type': 'bool',
+                },
+                'neighbor_prefix_lists': {
+                    'type': 'list',
+                    'nbr_prefix_list': {
+                        'type': 'str',
+                    },
+                    'nbr_prefix_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'remove_private_as': {
+                    'type': 'bool',
+                },
+                'neighbor_route_map_lists': {
+                    'type': 'list',
+                    'nbr_route_map': {
+                        'type': 'str',
+                    },
+                    'nbr_rmap_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'send_community_val': {
+                    'type': 'str',
+                    'choices': ['both', 'none', 'standard', 'extended']
+                },
+                'inbound': {
+                    'type': 'bool',
+                },
+                'unsuppress_map': {
+                    'type': 'str',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ipv4_neighbor_list': {
+                'type': 'list',
+                'neighbor_ipv4': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'peer_group_name': {
+                    'type': 'str',
+                },
+                'activate': {
+                    'type': 'bool',
+                },
+                'allowas_in': {
+                    'type': 'bool',
+                },
+                'allowas_in_count': {
+                    'type': 'int',
+                },
+                'prefix_list_direction': {
+                    'type': 'str',
+                    'choices': ['both', 'receive', 'send']
+                },
+                'default_originate': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'distribute_lists': {
+                    'type': 'list',
+                    'distribute_list': {
+                        'type': 'str',
+                    },
+                    'distribute_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'neighbor_filter_lists': {
+                    'type': 'list',
+                    'filter_list': {
+                        'type': 'str',
+                    },
+                    'filter_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'maximum_prefix': {
+                    'type': 'int',
+                },
+                'maximum_prefix_thres': {
+                    'type': 'int',
+                },
+                'next_hop_self': {
+                    'type': 'bool',
+                },
+                'neighbor_prefix_lists': {
+                    'type': 'list',
+                    'nbr_prefix_list': {
+                        'type': 'str',
+                    },
+                    'nbr_prefix_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'remove_private_as': {
+                    'type': 'bool',
+                },
+                'neighbor_route_map_lists': {
+                    'type': 'list',
+                    'nbr_route_map': {
+                        'type': 'str',
+                    },
+                    'nbr_rmap_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'send_community_val': {
+                    'type': 'str',
+                    'choices': ['both', 'none', 'standard', 'extended']
+                },
+                'inbound': {
+                    'type': 'bool',
+                },
+                'unsuppress_map': {
+                    'type': 'str',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'ipv6_neighbor_list': {
+                'type': 'list',
+                'neighbor_ipv6': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'peer_group_name': {
+                    'type': 'str',
+                },
+                'activate': {
+                    'type': 'bool',
+                },
+                'allowas_in': {
+                    'type': 'bool',
+                },
+                'allowas_in_count': {
+                    'type': 'int',
+                },
+                'prefix_list_direction': {
+                    'type': 'str',
+                    'choices': ['both', 'receive', 'send']
+                },
+                'default_originate': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'distribute_lists': {
+                    'type': 'list',
+                    'distribute_list': {
+                        'type': 'str',
+                    },
+                    'distribute_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'neighbor_filter_lists': {
+                    'type': 'list',
+                    'filter_list': {
+                        'type': 'str',
+                    },
+                    'filter_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'maximum_prefix': {
+                    'type': 'int',
+                },
+                'maximum_prefix_thres': {
+                    'type': 'int',
+                },
+                'next_hop_self': {
+                    'type': 'bool',
+                },
+                'neighbor_prefix_lists': {
+                    'type': 'list',
+                    'nbr_prefix_list': {
+                        'type': 'str',
+                    },
+                    'nbr_prefix_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'remove_private_as': {
+                    'type': 'bool',
+                },
+                'neighbor_route_map_lists': {
+                    'type': 'list',
+                    'nbr_route_map': {
+                        'type': 'str',
+                    },
+                    'nbr_rmap_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    }
+                },
+                'send_community_val': {
+                    'type': 'str',
+                    'choices': ['both', 'none', 'standard', 'extended']
+                },
+                'inbound': {
+                    'type': 'bool',
+                },
+                'unsuppress_map': {
+                    'type': 'str',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
             }
         },
         'redistribute': {
             'type': 'dict',
-            'ip_nat_list_cfg': {
-                'type': 'dict',
-                'ip_nat_list': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'lw4o6_cfg': {
-                'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
-                'lw4o6': {
-                    'type': 'bool',
-                }
-            },
-            'nat64_cfg': {
-                'type': 'dict',
-                'nat64': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
             'connected_cfg': {
                 'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
                 'connected': {
                     'type': 'bool',
-                }
-            },
-            'ip_nat_cfg': {
-                'type': 'dict',
+                },
                 'route_map': {
                     'type': 'str',
-                },
-                'ip_nat': {
-                    'type': 'bool',
                 }
             },
             'floating_ip_cfg': {
@@ -325,447 +716,119 @@ def get_argspec():
                     'type': 'str',
                 }
             },
-            'isis_cfg': {
+            'nat64_cfg': {
                 'type': 'dict',
+                'nat64': {
+                    'type': 'bool',
+                },
                 'route_map': {
                     'type': 'str',
-                },
-                'isis': {
-                    'type': 'bool',
-                }
-            },
-            'vip': {
-                'type': 'dict',
-                'only_not_flagged_cfg': {
-                    'type': 'dict',
-                    'route_map': {
-                        'type': 'str',
-                    },
-                    'only_not_flagged': {
-                        'type': 'bool',
-                    }
-                },
-                'only_flagged_cfg': {
-                    'type': 'dict',
-                    'route_map': {
-                        'type': 'str',
-                    },
-                    'only_flagged': {
-                        'type': 'bool',
-                    }
-                }
-            },
-            'rip_cfg': {
-                'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
-                'rip': {
-                    'type': 'bool',
-                }
-            },
-            'ospf_cfg': {
-                'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
-                'ospf': {
-                    'type': 'bool',
-                }
-            },
-            'static_cfg': {
-                'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
-                'static': {
-                    'type': 'bool',
                 }
             },
             'nat_map_cfg': {
                 'type': 'dict',
-                'route_map': {
-                    'type': 'str',
-                },
                 'nat_map': {
                     'type': 'bool',
-                }
-            }
-        },
-        'aggregate_address_list': {
-            'type': 'list',
-            'as_set': {
-                'type': 'bool',
-            },
-            'aggregate_address': {
-                'type': 'str',
-            },
-            'summary_only': {
-                'type': 'bool',
-            }
-        },
-        'originate': {
-            'type': 'bool',
-        },
-        'maximum_paths_value': {
-            'type': 'int',
-        },
-        'bgp': {
-            'type': 'dict',
-            'dampening_max_supress': {
-                'type': 'int',
-            },
-            'dampening': {
-                'type': 'bool',
-            },
-            'dampening_half': {
-                'type': 'int',
-            },
-            'dampening_start_reuse': {
-                'type': 'int',
-            },
-            'route_map': {
-                'type': 'str',
-            },
-            'dampening_start_supress': {
-                'type': 'int',
-            },
-            'dampening_unreachability': {
-                'type': 'int',
-            }
-        },
-        'auto_summary': {
-            'type': 'bool',
-        },
-        'synchronization': {
-            'type': 'bool',
-        },
-        'neighbor': {
-            'type': 'dict',
-            'peer_group_neighbor_list': {
-                'type': 'list',
-                'maximum_prefix': {
-                    'type': 'int',
-                },
-                'neighbor_prefix_lists': {
-                    'type': 'list',
-                    'nbr_prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'nbr_prefix_list': {
-                        'type': 'str',
-                    }
-                },
-                'activate': {
-                    'type': 'bool',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'send_community_val': {
-                    'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
-                },
-                'inbound': {
-                    'type': 'bool',
-                },
-                'next_hop_self': {
-                    'type': 'bool',
-                },
-                'maximum_prefix_thres': {
-                    'type': 'int',
                 },
                 'route_map': {
                     'type': 'str',
-                },
-                'peer_group': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'remove_private_as': {
-                    'type': 'bool',
-                },
-                'default_originate': {
-                    'type': 'bool',
-                },
-                'allowas_in_count': {
-                    'type': 'int',
-                },
-                'distribute_lists': {
-                    'type': 'list',
-                    'distribute_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'distribute_list': {
-                        'type': 'str',
-                    }
-                },
-                'prefix_list_direction': {
-                    'type': 'str',
-                    'choices': ['both', 'receive', 'send']
-                },
-                'allowas_in': {
-                    'type': 'bool',
-                },
-                'unsuppress_map': {
-                    'type': 'str',
-                },
-                'neighbor_filter_lists': {
-                    'type': 'list',
-                    'filter_list': {
-                        'type': 'str',
-                    },
-                    'filter_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'neighbor_route_map_lists': {
-                    'type': 'list',
-                    'nbr_rmap_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'nbr_route_map': {
-                        'type': 'str',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
                 }
             },
-            'ipv6_neighbor_list': {
-                'type': 'list',
-                'maximum_prefix': {
-                    'type': 'int',
-                },
-                'neighbor_prefix_lists': {
-                    'type': 'list',
-                    'nbr_prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'nbr_prefix_list': {
-                        'type': 'str',
-                    }
-                },
-                'allowas_in_count': {
-                    'type': 'int',
-                },
-                'neighbor_ipv6': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'send_community_val': {
-                    'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
-                },
-                'inbound': {
-                    'type': 'bool',
-                },
-                'next_hop_self': {
-                    'type': 'bool',
-                },
-                'maximum_prefix_thres': {
-                    'type': 'int',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'peer_group_name': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'unsuppress_map': {
-                    'type': 'str',
-                },
-                'prefix_list_direction': {
-                    'type': 'str',
-                    'choices': ['both', 'receive', 'send']
-                },
-                'default_originate': {
-                    'type': 'bool',
-                },
-                'activate': {
-                    'type': 'bool',
-                },
-                'remove_private_as': {
-                    'type': 'bool',
-                },
-                'distribute_lists': {
-                    'type': 'list',
-                    'distribute_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'distribute_list': {
-                        'type': 'str',
-                    }
-                },
-                'allowas_in': {
-                    'type': 'bool',
-                },
-                'neighbor_route_map_lists': {
-                    'type': 'list',
-                    'nbr_rmap_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'nbr_route_map': {
-                        'type': 'str',
-                    }
-                },
-                'neighbor_filter_lists': {
-                    'type': 'list',
-                    'filter_list': {
-                        'type': 'str',
-                    },
-                    'filter_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'ipv4_neighbor_list': {
-                'type': 'list',
-                'maximum_prefix': {
-                    'type': 'int',
-                },
-                'neighbor_prefix_lists': {
-                    'type': 'list',
-                    'nbr_prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'nbr_prefix_list': {
-                        'type': 'str',
-                    }
-                },
-                'allowas_in_count': {
-                    'type': 'int',
-                },
-                'peer_group_name': {
-                    'type': 'str',
-                },
-                'send_community_val': {
-                    'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
-                },
-                'neighbor_ipv4': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'inbound': {
-                    'type': 'bool',
-                },
-                'next_hop_self': {
-                    'type': 'bool',
-                },
-                'maximum_prefix_thres': {
-                    'type': 'int',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'unsuppress_map': {
-                    'type': 'str',
-                },
-                'default_originate': {
-                    'type': 'bool',
-                },
-                'activate': {
-                    'type': 'bool',
-                },
-                'remove_private_as': {
-                    'type': 'bool',
-                },
-                'prefix_list_direction': {
-                    'type': 'str',
-                    'choices': ['both', 'receive', 'send']
-                },
-                'allowas_in': {
-                    'type': 'bool',
-                },
-                'neighbor_route_map_lists': {
-                    'type': 'list',
-                    'nbr_rmap_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'nbr_route_map': {
-                        'type': 'str',
-                    }
-                },
-                'neighbor_filter_lists': {
-                    'type': 'list',
-                    'filter_list': {
-                        'type': 'str',
-                    },
-                    'filter_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'distribute_lists': {
-                    'type': 'list',
-                    'distribute_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    },
-                    'distribute_list': {
-                        'type': 'str',
-                    }
-                }
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'network': {
-            'type': 'dict',
-            'ipv6_network_list': {
-                'type': 'list',
-                'description': {
-                    'type': 'str',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'comm_value': {
-                    'type': 'str',
-                },
-                'network_ipv6': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'backdoor': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'synchronization': {
+            'lw4o6_cfg': {
                 'type': 'dict',
-                'network_synchronization': {
+                'lw4o6': {
                     'type': 'bool',
                 },
-                'uuid': {
+                'route_map': {
                     'type': 'str',
                 }
+            },
+            'static_nat_cfg': {
+                'type': 'dict',
+                'static_nat': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'ip_nat_cfg': {
+                'type': 'dict',
+                'ip_nat': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'ip_nat_list_cfg': {
+                'type': 'dict',
+                'ip_nat_list': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'isis_cfg': {
+                'type': 'dict',
+                'isis': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'ospf_cfg': {
+                'type': 'dict',
+                'ospf': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'rip_cfg': {
+                'type': 'dict',
+                'rip': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'static_cfg': {
+                'type': 'dict',
+                'static': {
+                    'type': 'bool',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'vip': {
+                'type': 'dict',
+                'only_flagged_cfg': {
+                    'type': 'dict',
+                    'only_flagged': {
+                        'type': 'bool',
+                    },
+                    'route_map': {
+                        'type': 'str',
+                    }
+                },
+                'only_not_flagged_cfg': {
+                    'type': 'dict',
+                    'only_not_flagged': {
+                        'type': 'bool',
+                    },
+                    'route_map': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'uuid': {
+                'type': 'str',
             }
         }
     })

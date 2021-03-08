@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_file_license
 description:
     - license file information and management commands
-short_description: Configures A10 file.license
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,81 +22,100 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     file_content:
         description:
         - Content of the uploaded file
+        type: str
         note:
         - Use 'lookup' ansible command to provide required data
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            feature_list:
-                description:
-                - "Field feature_list"
-            file_list:
-                description:
-                - "Field file_list"
-            host_id:
-                description:
-                - "Field host_id"
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
         required: False
     device:
         description:
         - "Device (Device ID)"
+        type: int
         required: False
     file:
         description:
         - "license local file name"
+        type: str
+        required: False
+    size:
+        description:
+        - "license file size in byte"
+        type: int
+        required: False
+    file_handle:
+        description:
+        - "full path of the uploaded file"
+        type: str
         required: False
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'=
           rename; 'check'= check; 'replace'= replace; 'delete'= delete;"
+        type: str
         required: False
-    file_handle:
+    dst_file:
         description:
-        - "full path of the uploaded file"
+        - "destination file name for copy and rename action"
+        type: str
         required: False
-    size:
+    uuid:
         description:
-        - "license file size in byte"
+        - "uuid of the object"
+        type: str
         required: False
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            host_id:
+                description:
+                - "Field host_id"
+                type: str
+            feature_list:
+                description:
+                - "Field feature_list"
+                type: list
+            file_list:
+                description:
+                - "Field file_list"
+                type: list
 
 '''
 
@@ -161,52 +178,16 @@ def get_argspec():
         'file_content': {
             'type': 'str',
         },
-        'oper': {
-            'type': 'dict',
-            'feature_list': {
-                'type': 'list',
-                'notice': {
-                    'type': 'str',
-                },
-                'Temporary': {
-                    'type': 'str',
-                },
-                'bandwidth': {
-                    'type': 'str',
-                },
-                'version': {
-                    'type': 'str',
-                },
-                'SN': {
-                    'type': 'str',
-                },
-                'expire_date': {
-                    'type': 'str',
-                },
-                'feature_installed': {
-                    'type': 'str',
-                }
-            },
-            'file_list': {
-                'type': 'list',
-                'file_name': {
-                    'type': 'str',
-                }
-            },
-            'host_id': {
-                'type': 'str',
-            }
-        },
-        'dst_file': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
         'device': {
             'type': 'int',
         },
         'file': {
+            'type': 'str',
+        },
+        'size': {
+            'type': 'int',
+        },
+        'file_handle': {
             'type': 'str',
         },
         'action': {
@@ -217,11 +198,47 @@ def get_argspec():
                 'replace', 'delete'
             ]
         },
-        'file_handle': {
+        'dst_file': {
             'type': 'str',
         },
-        'size': {
-            'type': 'int',
+        'uuid': {
+            'type': 'str',
+        },
+        'oper': {
+            'type': 'dict',
+            'host_id': {
+                'type': 'str',
+            },
+            'feature_list': {
+                'type': 'list',
+                'feature_installed': {
+                    'type': 'str',
+                },
+                'version': {
+                    'type': 'str',
+                },
+                'expire_date': {
+                    'type': 'str',
+                },
+                'notice': {
+                    'type': 'str',
+                },
+                'Temporary': {
+                    'type': 'str',
+                },
+                'SN': {
+                    'type': 'str',
+                },
+                'bandwidth': {
+                    'type': 'str',
+                }
+            },
+            'file_list': {
+                'type': 'list',
+                'file_name': {
+                    'type': 'str',
+                }
+            }
         }
     })
     return rv

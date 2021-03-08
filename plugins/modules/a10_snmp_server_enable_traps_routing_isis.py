@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_routing_isis
 description:
     - Enable isis traps
-short_description: Configures A10 snmp.server.enable.traps.routing.isis
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,103 +22,128 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    isisAuthenticationFailure:
-        description:
-        - "Enable isisAuthenticationFailure traps"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    isisProtocolsSupportedMismatch:
-        description:
-        - "Enable isisProtocolsSupportedMismatch traps"
-        required: False
-    isisRejectedAdjacency:
-        description:
-        - "Enable isisRejectedAdjacency traps"
-        required: False
-    isisMaxAreaAddressesMismatch:
-        description:
-        - "Enable isisMaxAreaAddressesMismatch traps"
-        required: False
-    isisCorruptedLSPDetected:
-        description:
-        - "Enable isisCorruptedLSPDetected traps"
-        required: False
-    isisOriginatingLSPBufferSizeMismatch:
-        description:
-        - "Enable isisOriginatingLSPBufferSizeMismatch traps"
-        required: False
-    isisAreaMismatch:
-        description:
-        - "Enable isisAreaMismatch traps"
-        required: False
-    isisLSPTooLargeToPropagate:
-        description:
-        - "Enable isisLSPTooLargeToPropagate traps"
-        required: False
-    isisOwnLSPPurge:
-        description:
-        - "Enable isisOwnLSPPurge traps"
-        required: False
-    isisSequenceNumberSkip:
-        description:
-        - "Enable isisSequenceNumberSkip traps"
-        required: False
-    isisDatabaseOverload:
-        description:
-        - "Enable isisDatabaseOverload traps"
-        required: False
-    isisAttemptToExceedMaxSequence:
-        description:
-        - "Enable isisAttemptToExceedMaxSequence traps"
-        required: False
-    isisIDLenMismatch:
-        description:
-        - "Enable isisIDLenMismatch traps"
-        required: False
-    isisAuthenticationTypeFailure:
-        description:
-        - "Enable isisAuthenticationTypeFailure traps"
-        required: False
-    isisVersionSkew:
-        description:
-        - "Enable isisVersionSkew traps"
-        required: False
-    isisManualAddressDrops:
-        description:
-        - "Enable isisManualAddressDrops traps"
+        type: str
         required: False
     isisAdjacencyChange:
         description:
         - "Enable isisAdjacencyChange traps"
+        type: bool
+        required: False
+    isisAreaMismatch:
+        description:
+        - "Enable isisAreaMismatch traps"
+        type: bool
+        required: False
+    isisAttemptToExceedMaxSequence:
+        description:
+        - "Enable isisAttemptToExceedMaxSequence traps"
+        type: bool
+        required: False
+    isisAuthenticationFailure:
+        description:
+        - "Enable isisAuthenticationFailure traps"
+        type: bool
+        required: False
+    isisAuthenticationTypeFailure:
+        description:
+        - "Enable isisAuthenticationTypeFailure traps"
+        type: bool
+        required: False
+    isisCorruptedLSPDetected:
+        description:
+        - "Enable isisCorruptedLSPDetected traps"
+        type: bool
+        required: False
+    isisDatabaseOverload:
+        description:
+        - "Enable isisDatabaseOverload traps"
+        type: bool
+        required: False
+    isisIDLenMismatch:
+        description:
+        - "Enable isisIDLenMismatch traps"
+        type: bool
+        required: False
+    isisLSPTooLargeToPropagate:
+        description:
+        - "Enable isisLSPTooLargeToPropagate traps"
+        type: bool
+        required: False
+    isisManualAddressDrops:
+        description:
+        - "Enable isisManualAddressDrops traps"
+        type: bool
+        required: False
+    isisMaxAreaAddressesMismatch:
+        description:
+        - "Enable isisMaxAreaAddressesMismatch traps"
+        type: bool
+        required: False
+    isisOriginatingLSPBufferSizeMismatch:
+        description:
+        - "Enable isisOriginatingLSPBufferSizeMismatch traps"
+        type: bool
+        required: False
+    isisOwnLSPPurge:
+        description:
+        - "Enable isisOwnLSPPurge traps"
+        type: bool
+        required: False
+    isisProtocolsSupportedMismatch:
+        description:
+        - "Enable isisProtocolsSupportedMismatch traps"
+        type: bool
+        required: False
+    isisRejectedAdjacency:
+        description:
+        - "Enable isisRejectedAdjacency traps"
+        type: bool
+        required: False
+    isisSequenceNumberSkip:
+        description:
+        - "Enable isisSequenceNumberSkip traps"
+        type: bool
+        required: False
+    isisVersionSkew:
+        description:
+        - "Enable isisVersionSkew traps"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -191,11 +214,44 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'isisAdjacencyChange': {
+            'type': 'bool',
+        },
+        'isisAreaMismatch': {
+            'type': 'bool',
+        },
+        'isisAttemptToExceedMaxSequence': {
+            'type': 'bool',
+        },
         'isisAuthenticationFailure': {
             'type': 'bool',
         },
-        'uuid': {
-            'type': 'str',
+        'isisAuthenticationTypeFailure': {
+            'type': 'bool',
+        },
+        'isisCorruptedLSPDetected': {
+            'type': 'bool',
+        },
+        'isisDatabaseOverload': {
+            'type': 'bool',
+        },
+        'isisIDLenMismatch': {
+            'type': 'bool',
+        },
+        'isisLSPTooLargeToPropagate': {
+            'type': 'bool',
+        },
+        'isisManualAddressDrops': {
+            'type': 'bool',
+        },
+        'isisMaxAreaAddressesMismatch': {
+            'type': 'bool',
+        },
+        'isisOriginatingLSPBufferSizeMismatch': {
+            'type': 'bool',
+        },
+        'isisOwnLSPPurge': {
+            'type': 'bool',
         },
         'isisProtocolsSupportedMismatch': {
             'type': 'bool',
@@ -203,47 +259,14 @@ def get_argspec():
         'isisRejectedAdjacency': {
             'type': 'bool',
         },
-        'isisMaxAreaAddressesMismatch': {
-            'type': 'bool',
-        },
-        'isisCorruptedLSPDetected': {
-            'type': 'bool',
-        },
-        'isisOriginatingLSPBufferSizeMismatch': {
-            'type': 'bool',
-        },
-        'isisAreaMismatch': {
-            'type': 'bool',
-        },
-        'isisLSPTooLargeToPropagate': {
-            'type': 'bool',
-        },
-        'isisOwnLSPPurge': {
-            'type': 'bool',
-        },
         'isisSequenceNumberSkip': {
-            'type': 'bool',
-        },
-        'isisDatabaseOverload': {
-            'type': 'bool',
-        },
-        'isisAttemptToExceedMaxSequence': {
-            'type': 'bool',
-        },
-        'isisIDLenMismatch': {
-            'type': 'bool',
-        },
-        'isisAuthenticationTypeFailure': {
             'type': 'bool',
         },
         'isisVersionSkew': {
             'type': 'bool',
         },
-        'isisManualAddressDrops': {
-            'type': 'bool',
-        },
-        'isisAdjacencyChange': {
-            'type': 'bool',
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_server_port_stats_port_diameter
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.server.port.stats.port.diameter
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,64 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     protocol:
         description:
-        - Key to identify parent object    port_number:
+        - Key to identify parent object
+        type: str
+        required: True
+    port_number:
         description:
-        - Key to identify parent object    server_name:
+        - Key to identify parent object
+        type: str
+        required: True
+    server_name:
         description:
-        - Key to identify parent object    stats:
+        - Key to identify parent object
+        type: str
+        required: True
+    stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
             port_diameter:
                 description:
                 - "Field port_diameter"
+                type: dict
 
 '''
 
@@ -120,88 +136,19 @@ def get_argspec():
             'type': 'dict',
             'port_diameter': {
                 'type': 'dict',
-                'ccr_in': {
-                    'type': 'str',
-                },
-                'svrsel_fail': {
+                'num': {
                     'type': 'str',
                 },
                 'curr': {
                     'type': 'str',
                 },
-                'acr_out': {
-                    'type': 'str',
-                },
-                'dwr_in': {
-                    'type': 'str',
-                },
-                'num': {
-                    'type': 'str',
-                },
-                'no_route': {
-                    'type': 'str',
-                },
                 'total': {
                     'type': 'str',
                 },
-                'user_session': {
+                'svrsel_fail': {
                     'type': 'str',
                 },
-                'ccr_out': {
-                    'type': 'str',
-                },
-                'dwr_out': {
-                    'type': 'str',
-                },
-                'sta_in': {
-                    'type': 'str',
-                },
-                'server_fail': {
-                    'type': 'str',
-                },
-                'dwa_in': {
-                    'type': 'str',
-                },
-                'dwa_out': {
-                    'type': 'str',
-                },
-                'asa_in': {
-                    'type': 'str',
-                },
-                'asr_out': {
-                    'type': 'str',
-                },
-                'cca_out': {
-                    'type': 'str',
-                },
-                'aca_out': {
-                    'type': 'str',
-                },
-                'aca_in': {
-                    'type': 'str',
-                },
-                'cca_in': {
-                    'type': 'str',
-                },
-                'other_out': {
-                    'type': 'str',
-                },
-                'cea_out': {
-                    'type': 'str',
-                },
-                'dpr_in': {
-                    'type': 'str',
-                },
-                'asr_in': {
-                    'type': 'str',
-                },
-                'cer_in': {
-                    'type': 'str',
-                },
-                'str_in': {
-                    'type': 'str',
-                },
-                'sta_out': {
+                'no_route': {
                     'type': 'str',
                 },
                 'snat_fail': {
@@ -210,34 +157,103 @@ def get_argspec():
                 'client_fail': {
                     'type': 'str',
                 },
-                'cer_out': {
-                    'type': 'str',
-                },
-                'dpa_out': {
-                    'type': 'str',
-                },
-                'cea_in': {
-                    'type': 'str',
-                },
-                'asa_out': {
+                'server_fail': {
                     'type': 'str',
                 },
                 'no_sess': {
                     'type': 'str',
                 },
-                'dpa_in': {
+                'user_session': {
+                    'type': 'str',
+                },
+                'acr_out': {
                     'type': 'str',
                 },
                 'acr_in': {
                     'type': 'str',
                 },
-                'dpr_out': {
+                'aca_out': {
+                    'type': 'str',
+                },
+                'aca_in': {
+                    'type': 'str',
+                },
+                'cea_out': {
+                    'type': 'str',
+                },
+                'cea_in': {
+                    'type': 'str',
+                },
+                'cer_out': {
+                    'type': 'str',
+                },
+                'cer_in': {
+                    'type': 'str',
+                },
+                'dwr_out': {
+                    'type': 'str',
+                },
+                'dwr_in': {
+                    'type': 'str',
+                },
+                'dwa_out': {
+                    'type': 'str',
+                },
+                'dwa_in': {
+                    'type': 'str',
+                },
+                'str_out': {
+                    'type': 'str',
+                },
+                'str_in': {
+                    'type': 'str',
+                },
+                'sta_out': {
+                    'type': 'str',
+                },
+                'sta_in': {
+                    'type': 'str',
+                },
+                'asr_out': {
+                    'type': 'str',
+                },
+                'asr_in': {
+                    'type': 'str',
+                },
+                'asa_out': {
+                    'type': 'str',
+                },
+                'asa_in': {
+                    'type': 'str',
+                },
+                'other_out': {
                     'type': 'str',
                 },
                 'other_in': {
                     'type': 'str',
                 },
-                'str_out': {
+                'cca_out': {
+                    'type': 'str',
+                },
+                'cca_in': {
+                    'type': 'str',
+                },
+                'ccr_out': {
+                    'type': 'str',
+                },
+                'ccr_in': {
+                    'type': 'str',
+                },
+                'dpr_out': {
+                    'type': 'str',
+                },
+                'dpr_in': {
+                    'type': 'str',
+                },
+                'dpa_out': {
+                    'type': 'str',
+                },
+                'dpa_in': {
                     'type': 'str',
                 }
             }

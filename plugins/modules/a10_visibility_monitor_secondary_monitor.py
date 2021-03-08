@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_visibility_monitor_secondary_monitor
 description:
     - Configure secondary monitoring key
-short_description: Configures A10 visibility.monitor.secondary-monitor
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,93 +22,117 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    mon_entity_topk:
-        description:
-        - "Enable topk for secondary entities"
-        required: False
-    debug_list:
-        description:
-        - "Field debug_list"
-        required: False
-        suboptions:
-            debug_port:
-                description:
-                - "Specify port"
-            debug_ip_addr:
-                description:
-                - "Specify source/dest ip addr"
-            debug_protocol:
-                description:
-                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
+        type: str
         required: False
     secondary_monitoring_key:
         description:
         - "'service'= Monitor traffic to any service;"
+        type: str
         required: True
-    delete_debug_file:
+    mon_entity_topk:
         description:
-        - "Field delete_debug_file"
+        - "Enable topk for secondary entities"
+        type: bool
         required: False
-        suboptions:
-            debug_port:
-                description:
-                - "Specify port"
-            debug_ip_addr:
-                description:
-                - "Specify source/dest ip addr"
-            debug_protocol:
-                description:
-                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
     source_entity_topk:
         description:
         - "Enable topk for sources to secondary-entities"
+        type: bool
         required: False
-    replay_debug_file:
+    uuid:
         description:
-        - "Field replay_debug_file"
+        - "uuid of the object"
+        type: str
+        required: False
+    debug_list:
+        description:
+        - "Field debug_list"
+        type: list
         required: False
         suboptions:
-            debug_port:
-                description:
-                - "Specify port"
             debug_ip_addr:
                 description:
                 - "Specify source/dest ip addr"
+                type: str
+            debug_port:
+                description:
+                - "Specify port"
+                type: int
             debug_protocol:
                 description:
                 - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    delete_debug_file:
+        description:
+        - "Field delete_debug_file"
+        type: dict
+        required: False
+        suboptions:
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+                type: str
+            debug_port:
+                description:
+                - "Specify port"
+                type: int
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+                type: str
+    replay_debug_file:
+        description:
+        - "Field replay_debug_file"
+        type: dict
+        required: False
+        suboptions:
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+                type: str
+            debug_port:
+                description:
+                - "Specify port"
+                type: int
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP;"
+                type: str
 
 '''
 
@@ -169,17 +191,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'secondary_monitoring_key': {
+            'type': 'str',
+            'required': True,
+            'choices': ['service']
+        },
         'mon_entity_topk': {
             'type': 'bool',
         },
+        'source_entity_topk': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'debug_list': {
             'type': 'list',
-            'debug_port': {
-                'type': 'int',
-                'required': True,
-            },
             'debug_ip_addr': {
                 'type': 'str',
+                'required': True,
+            },
+            'debug_port': {
+                'type': 'int',
                 'required': True,
             },
             'debug_protocol': {
@@ -191,37 +224,26 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'secondary_monitoring_key': {
-            'type': 'str',
-            'required': True,
-            'choices': ['service']
-        },
         'delete_debug_file': {
             'type': 'dict',
-            'debug_port': {
-                'type': 'int',
-            },
             'debug_ip_addr': {
                 'type': 'str',
+            },
+            'debug_port': {
+                'type': 'int',
             },
             'debug_protocol': {
                 'type': 'str',
                 'choices': ['TCP', 'UDP', 'ICMP']
             }
         },
-        'source_entity_topk': {
-            'type': 'bool',
-        },
         'replay_debug_file': {
             'type': 'dict',
-            'debug_port': {
-                'type': 'int',
-            },
             'debug_ip_addr': {
                 'type': 'str',
+            },
+            'debug_port': {
+                'type': 'int',
             },
             'debug_protocol': {
                 'type': 'str',

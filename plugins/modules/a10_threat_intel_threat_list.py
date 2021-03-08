@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_threat_intel_threat_list
 description:
     - Threat Categories for malicious IPs
-short_description: Configures A10 threat-intel.threat-list
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,73 +22,127 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    name:
+        description:
+        - "Threat category List name"
+        type: str
+        required: True
+    ntype:
+        description:
+        - "'webroot'= Configure Webroot threat categories;"
+        type: str
+        required: False
+    all_categories:
+        description:
+        - "Enable all categories"
+        type: bool
+        required: False
+    spam_sources:
+        description:
+        - "IP's tunneling spam messages through a proxy, anomalous SMTP activities, and
+          forum spam activities"
+        type: bool
+        required: False
+    windows_exploits:
+        description:
+        - "IP's associated with malware, shell code, rootkits, worms or viruses"
+        type: bool
         required: False
     web_attacks:
         description:
         - "IP's associated with cross site scripting, iFrame injection, SQL injection,
           cross domain injection, or domain password brute fo"
+        type: bool
         required: False
     botnets:
         description:
         - "Botnet C&C channels, and infected zombie machines controlled by Bot master"
+        type: bool
         required: False
-    name:
+    scanners:
         description:
-        - "Threat category List name"
-        required: True
-    spam_sources:
-        description:
-        - "IP's tunneling spam messages through a proxy, anomalous SMTP activities, and
-          forum spam activities"
+        - "IP's associated with probes, host scan, domain scan, and password brute force
+          attack"
+        type: bool
         required: False
-    windows_exploits:
+    dos_attacks:
         description:
-        - "IP's associated with malware, shell code, rootkits, worms or viruses"
+        - "IP's participating in DOS, DDOS, anomalous sync flood, and anomalous traffic
+          detection"
+        type: bool
+        required: False
+    reputation:
+        description:
+        - "IP addresses currently known to be infected with malware"
+        type: bool
         required: False
     phishing:
         description:
         - "IP addresses hosting phishing sites, ad click fraud or gaming fraud"
+        type: bool
+        required: False
+    proxy:
+        description:
+        - "IP addresses providing proxy services"
+        type: bool
         required: False
     mobile_threats:
         description:
         - "IP's associated with mobile threats"
+        type: bool
         required: False
     tor_proxy:
         description:
         - "IP's providing tor proxy services"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     user_tag:
         description:
         - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -101,80 +153,65 @@ options:
           'reputation'= Hits for reputation; 'phishing'= Hits for phishing; 'proxy'= Hits
           for proxy; 'mobile-threats'= Hits for mobile threats; 'tor-proxy'= Hits for
           tor-proxy; 'total-hits'= Total hits for threat-list;"
-    reputation:
-        description:
-        - "IP addresses currently known to be infected with malware"
-        required: False
-    proxy:
-        description:
-        - "IP addresses providing proxy services"
-        required: False
-    dos_attacks:
-        description:
-        - "IP's participating in DOS, DDOS, anomalous sync flood, and anomalous traffic
-          detection"
-        required: False
-    all_categories:
-        description:
-        - "Enable all categories"
-        required: False
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            web_attacks:
-                description:
-                - "Hits for web attacks"
-            total_hits:
-                description:
-                - "Total hits for threat-list"
-            botnets:
-                description:
-                - "Hits for botnets"
-            name:
-                description:
-                - "Threat category List name"
             spam_sources:
                 description:
                 - "Hits for spam sources"
+                type: str
             windows_exploits:
                 description:
                 - "Hits for windows exploits"
-            phishing:
+                type: str
+            web_attacks:
                 description:
-                - "Hits for phishing"
-            dos_attacks:
+                - "Hits for web attacks"
+                type: str
+            botnets:
                 description:
-                - "Hits for dos attacks"
-            reputation:
-                description:
-                - "Hits for reputation"
-            proxy:
-                description:
-                - "Hits for proxy"
-            mobile_threats:
-                description:
-                - "Hits for mobile threats"
+                - "Hits for botnets"
+                type: str
             scanners:
                 description:
                 - "Hits for scanners"
+                type: str
+            dos_attacks:
+                description:
+                - "Hits for dos attacks"
+                type: str
+            reputation:
+                description:
+                - "Hits for reputation"
+                type: str
+            phishing:
+                description:
+                - "Hits for phishing"
+                type: str
+            proxy:
+                description:
+                - "Hits for proxy"
+                type: str
+            mobile_threats:
+                description:
+                - "Hits for mobile threats"
+                type: str
             tor_proxy:
                 description:
                 - "Hits for tor-proxy"
-    ntype:
-        description:
-        - "'webroot'= Configure Webroot threat categories;"
-        required: False
-    scanners:
-        description:
-        - "IP's associated with probes, host scan, domain scan, and password brute force
-          attack"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            total_hits:
+                description:
+                - "Total hits for threat-list"
+                type: str
+            name:
+                description:
+                - "Threat category List name"
+                type: str
 
 '''
 
@@ -244,15 +281,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'web_attacks': {
-            'type': 'bool',
-        },
-        'botnets': {
-            'type': 'bool',
-        },
         'name': {
             'type': 'str',
             'required': True,
+        },
+        'ntype': {
+            'type': 'str',
+            'choices': ['webroot']
+        },
+        'all_categories': {
+            'type': 'bool',
         },
         'spam_sources': {
             'type': 'bool',
@@ -260,7 +298,25 @@ def get_argspec():
         'windows_exploits': {
             'type': 'bool',
         },
+        'web_attacks': {
+            'type': 'bool',
+        },
+        'botnets': {
+            'type': 'bool',
+        },
+        'scanners': {
+            'type': 'bool',
+        },
+        'dos_attacks': {
+            'type': 'bool',
+        },
+        'reputation': {
+            'type': 'bool',
+        },
         'phishing': {
+            'type': 'bool',
+        },
+        'proxy': {
             'type': 'bool',
         },
         'mobile_threats': {
@@ -268,6 +324,9 @@ def get_argspec():
         },
         'tor_proxy': {
             'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
         },
         'user_tag': {
             'type': 'str',
@@ -285,40 +344,21 @@ def get_argspec():
                 ]
             }
         },
-        'reputation': {
-            'type': 'bool',
-        },
-        'proxy': {
-            'type': 'bool',
-        },
-        'dos_attacks': {
-            'type': 'bool',
-        },
-        'all_categories': {
-            'type': 'bool',
-        },
         'stats': {
             'type': 'dict',
-            'web_attacks': {
-                'type': 'str',
-            },
-            'total_hits': {
-                'type': 'str',
-            },
-            'botnets': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
             'spam_sources': {
                 'type': 'str',
             },
             'windows_exploits': {
                 'type': 'str',
             },
-            'phishing': {
+            'web_attacks': {
+                'type': 'str',
+            },
+            'botnets': {
+                'type': 'str',
+            },
+            'scanners': {
                 'type': 'str',
             },
             'dos_attacks': {
@@ -327,28 +367,25 @@ def get_argspec():
             'reputation': {
                 'type': 'str',
             },
+            'phishing': {
+                'type': 'str',
+            },
             'proxy': {
                 'type': 'str',
             },
             'mobile_threats': {
                 'type': 'str',
             },
-            'scanners': {
-                'type': 'str',
-            },
             'tor_proxy': {
                 'type': 'str',
+            },
+            'total_hits': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
             }
-        },
-        'ntype': {
-            'type': 'str',
-            'choices': ['webroot']
-        },
-        'scanners': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

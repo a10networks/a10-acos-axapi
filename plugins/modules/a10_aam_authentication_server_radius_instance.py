@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_server_radius_instance
 description:
     - RADIUS Authentication Server instance
-short_description: Configures A10 aam.authentication.server.radius.instance
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,146 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    auth_type:
-        description:
-        - "'pap'= PAP authentication. Default; 'mschapv2'= MS-CHAPv2 authentication;
-          'mschapv2-pap'= Use MS-CHAPv2 first. If server doesn't support it, try PAP;"
-        required: False
-    health_check_string:
-        description:
-        - "Health monitor name"
-        required: False
-    retry:
-        description:
-        - "Specify the retry number for resend the request, default is 5 (The retry
-          number, default is 5)"
-        required: False
-    port_hm:
-        description:
-        - "Check port's health status"
+        type: str
         required: False
     name:
         description:
         - "Specify RADIUS authentication server name"
+        type: str
         required: True
-    port_hm_disable:
+    host:
         description:
-        - "Disable configured port health check configuration"
+        - "Field host"
+        type: dict
+        required: False
+        suboptions:
+            hostip:
+                description:
+                - "Server's hostname(Length 1-31) or IP address"
+                type: str
+            hostipv6:
+                description:
+                - "Server's IPV6 address"
+                type: str
+    secret:
+        description:
+        - "Specify the RADIUS server's secret"
+        type: bool
+        required: False
+    secret_string:
+        description:
+        - "The RADIUS server's secret"
+        type: str
         required: False
     encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED secret string)"
+        type: str
+        required: False
+    port:
+        description:
+        - "Specify the RADIUS server's authentication port, default is 1812"
+        type: int
+        required: False
+    port_hm:
+        description:
+        - "Check port's health status"
+        type: str
+        required: False
+    port_hm_disable:
+        description:
+        - "Disable configured port health check configuration"
+        type: bool
         required: False
     interval:
         description:
         - "Specify the interval time for resend the request (second), default is 3 seconds
           (The interval time(second), default is 3 seconds)"
+        type: int
         required: False
-    accounting_port:
+    retry:
         description:
-        - "Specify the RADIUS server's accounting port, default is 1813"
-        required: False
-    port:
-        description:
-        - "Specify the RADIUS server's authentication port, default is 1812"
+        - "Specify the retry number for resend the request, default is 5 (The retry
+          number, default is 5)"
+        type: int
         required: False
     health_check:
         description:
         - "Check server's health status"
+        type: bool
+        required: False
+    health_check_string:
+        description:
+        - "Health monitor name"
+        type: str
+        required: False
+    health_check_disable:
+        description:
+        - "Disable configured health check configuration"
+        type: bool
+        required: False
+    accounting_port:
+        description:
+        - "Specify the RADIUS server's accounting port, default is 1813"
+        type: int
+        required: False
+    acct_port_hm:
+        description:
+        - "Specify accounting port health check method"
+        type: str
         required: False
     acct_port_hm_disable:
         description:
         - "Disable configured accounting port health check configuration"
+        type: bool
         required: False
-    secret:
+    auth_type:
         description:
-        - "Specify the RADIUS server's secret"
+        - "'pap'= PAP authentication. Default; 'mschapv2'= MS-CHAPv2 authentication;
+          'mschapv2-pap'= Use MS-CHAPv2 first. If server doesn't support it, try PAP;"
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -120,74 +173,61 @@ options:
           Error; 'request'= Request; 'accounting-request-sent'= Accounting-Request Sent;
           'accounting-success'= Accounting Success; 'accounting-failure'= Accounting
           Failure;"
-    host:
-        description:
-        - "Field host"
-        required: False
-        suboptions:
-            hostipv6:
-                description:
-                - "Server's IPV6 address"
-            hostip:
-                description:
-                - "Server's hostname(Length 1-31) or IP address"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            authorize_failure:
-                description:
-                - "Authorization Failure"
-            accounting_request_sent:
-                description:
-                - "Accounting-Request Sent"
-            other_error:
-                description:
-                - "Other Error"
-            request:
-                description:
-                - "Request"
-            accounting_success:
-                description:
-                - "Accounting Success"
-            accounting_failure:
-                description:
-                - "Accounting Failure"
             authen_success:
                 description:
                 - "Authentication Success"
-            access_challenge:
-                description:
-                - "Access-Challenge Message Receive"
+                type: str
             authen_failure:
                 description:
                 - "Authentication Failure"
-            timeout_error:
-                description:
-                - "Timeout"
+                type: str
             authorize_success:
                 description:
                 - "Authorization Success"
+                type: str
+            authorize_failure:
+                description:
+                - "Authorization Failure"
+                type: str
+            access_challenge:
+                description:
+                - "Access-Challenge Message Receive"
+                type: str
+            timeout_error:
+                description:
+                - "Timeout"
+                type: str
+            other_error:
+                description:
+                - "Other Error"
+                type: str
+            request:
+                description:
+                - "Request"
+                type: str
+            accounting_request_sent:
+                description:
+                - "Accounting-Request Sent"
+                type: str
+            accounting_success:
+                description:
+                - "Accounting Success"
+                type: str
+            accounting_failure:
+                description:
+                - "Accounting Failure"
+                type: str
             name:
                 description:
                 - "Specify RADIUS authentication server name"
-    health_check_disable:
-        description:
-        - "Disable configured health check configuration"
-        required: False
-    secret_string:
-        description:
-        - "The RADIUS server's secret"
-        required: False
-    acct_port_hm:
-        description:
-        - "Specify accounting port health check method"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
 
 '''
 
@@ -259,46 +299,67 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'auth_type': {
+        'name': {
             'type': 'str',
-            'choices': ['pap', 'mschapv2', 'mschapv2-pap']
+            'required': True,
         },
-        'health_check_string': {
+        'host': {
+            'type': 'dict',
+            'hostip': {
+                'type': 'str',
+            },
+            'hostipv6': {
+                'type': 'str',
+            }
+        },
+        'secret': {
+            'type': 'bool',
+        },
+        'secret_string': {
             'type': 'str',
         },
-        'retry': {
+        'encrypted': {
+            'type': 'str',
+        },
+        'port': {
             'type': 'int',
         },
         'port_hm': {
             'type': 'str',
         },
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
         'port_hm_disable': {
             'type': 'bool',
-        },
-        'encrypted': {
-            'type': 'str',
         },
         'interval': {
             'type': 'int',
         },
-        'accounting_port': {
-            'type': 'int',
-        },
-        'port': {
+        'retry': {
             'type': 'int',
         },
         'health_check': {
             'type': 'bool',
         },
+        'health_check_string': {
+            'type': 'str',
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'accounting_port': {
+            'type': 'int',
+        },
+        'acct_port_hm': {
+            'type': 'str',
+        },
         'acct_port_hm_disable': {
             'type': 'bool',
         },
-        'secret': {
-            'type': 'bool',
+        'auth_type': {
+            'type': 'str',
+            'choices': ['pap', 'mschapv2', 'mschapv2-pap']
+        },
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -314,21 +375,24 @@ def get_argspec():
                 ]
             }
         },
-        'host': {
-            'type': 'dict',
-            'hostipv6': {
-                'type': 'str',
-            },
-            'hostip': {
-                'type': 'str',
-            }
-        },
         'stats': {
             'type': 'dict',
+            'authen_success': {
+                'type': 'str',
+            },
+            'authen_failure': {
+                'type': 'str',
+            },
+            'authorize_success': {
+                'type': 'str',
+            },
             'authorize_failure': {
                 'type': 'str',
             },
-            'accounting_request_sent': {
+            'access_challenge': {
+                'type': 'str',
+            },
+            'timeout_error': {
                 'type': 'str',
             },
             'other_error': {
@@ -337,43 +401,19 @@ def get_argspec():
             'request': {
                 'type': 'str',
             },
+            'accounting_request_sent': {
+                'type': 'str',
+            },
             'accounting_success': {
                 'type': 'str',
             },
             'accounting_failure': {
                 'type': 'str',
             },
-            'authen_success': {
-                'type': 'str',
-            },
-            'access_challenge': {
-                'type': 'str',
-            },
-            'authen_failure': {
-                'type': 'str',
-            },
-            'timeout_error': {
-                'type': 'str',
-            },
-            'authorize_success': {
-                'type': 'str',
-            },
             'name': {
                 'type': 'str',
                 'required': True,
             }
-        },
-        'health_check_disable': {
-            'type': 'bool',
-        },
-        'secret_string': {
-            'type': 'str',
-        },
-        'acct_port_hm': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

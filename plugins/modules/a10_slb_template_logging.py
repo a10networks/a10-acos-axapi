@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_logging
 description:
     - Logging template
-short_description: Configures A10 slb.template.logging
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,100 +22,124 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    pool_shared:
-        description:
-        - "Specify NAT pool or pool group"
+        type: str
         required: False
     name:
         description:
         - "Logging Template Name"
+        type: str
         required: True
     format:
         description:
         - "Specify a format string for web logging (format string(less than 250
           characters) for web logging)"
-        required: False
-    auto:
-        description:
-        - "'auto'= Configure auto NAT for logging, default is auto enabled;"
-        required: False
-    keep_end:
-        description:
-        - "Number of unmasked characters at the end (default= 0)"
+        type: str
         required: False
     local_logging:
         description:
         - "1 to enable local logging (1 to enable local logging, default 0)"
-        required: False
-    mask:
-        description:
-        - "Character to mask the matched pattern (default= X)"
-        required: False
-    template_tcp_proxy_shared:
-        description:
-        - "TCP Proxy Template name"
-        required: False
-    shared_partition_tcp_proxy_template:
-        description:
-        - "Reference a TCP Proxy template from shared partition"
-        required: False
-    keep_start:
-        description:
-        - "Number of unmasked characters at the beginning (default= 0)"
+        type: int
         required: False
     service_group:
         description:
         - "Bind a Service Group to the logging template (Service Group Name)"
+        type: str
         required: False
     pcre_mask:
         description:
         - "Mask matched PCRE pattern in the log"
+        type: str
         required: False
-    user_tag:
+    mask:
         description:
-        - "Customized tag"
+        - "Character to mask the matched pattern (default= X)"
+        type: str
+        required: False
+    keep_end:
+        description:
+        - "Number of unmasked characters at the end (default= 0)"
+        type: int
+        required: False
+    keep_start:
+        description:
+        - "Number of unmasked characters at the beginning (default= 0)"
+        type: int
         required: False
     tcp_proxy:
         description:
         - "TCP Proxy Template Name"
+        type: str
         required: False
-    shared_partition_pool:
+    shared_partition_tcp_proxy_template:
         description:
-        - "Reference a NAT pool or pool group from shared partition"
+        - "Reference a TCP Proxy template from shared partition"
+        type: bool
+        required: False
+    template_tcp_proxy_shared:
+        description:
+        - "TCP Proxy Template name"
+        type: str
         required: False
     pool:
         description:
         - "Specify NAT pool or pool group"
+        type: str
+        required: False
+    shared_partition_pool:
+        description:
+        - "Reference a NAT pool or pool group from shared partition"
+        type: bool
+        required: False
+    pool_shared:
+        description:
+        - "Specify NAT pool or pool group"
+        type: str
+        required: False
+    auto:
+        description:
+        - "'auto'= Configure auto NAT for logging, default is auto enabled;"
+        type: str
         required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -187,9 +209,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'pool_shared': {
-            'type': 'str',
-        },
         'name': {
             'type': 'str',
             'required': True,
@@ -197,26 +216,7 @@ def get_argspec():
         'format': {
             'type': 'str',
         },
-        'auto': {
-            'type': 'str',
-            'choices': ['auto']
-        },
-        'keep_end': {
-            'type': 'int',
-        },
         'local_logging': {
-            'type': 'int',
-        },
-        'mask': {
-            'type': 'str',
-        },
-        'template_tcp_proxy_shared': {
-            'type': 'str',
-        },
-        'shared_partition_tcp_proxy_template': {
-            'type': 'bool',
-        },
-        'keep_start': {
             'type': 'int',
         },
         'service_group': {
@@ -225,19 +225,41 @@ def get_argspec():
         'pcre_mask': {
             'type': 'str',
         },
-        'user_tag': {
+        'mask': {
             'type': 'str',
         },
+        'keep_end': {
+            'type': 'int',
+        },
+        'keep_start': {
+            'type': 'int',
+        },
         'tcp_proxy': {
+            'type': 'str',
+        },
+        'shared_partition_tcp_proxy_template': {
+            'type': 'bool',
+        },
+        'template_tcp_proxy_shared': {
+            'type': 'str',
+        },
+        'pool': {
             'type': 'str',
         },
         'shared_partition_pool': {
             'type': 'bool',
         },
-        'pool': {
+        'pool_shared': {
             'type': 'str',
         },
+        'auto': {
+            'type': 'str',
+            'choices': ['auto']
+        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

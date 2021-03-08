@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_global
 description:
     - Global SAML statistics
-short_description: Configures A10 aam.authentication.saml.global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -67,57 +78,69 @@ options:
           SAML Single-Sign-On Error; 'slo-req'= Total Single Logout Request; 'slo-
           success'= Total Single Logout Success; 'slo-error'= Total Single Logout Error;
           'other-error'= Total Other Error;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            responses_from_a10saml:
-                description:
-                - "Total Response from A10 SAML Service"
-            login_auth_req:
-                description:
-                - "Total Login Authentication Request"
-            slo_error:
-                description:
-                - "Total Single Logout Error"
             requests_to_a10saml:
                 description:
                 - "Total Request to A10 SAML Service"
-            sp_metadata_export_success:
+                type: str
+            responses_from_a10saml:
                 description:
-                - "Toal Metadata Export Success"
-            acs_authz_fail:
-                description:
-                - "Total SAML Single-Sign-On Authorization Fail"
-            slo_req:
-                description:
-                - "Total Single Logout Request"
-            login_auth_resp:
-                description:
-                - "Total Login Authentication Response"
-            slo_success:
-                description:
-                - "Total Single Logout Success"
-            acs_success:
-                description:
-                - "Total SAML Single-Sign-On Success"
-            acs_error:
-                description:
-                - "Total SAML Single-Sign-On Error"
-            other_error:
-                description:
-                - "Total Other Error"
-            acs_req:
-                description:
-                - "Total SAML Single-Sign-On Request"
+                - "Total Response from A10 SAML Service"
+                type: str
             sp_metadata_export_req:
                 description:
                 - "Total Metadata Export Request"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            sp_metadata_export_success:
+                description:
+                - "Toal Metadata Export Success"
+                type: str
+            login_auth_req:
+                description:
+                - "Total Login Authentication Request"
+                type: str
+            login_auth_resp:
+                description:
+                - "Total Login Authentication Response"
+                type: str
+            acs_req:
+                description:
+                - "Total SAML Single-Sign-On Request"
+                type: str
+            acs_success:
+                description:
+                - "Total SAML Single-Sign-On Success"
+                type: str
+            acs_authz_fail:
+                description:
+                - "Total SAML Single-Sign-On Authorization Fail"
+                type: str
+            acs_error:
+                description:
+                - "Total SAML Single-Sign-On Error"
+                type: str
+            slo_req:
+                description:
+                - "Total Single Logout Request"
+                type: str
+            slo_success:
+                description:
+                - "Total Single Logout Success"
+                type: str
+            slo_error:
+                description:
+                - "Total Single Logout Error"
+                type: str
+            other_error:
+                description:
+                - "Total Other Error"
+                type: str
 
 '''
 
@@ -172,6 +195,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -188,51 +214,48 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
+            'requests_to_a10saml': {
+                'type': 'str',
+            },
             'responses_from_a10saml': {
                 'type': 'str',
             },
-            'login_auth_req': {
-                'type': 'str',
-            },
-            'slo_error': {
-                'type': 'str',
-            },
-            'requests_to_a10saml': {
+            'sp_metadata_export_req': {
                 'type': 'str',
             },
             'sp_metadata_export_success': {
                 'type': 'str',
             },
-            'acs_authz_fail': {
-                'type': 'str',
-            },
-            'slo_req': {
+            'login_auth_req': {
                 'type': 'str',
             },
             'login_auth_resp': {
                 'type': 'str',
             },
-            'slo_success': {
+            'acs_req': {
                 'type': 'str',
             },
             'acs_success': {
                 'type': 'str',
             },
+            'acs_authz_fail': {
+                'type': 'str',
+            },
             'acs_error': {
+                'type': 'str',
+            },
+            'slo_req': {
+                'type': 'str',
+            },
+            'slo_success': {
+                'type': 'str',
+            },
+            'slo_error': {
                 'type': 'str',
             },
             'other_error': {
                 'type': 'str',
-            },
-            'acs_req': {
-                'type': 'str',
-            },
-            'sp_metadata_export_req': {
-                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

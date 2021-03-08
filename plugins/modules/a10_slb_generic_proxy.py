@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_generic_proxy
 description:
     - Configure Generic Proxy
-short_description: Configures A10 slb.generic-proxy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,46 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    oper:
+    uuid:
         description:
-        - "Field oper"
+        - "uuid of the object"
+        type: str
         required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -111,234 +111,319 @@ options:
           'reply_error_info_fail'= Fail to reply error info to peer; 'dpr_out'= Number of
           DPRs out; 'dpr_in'= Number of DPRs in; 'dpa_out'= Number of DPAs out; 'dpa_in'=
           Number of DPAs in;"
+                type: str
+    oper:
+        description:
+        - "Field oper"
+        type: dict
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+                type: list
+            cpu_count:
+                description:
+                - "Field cpu_count"
+                type: int
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            ccr_in:
-                description:
-                - "Number of CCRs in"
-            forward_unknown_session_id:
-                description:
-                - "Forward server side message with unknown session id"
-            svrsel_fail:
-                description:
-                - "Number of server selection failed"
-            curr:
-                description:
-                - "Current"
-            acr_out:
-                description:
-                - "Number of ACRs out"
-            dwr_in:
-                description:
-                - "Number of DWRs in"
-            client_fail:
-                description:
-                - "Number of client failures"
             num:
                 description:
                 - "Number"
-            no_route:
+                type: str
+            curr:
                 description:
-                - "Number of no routes"
-            conn_closed_by_client:
-                description:
-                - "Client initiates TCP close/reset"
+                - "Current"
+                type: str
             total:
                 description:
                 - "Total"
-            user_session:
+                type: str
+            svrsel_fail:
                 description:
-                - "Number of user sessions"
-            dcmsg_fwd_in:
+                - "Number of server selection failed"
+                type: str
+            no_route:
                 description:
-                - "Diameter cross cpu fwd in"
-            aca_out:
-                description:
-                - "Number of ACAs out"
-            sta_in:
-                description:
-                - "Number of STAs in"
-            server_fail:
-                description:
-                - "Number of server failures"
-            dwa_in:
-                description:
-                - "Number of DWAs in"
-            dwa_out:
-                description:
-                - "Number of DWAs out"
-            client_select_fail:
-                description:
-                - "Fail to select client"
-            asa_in:
-                description:
-                - "Number of ASAs in"
-            dcmsg_fwd_out:
-                description:
-                - "Diameter cross cpu fwd out"
-            reselect_fwd_tuple:
-                description:
-                - "Original client tuple does not exist so reselect another one"
-            retry_client_request:
-                description:
-                - "Diameter retry client request"
-            reply_unable_to_deliver:
-                description:
-                - "Reply with unable to deliver error info"
-            reselect_rev_tuple:
-                description:
-                - "Original server tuple does not exist so reselect another one"
-            dcmsg_rev_in:
-                description:
-                - "Diameter cross cpu rev in"
-            retry_client_request_fail:
-                description:
-                - "Diameter retry client request fail"
-            cca_out:
-                description:
-                - "Number of CCAs out"
-            total_http_req_enter_gen:
-                description:
-                - "Total number of HTTP requests enter generic proxy"
-            aca_in:
-                description:
-                - "Number of ACAs in"
-            terminate_on_cca_t:
-                description:
-                - "Diameter terminate on cca_t"
-            unkwn_cmd_code:
-                description:
-                - "Diameter unkown cmd code"
-            cca_in:
-                description:
-                - "Number of CCAs in"
-            dpa_out:
-                description:
-                - "Number of DPAs out"
-            invalid_avp:
-                description:
-                - "AVP value contains illegal chars"
-            other_out:
-                description:
-                - "Number of other messages out"
-            cea_out:
-                description:
-                - "Number of CEAs out"
-            dpr_in:
-                description:
-                - "Number of DPRs in"
-            asr_in:
-                description:
-                - "Number of ASRs in"
-            reply_error_info_fail:
-                description:
-                - "Fail to reply error info to peer"
-            asr_out:
-                description:
-                - "Number of ASRs out"
-            cer_in:
-                description:
-                - "Number of CERs in"
-            str_in:
-                description:
-                - "Number of STRs in"
-            sta_out:
-                description:
-                - "Number of STAs out"
+                - "Number of no routes"
+                type: str
             snat_fail:
                 description:
                 - "Number of snat failures"
-            cca_t:
+                type: str
+            client_fail:
                 description:
-                - "Number of CCAs terminate"
-            no_session_id:
+                - "Number of client failures"
+                type: str
+            server_fail:
                 description:
-                - "Diameter no session id avp"
-            update_latest_server:
-                description:
-                - "Update to the latest server that used a session id"
-            acr_in:
-                description:
-                - "Number of ACRs in"
-            dcmsg_error:
-                description:
-                - "Diameter cross cpu error"
-            ccr_t:
-                description:
-                - "Number of CCRs terminate"
-            ccr_u:
-                description:
-                - "Number of CCRs update"
-            cea_in:
-                description:
-                - "Number of CEAs in"
-            dwr_out:
-                description:
-                - "Number of DWRs out"
-            mismatch_fwd_id:
-                description:
-                - "Diameter mismatch fwd session id"
-            ccr_out:
-                description:
-                - "Number of CCRs out"
-            cer_out:
-                description:
-                - "Number of CERs out"
-            other_in:
-                description:
-                - "Number of other messages in"
-            mismatch_rev_id:
-                description:
-                - "Diameter mismatch rev session id"
-            no_fwd_tuple:
-                description:
-                - "Diameter no fwd tuple matched"
-            reselect_fwd_tuple_other_cpu:
-                description:
-                - "Original client tuple does not exist so reselect another one on other CPUs"
-            asa_out:
-                description:
-                - "Number of ASAs out"
-            dcmsg_rev_out:
-                description:
-                - "Diameter cross cpu rev out"
+                - "Number of server failures"
+                type: str
             no_sess:
                 description:
                 - "Number of no sessions"
-            dpa_in:
+                type: str
+            user_session:
                 description:
-                - "Number of DPAs in"
-            reply_invalid_avp_value:
+                - "Number of user sessions"
+                type: str
+            acr_out:
                 description:
-                - "Reply with invalid AVP error info"
-            reply_unknown_session_id:
+                - "Number of ACRs out"
+                type: str
+            acr_in:
                 description:
-                - "Reply with unknown session ID error info"
-            conn_closed_by_server:
+                - "Number of ACRs in"
+                type: str
+            aca_out:
                 description:
-                - "Server initiates TCP close/reset"
-            close_conn_when_vport_down:
+                - "Number of ACAs out"
+                type: str
+            aca_in:
                 description:
-                - "Close client conn when virtual port is down"
-            dpr_out:
+                - "Number of ACAs in"
+                type: str
+            cea_out:
                 description:
-                - "Number of DPRs out"
-            no_rev_tuple:
+                - "Number of CEAs out"
+                type: str
+            cea_in:
                 description:
-                - "Diameter no rev tuple matched"
-            ccr_i:
+                - "Number of CEAs in"
+                type: str
+            cer_out:
                 description:
-                - "Number of CCRs initial"
+                - "Number of CERs out"
+                type: str
+            cer_in:
+                description:
+                - "Number of CERs in"
+                type: str
+            dwr_out:
+                description:
+                - "Number of DWRs out"
+                type: str
+            dwr_in:
+                description:
+                - "Number of DWRs in"
+                type: str
+            dwa_out:
+                description:
+                - "Number of DWAs out"
+                type: str
+            dwa_in:
+                description:
+                - "Number of DWAs in"
+                type: str
             str_out:
                 description:
                 - "Number of STRs out"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            str_in:
+                description:
+                - "Number of STRs in"
+                type: str
+            sta_out:
+                description:
+                - "Number of STAs out"
+                type: str
+            sta_in:
+                description:
+                - "Number of STAs in"
+                type: str
+            asr_out:
+                description:
+                - "Number of ASRs out"
+                type: str
+            asr_in:
+                description:
+                - "Number of ASRs in"
+                type: str
+            asa_out:
+                description:
+                - "Number of ASAs out"
+                type: str
+            asa_in:
+                description:
+                - "Number of ASAs in"
+                type: str
+            other_out:
+                description:
+                - "Number of other messages out"
+                type: str
+            other_in:
+                description:
+                - "Number of other messages in"
+                type: str
+            total_http_req_enter_gen:
+                description:
+                - "Total number of HTTP requests enter generic proxy"
+                type: str
+            mismatch_fwd_id:
+                description:
+                - "Diameter mismatch fwd session id"
+                type: str
+            mismatch_rev_id:
+                description:
+                - "Diameter mismatch rev session id"
+                type: str
+            unkwn_cmd_code:
+                description:
+                - "Diameter unkown cmd code"
+                type: str
+            no_session_id:
+                description:
+                - "Diameter no session id avp"
+                type: str
+            no_fwd_tuple:
+                description:
+                - "Diameter no fwd tuple matched"
+                type: str
+            no_rev_tuple:
+                description:
+                - "Diameter no rev tuple matched"
+                type: str
+            dcmsg_fwd_in:
+                description:
+                - "Diameter cross cpu fwd in"
+                type: str
+            dcmsg_fwd_out:
+                description:
+                - "Diameter cross cpu fwd out"
+                type: str
+            dcmsg_rev_in:
+                description:
+                - "Diameter cross cpu rev in"
+                type: str
+            dcmsg_rev_out:
+                description:
+                - "Diameter cross cpu rev out"
+                type: str
+            dcmsg_error:
+                description:
+                - "Diameter cross cpu error"
+                type: str
+            retry_client_request:
+                description:
+                - "Diameter retry client request"
+                type: str
+            retry_client_request_fail:
+                description:
+                - "Diameter retry client request fail"
+                type: str
+            reply_unknown_session_id:
+                description:
+                - "Reply with unknown session ID error info"
+                type: str
+            ccr_out:
+                description:
+                - "Number of CCRs out"
+                type: str
+            ccr_in:
+                description:
+                - "Number of CCRs in"
+                type: str
+            cca_out:
+                description:
+                - "Number of CCAs out"
+                type: str
+            cca_in:
+                description:
+                - "Number of CCAs in"
+                type: str
+            ccr_i:
+                description:
+                - "Number of CCRs initial"
+                type: str
+            ccr_u:
+                description:
+                - "Number of CCRs update"
+                type: str
+            ccr_t:
+                description:
+                - "Number of CCRs terminate"
+                type: str
+            cca_t:
+                description:
+                - "Number of CCAs terminate"
+                type: str
+            terminate_on_cca_t:
+                description:
+                - "Diameter terminate on cca_t"
+                type: str
+            forward_unknown_session_id:
+                description:
+                - "Forward server side message with unknown session id"
+                type: str
+            update_latest_server:
+                description:
+                - "Update to the latest server that used a session id"
+                type: str
+            client_select_fail:
+                description:
+                - "Fail to select client"
+                type: str
+            close_conn_when_vport_down:
+                description:
+                - "Close client conn when virtual port is down"
+                type: str
+            invalid_avp:
+                description:
+                - "AVP value contains illegal chars"
+                type: str
+            reselect_fwd_tuple:
+                description:
+                - "Original client tuple does not exist so reselect another one"
+                type: str
+            reselect_fwd_tuple_other_cpu:
+                description:
+                - "Original client tuple does not exist so reselect another one on other CPUs"
+                type: str
+            reselect_rev_tuple:
+                description:
+                - "Original server tuple does not exist so reselect another one"
+                type: str
+            conn_closed_by_client:
+                description:
+                - "Client initiates TCP close/reset"
+                type: str
+            conn_closed_by_server:
+                description:
+                - "Server initiates TCP close/reset"
+                type: str
+            reply_invalid_avp_value:
+                description:
+                - "Reply with invalid AVP error info"
+                type: str
+            reply_unable_to_deliver:
+                description:
+                - "Reply with unable to deliver error info"
+                type: str
+            reply_error_info_fail:
+                description:
+                - "Fail to reply error info to peer"
+                type: str
+            dpr_out:
+                description:
+                - "Number of DPRs out"
+                type: str
+            dpr_in:
+                description:
+                - "Number of DPRs in"
+                type: str
+            dpa_out:
+                description:
+                - "Number of DPAs out"
+                type: str
+            dpa_in:
+                description:
+                - "Number of DPAs in"
+                type: str
 
 '''
 
@@ -394,227 +479,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'ccr_in': {
-                    'type': 'int',
-                },
-                'forward_unknown_session_id': {
-                    'type': 'int',
-                },
-                'acr_out': {
-                    'type': 'int',
-                },
-                'dwr_in': {
-                    'type': 'int',
-                },
-                'client_fail': {
-                    'type': 'int',
-                },
-                'server_selection_fail': {
-                    'type': 'int',
-                },
-                'curr_proxy_conns': {
-                    'type': 'int',
-                },
-                'conn_closed_by_client': {
-                    'type': 'int',
-                },
-                'server_fail': {
-                    'type': 'int',
-                },
-                'user_session': {
-                    'type': 'str',
-                },
-                'dcmsg_fwd_in': {
-                    'type': 'int',
-                },
-                'aca_out': {
-                    'type': 'int',
-                },
-                'dpr_in': {
-                    'type': 'int',
-                },
-                'update_latest_server': {
-                    'type': 'int',
-                },
-                'cer_out': {
-                    'type': 'int',
-                },
-                'total_http_conn_generic_proxy': {
-                    'type': 'int',
-                },
-                'dwa_out': {
-                    'type': 'int',
-                },
-                'client_select_fail': {
-                    'type': 'int',
-                },
-                'asa_in': {
-                    'type': 'int',
-                },
-                'dcmsg_fwd_out': {
-                    'type': 'int',
-                },
-                'reselect_fwd_tuple': {
-                    'type': 'int',
-                },
-                'retry_client_request': {
-                    'type': 'int',
-                },
-                'reply_unable_to_deliver': {
-                    'type': 'int',
-                },
-                'reselect_rev_tuple': {
-                    'type': 'int',
-                },
-                'dcmsg_rev_in': {
-                    'type': 'int',
-                },
-                'retry_client_request_fail': {
-                    'type': 'int',
-                },
-                'cca_out': {
-                    'type': 'int',
-                },
-                'no_route_fail': {
-                    'type': 'int',
-                },
-                'aca_in': {
-                    'type': 'int',
-                },
-                'terminate_on_cca_t': {
-                    'type': 'int',
-                },
-                'unkwn_cmd_code': {
-                    'type': 'int',
-                },
-                'cca_in': {
-                    'type': 'int',
-                },
-                'dpa_out': {
-                    'type': 'int',
-                },
-                'invalid_avp': {
-                    'type': 'int',
-                },
-                'other_out': {
-                    'type': 'int',
-                },
-                'cea_out': {
-                    'type': 'int',
-                },
-                'sta_in': {
-                    'type': 'int',
-                },
-                'asr_in': {
-                    'type': 'int',
-                },
-                'dwa_in': {
-                    'type': 'int',
-                },
-                'reply_error_info_fail': {
-                    'type': 'int',
-                },
-                'asr_out': {
-                    'type': 'int',
-                },
-                'cer_in': {
-                    'type': 'int',
-                },
-                'dpa_in': {
-                    'type': 'int',
-                },
-                'dpr_out': {
-                    'type': 'int',
-                },
-                'cca_t': {
-                    'type': 'int',
-                },
-                'no_session_id': {
-                    'type': 'int',
-                },
-                'str_out': {
-                    'type': 'int',
-                },
-                'acr_in': {
-                    'type': 'int',
-                },
-                'dcmsg_error': {
-                    'type': 'int',
-                },
-                'ccr_t': {
-                    'type': 'int',
-                },
-                'ccr_u': {
-                    'type': 'int',
-                },
-                'cea_in': {
-                    'type': 'int',
-                },
-                'dwr_out': {
-                    'type': 'int',
-                },
-                'mismatch_fwd_id': {
-                    'type': 'int',
-                },
-                'ccr_out': {
-                    'type': 'int',
-                },
-                'total_proxy_conns': {
-                    'type': 'int',
-                },
-                'other_in': {
-                    'type': 'int',
-                },
-                'mismatch_rev_id': {
-                    'type': 'int',
-                },
-                'no_fwd_tuple': {
-                    'type': 'int',
-                },
-                'reselect_fwd_tuple_other_cpu': {
-                    'type': 'int',
-                },
-                'asa_out': {
-                    'type': 'int',
-                },
-                'dcmsg_rev_out': {
-                    'type': 'int',
-                },
-                'str_in': {
-                    'type': 'int',
-                },
-                'reply_invalid_avp_value': {
-                    'type': 'int',
-                },
-                'reply_unknown_session_id': {
-                    'type': 'int',
-                },
-                'conn_closed_by_server': {
-                    'type': 'int',
-                },
-                'close_conn_when_vport_down': {
-                    'type': 'int',
-                },
-                'sta_out': {
-                    'type': 'int',
-                },
-                'no_rev_tuple': {
-                    'type': 'int',
-                },
-                'ccr_i': {
-                    'type': 'int',
-                },
-                'source_nat_fail': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
+        'uuid': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -648,132 +514,297 @@ def get_argspec():
                 ]
             }
         },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'curr_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_http_conn_generic_proxy': {
+                    'type': 'int',
+                },
+                'client_fail': {
+                    'type': 'int',
+                },
+                'server_fail': {
+                    'type': 'int',
+                },
+                'server_selection_fail': {
+                    'type': 'int',
+                },
+                'no_route_fail': {
+                    'type': 'int',
+                },
+                'source_nat_fail': {
+                    'type': 'int',
+                },
+                'user_session': {
+                    'type': 'str',
+                },
+                'acr_out': {
+                    'type': 'int',
+                },
+                'acr_in': {
+                    'type': 'int',
+                },
+                'aca_out': {
+                    'type': 'int',
+                },
+                'aca_in': {
+                    'type': 'int',
+                },
+                'dpr_out': {
+                    'type': 'int',
+                },
+                'dpr_in': {
+                    'type': 'int',
+                },
+                'dpa_out': {
+                    'type': 'int',
+                },
+                'dpa_in': {
+                    'type': 'int',
+                },
+                'cea_out': {
+                    'type': 'int',
+                },
+                'cea_in': {
+                    'type': 'int',
+                },
+                'cer_out': {
+                    'type': 'int',
+                },
+                'cer_in': {
+                    'type': 'int',
+                },
+                'dwa_out': {
+                    'type': 'int',
+                },
+                'dwa_in': {
+                    'type': 'int',
+                },
+                'dwr_out': {
+                    'type': 'int',
+                },
+                'dwr_in': {
+                    'type': 'int',
+                },
+                'str_out': {
+                    'type': 'int',
+                },
+                'str_in': {
+                    'type': 'int',
+                },
+                'sta_out': {
+                    'type': 'int',
+                },
+                'sta_in': {
+                    'type': 'int',
+                },
+                'asr_out': {
+                    'type': 'int',
+                },
+                'asr_in': {
+                    'type': 'int',
+                },
+                'asa_out': {
+                    'type': 'int',
+                },
+                'asa_in': {
+                    'type': 'int',
+                },
+                'other_out': {
+                    'type': 'int',
+                },
+                'other_in': {
+                    'type': 'int',
+                },
+                'mismatch_fwd_id': {
+                    'type': 'int',
+                },
+                'mismatch_rev_id': {
+                    'type': 'int',
+                },
+                'unkwn_cmd_code': {
+                    'type': 'int',
+                },
+                'no_session_id': {
+                    'type': 'int',
+                },
+                'no_fwd_tuple': {
+                    'type': 'int',
+                },
+                'no_rev_tuple': {
+                    'type': 'int',
+                },
+                'dcmsg_fwd_in': {
+                    'type': 'int',
+                },
+                'dcmsg_fwd_out': {
+                    'type': 'int',
+                },
+                'dcmsg_rev_in': {
+                    'type': 'int',
+                },
+                'dcmsg_rev_out': {
+                    'type': 'int',
+                },
+                'dcmsg_error': {
+                    'type': 'int',
+                },
+                'retry_client_request': {
+                    'type': 'int',
+                },
+                'retry_client_request_fail': {
+                    'type': 'int',
+                },
+                'reply_unknown_session_id': {
+                    'type': 'int',
+                },
+                'ccr_out': {
+                    'type': 'int',
+                },
+                'ccr_in': {
+                    'type': 'int',
+                },
+                'cca_out': {
+                    'type': 'int',
+                },
+                'cca_in': {
+                    'type': 'int',
+                },
+                'ccr_i': {
+                    'type': 'int',
+                },
+                'ccr_u': {
+                    'type': 'int',
+                },
+                'ccr_t': {
+                    'type': 'int',
+                },
+                'cca_t': {
+                    'type': 'int',
+                },
+                'terminate_on_cca_t': {
+                    'type': 'int',
+                },
+                'forward_unknown_session_id': {
+                    'type': 'int',
+                },
+                'update_latest_server': {
+                    'type': 'int',
+                },
+                'client_select_fail': {
+                    'type': 'int',
+                },
+                'close_conn_when_vport_down': {
+                    'type': 'int',
+                },
+                'invalid_avp': {
+                    'type': 'int',
+                },
+                'reselect_fwd_tuple': {
+                    'type': 'int',
+                },
+                'reselect_fwd_tuple_other_cpu': {
+                    'type': 'int',
+                },
+                'reselect_rev_tuple': {
+                    'type': 'int',
+                },
+                'conn_closed_by_client': {
+                    'type': 'int',
+                },
+                'conn_closed_by_server': {
+                    'type': 'int',
+                },
+                'reply_invalid_avp_value': {
+                    'type': 'int',
+                },
+                'reply_unable_to_deliver': {
+                    'type': 'int',
+                },
+                'reply_error_info_fail': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
         'stats': {
             'type': 'dict',
-            'ccr_in': {
-                'type': 'str',
-            },
-            'forward_unknown_session_id': {
-                'type': 'str',
-            },
-            'svrsel_fail': {
+            'num': {
                 'type': 'str',
             },
             'curr': {
                 'type': 'str',
             },
-            'acr_out': {
+            'total': {
                 'type': 'str',
             },
-            'dwr_in': {
-                'type': 'str',
-            },
-            'client_fail': {
-                'type': 'str',
-            },
-            'num': {
+            'svrsel_fail': {
                 'type': 'str',
             },
             'no_route': {
                 'type': 'str',
             },
-            'conn_closed_by_client': {
+            'snat_fail': {
                 'type': 'str',
             },
-            'total': {
-                'type': 'str',
-            },
-            'user_session': {
-                'type': 'str',
-            },
-            'dcmsg_fwd_in': {
-                'type': 'str',
-            },
-            'aca_out': {
-                'type': 'str',
-            },
-            'sta_in': {
+            'client_fail': {
                 'type': 'str',
             },
             'server_fail': {
                 'type': 'str',
             },
-            'dwa_in': {
+            'no_sess': {
                 'type': 'str',
             },
-            'dwa_out': {
+            'user_session': {
                 'type': 'str',
             },
-            'client_select_fail': {
+            'acr_out': {
                 'type': 'str',
             },
-            'asa_in': {
+            'acr_in': {
                 'type': 'str',
             },
-            'dcmsg_fwd_out': {
-                'type': 'str',
-            },
-            'reselect_fwd_tuple': {
-                'type': 'str',
-            },
-            'retry_client_request': {
-                'type': 'str',
-            },
-            'reply_unable_to_deliver': {
-                'type': 'str',
-            },
-            'reselect_rev_tuple': {
-                'type': 'str',
-            },
-            'dcmsg_rev_in': {
-                'type': 'str',
-            },
-            'retry_client_request_fail': {
-                'type': 'str',
-            },
-            'cca_out': {
-                'type': 'str',
-            },
-            'total_http_req_enter_gen': {
+            'aca_out': {
                 'type': 'str',
             },
             'aca_in': {
                 'type': 'str',
             },
-            'terminate_on_cca_t': {
-                'type': 'str',
-            },
-            'unkwn_cmd_code': {
-                'type': 'str',
-            },
-            'cca_in': {
-                'type': 'str',
-            },
-            'dpa_out': {
-                'type': 'str',
-            },
-            'invalid_avp': {
-                'type': 'str',
-            },
-            'other_out': {
-                'type': 'str',
-            },
             'cea_out': {
                 'type': 'str',
             },
-            'dpr_in': {
+            'cea_in': {
                 'type': 'str',
             },
-            'asr_in': {
-                'type': 'str',
-            },
-            'reply_error_info_fail': {
-                'type': 'str',
-            },
-            'asr_out': {
+            'cer_out': {
                 'type': 'str',
             },
             'cer_in': {
+                'type': 'str',
+            },
+            'dwr_out': {
+                'type': 'str',
+            },
+            'dwr_in': {
+                'type': 'str',
+            },
+            'dwa_out': {
+                'type': 'str',
+            },
+            'dwa_in': {
+                'type': 'str',
+            },
+            'str_out': {
                 'type': 'str',
             },
             'str_in': {
@@ -782,96 +813,150 @@ def get_argspec():
             'sta_out': {
                 'type': 'str',
             },
-            'snat_fail': {
+            'sta_in': {
                 'type': 'str',
             },
-            'cca_t': {
+            'asr_out': {
                 'type': 'str',
             },
-            'no_session_id': {
-                'type': 'str',
-            },
-            'update_latest_server': {
-                'type': 'str',
-            },
-            'acr_in': {
-                'type': 'str',
-            },
-            'dcmsg_error': {
-                'type': 'str',
-            },
-            'ccr_t': {
-                'type': 'str',
-            },
-            'ccr_u': {
-                'type': 'str',
-            },
-            'cea_in': {
-                'type': 'str',
-            },
-            'dwr_out': {
-                'type': 'str',
-            },
-            'mismatch_fwd_id': {
-                'type': 'str',
-            },
-            'ccr_out': {
-                'type': 'str',
-            },
-            'cer_out': {
-                'type': 'str',
-            },
-            'other_in': {
-                'type': 'str',
-            },
-            'mismatch_rev_id': {
-                'type': 'str',
-            },
-            'no_fwd_tuple': {
-                'type': 'str',
-            },
-            'reselect_fwd_tuple_other_cpu': {
+            'asr_in': {
                 'type': 'str',
             },
             'asa_out': {
                 'type': 'str',
             },
-            'dcmsg_rev_out': {
+            'asa_in': {
                 'type': 'str',
             },
-            'no_sess': {
+            'other_out': {
                 'type': 'str',
             },
-            'dpa_in': {
+            'other_in': {
                 'type': 'str',
             },
-            'reply_invalid_avp_value': {
+            'total_http_req_enter_gen': {
                 'type': 'str',
             },
-            'reply_unknown_session_id': {
+            'mismatch_fwd_id': {
                 'type': 'str',
             },
-            'conn_closed_by_server': {
+            'mismatch_rev_id': {
                 'type': 'str',
             },
-            'close_conn_when_vport_down': {
+            'unkwn_cmd_code': {
                 'type': 'str',
             },
-            'dpr_out': {
+            'no_session_id': {
+                'type': 'str',
+            },
+            'no_fwd_tuple': {
                 'type': 'str',
             },
             'no_rev_tuple': {
                 'type': 'str',
             },
+            'dcmsg_fwd_in': {
+                'type': 'str',
+            },
+            'dcmsg_fwd_out': {
+                'type': 'str',
+            },
+            'dcmsg_rev_in': {
+                'type': 'str',
+            },
+            'dcmsg_rev_out': {
+                'type': 'str',
+            },
+            'dcmsg_error': {
+                'type': 'str',
+            },
+            'retry_client_request': {
+                'type': 'str',
+            },
+            'retry_client_request_fail': {
+                'type': 'str',
+            },
+            'reply_unknown_session_id': {
+                'type': 'str',
+            },
+            'ccr_out': {
+                'type': 'str',
+            },
+            'ccr_in': {
+                'type': 'str',
+            },
+            'cca_out': {
+                'type': 'str',
+            },
+            'cca_in': {
+                'type': 'str',
+            },
             'ccr_i': {
                 'type': 'str',
             },
-            'str_out': {
+            'ccr_u': {
+                'type': 'str',
+            },
+            'ccr_t': {
+                'type': 'str',
+            },
+            'cca_t': {
+                'type': 'str',
+            },
+            'terminate_on_cca_t': {
+                'type': 'str',
+            },
+            'forward_unknown_session_id': {
+                'type': 'str',
+            },
+            'update_latest_server': {
+                'type': 'str',
+            },
+            'client_select_fail': {
+                'type': 'str',
+            },
+            'close_conn_when_vport_down': {
+                'type': 'str',
+            },
+            'invalid_avp': {
+                'type': 'str',
+            },
+            'reselect_fwd_tuple': {
+                'type': 'str',
+            },
+            'reselect_fwd_tuple_other_cpu': {
+                'type': 'str',
+            },
+            'reselect_rev_tuple': {
+                'type': 'str',
+            },
+            'conn_closed_by_client': {
+                'type': 'str',
+            },
+            'conn_closed_by_server': {
+                'type': 'str',
+            },
+            'reply_invalid_avp_value': {
+                'type': 'str',
+            },
+            'reply_unable_to_deliver': {
+                'type': 'str',
+            },
+            'reply_error_info_fail': {
+                'type': 'str',
+            },
+            'dpr_out': {
+                'type': 'str',
+            },
+            'dpr_in': {
+                'type': 'str',
+            },
+            'dpa_out': {
+                'type': 'str',
+            },
+            'dpa_in': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

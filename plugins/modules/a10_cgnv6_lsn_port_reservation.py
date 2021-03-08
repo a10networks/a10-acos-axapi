@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_port_reservation
 description:
     - Set Port Reservations
-short_description: Configures A10 cgnv6.lsn.port-reservation
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,60 +22,74 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
+    inside:
+        description:
+        - "Inside User Address and Port Range (Inside User IP address)"
+        type: str
+        required: True
     inside_port_start:
         description:
         - "Inside Start Port"
-        required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    nat_port_start:
-        description:
-        - "NAT Start Port"
+        type: int
         required: True
     inside_port_end:
         description:
         - "Inside End Port"
-        required: True
-    inside:
-        description:
-        - "Inside User Address and Port Range (Inside User IP address)"
+        type: int
         required: True
     nat:
         description:
         - "NAT IP address"
+        type: str
+        required: True
+    nat_port_start:
+        description:
+        - "NAT Start Port"
+        type: int
         required: True
     nat_port_end:
         description:
         - "NAT End Port"
+        type: int
         required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -136,14 +148,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'inside_port_start': {
-            'type': 'int',
+        'inside': {
+            'type': 'str',
             'required': True,
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'nat_port_start': {
+        'inside_port_start': {
             'type': 'int',
             'required': True,
         },
@@ -151,17 +160,20 @@ def get_argspec():
             'type': 'int',
             'required': True,
         },
-        'inside': {
+        'nat': {
             'type': 'str',
             'required': True,
         },
-        'nat': {
-            'type': 'str',
+        'nat_port_start': {
+            'type': 'int',
             'required': True,
         },
         'nat_port_end': {
             'type': 'int',
             'required': True,
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ve_ip_ospf_ospf_global
 description:
     - Global setting for Open Shortest Path First for IPv4 (OSPF)
-short_description: Configures A10 interface.ve.ip.ospf.ospf-global
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,142 +22,181 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ve_ifnum:
         description:
-        - Key to identify parent object    cost:
-        description:
-        - "Interface cost"
-        required: False
-    dead_interval:
-        description:
-        - "Interval after which a neighbor is declared dead (Seconds)"
-        required: False
-    authentication_key:
-        description:
-        - "Authentication password (key) (The OSPF password (key))"
-        required: False
-    network:
-        description:
-        - "Field network"
-        required: False
-        suboptions:
-            broadcast:
-                description:
-                - "Specify OSPF broadcast multi-access network"
-            point_to_multipoint:
-                description:
-                - "Specify OSPF point-to-multipoint network"
-            non_broadcast:
-                description:
-                - "Specify OSPF NBMA network"
-            point_to_point:
-                description:
-                - "Specify OSPF point-to-point network"
-            p2mp_nbma:
-                description:
-                - "Specify non-broadcast point-to-multipoint network"
-    mtu_ignore:
-        description:
-        - "Ignores the MTU in DBD packets"
-        required: False
-    transmit_delay:
-        description:
-        - "Link state transmit delay (Seconds)"
-        required: False
+        - Key to identify parent object
+        type: str
+        required: True
     authentication_cfg:
         description:
         - "Field authentication_cfg"
+        type: dict
         required: False
         suboptions:
             authentication:
                 description:
                 - "Enable authentication"
+                type: bool
             value:
                 description:
                 - "'message-digest'= Use message-digest authentication; 'null'= Use no
           authentication;"
-    retransmit_interval:
+                type: str
+    authentication_key:
         description:
-        - "Time between retransmitting lost link state advertisements (Seconds)"
+        - "Authentication password (key) (The OSPF password (key))"
+        type: str
         required: False
     bfd_cfg:
         description:
         - "Field bfd_cfg"
+        type: dict
         required: False
         suboptions:
-            disable:
-                description:
-                - "Disable BFD"
             bfd:
                 description:
                 - "Bidirectional Forwarding Detection (BFD)"
-    disable:
+                type: bool
+            disable:
+                description:
+                - "Disable BFD"
+                type: bool
+    cost:
         description:
-        - "'all'= All functionality;"
-        required: False
-    hello_interval:
-        description:
-        - "Time between HELLO packets (Seconds)"
+        - "Interface cost"
+        type: int
         required: False
     database_filter_cfg:
         description:
         - "Field database_filter_cfg"
+        type: dict
         required: False
         suboptions:
             database_filter:
                 description:
                 - "'all'= Filter all LSA;"
+                type: str
             out:
                 description:
                 - "Outgoing LSA"
-    priority:
+                type: bool
+    dead_interval:
         description:
-        - "Router priority"
+        - "Interval after which a neighbor is declared dead (Seconds)"
+        type: int
         required: False
-    mtu:
+    disable:
         description:
-        - "OSPF interface MTU (MTU size)"
+        - "'all'= All functionality;"
+        type: str
+        required: False
+    hello_interval:
+        description:
+        - "Time between HELLO packets (Seconds)"
+        type: int
         required: False
     message_digest_cfg:
         description:
         - "Field message_digest_cfg"
+        type: list
         required: False
         suboptions:
             message_digest_key:
                 description:
                 - "Message digest authentication password (key) (Key id)"
+                type: int
             md5:
                 description:
                 - "Field md5"
+                type: dict
+    mtu:
+        description:
+        - "OSPF interface MTU (MTU size)"
+        type: int
+        required: False
+    mtu_ignore:
+        description:
+        - "Ignores the MTU in DBD packets"
+        type: bool
+        required: False
+    network:
+        description:
+        - "Field network"
+        type: dict
+        required: False
+        suboptions:
+            broadcast:
+                description:
+                - "Specify OSPF broadcast multi-access network"
+                type: bool
+            non_broadcast:
+                description:
+                - "Specify OSPF NBMA network"
+                type: bool
+            point_to_point:
+                description:
+                - "Specify OSPF point-to-point network"
+                type: bool
+            point_to_multipoint:
+                description:
+                - "Specify OSPF point-to-multipoint network"
+                type: bool
+            p2mp_nbma:
+                description:
+                - "Specify non-broadcast point-to-multipoint network"
+                type: bool
+    priority:
+        description:
+        - "Router priority"
+        type: int
+        required: False
+    retransmit_interval:
+        description:
+        - "Time between retransmitting lost link state advertisements (Seconds)"
+        type: int
+        required: False
+    transmit_delay:
+        description:
+        - "Link state transmit delay (Seconds)"
+        type: int
+        required: False
     uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -228,39 +265,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'cost': {
-            'type': 'int',
-        },
-        'dead_interval': {
-            'type': 'int',
-        },
-        'authentication_key': {
-            'type': 'str',
-        },
-        'network': {
-            'type': 'dict',
-            'broadcast': {
-                'type': 'bool',
-            },
-            'point_to_multipoint': {
-                'type': 'bool',
-            },
-            'non_broadcast': {
-                'type': 'bool',
-            },
-            'point_to_point': {
-                'type': 'bool',
-            },
-            'p2mp_nbma': {
-                'type': 'bool',
-            }
-        },
-        'mtu_ignore': {
-            'type': 'bool',
-        },
-        'transmit_delay': {
-            'type': 'int',
-        },
         'authentication_cfg': {
             'type': 'dict',
             'authentication': {
@@ -271,23 +275,19 @@ def get_argspec():
                 'choices': ['message-digest', 'null']
             }
         },
-        'retransmit_interval': {
-            'type': 'int',
+        'authentication_key': {
+            'type': 'str',
         },
         'bfd_cfg': {
             'type': 'dict',
-            'disable': {
+            'bfd': {
                 'type': 'bool',
             },
-            'bfd': {
+            'disable': {
                 'type': 'bool',
             }
         },
-        'disable': {
-            'type': 'str',
-            'choices': ['all']
-        },
-        'hello_interval': {
+        'cost': {
             'type': 'int',
         },
         'database_filter_cfg': {
@@ -300,10 +300,14 @@ def get_argspec():
                 'type': 'bool',
             }
         },
-        'priority': {
+        'dead_interval': {
             'type': 'int',
         },
-        'mtu': {
+        'disable': {
+            'type': 'str',
+            'choices': ['all']
+        },
+        'hello_interval': {
             'type': 'int',
         },
         'message_digest_cfg': {
@@ -320,6 +324,39 @@ def get_argspec():
                     'type': 'str',
                 }
             }
+        },
+        'mtu': {
+            'type': 'int',
+        },
+        'mtu_ignore': {
+            'type': 'bool',
+        },
+        'network': {
+            'type': 'dict',
+            'broadcast': {
+                'type': 'bool',
+            },
+            'non_broadcast': {
+                'type': 'bool',
+            },
+            'point_to_point': {
+                'type': 'bool',
+            },
+            'point_to_multipoint': {
+                'type': 'bool',
+            },
+            'p2mp_nbma': {
+                'type': 'bool',
+            }
+        },
+        'priority': {
+            'type': 'int',
+        },
+        'retransmit_interval': {
+            'type': 'int',
+        },
+        'transmit_delay': {
+            'type': 'int',
         },
         'uuid': {
             'type': 'str',

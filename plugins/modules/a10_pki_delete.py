@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_pki_delete
 description:
     - Delete SSL cert
-short_description: Configures A10 pki.delete
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,60 +21,74 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    cert_name:
+        description:
+        - "Certificate file name"
+        type: str
+        required: False
+    ca:
+        description:
+        - "CA certificate file name"
+        type: str
+        required: False
+    private_key:
+        description:
+        - "Private key file name"
+        type: str
+        required: False
+    crl:
+        description:
+        - "CRL file name"
+        type: str
+        required: False
+    csr:
+        description:
+        - "CSR file name"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: str
         required: False
         suboptions:
             filename:
                 description:
                 - "Field filename"
-    cert_name:
-        description:
-        - "Certificate file name"
-        required: False
-    private_key:
-        description:
-        - "Private key file name"
-        required: False
-    ca:
-        description:
-        - "CA certificate file name"
-        required: False
-    crl:
-        description:
-        - "CRL file name"
-        required: False
-    csr:
-        description:
-        - "CSR file name"
-        required: False
+                type: str
 
 '''
 
@@ -132,20 +144,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'oper': {
-            'type': 'str',
-            'required': False,
-            'filename': {
-                'type': 'str',
-            }
-        },
         'cert_name': {
             'type': 'str',
         },
-        'private_key': {
+        'ca': {
             'type': 'str',
         },
-        'ca': {
+        'private_key': {
             'type': 'str',
         },
         'crl': {
@@ -153,6 +158,13 @@ def get_argspec():
         },
         'csr': {
             'type': 'str',
+        },
+        'oper': {
+            'type': 'str',
+            'required': False,
+            'filename': {
+                'type': 'str',
+            }
         }
     })
     return rv

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_snmp
 description:
     - SNMP type
-short_description: Configures A10 health.monitor.method.snmp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,70 +22,89 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    snmp_port:
+        - Key to identify parent object
+        type: str
+        required: True
+    snmp:
+        description:
+        - "SNMP type"
+        type: bool
+        required: False
+    snmp_port:
         description:
         - "Specify SNMP port, default is 161 (Port Number)"
+        type: int
         required: False
-    uuid:
+    community:
         description:
-        - "uuid of the object"
+        - "Specify SNMP community, default is 'public' (Community String)"
+        type: str
         required: False
     oid:
         description:
         - "Field oid"
+        type: dict
         required: False
         suboptions:
             mib:
                 description:
                 - "'sysDescr'= The MIB-2 OID of system description, 1.1.0; 'sysUpTime'= The MIB-2
           OID of system up time, 1.3.0; 'sysName'= The MIB-2 OID of system nume, 1.5.0;"
+                type: str
             asn:
                 description:
                 - "Specify the format in ASN.1 style"
-    snmp:
-        description:
-        - "SNMP type"
-        required: False
-    community:
-        description:
-        - "Specify SNMP community, default is 'public' (Community String)"
-        required: False
+                type: str
     operation:
         description:
         - "Field operation"
+        type: dict
         required: False
         suboptions:
             oper_type:
                 description:
                 - "'getnext'= Get-Next-Request command; 'get'= Get-Request command;"
+                type: str
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
 
 '''
 
@@ -145,10 +162,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'snmp': {
+            'type': 'bool',
+        },
         'snmp_port': {
             'type': 'int',
         },
-        'uuid': {
+        'community': {
             'type': 'str',
         },
         'oid': {
@@ -161,18 +181,15 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'snmp': {
-            'type': 'bool',
-        },
-        'community': {
-            'type': 'str',
-        },
         'operation': {
             'type': 'dict',
             'oper_type': {
                 'type': 'str',
                 'choices': ['getnext', 'get']
             }
+        },
+        'uuid': {
+            'type': 'str',
         }
     })
     # Parent keys

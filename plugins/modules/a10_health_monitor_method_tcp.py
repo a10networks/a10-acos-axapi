@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_health_monitor_method_tcp
 description:
     - TCP type
-short_description: Configures A10 health.monitor.method.tcp
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,61 +22,78 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     monitor_name:
         description:
-        - Key to identify parent object    uuid:
+        - Key to identify parent object
+        type: str
+        required: True
+    method_tcp:
         description:
-        - "uuid of the object"
+        - "TCP type"
+        type: bool
         required: False
     tcp_port:
         description:
         - "Specify TCP port (Specify port number)"
+        type: int
+        required: False
+    port_halfopen:
+        description:
+        - "Set TCP SYN check"
+        type: bool
+        required: False
+    port_send:
+        description:
+        - "Send a string to server (Specify the string)"
+        type: str
         required: False
     port_resp:
         description:
         - "Field port_resp"
+        type: dict
         required: False
         suboptions:
             port_contains:
                 description:
                 - "Mark server up if response string contains another string (Specify the string)"
-    method_tcp:
+                type: str
+    uuid:
         description:
-        - "TCP type"
-        required: False
-    port_send:
-        description:
-        - "Send a string to server (Specify the string)"
-        required: False
-    port_halfopen:
-        description:
-        - "Set TCP SYN check"
+        - "uuid of the object"
+        type: str
         required: False
 
 '''
@@ -137,11 +152,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'uuid': {
-            'type': 'str',
+        'method_tcp': {
+            'type': 'bool',
         },
         'tcp_port': {
             'type': 'int',
+        },
+        'port_halfopen': {
+            'type': 'bool',
+        },
+        'port_send': {
+            'type': 'str',
         },
         'port_resp': {
             'type': 'dict',
@@ -149,14 +170,8 @@ def get_argspec():
                 'type': 'str',
             }
         },
-        'method_tcp': {
-            'type': 'bool',
-        },
-        'port_send': {
+        'uuid': {
             'type': 'str',
-        },
-        'port_halfopen': {
-            'type': 'bool',
         }
     })
     # Parent keys

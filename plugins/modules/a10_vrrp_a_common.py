@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vrrp_a_common
 description:
     - HA VRRP-A Global Commands
-short_description: Configures A10 vrrp.a.common
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,122 +22,151 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    forward_l4_packet_on_standby:
+    device_id:
         description:
-        - "Enables Layer 2/3 forwarding of Layer 4 traffic on the Standby ACOS device"
+        - "Unique ID for each VRRP-A box (Device-id number)"
+        type: int
         required: False
-    get_ready_time:
+    set_id:
         description:
-        - "set get ready time after ax starting up (60-1200, in unit of 100millisec,
-          default is 60)"
+        - "Set-ID for HA configuration (Set id from 1 to 15)"
+        type: int
+        required: False
+    disable_default_vrid:
+        description:
+        - "Disable default vrid"
+        type: bool
+        required: False
+    action:
+        description:
+        - "'enable'= enable vrrp-a; 'disable'= disable vrrp-a;"
+        type: str
         required: False
     hello_interval:
         description:
         - "VRRP-A Hello Interval (1-255, in unit of 100millisec, default is 2)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
+        type: int
         required: False
     preemption_delay:
         description:
         - "Delay before changing state from Active to Standby (1-255, in unit of
           100millisec, default is 60)"
-        required: False
-    set_id:
-        description:
-        - "Set-ID for HA configuration (Set id from 1 to 15)"
-        required: False
-    device_id:
-        description:
-        - "Unique ID for each VRRP-A box (Device-id number)"
-        required: False
-    arp_retry:
-        description:
-        - "Number of additional gratuitous ARPs sent out after HA failover (1-255, default
-          is 4)"
+        type: int
         required: False
     dead_timer:
         description:
         - "VRRP-A dead timer in terms of how many hello messages missed, default is 5
           (2-255, default is 5)"
+        type: int
         required: False
-    disable_default_vrid:
+    arp_retry:
         description:
-        - "Disable default vrid"
+        - "Number of additional gratuitous ARPs sent out after HA failover (1-255, default
+          is 4)"
+        type: int
         required: False
     track_event_delay:
         description:
         - "Delay before changing state after up/down event (Units of 100 milliseconds
           (default 30))"
+        type: int
         required: False
-    action:
+    get_ready_time:
         description:
-        - "'enable'= enable vrrp-a; 'disable'= disable vrrp-a;"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            vrrp_common_dummy:
-                description:
-                - "dummy counter"
-    hostid_append_to_vrid:
-        description:
-        - "Field hostid_append_to_vrid"
-        required: False
-        suboptions:
-            hostid_append_to_vrid_value:
-                description:
-                - "hostid append to vrid num"
-            hostid_append_to_vrid_default:
-                description:
-                - "hostid append to vrid default"
-    restart_time:
-        description:
-        - "Time between restarting ports on standby system after transition"
+        - "set get ready time after ax starting up (60-1200, in unit of 100millisec,
+          default is 60)"
+        type: int
         required: False
     inline_mode_cfg:
         description:
         - "Field inline_mode_cfg"
+        type: dict
         required: False
         suboptions:
             inline_mode:
                 description:
                 - "Enable Layer 2 Inline Hot Standby Mode"
-            preferred_trunk:
-                description:
-                - "Preferred trunk Port"
+                type: bool
             preferred_port:
                 description:
                 - "Preferred ethernet Port"
+                type: str
+            preferred_trunk:
+                description:
+                - "Preferred trunk Port"
+                type: int
+    restart_time:
+        description:
+        - "Time between restarting ports on standby system after transition"
+        type: int
+        required: False
+    hostid_append_to_vrid:
+        description:
+        - "Field hostid_append_to_vrid"
+        type: dict
+        required: False
+        suboptions:
+            hostid_append_to_vrid_default:
+                description:
+                - "hostid append to vrid default"
+                type: bool
+            hostid_append_to_vrid_value:
+                description:
+                - "hostid append to vrid num"
+                type: int
+    forward_l4_packet_on_standby:
+        description:
+        - "Enables Layer 2/3 forwarding of Layer 4 traffic on the Standby ACOS device"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    stats:
+        description:
+        - "Field stats"
+        type: dict
+        required: False
+        suboptions:
+            vrrp_common_dummy:
+                description:
+                - "dummy counter"
+                type: str
 
 '''
 
@@ -207,59 +234,35 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'forward_l4_packet_on_standby': {
-            'type': 'bool',
-        },
-        'get_ready_time': {
-            'type': 'int',
-        },
-        'hello_interval': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'preemption_delay': {
+        'device_id': {
             'type': 'int',
         },
         'set_id': {
             'type': 'int',
         },
-        'device_id': {
-            'type': 'int',
-        },
-        'arp_retry': {
-            'type': 'int',
-        },
-        'dead_timer': {
-            'type': 'int',
-        },
         'disable_default_vrid': {
             'type': 'bool',
-        },
-        'track_event_delay': {
-            'type': 'int',
         },
         'action': {
             'type': 'str',
             'choices': ['enable', 'disable']
         },
-        'stats': {
-            'type': 'dict',
-            'vrrp_common_dummy': {
-                'type': 'str',
-            }
+        'hello_interval': {
+            'type': 'int',
         },
-        'hostid_append_to_vrid': {
-            'type': 'dict',
-            'hostid_append_to_vrid_value': {
-                'type': 'int',
-            },
-            'hostid_append_to_vrid_default': {
-                'type': 'bool',
-            }
+        'preemption_delay': {
+            'type': 'int',
         },
-        'restart_time': {
+        'dead_timer': {
+            'type': 'int',
+        },
+        'arp_retry': {
+            'type': 'int',
+        },
+        'track_event_delay': {
+            'type': 'int',
+        },
+        'get_ready_time': {
             'type': 'int',
         },
         'inline_mode_cfg': {
@@ -267,10 +270,34 @@ def get_argspec():
             'inline_mode': {
                 'type': 'bool',
             },
+            'preferred_port': {
+                'type': 'str',
+            },
             'preferred_trunk': {
                 'type': 'int',
+            }
+        },
+        'restart_time': {
+            'type': 'int',
+        },
+        'hostid_append_to_vrid': {
+            'type': 'dict',
+            'hostid_append_to_vrid_default': {
+                'type': 'bool',
             },
-            'preferred_port': {
+            'hostid_append_to_vrid_value': {
+                'type': 'int',
+            }
+        },
+        'forward_l4_packet_on_standby': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'stats': {
+            'type': 'dict',
+            'vrrp_common_dummy': {
                 'type': 'str',
             }
         }

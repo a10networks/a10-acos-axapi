@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_access_list_summary
 description:
     - Field summary
-short_description: Configures A10 access.list.summary
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,44 +22,54 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
             acl_list:
                 description:
                 - "Field acl_list"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: list
 
 '''
 
@@ -115,110 +123,110 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'acl_list': {
                 'type': 'list',
+                'id': {
+                    'type': 'int',
+                },
+                'name': {
+                    'type': 'str',
+                },
                 'mgmt_pkt_hit_count': {
                     'type': 'int',
                 },
                 'v6flag': {
                     'type': 'int',
                 },
-                'name': {
-                    'type': 'str',
-                },
                 'rule_list': {
                     'type': 'list',
-                    'icmp_type': {
-                        'type': 'int',
-                    },
-                    'dst_obj_id': {
-                        'type': 'str',
-                    },
-                    'geo_location_name': {
-                        'type': 'str',
-                    },
-                    'src_host_mask': {
-                        'type': 'str',
-                    },
-                    'ip_frag': {
-                        'type': 'int',
-                    },
-                    'vlan_id': {
-                        'type': 'int',
-                    },
-                    'src_port_end': {
-                        'type': 'int',
-                    },
-                    'dst_port_end': {
-                        'type': 'int',
-                    },
-                    'log': {
-                        'type': 'int',
-                    },
-                    'src_obj_id': {
-                        'type': 'str',
-                    },
-                    'proto': {
-                        'type': 'str',
-                    },
-                    'tcp_established': {
-                        'type': 'int',
-                    },
-                    'svc_obj_id': {
-                        'type': 'str',
-                    },
-                    'icmp_code': {
-                        'type': 'int',
-                    },
-                    'dst_host_mask': {
-                        'type': 'str',
-                    },
-                    'data_plane_hits': {
-                        'type': 'int',
-                    },
-                    'dscp': {
-                        'type': 'int',
-                    },
-                    'trunk': {
-                        'type': 'int',
-                    },
                     'sequence_num': {
-                        'type': 'int',
-                    },
-                    'log_transparent_sess_only': {
-                        'type': 'int',
-                    },
-                    'remark': {
-                        'type': 'str',
-                    },
-                    'dst_port_start': {
-                        'type': 'int',
-                    },
-                    'src_host': {
-                        'type': 'str',
-                    },
-                    'src_port_start': {
                         'type': 'int',
                     },
                     'action': {
                         'type': 'str',
                     },
-                    'eth': {
+                    'remark': {
+                        'type': 'str',
+                    },
+                    'proto': {
+                        'type': 'str',
+                    },
+                    'icmp_type': {
                         'type': 'int',
+                    },
+                    'icmp_code': {
+                        'type': 'int',
+                    },
+                    'svc_obj_id': {
+                        'type': 'str',
+                    },
+                    'geo_location_name': {
+                        'type': 'str',
+                    },
+                    'src_obj_id': {
+                        'type': 'str',
+                    },
+                    'src_host': {
+                        'type': 'str',
+                    },
+                    'src_host_mask': {
+                        'type': 'str',
+                    },
+                    'src_port_start': {
+                        'type': 'int',
+                    },
+                    'src_port_end': {
+                        'type': 'int',
+                    },
+                    'dst_obj_id': {
+                        'type': 'str',
                     },
                     'dst_host': {
                         'type': 'str',
+                    },
+                    'dst_host_mask': {
+                        'type': 'str',
+                    },
+                    'dst_port_start': {
+                        'type': 'int',
+                    },
+                    'dst_port_end': {
+                        'type': 'int',
+                    },
+                    'eth': {
+                        'type': 'int',
+                    },
+                    'trunk': {
+                        'type': 'int',
+                    },
+                    'vlan_id': {
+                        'type': 'int',
+                    },
+                    'tcp_established': {
+                        'type': 'int',
+                    },
+                    'dscp': {
+                        'type': 'int',
+                    },
+                    'ip_frag': {
+                        'type': 'int',
+                    },
+                    'log': {
+                        'type': 'int',
+                    },
+                    'log_transparent_sess_only': {
+                        'type': 'int',
+                    },
+                    'data_plane_hits': {
+                        'type': 'int',
                     }
-                },
-                'id': {
-                    'type': 'int',
                 }
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

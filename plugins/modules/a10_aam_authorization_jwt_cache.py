@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_aam_authorization_jwt_cache
 description:
     - AAM authorization JWT cache related operations
-short_description: Configures A10 aam.authorization.jwt.cache
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,56 +22,70 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     oper:
         description:
         - "Field oper"
+        type: dict
         required: False
         suboptions:
-            max_token_cache:
-                description:
-                - "Field max_token_cache"
-            cache_list:
-                description:
-                - "Field cache_list"
-            audience:
-                description:
-                - "Field audience"
             token_cached:
                 description:
                 - "Field token_cached"
+                type: int
             token_cache_hit:
                 description:
                 - "Field token_cache_hit"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: int
+            max_token_cache:
+                description:
+                - "Field max_token_cache"
+                type: int
+            cache_list:
+                description:
+                - "Field cache_list"
+                type: list
+            audience:
+                description:
+                - "Field audience"
+                type: str
 
 '''
 
@@ -127,44 +139,44 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
-            'max_token_cache': {
-                'type': 'int',
-            },
-            'cache_list': {
-                'type': 'list',
-                'client_ip': {
-                    'type': 'str',
-                },
-                'audience': {
-                    'type': 'str',
-                },
-                'ttl': {
-                    'type': 'int',
-                },
-                'cache_id': {
-                    'type': 'int',
-                },
-                'subject': {
-                    'type': 'str',
-                },
-                'issuer': {
-                    'type': 'str',
-                }
-            },
-            'audience': {
-                'type': 'str',
-            },
             'token_cached': {
                 'type': 'int',
             },
             'token_cache_hit': {
                 'type': 'int',
+            },
+            'max_token_cache': {
+                'type': 'int',
+            },
+            'cache_list': {
+                'type': 'list',
+                'cache_id': {
+                    'type': 'int',
+                },
+                'issuer': {
+                    'type': 'str',
+                },
+                'subject': {
+                    'type': 'str',
+                },
+                'audience': {
+                    'type': 'str',
+                },
+                'client_ip': {
+                    'type': 'str',
+                },
+                'ttl': {
+                    'type': 'int',
+                }
+            },
+            'audience': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

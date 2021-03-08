@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_template_policy
 description:
     - Policy config
-short_description: Configures A10 slb.template.policy
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,168 +22,152 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
-    forward_policy:
-        description:
-        - "Field forward_policy"
-        required: False
-        suboptions:
-            filtering:
-                description:
-                - "Field filtering"
-            uuid:
-                description:
-                - "uuid of the object"
-            local_logging:
-                description:
-                - "Enable local logging"
-            san_filtering:
-                description:
-                - "Field san_filtering"
-            action_list:
-                description:
-                - "Field action_list"
-            no_client_conn_reuse:
-                description:
-                - "Inspects only first request of a connection"
-            require_web_category:
-                description:
-                - "Wait for web category to be resolved before taking proxy decision"
-            acos_event_log:
-                description:
-                - "Enable acos event logging"
-            source_list:
-                description:
-                - "Field source_list"
-    use_destination_ip:
-        description:
-        - "Use destination IP to match the policy"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            forward_policy:
-                description:
-                - "Field forward_policy"
-            fwd_policy_dns_unresolved:
-                description:
-                - "Forward-policy unresolved DNS queries"
-            fwd_policy_hits:
-                description:
-                - "Number of forward-policy requests for this policy template"
-            fwd_policy_policy_drop:
-                description:
-                - "Number of forward-policy requests dropped"
-            name:
-                description:
-                - "Policy template name"
-            fwd_policy_forward_to_service_group:
-                description:
-                - "Number of forward-policy requests forwarded to service group"
-            fwd_policy_forward_to_internet:
-                description:
-                - "Number of forward-policy requests forwarded to internet"
-            fwd_policy_dns_outstanding:
-                description:
-                - "Forward-policy current DNS outstanding requests"
-            fwd_policy_source_match_not_found:
-                description:
-                - "Forward-policy requests without matching source rule"
-            fwd_policy_snat_fail:
-                description:
-                - "Forward-policy source-nat translation failure"
-            exp_client_hello_not_found:
-                description:
-                - "Expected Client HELLO requests not found"
-            fwd_policy_forward_to_proxy:
-                description:
-                - "Number of forward-policy requests forwarded to proxy"
     name:
         description:
         - "Policy template name"
+        type: str
         required: True
-    over_limit:
-        description:
-        - "Specify operation in case over limit"
-        required: False
-    class_list:
-        description:
-        - "Field class_list"
-        required: False
-        suboptions:
-            header_name:
-                description:
-                - "Specify L7 header name"
-            lid_list:
-                description:
-                - "Field lid_list"
-            name:
-                description:
-                - "Class list name or geo-location-class-list name"
-            client_ip_l3_dest:
-                description:
-                - "Use destination IP as client IP address"
-            client_ip_l7_header:
-                description:
-                - "Use extract client IP address from L7 header"
-            uuid:
-                description:
-                - "uuid of the object"
-    interval:
-        description:
-        - "Log interval (minute)"
-        required: False
-    share:
-        description:
-        - "Share counters between virtual ports and virtual servers"
-        required: False
-    full_domain_tree:
-        description:
-        - "Share counters between geo-location and sub regions"
-        required: False
-    over_limit_logging:
-        description:
-        - "Log a message"
-        required: False
     bw_list_name:
         description:
         - "Specify a blacklist/whitelist name"
+        type: str
         required: False
     timeout:
         description:
         - "Define timeout value of PBSLB dynamic entry (Timeout value (minute, default is
           5))"
+        type: int
+        required: False
+    use_destination_ip:
+        description:
+        - "Use destination IP to match the policy"
+        type: bool
+        required: False
+    over_limit:
+        description:
+        - "Specify operation in case over limit"
+        type: bool
+        required: False
+    over_limit_reset:
+        description:
+        - "Reset the connection when it exceeds limit"
+        type: bool
+        required: False
+    over_limit_lockup:
+        description:
+        - "Don't accept any new connection for certain time (Lockup duration (minute))"
+        type: int
+        required: False
+    over_limit_logging:
+        description:
+        - "Log a message"
+        type: bool
+        required: False
+    interval:
+        description:
+        - "Log interval (minute)"
+        type: int
+        required: False
+    bw_list_id:
+        description:
+        - "Field bw_list_id"
+        type: list
+        required: False
+        suboptions:
+            id:
+                description:
+                - "Specify id that maps to service group (The id number)"
+                type: int
+            service_group:
+                description:
+                - "Specify a service group (Specify the service group name)"
+                type: str
+            pbslb_logging:
+                description:
+                - "Configure PBSLB logging"
+                type: bool
+            pbslb_interval:
+                description:
+                - "Specify logging interval in minutes"
+                type: int
+            fail:
+                description:
+                - "Only log unsuccessful connections"
+                type: bool
+            bw_list_action:
+                description:
+                - "'drop'= drop the packet; 'reset'= Send reset back;"
+                type: str
+            logging_drp_rst:
+                description:
+                - "Configure PBSLB logging"
+                type: bool
+            action_interval:
+                description:
+                - "Specify logging interval in minute (default is 3)"
+                type: int
+    overlap:
+        description:
+        - "Use overlap mode for geo-location to do longest match"
+        type: bool
+        required: False
+    share:
+        description:
+        - "Share counters between virtual ports and virtual servers"
+        type: bool
+        required: False
+    full_domain_tree:
+        description:
+        - "Share counters between geo-location and sub regions"
+        type: bool
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -201,55 +183,133 @@ options:
           forward-policy requests dropped; 'fwd-policy-source-match-not-found'= Forward-
           policy requests without matching source rule; 'exp-client-hello-not-found'=
           Expected Client HELLO requests not found;"
-    user_tag:
+                type: str
+    class_list:
         description:
-        - "Customized tag"
-        required: False
-    bw_list_id:
-        description:
-        - "Field bw_list_id"
+        - "Field class_list"
+        type: dict
         required: False
         suboptions:
-            pbslb_interval:
+            name:
                 description:
-                - "Specify logging interval in minutes"
-            action_interval:
+                - "Class list name or geo-location-class-list name"
+                type: str
+            client_ip_l3_dest:
                 description:
-                - "Specify logging interval in minute (default is 3)"
-            service_group:
+                - "Use destination IP as client IP address"
+                type: bool
+            client_ip_l7_header:
                 description:
-                - "Specify a service group (Specify the service group name)"
-            logging_drp_rst:
+                - "Use extract client IP address from L7 header"
+                type: bool
+            header_name:
                 description:
-                - "Configure PBSLB logging"
-            fail:
+                - "Specify L7 header name"
+                type: str
+            uuid:
                 description:
-                - "Only log unsuccessful connections"
-            pbslb_logging:
+                - "uuid of the object"
+                type: str
+            lid_list:
                 description:
-                - "Configure PBSLB logging"
-            id:
-                description:
-                - "Specify id that maps to service group (The id number)"
-            bw_list_action:
-                description:
-                - "'drop'= drop the packet; 'reset'= Send reset back;"
-    over_limit_lockup:
+                - "Field lid_list"
+                type: list
+    forward_policy:
         description:
-        - "Don't accept any new connection for certain time (Lockup duration (minute))"
+        - "Field forward_policy"
+        type: dict
         required: False
-    uuid:
+        suboptions:
+            no_client_conn_reuse:
+                description:
+                - "Inspects only first request of a connection"
+                type: bool
+            acos_event_log:
+                description:
+                - "Enable acos event logging"
+                type: bool
+            local_logging:
+                description:
+                - "Enable local logging"
+                type: bool
+            require_web_category:
+                description:
+                - "Wait for web category to be resolved before taking proxy decision"
+                type: bool
+            filtering:
+                description:
+                - "Field filtering"
+                type: list
+            san_filtering:
+                description:
+                - "Field san_filtering"
+                type: list
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            action_list:
+                description:
+                - "Field action_list"
+                type: list
+            source_list:
+                description:
+                - "Field source_list"
+                type: list
+    stats:
         description:
-        - "uuid of the object"
+        - "Field stats"
+        type: dict
         required: False
-    over_limit_reset:
-        description:
-        - "Reset the connection when it exceeds limit"
-        required: False
-    overlap:
-        description:
-        - "Use overlap mode for geo-location to do longest match"
-        required: False
+        suboptions:
+            fwd_policy_dns_unresolved:
+                description:
+                - "Forward-policy unresolved DNS queries"
+                type: str
+            fwd_policy_dns_outstanding:
+                description:
+                - "Forward-policy current DNS outstanding requests"
+                type: str
+            fwd_policy_snat_fail:
+                description:
+                - "Forward-policy source-nat translation failure"
+                type: str
+            fwd_policy_hits:
+                description:
+                - "Number of forward-policy requests for this policy template"
+                type: str
+            fwd_policy_forward_to_internet:
+                description:
+                - "Number of forward-policy requests forwarded to internet"
+                type: str
+            fwd_policy_forward_to_service_group:
+                description:
+                - "Number of forward-policy requests forwarded to service group"
+                type: str
+            fwd_policy_forward_to_proxy:
+                description:
+                - "Number of forward-policy requests forwarded to proxy"
+                type: str
+            fwd_policy_policy_drop:
+                description:
+                - "Number of forward-policy requests dropped"
+                type: str
+            fwd_policy_source_match_not_found:
+                description:
+                - "Forward-policy requests without matching source rule"
+                type: str
+            exp_client_hello_not_found:
+                description:
+                - "Expected Client HELLO requests not found"
+                type: str
+            name:
+                description:
+                - "Policy template name"
+                type: str
+            forward_policy:
+                description:
+                - "Field forward_policy"
+                type: dict
 
 '''
 
@@ -320,389 +380,64 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'forward_policy': {
-            'type': 'dict',
-            'filtering': {
-                'type': 'list',
-                'ssli_url_filtering': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'bypassed-sni-disable', 'intercepted-sni-enable',
-                        'intercepted-http-disable', 'no-sni-allow'
-                    ]
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'local_logging': {
-                'type': 'bool',
-            },
-            'san_filtering': {
-                'type': 'list',
-                'ssli_url_filtering_san': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'enable-san', 'bypassed-san-disable',
-                        'intercepted-san-enable', 'no-san-allow'
-                    ]
-                }
-            },
-            'action_list': {
-                'type': 'list',
-                'log': {
-                    'type': 'bool',
-                },
-                'http_status_code': {
-                    'type': 'str',
-                    'choices': ['301', '302']
-                },
-                'forward_snat': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'drop_response_code': {
-                    'type': 'int',
-                },
-                'action1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'forward-to-internet', 'forward-to-service-group',
-                        'forward-to-proxy', 'drop'
-                    ]
-                },
-                'fake_sg': {
-                    'type': 'str',
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'real_sg': {
-                    'type': 'str',
-                },
-                'drop_message': {
-                    'type': 'str',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type': 'str',
-                        'choices': ['all', 'hits']
-                    }
-                },
-                'fall_back': {
-                    'type': 'str',
-                },
-                'fall_back_snat': {
-                    'type': 'str',
-                },
-                'drop_redirect_url': {
-                    'type': 'str',
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                }
-            },
-            'no_client_conn_reuse': {
-                'type': 'bool',
-            },
-            'require_web_category': {
-                'type': 'bool',
-            },
-            'acos_event_log': {
-                'type': 'bool',
-            },
-            'source_list': {
-                'type': 'list',
-                'match_any': {
-                    'type': 'bool',
-                },
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'match_authorize_policy': {
-                    'type': 'str',
-                },
-                'destination': {
-                    'type': 'dict',
-                    'class_list_list': {
-                        'type': 'list',
-                        'uuid': {
-                            'type': 'str',
-                        },
-                        'dest_class_list': {
-                            'type': 'str',
-                            'required': True,
-                        },
-                        'priority': {
-                            'type': 'int',
-                        },
-                        'sampling_enable': {
-                            'type': 'list',
-                            'counters1': {
-                                'type': 'str',
-                                'choices': ['all', 'hits']
-                            }
-                        },
-                        'action': {
-                            'type': 'str',
-                        },
-                        'ntype': {
-                            'type': 'str',
-                            'choices': ['host', 'url', 'ip']
-                        }
-                    },
-                    'web_category_list_list': {
-                        'type': 'list',
-                        'uuid': {
-                            'type': 'str',
-                        },
-                        'web_category_list': {
-                            'type': 'str',
-                            'required': True,
-                        },
-                        'priority': {
-                            'type': 'int',
-                        },
-                        'sampling_enable': {
-                            'type': 'list',
-                            'counters1': {
-                                'type': 'str',
-                                'choices': ['all', 'hits']
-                            }
-                        },
-                        'action': {
-                            'type': 'str',
-                        },
-                        'ntype': {
-                            'type': 'str',
-                            'choices': ['host', 'url']
-                        }
-                    },
-                    'any': {
-                        'type': 'dict',
-                        'action': {
-                            'type': 'str',
-                        },
-                        'sampling_enable': {
-                            'type': 'list',
-                            'counters1': {
-                                'type': 'str',
-                                'choices': ['all', 'hits']
-                            }
-                        },
-                        'uuid': {
-                            'type': 'str',
-                        }
-                    }
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'priority': {
-                    'type': 'int',
-                },
-                'sampling_enable': {
-                    'type': 'list',
-                    'counters1': {
-                        'type':
-                        'str',
-                        'choices': [
-                            'all', 'hits', 'destination-match-not-found',
-                            'no-host-info'
-                        ]
-                    }
-                },
-                'match_class_list': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'use_destination_ip': {
-            'type': 'bool',
-        },
-        'stats': {
-            'type': 'dict',
-            'forward_policy': {
-                'type': 'dict',
-            },
-            'fwd_policy_dns_unresolved': {
-                'type': 'str',
-            },
-            'fwd_policy_hits': {
-                'type': 'str',
-            },
-            'fwd_policy_policy_drop': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'fwd_policy_forward_to_service_group': {
-                'type': 'str',
-            },
-            'fwd_policy_forward_to_internet': {
-                'type': 'str',
-            },
-            'fwd_policy_dns_outstanding': {
-                'type': 'str',
-            },
-            'fwd_policy_source_match_not_found': {
-                'type': 'str',
-            },
-            'fwd_policy_snat_fail': {
-                'type': 'str',
-            },
-            'exp_client_hello_not_found': {
-                'type': 'str',
-            },
-            'fwd_policy_forward_to_proxy': {
-                'type': 'str',
-            }
-        },
         'name': {
             'type': 'str',
             'required': True,
         },
+        'bw_list_name': {
+            'type': 'str',
+        },
+        'timeout': {
+            'type': 'int',
+        },
+        'use_destination_ip': {
+            'type': 'bool',
+        },
         'over_limit': {
             'type': 'bool',
         },
-        'class_list': {
-            'type': 'dict',
-            'header_name': {
-                'type': 'str',
-            },
-            'lid_list': {
-                'type': 'list',
-                'request_rate_limit': {
-                    'type': 'int',
-                },
-                'action_value': {
-                    'type': 'str',
-                    'choices': ['forward', 'reset']
-                },
-                'request_per': {
-                    'type': 'int',
-                },
-                'bw_rate_limit': {
-                    'type': 'int',
-                },
-                'conn_limit': {
-                    'type': 'int',
-                },
-                'log': {
-                    'type': 'bool',
-                },
-                'direct_action_value': {
-                    'type': 'str',
-                    'choices': ['drop', 'reset']
-                },
-                'conn_per': {
-                    'type': 'int',
-                },
-                'direct_fail': {
-                    'type': 'bool',
-                },
-                'conn_rate_limit': {
-                    'type': 'int',
-                },
-                'direct_pbslb_logging': {
-                    'type': 'bool',
-                },
-                'dns64': {
-                    'type': 'dict',
-                    'prefix': {
-                        'type': 'str',
-                    },
-                    'exclusive_answer': {
-                        'type': 'bool',
-                    },
-                    'disable': {
-                        'type': 'bool',
-                    }
-                },
-                'lidnum': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'over_limit_action': {
-                    'type': 'bool',
-                },
-                'response_code_rate_limit': {
-                    'type': 'list',
-                    'threshold': {
-                        'type': 'int',
-                    },
-                    'code_range_end': {
-                        'type': 'int',
-                    },
-                    'code_range_start': {
-                        'type': 'int',
-                    },
-                    'period': {
-                        'type': 'int',
-                    }
-                },
-                'direct_service_group': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'request_limit': {
-                    'type': 'int',
-                },
-                'direct_action_interval': {
-                    'type': 'int',
-                },
-                'bw_per': {
-                    'type': 'int',
-                },
-                'interval': {
-                    'type': 'int',
-                },
-                'user_tag': {
-                    'type': 'str',
-                },
-                'direct_action': {
-                    'type': 'bool',
-                },
-                'lockout': {
-                    'type': 'int',
-                },
-                'direct_logging_drp_rst': {
-                    'type': 'bool',
-                },
-                'direct_pbslb_interval': {
-                    'type': 'int',
-                }
-            },
-            'name': {
-                'type': 'str',
-            },
-            'client_ip_l3_dest': {
-                'type': 'bool',
-            },
-            'client_ip_l7_header': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
+        'over_limit_reset': {
+            'type': 'bool',
+        },
+        'over_limit_lockup': {
+            'type': 'int',
+        },
+        'over_limit_logging': {
+            'type': 'bool',
         },
         'interval': {
             'type': 'int',
+        },
+        'bw_list_id': {
+            'type': 'list',
+            'id': {
+                'type': 'int',
+            },
+            'service_group': {
+                'type': 'str',
+            },
+            'pbslb_logging': {
+                'type': 'bool',
+            },
+            'pbslb_interval': {
+                'type': 'int',
+            },
+            'fail': {
+                'type': 'bool',
+            },
+            'bw_list_action': {
+                'type': 'str',
+                'choices': ['drop', 'reset']
+            },
+            'logging_drp_rst': {
+                'type': 'bool',
+            },
+            'action_interval': {
+                'type': 'int',
+            }
+        },
+        'overlap': {
+            'type': 'bool',
         },
         'share': {
             'type': 'bool',
@@ -710,14 +445,11 @@ def get_argspec():
         'full_domain_tree': {
             'type': 'bool',
         },
-        'over_limit_logging': {
-            'type': 'bool',
-        },
-        'bw_list_name': {
+        'uuid': {
             'type': 'str',
         },
-        'timeout': {
-            'type': 'int',
+        'user_tag': {
+            'type': 'str',
         },
         'sampling_enable': {
             'type': 'list',
@@ -735,48 +467,376 @@ def get_argspec():
                 ]
             }
         },
-        'user_tag': {
-            'type': 'str',
-        },
-        'bw_list_id': {
-            'type': 'list',
-            'pbslb_interval': {
-                'type': 'int',
-            },
-            'action_interval': {
-                'type': 'int',
-            },
-            'service_group': {
+        'class_list': {
+            'type': 'dict',
+            'name': {
                 'type': 'str',
             },
-            'logging_drp_rst': {
+            'client_ip_l3_dest': {
                 'type': 'bool',
             },
-            'fail': {
+            'client_ip_l7_header': {
                 'type': 'bool',
             },
-            'pbslb_logging': {
-                'type': 'bool',
-            },
-            'id': {
-                'type': 'int',
-            },
-            'bw_list_action': {
+            'header_name': {
                 'type': 'str',
-                'choices': ['drop', 'reset']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'lid_list': {
+                'type': 'list',
+                'lidnum': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'conn_limit': {
+                    'type': 'int',
+                },
+                'conn_rate_limit': {
+                    'type': 'int',
+                },
+                'conn_per': {
+                    'type': 'int',
+                },
+                'request_limit': {
+                    'type': 'int',
+                },
+                'request_rate_limit': {
+                    'type': 'int',
+                },
+                'request_per': {
+                    'type': 'int',
+                },
+                'bw_rate_limit': {
+                    'type': 'int',
+                },
+                'bw_per': {
+                    'type': 'int',
+                },
+                'over_limit_action': {
+                    'type': 'bool',
+                },
+                'action_value': {
+                    'type': 'str',
+                    'choices': ['forward', 'reset']
+                },
+                'lockout': {
+                    'type': 'int',
+                },
+                'log': {
+                    'type': 'bool',
+                },
+                'interval': {
+                    'type': 'int',
+                },
+                'direct_action': {
+                    'type': 'bool',
+                },
+                'direct_service_group': {
+                    'type': 'str',
+                },
+                'direct_pbslb_logging': {
+                    'type': 'bool',
+                },
+                'direct_pbslb_interval': {
+                    'type': 'int',
+                },
+                'direct_fail': {
+                    'type': 'bool',
+                },
+                'direct_action_value': {
+                    'type': 'str',
+                    'choices': ['drop', 'reset']
+                },
+                'direct_logging_drp_rst': {
+                    'type': 'bool',
+                },
+                'direct_action_interval': {
+                    'type': 'int',
+                },
+                'response_code_rate_limit': {
+                    'type': 'list',
+                    'code_range_start': {
+                        'type': 'int',
+                    },
+                    'code_range_end': {
+                        'type': 'int',
+                    },
+                    'threshold': {
+                        'type': 'int',
+                    },
+                    'period': {
+                        'type': 'int',
+                    }
+                },
+                'dns64': {
+                    'type': 'dict',
+                    'disable': {
+                        'type': 'bool',
+                    },
+                    'exclusive_answer': {
+                        'type': 'bool',
+                    },
+                    'prefix': {
+                        'type': 'str',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                }
             }
         },
-        'over_limit_lockup': {
-            'type': 'int',
+        'forward_policy': {
+            'type': 'dict',
+            'no_client_conn_reuse': {
+                'type': 'bool',
+            },
+            'acos_event_log': {
+                'type': 'bool',
+            },
+            'local_logging': {
+                'type': 'bool',
+            },
+            'require_web_category': {
+                'type': 'bool',
+            },
+            'filtering': {
+                'type': 'list',
+                'ssli_url_filtering': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bypassed-sni-disable', 'intercepted-sni-enable',
+                        'intercepted-http-disable', 'no-sni-allow'
+                    ]
+                }
+            },
+            'san_filtering': {
+                'type': 'list',
+                'ssli_url_filtering_san': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'enable-san', 'bypassed-san-disable',
+                        'intercepted-san-enable', 'no-san-allow'
+                    ]
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'action_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'action1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'forward-to-internet', 'forward-to-service-group',
+                        'forward-to-proxy', 'drop'
+                    ]
+                },
+                'fake_sg': {
+                    'type': 'str',
+                },
+                'real_sg': {
+                    'type': 'str',
+                },
+                'forward_snat': {
+                    'type': 'str',
+                },
+                'fall_back': {
+                    'type': 'str',
+                },
+                'fall_back_snat': {
+                    'type': 'str',
+                },
+                'log': {
+                    'type': 'bool',
+                },
+                'drop_response_code': {
+                    'type': 'int',
+                },
+                'drop_message': {
+                    'type': 'str',
+                },
+                'drop_redirect_url': {
+                    'type': 'str',
+                },
+                'http_status_code': {
+                    'type': 'str',
+                    'choices': ['301', '302']
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'hits']
+                    }
+                }
+            },
+            'source_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'match_class_list': {
+                    'type': 'str',
+                },
+                'match_any': {
+                    'type': 'bool',
+                },
+                'match_authorize_policy': {
+                    'type': 'str',
+                },
+                'priority': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'user_tag': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'all', 'hits', 'destination-match-not-found',
+                            'no-host-info'
+                        ]
+                    }
+                },
+                'destination': {
+                    'type': 'dict',
+                    'class_list_list': {
+                        'type': 'list',
+                        'dest_class_list': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'action': {
+                            'type': 'str',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                            'choices': ['host', 'url', 'ip']
+                        },
+                        'priority': {
+                            'type': 'int',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type': 'str',
+                                'choices': ['all', 'hits']
+                            }
+                        }
+                    },
+                    'web_category_list_list': {
+                        'type': 'list',
+                        'web_category_list': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'action': {
+                            'type': 'str',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                            'choices': ['host', 'url']
+                        },
+                        'priority': {
+                            'type': 'int',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type': 'str',
+                                'choices': ['all', 'hits']
+                            }
+                        }
+                    },
+                    'any': {
+                        'type': 'dict',
+                        'action': {
+                            'type': 'str',
+                        },
+                        'uuid': {
+                            'type': 'str',
+                        },
+                        'sampling_enable': {
+                            'type': 'list',
+                            'counters1': {
+                                'type': 'str',
+                                'choices': ['all', 'hits']
+                            }
+                        }
+                    }
+                }
+            }
         },
-        'uuid': {
-            'type': 'str',
-        },
-        'over_limit_reset': {
-            'type': 'bool',
-        },
-        'overlap': {
-            'type': 'bool',
+        'stats': {
+            'type': 'dict',
+            'fwd_policy_dns_unresolved': {
+                'type': 'str',
+            },
+            'fwd_policy_dns_outstanding': {
+                'type': 'str',
+            },
+            'fwd_policy_snat_fail': {
+                'type': 'str',
+            },
+            'fwd_policy_hits': {
+                'type': 'str',
+            },
+            'fwd_policy_forward_to_internet': {
+                'type': 'str',
+            },
+            'fwd_policy_forward_to_service_group': {
+                'type': 'str',
+            },
+            'fwd_policy_forward_to_proxy': {
+                'type': 'str',
+            },
+            'fwd_policy_policy_drop': {
+                'type': 'str',
+            },
+            'fwd_policy_source_match_not_found': {
+                'type': 'str',
+            },
+            'exp_client_hello_not_found': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'forward_policy': {
+                'type': 'dict',
+            }
         }
     })
     return rv

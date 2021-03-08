@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,44 +13,61 @@ DOCUMENTATION = r'''
 module: a10_vcs_vblades_stat
 description:
     - Show aVCS vBlade box statistics information
-short_description: Configures A10 vcs-vblades.stat
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
         - State of the object to be created.
         choices:
           - noop
+          - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    vblade_id:
+        description:
+        - "vBlade-id"
+        type: int
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -70,64 +87,73 @@ options:
           of aVCS election; 'slave_cfg_upd_notif_err'= vBlade Configuration Update Notif
           Errors counter of aVCS election; 'slave_cfg_upd_result_err'= vBlade
           Configuration Update Result Errors counter of aVCS election;"
-    vblade_id:
-        description:
-        - "vBlade-id"
-        required: True
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            slave_recv_bytes:
-                description:
-                - "vBlade Received Bytes counter of aVCS election"
-            slave_cfg_upd_r_fail:
-                description:
-                - "vBlade Remote Configuration Update Errors counter of aVCS election"
-            slave_cfg_upd_result_err:
-                description:
-                - "vBlade Configuration Update Result Errors counter of aVCS election"
-            slave_cfg_upd:
-                description:
-                - "vBlade Received Configuration Updates counter of aVCS election"
-            slave_msg_inval:
-                description:
-                - "vBlade Invalid Messages counter of aVCS election"
-            slave_n_recv:
-                description:
-                - "vBlade Received Messages counter of aVCS election"
-            slave_cfg_upd_notif_err:
-                description:
-                - "vBlade Configuration Update Notif Errors counter of aVCS election"
-            slave_keepalive:
-                description:
-                - "vBlade Received Keepalives counter of aVCS election"
             slave_recv_err:
                 description:
                 - "vBlade Receive Errors counter of aVCS election"
-            slave_n_sent:
-                description:
-                - "vBlade Sent Messages counter of aVCS election"
-            vblade_id:
-                description:
-                - "vBlade-id"
+                type: str
             slave_send_err:
                 description:
                 - "vBlade Send Errors counter of aVCS election"
-            slave_cfg_upd_l1_fail:
+                type: str
+            slave_recv_bytes:
                 description:
-                - "vBlade Local Configuration Update Errors (1) counter of aVCS election"
-            slave_cfg_upd_l2_fail:
-                description:
-                - "vBlade Local Configuration Update Errors (2) counter of aVCS election"
+                - "vBlade Received Bytes counter of aVCS election"
+                type: str
             slave_sent_bytes:
                 description:
                 - "vBlade Sent Bytes counter of aVCS election"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            slave_n_recv:
+                description:
+                - "vBlade Received Messages counter of aVCS election"
+                type: str
+            slave_n_sent:
+                description:
+                - "vBlade Sent Messages counter of aVCS election"
+                type: str
+            slave_msg_inval:
+                description:
+                - "vBlade Invalid Messages counter of aVCS election"
+                type: str
+            slave_keepalive:
+                description:
+                - "vBlade Received Keepalives counter of aVCS election"
+                type: str
+            slave_cfg_upd:
+                description:
+                - "vBlade Received Configuration Updates counter of aVCS election"
+                type: str
+            slave_cfg_upd_l1_fail:
+                description:
+                - "vBlade Local Configuration Update Errors (1) counter of aVCS election"
+                type: str
+            slave_cfg_upd_r_fail:
+                description:
+                - "vBlade Remote Configuration Update Errors counter of aVCS election"
+                type: str
+            slave_cfg_upd_l2_fail:
+                description:
+                - "vBlade Local Configuration Update Errors (2) counter of aVCS election"
+                type: str
+            slave_cfg_upd_notif_err:
+                description:
+                - "vBlade Configuration Update Notif Errors counter of aVCS election"
+                type: str
+            slave_cfg_upd_result_err:
+                description:
+                - "vBlade Configuration Update Result Errors counter of aVCS election"
+                type: str
+            vblade_id:
+                description:
+                - "vBlade-id"
+                type: int
 
 '''
 
@@ -161,7 +187,7 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="noop", choices=['noop']),
+        state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
         a10_partition=dict(
             type='dict',
@@ -181,6 +207,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'vblade_id': {
+            'type': 'int',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -196,61 +229,54 @@ def get_argspec():
                 ]
             }
         },
-        'vblade_id': {
-            'type': 'int',
-            'required': True,
-        },
         'stats': {
             'type': 'dict',
+            'slave_recv_err': {
+                'type': 'str',
+            },
+            'slave_send_err': {
+                'type': 'str',
+            },
             'slave_recv_bytes': {
                 'type': 'str',
             },
-            'slave_cfg_upd_r_fail': {
-                'type': 'str',
-            },
-            'slave_cfg_upd_result_err': {
-                'type': 'str',
-            },
-            'slave_cfg_upd': {
-                'type': 'str',
-            },
-            'slave_msg_inval': {
+            'slave_sent_bytes': {
                 'type': 'str',
             },
             'slave_n_recv': {
                 'type': 'str',
             },
-            'slave_cfg_upd_notif_err': {
+            'slave_n_sent': {
+                'type': 'str',
+            },
+            'slave_msg_inval': {
                 'type': 'str',
             },
             'slave_keepalive': {
                 'type': 'str',
             },
-            'slave_recv_err': {
-                'type': 'str',
-            },
-            'slave_n_sent': {
-                'type': 'str',
-            },
-            'vblade_id': {
-                'type': 'int',
-                'required': True,
-            },
-            'slave_send_err': {
+            'slave_cfg_upd': {
                 'type': 'str',
             },
             'slave_cfg_upd_l1_fail': {
                 'type': 'str',
             },
+            'slave_cfg_upd_r_fail': {
+                'type': 'str',
+            },
             'slave_cfg_upd_l2_fail': {
                 'type': 'str',
             },
-            'slave_sent_bytes': {
+            'slave_cfg_upd_notif_err': {
                 'type': 'str',
+            },
+            'slave_cfg_upd_result_err': {
+                'type': 'str',
+            },
+            'vblade_id': {
+                'type': 'int',
+                'required': True,
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv
@@ -303,6 +329,155 @@ def exists(module):
         return None
 
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k, v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        elif isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
+
+def build_envelope(title, data):
+    return {title: data}
+
+
+def new_url(module):
+    """Return the URL for creating a resource"""
+    # To create the URL, we need to take the format string and return it with no params
+    url_base = "/axapi/v3/vcs-vblades/stat/{vblade-id}"
+
+    f_dict = {}
+    f_dict["vblade-id"] = ""
+
+    return url_base.format(**f_dict)
+
+
+def validate(params):
+    # Ensure that params contains all the keys.
+    requires_one_of = sorted([])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
+    errors = []
+    marg = []
+
+    if not len(requires_one_of):
+        return REQUIRED_VALID
+
+    if len(present_keys) == 0:
+        rc, msg = REQUIRED_NOT_SET
+        marg = requires_one_of
+    elif requires_one_of == present_keys:
+        rc, msg = REQUIRED_MUTEX
+        marg = present_keys
+    else:
+        rc, msg = REQUIRED_VALID
+
+    if not rc:
+        errors.append(msg.format(", ".join(marg)))
+
+    return rc, errors
+
+
+def build_json(title, module):
+    rv = {}
+
+    for x in AVAILABLE_PROPERTIES:
+        v = module.params.get(x)
+        if v is not None:
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            elif isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
+
+    return build_envelope(title, rv)
+
+
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["stat"].items():
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+                break
+            else:
+                if existing_config["stat"][k] != v:
+                    if result["changed"] is not True:
+                        result["changed"] = True
+                    existing_config["stat"][k] = v
+            result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+
+def create(module, result, payload):
+    try:
+        post_result = module.client.post(new_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
+
+def update(module, result, existing_config, payload):
+    try:
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
+
+def present(module, result, existing_config):
+    payload = build_json("stat", module)
+    changed_config = report_changes(module, result, existing_config, payload)
+    if module.check_mode:
+        return changed_config
+    elif not existing_config:
+        return create(module, result, payload)
+    elif existing_config and not changed_config.get('changed'):
+        return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
+
+
 def replace(module, result, existing_config, payload):
     try:
         post_result = module.client.put(existing_url(module), payload)
@@ -337,6 +512,18 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        for ve in validation_errors:
+            run_errors.append(ve)
+
+    if not valid:
+        err_msg = "\n".join(run_errors)
+        result["messages"] = "Validation failure: " + str(run_errors)
+        module.fail_json(msg=err_msg, **result)
+
     module.client = client_factory(ansible_host, ansible_port, protocol,
                                    ansible_username, ansible_password)
 
@@ -347,6 +534,9 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
+
+    if state == 'present':
+        result = present(module, result, existing_config)
 
     if state == 'noop':
         if module.params.get("get_type") == "single":

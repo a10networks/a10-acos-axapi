@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_slb_ftp_ctl
 description:
     - Configure FTP
-short_description: Configures A10 slb.ftp-ctl
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -64,39 +75,45 @@ options:
           'alg_port_helper_freed_unused'= PORT helper freed unused;
           'alg_pasv_helper_freed_unused'= PASV helper freed unused;
           'alg_port_helper_nat_free'= PORT helper NAT free;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            alg_pkts_xmitted_num:
-                description:
-                - "ALG packets rexmitted"
-            alg_pasv_helper_freed_unused:
-                description:
-                - "PASV helper freed unused"
-            alg_pasv_helper_created:
-                description:
-                - "Total PASV helper sessions"
-            alg_port_helper_created:
-                description:
-                - "Total PORT helper sessions"
             sessions_num:
                 description:
                 - "Total Control Sessions"
-            alg_port_helper_nat_free:
-                description:
-                - "PORT helper NAT free"
-            alg_port_helper_freed_unused:
-                description:
-                - "PORT helper freed unused"
+                type: str
             alg_pkts_num:
                 description:
                 - "Total ALG packets"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            alg_pkts_xmitted_num:
+                description:
+                - "ALG packets rexmitted"
+                type: str
+            alg_port_helper_created:
+                description:
+                - "Total PORT helper sessions"
+                type: str
+            alg_pasv_helper_created:
+                description:
+                - "Total PASV helper sessions"
+                type: str
+            alg_port_helper_freed_unused:
+                description:
+                - "PORT helper freed unused"
+                type: str
+            alg_pasv_helper_freed_unused:
+                description:
+                - "PASV helper freed unused"
+                type: str
+            alg_port_helper_nat_free:
+                description:
+                - "PORT helper NAT free"
+                type: str
 
 '''
 
@@ -151,6 +168,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -166,33 +186,30 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
+            'sessions_num': {
+                'type': 'str',
+            },
+            'alg_pkts_num': {
+                'type': 'str',
+            },
             'alg_pkts_xmitted_num': {
-                'type': 'str',
-            },
-            'alg_pasv_helper_freed_unused': {
-                'type': 'str',
-            },
-            'alg_pasv_helper_created': {
                 'type': 'str',
             },
             'alg_port_helper_created': {
                 'type': 'str',
             },
-            'sessions_num': {
-                'type': 'str',
-            },
-            'alg_port_helper_nat_free': {
+            'alg_pasv_helper_created': {
                 'type': 'str',
             },
             'alg_port_helper_freed_unused': {
                 'type': 'str',
             },
-            'alg_pkts_num': {
+            'alg_pasv_helper_freed_unused': {
+                'type': 'str',
+            },
+            'alg_port_helper_nat_free': {
                 'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

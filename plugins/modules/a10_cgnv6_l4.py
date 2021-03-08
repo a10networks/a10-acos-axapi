@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_cgnv6_l4
 description:
     - CGNV6 L4 Statistics
-short_description: Configures A10 cgnv6.l4
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,35 +22,48 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        type: str
         required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
+        type: list
         required: False
         suboptions:
             counters1:
@@ -78,9 +89,9 @@ options:
           DS-Lite Fast Setup Attempt; 'dslite-fast-setup-err'= DS-Lite Fast Setup Error;
           'fast-setup-delayed-err'= Fast Setup Delayed Error; 'fast-setup-mtu-too-small'=
           Fast Setup MTU Too Small; 'fixed-nat44-fast-setup'= Fixed NAT Fast Setup
-          Attempt; 'fixed-nat44-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-nat64
-          -fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat64-fast-setup-err'= Fixed
-          NAT Fast Setup Error; 'fixed-nat-dslite-fast-setup'= Fixed NAT Fast Setup
+          Attempt; 'fixed-nat44-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-
+          nat64-fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat64-fast-setup-err'=
+          Fixed NAT Fast Setup Error; 'fixed-nat-dslite-fast-setup'= Fixed NAT Fast Setup
           Attempt; 'fixed-nat-dslite-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-
           nat-fast-setup-delayed-err'= Fixed NAT Fast Setup Delayed Error; 'fixed-nat-
           fast-setup-mtu-too-small'= Fixed NAT Fast Setup MTU Too Small; 'static-nat-
@@ -100,54 +111,65 @@ options:
           rerouting-drop'= Rerouting Zone Mismatch Drop; 'nat-range-list-acl-deny'= Nat
           range-list ACL deny; 'nat-range-list-acl-permit'= Nat range-list ACL permit;
           'fw-next-action-incorrect-drop'= FW Next Action Incorrect Drop;"
+                type: str
     stats:
         description:
         - "Field stats"
+        type: dict
         required: False
         suboptions:
-            no_rev_route:
-                description:
-                - "No Reverse Route for Session"
-            tcp_rst_sent:
-                description:
-                - "TCP RST Sent"
-            ipv6_dst_invalid_unicast:
-                description:
-                - "IPv6 Destination Not Valid Unicast"
-            ipip_icmp_reply_sent:
-                description:
-                - "IPIP ICMP Echo Reply Sent"
-            icmp_filtered_sent:
-                description:
-                - "ICMP Administratively Filtered Sent"
-            ipv6_src_invalid_unicast:
-                description:
-                - "IPv6 Source Not Valid Unicast"
-            out_of_session_memory:
-                description:
-                - "Out of Session Memory"
-            ip_dst_invalid_unicast:
-                description:
-                - "IPv4 Destination Not Valid Unicast"
             no_fwd_route:
                 description:
                 - "No Forward Route for Session"
+                type: str
+            no_rev_route:
+                description:
+                - "No Reverse Route for Session"
+                type: str
+            out_of_session_memory:
+                description:
+                - "Out of Session Memory"
+                type: str
+            tcp_rst_sent:
+                description:
+                - "TCP RST Sent"
+                type: str
+            ipip_icmp_reply_sent:
+                description:
+                - "IPIP ICMP Echo Reply Sent"
+                type: str
+            icmp_filtered_sent:
+                description:
+                - "ICMP Administratively Filtered Sent"
+                type: str
             icmp_host_unreachable_sent:
                 description:
                 - "ICMP Host Unreachable Sent"
-            ip_src_invalid_unicast:
-                description:
-                - "IPv4 Source Not Valid Unicast"
+                type: str
             icmp_reply_no_session_drop:
                 description:
                 - "ICMP Reply No Session Drop"
+                type: str
             ipip_truncated:
                 description:
                 - "IPIP Truncated Packet"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
+                type: str
+            ip_src_invalid_unicast:
+                description:
+                - "IPv4 Source Not Valid Unicast"
+                type: str
+            ip_dst_invalid_unicast:
+                description:
+                - "IPv4 Destination Not Valid Unicast"
+                type: str
+            ipv6_src_invalid_unicast:
+                description:
+                - "IPv6 Source Not Valid Unicast"
+                type: str
+            ipv6_dst_invalid_unicast:
+                description:
+                - "IPv6 Destination Not Valid Unicast"
+                type: str
 
 '''
 
@@ -202,6 +224,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'uuid': {
+            'type': 'str',
+        },
         'sampling_enable': {
             'type': 'list',
             'counters1': {
@@ -248,13 +273,16 @@ def get_argspec():
         },
         'stats': {
             'type': 'dict',
+            'no_fwd_route': {
+                'type': 'str',
+            },
             'no_rev_route': {
                 'type': 'str',
             },
-            'tcp_rst_sent': {
+            'out_of_session_memory': {
                 'type': 'str',
             },
-            'ipv6_dst_invalid_unicast': {
+            'tcp_rst_sent': {
                 'type': 'str',
             },
             'ipip_icmp_reply_sent': {
@@ -263,22 +291,7 @@ def get_argspec():
             'icmp_filtered_sent': {
                 'type': 'str',
             },
-            'ipv6_src_invalid_unicast': {
-                'type': 'str',
-            },
-            'out_of_session_memory': {
-                'type': 'str',
-            },
-            'ip_dst_invalid_unicast': {
-                'type': 'str',
-            },
-            'no_fwd_route': {
-                'type': 'str',
-            },
             'icmp_host_unreachable_sent': {
-                'type': 'str',
-            },
-            'ip_src_invalid_unicast': {
                 'type': 'str',
             },
             'icmp_reply_no_session_drop': {
@@ -286,10 +299,19 @@ def get_argspec():
             },
             'ipip_truncated': {
                 'type': 'str',
+            },
+            'ip_src_invalid_unicast': {
+                'type': 'str',
+            },
+            'ip_dst_invalid_unicast': {
+                'type': 'str',
+            },
+            'ipv6_src_invalid_unicast': {
+                'type': 'str',
+            },
+            'ipv6_dst_invalid_unicast': {
+                'type': 'str',
             }
-        },
-        'uuid': {
-            'type': 'str',
         }
     })
     return rv

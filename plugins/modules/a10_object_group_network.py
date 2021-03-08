@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_object_group_network
 description:
     - Configure Network Object Group
-short_description: Configures A10 object-group.network
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,108 +22,138 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    description:
-        description:
-        - "Description of the object-group instance"
-        required: False
-    rules:
-        description:
-        - "Field rules"
-        required: False
-        suboptions:
-            host_v6:
-                description:
-                - "IPv6 Host Address"
-            subnet:
-                description:
-                - "IPv4 Network Address"
-            host_v4:
-                description:
-                - "IPv4 Host Address"
-            ip_range_end:
-                description:
-                - "IPV4 Host address end"
-            any:
-                description:
-                - "Any host"
-            slb_vserver:
-                description:
-                - "Virtual Server"
-            fw_ipv6_subnet:
-                description:
-                - "IPv6 Network Address"
-            ipv6_subnet:
-                description:
-                - "IPv6 Network Address"
-            seq_num:
-                description:
-                - "Sequence number"
-            obj_network:
-                description:
-                - "Network Object"
-            ipv6_range_end:
-                description:
-                - "IPV6 Host address end"
-            ipv6_range_start:
-                description:
-                - "IPv6 Host Address start"
-            slb_server:
-                description:
-                - "Server"
-            rev_subnet_mask:
-                description:
-                - "Network Mask. 0=apply, 255=ignore"
-            fw_ipv4_address:
-                description:
-                - "IPv4 Network Address"
-            ip_range_start:
-                description:
-                - "IPv4 Host Address start"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    ip_version:
-        description:
-        - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
-        required: False
-    usage:
-        description:
-        - "'acl'= Use for access-lists (default).; 'fw'= Use for Firewall rule-set;"
+        type: str
         required: False
     net_name:
         description:
         - "Network Object Group Name"
+        type: str
         required: True
+    usage:
+        description:
+        - "'acl'= Use for access-lists (default).; 'fw'= Use for Firewall rule-set;"
+        type: str
+        required: False
+    ip_version:
+        description:
+        - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
+        type: str
+        required: False
+    description:
+        description:
+        - "Description of the object-group instance"
+        type: str
+        required: False
+    rules:
+        description:
+        - "Field rules"
+        type: list
+        required: False
+        suboptions:
+            seq_num:
+                description:
+                - "Sequence number"
+                type: int
+            host_v4:
+                description:
+                - "IPv4 Host Address"
+                type: str
+            host_v6:
+                description:
+                - "IPv6 Host Address"
+                type: str
+            ip_range_start:
+                description:
+                - "IPv4 Host Address start"
+                type: str
+            ip_range_end:
+                description:
+                - "IPV4 Host address end"
+                type: str
+            ipv6_range_start:
+                description:
+                - "IPv6 Host Address start"
+                type: str
+            ipv6_range_end:
+                description:
+                - "IPV6 Host address end"
+                type: str
+            any:
+                description:
+                - "Any host"
+                type: bool
+            subnet:
+                description:
+                - "IPv4 Network Address"
+                type: str
+            rev_subnet_mask:
+                description:
+                - "Network Mask. 0=apply, 255=ignore"
+                type: str
+            fw_ipv4_address:
+                description:
+                - "IPv4 Network Address"
+                type: str
+            ipv6_subnet:
+                description:
+                - "IPv6 Network Address"
+                type: str
+            fw_ipv6_subnet:
+                description:
+                - "IPv6 Network Address"
+                type: str
+            obj_network:
+                description:
+                - "Network Object"
+                type: str
+            slb_server:
+                description:
+                - "Server"
+                type: str
+            slb_vserver:
+                description:
+                - "Virtual Server"
+                type: str
     uuid:
         description:
         - "uuid of the object"
+        type: str
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        type: str
         required: False
 
 '''
@@ -185,48 +213,48 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'net_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'usage': {
+            'type': 'str',
+            'choices': ['acl', 'fw']
+        },
+        'ip_version': {
+            'type': 'str',
+            'choices': ['v4', 'v6']
+        },
         'description': {
             'type': 'str',
         },
         'rules': {
             'type': 'list',
+            'seq_num': {
+                'type': 'int',
+            },
+            'host_v4': {
+                'type': 'str',
+            },
             'host_v6': {
                 'type': 'str',
             },
-            'subnet': {
-                'type': 'str',
-            },
-            'host_v4': {
+            'ip_range_start': {
                 'type': 'str',
             },
             'ip_range_end': {
                 'type': 'str',
             },
-            'any': {
-                'type': 'bool',
-            },
-            'slb_vserver': {
-                'type': 'str',
-            },
-            'fw_ipv6_subnet': {
-                'type': 'str',
-            },
-            'ipv6_subnet': {
-                'type': 'str',
-            },
-            'seq_num': {
-                'type': 'int',
-            },
-            'obj_network': {
+            'ipv6_range_start': {
                 'type': 'str',
             },
             'ipv6_range_end': {
                 'type': 'str',
             },
-            'ipv6_range_start': {
-                'type': 'str',
+            'any': {
+                'type': 'bool',
             },
-            'slb_server': {
+            'subnet': {
                 'type': 'str',
             },
             'rev_subnet_mask': {
@@ -235,26 +263,26 @@ def get_argspec():
             'fw_ipv4_address': {
                 'type': 'str',
             },
-            'ip_range_start': {
+            'ipv6_subnet': {
+                'type': 'str',
+            },
+            'fw_ipv6_subnet': {
+                'type': 'str',
+            },
+            'obj_network': {
+                'type': 'str',
+            },
+            'slb_server': {
+                'type': 'str',
+            },
+            'slb_vserver': {
                 'type': 'str',
             }
         },
-        'user_tag': {
-            'type': 'str',
-        },
-        'ip_version': {
-            'type': 'str',
-            'choices': ['v4', 'v6']
-        },
-        'usage': {
-            'type': 'str',
-            'choices': ['acl', 'fw']
-        },
-        'net_name': {
-            'type': 'str',
-            'required': True,
-        },
         'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
             'type': 'str',
         }
     })

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_scaleout_cluster_service_config
 description:
     - Configure scaleout templates for SLB, CGN and VRRP
-short_description: Configures A10 scaleout.cluster.service-config
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -23,58 +21,75 @@ options:
         choices:
           - noop
           - present
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     cluster_id:
         description:
-        - Key to identify parent object    uuid:
+        - Key to identify parent object
+        type: str
+        required: True
+    uuid:
         description:
         - "uuid of the object"
+        type: str
         required: False
     template_list:
         description:
         - "Field template_list"
+        type: list
         required: False
         suboptions:
-            device_group:
-                description:
-                - "Device group id"
-            bucket_count:
-                description:
-                - "Number of traffic buckets"
             name:
                 description:
                 - "Scaleout template Name"
-            user_tag:
+                type: str
+            bucket_count:
                 description:
-                - "Customized tag"
+                - "Number of traffic buckets"
+                type: int
+            device_group:
+                description:
+                - "Device group id"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
 
 '''
 
@@ -131,20 +146,20 @@ def get_argspec():
         },
         'template_list': {
             'type': 'list',
-            'device_group': {
-                'type': 'int',
-            },
-            'bucket_count': {
-                'type': 'int',
-            },
             'name': {
                 'type': 'str',
                 'required': True,
             },
-            'user_tag': {
-                'type': 'str',
+            'bucket_count': {
+                'type': 'int',
+            },
+            'device_group': {
+                'type': 'int',
             },
             'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
                 'type': 'str',
             }
         }

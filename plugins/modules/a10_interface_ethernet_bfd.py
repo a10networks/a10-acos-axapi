@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_interface_ethernet_bfd
 description:
     - Configure BFD (Bidirectional Forwarding Detection)
-short_description: Configures A10 interface.ethernet.bfd
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,78 +22,100 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
+        type: str
         required: False
     ethernet_ifnum:
         description:
-        - Key to identify parent object    interval_cfg:
+        - Key to identify parent object
+        type: str
+        required: True
+    authentication:
+        description:
+        - "Field authentication"
+        type: dict
+        required: False
+        suboptions:
+            key_id:
+                description:
+                - "Key ID"
+                type: int
+            method:
+                description:
+                - "'md5'= Keyed MD5; 'meticulous-md5'= Meticulous Keyed MD5; 'meticulous-sha1'=
+          Meticulous Keyed SHA1; 'sha1'= Keyed SHA1; 'simple'= Simple Password;"
+                type: str
+            password:
+                description:
+                - "Key String"
+                type: str
+            encrypted:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED password string)"
+                type: str
+    echo:
+        description:
+        - "Enable BFD Echo"
+        type: bool
+        required: False
+    demand:
+        description:
+        - "Demand mode"
+        type: bool
+        required: False
+    interval_cfg:
         description:
         - "Field interval_cfg"
+        type: dict
         required: False
         suboptions:
             interval:
                 description:
                 - "Transmit interval between BFD packets (Milliseconds)"
+                type: int
             min_rx:
                 description:
                 - "Minimum receive interval capability (Milliseconds)"
+                type: int
             multiplier:
                 description:
                 - "Multiplier value used to compute holddown (value used to multiply the interval)"
-    authentication:
-        description:
-        - "Field authentication"
-        required: False
-        suboptions:
-            encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
-          ENCRYPTED password string)"
-            password:
-                description:
-                - "Key String"
-            method:
-                description:
-                - "'md5'= Keyed MD5; 'meticulous-md5'= Meticulous Keyed MD5; 'meticulous-sha1'=
-          Meticulous Keyed SHA1; 'sha1'= Keyed SHA1; 'simple'= Simple Password;"
-            key_id:
-                description:
-                - "Key ID"
-    echo:
-        description:
-        - "Enable BFD Echo"
-        required: False
+                type: int
     uuid:
         description:
         - "uuid of the object"
-        required: False
-    demand:
-        description:
-        - "Demand mode"
+        type: str
         required: False
 
 '''
@@ -153,6 +173,30 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'authentication': {
+            'type': 'dict',
+            'key_id': {
+                'type': 'int',
+            },
+            'method': {
+                'type':
+                'str',
+                'choices':
+                ['md5', 'meticulous-md5', 'meticulous-sha1', 'sha1', 'simple']
+            },
+            'password': {
+                'type': 'str',
+            },
+            'encrypted': {
+                'type': 'str',
+            }
+        },
+        'echo': {
+            'type': 'bool',
+        },
+        'demand': {
+            'type': 'bool',
+        },
         'interval_cfg': {
             'type': 'dict',
             'interval': {
@@ -165,32 +209,8 @@ def get_argspec():
                 'type': 'int',
             }
         },
-        'authentication': {
-            'type': 'dict',
-            'encrypted': {
-                'type': 'str',
-            },
-            'password': {
-                'type': 'str',
-            },
-            'method': {
-                'type':
-                'str',
-                'choices':
-                ['md5', 'meticulous-md5', 'meticulous-sha1', 'sha1', 'simple']
-            },
-            'key_id': {
-                'type': 'int',
-            }
-        },
-        'echo': {
-            'type': 'bool',
-        },
         'uuid': {
             'type': 'str',
-        },
-        'demand': {
-            'type': 'bool',
         }
     })
     # Parent keys

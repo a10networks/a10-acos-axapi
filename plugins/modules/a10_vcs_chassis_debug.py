@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright 2018 A10 Networks
+# Copyright 2021 A10 Networks
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -13,9 +13,7 @@ DOCUMENTATION = r'''
 module: a10_vcs_chassis_debug
 description:
     - VCS debug
-short_description: Configures A10 vcs.chassis.debug
-author: A10 Networks 2018
-version_added: 2.4
+author: A10 Networks 2021
 options:
     state:
         description:
@@ -24,91 +22,113 @@ options:
           - noop
           - present
           - absent
+        type: str
         required: True
     ansible_host:
         description:
         - Host for AXAPI authentication
+        type: str
         required: True
     ansible_username:
         description:
         - Username for AXAPI authentication
+        type: str
         required: True
     ansible_password:
         description:
         - Password for AXAPI authentication
+        type: str
         required: True
     ansible_port:
         description:
         - Port for AXAPI authentication
+        type: int
         required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
         choices: [1-8]
+        type: int
         required: False
     a10_partition:
         description:
         - Destination/target partition for object/command
-        required: False
-    info:
-        description:
-        - "Information component"
-        required: False
-    daemon_msg:
-        description:
-        - "Daemon message component"
+        type: str
         required: False
     daemon:
         description:
         - "Daemon component"
-        required: False
-    lib:
-        description:
-        - "Lib component"
-        required: False
-    vblade:
-        description:
-        - "vBlade component"
-        required: False
-    election_pdu:
-        description:
-        - "Election pdu component"
-        required: False
-    util:
-        description:
-        - "Utility component"
-        required: False
-    ssl:
-        description:
-        - "SSL component"
-        required: False
-    handler:
-        description:
-        - "Handler component"
+        type: bool
         required: False
     election:
         description:
         - "Election component"
+        type: bool
         required: False
-    vmaster:
+    info:
         description:
-        - "vMaster component"
+        - "Information component"
+        type: bool
         required: False
-    vblade_msg:
+    daemon_msg:
         description:
-        - "vBlade Message component"
+        - "Daemon message component"
+        type: bool
+        required: False
+    election_pdu:
+        description:
+        - "Election pdu component"
+        type: bool
+        required: False
+    lib:
+        description:
+        - "Lib component"
+        type: bool
+        required: False
+    util:
+        description:
+        - "Utility component"
+        type: bool
+        required: False
+    ssl:
+        description:
+        - "SSL component"
+        type: bool
         required: False
     net:
         description:
         - "Net component"
-        required: False
-    encoder:
-        description:
-        - "Encoder component"
+        type: bool
         required: False
     vmaster_msg:
         description:
         - "vMaster Message component"
+        type: bool
+        required: False
+    vblade_msg:
+        description:
+        - "vBlade Message component"
+        type: bool
+        required: False
+    encoder:
+        description:
+        - "Encoder component"
+        type: bool
+        required: False
+    handler:
+        description:
+        - "Handler component"
+        type: bool
+        required: False
+    vmaster:
+        description:
+        - "vMaster component"
+        type: bool
+        required: False
+    vblade:
+        description:
+        - "vBlade component"
+        type: bool
         required: False
 
 '''
@@ -176,22 +196,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'daemon': {
+            'type': 'bool',
+        },
+        'election': {
+            'type': 'bool',
+        },
         'info': {
             'type': 'bool',
         },
         'daemon_msg': {
             'type': 'bool',
         },
-        'daemon': {
+        'election_pdu': {
             'type': 'bool',
         },
         'lib': {
-            'type': 'bool',
-        },
-        'vblade': {
-            'type': 'bool',
-        },
-        'election_pdu': {
             'type': 'bool',
         },
         'util': {
@@ -200,25 +220,25 @@ def get_argspec():
         'ssl': {
             'type': 'bool',
         },
-        'handler': {
+        'net': {
             'type': 'bool',
         },
-        'election': {
-            'type': 'bool',
-        },
-        'vmaster': {
+        'vmaster_msg': {
             'type': 'bool',
         },
         'vblade_msg': {
             'type': 'bool',
         },
-        'net': {
-            'type': 'bool',
-        },
         'encoder': {
             'type': 'bool',
         },
-        'vmaster_msg': {
+        'handler': {
+            'type': 'bool',
+        },
+        'vmaster': {
+            'type': 'bool',
+        },
+        'vblade': {
             'type': 'bool',
         }
     })
