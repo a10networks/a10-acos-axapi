@@ -365,5 +365,3 @@ Please see (https://github.com/a10networks/a10-acos-axapi/tree/master/examples) 
 
 ## Issues and Inquiries
 For all issues, please send an email to support@a10networks.com 
-
-For general inquiries, please send an email to opensource@a10networks.com
