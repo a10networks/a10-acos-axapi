@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_cgnv6_logging
 description:
@@ -371,25 +372,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "nat_quota_exceeded",
-    "nat_resource_exhausted",
-    "sampling_enable",
-    "source_address",
-    "stats",
-    "tcp_svr_status",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -399,265 +420,38 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["nat_quota_exceeded", "nat_resource_exhausted", "sampling_enable", "source_address", "stats", "tcp_svr_status", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'tcp-session-created', 'tcp-session-deleted',
-                    'tcp-port-allocated', 'tcp-port-freed',
-                    'tcp-port-batch-allocated', 'tcp-port-batch-freed',
-                    'udp-session-created', 'udp-session-deleted',
-                    'udp-port-allocated', 'udp-port-freed',
-                    'udp-port-batch-allocated', 'udp-port-batch-freed',
-                    'icmp-session-created', 'icmp-session-deleted',
-                    'icmp-resource-allocated', 'icmp-resource-freed',
-                    'icmpv6-session-created', 'icmpv6-session-deleted',
-                    'icmpv6-resource-allocated', 'icmpv6-resource-freed',
-                    'gre-session-created', 'gre-session-deleted',
-                    'gre-resource-allocated', 'gre-resource-freed',
-                    'esp-session-created', 'esp-session-deleted',
-                    'esp-resource-allocated', 'esp-resource-freed',
-                    'fixed-nat-user-ports', 'fixed-nat-disable-config-logged',
-                    'fixed-nat-disable-config-logs-sent',
-                    'fixed-nat-periodic-config-logs-sent',
-                    'fixed-nat-periodic-config-logged',
-                    'fixed-nat-interim-updated', 'enhanced-user-log',
-                    'log-sent', 'log-dropped', 'conn-tcp-established',
-                    'conn-tcp-dropped', 'tcp-port-overloading-allocated',
-                    'tcp-port-overloading-freed',
-                    'udp-port-overloading-allocated',
-                    'udp-port-overloading-freed', 'http-request-logged',
-                    'reduced-logs-by-destination', 'out-of-buffers',
-                    'add-msg-failed', 'rtsp-port-allocated', 'rtsp-port-freed',
-                    'conn-tcp-create-failed', 'ipv4-frag-applied',
-                    'ipv4-frag-failed', 'ipv6-frag-applied',
-                    'ipv6-frag-failed', 'interim-update-scheduled',
-                    'interim-update-schedule-failed',
-                    'interim-update-terminated', 'interim-update-memory-freed',
-                    'interim-update-no-buff-retried',
-                    'tcp-port-batch-interim-updated',
-                    'udp-port-batch-interim-updated',
-                    'port-block-accounting-freed',
-                    'port-block-accounting-allocated', 'log-message-too-long',
-                    'http-out-of-order-dropped', 'http-alloc-failed',
-                    'http-frag-merge-failed-dropped', 'http-malloc',
-                    'http-mfree', 'http-spm-alloc-type0',
-                    'http-spm-alloc-type1', 'http-spm-alloc-type2',
-                    'http-spm-alloc-type3', 'http-spm-alloc-type4',
-                    'http-spm-free-type0', 'http-spm-free-type1',
-                    'http-spm-free-type2', 'http-spm-free-type3',
-                    'http-spm-free-type4'
-                ]
-            }
-        },
-        'source_address': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'tcp_svr_status': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'nat_resource_exhausted': {
-            'type': 'dict',
-            'level': {
-                'type': 'str',
-                'choices': ['warning', 'critical', 'notice']
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'nat_quota_exceeded': {
-            'type': 'dict',
-            'level': {
-                'type': 'str',
-                'choices': ['warning', 'critical', 'notice']
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'tcp_session_created': {
-                'type': 'str',
-            },
-            'tcp_session_deleted': {
-                'type': 'str',
-            },
-            'tcp_port_allocated': {
-                'type': 'str',
-            },
-            'tcp_port_freed': {
-                'type': 'str',
-            },
-            'tcp_port_batch_allocated': {
-                'type': 'str',
-            },
-            'tcp_port_batch_freed': {
-                'type': 'str',
-            },
-            'udp_session_created': {
-                'type': 'str',
-            },
-            'udp_session_deleted': {
-                'type': 'str',
-            },
-            'udp_port_allocated': {
-                'type': 'str',
-            },
-            'udp_port_freed': {
-                'type': 'str',
-            },
-            'udp_port_batch_allocated': {
-                'type': 'str',
-            },
-            'udp_port_batch_freed': {
-                'type': 'str',
-            },
-            'icmp_session_created': {
-                'type': 'str',
-            },
-            'icmp_session_deleted': {
-                'type': 'str',
-            },
-            'icmp_resource_allocated': {
-                'type': 'str',
-            },
-            'icmp_resource_freed': {
-                'type': 'str',
-            },
-            'icmpv6_session_created': {
-                'type': 'str',
-            },
-            'icmpv6_session_deleted': {
-                'type': 'str',
-            },
-            'icmpv6_resource_allocated': {
-                'type': 'str',
-            },
-            'icmpv6_resource_freed': {
-                'type': 'str',
-            },
-            'gre_session_created': {
-                'type': 'str',
-            },
-            'gre_session_deleted': {
-                'type': 'str',
-            },
-            'gre_resource_allocated': {
-                'type': 'str',
-            },
-            'gre_resource_freed': {
-                'type': 'str',
-            },
-            'esp_session_created': {
-                'type': 'str',
-            },
-            'esp_session_deleted': {
-                'type': 'str',
-            },
-            'esp_resource_allocated': {
-                'type': 'str',
-            },
-            'esp_resource_freed': {
-                'type': 'str',
-            },
-            'fixed_nat_user_ports': {
-                'type': 'str',
-            },
-            'fixed_nat_disable_config_logged': {
-                'type': 'str',
-            },
-            'fixed_nat_disable_config_logs_sent': {
-                'type': 'str',
-            },
-            'fixed_nat_periodic_config_logs_sent': {
-                'type': 'str',
-            },
-            'fixed_nat_periodic_config_logged': {
-                'type': 'str',
-            },
-            'fixed_nat_interim_updated': {
-                'type': 'str',
-            },
-            'enhanced_user_log': {
-                'type': 'str',
-            },
-            'log_sent': {
-                'type': 'str',
-            },
-            'log_dropped': {
-                'type': 'str',
-            },
-            'conn_tcp_established': {
-                'type': 'str',
-            },
-            'conn_tcp_dropped': {
-                'type': 'str',
-            },
-            'tcp_port_overloading_allocated': {
-                'type': 'str',
-            },
-            'tcp_port_overloading_freed': {
-                'type': 'str',
-            },
-            'udp_port_overloading_allocated': {
-                'type': 'str',
-            },
-            'udp_port_overloading_freed': {
-                'type': 'str',
-            },
-            'http_request_logged': {
-                'type': 'str',
-            },
-            'reduced_logs_by_destination': {
-                'type': 'str',
-            },
-            'tcp_port_batch_interim_updated': {
-                'type': 'str',
-            },
-            'udp_port_batch_interim_updated': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'tcp-session-created', 'tcp-session-deleted', 'tcp-port-allocated', 'tcp-port-freed', 'tcp-port-batch-allocated', 'tcp-port-batch-freed', 'udp-session-created', 'udp-session-deleted', 'udp-port-allocated', 'udp-port-freed', 'udp-port-batch-allocated', 'udp-port-batch-freed', 'icmp-session-created', 'icmp-session-deleted', 'icmp-resource-allocated', 'icmp-resource-freed', 'icmpv6-session-created', 'icmpv6-session-deleted', 'icmpv6-resource-allocated', 'icmpv6-resource-freed', 'gre-session-created', 'gre-session-deleted', 'gre-resource-allocated', 'gre-resource-freed', 'esp-session-created', 'esp-session-deleted', 'esp-resource-allocated', 'esp-resource-freed', 'fixed-nat-user-ports', 'fixed-nat-disable-config-logged', 'fixed-nat-disable-config-logs-sent', 'fixed-nat-periodic-config-logs-sent', 'fixed-nat-periodic-config-logged', 'fixed-nat-interim-updated', 'enhanced-user-log', 'log-sent', 'log-dropped', 'conn-tcp-established', 'conn-tcp-dropped', 'tcp-port-overloading-allocated', 'tcp-port-overloading-freed', 'udp-port-overloading-allocated', 'udp-port-overloading-freed', 'http-request-logged', 'reduced-logs-by-destination', 'out-of-buffers', 'add-msg-failed', 'rtsp-port-allocated', 'rtsp-port-freed', 'conn-tcp-create-failed', 'ipv4-frag-applied', 'ipv4-frag-failed', 'ipv6-frag-applied', 'ipv6-frag-failed', 'interim-update-scheduled', 'interim-update-schedule-failed', 'interim-update-terminated', 'interim-update-memory-freed', 'interim-update-no-buff-retried', 'tcp-port-batch-interim-updated', 'udp-port-batch-interim-updated', 'port-block-accounting-freed', 'port-block-accounting-allocated', 'log-message-too-long', 'http-out-of-order-dropped', 'http-alloc-failed', 'http-frag-merge-failed-dropped', 'http-malloc', 'http-mfree', 'http-spm-alloc-type0', 'http-spm-alloc-type1', 'http-spm-alloc-type2', 'http-spm-alloc-type3', 'http-spm-alloc-type4', 'http-spm-free-type0', 'http-spm-free-type1', 'http-spm-free-type2', 'http-spm-free-type3', 'http-spm-free-type4']}},
+        'source_address': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'tcp_svr_status': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'nat_resource_exhausted': {'type': 'dict', 'level': {'type': 'str', 'choices': ['warning', 'critical', 'notice']}, 'uuid': {'type': 'str', }},
+        'nat_quota_exceeded': {'type': 'dict', 'level': {'type': 'str', 'choices': ['warning', 'critical', 'notice']}, 'uuid': {'type': 'str', }},
+        'stats': {'type': 'dict', 'tcp_session_created': {'type': 'str', }, 'tcp_session_deleted': {'type': 'str', }, 'tcp_port_allocated': {'type': 'str', }, 'tcp_port_freed': {'type': 'str', }, 'tcp_port_batch_allocated': {'type': 'str', }, 'tcp_port_batch_freed': {'type': 'str', }, 'udp_session_created': {'type': 'str', }, 'udp_session_deleted': {'type': 'str', }, 'udp_port_allocated': {'type': 'str', }, 'udp_port_freed': {'type': 'str', }, 'udp_port_batch_allocated': {'type': 'str', }, 'udp_port_batch_freed': {'type': 'str', }, 'icmp_session_created': {'type': 'str', }, 'icmp_session_deleted': {'type': 'str', }, 'icmp_resource_allocated': {'type': 'str', }, 'icmp_resource_freed': {'type': 'str', }, 'icmpv6_session_created': {'type': 'str', }, 'icmpv6_session_deleted': {'type': 'str', }, 'icmpv6_resource_allocated': {'type': 'str', }, 'icmpv6_resource_freed': {'type': 'str', }, 'gre_session_created': {'type': 'str', }, 'gre_session_deleted': {'type': 'str', }, 'gre_resource_allocated': {'type': 'str', }, 'gre_resource_freed': {'type': 'str', }, 'esp_session_created': {'type': 'str', }, 'esp_session_deleted': {'type': 'str', }, 'esp_resource_allocated': {'type': 'str', }, 'esp_resource_freed': {'type': 'str', }, 'fixed_nat_user_ports': {'type': 'str', }, 'fixed_nat_disable_config_logged': {'type': 'str', }, 'fixed_nat_disable_config_logs_sent': {'type': 'str', }, 'fixed_nat_periodic_config_logs_sent': {'type': 'str', }, 'fixed_nat_periodic_config_logged': {'type': 'str', }, 'fixed_nat_interim_updated': {'type': 'str', }, 'enhanced_user_log': {'type': 'str', }, 'log_sent': {'type': 'str', }, 'log_dropped': {'type': 'str', }, 'conn_tcp_established': {'type': 'str', }, 'conn_tcp_dropped': {'type': 'str', }, 'tcp_port_overloading_allocated': {'type': 'str', }, 'tcp_port_overloading_freed': {'type': 'str', }, 'udp_port_overloading_allocated': {'type': 'str', }, 'udp_port_overloading_freed': {'type': 'str', }, 'http_request_logged': {'type': 'str', }, 'reduced_logs_by_destination': {'type': 'str', }, 'tcp_port_batch_interim_updated': {'type': 'str', }, 'udp_port_batch_interim_updated': {'type': 'str', }}
     })
     return rv
 
@@ -684,28 +478,80 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_stats(module):
+    query_params = {}
     if module.params.get("stats"):
-        query_params = {}
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module), params=query_params)
-    return module.client.get(stats_url(module))
+    return _get(module, stats_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -730,7 +576,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -746,9 +594,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -792,32 +638,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["logging"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["logging"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["logging"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["logging"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["logging"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["logging"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -828,12 +673,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -844,21 +690,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("logging", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -870,15 +715,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -898,9 +743,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -917,6 +765,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -927,16 +776,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -946,24 +801,20 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+            result["axapi_calls"].append(get_stats(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_waf_global
 description:
@@ -699,21 +700,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -723,508 +748,34 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'total_req', 'req_allowed', 'req_denied',
-                    'bot_check_succ', 'bot_check_fail',
-                    'form_consistency_succ', 'form_consistency_fail',
-                    'form_csrf_tag_succ', 'form_csrf_tag_fail',
-                    'url_check_succ', 'url_check_fail', 'url_check_learn',
-                    'buf_ovf_url_len_fail', 'buf_ovf_cookie_len_fail',
-                    'buf_ovf_hdrs_len_fail', 'buf_ovf_post_size_fail',
-                    'max_cookies_fail', 'max_hdrs_fail',
-                    'http_method_check_succ', 'http_method_check_fail',
-                    'http_check_succ', 'http_check_fail', 'referer_check_succ',
-                    'referer_check_fail', 'referer_check_redirect',
-                    'uri_wlist_succ', 'uri_wlist_fail', 'uri_blist_succ',
-                    'uri_blist_fail', 'post_form_check_succ',
-                    'post_form_check_sanitize', 'post_form_check_reject',
-                    'ccn_mask_amex', 'ccn_mask_diners', 'ccn_mask_visa',
-                    'ccn_mask_mastercard', 'ccn_mask_discover', 'ccn_mask_jcb',
-                    'ssn_mask', 'pcre_mask', 'cookie_encrypt_succ',
-                    'cookie_encrypt_fail', 'cookie_encrypt_limit_exceeded',
-                    'cookie_encrypt_skip_rcache', 'cookie_decrypt_succ',
-                    'cookie_decrypt_fail', 'sqlia_chk_url_succ',
-                    'sqlia_chk_url_sanitize', 'sqlia_chk_url_reject',
-                    'sqlia_chk_post_succ', 'sqlia_chk_post_sanitize',
-                    'sqlia_chk_post_reject', 'xss_chk_cookie_succ',
-                    'xss_chk_cookie_sanitize', 'xss_chk_cookie_reject',
-                    'xss_chk_url_succ', 'xss_chk_url_sanitize',
-                    'xss_chk_url_reject', 'xss_chk_post_succ',
-                    'xss_chk_post_sanitize', 'xss_chk_post_reject',
-                    'resp_code_hidden', 'resp_hdrs_filtered', 'learn_updates',
-                    'num_drops', 'num_resets', 'form_non_ssl_reject',
-                    'form_non_post_reject', 'sess_check_none',
-                    'sess_check_succ', 'sess_check_fail', 'soap_check_succ',
-                    'soap_check_failure', 'wsdl_fail', 'wsdl_succ',
-                    'xml_schema_fail', 'xml_schema_succ', 'xml_sqlia_chk_fail',
-                    'xml_sqlia_chk_succ', 'xml_xss_chk_fail',
-                    'xml_xss_chk_succ', 'json_check_failure',
-                    'json_check_succ', 'xml_check_failure', 'xml_check_succ',
-                    'buf_ovf_cookie_value_len_fail',
-                    'buf_ovf_cookies_len_fail', 'buf_ovf_hdr_name_len_fail',
-                    'buf_ovf_hdr_value_len_fail',
-                    'buf_ovf_max_data_parse_fail', 'buf_ovf_line_len_fail',
-                    'buf_ovf_parameter_name_len_fail',
-                    'buf_ovf_parameter_value_len_fail',
-                    'buf_ovf_parameter_total_len_fail',
-                    'buf_ovf_query_len_fail', 'max_entities_fail',
-                    'max_parameters_fail', 'buf_ovf_cookie_name_len_fail',
-                    'xml_limit_attr', 'xml_limit_attr_name_len',
-                    'xml_limit_attr_value_len', 'xml_limit_cdata_len',
-                    'xml_limit_elem', 'xml_limit_elem_child',
-                    'xml_limit_elem_depth', 'xml_limit_elem_name_len',
-                    'xml_limit_entity_exp', 'xml_limit_entity_exp_depth',
-                    'xml_limit_namespace', 'xml_limit_namespace_uri_len',
-                    'json_limit_array_value_count', 'json_limit_depth',
-                    'json_limit_object_member_count', 'json_limit_string',
-                    'form_non_masked_password', 'form_non_ssl_password',
-                    'form_password_autocomplete', 'redirect_wlist_succ',
-                    'redirect_wlist_fail', 'redirect_wlist_learn',
-                    'form_set_no_cache', 'resp_denied', 'sessions_alloc',
-                    'sessions_freed', 'out_of_sessions', 'too_many_sessions',
-                    'called', 'permitted', 'brute_force_success',
-                    'brute_force_fail', 'challenge_cookie_sent',
-                    'challenge_javascript_sent', 'challenge_captcha_sent'
-                ]
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'total_req': {
-                'type': 'str',
-            },
-            'req_allowed': {
-                'type': 'str',
-            },
-            'req_denied': {
-                'type': 'str',
-            },
-            'bot_check_succ': {
-                'type': 'str',
-            },
-            'bot_check_fail': {
-                'type': 'str',
-            },
-            'form_consistency_succ': {
-                'type': 'str',
-            },
-            'form_consistency_fail': {
-                'type': 'str',
-            },
-            'form_csrf_tag_succ': {
-                'type': 'str',
-            },
-            'form_csrf_tag_fail': {
-                'type': 'str',
-            },
-            'url_check_succ': {
-                'type': 'str',
-            },
-            'url_check_fail': {
-                'type': 'str',
-            },
-            'url_check_learn': {
-                'type': 'str',
-            },
-            'buf_ovf_url_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_cookie_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_hdrs_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_post_size_fail': {
-                'type': 'str',
-            },
-            'max_cookies_fail': {
-                'type': 'str',
-            },
-            'max_hdrs_fail': {
-                'type': 'str',
-            },
-            'http_method_check_succ': {
-                'type': 'str',
-            },
-            'http_method_check_fail': {
-                'type': 'str',
-            },
-            'http_check_succ': {
-                'type': 'str',
-            },
-            'http_check_fail': {
-                'type': 'str',
-            },
-            'referer_check_succ': {
-                'type': 'str',
-            },
-            'referer_check_fail': {
-                'type': 'str',
-            },
-            'referer_check_redirect': {
-                'type': 'str',
-            },
-            'uri_wlist_succ': {
-                'type': 'str',
-            },
-            'uri_wlist_fail': {
-                'type': 'str',
-            },
-            'uri_blist_succ': {
-                'type': 'str',
-            },
-            'uri_blist_fail': {
-                'type': 'str',
-            },
-            'post_form_check_succ': {
-                'type': 'str',
-            },
-            'post_form_check_sanitize': {
-                'type': 'str',
-            },
-            'post_form_check_reject': {
-                'type': 'str',
-            },
-            'ccn_mask_amex': {
-                'type': 'str',
-            },
-            'ccn_mask_diners': {
-                'type': 'str',
-            },
-            'ccn_mask_visa': {
-                'type': 'str',
-            },
-            'ccn_mask_mastercard': {
-                'type': 'str',
-            },
-            'ccn_mask_discover': {
-                'type': 'str',
-            },
-            'ccn_mask_jcb': {
-                'type': 'str',
-            },
-            'ssn_mask': {
-                'type': 'str',
-            },
-            'pcre_mask': {
-                'type': 'str',
-            },
-            'cookie_encrypt_succ': {
-                'type': 'str',
-            },
-            'cookie_encrypt_fail': {
-                'type': 'str',
-            },
-            'cookie_encrypt_limit_exceeded': {
-                'type': 'str',
-            },
-            'cookie_encrypt_skip_rcache': {
-                'type': 'str',
-            },
-            'cookie_decrypt_succ': {
-                'type': 'str',
-            },
-            'cookie_decrypt_fail': {
-                'type': 'str',
-            },
-            'sqlia_chk_url_succ': {
-                'type': 'str',
-            },
-            'sqlia_chk_url_sanitize': {
-                'type': 'str',
-            },
-            'sqlia_chk_url_reject': {
-                'type': 'str',
-            },
-            'sqlia_chk_post_succ': {
-                'type': 'str',
-            },
-            'sqlia_chk_post_sanitize': {
-                'type': 'str',
-            },
-            'sqlia_chk_post_reject': {
-                'type': 'str',
-            },
-            'xss_chk_cookie_succ': {
-                'type': 'str',
-            },
-            'xss_chk_cookie_sanitize': {
-                'type': 'str',
-            },
-            'xss_chk_cookie_reject': {
-                'type': 'str',
-            },
-            'xss_chk_url_succ': {
-                'type': 'str',
-            },
-            'xss_chk_url_sanitize': {
-                'type': 'str',
-            },
-            'xss_chk_url_reject': {
-                'type': 'str',
-            },
-            'xss_chk_post_succ': {
-                'type': 'str',
-            },
-            'xss_chk_post_sanitize': {
-                'type': 'str',
-            },
-            'xss_chk_post_reject': {
-                'type': 'str',
-            },
-            'resp_code_hidden': {
-                'type': 'str',
-            },
-            'resp_hdrs_filtered': {
-                'type': 'str',
-            },
-            'learn_updates': {
-                'type': 'str',
-            },
-            'num_drops': {
-                'type': 'str',
-            },
-            'num_resets': {
-                'type': 'str',
-            },
-            'form_non_ssl_reject': {
-                'type': 'str',
-            },
-            'form_non_post_reject': {
-                'type': 'str',
-            },
-            'sess_check_none': {
-                'type': 'str',
-            },
-            'sess_check_succ': {
-                'type': 'str',
-            },
-            'sess_check_fail': {
-                'type': 'str',
-            },
-            'soap_check_succ': {
-                'type': 'str',
-            },
-            'soap_check_failure': {
-                'type': 'str',
-            },
-            'wsdl_fail': {
-                'type': 'str',
-            },
-            'wsdl_succ': {
-                'type': 'str',
-            },
-            'xml_schema_fail': {
-                'type': 'str',
-            },
-            'xml_schema_succ': {
-                'type': 'str',
-            },
-            'xml_sqlia_chk_fail': {
-                'type': 'str',
-            },
-            'xml_sqlia_chk_succ': {
-                'type': 'str',
-            },
-            'xml_xss_chk_fail': {
-                'type': 'str',
-            },
-            'xml_xss_chk_succ': {
-                'type': 'str',
-            },
-            'json_check_failure': {
-                'type': 'str',
-            },
-            'json_check_succ': {
-                'type': 'str',
-            },
-            'xml_check_failure': {
-                'type': 'str',
-            },
-            'xml_check_succ': {
-                'type': 'str',
-            },
-            'buf_ovf_cookie_value_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_cookies_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_hdr_name_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_hdr_value_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_max_data_parse_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_line_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_name_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_value_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_parameter_total_len_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_query_len_fail': {
-                'type': 'str',
-            },
-            'max_entities_fail': {
-                'type': 'str',
-            },
-            'max_parameters_fail': {
-                'type': 'str',
-            },
-            'buf_ovf_cookie_name_len_fail': {
-                'type': 'str',
-            },
-            'xml_limit_attr': {
-                'type': 'str',
-            },
-            'xml_limit_attr_name_len': {
-                'type': 'str',
-            },
-            'xml_limit_attr_value_len': {
-                'type': 'str',
-            },
-            'xml_limit_cdata_len': {
-                'type': 'str',
-            },
-            'xml_limit_elem': {
-                'type': 'str',
-            },
-            'xml_limit_elem_child': {
-                'type': 'str',
-            },
-            'xml_limit_elem_depth': {
-                'type': 'str',
-            },
-            'xml_limit_elem_name_len': {
-                'type': 'str',
-            },
-            'xml_limit_entity_exp': {
-                'type': 'str',
-            },
-            'xml_limit_entity_exp_depth': {
-                'type': 'str',
-            },
-            'xml_limit_namespace': {
-                'type': 'str',
-            },
-            'xml_limit_namespace_uri_len': {
-                'type': 'str',
-            },
-            'json_limit_array_value_count': {
-                'type': 'str',
-            },
-            'json_limit_depth': {
-                'type': 'str',
-            },
-            'json_limit_object_member_count': {
-                'type': 'str',
-            },
-            'json_limit_string': {
-                'type': 'str',
-            },
-            'form_non_masked_password': {
-                'type': 'str',
-            },
-            'form_non_ssl_password': {
-                'type': 'str',
-            },
-            'form_password_autocomplete': {
-                'type': 'str',
-            },
-            'redirect_wlist_succ': {
-                'type': 'str',
-            },
-            'redirect_wlist_fail': {
-                'type': 'str',
-            },
-            'redirect_wlist_learn': {
-                'type': 'str',
-            },
-            'form_set_no_cache': {
-                'type': 'str',
-            },
-            'resp_denied': {
-                'type': 'str',
-            },
-            'sessions_alloc': {
-                'type': 'str',
-            },
-            'sessions_freed': {
-                'type': 'str',
-            },
-            'out_of_sessions': {
-                'type': 'str',
-            },
-            'too_many_sessions': {
-                'type': 'str',
-            },
-            'called': {
-                'type': 'str',
-            },
-            'permitted': {
-                'type': 'str',
-            },
-            'brute_force_success': {
-                'type': 'str',
-            },
-            'brute_force_fail': {
-                'type': 'str',
-            },
-            'challenge_cookie_sent': {
-                'type': 'str',
-            },
-            'challenge_javascript_sent': {
-                'type': 'str',
-            },
-            'challenge_captcha_sent': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'total_req', 'req_allowed', 'req_denied', 'bot_check_succ', 'bot_check_fail', 'form_consistency_succ', 'form_consistency_fail', 'form_csrf_tag_succ', 'form_csrf_tag_fail', 'url_check_succ', 'url_check_fail', 'url_check_learn', 'buf_ovf_url_len_fail', 'buf_ovf_cookie_len_fail', 'buf_ovf_hdrs_len_fail', 'buf_ovf_post_size_fail', 'max_cookies_fail', 'max_hdrs_fail', 'http_method_check_succ', 'http_method_check_fail', 'http_check_succ', 'http_check_fail', 'referer_check_succ', 'referer_check_fail', 'referer_check_redirect', 'uri_wlist_succ', 'uri_wlist_fail', 'uri_blist_succ', 'uri_blist_fail', 'post_form_check_succ', 'post_form_check_sanitize', 'post_form_check_reject', 'ccn_mask_amex', 'ccn_mask_diners', 'ccn_mask_visa', 'ccn_mask_mastercard', 'ccn_mask_discover', 'ccn_mask_jcb', 'ssn_mask', 'pcre_mask', 'cookie_encrypt_succ', 'cookie_encrypt_fail', 'cookie_encrypt_limit_exceeded', 'cookie_encrypt_skip_rcache', 'cookie_decrypt_succ', 'cookie_decrypt_fail', 'sqlia_chk_url_succ', 'sqlia_chk_url_sanitize', 'sqlia_chk_url_reject', 'sqlia_chk_post_succ', 'sqlia_chk_post_sanitize', 'sqlia_chk_post_reject', 'xss_chk_cookie_succ', 'xss_chk_cookie_sanitize', 'xss_chk_cookie_reject', 'xss_chk_url_succ', 'xss_chk_url_sanitize', 'xss_chk_url_reject', 'xss_chk_post_succ', 'xss_chk_post_sanitize', 'xss_chk_post_reject', 'resp_code_hidden', 'resp_hdrs_filtered', 'learn_updates', 'num_drops', 'num_resets', 'form_non_ssl_reject', 'form_non_post_reject', 'sess_check_none', 'sess_check_succ', 'sess_check_fail', 'soap_check_succ', 'soap_check_failure', 'wsdl_fail', 'wsdl_succ', 'xml_schema_fail', 'xml_schema_succ', 'xml_sqlia_chk_fail', 'xml_sqlia_chk_succ', 'xml_xss_chk_fail', 'xml_xss_chk_succ', 'json_check_failure', 'json_check_succ', 'xml_check_failure', 'xml_check_succ', 'buf_ovf_cookie_value_len_fail', 'buf_ovf_cookies_len_fail', 'buf_ovf_hdr_name_len_fail', 'buf_ovf_hdr_value_len_fail', 'buf_ovf_max_data_parse_fail', 'buf_ovf_line_len_fail', 'buf_ovf_parameter_name_len_fail', 'buf_ovf_parameter_value_len_fail', 'buf_ovf_parameter_total_len_fail', 'buf_ovf_query_len_fail', 'max_entities_fail', 'max_parameters_fail', 'buf_ovf_cookie_name_len_fail', 'xml_limit_attr', 'xml_limit_attr_name_len', 'xml_limit_attr_value_len', 'xml_limit_cdata_len', 'xml_limit_elem', 'xml_limit_elem_child', 'xml_limit_elem_depth', 'xml_limit_elem_name_len', 'xml_limit_entity_exp', 'xml_limit_entity_exp_depth', 'xml_limit_namespace', 'xml_limit_namespace_uri_len', 'json_limit_array_value_count', 'json_limit_depth', 'json_limit_object_member_count', 'json_limit_string', 'form_non_masked_password', 'form_non_ssl_password', 'form_password_autocomplete', 'redirect_wlist_succ', 'redirect_wlist_fail', 'redirect_wlist_learn', 'form_set_no_cache', 'resp_denied', 'sessions_alloc', 'sessions_freed', 'out_of_sessions', 'too_many_sessions', 'called', 'permitted', 'brute_force_success', 'brute_force_fail', 'challenge_cookie_sent', 'challenge_javascript_sent', 'challenge_captcha_sent']}},
+        'stats': {'type': 'dict', 'total_req': {'type': 'str', }, 'req_allowed': {'type': 'str', }, 'req_denied': {'type': 'str', }, 'bot_check_succ': {'type': 'str', }, 'bot_check_fail': {'type': 'str', }, 'form_consistency_succ': {'type': 'str', }, 'form_consistency_fail': {'type': 'str', }, 'form_csrf_tag_succ': {'type': 'str', }, 'form_csrf_tag_fail': {'type': 'str', }, 'url_check_succ': {'type': 'str', }, 'url_check_fail': {'type': 'str', }, 'url_check_learn': {'type': 'str', }, 'buf_ovf_url_len_fail': {'type': 'str', }, 'buf_ovf_cookie_len_fail': {'type': 'str', }, 'buf_ovf_hdrs_len_fail': {'type': 'str', }, 'buf_ovf_post_size_fail': {'type': 'str', }, 'max_cookies_fail': {'type': 'str', }, 'max_hdrs_fail': {'type': 'str', }, 'http_method_check_succ': {'type': 'str', }, 'http_method_check_fail': {'type': 'str', }, 'http_check_succ': {'type': 'str', }, 'http_check_fail': {'type': 'str', }, 'referer_check_succ': {'type': 'str', }, 'referer_check_fail': {'type': 'str', }, 'referer_check_redirect': {'type': 'str', }, 'uri_wlist_succ': {'type': 'str', }, 'uri_wlist_fail': {'type': 'str', }, 'uri_blist_succ': {'type': 'str', }, 'uri_blist_fail': {'type': 'str', }, 'post_form_check_succ': {'type': 'str', }, 'post_form_check_sanitize': {'type': 'str', }, 'post_form_check_reject': {'type': 'str', }, 'ccn_mask_amex': {'type': 'str', }, 'ccn_mask_diners': {'type': 'str', }, 'ccn_mask_visa': {'type': 'str', }, 'ccn_mask_mastercard': {'type': 'str', }, 'ccn_mask_discover': {'type': 'str', }, 'ccn_mask_jcb': {'type': 'str', }, 'ssn_mask': {'type': 'str', }, 'pcre_mask': {'type': 'str', }, 'cookie_encrypt_succ': {'type': 'str', }, 'cookie_encrypt_fail': {'type': 'str', }, 'cookie_encrypt_limit_exceeded': {'type': 'str', }, 'cookie_encrypt_skip_rcache': {'type': 'str', }, 'cookie_decrypt_succ': {'type': 'str', }, 'cookie_decrypt_fail': {'type': 'str', }, 'sqlia_chk_url_succ': {'type': 'str', }, 'sqlia_chk_url_sanitize': {'type': 'str', }, 'sqlia_chk_url_reject': {'type': 'str', }, 'sqlia_chk_post_succ': {'type': 'str', }, 'sqlia_chk_post_sanitize': {'type': 'str', }, 'sqlia_chk_post_reject': {'type': 'str', }, 'xss_chk_cookie_succ': {'type': 'str', }, 'xss_chk_cookie_sanitize': {'type': 'str', }, 'xss_chk_cookie_reject': {'type': 'str', }, 'xss_chk_url_succ': {'type': 'str', }, 'xss_chk_url_sanitize': {'type': 'str', }, 'xss_chk_url_reject': {'type': 'str', }, 'xss_chk_post_succ': {'type': 'str', }, 'xss_chk_post_sanitize': {'type': 'str', }, 'xss_chk_post_reject': {'type': 'str', }, 'resp_code_hidden': {'type': 'str', }, 'resp_hdrs_filtered': {'type': 'str', }, 'learn_updates': {'type': 'str', }, 'num_drops': {'type': 'str', }, 'num_resets': {'type': 'str', }, 'form_non_ssl_reject': {'type': 'str', }, 'form_non_post_reject': {'type': 'str', }, 'sess_check_none': {'type': 'str', }, 'sess_check_succ': {'type': 'str', }, 'sess_check_fail': {'type': 'str', }, 'soap_check_succ': {'type': 'str', }, 'soap_check_failure': {'type': 'str', }, 'wsdl_fail': {'type': 'str', }, 'wsdl_succ': {'type': 'str', }, 'xml_schema_fail': {'type': 'str', }, 'xml_schema_succ': {'type': 'str', }, 'xml_sqlia_chk_fail': {'type': 'str', }, 'xml_sqlia_chk_succ': {'type': 'str', }, 'xml_xss_chk_fail': {'type': 'str', }, 'xml_xss_chk_succ': {'type': 'str', }, 'json_check_failure': {'type': 'str', }, 'json_check_succ': {'type': 'str', }, 'xml_check_failure': {'type': 'str', }, 'xml_check_succ': {'type': 'str', }, 'buf_ovf_cookie_value_len_fail': {'type': 'str', }, 'buf_ovf_cookies_len_fail': {'type': 'str', }, 'buf_ovf_hdr_name_len_fail': {'type': 'str', }, 'buf_ovf_hdr_value_len_fail': {'type': 'str', }, 'buf_ovf_max_data_parse_fail': {'type': 'str', }, 'buf_ovf_line_len_fail': {'type': 'str', }, 'buf_ovf_parameter_name_len_fail': {'type': 'str', }, 'buf_ovf_parameter_value_len_fail': {'type': 'str', }, 'buf_ovf_parameter_total_len_fail': {'type': 'str', }, 'buf_ovf_query_len_fail': {'type': 'str', }, 'max_entities_fail': {'type': 'str', }, 'max_parameters_fail': {'type': 'str', }, 'buf_ovf_cookie_name_len_fail': {'type': 'str', }, 'xml_limit_attr': {'type': 'str', }, 'xml_limit_attr_name_len': {'type': 'str', }, 'xml_limit_attr_value_len': {'type': 'str', }, 'xml_limit_cdata_len': {'type': 'str', }, 'xml_limit_elem': {'type': 'str', }, 'xml_limit_elem_child': {'type': 'str', }, 'xml_limit_elem_depth': {'type': 'str', }, 'xml_limit_elem_name_len': {'type': 'str', }, 'xml_limit_entity_exp': {'type': 'str', }, 'xml_limit_entity_exp_depth': {'type': 'str', }, 'xml_limit_namespace': {'type': 'str', }, 'xml_limit_namespace_uri_len': {'type': 'str', }, 'json_limit_array_value_count': {'type': 'str', }, 'json_limit_depth': {'type': 'str', }, 'json_limit_object_member_count': {'type': 'str', }, 'json_limit_string': {'type': 'str', }, 'form_non_masked_password': {'type': 'str', }, 'form_non_ssl_password': {'type': 'str', }, 'form_password_autocomplete': {'type': 'str', }, 'redirect_wlist_succ': {'type': 'str', }, 'redirect_wlist_fail': {'type': 'str', }, 'redirect_wlist_learn': {'type': 'str', }, 'form_set_no_cache': {'type': 'str', }, 'resp_denied': {'type': 'str', }, 'sessions_alloc': {'type': 'str', }, 'sessions_freed': {'type': 'str', }, 'out_of_sessions': {'type': 'str', }, 'too_many_sessions': {'type': 'str', }, 'called': {'type': 'str', }, 'permitted': {'type': 'str', }, 'brute_force_success': {'type': 'str', }, 'brute_force_fail': {'type': 'str', }, 'challenge_cookie_sent': {'type': 'str', }, 'challenge_javascript_sent': {'type': 'str', }, 'challenge_captcha_sent': {'type': 'str', }}
     })
     return rv
 
@@ -1251,28 +802,80 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_stats(module):
+    query_params = {}
     if module.params.get("stats"):
-        query_params = {}
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module), params=query_params)
-    return module.client.get(stats_url(module))
+    return _get(module, stats_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -1297,7 +900,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -1313,9 +918,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -1359,32 +962,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["global"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["global"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["global"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["global"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["global"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["global"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1395,12 +997,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1411,21 +1014,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("global", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -1437,15 +1039,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -1465,9 +1067,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1484,6 +1089,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -1494,16 +1100,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -1513,24 +1125,20 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+            result["axapi_calls"].append(get_stats(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

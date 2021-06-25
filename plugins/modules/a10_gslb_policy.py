@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_gslb_policy
 description:
@@ -668,58 +669,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "active_rdt",
-    "active_servers_enable",
-    "active_servers_fail_break",
-    "admin_ip_enable",
-    "admin_ip_top_only",
-    "admin_preference",
-    "alias_admin_preference",
-    "amount_first",
-    "auto_map",
-    "bw_cost_enable",
-    "bw_cost_fail_break",
-    "capacity",
-    "connection_load",
-    "dns",
-    "edns",
-    "geo_location_list",
-    "geo_location_match",
-    "geographic",
-    "health_check",
-    "health_check_preference_enable",
-    "health_preference_top",
-    "ip_list",
-    "least_response",
-    "metric_fail_break",
-    "metric_force_check",
-    "metric_order",
-    "metric_type",
-    "name",
-    "num_session_enable",
-    "num_session_tolerance",
-    "oper",
-    "ordered_ip_top_only",
-    "round_robin",
-    "user_tag",
-    "uuid",
-    "weighted_alias",
-    "weighted_ip_enable",
-    "weighted_ip_total_hits",
-    "weighted_site_enable",
-    "weighted_site_total_hits",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -729,511 +717,71 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["active_rdt", "active_servers_enable", "active_servers_fail_break", "admin_ip_enable", "admin_ip_top_only", "admin_preference", "alias_admin_preference", "amount_first", "auto_map", "bw_cost_enable", "bw_cost_fail_break", "capacity", "connection_load", "dns", "edns", "geo_location_list", "geo_location_match", "geographic", "health_check", "health_check_preference_enable", "health_preference_top", "ip_list", "least_response", "metric_fail_break", "metric_force_check", "metric_order", "metric_type", "name", "num_session_enable", "num_session_tolerance", "oper", "ordered_ip_top_only", "round_robin", "user_tag", "uuid", "weighted_alias", "weighted_ip_enable", "weighted_ip_total_hits", "weighted_site_enable", "weighted_site_total_hits", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'health_check': {
-            'type': 'bool',
-        },
-        'health_check_preference_enable': {
-            'type': 'bool',
-        },
-        'health_preference_top': {
-            'type': 'int',
-        },
-        'amount_first': {
-            'type': 'bool',
-        },
-        'weighted_ip_enable': {
-            'type': 'bool',
-        },
-        'weighted_ip_total_hits': {
-            'type': 'bool',
-        },
-        'weighted_site_enable': {
-            'type': 'bool',
-        },
-        'weighted_site_total_hits': {
-            'type': 'bool',
-        },
-        'weighted_alias': {
-            'type': 'bool',
-        },
-        'active_servers_enable': {
-            'type': 'bool',
-        },
-        'active_servers_fail_break': {
-            'type': 'bool',
-        },
-        'bw_cost_enable': {
-            'type': 'bool',
-        },
-        'bw_cost_fail_break': {
-            'type': 'bool',
-        },
-        'geographic': {
-            'type': 'bool',
-        },
-        'num_session_enable': {
-            'type': 'bool',
-        },
-        'num_session_tolerance': {
-            'type': 'int',
-        },
-        'admin_preference': {
-            'type': 'bool',
-        },
-        'alias_admin_preference': {
-            'type': 'bool',
-        },
-        'least_response': {
-            'type': 'bool',
-        },
-        'admin_ip_enable': {
-            'type': 'bool',
-        },
-        'admin_ip_top_only': {
-            'type': 'bool',
-        },
-        'ordered_ip_top_only': {
-            'type': 'bool',
-        },
-        'round_robin': {
-            'type': 'bool',
-        },
-        'metric_force_check': {
-            'type': 'bool',
-        },
-        'metric_fail_break': {
-            'type': 'bool',
-        },
-        'ip_list': {
-            'type': 'str',
-        },
-        'metric_order': {
-            'type': 'bool',
-        },
-        'metric_type': {
-            'type':
-            'str',
-            'choices': [
-                'health-check', 'weighted-ip', 'weighted-site', 'capacity',
-                'active-servers', 'active-rdt', 'geographic',
-                'connection-load', 'num-session', 'admin-preference',
-                'bw-cost', 'least-response', 'admin-ip'
-            ]
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'capacity': {
-            'type': 'dict',
-            'capacity_enable': {
-                'type': 'bool',
-            },
-            'threshold': {
-                'type': 'int',
-            },
-            'capacity_fail_break': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'connection_load': {
-            'type': 'dict',
-            'connection_load_enable': {
-                'type': 'bool',
-            },
-            'connection_load_fail_break': {
-                'type': 'bool',
-            },
-            'connection_load_samples': {
-                'type': 'int',
-            },
-            'connection_load_interval': {
-                'type': 'int',
-            },
-            'limit': {
-                'type': 'bool',
-            },
-            'connection_load_limit': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'dns': {
-            'type': 'dict',
-            'action': {
-                'type': 'bool',
-            },
-            'active_only': {
-                'type': 'bool',
-            },
-            'active_only_fail_safe': {
-                'type': 'bool',
-            },
-            'dns_addition_mx': {
-                'type': 'bool',
-            },
-            'dns_auto_map': {
-                'type': 'bool',
-            },
-            'backup_alias': {
-                'type': 'bool',
-            },
-            'backup_server': {
-                'type': 'bool',
-            },
-            'external_ip': {
-                'type': 'bool',
-            },
-            'external_soa': {
-                'type': 'bool',
-            },
-            'cname_detect': {
-                'type': 'bool',
-            },
-            'ip_replace': {
-                'type': 'bool',
-            },
-            'geoloc_alias': {
-                'type': 'bool',
-            },
-            'geoloc_action': {
-                'type': 'bool',
-            },
-            'geoloc_policy': {
-                'type': 'bool',
-            },
-            'selected_only': {
-                'type': 'bool',
-            },
-            'selected_only_value': {
-                'type': 'int',
-            },
-            'cache': {
-                'type': 'bool',
-            },
-            'aging_time': {
-                'type': 'int',
-            },
-            'delegation': {
-                'type': 'bool',
-            },
-            'hint': {
-                'type': 'str',
-                'choices': ['none', 'answer', 'addition']
-            },
-            'logging': {
-                'type': 'str',
-                'choices': ['none', 'query', 'response', 'both']
-            },
-            'template': {
-                'type': 'str',
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'use_server_ttl': {
-                'type': 'bool',
-            },
-            'server': {
-                'type': 'bool',
-            },
-            'server_srv': {
-                'type': 'bool',
-            },
-            'server_mx': {
-                'type': 'bool',
-            },
-            'server_naptr': {
-                'type': 'bool',
-            },
-            'server_addition_mx': {
-                'type': 'bool',
-            },
-            'server_ns': {
-                'type': 'bool',
-            },
-            'server_auto_ns': {
-                'type': 'bool',
-            },
-            'server_ptr': {
-                'type': 'bool',
-            },
-            'server_auto_ptr': {
-                'type': 'bool',
-            },
-            'server_txt': {
-                'type': 'bool',
-            },
-            'server_any': {
-                'type': 'bool',
-            },
-            'server_any_with_metric': {
-                'type': 'bool',
-            },
-            'server_authoritative': {
-                'type': 'bool',
-            },
-            'server_sec': {
-                'type': 'bool',
-            },
-            'server_ns_list': {
-                'type': 'bool',
-            },
-            'server_full_list': {
-                'type': 'bool',
-            },
-            'server_mode_only': {
-                'type': 'bool',
-            },
-            'server_cname': {
-                'type': 'bool',
-            },
-            'ipv6': {
-                'type': 'list',
-                'dns_ipv6_option': {
-                    'type': 'str',
-                    'choices': ['mix', 'smart', 'mapping']
-                },
-                'dns_ipv6_mapping_type': {
-                    'type': 'str',
-                    'choices': ['addition', 'answer', 'exclusive', 'replace']
-                }
-            },
-            'block_action': {
-                'type': 'bool',
-            },
-            'action_type': {
-                'type': 'str',
-                'choices': ['drop', 'reject', 'ignore']
-            },
-            'proxy_block_port_range_list': {
-                'type': 'list',
-                'proxy_block_range_from': {
-                    'type': 'int',
-                },
-                'proxy_block_range_to': {
-                    'type': 'int',
-                }
-            },
-            'block_value': {
-                'type': 'list',
-                'block_value': {
-                    'type': 'int',
-                }
-            },
-            'block_type': {
-                'type':
-                'str',
-                'choices':
-                ['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']
-            },
-            'sticky': {
-                'type': 'bool',
-            },
-            'sticky_mask': {
-                'type': 'str',
-            },
-            'sticky_ipv6_mask': {
-                'type': 'int',
-            },
-            'sticky_aging_time': {
-                'type': 'int',
-            },
-            'dynamic_preference': {
-                'type': 'bool',
-            },
-            'dynamic_weight': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'geo_location_list': {
-            'type': 'list',
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'ip_multiple_fields': {
-                'type': 'list',
-                'ip_sub': {
-                    'type': 'str',
-                },
-                'ip_mask_sub': {
-                    'type': 'str',
-                },
-                'ip_addr2_sub': {
-                    'type': 'str',
-                }
-            },
-            'ipv6_multiple_fields': {
-                'type': 'list',
-                'ipv6_sub': {
-                    'type': 'str',
-                },
-                'ipv6_mask_sub': {
-                    'type': 'int',
-                },
-                'ipv6_addr2_sub': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            }
-        },
-        'geo_location_match': {
-            'type': 'dict',
-            'overlap': {
-                'type': 'bool',
-            },
-            'geo_type_overlap': {
-                'type': 'str',
-                'choices': ['global', 'policy']
-            },
-            'match_first': {
-                'type': 'str',
-                'choices': ['global', 'policy']
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'active_rdt': {
-            'type': 'dict',
-            'enable': {
-                'type': 'bool',
-            },
-            'single_shot': {
-                'type': 'bool',
-            },
-            'timeout': {
-                'type': 'int',
-            },
-            'skip': {
-                'type': 'int',
-            },
-            'keep_tracking': {
-                'type': 'bool',
-            },
-            'ignore_id': {
-                'type': 'int',
-            },
-            'samples': {
-                'type': 'int',
-            },
-            'tolerance': {
-                'type': 'int',
-            },
-            'difference': {
-                'type': 'int',
-            },
-            'limit': {
-                'type': 'int',
-            },
-            'fail_break': {
-                'type': 'bool',
-            },
-            'controller': {
-                'type': 'bool',
-            },
-            'proto_rdt_enable': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'auto_map': {
-            'type': 'dict',
-            'ttl': {
-                'type': 'int',
-            },
-            'module_disable': {
-                'type': 'bool',
-            },
-            'all': {
-                'type': 'bool',
-            },
-            'module_type': {
-                'type':
-                'str',
-                'choices': [
-                    'slb-virtual-server', 'slb-device', 'slb-server',
-                    'gslb-service-ip', 'gslb-site', 'gslb-group', 'hostname'
-                ]
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'edns': {
-            'type': 'dict',
-            'client_subnet_geographic': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'metric_list': {
-                'type': 'list',
-                'ntype': {
-                    'type': 'str',
-                },
-                'order': {
-                    'type': 'int',
-                }
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
-        }
+    rv.update({'name': {'type': 'str', 'required': True, },
+        'health_check': {'type': 'bool', },
+        'health_check_preference_enable': {'type': 'bool', },
+        'health_preference_top': {'type': 'int', },
+        'amount_first': {'type': 'bool', },
+        'weighted_ip_enable': {'type': 'bool', },
+        'weighted_ip_total_hits': {'type': 'bool', },
+        'weighted_site_enable': {'type': 'bool', },
+        'weighted_site_total_hits': {'type': 'bool', },
+        'weighted_alias': {'type': 'bool', },
+        'active_servers_enable': {'type': 'bool', },
+        'active_servers_fail_break': {'type': 'bool', },
+        'bw_cost_enable': {'type': 'bool', },
+        'bw_cost_fail_break': {'type': 'bool', },
+        'geographic': {'type': 'bool', },
+        'num_session_enable': {'type': 'bool', },
+        'num_session_tolerance': {'type': 'int', },
+        'admin_preference': {'type': 'bool', },
+        'alias_admin_preference': {'type': 'bool', },
+        'least_response': {'type': 'bool', },
+        'admin_ip_enable': {'type': 'bool', },
+        'admin_ip_top_only': {'type': 'bool', },
+        'ordered_ip_top_only': {'type': 'bool', },
+        'round_robin': {'type': 'bool', },
+        'metric_force_check': {'type': 'bool', },
+        'metric_fail_break': {'type': 'bool', },
+        'ip_list': {'type': 'str', },
+        'metric_order': {'type': 'bool', },
+        'metric_type': {'type': 'str', 'choices': ['health-check', 'weighted-ip', 'weighted-site', 'capacity', 'active-servers', 'active-rdt', 'geographic', 'connection-load', 'num-session', 'admin-preference', 'bw-cost', 'least-response', 'admin-ip']},
+        'uuid': {'type': 'str', },
+        'user_tag': {'type': 'str', },
+        'capacity': {'type': 'dict', 'capacity_enable': {'type': 'bool', }, 'threshold': {'type': 'int', }, 'capacity_fail_break': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'connection_load': {'type': 'dict', 'connection_load_enable': {'type': 'bool', }, 'connection_load_fail_break': {'type': 'bool', }, 'connection_load_samples': {'type': 'int', }, 'connection_load_interval': {'type': 'int', }, 'limit': {'type': 'bool', }, 'connection_load_limit': {'type': 'int', }, 'uuid': {'type': 'str', }},
+        'dns': {'type': 'dict', 'action': {'type': 'bool', }, 'active_only': {'type': 'bool', }, 'active_only_fail_safe': {'type': 'bool', }, 'dns_addition_mx': {'type': 'bool', }, 'dns_auto_map': {'type': 'bool', }, 'backup_alias': {'type': 'bool', }, 'backup_server': {'type': 'bool', }, 'external_ip': {'type': 'bool', }, 'external_soa': {'type': 'bool', }, 'cname_detect': {'type': 'bool', }, 'ip_replace': {'type': 'bool', }, 'geoloc_alias': {'type': 'bool', }, 'geoloc_action': {'type': 'bool', }, 'geoloc_policy': {'type': 'bool', }, 'selected_only': {'type': 'bool', }, 'selected_only_value': {'type': 'int', }, 'cache': {'type': 'bool', }, 'aging_time': {'type': 'int', }, 'delegation': {'type': 'bool', }, 'hint': {'type': 'str', 'choices': ['none', 'answer', 'addition']}, 'logging': {'type': 'str', 'choices': ['none', 'query', 'response', 'both']}, 'template': {'type': 'str', }, 'ttl': {'type': 'int', }, 'use_server_ttl': {'type': 'bool', }, 'server': {'type': 'bool', }, 'server_srv': {'type': 'bool', }, 'server_mx': {'type': 'bool', }, 'server_naptr': {'type': 'bool', }, 'server_addition_mx': {'type': 'bool', }, 'server_ns': {'type': 'bool', }, 'server_auto_ns': {'type': 'bool', }, 'server_ptr': {'type': 'bool', }, 'server_auto_ptr': {'type': 'bool', }, 'server_txt': {'type': 'bool', }, 'server_any': {'type': 'bool', }, 'server_any_with_metric': {'type': 'bool', }, 'server_authoritative': {'type': 'bool', }, 'server_sec': {'type': 'bool', }, 'server_ns_list': {'type': 'bool', }, 'server_full_list': {'type': 'bool', }, 'server_mode_only': {'type': 'bool', }, 'server_cname': {'type': 'bool', }, 'ipv6': {'type': 'list', 'dns_ipv6_option': {'type': 'str', 'choices': ['mix', 'smart', 'mapping']}, 'dns_ipv6_mapping_type': {'type': 'str', 'choices': ['addition', 'answer', 'exclusive', 'replace']}}, 'block_action': {'type': 'bool', }, 'action_type': {'type': 'str', 'choices': ['drop', 'reject', 'ignore']}, 'proxy_block_port_range_list': {'type': 'list', 'proxy_block_range_from': {'type': 'int', }, 'proxy_block_range_to': {'type': 'int', }}, 'block_value': {'type': 'list', 'block_value': {'type': 'int', }}, 'block_type': {'type': 'str', 'choices': ['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']}, 'sticky': {'type': 'bool', }, 'sticky_mask': {'type': 'str', }, 'sticky_ipv6_mask': {'type': 'int', }, 'sticky_aging_time': {'type': 'int', }, 'dynamic_preference': {'type': 'bool', }, 'dynamic_weight': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'geo_location_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'ip_multiple_fields': {'type': 'list', 'ip_sub': {'type': 'str', }, 'ip_mask_sub': {'type': 'str', }, 'ip_addr2_sub': {'type': 'str', }}, 'ipv6_multiple_fields': {'type': 'list', 'ipv6_sub': {'type': 'str', }, 'ipv6_mask_sub': {'type': 'int', }, 'ipv6_addr2_sub': {'type': 'str', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }},
+        'geo_location_match': {'type': 'dict', 'overlap': {'type': 'bool', }, 'geo_type_overlap': {'type': 'str', 'choices': ['global', 'policy']}, 'match_first': {'type': 'str', 'choices': ['global', 'policy']}, 'uuid': {'type': 'str', }},
+        'active_rdt': {'type': 'dict', 'enable': {'type': 'bool', }, 'single_shot': {'type': 'bool', }, 'timeout': {'type': 'int', }, 'skip': {'type': 'int', }, 'keep_tracking': {'type': 'bool', }, 'ignore_id': {'type': 'int', }, 'samples': {'type': 'int', }, 'tolerance': {'type': 'int', }, 'difference': {'type': 'int', }, 'limit': {'type': 'int', }, 'fail_break': {'type': 'bool', }, 'controller': {'type': 'bool', }, 'proto_rdt_enable': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'auto_map': {'type': 'dict', 'ttl': {'type': 'int', }, 'module_disable': {'type': 'bool', }, 'all': {'type': 'bool', }, 'module_type': {'type': 'str', 'choices': ['slb-virtual-server', 'slb-device', 'slb-server', 'gslb-service-ip', 'gslb-site', 'gslb-group', 'hostname']}, 'uuid': {'type': 'str', }},
+        'edns': {'type': 'dict', 'client_subnet_geographic': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'oper': {'type': 'dict', 'metric_list': {'type': 'list', 'ntype': {'type': 'str', }, 'order': {'type': 'int', }}, 'name': {'type': 'str', 'required': True, }}
     })
     return rv
 
@@ -1261,28 +809,80 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -1307,7 +907,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -1324,9 +926,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -1370,32 +970,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["policy"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["policy"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["policy"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["policy"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["policy"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["policy"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1406,12 +1005,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1422,21 +1022,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("policy", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -1448,15 +1047,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -1476,9 +1075,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1495,6 +1097,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -1505,16 +1108,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -1524,24 +1133,20 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

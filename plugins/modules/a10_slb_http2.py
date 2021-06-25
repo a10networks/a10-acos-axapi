@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_http2
 description:
@@ -609,22 +610,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -634,774 +658,35 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'curr_proxy', 'total_proxy',
-                    'connection_preface_rcvd', 'control_frame',
-                    'headers_frame', 'continuation_frame', 'rst_frame_rcvd',
-                    'settings_frame', 'window_update_frame', 'ping_frame',
-                    'goaway_frame', 'priority_frame', 'data_frame',
-                    'unknown_frame', 'connection_preface_sent',
-                    'settings_frame_sent', 'settings_ack_sent',
-                    'empty_settings_sent', 'ping_frame_sent',
-                    'window_update_frame_sent', 'rst_frame_sent',
-                    'goaway_frame_sent', 'header_to_app', 'data_to_app',
-                    'protocol_error', 'internal_error', 'proxy_alloc_error',
-                    'split_buff_fail', 'invalid_frame_size',
-                    'error_max_invalid_stream', 'data_no_stream',
-                    'flow_control_error', 'settings_timeout',
-                    'frame_size_error', 'refused_stream', 'cancel',
-                    'compression_error', 'connect_error', 'enhance_your_calm',
-                    'inadequate_security', 'http_1_1_required',
-                    'deflate_alloc_fail', 'inflate_alloc_fail',
-                    'inflate_header_fail', 'bad_connection_preface',
-                    'cant_allocate_control_frame',
-                    'cant_allocate_settings_frame',
-                    'bad_frame_type_for_stream_state', 'wrong_stream_state',
-                    'data_queue_alloc_error', 'buff_alloc_error',
-                    'cant_allocate_rst_frame', 'cant_allocate_goaway_frame',
-                    'cant_allocate_ping_frame', 'cant_allocate_stream',
-                    'cant_allocate_window_frame', 'header_no_stream',
-                    'header_padlen_gt_frame_payload',
-                    'streams_gt_max_concur_streams',
-                    'idle_state_unexpected_frame',
-                    'reserved_local_state_unexpected_frame',
-                    'reserved_remote_state_unexpected_frame',
-                    'half_closed_remote_state_unexpected_frame',
-                    'closed_state_unexpected_frame',
-                    'zero_window_size_on_stream',
-                    'exceeds_max_window_size_stream', 'stream_closed',
-                    'continuation_before_headers',
-                    'invalid_frame_during_headers',
-                    'headers_after_continuation', 'invalid_push_promise',
-                    'invalid_stream_id', 'headers_interleaved',
-                    'trailers_no_end_stream', 'invalid_setting_value',
-                    'invalid_window_update', 'frame_header_bytes_received',
-                    'frame_header_bytes_sent', 'control_bytes_received',
-                    'control_bytes_sent', 'header_bytes_received',
-                    'header_bytes_sent', 'data_bytes_received',
-                    'data_bytes_sent', 'total_bytes_received',
-                    'total_bytes_sent', 'peak_proxy', 'control_frame_sent',
-                    'continuation_frame_sent', 'data_frame_sent',
-                    'headers_frame_sent', 'priority_frame_sent',
-                    'settings_ack_rcvd', 'empty_settings_rcvd',
-                    'alloc_fail_total', 'err_rcvd_total', 'err_sent_total',
-                    'err_sent_proto_err', 'err_sent_internal_err',
-                    'err_sent_flow_control', 'err_sent_setting_timeout',
-                    'err_sent_stream_closed', 'err_sent_frame_size_err',
-                    'err_sent_refused_stream', 'err_sent_cancel',
-                    'err_sent_compression_err', 'err_sent_connect_err',
-                    'err_sent_your_calm', 'err_sent_inadequate_security',
-                    'err_sent_http11_required'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'http2_cpu_list': {
-                'type': 'list',
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'peak_proxy': {
-                    'type': 'int',
-                },
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'connection_preface_rcvd': {
-                    'type': 'int',
-                },
-                'connection_preface_sent': {
-                    'type': 'int',
-                },
-                'control_frame': {
-                    'type': 'int',
-                },
-                'control_frame_sent': {
-                    'type': 'int',
-                },
-                'continuation_frame': {
-                    'type': 'int',
-                },
-                'continuation_frame_sent': {
-                    'type': 'int',
-                },
-                'data_frame': {
-                    'type': 'int',
-                },
-                'data_frame_sent': {
-                    'type': 'int',
-                },
-                'data_to_app': {
-                    'type': 'int',
-                },
-                'goaway_frame': {
-                    'type': 'int',
-                },
-                'goaway_frame_sent': {
-                    'type': 'int',
-                },
-                'headers_frame': {
-                    'type': 'int',
-                },
-                'headers_frame_sent': {
-                    'type': 'int',
-                },
-                'header_to_app': {
-                    'type': 'int',
-                },
-                'ping_frame': {
-                    'type': 'int',
-                },
-                'ping_frame_sent': {
-                    'type': 'int',
-                },
-                'priority_frame': {
-                    'type': 'int',
-                },
-                'priority_frame_sent': {
-                    'type': 'int',
-                },
-                'rst_frame_rcvd': {
-                    'type': 'int',
-                },
-                'rst_frame_sent': {
-                    'type': 'int',
-                },
-                'settings_frame': {
-                    'type': 'int',
-                },
-                'settings_frame_sent': {
-                    'type': 'int',
-                },
-                'settings_ack_rcvd': {
-                    'type': 'int',
-                },
-                'settings_ack_sent': {
-                    'type': 'int',
-                },
-                'empty_settings_rcvd': {
-                    'type': 'int',
-                },
-                'empty_settings_sent': {
-                    'type': 'int',
-                },
-                'window_update_frame': {
-                    'type': 'int',
-                },
-                'window_update_frame_sent': {
-                    'type': 'int',
-                },
-                'unknown_frame': {
-                    'type': 'int',
-                },
-                'split_buff_fail': {
-                    'type': 'int',
-                },
-                'invalid_frame_size': {
-                    'type': 'int',
-                },
-                'error_max_invalid_stream': {
-                    'type': 'int',
-                },
-                'data_no_stream': {
-                    'type': 'int',
-                },
-                'bad_connection_preface': {
-                    'type': 'int',
-                },
-                'bad_frame_type_for_stream_state': {
-                    'type': 'int',
-                },
-                'wrong_stream_state': {
-                    'type': 'int',
-                },
-                'alloc_fail_total': {
-                    'type': 'int',
-                },
-                'proxy_alloc_error': {
-                    'type': 'int',
-                },
-                'deflate_alloc_fail': {
-                    'type': 'int',
-                },
-                'inflate_alloc_fail': {
-                    'type': 'int',
-                },
-                'data_queue_alloc_error': {
-                    'type': 'int',
-                },
-                'buff_alloc_error': {
-                    'type': 'int',
-                },
-                'cant_allocate_control_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_settings_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_rst_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_goaway_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_ping_frame': {
-                    'type': 'int',
-                },
-                'cant_allocate_stream': {
-                    'type': 'int',
-                },
-                'cant_allocate_window_frame': {
-                    'type': 'int',
-                },
-                'inflate_header_fail': {
-                    'type': 'int',
-                },
-                'header_no_stream': {
-                    'type': 'int',
-                },
-                'header_padlen_gt_frame_payload': {
-                    'type': 'int',
-                },
-                'streams_gt_max_concur_streams': {
-                    'type': 'int',
-                },
-                'idle_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'reserved_local_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'reserved_remote_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'half_closed_remote_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'closed_state_unexpected_frame': {
-                    'type': 'int',
-                },
-                'zero_window_size_on_stream': {
-                    'type': 'int',
-                },
-                'exceeds_max_window_size_stream': {
-                    'type': 'int',
-                },
-                'continuation_before_headers': {
-                    'type': 'int',
-                },
-                'invalid_frame_during_headers': {
-                    'type': 'int',
-                },
-                'headers_after_continuation': {
-                    'type': 'int',
-                },
-                'invalid_push_promise': {
-                    'type': 'int',
-                },
-                'invalid_stream_id': {
-                    'type': 'int',
-                },
-                'headers_interleaved': {
-                    'type': 'int',
-                },
-                'trailers_no_end_stream': {
-                    'type': 'int',
-                },
-                'invalid_setting_value': {
-                    'type': 'int',
-                },
-                'invalid_window_update': {
-                    'type': 'int',
-                },
-                'err_rcvd_total': {
-                    'type': 'int',
-                },
-                'protocol_error': {
-                    'type': 'int',
-                },
-                'internal_error': {
-                    'type': 'int',
-                },
-                'flow_control_error': {
-                    'type': 'int',
-                },
-                'settings_timeout': {
-                    'type': 'int',
-                },
-                'stream_closed': {
-                    'type': 'int',
-                },
-                'frame_size_error': {
-                    'type': 'int',
-                },
-                'refused_stream': {
-                    'type': 'int',
-                },
-                'cancel': {
-                    'type': 'int',
-                },
-                'compression_error': {
-                    'type': 'int',
-                },
-                'connect_error': {
-                    'type': 'int',
-                },
-                'enhance_your_calm': {
-                    'type': 'int',
-                },
-                'inadequate_security': {
-                    'type': 'int',
-                },
-                'http_1_1_required': {
-                    'type': 'int',
-                },
-                'err_sent_total': {
-                    'type': 'int',
-                },
-                'err_sent_proto_err': {
-                    'type': 'int',
-                },
-                'err_sent_internal_err': {
-                    'type': 'int',
-                },
-                'err_sent_flow_control': {
-                    'type': 'int',
-                },
-                'err_sent_setting_timeout': {
-                    'type': 'int',
-                },
-                'err_sent_stream_closed': {
-                    'type': 'int',
-                },
-                'err_sent_frame_size_err': {
-                    'type': 'int',
-                },
-                'err_sent_refused_stream': {
-                    'type': 'int',
-                },
-                'err_sent_cancel': {
-                    'type': 'int',
-                },
-                'err_sent_compression_err': {
-                    'type': 'int',
-                },
-                'err_sent_connect_err': {
-                    'type': 'int',
-                },
-                'err_sent_your_calm': {
-                    'type': 'int',
-                },
-                'err_sent_inadequate_security': {
-                    'type': 'int',
-                },
-                'err_sent_http11_required': {
-                    'type': 'int',
-                },
-                'frame_header_bytes_received': {
-                    'type': 'int',
-                },
-                'frame_header_bytes_sent': {
-                    'type': 'int',
-                },
-                'control_bytes_received': {
-                    'type': 'int',
-                },
-                'control_bytes_sent': {
-                    'type': 'int',
-                },
-                'header_bytes_received': {
-                    'type': 'int',
-                },
-                'header_bytes_sent': {
-                    'type': 'int',
-                },
-                'data_bytes_received': {
-                    'type': 'int',
-                },
-                'data_bytes_sent': {
-                    'type': 'int',
-                },
-                'total_bytes_received': {
-                    'type': 'int',
-                },
-                'total_bytes_sent': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'curr_proxy': {
-                'type': 'str',
-            },
-            'total_proxy': {
-                'type': 'str',
-            },
-            'connection_preface_rcvd': {
-                'type': 'str',
-            },
-            'control_frame': {
-                'type': 'str',
-            },
-            'headers_frame': {
-                'type': 'str',
-            },
-            'continuation_frame': {
-                'type': 'str',
-            },
-            'rst_frame_rcvd': {
-                'type': 'str',
-            },
-            'settings_frame': {
-                'type': 'str',
-            },
-            'window_update_frame': {
-                'type': 'str',
-            },
-            'ping_frame': {
-                'type': 'str',
-            },
-            'goaway_frame': {
-                'type': 'str',
-            },
-            'priority_frame': {
-                'type': 'str',
-            },
-            'data_frame': {
-                'type': 'str',
-            },
-            'unknown_frame': {
-                'type': 'str',
-            },
-            'connection_preface_sent': {
-                'type': 'str',
-            },
-            'settings_frame_sent': {
-                'type': 'str',
-            },
-            'settings_ack_sent': {
-                'type': 'str',
-            },
-            'empty_settings_sent': {
-                'type': 'str',
-            },
-            'ping_frame_sent': {
-                'type': 'str',
-            },
-            'window_update_frame_sent': {
-                'type': 'str',
-            },
-            'rst_frame_sent': {
-                'type': 'str',
-            },
-            'goaway_frame_sent': {
-                'type': 'str',
-            },
-            'header_to_app': {
-                'type': 'str',
-            },
-            'data_to_app': {
-                'type': 'str',
-            },
-            'protocol_error': {
-                'type': 'str',
-            },
-            'internal_error': {
-                'type': 'str',
-            },
-            'proxy_alloc_error': {
-                'type': 'str',
-            },
-            'split_buff_fail': {
-                'type': 'str',
-            },
-            'invalid_frame_size': {
-                'type': 'str',
-            },
-            'error_max_invalid_stream': {
-                'type': 'str',
-            },
-            'data_no_stream': {
-                'type': 'str',
-            },
-            'flow_control_error': {
-                'type': 'str',
-            },
-            'settings_timeout': {
-                'type': 'str',
-            },
-            'frame_size_error': {
-                'type': 'str',
-            },
-            'refused_stream': {
-                'type': 'str',
-            },
-            'cancel': {
-                'type': 'str',
-            },
-            'compression_error': {
-                'type': 'str',
-            },
-            'connect_error': {
-                'type': 'str',
-            },
-            'enhance_your_calm': {
-                'type': 'str',
-            },
-            'inadequate_security': {
-                'type': 'str',
-            },
-            'http_1_1_required': {
-                'type': 'str',
-            },
-            'deflate_alloc_fail': {
-                'type': 'str',
-            },
-            'inflate_alloc_fail': {
-                'type': 'str',
-            },
-            'inflate_header_fail': {
-                'type': 'str',
-            },
-            'bad_connection_preface': {
-                'type': 'str',
-            },
-            'cant_allocate_control_frame': {
-                'type': 'str',
-            },
-            'cant_allocate_settings_frame': {
-                'type': 'str',
-            },
-            'bad_frame_type_for_stream_state': {
-                'type': 'str',
-            },
-            'wrong_stream_state': {
-                'type': 'str',
-            },
-            'data_queue_alloc_error': {
-                'type': 'str',
-            },
-            'buff_alloc_error': {
-                'type': 'str',
-            },
-            'cant_allocate_rst_frame': {
-                'type': 'str',
-            },
-            'cant_allocate_goaway_frame': {
-                'type': 'str',
-            },
-            'cant_allocate_ping_frame': {
-                'type': 'str',
-            },
-            'cant_allocate_stream': {
-                'type': 'str',
-            },
-            'cant_allocate_window_frame': {
-                'type': 'str',
-            },
-            'header_no_stream': {
-                'type': 'str',
-            },
-            'header_padlen_gt_frame_payload': {
-                'type': 'str',
-            },
-            'streams_gt_max_concur_streams': {
-                'type': 'str',
-            },
-            'idle_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'reserved_local_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'reserved_remote_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'half_closed_remote_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'closed_state_unexpected_frame': {
-                'type': 'str',
-            },
-            'zero_window_size_on_stream': {
-                'type': 'str',
-            },
-            'exceeds_max_window_size_stream': {
-                'type': 'str',
-            },
-            'stream_closed': {
-                'type': 'str',
-            },
-            'continuation_before_headers': {
-                'type': 'str',
-            },
-            'invalid_frame_during_headers': {
-                'type': 'str',
-            },
-            'headers_after_continuation': {
-                'type': 'str',
-            },
-            'invalid_push_promise': {
-                'type': 'str',
-            },
-            'invalid_stream_id': {
-                'type': 'str',
-            },
-            'headers_interleaved': {
-                'type': 'str',
-            },
-            'trailers_no_end_stream': {
-                'type': 'str',
-            },
-            'invalid_setting_value': {
-                'type': 'str',
-            },
-            'invalid_window_update': {
-                'type': 'str',
-            },
-            'frame_header_bytes_received': {
-                'type': 'str',
-            },
-            'frame_header_bytes_sent': {
-                'type': 'str',
-            },
-            'control_bytes_received': {
-                'type': 'str',
-            },
-            'control_bytes_sent': {
-                'type': 'str',
-            },
-            'header_bytes_received': {
-                'type': 'str',
-            },
-            'header_bytes_sent': {
-                'type': 'str',
-            },
-            'data_bytes_received': {
-                'type': 'str',
-            },
-            'data_bytes_sent': {
-                'type': 'str',
-            },
-            'total_bytes_received': {
-                'type': 'str',
-            },
-            'total_bytes_sent': {
-                'type': 'str',
-            },
-            'peak_proxy': {
-                'type': 'str',
-            },
-            'control_frame_sent': {
-                'type': 'str',
-            },
-            'continuation_frame_sent': {
-                'type': 'str',
-            },
-            'data_frame_sent': {
-                'type': 'str',
-            },
-            'headers_frame_sent': {
-                'type': 'str',
-            },
-            'priority_frame_sent': {
-                'type': 'str',
-            },
-            'settings_ack_rcvd': {
-                'type': 'str',
-            },
-            'empty_settings_rcvd': {
-                'type': 'str',
-            },
-            'alloc_fail_total': {
-                'type': 'str',
-            },
-            'err_rcvd_total': {
-                'type': 'str',
-            },
-            'err_sent_total': {
-                'type': 'str',
-            },
-            'err_sent_proto_err': {
-                'type': 'str',
-            },
-            'err_sent_internal_err': {
-                'type': 'str',
-            },
-            'err_sent_flow_control': {
-                'type': 'str',
-            },
-            'err_sent_setting_timeout': {
-                'type': 'str',
-            },
-            'err_sent_stream_closed': {
-                'type': 'str',
-            },
-            'err_sent_frame_size_err': {
-                'type': 'str',
-            },
-            'err_sent_refused_stream': {
-                'type': 'str',
-            },
-            'err_sent_cancel': {
-                'type': 'str',
-            },
-            'err_sent_compression_err': {
-                'type': 'str',
-            },
-            'err_sent_connect_err': {
-                'type': 'str',
-            },
-            'err_sent_your_calm': {
-                'type': 'str',
-            },
-            'err_sent_inadequate_security': {
-                'type': 'str',
-            },
-            'err_sent_http11_required': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'curr_proxy', 'total_proxy', 'connection_preface_rcvd', 'control_frame', 'headers_frame', 'continuation_frame', 'rst_frame_rcvd', 'settings_frame', 'window_update_frame', 'ping_frame', 'goaway_frame', 'priority_frame', 'data_frame', 'unknown_frame', 'connection_preface_sent', 'settings_frame_sent', 'settings_ack_sent', 'empty_settings_sent', 'ping_frame_sent', 'window_update_frame_sent', 'rst_frame_sent', 'goaway_frame_sent', 'header_to_app', 'data_to_app', 'protocol_error', 'internal_error', 'proxy_alloc_error', 'split_buff_fail', 'invalid_frame_size', 'error_max_invalid_stream', 'data_no_stream', 'flow_control_error', 'settings_timeout', 'frame_size_error', 'refused_stream', 'cancel', 'compression_error', 'connect_error', 'enhance_your_calm', 'inadequate_security', 'http_1_1_required', 'deflate_alloc_fail', 'inflate_alloc_fail', 'inflate_header_fail', 'bad_connection_preface', 'cant_allocate_control_frame', 'cant_allocate_settings_frame', 'bad_frame_type_for_stream_state', 'wrong_stream_state', 'data_queue_alloc_error', 'buff_alloc_error', 'cant_allocate_rst_frame', 'cant_allocate_goaway_frame', 'cant_allocate_ping_frame', 'cant_allocate_stream', 'cant_allocate_window_frame', 'header_no_stream', 'header_padlen_gt_frame_payload', 'streams_gt_max_concur_streams', 'idle_state_unexpected_frame', 'reserved_local_state_unexpected_frame', 'reserved_remote_state_unexpected_frame', 'half_closed_remote_state_unexpected_frame', 'closed_state_unexpected_frame', 'zero_window_size_on_stream', 'exceeds_max_window_size_stream', 'stream_closed', 'continuation_before_headers', 'invalid_frame_during_headers', 'headers_after_continuation', 'invalid_push_promise', 'invalid_stream_id', 'headers_interleaved', 'trailers_no_end_stream', 'invalid_setting_value', 'invalid_window_update', 'frame_header_bytes_received', 'frame_header_bytes_sent', 'control_bytes_received', 'control_bytes_sent', 'header_bytes_received', 'header_bytes_sent', 'data_bytes_received', 'data_bytes_sent', 'total_bytes_received', 'total_bytes_sent', 'peak_proxy', 'control_frame_sent', 'continuation_frame_sent', 'data_frame_sent', 'headers_frame_sent', 'priority_frame_sent', 'settings_ack_rcvd', 'empty_settings_rcvd', 'alloc_fail_total', 'err_rcvd_total', 'err_sent_total', 'err_sent_proto_err', 'err_sent_internal_err', 'err_sent_flow_control', 'err_sent_setting_timeout', 'err_sent_stream_closed', 'err_sent_frame_size_err', 'err_sent_refused_stream', 'err_sent_cancel', 'err_sent_compression_err', 'err_sent_connect_err', 'err_sent_your_calm', 'err_sent_inadequate_security', 'err_sent_http11_required']}},
+        'oper': {'type': 'dict', 'http2_cpu_list': {'type': 'list', 'curr_proxy': {'type': 'int', }, 'peak_proxy': {'type': 'int', }, 'total_proxy': {'type': 'int', }, 'connection_preface_rcvd': {'type': 'int', }, 'connection_preface_sent': {'type': 'int', }, 'control_frame': {'type': 'int', }, 'control_frame_sent': {'type': 'int', }, 'continuation_frame': {'type': 'int', }, 'continuation_frame_sent': {'type': 'int', }, 'data_frame': {'type': 'int', }, 'data_frame_sent': {'type': 'int', }, 'data_to_app': {'type': 'int', }, 'goaway_frame': {'type': 'int', }, 'goaway_frame_sent': {'type': 'int', }, 'headers_frame': {'type': 'int', }, 'headers_frame_sent': {'type': 'int', }, 'header_to_app': {'type': 'int', }, 'ping_frame': {'type': 'int', }, 'ping_frame_sent': {'type': 'int', }, 'priority_frame': {'type': 'int', }, 'priority_frame_sent': {'type': 'int', }, 'rst_frame_rcvd': {'type': 'int', }, 'rst_frame_sent': {'type': 'int', }, 'settings_frame': {'type': 'int', }, 'settings_frame_sent': {'type': 'int', }, 'settings_ack_rcvd': {'type': 'int', }, 'settings_ack_sent': {'type': 'int', }, 'empty_settings_rcvd': {'type': 'int', }, 'empty_settings_sent': {'type': 'int', }, 'window_update_frame': {'type': 'int', }, 'window_update_frame_sent': {'type': 'int', }, 'unknown_frame': {'type': 'int', }, 'split_buff_fail': {'type': 'int', }, 'invalid_frame_size': {'type': 'int', }, 'error_max_invalid_stream': {'type': 'int', }, 'data_no_stream': {'type': 'int', }, 'bad_connection_preface': {'type': 'int', }, 'bad_frame_type_for_stream_state': {'type': 'int', }, 'wrong_stream_state': {'type': 'int', }, 'alloc_fail_total': {'type': 'int', }, 'proxy_alloc_error': {'type': 'int', }, 'deflate_alloc_fail': {'type': 'int', }, 'inflate_alloc_fail': {'type': 'int', }, 'data_queue_alloc_error': {'type': 'int', }, 'buff_alloc_error': {'type': 'int', }, 'cant_allocate_control_frame': {'type': 'int', }, 'cant_allocate_settings_frame': {'type': 'int', }, 'cant_allocate_rst_frame': {'type': 'int', }, 'cant_allocate_goaway_frame': {'type': 'int', }, 'cant_allocate_ping_frame': {'type': 'int', }, 'cant_allocate_stream': {'type': 'int', }, 'cant_allocate_window_frame': {'type': 'int', }, 'inflate_header_fail': {'type': 'int', }, 'header_no_stream': {'type': 'int', }, 'header_padlen_gt_frame_payload': {'type': 'int', }, 'streams_gt_max_concur_streams': {'type': 'int', }, 'idle_state_unexpected_frame': {'type': 'int', }, 'reserved_local_state_unexpected_frame': {'type': 'int', }, 'reserved_remote_state_unexpected_frame': {'type': 'int', }, 'half_closed_remote_state_unexpected_frame': {'type': 'int', }, 'closed_state_unexpected_frame': {'type': 'int', }, 'zero_window_size_on_stream': {'type': 'int', }, 'exceeds_max_window_size_stream': {'type': 'int', }, 'continuation_before_headers': {'type': 'int', }, 'invalid_frame_during_headers': {'type': 'int', }, 'headers_after_continuation': {'type': 'int', }, 'invalid_push_promise': {'type': 'int', }, 'invalid_stream_id': {'type': 'int', }, 'headers_interleaved': {'type': 'int', }, 'trailers_no_end_stream': {'type': 'int', }, 'invalid_setting_value': {'type': 'int', }, 'invalid_window_update': {'type': 'int', }, 'err_rcvd_total': {'type': 'int', }, 'protocol_error': {'type': 'int', }, 'internal_error': {'type': 'int', }, 'flow_control_error': {'type': 'int', }, 'settings_timeout': {'type': 'int', }, 'stream_closed': {'type': 'int', }, 'frame_size_error': {'type': 'int', }, 'refused_stream': {'type': 'int', }, 'cancel': {'type': 'int', }, 'compression_error': {'type': 'int', }, 'connect_error': {'type': 'int', }, 'enhance_your_calm': {'type': 'int', }, 'inadequate_security': {'type': 'int', }, 'http_1_1_required': {'type': 'int', }, 'err_sent_total': {'type': 'int', }, 'err_sent_proto_err': {'type': 'int', }, 'err_sent_internal_err': {'type': 'int', }, 'err_sent_flow_control': {'type': 'int', }, 'err_sent_setting_timeout': {'type': 'int', }, 'err_sent_stream_closed': {'type': 'int', }, 'err_sent_frame_size_err': {'type': 'int', }, 'err_sent_refused_stream': {'type': 'int', }, 'err_sent_cancel': {'type': 'int', }, 'err_sent_compression_err': {'type': 'int', }, 'err_sent_connect_err': {'type': 'int', }, 'err_sent_your_calm': {'type': 'int', }, 'err_sent_inadequate_security': {'type': 'int', }, 'err_sent_http11_required': {'type': 'int', }, 'frame_header_bytes_received': {'type': 'int', }, 'frame_header_bytes_sent': {'type': 'int', }, 'control_bytes_received': {'type': 'int', }, 'control_bytes_sent': {'type': 'int', }, 'header_bytes_received': {'type': 'int', }, 'header_bytes_sent': {'type': 'int', }, 'data_bytes_received': {'type': 'int', }, 'data_bytes_sent': {'type': 'int', }, 'total_bytes_received': {'type': 'int', }, 'total_bytes_sent': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
+        'stats': {'type': 'dict', 'curr_proxy': {'type': 'str', }, 'total_proxy': {'type': 'str', }, 'connection_preface_rcvd': {'type': 'str', }, 'control_frame': {'type': 'str', }, 'headers_frame': {'type': 'str', }, 'continuation_frame': {'type': 'str', }, 'rst_frame_rcvd': {'type': 'str', }, 'settings_frame': {'type': 'str', }, 'window_update_frame': {'type': 'str', }, 'ping_frame': {'type': 'str', }, 'goaway_frame': {'type': 'str', }, 'priority_frame': {'type': 'str', }, 'data_frame': {'type': 'str', }, 'unknown_frame': {'type': 'str', }, 'connection_preface_sent': {'type': 'str', }, 'settings_frame_sent': {'type': 'str', }, 'settings_ack_sent': {'type': 'str', }, 'empty_settings_sent': {'type': 'str', }, 'ping_frame_sent': {'type': 'str', }, 'window_update_frame_sent': {'type': 'str', }, 'rst_frame_sent': {'type': 'str', }, 'goaway_frame_sent': {'type': 'str', }, 'header_to_app': {'type': 'str', }, 'data_to_app': {'type': 'str', }, 'protocol_error': {'type': 'str', }, 'internal_error': {'type': 'str', }, 'proxy_alloc_error': {'type': 'str', }, 'split_buff_fail': {'type': 'str', }, 'invalid_frame_size': {'type': 'str', }, 'error_max_invalid_stream': {'type': 'str', }, 'data_no_stream': {'type': 'str', }, 'flow_control_error': {'type': 'str', }, 'settings_timeout': {'type': 'str', }, 'frame_size_error': {'type': 'str', }, 'refused_stream': {'type': 'str', }, 'cancel': {'type': 'str', }, 'compression_error': {'type': 'str', }, 'connect_error': {'type': 'str', }, 'enhance_your_calm': {'type': 'str', }, 'inadequate_security': {'type': 'str', }, 'http_1_1_required': {'type': 'str', }, 'deflate_alloc_fail': {'type': 'str', }, 'inflate_alloc_fail': {'type': 'str', }, 'inflate_header_fail': {'type': 'str', }, 'bad_connection_preface': {'type': 'str', }, 'cant_allocate_control_frame': {'type': 'str', }, 'cant_allocate_settings_frame': {'type': 'str', }, 'bad_frame_type_for_stream_state': {'type': 'str', }, 'wrong_stream_state': {'type': 'str', }, 'data_queue_alloc_error': {'type': 'str', }, 'buff_alloc_error': {'type': 'str', }, 'cant_allocate_rst_frame': {'type': 'str', }, 'cant_allocate_goaway_frame': {'type': 'str', }, 'cant_allocate_ping_frame': {'type': 'str', }, 'cant_allocate_stream': {'type': 'str', }, 'cant_allocate_window_frame': {'type': 'str', }, 'header_no_stream': {'type': 'str', }, 'header_padlen_gt_frame_payload': {'type': 'str', }, 'streams_gt_max_concur_streams': {'type': 'str', }, 'idle_state_unexpected_frame': {'type': 'str', }, 'reserved_local_state_unexpected_frame': {'type': 'str', }, 'reserved_remote_state_unexpected_frame': {'type': 'str', }, 'half_closed_remote_state_unexpected_frame': {'type': 'str', }, 'closed_state_unexpected_frame': {'type': 'str', }, 'zero_window_size_on_stream': {'type': 'str', }, 'exceeds_max_window_size_stream': {'type': 'str', }, 'stream_closed': {'type': 'str', }, 'continuation_before_headers': {'type': 'str', }, 'invalid_frame_during_headers': {'type': 'str', }, 'headers_after_continuation': {'type': 'str', }, 'invalid_push_promise': {'type': 'str', }, 'invalid_stream_id': {'type': 'str', }, 'headers_interleaved': {'type': 'str', }, 'trailers_no_end_stream': {'type': 'str', }, 'invalid_setting_value': {'type': 'str', }, 'invalid_window_update': {'type': 'str', }, 'frame_header_bytes_received': {'type': 'str', }, 'frame_header_bytes_sent': {'type': 'str', }, 'control_bytes_received': {'type': 'str', }, 'control_bytes_sent': {'type': 'str', }, 'header_bytes_received': {'type': 'str', }, 'header_bytes_sent': {'type': 'str', }, 'data_bytes_received': {'type': 'str', }, 'data_bytes_sent': {'type': 'str', }, 'total_bytes_received': {'type': 'str', }, 'total_bytes_sent': {'type': 'str', }, 'peak_proxy': {'type': 'str', }, 'control_frame_sent': {'type': 'str', }, 'continuation_frame_sent': {'type': 'str', }, 'data_frame_sent': {'type': 'str', }, 'headers_frame_sent': {'type': 'str', }, 'priority_frame_sent': {'type': 'str', }, 'settings_ack_rcvd': {'type': 'str', }, 'empty_settings_rcvd': {'type': 'str', }, 'alloc_fail_total': {'type': 'str', }, 'err_rcvd_total': {'type': 'str', }, 'err_sent_total': {'type': 'str', }, 'err_sent_proto_err': {'type': 'str', }, 'err_sent_internal_err': {'type': 'str', }, 'err_sent_flow_control': {'type': 'str', }, 'err_sent_setting_timeout': {'type': 'str', }, 'err_sent_stream_closed': {'type': 'str', }, 'err_sent_frame_size_err': {'type': 'str', }, 'err_sent_refused_stream': {'type': 'str', }, 'err_sent_cancel': {'type': 'str', }, 'err_sent_compression_err': {'type': 'str', }, 'err_sent_connect_err': {'type': 'str', }, 'err_sent_your_calm': {'type': 'str', }, 'err_sent_inadequate_security': {'type': 'str', }, 'err_sent_http11_required': {'type': 'str', }}
     })
     return rv
 
@@ -1434,37 +719,88 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
 
 def get_stats(module):
+    query_params = {}
     if module.params.get("stats"):
-        query_params = {}
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module), params=query_params)
-    return module.client.get(stats_url(module))
+    return _get(module, stats_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -1489,7 +825,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -1505,9 +843,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -1551,32 +887,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["http2"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["http2"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["http2"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["http2"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["http2"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["http2"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1587,12 +922,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1603,21 +939,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("http2", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -1629,15 +964,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -1657,9 +992,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1676,6 +1014,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -1686,16 +1025,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -1705,26 +1050,22 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
         elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+            result["axapi_calls"].append(get_stats(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

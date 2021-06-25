@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_health_check_details
 description:
@@ -349,20 +350,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -372,249 +398,33 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["oper", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'oper': {
-            'type': 'dict',
-            'pin_id': {
-                'type': 'int',
-            },
-            'process_index': {
-                'type': 'int',
-            },
-            'health_state': {
-                'type': 'str',
-            },
-            'state_reason': {
-                'type': 'str',
-            },
-            'monitor_name': {
-                'type': 'str',
-            },
-            'received_success': {
-                'type': 'int',
-            },
-            'received_fail': {
-                'type': 'int',
-            },
-            'response_timeout': {
-                'type': 'int',
-            },
-            'curr_interval': {
-                'type': 'int',
-            },
-            'method': {
-                'type': 'str',
-            },
-            'attr_alias_addr': {
-                'type': 'str',
-            },
-            'attr_port': {
-                'type': 'int',
-            },
-            'half_open': {
-                'type': 'int',
-            },
-            'send': {
-                'type': 'str',
-            },
-            'resp_cont': {
-                'type': 'str',
-            },
-            'force_up': {
-                'type': 'int',
-            },
-            'url': {
-                'type': 'str',
-            },
-            'expect_text': {
-                'type': 'str',
-            },
-            'expect_resp_code': {
-                'type': 'str',
-            },
-            'expect_text_regex': {
-                'type': 'str',
-            },
-            'expect_resp_regex_code': {
-                'type': 'str',
-            },
-            'maintenance_code': {
-                'type': 'str',
-            },
-            'user': {
-                'type': 'str',
-            },
-            'pass': {
-                'type': 'str',
-            },
-            'postdata': {
-                'type': 'str',
-            },
-            'host': {
-                'type': 'str',
-            },
-            'kerberos_realm': {
-                'type': 'str',
-            },
-            'kerberos_kdc': {
-                'type': 'str',
-            },
-            'kerberos_port': {
-                'type': 'int',
-            },
-            'snmp_operation': {
-                'type': 'int',
-            },
-            'community': {
-                'type': 'str',
-            },
-            'oid': {
-                'type': 'str',
-            },
-            'domain': {
-                'type': 'str',
-            },
-            'starttls': {
-                'type': 'int',
-            },
-            'mail_from': {
-                'type': 'str',
-            },
-            'rcpt_to': {
-                'type': 'str',
-            },
-            'ipaddr': {
-                'type': 'str',
-            },
-            'dns_qtype': {
-                'type': 'int',
-            },
-            'dns_recurse': {
-                'type': 'int',
-            },
-            'dns_expect_type': {
-                'type': 'int',
-            },
-            'dns_expect': {
-                'type': 'str',
-            },
-            'transport_proto': {
-                'type': 'int',
-            },
-            'sip_register': {
-                'type': 'int',
-            },
-            'secret': {
-                'type': 'str',
-            },
-            'query': {
-                'type': 'str',
-            },
-            'base_dn': {
-                'type': 'str',
-            },
-            'ldap_ssl': {
-                'type': 'int',
-            },
-            'ldap_tls': {
-                'type': 'int',
-            },
-            'attr_type': {
-                'type': 'str',
-            },
-            'db_name': {
-                'type': 'str',
-            },
-            'receive': {
-                'type': 'str',
-            },
-            'rcv_integer': {
-                'type': 'int',
-            },
-            'db_row': {
-                'type': 'int',
-            },
-            'db_column': {
-                'type': 'int',
-            },
-            'pname': {
-                'type': 'str',
-            },
-            'tcp_only': {
-                'type': 'int',
-            },
-            'attr_program': {
-                'type': 'str',
-            },
-            'arguments': {
-                'type': 'str',
-            },
-            'attr_rpn': {
-                'type': 'str',
-            },
-            'http_wait_resp': {
-                'type': 'int',
-            },
-            'l4_conn_num': {
-                'type': 'int',
-            },
-            'l4_errors': {
-                'type': 'int',
-            },
-            'avg_rtt': {
-                'type': 'int',
-            },
-            'curr_rtt': {
-                'type': 'int',
-            },
-            'avg_tcp_rtt': {
-                'type': 'int',
-            },
-            'curr_tcp_rtt': {
-                'type': 'int',
-            },
-            'status_code_rcv': {
-                'type': 'int',
-            },
-            'http_req_sent': {
-                'type': 'int',
-            },
-            'http_errors': {
-                'type': 'int',
-            },
-            'mac_addr': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'oper': {'type': 'dict', 'pin_id': {'type': 'int', }, 'process_index': {'type': 'int', }, 'health_state': {'type': 'str', }, 'state_reason': {'type': 'str', }, 'monitor_name': {'type': 'str', }, 'received_success': {'type': 'int', }, 'received_fail': {'type': 'int', }, 'response_timeout': {'type': 'int', }, 'curr_interval': {'type': 'int', }, 'method': {'type': 'str', }, 'attr_alias_addr': {'type': 'str', }, 'attr_port': {'type': 'int', }, 'half_open': {'type': 'int', }, 'send': {'type': 'str', }, 'resp_cont': {'type': 'str', }, 'force_up': {'type': 'int', }, 'url': {'type': 'str', }, 'expect_text': {'type': 'str', }, 'expect_resp_code': {'type': 'str', }, 'expect_text_regex': {'type': 'str', }, 'expect_resp_regex_code': {'type': 'str', }, 'maintenance_code': {'type': 'str', }, 'user': {'type': 'str', }, 'pass': {'type': 'str', }, 'postdata': {'type': 'str', }, 'host': {'type': 'str', }, 'kerberos_realm': {'type': 'str', }, 'kerberos_kdc': {'type': 'str', }, 'kerberos_port': {'type': 'int', }, 'snmp_operation': {'type': 'int', }, 'community': {'type': 'str', }, 'oid': {'type': 'str', }, 'domain': {'type': 'str', }, 'starttls': {'type': 'int', }, 'mail_from': {'type': 'str', }, 'rcpt_to': {'type': 'str', }, 'ipaddr': {'type': 'str', }, 'dns_qtype': {'type': 'int', }, 'dns_recurse': {'type': 'int', }, 'dns_expect_type': {'type': 'int', }, 'dns_expect': {'type': 'str', }, 'transport_proto': {'type': 'int', }, 'sip_register': {'type': 'int', }, 'secret': {'type': 'str', }, 'query': {'type': 'str', }, 'base_dn': {'type': 'str', }, 'ldap_ssl': {'type': 'int', }, 'ldap_tls': {'type': 'int', }, 'attr_type': {'type': 'str', }, 'db_name': {'type': 'str', }, 'receive': {'type': 'str', }, 'rcv_integer': {'type': 'int', }, 'db_row': {'type': 'int', }, 'db_column': {'type': 'int', }, 'pname': {'type': 'str', }, 'tcp_only': {'type': 'int', }, 'attr_program': {'type': 'str', }, 'arguments': {'type': 'str', }, 'attr_rpn': {'type': 'str', }, 'http_wait_resp': {'type': 'int', }, 'l4_conn_num': {'type': 'int', }, 'l4_errors': {'type': 'int', }, 'avg_rtt': {'type': 'int', }, 'curr_rtt': {'type': 'int', }, 'avg_tcp_rtt': {'type': 'int', }, 'curr_tcp_rtt': {'type': 'int', }, 'status_code_rcv': {'type': 'int', }, 'http_req_sent': {'type': 'int', }, 'http_errors': {'type': 'int', }, 'mac_addr': {'type': 'str', }}
     })
     return rv
 
@@ -641,28 +451,80 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -687,7 +549,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -703,9 +567,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -756,9 +618,10 @@ def report_changes(module, result, existing_config):
 
 def create(module, result):
     try:
-        post_result = module.client.post(new_url(module))
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -769,12 +632,13 @@ def create(module, result):
 
 def update(module, result, existing_config):
     try:
-        post_result = module.client.post(existing_url(module))
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -794,7 +658,8 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -806,21 +671,24 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -837,6 +705,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -847,16 +716,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -866,24 +741,20 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_icap_http
 description:
@@ -370,22 +371,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -395,448 +419,35 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'status_200', 'status_201', 'status_202',
-                    'status_203', 'status_204', 'status_205', 'status_206',
-                    'status_207', 'status_100', 'status_101', 'status_102',
-                    'status_300', 'status_301', 'status_302', 'status_303',
-                    'status_304', 'status_305', 'status_306', 'status_307',
-                    'status_400', 'status_401', 'status_402', 'status_403',
-                    'status_404', 'status_405', 'status_406', 'status_407',
-                    'status_408', 'status_409', 'status_410', 'status_411',
-                    'status_412', 'status_413', 'status_414', 'status_415',
-                    'status_416', 'status_417', 'status_418', 'status_422',
-                    'status_423', 'status_424', 'status_425', 'status_426',
-                    'status_449', 'status_450', 'status_500', 'status_501',
-                    'status_502', 'status_503', 'status_504', 'status_505',
-                    'status_506', 'status_507', 'status_508', 'status_509',
-                    'status_510', 'status_1xx', 'status_2xx', 'status_3xx',
-                    'status_4xx', 'status_5xx', 'status_6xx', 'status_unknown'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'status_2xx': {
-                    'type': 'int',
-                },
-                'status_200': {
-                    'type': 'int',
-                },
-                'status_201': {
-                    'type': 'int',
-                },
-                'status_202': {
-                    'type': 'int',
-                },
-                'status_203': {
-                    'type': 'int',
-                },
-                'status_204': {
-                    'type': 'int',
-                },
-                'status_205': {
-                    'type': 'int',
-                },
-                'status_206': {
-                    'type': 'int',
-                },
-                'status_207': {
-                    'type': 'int',
-                },
-                'status_1xx': {
-                    'type': 'int',
-                },
-                'status_100': {
-                    'type': 'int',
-                },
-                'status_101': {
-                    'type': 'int',
-                },
-                'status_102': {
-                    'type': 'int',
-                },
-                'status_3xx': {
-                    'type': 'int',
-                },
-                'status_300': {
-                    'type': 'int',
-                },
-                'status_301': {
-                    'type': 'int',
-                },
-                'status_302': {
-                    'type': 'int',
-                },
-                'status_303': {
-                    'type': 'int',
-                },
-                'status_304': {
-                    'type': 'int',
-                },
-                'status_305': {
-                    'type': 'int',
-                },
-                'status_306': {
-                    'type': 'int',
-                },
-                'status_307': {
-                    'type': 'int',
-                },
-                'status_4xx': {
-                    'type': 'int',
-                },
-                'status_400': {
-                    'type': 'int',
-                },
-                'status_401': {
-                    'type': 'int',
-                },
-                'status_402': {
-                    'type': 'int',
-                },
-                'status_403': {
-                    'type': 'int',
-                },
-                'status_404': {
-                    'type': 'int',
-                },
-                'status_405': {
-                    'type': 'int',
-                },
-                'status_406': {
-                    'type': 'int',
-                },
-                'status_407': {
-                    'type': 'int',
-                },
-                'status_408': {
-                    'type': 'int',
-                },
-                'status_409': {
-                    'type': 'int',
-                },
-                'status_410': {
-                    'type': 'int',
-                },
-                'status_411': {
-                    'type': 'int',
-                },
-                'status_412': {
-                    'type': 'int',
-                },
-                'status_413': {
-                    'type': 'int',
-                },
-                'status_414': {
-                    'type': 'int',
-                },
-                'status_415': {
-                    'type': 'int',
-                },
-                'status_416': {
-                    'type': 'int',
-                },
-                'status_417': {
-                    'type': 'int',
-                },
-                'status_418': {
-                    'type': 'int',
-                },
-                'status_422': {
-                    'type': 'int',
-                },
-                'status_423': {
-                    'type': 'int',
-                },
-                'status_424': {
-                    'type': 'int',
-                },
-                'status_425': {
-                    'type': 'int',
-                },
-                'status_426': {
-                    'type': 'int',
-                },
-                'status_449': {
-                    'type': 'int',
-                },
-                'status_450': {
-                    'type': 'int',
-                },
-                'status_5xx': {
-                    'type': 'int',
-                },
-                'status_500': {
-                    'type': 'int',
-                },
-                'status_501': {
-                    'type': 'int',
-                },
-                'status_502': {
-                    'type': 'int',
-                },
-                'status_503': {
-                    'type': 'int',
-                },
-                'status_504': {
-                    'type': 'int',
-                },
-                'status_505': {
-                    'type': 'int',
-                },
-                'status_506': {
-                    'type': 'int',
-                },
-                'status_507': {
-                    'type': 'int',
-                },
-                'status_508': {
-                    'type': 'int',
-                },
-                'status_509': {
-                    'type': 'int',
-                },
-                'status_510': {
-                    'type': 'int',
-                },
-                'status_6xx': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'status_200': {
-                'type': 'str',
-            },
-            'status_201': {
-                'type': 'str',
-            },
-            'status_202': {
-                'type': 'str',
-            },
-            'status_203': {
-                'type': 'str',
-            },
-            'status_204': {
-                'type': 'str',
-            },
-            'status_205': {
-                'type': 'str',
-            },
-            'status_206': {
-                'type': 'str',
-            },
-            'status_207': {
-                'type': 'str',
-            },
-            'status_100': {
-                'type': 'str',
-            },
-            'status_101': {
-                'type': 'str',
-            },
-            'status_102': {
-                'type': 'str',
-            },
-            'status_300': {
-                'type': 'str',
-            },
-            'status_301': {
-                'type': 'str',
-            },
-            'status_302': {
-                'type': 'str',
-            },
-            'status_303': {
-                'type': 'str',
-            },
-            'status_304': {
-                'type': 'str',
-            },
-            'status_305': {
-                'type': 'str',
-            },
-            'status_306': {
-                'type': 'str',
-            },
-            'status_307': {
-                'type': 'str',
-            },
-            'status_400': {
-                'type': 'str',
-            },
-            'status_401': {
-                'type': 'str',
-            },
-            'status_402': {
-                'type': 'str',
-            },
-            'status_403': {
-                'type': 'str',
-            },
-            'status_404': {
-                'type': 'str',
-            },
-            'status_405': {
-                'type': 'str',
-            },
-            'status_406': {
-                'type': 'str',
-            },
-            'status_407': {
-                'type': 'str',
-            },
-            'status_408': {
-                'type': 'str',
-            },
-            'status_409': {
-                'type': 'str',
-            },
-            'status_410': {
-                'type': 'str',
-            },
-            'status_411': {
-                'type': 'str',
-            },
-            'status_412': {
-                'type': 'str',
-            },
-            'status_413': {
-                'type': 'str',
-            },
-            'status_414': {
-                'type': 'str',
-            },
-            'status_415': {
-                'type': 'str',
-            },
-            'status_416': {
-                'type': 'str',
-            },
-            'status_417': {
-                'type': 'str',
-            },
-            'status_418': {
-                'type': 'str',
-            },
-            'status_422': {
-                'type': 'str',
-            },
-            'status_423': {
-                'type': 'str',
-            },
-            'status_424': {
-                'type': 'str',
-            },
-            'status_425': {
-                'type': 'str',
-            },
-            'status_426': {
-                'type': 'str',
-            },
-            'status_449': {
-                'type': 'str',
-            },
-            'status_450': {
-                'type': 'str',
-            },
-            'status_500': {
-                'type': 'str',
-            },
-            'status_501': {
-                'type': 'str',
-            },
-            'status_502': {
-                'type': 'str',
-            },
-            'status_503': {
-                'type': 'str',
-            },
-            'status_504': {
-                'type': 'str',
-            },
-            'status_505': {
-                'type': 'str',
-            },
-            'status_506': {
-                'type': 'str',
-            },
-            'status_507': {
-                'type': 'str',
-            },
-            'status_508': {
-                'type': 'str',
-            },
-            'status_509': {
-                'type': 'str',
-            },
-            'status_510': {
-                'type': 'str',
-            },
-            'status_1xx': {
-                'type': 'str',
-            },
-            'status_2xx': {
-                'type': 'str',
-            },
-            'status_3xx': {
-                'type': 'str',
-            },
-            'status_4xx': {
-                'type': 'str',
-            },
-            'status_5xx': {
-                'type': 'str',
-            },
-            'status_6xx': {
-                'type': 'str',
-            },
-            'status_unknown': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'status_200', 'status_201', 'status_202', 'status_203', 'status_204', 'status_205', 'status_206', 'status_207', 'status_100', 'status_101', 'status_102', 'status_300', 'status_301', 'status_302', 'status_303', 'status_304', 'status_305', 'status_306', 'status_307', 'status_400', 'status_401', 'status_402', 'status_403', 'status_404', 'status_405', 'status_406', 'status_407', 'status_408', 'status_409', 'status_410', 'status_411', 'status_412', 'status_413', 'status_414', 'status_415', 'status_416', 'status_417', 'status_418', 'status_422', 'status_423', 'status_424', 'status_425', 'status_426', 'status_449', 'status_450', 'status_500', 'status_501', 'status_502', 'status_503', 'status_504', 'status_505', 'status_506', 'status_507', 'status_508', 'status_509', 'status_510', 'status_1xx', 'status_2xx', 'status_3xx', 'status_4xx', 'status_5xx', 'status_6xx', 'status_unknown']}},
+        'oper': {'type': 'dict', 'l4_cpu_list': {'type': 'list', 'status_2xx': {'type': 'int', }, 'status_200': {'type': 'int', }, 'status_201': {'type': 'int', }, 'status_202': {'type': 'int', }, 'status_203': {'type': 'int', }, 'status_204': {'type': 'int', }, 'status_205': {'type': 'int', }, 'status_206': {'type': 'int', }, 'status_207': {'type': 'int', }, 'status_1xx': {'type': 'int', }, 'status_100': {'type': 'int', }, 'status_101': {'type': 'int', }, 'status_102': {'type': 'int', }, 'status_3xx': {'type': 'int', }, 'status_300': {'type': 'int', }, 'status_301': {'type': 'int', }, 'status_302': {'type': 'int', }, 'status_303': {'type': 'int', }, 'status_304': {'type': 'int', }, 'status_305': {'type': 'int', }, 'status_306': {'type': 'int', }, 'status_307': {'type': 'int', }, 'status_4xx': {'type': 'int', }, 'status_400': {'type': 'int', }, 'status_401': {'type': 'int', }, 'status_402': {'type': 'int', }, 'status_403': {'type': 'int', }, 'status_404': {'type': 'int', }, 'status_405': {'type': 'int', }, 'status_406': {'type': 'int', }, 'status_407': {'type': 'int', }, 'status_408': {'type': 'int', }, 'status_409': {'type': 'int', }, 'status_410': {'type': 'int', }, 'status_411': {'type': 'int', }, 'status_412': {'type': 'int', }, 'status_413': {'type': 'int', }, 'status_414': {'type': 'int', }, 'status_415': {'type': 'int', }, 'status_416': {'type': 'int', }, 'status_417': {'type': 'int', }, 'status_418': {'type': 'int', }, 'status_422': {'type': 'int', }, 'status_423': {'type': 'int', }, 'status_424': {'type': 'int', }, 'status_425': {'type': 'int', }, 'status_426': {'type': 'int', }, 'status_449': {'type': 'int', }, 'status_450': {'type': 'int', }, 'status_5xx': {'type': 'int', }, 'status_500': {'type': 'int', }, 'status_501': {'type': 'int', }, 'status_502': {'type': 'int', }, 'status_503': {'type': 'int', }, 'status_504': {'type': 'int', }, 'status_505': {'type': 'int', }, 'status_506': {'type': 'int', }, 'status_507': {'type': 'int', }, 'status_508': {'type': 'int', }, 'status_509': {'type': 'int', }, 'status_510': {'type': 'int', }, 'status_6xx': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
+        'stats': {'type': 'dict', 'status_200': {'type': 'str', }, 'status_201': {'type': 'str', }, 'status_202': {'type': 'str', }, 'status_203': {'type': 'str', }, 'status_204': {'type': 'str', }, 'status_205': {'type': 'str', }, 'status_206': {'type': 'str', }, 'status_207': {'type': 'str', }, 'status_100': {'type': 'str', }, 'status_101': {'type': 'str', }, 'status_102': {'type': 'str', }, 'status_300': {'type': 'str', }, 'status_301': {'type': 'str', }, 'status_302': {'type': 'str', }, 'status_303': {'type': 'str', }, 'status_304': {'type': 'str', }, 'status_305': {'type': 'str', }, 'status_306': {'type': 'str', }, 'status_307': {'type': 'str', }, 'status_400': {'type': 'str', }, 'status_401': {'type': 'str', }, 'status_402': {'type': 'str', }, 'status_403': {'type': 'str', }, 'status_404': {'type': 'str', }, 'status_405': {'type': 'str', }, 'status_406': {'type': 'str', }, 'status_407': {'type': 'str', }, 'status_408': {'type': 'str', }, 'status_409': {'type': 'str', }, 'status_410': {'type': 'str', }, 'status_411': {'type': 'str', }, 'status_412': {'type': 'str', }, 'status_413': {'type': 'str', }, 'status_414': {'type': 'str', }, 'status_415': {'type': 'str', }, 'status_416': {'type': 'str', }, 'status_417': {'type': 'str', }, 'status_418': {'type': 'str', }, 'status_422': {'type': 'str', }, 'status_423': {'type': 'str', }, 'status_424': {'type': 'str', }, 'status_425': {'type': 'str', }, 'status_426': {'type': 'str', }, 'status_449': {'type': 'str', }, 'status_450': {'type': 'str', }, 'status_500': {'type': 'str', }, 'status_501': {'type': 'str', }, 'status_502': {'type': 'str', }, 'status_503': {'type': 'str', }, 'status_504': {'type': 'str', }, 'status_505': {'type': 'str', }, 'status_506': {'type': 'str', }, 'status_507': {'type': 'str', }, 'status_508': {'type': 'str', }, 'status_509': {'type': 'str', }, 'status_510': {'type': 'str', }, 'status_1xx': {'type': 'str', }, 'status_2xx': {'type': 'str', }, 'status_3xx': {'type': 'str', }, 'status_4xx': {'type': 'str', }, 'status_5xx': {'type': 'str', }, 'status_6xx': {'type': 'str', }, 'status_unknown': {'type': 'str', }}
     })
     return rv
 
@@ -869,37 +480,88 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
 
 def get_stats(module):
+    query_params = {}
     if module.params.get("stats"):
-        query_params = {}
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module), params=query_params)
-    return module.client.get(stats_url(module))
+    return _get(module, stats_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -924,7 +586,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -940,9 +604,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -986,32 +648,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["icap_http"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["icap_http"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["icap_http"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["icap_http"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["icap_http"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["icap_http"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1022,12 +683,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1038,21 +700,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("icap_http", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -1064,15 +725,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -1092,9 +753,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1111,6 +775,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -1121,16 +786,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -1140,26 +811,22 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
         elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+            result["axapi_calls"].append(get_stats(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

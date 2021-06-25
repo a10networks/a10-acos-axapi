@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_generic_proxy
 description:
@@ -427,22 +428,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -452,512 +476,35 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route',
-                    'snat_fail', 'client_fail', 'server_fail', 'no_sess',
-                    'user_session', 'acr_out', 'acr_in', 'aca_out', 'aca_in',
-                    'cea_out', 'cea_in', 'cer_out', 'cer_in', 'dwr_out',
-                    'dwr_in', 'dwa_out', 'dwa_in', 'str_out', 'str_in',
-                    'sta_out', 'sta_in', 'asr_out', 'asr_in', 'asa_out',
-                    'asa_in', 'other_out', 'other_in',
-                    'total_http_req_enter_gen', 'mismatch_fwd_id',
-                    'mismatch_rev_id', 'unkwn_cmd_code', 'no_session_id',
-                    'no_fwd_tuple', 'no_rev_tuple', 'dcmsg_fwd_in',
-                    'dcmsg_fwd_out', 'dcmsg_rev_in', 'dcmsg_rev_out',
-                    'dcmsg_error', 'retry_client_request',
-                    'retry_client_request_fail', 'reply_unknown_session_id',
-                    'ccr_out', 'ccr_in', 'cca_out', 'cca_in', 'ccr_i', 'ccr_u',
-                    'ccr_t', 'cca_t', 'terminate_on_cca_t',
-                    'forward_unknown_session_id', 'update_latest_server',
-                    'client_select_fail', 'close_conn_when_vport_down',
-                    'invalid_avp', 'reselect_fwd_tuple',
-                    'reselect_fwd_tuple_other_cpu', 'reselect_rev_tuple',
-                    'conn_closed_by_client', 'conn_closed_by_server',
-                    'reply_invalid_avp_value', 'reply_unable_to_deliver',
-                    'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out',
-                    'dpa_in'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'curr_proxy_conns': {
-                    'type': 'int',
-                },
-                'total_proxy_conns': {
-                    'type': 'int',
-                },
-                'total_http_conn_generic_proxy': {
-                    'type': 'int',
-                },
-                'client_fail': {
-                    'type': 'int',
-                },
-                'server_fail': {
-                    'type': 'int',
-                },
-                'server_selection_fail': {
-                    'type': 'int',
-                },
-                'no_route_fail': {
-                    'type': 'int',
-                },
-                'source_nat_fail': {
-                    'type': 'int',
-                },
-                'user_session': {
-                    'type': 'str',
-                },
-                'acr_out': {
-                    'type': 'int',
-                },
-                'acr_in': {
-                    'type': 'int',
-                },
-                'aca_out': {
-                    'type': 'int',
-                },
-                'aca_in': {
-                    'type': 'int',
-                },
-                'dpr_out': {
-                    'type': 'int',
-                },
-                'dpr_in': {
-                    'type': 'int',
-                },
-                'dpa_out': {
-                    'type': 'int',
-                },
-                'dpa_in': {
-                    'type': 'int',
-                },
-                'cea_out': {
-                    'type': 'int',
-                },
-                'cea_in': {
-                    'type': 'int',
-                },
-                'cer_out': {
-                    'type': 'int',
-                },
-                'cer_in': {
-                    'type': 'int',
-                },
-                'dwa_out': {
-                    'type': 'int',
-                },
-                'dwa_in': {
-                    'type': 'int',
-                },
-                'dwr_out': {
-                    'type': 'int',
-                },
-                'dwr_in': {
-                    'type': 'int',
-                },
-                'str_out': {
-                    'type': 'int',
-                },
-                'str_in': {
-                    'type': 'int',
-                },
-                'sta_out': {
-                    'type': 'int',
-                },
-                'sta_in': {
-                    'type': 'int',
-                },
-                'asr_out': {
-                    'type': 'int',
-                },
-                'asr_in': {
-                    'type': 'int',
-                },
-                'asa_out': {
-                    'type': 'int',
-                },
-                'asa_in': {
-                    'type': 'int',
-                },
-                'other_out': {
-                    'type': 'int',
-                },
-                'other_in': {
-                    'type': 'int',
-                },
-                'mismatch_fwd_id': {
-                    'type': 'int',
-                },
-                'mismatch_rev_id': {
-                    'type': 'int',
-                },
-                'unkwn_cmd_code': {
-                    'type': 'int',
-                },
-                'no_session_id': {
-                    'type': 'int',
-                },
-                'no_fwd_tuple': {
-                    'type': 'int',
-                },
-                'no_rev_tuple': {
-                    'type': 'int',
-                },
-                'dcmsg_fwd_in': {
-                    'type': 'int',
-                },
-                'dcmsg_fwd_out': {
-                    'type': 'int',
-                },
-                'dcmsg_rev_in': {
-                    'type': 'int',
-                },
-                'dcmsg_rev_out': {
-                    'type': 'int',
-                },
-                'dcmsg_error': {
-                    'type': 'int',
-                },
-                'retry_client_request': {
-                    'type': 'int',
-                },
-                'retry_client_request_fail': {
-                    'type': 'int',
-                },
-                'reply_unknown_session_id': {
-                    'type': 'int',
-                },
-                'ccr_out': {
-                    'type': 'int',
-                },
-                'ccr_in': {
-                    'type': 'int',
-                },
-                'cca_out': {
-                    'type': 'int',
-                },
-                'cca_in': {
-                    'type': 'int',
-                },
-                'ccr_i': {
-                    'type': 'int',
-                },
-                'ccr_u': {
-                    'type': 'int',
-                },
-                'ccr_t': {
-                    'type': 'int',
-                },
-                'cca_t': {
-                    'type': 'int',
-                },
-                'terminate_on_cca_t': {
-                    'type': 'int',
-                },
-                'forward_unknown_session_id': {
-                    'type': 'int',
-                },
-                'update_latest_server': {
-                    'type': 'int',
-                },
-                'client_select_fail': {
-                    'type': 'int',
-                },
-                'close_conn_when_vport_down': {
-                    'type': 'int',
-                },
-                'invalid_avp': {
-                    'type': 'int',
-                },
-                'reselect_fwd_tuple': {
-                    'type': 'int',
-                },
-                'reselect_fwd_tuple_other_cpu': {
-                    'type': 'int',
-                },
-                'reselect_rev_tuple': {
-                    'type': 'int',
-                },
-                'conn_closed_by_client': {
-                    'type': 'int',
-                },
-                'conn_closed_by_server': {
-                    'type': 'int',
-                },
-                'reply_invalid_avp_value': {
-                    'type': 'int',
-                },
-                'reply_unable_to_deliver': {
-                    'type': 'int',
-                },
-                'reply_error_info_fail': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'num': {
-                'type': 'str',
-            },
-            'curr': {
-                'type': 'str',
-            },
-            'total': {
-                'type': 'str',
-            },
-            'svrsel_fail': {
-                'type': 'str',
-            },
-            'no_route': {
-                'type': 'str',
-            },
-            'snat_fail': {
-                'type': 'str',
-            },
-            'client_fail': {
-                'type': 'str',
-            },
-            'server_fail': {
-                'type': 'str',
-            },
-            'no_sess': {
-                'type': 'str',
-            },
-            'user_session': {
-                'type': 'str',
-            },
-            'acr_out': {
-                'type': 'str',
-            },
-            'acr_in': {
-                'type': 'str',
-            },
-            'aca_out': {
-                'type': 'str',
-            },
-            'aca_in': {
-                'type': 'str',
-            },
-            'cea_out': {
-                'type': 'str',
-            },
-            'cea_in': {
-                'type': 'str',
-            },
-            'cer_out': {
-                'type': 'str',
-            },
-            'cer_in': {
-                'type': 'str',
-            },
-            'dwr_out': {
-                'type': 'str',
-            },
-            'dwr_in': {
-                'type': 'str',
-            },
-            'dwa_out': {
-                'type': 'str',
-            },
-            'dwa_in': {
-                'type': 'str',
-            },
-            'str_out': {
-                'type': 'str',
-            },
-            'str_in': {
-                'type': 'str',
-            },
-            'sta_out': {
-                'type': 'str',
-            },
-            'sta_in': {
-                'type': 'str',
-            },
-            'asr_out': {
-                'type': 'str',
-            },
-            'asr_in': {
-                'type': 'str',
-            },
-            'asa_out': {
-                'type': 'str',
-            },
-            'asa_in': {
-                'type': 'str',
-            },
-            'other_out': {
-                'type': 'str',
-            },
-            'other_in': {
-                'type': 'str',
-            },
-            'total_http_req_enter_gen': {
-                'type': 'str',
-            },
-            'mismatch_fwd_id': {
-                'type': 'str',
-            },
-            'mismatch_rev_id': {
-                'type': 'str',
-            },
-            'unkwn_cmd_code': {
-                'type': 'str',
-            },
-            'no_session_id': {
-                'type': 'str',
-            },
-            'no_fwd_tuple': {
-                'type': 'str',
-            },
-            'no_rev_tuple': {
-                'type': 'str',
-            },
-            'dcmsg_fwd_in': {
-                'type': 'str',
-            },
-            'dcmsg_fwd_out': {
-                'type': 'str',
-            },
-            'dcmsg_rev_in': {
-                'type': 'str',
-            },
-            'dcmsg_rev_out': {
-                'type': 'str',
-            },
-            'dcmsg_error': {
-                'type': 'str',
-            },
-            'retry_client_request': {
-                'type': 'str',
-            },
-            'retry_client_request_fail': {
-                'type': 'str',
-            },
-            'reply_unknown_session_id': {
-                'type': 'str',
-            },
-            'ccr_out': {
-                'type': 'str',
-            },
-            'ccr_in': {
-                'type': 'str',
-            },
-            'cca_out': {
-                'type': 'str',
-            },
-            'cca_in': {
-                'type': 'str',
-            },
-            'ccr_i': {
-                'type': 'str',
-            },
-            'ccr_u': {
-                'type': 'str',
-            },
-            'ccr_t': {
-                'type': 'str',
-            },
-            'cca_t': {
-                'type': 'str',
-            },
-            'terminate_on_cca_t': {
-                'type': 'str',
-            },
-            'forward_unknown_session_id': {
-                'type': 'str',
-            },
-            'update_latest_server': {
-                'type': 'str',
-            },
-            'client_select_fail': {
-                'type': 'str',
-            },
-            'close_conn_when_vport_down': {
-                'type': 'str',
-            },
-            'invalid_avp': {
-                'type': 'str',
-            },
-            'reselect_fwd_tuple': {
-                'type': 'str',
-            },
-            'reselect_fwd_tuple_other_cpu': {
-                'type': 'str',
-            },
-            'reselect_rev_tuple': {
-                'type': 'str',
-            },
-            'conn_closed_by_client': {
-                'type': 'str',
-            },
-            'conn_closed_by_server': {
-                'type': 'str',
-            },
-            'reply_invalid_avp_value': {
-                'type': 'str',
-            },
-            'reply_unable_to_deliver': {
-                'type': 'str',
-            },
-            'reply_error_info_fail': {
-                'type': 'str',
-            },
-            'dpr_out': {
-                'type': 'str',
-            },
-            'dpr_in': {
-                'type': 'str',
-            },
-            'dpa_out': {
-                'type': 'str',
-            },
-            'dpa_in': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'client_fail', 'server_fail', 'no_sess', 'user_session', 'acr_out', 'acr_in', 'aca_out', 'aca_in', 'cea_out', 'cea_in', 'cer_out', 'cer_in', 'dwr_out', 'dwr_in', 'dwa_out', 'dwa_in', 'str_out', 'str_in', 'sta_out', 'sta_in', 'asr_out', 'asr_in', 'asa_out', 'asa_in', 'other_out', 'other_in', 'total_http_req_enter_gen', 'mismatch_fwd_id', 'mismatch_rev_id', 'unkwn_cmd_code', 'no_session_id', 'no_fwd_tuple', 'no_rev_tuple', 'dcmsg_fwd_in', 'dcmsg_fwd_out', 'dcmsg_rev_in', 'dcmsg_rev_out', 'dcmsg_error', 'retry_client_request', 'retry_client_request_fail', 'reply_unknown_session_id', 'ccr_out', 'ccr_in', 'cca_out', 'cca_in', 'ccr_i', 'ccr_u', 'ccr_t', 'cca_t', 'terminate_on_cca_t', 'forward_unknown_session_id', 'update_latest_server', 'client_select_fail', 'close_conn_when_vport_down', 'invalid_avp', 'reselect_fwd_tuple', 'reselect_fwd_tuple_other_cpu', 'reselect_rev_tuple', 'conn_closed_by_client', 'conn_closed_by_server', 'reply_invalid_avp_value', 'reply_unable_to_deliver', 'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out', 'dpa_in']}},
+        'oper': {'type': 'dict', 'l4_cpu_list': {'type': 'list', 'curr_proxy_conns': {'type': 'int', }, 'total_proxy_conns': {'type': 'int', }, 'total_http_conn_generic_proxy': {'type': 'int', }, 'client_fail': {'type': 'int', }, 'server_fail': {'type': 'int', }, 'server_selection_fail': {'type': 'int', }, 'no_route_fail': {'type': 'int', }, 'source_nat_fail': {'type': 'int', }, 'user_session': {'type': 'str', }, 'acr_out': {'type': 'int', }, 'acr_in': {'type': 'int', }, 'aca_out': {'type': 'int', }, 'aca_in': {'type': 'int', }, 'dpr_out': {'type': 'int', }, 'dpr_in': {'type': 'int', }, 'dpa_out': {'type': 'int', }, 'dpa_in': {'type': 'int', }, 'cea_out': {'type': 'int', }, 'cea_in': {'type': 'int', }, 'cer_out': {'type': 'int', }, 'cer_in': {'type': 'int', }, 'dwa_out': {'type': 'int', }, 'dwa_in': {'type': 'int', }, 'dwr_out': {'type': 'int', }, 'dwr_in': {'type': 'int', }, 'str_out': {'type': 'int', }, 'str_in': {'type': 'int', }, 'sta_out': {'type': 'int', }, 'sta_in': {'type': 'int', }, 'asr_out': {'type': 'int', }, 'asr_in': {'type': 'int', }, 'asa_out': {'type': 'int', }, 'asa_in': {'type': 'int', }, 'other_out': {'type': 'int', }, 'other_in': {'type': 'int', }, 'mismatch_fwd_id': {'type': 'int', }, 'mismatch_rev_id': {'type': 'int', }, 'unkwn_cmd_code': {'type': 'int', }, 'no_session_id': {'type': 'int', }, 'no_fwd_tuple': {'type': 'int', }, 'no_rev_tuple': {'type': 'int', }, 'dcmsg_fwd_in': {'type': 'int', }, 'dcmsg_fwd_out': {'type': 'int', }, 'dcmsg_rev_in': {'type': 'int', }, 'dcmsg_rev_out': {'type': 'int', }, 'dcmsg_error': {'type': 'int', }, 'retry_client_request': {'type': 'int', }, 'retry_client_request_fail': {'type': 'int', }, 'reply_unknown_session_id': {'type': 'int', }, 'ccr_out': {'type': 'int', }, 'ccr_in': {'type': 'int', }, 'cca_out': {'type': 'int', }, 'cca_in': {'type': 'int', }, 'ccr_i': {'type': 'int', }, 'ccr_u': {'type': 'int', }, 'ccr_t': {'type': 'int', }, 'cca_t': {'type': 'int', }, 'terminate_on_cca_t': {'type': 'int', }, 'forward_unknown_session_id': {'type': 'int', }, 'update_latest_server': {'type': 'int', }, 'client_select_fail': {'type': 'int', }, 'close_conn_when_vport_down': {'type': 'int', }, 'invalid_avp': {'type': 'int', }, 'reselect_fwd_tuple': {'type': 'int', }, 'reselect_fwd_tuple_other_cpu': {'type': 'int', }, 'reselect_rev_tuple': {'type': 'int', }, 'conn_closed_by_client': {'type': 'int', }, 'conn_closed_by_server': {'type': 'int', }, 'reply_invalid_avp_value': {'type': 'int', }, 'reply_unable_to_deliver': {'type': 'int', }, 'reply_error_info_fail': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
+        'stats': {'type': 'dict', 'num': {'type': 'str', }, 'curr': {'type': 'str', }, 'total': {'type': 'str', }, 'svrsel_fail': {'type': 'str', }, 'no_route': {'type': 'str', }, 'snat_fail': {'type': 'str', }, 'client_fail': {'type': 'str', }, 'server_fail': {'type': 'str', }, 'no_sess': {'type': 'str', }, 'user_session': {'type': 'str', }, 'acr_out': {'type': 'str', }, 'acr_in': {'type': 'str', }, 'aca_out': {'type': 'str', }, 'aca_in': {'type': 'str', }, 'cea_out': {'type': 'str', }, 'cea_in': {'type': 'str', }, 'cer_out': {'type': 'str', }, 'cer_in': {'type': 'str', }, 'dwr_out': {'type': 'str', }, 'dwr_in': {'type': 'str', }, 'dwa_out': {'type': 'str', }, 'dwa_in': {'type': 'str', }, 'str_out': {'type': 'str', }, 'str_in': {'type': 'str', }, 'sta_out': {'type': 'str', }, 'sta_in': {'type': 'str', }, 'asr_out': {'type': 'str', }, 'asr_in': {'type': 'str', }, 'asa_out': {'type': 'str', }, 'asa_in': {'type': 'str', }, 'other_out': {'type': 'str', }, 'other_in': {'type': 'str', }, 'total_http_req_enter_gen': {'type': 'str', }, 'mismatch_fwd_id': {'type': 'str', }, 'mismatch_rev_id': {'type': 'str', }, 'unkwn_cmd_code': {'type': 'str', }, 'no_session_id': {'type': 'str', }, 'no_fwd_tuple': {'type': 'str', }, 'no_rev_tuple': {'type': 'str', }, 'dcmsg_fwd_in': {'type': 'str', }, 'dcmsg_fwd_out': {'type': 'str', }, 'dcmsg_rev_in': {'type': 'str', }, 'dcmsg_rev_out': {'type': 'str', }, 'dcmsg_error': {'type': 'str', }, 'retry_client_request': {'type': 'str', }, 'retry_client_request_fail': {'type': 'str', }, 'reply_unknown_session_id': {'type': 'str', }, 'ccr_out': {'type': 'str', }, 'ccr_in': {'type': 'str', }, 'cca_out': {'type': 'str', }, 'cca_in': {'type': 'str', }, 'ccr_i': {'type': 'str', }, 'ccr_u': {'type': 'str', }, 'ccr_t': {'type': 'str', }, 'cca_t': {'type': 'str', }, 'terminate_on_cca_t': {'type': 'str', }, 'forward_unknown_session_id': {'type': 'str', }, 'update_latest_server': {'type': 'str', }, 'client_select_fail': {'type': 'str', }, 'close_conn_when_vport_down': {'type': 'str', }, 'invalid_avp': {'type': 'str', }, 'reselect_fwd_tuple': {'type': 'str', }, 'reselect_fwd_tuple_other_cpu': {'type': 'str', }, 'reselect_rev_tuple': {'type': 'str', }, 'conn_closed_by_client': {'type': 'str', }, 'conn_closed_by_server': {'type': 'str', }, 'reply_invalid_avp_value': {'type': 'str', }, 'reply_unable_to_deliver': {'type': 'str', }, 'reply_error_info_fail': {'type': 'str', }, 'dpr_out': {'type': 'str', }, 'dpr_in': {'type': 'str', }, 'dpa_out': {'type': 'str', }, 'dpa_in': {'type': 'str', }}
     })
     return rv
 
@@ -990,37 +537,88 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
 
 def get_stats(module):
+    query_params = {}
     if module.params.get("stats"):
-        query_params = {}
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module), params=query_params)
-    return module.client.get(stats_url(module))
+    return _get(module, stats_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -1045,7 +643,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -1061,9 +661,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -1107,32 +705,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["generic-proxy"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["generic-proxy"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["generic-proxy"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["generic-proxy"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["generic-proxy"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["generic-proxy"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1143,12 +740,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1159,21 +757,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("generic-proxy", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -1185,15 +782,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -1213,9 +810,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1232,6 +832,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -1242,16 +843,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -1261,26 +868,22 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
         elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+            result["axapi_calls"].append(get_stats(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

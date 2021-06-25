@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_imap_proxy
 description:
@@ -320,22 +321,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -345,295 +369,35 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route',
-                    'snat_fail', 'feat', 'cc', 'data_ssl', 'line_too_long',
-                    'line_mem_freed', 'invalid_start_line', 'auth_tls', 'prot',
-                    'pbsz', 'pasv', 'port', 'request_dont_care',
-                    'client_auth_tls', 'cant_find_pasv', 'pasv_addr_ne_server',
-                    'smp_create_fail', 'data_server_conn_fail',
-                    'data_send_fail', 'epsv', 'cant_find_epsv', 'data_curr',
-                    'data_total', 'auth_unsupported', 'adat',
-                    'unsupported_pbsz_value', 'unsupported_prot_value',
-                    'unsupported_command', 'control_to_clear',
-                    'control_to_ssl', 'bad_sequence', 'rsv_persist_conn_fail',
-                    'smp_v6_fail', 'smp_v4_fail', 'insert_tuple_fail',
-                    'cl_est_err', 'ser_connecting_err', 'server_response_err',
-                    'cl_request_err', 'data_conn_start_err',
-                    'data_serv_connecting_err', 'data_serv_connected_err',
-                    'request', 'capability', 'start_tls', 'login'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'current_proxy_conns': {
-                    'type': 'int',
-                },
-                'total_proxy_conns': {
-                    'type': 'int',
-                },
-                'total_imap_request': {
-                    'type': 'int',
-                },
-                'server_selection_failure': {
-                    'type': 'int',
-                },
-                'no_route_failure': {
-                    'type': 'int',
-                },
-                'source_nat_failure': {
-                    'type': 'int',
-                },
-                'start_tls_cmd': {
-                    'type': 'int',
-                },
-                'login_packet': {
-                    'type': 'int',
-                },
-                'capability_packet': {
-                    'type': 'int',
-                },
-                'request_line_freed': {
-                    'type': 'int',
-                },
-                'inv_start_line': {
-                    'type': 'int',
-                },
-                'other_cmd': {
-                    'type': 'int',
-                },
-                'imap_line_too_long': {
-                    'type': 'int',
-                },
-                'control_chn_ssl': {
-                    'type': 'int',
-                },
-                'bad_seq': {
-                    'type': 'int',
-                },
-                'serv_sel_persist_fail': {
-                    'type': 'int',
-                },
-                'serv_sel_smpv6_fail': {
-                    'type': 'int',
-                },
-                'serv_sel_smpv4_fail': {
-                    'type': 'int',
-                },
-                'serv_sel_ins_tpl_fail': {
-                    'type': 'int',
-                },
-                'client_est_state_err': {
-                    'type': 'int',
-                },
-                'serv_ctng_state_err': {
-                    'type': 'int',
-                },
-                'serv_resp_state_err': {
-                    'type': 'int',
-                },
-                'client_rq_state_err': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'num': {
-                'type': 'str',
-            },
-            'curr': {
-                'type': 'str',
-            },
-            'total': {
-                'type': 'str',
-            },
-            'svrsel_fail': {
-                'type': 'str',
-            },
-            'no_route': {
-                'type': 'str',
-            },
-            'snat_fail': {
-                'type': 'str',
-            },
-            'feat': {
-                'type': 'str',
-            },
-            'cc': {
-                'type': 'str',
-            },
-            'data_ssl': {
-                'type': 'str',
-            },
-            'line_too_long': {
-                'type': 'str',
-            },
-            'line_mem_freed': {
-                'type': 'str',
-            },
-            'invalid_start_line': {
-                'type': 'str',
-            },
-            'auth_tls': {
-                'type': 'str',
-            },
-            'prot': {
-                'type': 'str',
-            },
-            'pbsz': {
-                'type': 'str',
-            },
-            'pasv': {
-                'type': 'str',
-            },
-            'port': {
-                'type': 'str',
-            },
-            'request_dont_care': {
-                'type': 'str',
-            },
-            'client_auth_tls': {
-                'type': 'str',
-            },
-            'cant_find_pasv': {
-                'type': 'str',
-            },
-            'pasv_addr_ne_server': {
-                'type': 'str',
-            },
-            'smp_create_fail': {
-                'type': 'str',
-            },
-            'data_server_conn_fail': {
-                'type': 'str',
-            },
-            'data_send_fail': {
-                'type': 'str',
-            },
-            'epsv': {
-                'type': 'str',
-            },
-            'cant_find_epsv': {
-                'type': 'str',
-            },
-            'data_curr': {
-                'type': 'str',
-            },
-            'data_total': {
-                'type': 'str',
-            },
-            'auth_unsupported': {
-                'type': 'str',
-            },
-            'adat': {
-                'type': 'str',
-            },
-            'unsupported_pbsz_value': {
-                'type': 'str',
-            },
-            'unsupported_prot_value': {
-                'type': 'str',
-            },
-            'unsupported_command': {
-                'type': 'str',
-            },
-            'control_to_clear': {
-                'type': 'str',
-            },
-            'control_to_ssl': {
-                'type': 'str',
-            },
-            'bad_sequence': {
-                'type': 'str',
-            },
-            'rsv_persist_conn_fail': {
-                'type': 'str',
-            },
-            'smp_v6_fail': {
-                'type': 'str',
-            },
-            'smp_v4_fail': {
-                'type': 'str',
-            },
-            'insert_tuple_fail': {
-                'type': 'str',
-            },
-            'cl_est_err': {
-                'type': 'str',
-            },
-            'ser_connecting_err': {
-                'type': 'str',
-            },
-            'server_response_err': {
-                'type': 'str',
-            },
-            'cl_request_err': {
-                'type': 'str',
-            },
-            'data_conn_start_err': {
-                'type': 'str',
-            },
-            'data_serv_connecting_err': {
-                'type': 'str',
-            },
-            'data_serv_connected_err': {
-                'type': 'str',
-            },
-            'request': {
-                'type': 'str',
-            },
-            'capability': {
-                'type': 'str',
-            },
-            'start_tls': {
-                'type': 'str',
-            },
-            'login': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'feat', 'cc', 'data_ssl', 'line_too_long', 'line_mem_freed', 'invalid_start_line', 'auth_tls', 'prot', 'pbsz', 'pasv', 'port', 'request_dont_care', 'client_auth_tls', 'cant_find_pasv', 'pasv_addr_ne_server', 'smp_create_fail', 'data_server_conn_fail', 'data_send_fail', 'epsv', 'cant_find_epsv', 'data_curr', 'data_total', 'auth_unsupported', 'adat', 'unsupported_pbsz_value', 'unsupported_prot_value', 'unsupported_command', 'control_to_clear', 'control_to_ssl', 'bad_sequence', 'rsv_persist_conn_fail', 'smp_v6_fail', 'smp_v4_fail', 'insert_tuple_fail', 'cl_est_err', 'ser_connecting_err', 'server_response_err', 'cl_request_err', 'data_conn_start_err', 'data_serv_connecting_err', 'data_serv_connected_err', 'request', 'capability', 'start_tls', 'login']}},
+        'oper': {'type': 'dict', 'l4_cpu_list': {'type': 'list', 'current_proxy_conns': {'type': 'int', }, 'total_proxy_conns': {'type': 'int', }, 'total_imap_request': {'type': 'int', }, 'server_selection_failure': {'type': 'int', }, 'no_route_failure': {'type': 'int', }, 'source_nat_failure': {'type': 'int', }, 'start_tls_cmd': {'type': 'int', }, 'login_packet': {'type': 'int', }, 'capability_packet': {'type': 'int', }, 'request_line_freed': {'type': 'int', }, 'inv_start_line': {'type': 'int', }, 'other_cmd': {'type': 'int', }, 'imap_line_too_long': {'type': 'int', }, 'control_chn_ssl': {'type': 'int', }, 'bad_seq': {'type': 'int', }, 'serv_sel_persist_fail': {'type': 'int', }, 'serv_sel_smpv6_fail': {'type': 'int', }, 'serv_sel_smpv4_fail': {'type': 'int', }, 'serv_sel_ins_tpl_fail': {'type': 'int', }, 'client_est_state_err': {'type': 'int', }, 'serv_ctng_state_err': {'type': 'int', }, 'serv_resp_state_err': {'type': 'int', }, 'client_rq_state_err': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
+        'stats': {'type': 'dict', 'num': {'type': 'str', }, 'curr': {'type': 'str', }, 'total': {'type': 'str', }, 'svrsel_fail': {'type': 'str', }, 'no_route': {'type': 'str', }, 'snat_fail': {'type': 'str', }, 'feat': {'type': 'str', }, 'cc': {'type': 'str', }, 'data_ssl': {'type': 'str', }, 'line_too_long': {'type': 'str', }, 'line_mem_freed': {'type': 'str', }, 'invalid_start_line': {'type': 'str', }, 'auth_tls': {'type': 'str', }, 'prot': {'type': 'str', }, 'pbsz': {'type': 'str', }, 'pasv': {'type': 'str', }, 'port': {'type': 'str', }, 'request_dont_care': {'type': 'str', }, 'client_auth_tls': {'type': 'str', }, 'cant_find_pasv': {'type': 'str', }, 'pasv_addr_ne_server': {'type': 'str', }, 'smp_create_fail': {'type': 'str', }, 'data_server_conn_fail': {'type': 'str', }, 'data_send_fail': {'type': 'str', }, 'epsv': {'type': 'str', }, 'cant_find_epsv': {'type': 'str', }, 'data_curr': {'type': 'str', }, 'data_total': {'type': 'str', }, 'auth_unsupported': {'type': 'str', }, 'adat': {'type': 'str', }, 'unsupported_pbsz_value': {'type': 'str', }, 'unsupported_prot_value': {'type': 'str', }, 'unsupported_command': {'type': 'str', }, 'control_to_clear': {'type': 'str', }, 'control_to_ssl': {'type': 'str', }, 'bad_sequence': {'type': 'str', }, 'rsv_persist_conn_fail': {'type': 'str', }, 'smp_v6_fail': {'type': 'str', }, 'smp_v4_fail': {'type': 'str', }, 'insert_tuple_fail': {'type': 'str', }, 'cl_est_err': {'type': 'str', }, 'ser_connecting_err': {'type': 'str', }, 'server_response_err': {'type': 'str', }, 'cl_request_err': {'type': 'str', }, 'data_conn_start_err': {'type': 'str', }, 'data_serv_connecting_err': {'type': 'str', }, 'data_serv_connected_err': {'type': 'str', }, 'request': {'type': 'str', }, 'capability': {'type': 'str', }, 'start_tls': {'type': 'str', }, 'login': {'type': 'str', }}
     })
     return rv
 
@@ -666,37 +430,88 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
 
 def get_stats(module):
+    query_params = {}
     if module.params.get("stats"):
-        query_params = {}
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module), params=query_params)
-    return module.client.get(stats_url(module))
+    return _get(module, stats_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -721,7 +536,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -737,9 +554,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -783,32 +598,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["imap-proxy"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["imap-proxy"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["imap-proxy"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["imap-proxy"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["imap-proxy"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["imap-proxy"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -819,12 +633,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -835,21 +650,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("imap-proxy", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -861,15 +675,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -889,9 +703,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -908,6 +725,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -918,16 +736,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -937,26 +761,22 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
         elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+            result["axapi_calls"].append(get_stats(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_spdy_proxy
 description:
@@ -483,22 +484,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -508,599 +532,35 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'curr_proxy', 'total_proxy', 'curr_http_proxy',
-                    'total_http_proxy', 'total_v2_proxy', 'total_v3_proxy',
-                    'curr_stream', 'total_stream', 'total_stream_succ',
-                    'client_rst', 'server_rst', 'client_goaway',
-                    'server_goaway', 'tcp_err', 'inflate_ctx', 'deflate_ctx',
-                    'ping_sent', 'stream_not_found', 'client_fin',
-                    'server_fin', 'stream_close', 'stream_err', 'session_err',
-                    'control_frame', 'syn_frame', 'syn_reply_frame',
-                    'headers_frame', 'settings_frame', 'window_frame',
-                    'ping_frame', 'data_frame', 'data_no_stream',
-                    'data_no_stream_no_goaway', 'data_no_stream_goaway_close',
-                    'est_cb_no_tuple', 'data_cb_no_tuple', 'ctx_alloc_fail',
-                    'fin_close_session', 'server_rst_close_stream',
-                    'stream_found', 'close_stream_session_not_found',
-                    'close_stream_stream_not_found',
-                    'close_stream_already_closed',
-                    'close_stream_session_close',
-                    'close_session_already_closed',
-                    'max_concurrent_stream_limit', 'stream_alloc_fail',
-                    'http_conn_alloc_fail', 'request_header_alloc_fail',
-                    'name_value_total_len_ex', 'name_value_zero_len',
-                    'name_value_invalid_http_ver', 'name_value_connection',
-                    'name_value_keepalive', 'name_value_proxy_conn',
-                    'name_value_trasnfer_encod', 'name_value_no_must_have',
-                    'decompress_fail', 'syn_after_goaway', 'stream_lt_prev',
-                    'syn_stream_exist_or_even', 'syn_unidir',
-                    'syn_reply_alr_rcvd', 'client_rst_nostream',
-                    'window_no_stream', 'invalid_window_size',
-                    'unknown_control_frame', 'data_on_closed_stream',
-                    'invalid_frame_size', 'invalid_version',
-                    'header_after_session_close', 'compress_ctx_alloc_fail',
-                    'header_compress_fail', 'http_data_session_close',
-                    'http_data_stream_not_found',
-                    'close_stream_not_http_proxy', 'session_needs_requeue',
-                    'new_stream_session_del', 'fin_stream_closed',
-                    'http_close_stream_closed', 'http_err_stream_closed',
-                    'http_hdr_stream_close', 'http_data_stream_close',
-                    'session_close'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'curr_proxy': {
-                    'type': 'int',
-                },
-                'total_proxy': {
-                    'type': 'int',
-                },
-                'curr_http_proxy': {
-                    'type': 'int',
-                },
-                'total_http_proxy': {
-                    'type': 'int',
-                },
-                'total_v2_proxy': {
-                    'type': 'int',
-                },
-                'total_v3_proxy': {
-                    'type': 'int',
-                },
-                'curr_stream': {
-                    'type': 'int',
-                },
-                'total_stream': {
-                    'type': 'int',
-                },
-                'total_stream_succ': {
-                    'type': 'int',
-                },
-                'client_rst': {
-                    'type': 'int',
-                },
-                'server_rst': {
-                    'type': 'int',
-                },
-                'client_goaway': {
-                    'type': 'int',
-                },
-                'server_goaway': {
-                    'type': 'int',
-                },
-                'tcp_err': {
-                    'type': 'int',
-                },
-                'inflate_ctx': {
-                    'type': 'int',
-                },
-                'deflate_ctx': {
-                    'type': 'int',
-                },
-                'ping_sent': {
-                    'type': 'int',
-                },
-                'stream_not_found': {
-                    'type': 'int',
-                },
-                'client_fin': {
-                    'type': 'int',
-                },
-                'server_fin': {
-                    'type': 'int',
-                },
-                'stream_close': {
-                    'type': 'int',
-                },
-                'stream_err': {
-                    'type': 'int',
-                },
-                'session_err': {
-                    'type': 'int',
-                },
-                'control_frame': {
-                    'type': 'int',
-                },
-                'syn_frame': {
-                    'type': 'int',
-                },
-                'syn_reply_frame': {
-                    'type': 'int',
-                },
-                'headers_frame': {
-                    'type': 'int',
-                },
-                'settings_frame': {
-                    'type': 'int',
-                },
-                'window_frame': {
-                    'type': 'int',
-                },
-                'ping_frame': {
-                    'type': 'int',
-                },
-                'data_frame': {
-                    'type': 'int',
-                },
-                'data_no_stream': {
-                    'type': 'int',
-                },
-                'data_no_stream_no_goaway': {
-                    'type': 'int',
-                },
-                'data_no_stream_goaway_close': {
-                    'type': 'int',
-                },
-                'est_cb_no_tuple': {
-                    'type': 'int',
-                },
-                'data_cb_no_tuple': {
-                    'type': 'int',
-                },
-                'ctx_alloc_fail': {
-                    'type': 'int',
-                },
-                'fin_close_session': {
-                    'type': 'int',
-                },
-                'server_rst_close_stream': {
-                    'type': 'int',
-                },
-                'stream_found': {
-                    'type': 'int',
-                },
-                'close_stream_session_not_found': {
-                    'type': 'int',
-                },
-                'close_stream_stream_not_found': {
-                    'type': 'int',
-                },
-                'close_stream_already_closed': {
-                    'type': 'int',
-                },
-                'close_stream_session_close': {
-                    'type': 'int',
-                },
-                'close_session_already_closed': {
-                    'type': 'int',
-                },
-                'max_concurrent_stream_limit': {
-                    'type': 'int',
-                },
-                'stream_alloc_fail': {
-                    'type': 'int',
-                },
-                'http_conn_alloc_fail': {
-                    'type': 'int',
-                },
-                'request_header_alloc_fail': {
-                    'type': 'int',
-                },
-                'name_value_total_len_ex': {
-                    'type': 'int',
-                },
-                'name_value_zero_len': {
-                    'type': 'int',
-                },
-                'name_value_invalid_http_ver': {
-                    'type': 'int',
-                },
-                'name_value_connection': {
-                    'type': 'int',
-                },
-                'name_value_keepalive': {
-                    'type': 'int',
-                },
-                'name_value_proxy_conn': {
-                    'type': 'int',
-                },
-                'name_value_trasnfer_encod': {
-                    'type': 'int',
-                },
-                'name_value_no_must_have': {
-                    'type': 'int',
-                },
-                'decompress_fail': {
-                    'type': 'int',
-                },
-                'syn_after_goaway': {
-                    'type': 'int',
-                },
-                'stream_lt_prev': {
-                    'type': 'int',
-                },
-                'syn_stream_exist_or_even': {
-                    'type': 'int',
-                },
-                'syn_unidir': {
-                    'type': 'int',
-                },
-                'syn_reply_alr_rcvd': {
-                    'type': 'int',
-                },
-                'client_rst_nostream': {
-                    'type': 'int',
-                },
-                'window_no_stream': {
-                    'type': 'int',
-                },
-                'invalid_window_size': {
-                    'type': 'int',
-                },
-                'unknown_control_frame': {
-                    'type': 'int',
-                },
-                'data_on_closed_stream': {
-                    'type': 'int',
-                },
-                'invalid_frame_size': {
-                    'type': 'int',
-                },
-                'invalid_version': {
-                    'type': 'int',
-                },
-                'header_after_session_close': {
-                    'type': 'int',
-                },
-                'compress_ctx_alloc_fail': {
-                    'type': 'int',
-                },
-                'header_compress_fail': {
-                    'type': 'int',
-                },
-                'http_data_session_close': {
-                    'type': 'int',
-                },
-                'http_data_stream_not_found': {
-                    'type': 'int',
-                },
-                'close_stream_not_http_proxy': {
-                    'type': 'int',
-                },
-                'session_needs_requeue': {
-                    'type': 'int',
-                },
-                'new_stream_session_del': {
-                    'type': 'int',
-                },
-                'fin_stream_closed': {
-                    'type': 'int',
-                },
-                'http_close_stream_closed': {
-                    'type': 'int',
-                },
-                'http_err_stream_closed': {
-                    'type': 'int',
-                },
-                'http_hdr_stream_close': {
-                    'type': 'int',
-                },
-                'http_data_stream_close': {
-                    'type': 'int',
-                },
-                'session_close': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'curr_proxy': {
-                'type': 'str',
-            },
-            'total_proxy': {
-                'type': 'str',
-            },
-            'curr_http_proxy': {
-                'type': 'str',
-            },
-            'total_http_proxy': {
-                'type': 'str',
-            },
-            'total_v2_proxy': {
-                'type': 'str',
-            },
-            'total_v3_proxy': {
-                'type': 'str',
-            },
-            'curr_stream': {
-                'type': 'str',
-            },
-            'total_stream': {
-                'type': 'str',
-            },
-            'total_stream_succ': {
-                'type': 'str',
-            },
-            'client_rst': {
-                'type': 'str',
-            },
-            'server_rst': {
-                'type': 'str',
-            },
-            'client_goaway': {
-                'type': 'str',
-            },
-            'server_goaway': {
-                'type': 'str',
-            },
-            'tcp_err': {
-                'type': 'str',
-            },
-            'inflate_ctx': {
-                'type': 'str',
-            },
-            'deflate_ctx': {
-                'type': 'str',
-            },
-            'ping_sent': {
-                'type': 'str',
-            },
-            'stream_not_found': {
-                'type': 'str',
-            },
-            'client_fin': {
-                'type': 'str',
-            },
-            'server_fin': {
-                'type': 'str',
-            },
-            'stream_close': {
-                'type': 'str',
-            },
-            'stream_err': {
-                'type': 'str',
-            },
-            'session_err': {
-                'type': 'str',
-            },
-            'control_frame': {
-                'type': 'str',
-            },
-            'syn_frame': {
-                'type': 'str',
-            },
-            'syn_reply_frame': {
-                'type': 'str',
-            },
-            'headers_frame': {
-                'type': 'str',
-            },
-            'settings_frame': {
-                'type': 'str',
-            },
-            'window_frame': {
-                'type': 'str',
-            },
-            'ping_frame': {
-                'type': 'str',
-            },
-            'data_frame': {
-                'type': 'str',
-            },
-            'data_no_stream': {
-                'type': 'str',
-            },
-            'data_no_stream_no_goaway': {
-                'type': 'str',
-            },
-            'data_no_stream_goaway_close': {
-                'type': 'str',
-            },
-            'est_cb_no_tuple': {
-                'type': 'str',
-            },
-            'data_cb_no_tuple': {
-                'type': 'str',
-            },
-            'ctx_alloc_fail': {
-                'type': 'str',
-            },
-            'fin_close_session': {
-                'type': 'str',
-            },
-            'server_rst_close_stream': {
-                'type': 'str',
-            },
-            'stream_found': {
-                'type': 'str',
-            },
-            'close_stream_session_not_found': {
-                'type': 'str',
-            },
-            'close_stream_stream_not_found': {
-                'type': 'str',
-            },
-            'close_stream_already_closed': {
-                'type': 'str',
-            },
-            'close_stream_session_close': {
-                'type': 'str',
-            },
-            'close_session_already_closed': {
-                'type': 'str',
-            },
-            'max_concurrent_stream_limit': {
-                'type': 'str',
-            },
-            'stream_alloc_fail': {
-                'type': 'str',
-            },
-            'http_conn_alloc_fail': {
-                'type': 'str',
-            },
-            'request_header_alloc_fail': {
-                'type': 'str',
-            },
-            'name_value_total_len_ex': {
-                'type': 'str',
-            },
-            'name_value_zero_len': {
-                'type': 'str',
-            },
-            'name_value_invalid_http_ver': {
-                'type': 'str',
-            },
-            'name_value_connection': {
-                'type': 'str',
-            },
-            'name_value_keepalive': {
-                'type': 'str',
-            },
-            'name_value_proxy_conn': {
-                'type': 'str',
-            },
-            'name_value_trasnfer_encod': {
-                'type': 'str',
-            },
-            'name_value_no_must_have': {
-                'type': 'str',
-            },
-            'decompress_fail': {
-                'type': 'str',
-            },
-            'syn_after_goaway': {
-                'type': 'str',
-            },
-            'stream_lt_prev': {
-                'type': 'str',
-            },
-            'syn_stream_exist_or_even': {
-                'type': 'str',
-            },
-            'syn_unidir': {
-                'type': 'str',
-            },
-            'syn_reply_alr_rcvd': {
-                'type': 'str',
-            },
-            'client_rst_nostream': {
-                'type': 'str',
-            },
-            'window_no_stream': {
-                'type': 'str',
-            },
-            'invalid_window_size': {
-                'type': 'str',
-            },
-            'unknown_control_frame': {
-                'type': 'str',
-            },
-            'data_on_closed_stream': {
-                'type': 'str',
-            },
-            'invalid_frame_size': {
-                'type': 'str',
-            },
-            'invalid_version': {
-                'type': 'str',
-            },
-            'header_after_session_close': {
-                'type': 'str',
-            },
-            'compress_ctx_alloc_fail': {
-                'type': 'str',
-            },
-            'header_compress_fail': {
-                'type': 'str',
-            },
-            'http_data_session_close': {
-                'type': 'str',
-            },
-            'http_data_stream_not_found': {
-                'type': 'str',
-            },
-            'close_stream_not_http_proxy': {
-                'type': 'str',
-            },
-            'session_needs_requeue': {
-                'type': 'str',
-            },
-            'new_stream_session_del': {
-                'type': 'str',
-            },
-            'fin_stream_closed': {
-                'type': 'str',
-            },
-            'http_close_stream_closed': {
-                'type': 'str',
-            },
-            'http_err_stream_closed': {
-                'type': 'str',
-            },
-            'http_hdr_stream_close': {
-                'type': 'str',
-            },
-            'http_data_stream_close': {
-                'type': 'str',
-            },
-            'session_close': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'curr_proxy', 'total_proxy', 'curr_http_proxy', 'total_http_proxy', 'total_v2_proxy', 'total_v3_proxy', 'curr_stream', 'total_stream', 'total_stream_succ', 'client_rst', 'server_rst', 'client_goaway', 'server_goaway', 'tcp_err', 'inflate_ctx', 'deflate_ctx', 'ping_sent', 'stream_not_found', 'client_fin', 'server_fin', 'stream_close', 'stream_err', 'session_err', 'control_frame', 'syn_frame', 'syn_reply_frame', 'headers_frame', 'settings_frame', 'window_frame', 'ping_frame', 'data_frame', 'data_no_stream', 'data_no_stream_no_goaway', 'data_no_stream_goaway_close', 'est_cb_no_tuple', 'data_cb_no_tuple', 'ctx_alloc_fail', 'fin_close_session', 'server_rst_close_stream', 'stream_found', 'close_stream_session_not_found', 'close_stream_stream_not_found', 'close_stream_already_closed', 'close_stream_session_close', 'close_session_already_closed', 'max_concurrent_stream_limit', 'stream_alloc_fail', 'http_conn_alloc_fail', 'request_header_alloc_fail', 'name_value_total_len_ex', 'name_value_zero_len', 'name_value_invalid_http_ver', 'name_value_connection', 'name_value_keepalive', 'name_value_proxy_conn', 'name_value_trasnfer_encod', 'name_value_no_must_have', 'decompress_fail', 'syn_after_goaway', 'stream_lt_prev', 'syn_stream_exist_or_even', 'syn_unidir', 'syn_reply_alr_rcvd', 'client_rst_nostream', 'window_no_stream', 'invalid_window_size', 'unknown_control_frame', 'data_on_closed_stream', 'invalid_frame_size', 'invalid_version', 'header_after_session_close', 'compress_ctx_alloc_fail', 'header_compress_fail', 'http_data_session_close', 'http_data_stream_not_found', 'close_stream_not_http_proxy', 'session_needs_requeue', 'new_stream_session_del', 'fin_stream_closed', 'http_close_stream_closed', 'http_err_stream_closed', 'http_hdr_stream_close', 'http_data_stream_close', 'session_close']}},
+        'oper': {'type': 'dict', 'l4_cpu_list': {'type': 'list', 'curr_proxy': {'type': 'int', }, 'total_proxy': {'type': 'int', }, 'curr_http_proxy': {'type': 'int', }, 'total_http_proxy': {'type': 'int', }, 'total_v2_proxy': {'type': 'int', }, 'total_v3_proxy': {'type': 'int', }, 'curr_stream': {'type': 'int', }, 'total_stream': {'type': 'int', }, 'total_stream_succ': {'type': 'int', }, 'client_rst': {'type': 'int', }, 'server_rst': {'type': 'int', }, 'client_goaway': {'type': 'int', }, 'server_goaway': {'type': 'int', }, 'tcp_err': {'type': 'int', }, 'inflate_ctx': {'type': 'int', }, 'deflate_ctx': {'type': 'int', }, 'ping_sent': {'type': 'int', }, 'stream_not_found': {'type': 'int', }, 'client_fin': {'type': 'int', }, 'server_fin': {'type': 'int', }, 'stream_close': {'type': 'int', }, 'stream_err': {'type': 'int', }, 'session_err': {'type': 'int', }, 'control_frame': {'type': 'int', }, 'syn_frame': {'type': 'int', }, 'syn_reply_frame': {'type': 'int', }, 'headers_frame': {'type': 'int', }, 'settings_frame': {'type': 'int', }, 'window_frame': {'type': 'int', }, 'ping_frame': {'type': 'int', }, 'data_frame': {'type': 'int', }, 'data_no_stream': {'type': 'int', }, 'data_no_stream_no_goaway': {'type': 'int', }, 'data_no_stream_goaway_close': {'type': 'int', }, 'est_cb_no_tuple': {'type': 'int', }, 'data_cb_no_tuple': {'type': 'int', }, 'ctx_alloc_fail': {'type': 'int', }, 'fin_close_session': {'type': 'int', }, 'server_rst_close_stream': {'type': 'int', }, 'stream_found': {'type': 'int', }, 'close_stream_session_not_found': {'type': 'int', }, 'close_stream_stream_not_found': {'type': 'int', }, 'close_stream_already_closed': {'type': 'int', }, 'close_stream_session_close': {'type': 'int', }, 'close_session_already_closed': {'type': 'int', }, 'max_concurrent_stream_limit': {'type': 'int', }, 'stream_alloc_fail': {'type': 'int', }, 'http_conn_alloc_fail': {'type': 'int', }, 'request_header_alloc_fail': {'type': 'int', }, 'name_value_total_len_ex': {'type': 'int', }, 'name_value_zero_len': {'type': 'int', }, 'name_value_invalid_http_ver': {'type': 'int', }, 'name_value_connection': {'type': 'int', }, 'name_value_keepalive': {'type': 'int', }, 'name_value_proxy_conn': {'type': 'int', }, 'name_value_trasnfer_encod': {'type': 'int', }, 'name_value_no_must_have': {'type': 'int', }, 'decompress_fail': {'type': 'int', }, 'syn_after_goaway': {'type': 'int', }, 'stream_lt_prev': {'type': 'int', }, 'syn_stream_exist_or_even': {'type': 'int', }, 'syn_unidir': {'type': 'int', }, 'syn_reply_alr_rcvd': {'type': 'int', }, 'client_rst_nostream': {'type': 'int', }, 'window_no_stream': {'type': 'int', }, 'invalid_window_size': {'type': 'int', }, 'unknown_control_frame': {'type': 'int', }, 'data_on_closed_stream': {'type': 'int', }, 'invalid_frame_size': {'type': 'int', }, 'invalid_version': {'type': 'int', }, 'header_after_session_close': {'type': 'int', }, 'compress_ctx_alloc_fail': {'type': 'int', }, 'header_compress_fail': {'type': 'int', }, 'http_data_session_close': {'type': 'int', }, 'http_data_stream_not_found': {'type': 'int', }, 'close_stream_not_http_proxy': {'type': 'int', }, 'session_needs_requeue': {'type': 'int', }, 'new_stream_session_del': {'type': 'int', }, 'fin_stream_closed': {'type': 'int', }, 'http_close_stream_closed': {'type': 'int', }, 'http_err_stream_closed': {'type': 'int', }, 'http_hdr_stream_close': {'type': 'int', }, 'http_data_stream_close': {'type': 'int', }, 'session_close': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
+        'stats': {'type': 'dict', 'curr_proxy': {'type': 'str', }, 'total_proxy': {'type': 'str', }, 'curr_http_proxy': {'type': 'str', }, 'total_http_proxy': {'type': 'str', }, 'total_v2_proxy': {'type': 'str', }, 'total_v3_proxy': {'type': 'str', }, 'curr_stream': {'type': 'str', }, 'total_stream': {'type': 'str', }, 'total_stream_succ': {'type': 'str', }, 'client_rst': {'type': 'str', }, 'server_rst': {'type': 'str', }, 'client_goaway': {'type': 'str', }, 'server_goaway': {'type': 'str', }, 'tcp_err': {'type': 'str', }, 'inflate_ctx': {'type': 'str', }, 'deflate_ctx': {'type': 'str', }, 'ping_sent': {'type': 'str', }, 'stream_not_found': {'type': 'str', }, 'client_fin': {'type': 'str', }, 'server_fin': {'type': 'str', }, 'stream_close': {'type': 'str', }, 'stream_err': {'type': 'str', }, 'session_err': {'type': 'str', }, 'control_frame': {'type': 'str', }, 'syn_frame': {'type': 'str', }, 'syn_reply_frame': {'type': 'str', }, 'headers_frame': {'type': 'str', }, 'settings_frame': {'type': 'str', }, 'window_frame': {'type': 'str', }, 'ping_frame': {'type': 'str', }, 'data_frame': {'type': 'str', }, 'data_no_stream': {'type': 'str', }, 'data_no_stream_no_goaway': {'type': 'str', }, 'data_no_stream_goaway_close': {'type': 'str', }, 'est_cb_no_tuple': {'type': 'str', }, 'data_cb_no_tuple': {'type': 'str', }, 'ctx_alloc_fail': {'type': 'str', }, 'fin_close_session': {'type': 'str', }, 'server_rst_close_stream': {'type': 'str', }, 'stream_found': {'type': 'str', }, 'close_stream_session_not_found': {'type': 'str', }, 'close_stream_stream_not_found': {'type': 'str', }, 'close_stream_already_closed': {'type': 'str', }, 'close_stream_session_close': {'type': 'str', }, 'close_session_already_closed': {'type': 'str', }, 'max_concurrent_stream_limit': {'type': 'str', }, 'stream_alloc_fail': {'type': 'str', }, 'http_conn_alloc_fail': {'type': 'str', }, 'request_header_alloc_fail': {'type': 'str', }, 'name_value_total_len_ex': {'type': 'str', }, 'name_value_zero_len': {'type': 'str', }, 'name_value_invalid_http_ver': {'type': 'str', }, 'name_value_connection': {'type': 'str', }, 'name_value_keepalive': {'type': 'str', }, 'name_value_proxy_conn': {'type': 'str', }, 'name_value_trasnfer_encod': {'type': 'str', }, 'name_value_no_must_have': {'type': 'str', }, 'decompress_fail': {'type': 'str', }, 'syn_after_goaway': {'type': 'str', }, 'stream_lt_prev': {'type': 'str', }, 'syn_stream_exist_or_even': {'type': 'str', }, 'syn_unidir': {'type': 'str', }, 'syn_reply_alr_rcvd': {'type': 'str', }, 'client_rst_nostream': {'type': 'str', }, 'window_no_stream': {'type': 'str', }, 'invalid_window_size': {'type': 'str', }, 'unknown_control_frame': {'type': 'str', }, 'data_on_closed_stream': {'type': 'str', }, 'invalid_frame_size': {'type': 'str', }, 'invalid_version': {'type': 'str', }, 'header_after_session_close': {'type': 'str', }, 'compress_ctx_alloc_fail': {'type': 'str', }, 'header_compress_fail': {'type': 'str', }, 'http_data_session_close': {'type': 'str', }, 'http_data_stream_not_found': {'type': 'str', }, 'close_stream_not_http_proxy': {'type': 'str', }, 'session_needs_requeue': {'type': 'str', }, 'new_stream_session_del': {'type': 'str', }, 'fin_stream_closed': {'type': 'str', }, 'http_close_stream_closed': {'type': 'str', }, 'http_err_stream_closed': {'type': 'str', }, 'http_hdr_stream_close': {'type': 'str', }, 'http_data_stream_close': {'type': 'str', }, 'session_close': {'type': 'str', }}
     })
     return rv
 
@@ -1133,37 +593,88 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
 
 def get_stats(module):
+    query_params = {}
     if module.params.get("stats"):
-        query_params = {}
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module), params=query_params)
-    return module.client.get(stats_url(module))
+    return _get(module, stats_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -1188,7 +699,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -1204,9 +717,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -1250,32 +761,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["spdy-proxy"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["spdy-proxy"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["spdy-proxy"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["spdy-proxy"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["spdy-proxy"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["spdy-proxy"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1286,12 +796,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1302,21 +813,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("spdy-proxy", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -1328,15 +838,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -1356,9 +866,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1375,6 +888,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -1385,16 +899,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -1404,26 +924,22 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
         elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+            result["axapi_calls"].append(get_stats(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_common
 description:
@@ -461,89 +462,45 @@ options:
 
 '''
 
+RETURN = r'''
+modified_values:
+    description:
+    - Values modified (or potential changes if using check_mode) as a result of task operation
+    returned: changed
+    type: dict
+axapi_calls:
+    description: Sequential list of AXAPI calls made by the task
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        endpoint:
+            description: The AXAPI endpoint being accessed.
+            type: str
+            sample:
+                - /axapi/v3/slb/virtual_server
+                - /axapi/v3/file/ssl-cert
+        http_method:
+            description:
+            - HTTP method being used by the primary task to interact with the AXAPI endpoint.
+            type: str
+            sample:
+                - POST
+                - GET
+        request_body:
+            description: Params used to query the AXAPI
+            type: complex
+        response_body:
+            description: Response from the AXAPI
+            type: complex
+'''
+
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
-# Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "after_disable",
-    "allow_in_gateway_mode",
-    "auto_nat_no_ip_refresh",
-    "buff_thresh",
-    "buff_thresh_hw_buff",
-    "buff_thresh_relieve_thresh",
-    "buff_thresh_sys_buff_high",
-    "buff_thresh_sys_buff_low",
-    "compress_block_size",
-    "conn_rate_limit",
-    "ddos_protection",
-    "disable_adaptive_resource_check",
-    "disable_persist_scoring",
-    "disable_port_masking",
-    "disable_server_auto_reselect",
-    "dns_cache_age",
-    "dns_cache_enable",
-    "dns_cache_entry_size",
-    "dns_response_rate_limiting",
-    "dns_vip_stateless",
-    "drop_icmp_to_vip_when_vip_down",
-    "dsr_health_check_enable",
-    "ecmp_hash",
-    "enable_l7_req_acct",
-    "entity",
-    "exclude_destination",
-    "extended_stats",
-    "fast_path_disable",
-    "gateway_health_check",
-    "graceful_shutdown",
-    "graceful_shutdown_enable",
-    "honor_server_response_ttl",
-    "hw_compression",
-    "hw_syn_rr",
-    "interval",
-    "ipv4_offset",
-    "l2l3_trunk_lb_disable",
-    "log_for_reset_unknown_conn",
-    "low_latency",
-    "max_buff_queued_per_conn",
-    "max_http_header_count",
-    "max_local_rate",
-    "max_remote_rate",
-    "msl_time",
-    "mss_table",
-    "no_auto_up_on_aflex",
-    "oper",
-    "override_port",
-    "pkt_rate_for_reset_unknown_conn",
-    "player_id_check_enable",
-    "range",
-    "range_end",
-    "range_start",
-    "rate_limit_logging",
-    "reset_stale_session",
-    "resolve_port_conflict",
-    "response_type",
-    "scale_out",
-    "service_group_on_no_dest_nat_vports",
-    "snat_gwy_for_l3",
-    "snat_on_vip",
-    "snat_preserve",
-    "software",
-    "sort_res",
-    "ssli_sni_hash_enable",
-    "stateless_sg_multi_binding",
-    "stats_data_disable",
-    "timeout",
-    "ttl_threshold",
-    "use_mss_tab",
-    "uuid",
-]
+# standard ansible module imports
+from ansible.module_utils.basic import AnsibleModule
+import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -553,320 +510,102 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
 
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+# Hacky way of having access to object properties for evaluation
+AVAILABLE_PROPERTIES = ["after_disable", "allow_in_gateway_mode", "auto_nat_no_ip_refresh", "buff_thresh", "buff_thresh_hw_buff", "buff_thresh_relieve_thresh", "buff_thresh_sys_buff_high", "buff_thresh_sys_buff_low", "compress_block_size", "conn_rate_limit", "ddos_protection", "disable_adaptive_resource_check", "disable_persist_scoring", "disable_port_masking", "disable_server_auto_reselect", "dns_cache_age", "dns_cache_enable", "dns_cache_entry_size", "dns_response_rate_limiting", "dns_vip_stateless", "drop_icmp_to_vip_when_vip_down", "dsr_health_check_enable", "ecmp_hash", "enable_l7_req_acct", "entity", "exclude_destination", "extended_stats", "fast_path_disable", "gateway_health_check", "graceful_shutdown", "graceful_shutdown_enable", "honor_server_response_ttl", "hw_compression", "hw_syn_rr", "interval", "ipv4_offset", "l2l3_trunk_lb_disable", "log_for_reset_unknown_conn", "low_latency", "max_buff_queued_per_conn", "max_http_header_count", "max_local_rate", "max_remote_rate", "msl_time", "mss_table", "no_auto_up_on_aflex", "oper", "override_port", "pkt_rate_for_reset_unknown_conn", "player_id_check_enable", "range", "range_end", "range_start", "rate_limit_logging", "reset_stale_session", "resolve_port_conflict", "response_type", "scale_out", "service_group_on_no_dest_nat_vports", "snat_gwy_for_l3", "snat_on_vip", "snat_preserve", "software", "sort_res", "ssli_sni_hash_enable", "stateless_sg_multi_binding", "stats_data_disable", "timeout", "ttl_threshold", "use_mss_tab", "uuid", ]
+
+
 def get_default_argspec():
     return dict(
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='dict',
-            name=dict(type='str', ),
-            shared=dict(type='str', ),
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'extended_stats': {
-            'type': 'bool',
-        },
-        'stats_data_disable': {
-            'type': 'bool',
-        },
-        'graceful_shutdown_enable': {
-            'type': 'bool',
-        },
-        'graceful_shutdown': {
-            'type': 'int',
-        },
-        'entity': {
-            'type': 'str',
-            'choices': ['server', 'virtual-server']
-        },
-        'after_disable': {
-            'type': 'bool',
-        },
-        'rate_limit_logging': {
-            'type': 'bool',
-        },
-        'max_local_rate': {
-            'type': 'int',
-        },
-        'max_remote_rate': {
-            'type': 'int',
-        },
-        'exclude_destination': {
-            'type': 'str',
-            'choices': ['local', 'remote']
-        },
-        'range': {
-            'type': 'int',
-        },
-        'range_start': {
-            'type': 'int',
-        },
-        'range_end': {
-            'type': 'int',
-        },
-        'dsr_health_check_enable': {
-            'type': 'bool',
-        },
-        'override_port': {
-            'type': 'bool',
-        },
-        'reset_stale_session': {
-            'type': 'bool',
-        },
-        'dns_cache_enable': {
-            'type': 'bool',
-        },
-        'response_type': {
-            'type': 'str',
-            'choices': ['single-answer', 'round-robin']
-        },
-        'ttl_threshold': {
-            'type': 'int',
-        },
-        'dns_cache_age': {
-            'type': 'int',
-        },
-        'compress_block_size': {
-            'type': 'int',
-        },
-        'dns_cache_entry_size': {
-            'type': 'int',
-        },
-        'dns_vip_stateless': {
-            'type': 'bool',
-        },
-        'honor_server_response_ttl': {
-            'type': 'bool',
-        },
-        'buff_thresh': {
-            'type': 'bool',
-        },
-        'buff_thresh_hw_buff': {
-            'type': 'int',
-        },
-        'buff_thresh_relieve_thresh': {
-            'type': 'int',
-        },
-        'buff_thresh_sys_buff_low': {
-            'type': 'int',
-        },
-        'buff_thresh_sys_buff_high': {
-            'type': 'int',
-        },
-        'max_buff_queued_per_conn': {
-            'type': 'int',
-        },
-        'pkt_rate_for_reset_unknown_conn': {
-            'type': 'int',
-        },
-        'log_for_reset_unknown_conn': {
-            'type': 'bool',
-        },
-        'gateway_health_check': {
-            'type': 'bool',
-        },
-        'interval': {
-            'type': 'int',
-        },
-        'timeout': {
-            'type': 'int',
-        },
-        'msl_time': {
-            'type': 'int',
-        },
-        'fast_path_disable': {
-            'type': 'bool',
-        },
-        'l2l3_trunk_lb_disable': {
-            'type': 'bool',
-        },
-        'snat_gwy_for_l3': {
-            'type': 'bool',
-        },
-        'allow_in_gateway_mode': {
-            'type': 'bool',
-        },
-        'disable_server_auto_reselect': {
-            'type': 'bool',
-        },
-        'enable_l7_req_acct': {
-            'type': 'bool',
-        },
-        'disable_adaptive_resource_check': {
-            'type': 'bool',
-        },
-        'snat_on_vip': {
-            'type': 'bool',
-        },
-        'low_latency': {
-            'type': 'bool',
-        },
-        'mss_table': {
-            'type': 'int',
-        },
-        'resolve_port_conflict': {
-            'type': 'bool',
-        },
-        'no_auto_up_on_aflex': {
-            'type': 'bool',
-        },
-        'hw_compression': {
-            'type': 'bool',
-        },
-        'hw_syn_rr': {
-            'type': 'int',
-        },
-        'max_http_header_count': {
-            'type': 'int',
-        },
-        'scale_out': {
-            'type': 'bool',
-        },
-        'sort_res': {
-            'type': 'bool',
-        },
-        'use_mss_tab': {
-            'type': 'bool',
-        },
-        'auto_nat_no_ip_refresh': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'ddos_protection': {
-            'type': 'dict',
-            'ipd_enable_toggle': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'logging': {
-                'type': 'dict',
-                'ipd_logging_toggle': {
-                    'type': 'str',
-                    'choices': ['enable', 'disable']
-                }
-            },
-            'packets_per_second': {
-                'type': 'dict',
-                'ipd_tcp': {
-                    'type': 'int',
-                },
-                'ipd_udp': {
-                    'type': 'int',
-                }
-            }
-        },
-        'ssli_sni_hash_enable': {
-            'type': 'bool',
-        },
-        'software': {
-            'type': 'bool',
-        },
-        'ecmp_hash': {
-            'type': 'str',
-            'choices': ['system-default', 'connection-based']
-        },
-        'drop_icmp_to_vip_when_vip_down': {
-            'type': 'bool',
-        },
-        'player_id_check_enable': {
-            'type': 'bool',
-        },
-        'stateless_sg_multi_binding': {
-            'type': 'bool',
-        },
-        'disable_persist_scoring': {
-            'type': 'bool',
-        },
-        'ipv4_offset': {
-            'type': 'int',
-        },
-        'disable_port_masking': {
-            'type': 'bool',
-        },
-        'snat_preserve': {
-            'type': 'dict',
-            'range': {
-                'type': 'list',
-                'port1': {
-                    'type': 'int',
-                },
-                'port2': {
-                    'type': 'int',
-                }
-            }
-        },
-        'service_group_on_no_dest_nat_vports': {
-            'type': 'str',
-            'choices': ['allow-same', 'enforce-different']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'conn_rate_limit': {
-            'type': 'dict',
-            'src_ip_list': {
-                'type': 'list',
-                'protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['tcp', 'udp']
-                },
-                'limit': {
-                    'type': 'int',
-                },
-                'limit_period': {
-                    'type': 'str',
-                    'choices': ['100', '1000']
-                },
-                'shared': {
-                    'type': 'bool',
-                },
-                'exceed_action': {
-                    'type': 'bool',
-                },
-                'log': {
-                    'type': 'bool',
-                },
-                'lock_out': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'dns_response_rate_limiting': {
-            'type': 'dict',
-            'max_table_entries': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'server_auto_reselect': {
-                'type': 'int',
-            }
-        }
+    rv.update({'extended_stats': {'type': 'bool', },
+        'stats_data_disable': {'type': 'bool', },
+        'graceful_shutdown_enable': {'type': 'bool', },
+        'graceful_shutdown': {'type': 'int', },
+        'entity': {'type': 'str', 'choices': ['server', 'virtual-server']},
+        'after_disable': {'type': 'bool', },
+        'rate_limit_logging': {'type': 'bool', },
+        'max_local_rate': {'type': 'int', },
+        'max_remote_rate': {'type': 'int', },
+        'exclude_destination': {'type': 'str', 'choices': ['local', 'remote']},
+        'range': {'type': 'int', },
+        'range_start': {'type': 'int', },
+        'range_end': {'type': 'int', },
+        'dsr_health_check_enable': {'type': 'bool', },
+        'override_port': {'type': 'bool', },
+        'reset_stale_session': {'type': 'bool', },
+        'dns_cache_enable': {'type': 'bool', },
+        'response_type': {'type': 'str', 'choices': ['single-answer', 'round-robin']},
+        'ttl_threshold': {'type': 'int', },
+        'dns_cache_age': {'type': 'int', },
+        'compress_block_size': {'type': 'int', },
+        'dns_cache_entry_size': {'type': 'int', },
+        'dns_vip_stateless': {'type': 'bool', },
+        'honor_server_response_ttl': {'type': 'bool', },
+        'buff_thresh': {'type': 'bool', },
+        'buff_thresh_hw_buff': {'type': 'int', },
+        'buff_thresh_relieve_thresh': {'type': 'int', },
+        'buff_thresh_sys_buff_low': {'type': 'int', },
+        'buff_thresh_sys_buff_high': {'type': 'int', },
+        'max_buff_queued_per_conn': {'type': 'int', },
+        'pkt_rate_for_reset_unknown_conn': {'type': 'int', },
+        'log_for_reset_unknown_conn': {'type': 'bool', },
+        'gateway_health_check': {'type': 'bool', },
+        'interval': {'type': 'int', },
+        'timeout': {'type': 'int', },
+        'msl_time': {'type': 'int', },
+        'fast_path_disable': {'type': 'bool', },
+        'l2l3_trunk_lb_disable': {'type': 'bool', },
+        'snat_gwy_for_l3': {'type': 'bool', },
+        'allow_in_gateway_mode': {'type': 'bool', },
+        'disable_server_auto_reselect': {'type': 'bool', },
+        'enable_l7_req_acct': {'type': 'bool', },
+        'disable_adaptive_resource_check': {'type': 'bool', },
+        'snat_on_vip': {'type': 'bool', },
+        'low_latency': {'type': 'bool', },
+        'mss_table': {'type': 'int', },
+        'resolve_port_conflict': {'type': 'bool', },
+        'no_auto_up_on_aflex': {'type': 'bool', },
+        'hw_compression': {'type': 'bool', },
+        'hw_syn_rr': {'type': 'int', },
+        'max_http_header_count': {'type': 'int', },
+        'scale_out': {'type': 'bool', },
+        'sort_res': {'type': 'bool', },
+        'use_mss_tab': {'type': 'bool', },
+        'auto_nat_no_ip_refresh': {'type': 'str', 'choices': ['enable', 'disable']},
+        'ddos_protection': {'type': 'dict', 'ipd_enable_toggle': {'type': 'str', 'choices': ['enable', 'disable']}, 'logging': {'type': 'dict', 'ipd_logging_toggle': {'type': 'str', 'choices': ['enable', 'disable']}}, 'packets_per_second': {'type': 'dict', 'ipd_tcp': {'type': 'int', }, 'ipd_udp': {'type': 'int', }}},
+        'ssli_sni_hash_enable': {'type': 'bool', },
+        'software': {'type': 'bool', },
+        'ecmp_hash': {'type': 'str', 'choices': ['system-default', 'connection-based']},
+        'drop_icmp_to_vip_when_vip_down': {'type': 'bool', },
+        'player_id_check_enable': {'type': 'bool', },
+        'stateless_sg_multi_binding': {'type': 'bool', },
+        'disable_persist_scoring': {'type': 'bool', },
+        'ipv4_offset': {'type': 'int', },
+        'disable_port_masking': {'type': 'bool', },
+        'snat_preserve': {'type': 'dict', 'range': {'type': 'list', 'port1': {'type': 'int', }, 'port2': {'type': 'int', }}},
+        'service_group_on_no_dest_nat_vports': {'type': 'str', 'choices': ['allow-same', 'enforce-different']},
+        'uuid': {'type': 'str', },
+        'conn_rate_limit': {'type': 'dict', 'src_ip_list': {'type': 'list', 'protocol': {'type': 'str', 'required': True, 'choices': ['tcp', 'udp']}, 'limit': {'type': 'int', }, 'limit_period': {'type': 'str', 'choices': ['100', '1000']}, 'shared': {'type': 'bool', }, 'exceed_action': {'type': 'bool', }, 'log': {'type': 'bool', }, 'lock_out': {'type': 'int', }, 'uuid': {'type': 'str', }}},
+        'dns_response_rate_limiting': {'type': 'dict', 'max_table_entries': {'type': 'int', }, 'uuid': {'type': 'str', }},
+        'oper': {'type': 'dict', 'server_auto_reselect': {'type': 'int', }}
     })
     return rv
 
@@ -893,28 +632,80 @@ def list_url(module):
     return ret[0:ret.rfind('/')]
 
 
+def _get(module, url, params={}):
+
+    resp = None
+    try:
+        resp = module.client.get(url, params=params)
+    except a10_ex.NotFound:
+        resp = "Not Found"
+
+    call_result = {
+        "endpoint": url,
+        "http_method": "GET",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _post(module, url, params={}, file_content=None, file_name=None):
+    resp = module.client.post(url, params=params)
+    resp = resp if resp else {}
+    call_result = {
+        "endpoint": url,
+        "http_method": "POST",
+        "request_body": params,
+        "response_body": resp,
+    }
+    return call_result
+
+
+def _delete(module, url):
+    call_result = {
+        "endpoint": url,
+        "http_method": "DELETE",
+        "request_body": {},
+        "response_body": module.client.delete(url),
+    }
+    return call_result
+
+
+def _switch_device_context(module, device_id):
+    call_result = {
+        "endpoint": "/axapi/v3/device-context",
+        "http_method": "POST",
+        "request_body": {"device-id": device_id},
+        "response_body": module.client.change_context(device_id)
+    }
+    return call_result
+
+
+def _active_partition(module, a10_partition):
+    call_result = {
+        "endpoint": "/axapi/v3/active-partition",
+        "http_method": "POST",
+        "request_body": {"curr_part_name": a10_partition},
+        "response_body": module.client.activate_partition(a10_partition)
+    }
+    return call_result
+
+
 def get(module):
-    return module.client.get(existing_url(module))
+    return _get(module, existing_url(module))
 
 
 def get_list(module):
-    return module.client.get(list_url(module))
+    return _get(module, list_url(module))
 
 
 def get_oper(module):
+    query_params = {}
     if module.params.get("oper"):
-        query_params = {}
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(oper_url(module), params=query_params)
-    return module.client.get(oper_url(module))
+    return _get(module, oper_url(module), params=query_params)
 
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
 
 
 def _to_axapi(key):
@@ -939,7 +730,9 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {title: data}
+    return {
+        title: data
+    }
 
 
 def new_url(module):
@@ -955,9 +748,7 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
 
     errors = []
     marg = []
@@ -1001,32 +792,31 @@ def build_json(title, module):
 
 
 def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["common"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-                break
-            else:
-                if existing_config["common"][k] != v:
-                    if result["changed"] is not True:
-                        result["changed"] = True
-                    existing_config["common"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["common"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["common"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["common"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        call_result = _post(module, new_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        result["modified_values"].update(
+                **call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1037,12 +827,13 @@ def create(module, result, payload):
 
 def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
+        call_result = _post(module, existing_url(module), payload)
+        result["axapi_calls"].append(call_result)
+        if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
+            result["modified_values"].update(
+                **call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1053,21 +844,20 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("common", module)
-    changed_config = report_changes(module, result, existing_config, payload)
+    change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
+        return change_results
     elif not existing_config:
         return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
+    elif existing_config and change_results.get('changed'):
         return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
+    return result
 
 
 def delete(module, result):
     try:
-        module.client.delete(existing_url(module))
+        call_result = _delete(module, existing_url(module))
+        result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -1079,15 +869,15 @@ def delete(module, result):
 
 
 def absent(module, result, existing_config):
+    if not existing_config:
+        result["changed"] = False
+        return result
+
     if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
+        result["changed"] = True
+        return result
+
+    return delete(module, result)
 
 
 def replace(module, result, existing_config, payload):
@@ -1107,9 +897,12 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    run_errors = []
-
-    result = dict(changed=False, original_message="", message="", result={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1126,6 +919,7 @@ def run_command(module):
 
     valid = True
 
+    run_errors = []
     if state == 'present':
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
@@ -1136,16 +930,22 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
 
     if a10_partition:
-        module.client.activate_partition(a10_partition)
+        result["axapi_calls"].append(
+            _active_partition(module, a10_partition))
 
     if a10_device_context_id:
-        module.client.change_context(a10_device_context_id)
+         result["axapi_calls"].append(
+            _switch_device_context(module, a10_device_context_id))
 
-    existing_config = exists(module)
+    existing_config = get(module)
+    result["axapi_calls"].append(existing_config)
+    if existing_config['response_body'] != 'Not Found':
+        existing_config = existing_config["response_body"]
+    else:
+        existing_config = None
 
     if state == 'present':
         result = present(module, result, existing_config)
@@ -1155,24 +955,20 @@ def run_command(module):
 
     if state == 'noop':
         if module.params.get("get_type") == "single":
-            result["result"] = get(module)
+            result["axapi_calls"].append(get(module))
         elif module.params.get("get_type") == "list":
-            result["result"] = get_list(module)
+            result["axapi_calls"].append(get_list(module))
         elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+            result["axapi_calls"].append(get_oper(module))
     module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
-
-# standard ansible module imports
-from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

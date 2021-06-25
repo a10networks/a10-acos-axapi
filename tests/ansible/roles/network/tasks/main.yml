@@ -1,2 +1,3 @@
 ---
 - include_tasks: test_network_vlan.yml
+- include_tasks: cleanup.yml
