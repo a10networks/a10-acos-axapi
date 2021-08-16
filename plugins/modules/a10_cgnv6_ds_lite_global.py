@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_global
 description:
@@ -879,9 +878,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -890,7 +890,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -898,7 +897,17 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["icmp", "inside", "ip_checksum_error", "l4_checksum_error", "sampling_enable", "stats", "tcp", "user_quota_prefix_length", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "icmp",
+    "inside",
+    "ip_checksum_error",
+    "l4_checksum_error",
+    "sampling_enable",
+    "stats",
+    "tcp",
+    "user_quota_prefix_length",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -906,25 +915,639 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'user_quota_prefix_length': {'type': 'int', },
-        'tcp': {'type': 'dict', 'mss_clamp': {'type': 'dict', 'mss_clamp_type': {'type': 'str', 'choices': ['fixed', 'none', 'subtract']}, 'mss_value': {'type': 'int', }, 'mss_subtract': {'type': 'int', }, 'min': {'type': 'int', }}, 'reset_on_error': {'type': 'dict', 'outbound': {'type': 'str', 'choices': ['disable']}}},
-        'ip_checksum_error': {'type': 'str', 'choices': ['fix', 'drop']},
-        'l4_checksum_error': {'type': 'str', 'choices': ['propagate', 'fix', 'drop']},
-        'inside': {'type': 'dict', 'source': {'type': 'dict', 'class_list': {'type': 'str', }}},
-        'icmp': {'type': 'dict', 'send_on_port_unavailable': {'type': 'str', 'choices': ['host-unreachable', 'admin-filtered', 'disable']}, 'send_on_user_quota_exceeded': {'type': 'str', 'choices': ['host-unreachable', 'admin-filtered', 'disable']}},
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'total_tcp_allocated', 'total_tcp_freed', 'total_udp_allocated', 'total_udp_freed', 'total_icmp_allocated', 'total_icmp_freed', 'data_session_created', 'data_session_freed', 'user_quota_created', 'user_quota_put_in_del_q', 'user_quota_failure', 'nat_port_unavailable_tcp', 'nat_port_unavailable_udp', 'nat_port_unavailable_icmp', 'new_user_resource_unavailable', 'tcp_user_quota_exceeded', 'udp_user_quota_exceeded', 'icmp_user_quota_exceeded', 'extended_quota_matched', 'extended_quota_exceeded', 'data_sesn_user_quota_exceeded', 'data_sesn_rate_user_quota_exceeded', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_failure', 'hairpin', 'fullcone_self_hairpinning_drop', 'endpoint_indep_map_match', 'endpoint_indep_filter_match', 'inbound_filtered', 'eif_limit_exceeded', 'total_tcp_overloaded', 'total_udp_overloaded', 'port_overloading_smp_inserted_tcp', 'port_overloading_smp_inserted_udp', 'port_overloading_smp_free_tcp', 'port_overloading_smp_free_udp', 'nat_pool_unusable', 'ha_nat_pool_unusable', 'ha_nat_pool_batch_type_mismatch', 'no_radius_profile_match', 'truncated_packet', 'lid_drop', 'lid_pass_through', 'no_class_list_match', 'class_list_permit_drop', 'user_quota_mem_allocated', 'user_quota_mem_freed', 'user_quota_created_shadow', 'quota_marked_deleted', 'quota_delete_not_in_bucket', 'user_quota_put_in_del_q_shadow', 'prefix_quota_created', 'prefix_quota_put_in_del_q', 'prefix_quota_failure', 'total_user_quota_created', 'total_user_quota_put_in_del_q', 'total_user_quota_failure', 'tcp_out_of_state_rst_sent', 'tcp_out_of_state_rst_dropped', 'icmp_out_of_state_uqe_admin_filtered_sent', 'icmp_out_of_state_uqe_host_unreachable_sent', 'icmp_out_of_state_uqe_dropped', 'user_quota_not_found', 'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow', 'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'udp_alg_fullcone_created', 'udp_alg_fullcone_freed', 'fullcone_created', 'fullcone_freed', 'data_session_created_shadow', 'data_session_freed_shadow', 'data_session_user_quota_mismatch', 'extended_quota_mismatched', 'nat_port_unavailable_other', 'nat_port_unavailable', 'new_user_resource_unavailable_tcp', 'new_user_resource_unavailable_udp', 'new_user_resource_unavailable_icmp', 'new_user_resource_unavailable_other', 'total_tcp_allocated_shadow', 'total_tcp_freed_shadow', 'total_udp_allocated_shadow', 'total_udp_freed_shadow', 'total_icmp_allocated_shadow', 'total_icmp_freed_shadow', 'udp_alg_no_quota', 'udp_alg_eim_mismatch', 'udp_alg_no_nat_ip', 'udp_alg_alloc_failure', 'sip_alg_no_quota', 'sip_alg_quota_inc_failure', 'sip_alg_no_nat_ip', 'sip_alg_reuse_contact_fullcone', 'sip_alg_contact_fullcone_mismatch', 'sip_alg_alloc_contact_port_failure', 'sip_alg_create_contact_fullcone_failure', 'sip_alg_release_contact_port_failure', 'sip_alg_single_rtp_fullcone', 'sip_alg_single_rtcp_fullcone', 'sip_alg_rtcp_fullcone_mismatch', 'sip_alg_reuse_rtp_rtcp_fullcone', 'sip_alg_alloc_rtp_rtcp_port_failure', 'sip_alg_alloc_single_port_failure', 'sip_alg_create_single_fullcone_failure', 'sip_alg_create_rtp_fullcone_failure', 'sip_alg_create_rtcp_fullcone_failure', 'sip_alg_port_pair_alloc_from_consecutive', 'sip_alg_port_pair_alloc_from_partition', 'sip_alg_port_pair_alloc_from_pool_port_batch', 'sip_alg_port_pair_alloc_from_quota_consecutive', 'sip_alg_port_pair_alloc_from_quota_partition', 'sip_alg_port_pair_alloc_from_quota_partition_error', 'sip_alg_port_pair_alloc_from_quota_pool_port_batch', 'sip_alg_port_pair_alloc_from_quota_pool_port_batch_with_frag']}, 'counters2': {'type': 'str', 'choices': ['h323_alg_no_quota', 'h323_alg_quota_inc_failure', 'h323_alg_no_nat_ip', 'h323_alg_reuse_fullcone', 'h323_alg_fullcone_mismatch', 'h323_alg_alloc_port_failure', 'h323_alg_create_fullcone_failure', 'h323_alg_release_port_failure', 'h323_alg_single_rtp_fullcone', 'h323_alg_single_rtcp_fullcone', 'h323_alg_rtcp_fullcone_mismatch', 'h323_alg_reuse_rtp_rtcp_fullcone', 'h323_alg_alloc_rtp_rtcp_port_failure', 'h323_alg_alloc_single_port_failure', 'h323_alg_create_single_fullcone_failure', 'h323_alg_create_rtp_fullcone_failure', 'h323_alg_create_rtcp_fullcone_failure', 'h323_alg_port_pair_alloc_from_consecutive', 'h323_alg_port_pair_alloc_from_partition', 'h323_alg_port_pair_alloc_from_pool_port_batch', 'h323_alg_port_pair_alloc_from_quota_consecutive', 'h323_alg_port_pair_alloc_from_quota_partition', 'h323_alg_port_pair_alloc_from_quota_partition_error', 'h323_alg_port_pair_alloc_from_quota_pool_port_batch', 'port_batch_quota_extension_alloc_failure', 'port_batch_free_quota_not_found', 'port_batch_free_port_not_found', 'port_batch_free_wrong_partition', 'radius_query_quota_ext_alloc_failure', 'radius_query_quota_ext_alloc_race_free', 'quota_extension_added', 'quota_extension_removed', 'quota_extension_remove_not_found', 'ha_sync_port_batch_sent', 'ha_sync_port_batch_rcv', 'ha_send_port_batch_not_found', 'ha_rcv_port_not_in_port_batch', 'bad_port_to_free', 'consecutive_port_free', 'partition_port_free', 'pool_port_batch_port_free', 'port_allocated_from_quota_consecutive', 'port_allocated_from_quota_partition', 'port_allocated_from_quota_pool_port_batch', 'port_freed_from_quota_consecutive', 'port_freed_from_quota_partition', 'port_freed_from_quota_pool_port_batch', 'port_batch_allocated_to_quota', 'port_batch_freed_from_quota', 'specific_port_allocated_from_quota_consecutive', 'specific_port_allocated_from_quota_partition', 'specific_port_allocated_from_quota_pool_port_batch', 'port_batch_container_alloc_failure', 'port_batch_container_alloc_race_free', 'port_overloading_destination_conflict', 'port_overloading_out_of_memory', 'port_overloading_assign_user', 'port_overloading_assign_user_port_batch', 'port_overloading_inc', 'port_overloading_dec_on_conflict', 'port_overloading_dec_on_free', 'port_overloading_free_port_on_conflict', 'port_overloading_free_port_batch_on_conflict', 'port_overloading_inc_overflow', 'port_overloading_attempt_consecutive_ports', 'port_overloading_attempt_same_partition', 'port_overloading_attempt_diff_partition', 'port_overloading_attempt_failed', 'port_overloading_conn_free_retry_lookup', 'port_overloading_conn_free_not_found', 'port_overloading_smp_mem_allocated', 'port_overloading_smp_mem_freed', 'port_overloading_smp_inserted', 'port_overloading_smp_inserted_tcp_shadow', 'port_overloading_smp_inserted_udp_shadow', 'port_overloading_smp_free_tcp_shadow', 'port_overloading_smp_free_udp_shadow', 'port_overloading_smp_put_in_del_q_from_conn', 'port_overloading_smp_free_dec_failure', 'port_overloading_smp_free_no_quota', 'port_overloading_smp_free_port', 'port_overloading_smp_free_port_from_quota', 'port_overloading_for_no_ports', 'port_overloading_for_no_ports_success', 'port_overloading_for_quota_exceeded', 'port_overloading_for_quota_exceeded_success', 'port_overloading_for_quota_exceeded_race', 'port_overloading_for_quota_exceeded_race_success', 'port_overloading_for_new_user', 'port_overloading_for_new_user_success', 'ha_port_overloading_attempt_failed', 'ha_port_overloading_for_no_ports', 'ha_port_overloading_for_no_ports_success', 'ha_port_overloading_for_quota_exceeded', 'ha_port_overloading_for_quota_exceeded_success', 'ha_port_overloading_for_quota_exceeded_race', 'ha_port_overloading_for_quota_exceeded_race_success', 'ha_port_overloading_for_new_user', 'ha_port_overloading_for_new_user_success']}, 'counters3': {'type': 'str', 'choices': ['nat_pool_force_delete', 'quota_ext_too_many', 'nat_pool_not_found_on_free', 'standby_class_list_drop', 'fullcone_inbound_nat_pool_mismatch', 'bad_ip_tot_len', 'ip_checksum_verified', 'ip_checksum_fixed', 'ip_checksum_bad_drop', 'ip_frag_checksum_fixed', 'l4_checksum_verified', 'l4_checksum_fixed', 'l4_checksum_bad_drop', 'jumbo_list_bad_l4_len', 'frag_list_bad_l4_len', 'nat_pool_attempt_adding_multiple_free_batches', 'nat_pool_add_free_batch_failed', 'mgcp_alg_no_quota', 'mgcp_alg_quota_inc_failure', 'mgcp_alg_no_nat_ip', 'mgcp_alg_reuse_fullcone', 'mgcp_alg_fullcone_mismatch', 'mgcp_alg_alloc_port_failure', 'mgcp_alg_create_fullcone_failure', 'mgcp_alg_release_port_failure', 'mgcp_alg_single_rtp_fullcone', 'mgcp_alg_single_rtcp_fullcone', 'mgcp_alg_rtcp_fullcone_mismatch', 'mgcp_alg_reuse_rtp_rtcp_fullcone', 'mgcp_alg_alloc_rtp_rtcp_port_failure', 'mgcp_alg_alloc_single_port_failure', 'mgcp_alg_create_single_fullcone_failure', 'mgcp_alg_create_rtp_fullcone_failure', 'mgcp_alg_create_rtcp_fullcone_failure', 'mgcp_alg_port_pair_alloc_from_consecutive', 'mgcp_alg_port_pair_alloc_from_partition', 'mgcp_alg_port_pair_alloc_from_pool_port_batch', 'mgcp_alg_port_pair_alloc_from_quota_consecutive', 'mgcp_alg_port_pair_alloc_from_quota_partition', 'mgcp_alg_port_pair_alloc_from_quota_partition_error', 'mgcp_alg_port_pair_alloc_from_quota_pool_port_batch', 'user_quota_unusable_drop', 'user_quota_unusable', 'nat_pool_same_port_batch_udp_failed', 'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4', 'prefix_quota_mismatch']}},
-        'stats': {'type': 'dict', 'total_tcp_allocated': {'type': 'str', }, 'total_tcp_freed': {'type': 'str', }, 'total_udp_allocated': {'type': 'str', }, 'total_udp_freed': {'type': 'str', }, 'total_icmp_allocated': {'type': 'str', }, 'total_icmp_freed': {'type': 'str', }, 'data_session_created': {'type': 'str', }, 'data_session_freed': {'type': 'str', }, 'user_quota_created': {'type': 'str', }, 'user_quota_put_in_del_q': {'type': 'str', }, 'user_quota_failure': {'type': 'str', }, 'nat_port_unavailable_tcp': {'type': 'str', }, 'nat_port_unavailable_udp': {'type': 'str', }, 'nat_port_unavailable_icmp': {'type': 'str', }, 'new_user_resource_unavailable': {'type': 'str', }, 'tcp_user_quota_exceeded': {'type': 'str', }, 'udp_user_quota_exceeded': {'type': 'str', }, 'icmp_user_quota_exceeded': {'type': 'str', }, 'extended_quota_matched': {'type': 'str', }, 'extended_quota_exceeded': {'type': 'str', }, 'data_sesn_user_quota_exceeded': {'type': 'str', }, 'data_sesn_rate_user_quota_exceeded': {'type': 'str', }, 'tcp_fullcone_created': {'type': 'str', }, 'tcp_fullcone_freed': {'type': 'str', }, 'udp_fullcone_created': {'type': 'str', }, 'udp_fullcone_freed': {'type': 'str', }, 'fullcone_failure': {'type': 'str', }, 'hairpin': {'type': 'str', }, 'fullcone_self_hairpinning_drop': {'type': 'str', }, 'endpoint_indep_map_match': {'type': 'str', }, 'endpoint_indep_filter_match': {'type': 'str', }, 'inbound_filtered': {'type': 'str', }, 'eif_limit_exceeded': {'type': 'str', }, 'total_tcp_overloaded': {'type': 'str', }, 'total_udp_overloaded': {'type': 'str', }, 'port_overloading_smp_inserted_tcp': {'type': 'str', }, 'port_overloading_smp_inserted_udp': {'type': 'str', }, 'port_overloading_smp_free_tcp': {'type': 'str', }, 'port_overloading_smp_free_udp': {'type': 'str', }, 'nat_pool_unusable': {'type': 'str', }, 'ha_nat_pool_unusable': {'type': 'str', }, 'ha_nat_pool_batch_type_mismatch': {'type': 'str', }, 'no_radius_profile_match': {'type': 'str', }, 'truncated_packet': {'type': 'str', }, 'lid_drop': {'type': 'str', }, 'lid_pass_through': {'type': 'str', }, 'no_class_list_match': {'type': 'str', }, 'class_list_permit_drop': {'type': 'str', }, 'user_quota_unusable_drop': {'type': 'str', }, 'user_quota_unusable': {'type': 'str', }, 'fwd_ingress_packets_tcp': {'type': 'str', }, 'fwd_egress_packets_tcp': {'type': 'str', }, 'rev_ingress_packets_tcp': {'type': 'str', }, 'rev_egress_packets_tcp': {'type': 'str', }, 'fwd_ingress_bytes_tcp': {'type': 'str', }, 'fwd_egress_bytes_tcp': {'type': 'str', }, 'rev_ingress_bytes_tcp': {'type': 'str', }, 'rev_egress_bytes_tcp': {'type': 'str', }, 'fwd_ingress_packets_udp': {'type': 'str', }, 'fwd_egress_packets_udp': {'type': 'str', }, 'rev_ingress_packets_udp': {'type': 'str', }, 'rev_egress_packets_udp': {'type': 'str', }, 'fwd_ingress_bytes_udp': {'type': 'str', }, 'fwd_egress_bytes_udp': {'type': 'str', }, 'rev_ingress_bytes_udp': {'type': 'str', }, 'rev_egress_bytes_udp': {'type': 'str', }, 'fwd_ingress_packets_icmp': {'type': 'str', }, 'fwd_egress_packets_icmp': {'type': 'str', }, 'rev_ingress_packets_icmp': {'type': 'str', }, 'rev_egress_packets_icmp': {'type': 'str', }, 'fwd_ingress_bytes_icmp': {'type': 'str', }, 'fwd_egress_bytes_icmp': {'type': 'str', }, 'rev_ingress_bytes_icmp': {'type': 'str', }, 'rev_egress_bytes_icmp': {'type': 'str', }, 'fwd_ingress_packets_others': {'type': 'str', }, 'fwd_egress_packets_others': {'type': 'str', }, 'rev_ingress_packets_others': {'type': 'str', }, 'rev_egress_packets_others': {'type': 'str', }, 'fwd_ingress_bytes_others': {'type': 'str', }, 'fwd_egress_bytes_others': {'type': 'str', }, 'rev_ingress_bytes_others': {'type': 'str', }, 'rev_egress_bytes_others': {'type': 'str', }, 'fwd_ingress_pkt_size_range1': {'type': 'str', }, 'fwd_ingress_pkt_size_range2': {'type': 'str', }, 'fwd_ingress_pkt_size_range3': {'type': 'str', }, 'fwd_ingress_pkt_size_range4': {'type': 'str', }, 'fwd_egress_pkt_size_range1': {'type': 'str', }, 'fwd_egress_pkt_size_range2': {'type': 'str', }, 'fwd_egress_pkt_size_range3': {'type': 'str', }, 'fwd_egress_pkt_size_range4': {'type': 'str', }, 'rev_ingress_pkt_size_range1': {'type': 'str', }, 'rev_ingress_pkt_size_range2': {'type': 'str', }, 'rev_ingress_pkt_size_range3': {'type': 'str', }, 'rev_ingress_pkt_size_range4': {'type': 'str', }, 'rev_egress_pkt_size_range1': {'type': 'str', }, 'rev_egress_pkt_size_range2': {'type': 'str', }, 'rev_egress_pkt_size_range3': {'type': 'str', }, 'rev_egress_pkt_size_range4': {'type': 'str', }, 'prefix_quota_mismatch': {'type': 'str', }}
+    rv.update({
+        'user_quota_prefix_length': {
+            'type': 'int',
+        },
+        'tcp': {
+            'type': 'dict',
+            'mss_clamp': {
+                'type': 'dict',
+                'mss_clamp_type': {
+                    'type': 'str',
+                    'choices': ['fixed', 'none', 'subtract']
+                },
+                'mss_value': {
+                    'type': 'int',
+                },
+                'mss_subtract': {
+                    'type': 'int',
+                },
+                'min': {
+                    'type': 'int',
+                }
+            },
+            'reset_on_error': {
+                'type': 'dict',
+                'outbound': {
+                    'type': 'str',
+                    'choices': ['disable']
+                }
+            }
+        },
+        'ip_checksum_error': {
+            'type': 'str',
+            'choices': ['fix', 'drop']
+        },
+        'l4_checksum_error': {
+            'type': 'str',
+            'choices': ['propagate', 'fix', 'drop']
+        },
+        'inside': {
+            'type': 'dict',
+            'source': {
+                'type': 'dict',
+                'class_list': {
+                    'type': 'str',
+                }
+            }
+        },
+        'icmp': {
+            'type': 'dict',
+            'send_on_port_unavailable': {
+                'type': 'str',
+                'choices': ['host-unreachable', 'admin-filtered', 'disable']
+            },
+            'send_on_user_quota_exceeded': {
+                'type': 'str',
+                'choices': ['host-unreachable', 'admin-filtered', 'disable']
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'total_tcp_allocated', 'total_tcp_freed',
+                    'total_udp_allocated', 'total_udp_freed',
+                    'total_icmp_allocated', 'total_icmp_freed',
+                    'data_session_created', 'data_session_freed',
+                    'user_quota_created', 'user_quota_put_in_del_q',
+                    'user_quota_failure', 'nat_port_unavailable_tcp',
+                    'nat_port_unavailable_udp', 'nat_port_unavailable_icmp',
+                    'new_user_resource_unavailable', 'tcp_user_quota_exceeded',
+                    'udp_user_quota_exceeded', 'icmp_user_quota_exceeded',
+                    'extended_quota_matched', 'extended_quota_exceeded',
+                    'data_sesn_user_quota_exceeded',
+                    'data_sesn_rate_user_quota_exceeded',
+                    'tcp_fullcone_created', 'tcp_fullcone_freed',
+                    'udp_fullcone_created', 'udp_fullcone_freed',
+                    'fullcone_failure', 'hairpin',
+                    'fullcone_self_hairpinning_drop',
+                    'endpoint_indep_map_match', 'endpoint_indep_filter_match',
+                    'inbound_filtered', 'eif_limit_exceeded',
+                    'total_tcp_overloaded', 'total_udp_overloaded',
+                    'port_overloading_smp_inserted_tcp',
+                    'port_overloading_smp_inserted_udp',
+                    'port_overloading_smp_free_tcp',
+                    'port_overloading_smp_free_udp', 'nat_pool_unusable',
+                    'ha_nat_pool_unusable', 'ha_nat_pool_batch_type_mismatch',
+                    'no_radius_profile_match', 'truncated_packet', 'lid_drop',
+                    'lid_pass_through', 'no_class_list_match',
+                    'class_list_permit_drop', 'user_quota_mem_allocated',
+                    'user_quota_mem_freed', 'user_quota_created_shadow',
+                    'quota_marked_deleted', 'quota_delete_not_in_bucket',
+                    'user_quota_put_in_del_q_shadow', 'prefix_quota_created',
+                    'prefix_quota_put_in_del_q', 'prefix_quota_failure',
+                    'total_user_quota_created',
+                    'total_user_quota_put_in_del_q',
+                    'total_user_quota_failure', 'tcp_out_of_state_rst_sent',
+                    'tcp_out_of_state_rst_dropped',
+                    'icmp_out_of_state_uqe_admin_filtered_sent',
+                    'icmp_out_of_state_uqe_host_unreachable_sent',
+                    'icmp_out_of_state_uqe_dropped', 'user_quota_not_found',
+                    'tcp_fullcone_created_shadow', 'tcp_fullcone_freed_shadow',
+                    'udp_fullcone_created_shadow', 'udp_fullcone_freed_shadow',
+                    'udp_alg_fullcone_created', 'udp_alg_fullcone_freed',
+                    'fullcone_created', 'fullcone_freed',
+                    'data_session_created_shadow', 'data_session_freed_shadow',
+                    'data_session_user_quota_mismatch',
+                    'extended_quota_mismatched', 'nat_port_unavailable_other',
+                    'nat_port_unavailable',
+                    'new_user_resource_unavailable_tcp',
+                    'new_user_resource_unavailable_udp',
+                    'new_user_resource_unavailable_icmp',
+                    'new_user_resource_unavailable_other',
+                    'total_tcp_allocated_shadow', 'total_tcp_freed_shadow',
+                    'total_udp_allocated_shadow', 'total_udp_freed_shadow',
+                    'total_icmp_allocated_shadow', 'total_icmp_freed_shadow',
+                    'udp_alg_no_quota', 'udp_alg_eim_mismatch',
+                    'udp_alg_no_nat_ip', 'udp_alg_alloc_failure',
+                    'sip_alg_no_quota', 'sip_alg_quota_inc_failure',
+                    'sip_alg_no_nat_ip', 'sip_alg_reuse_contact_fullcone',
+                    'sip_alg_contact_fullcone_mismatch',
+                    'sip_alg_alloc_contact_port_failure',
+                    'sip_alg_create_contact_fullcone_failure',
+                    'sip_alg_release_contact_port_failure',
+                    'sip_alg_single_rtp_fullcone',
+                    'sip_alg_single_rtcp_fullcone',
+                    'sip_alg_rtcp_fullcone_mismatch',
+                    'sip_alg_reuse_rtp_rtcp_fullcone',
+                    'sip_alg_alloc_rtp_rtcp_port_failure',
+                    'sip_alg_alloc_single_port_failure',
+                    'sip_alg_create_single_fullcone_failure',
+                    'sip_alg_create_rtp_fullcone_failure',
+                    'sip_alg_create_rtcp_fullcone_failure',
+                    'sip_alg_port_pair_alloc_from_consecutive',
+                    'sip_alg_port_pair_alloc_from_partition',
+                    'sip_alg_port_pair_alloc_from_pool_port_batch',
+                    'sip_alg_port_pair_alloc_from_quota_consecutive',
+                    'sip_alg_port_pair_alloc_from_quota_partition',
+                    'sip_alg_port_pair_alloc_from_quota_partition_error',
+                    'sip_alg_port_pair_alloc_from_quota_pool_port_batch',
+                    'sip_alg_port_pair_alloc_from_quota_pool_port_batch_with_frag'
+                ]
+            },
+            'counters2': {
+                'type':
+                'str',
+                'choices': [
+                    'h323_alg_no_quota', 'h323_alg_quota_inc_failure',
+                    'h323_alg_no_nat_ip', 'h323_alg_reuse_fullcone',
+                    'h323_alg_fullcone_mismatch',
+                    'h323_alg_alloc_port_failure',
+                    'h323_alg_create_fullcone_failure',
+                    'h323_alg_release_port_failure',
+                    'h323_alg_single_rtp_fullcone',
+                    'h323_alg_single_rtcp_fullcone',
+                    'h323_alg_rtcp_fullcone_mismatch',
+                    'h323_alg_reuse_rtp_rtcp_fullcone',
+                    'h323_alg_alloc_rtp_rtcp_port_failure',
+                    'h323_alg_alloc_single_port_failure',
+                    'h323_alg_create_single_fullcone_failure',
+                    'h323_alg_create_rtp_fullcone_failure',
+                    'h323_alg_create_rtcp_fullcone_failure',
+                    'h323_alg_port_pair_alloc_from_consecutive',
+                    'h323_alg_port_pair_alloc_from_partition',
+                    'h323_alg_port_pair_alloc_from_pool_port_batch',
+                    'h323_alg_port_pair_alloc_from_quota_consecutive',
+                    'h323_alg_port_pair_alloc_from_quota_partition',
+                    'h323_alg_port_pair_alloc_from_quota_partition_error',
+                    'h323_alg_port_pair_alloc_from_quota_pool_port_batch',
+                    'port_batch_quota_extension_alloc_failure',
+                    'port_batch_free_quota_not_found',
+                    'port_batch_free_port_not_found',
+                    'port_batch_free_wrong_partition',
+                    'radius_query_quota_ext_alloc_failure',
+                    'radius_query_quota_ext_alloc_race_free',
+                    'quota_extension_added', 'quota_extension_removed',
+                    'quota_extension_remove_not_found',
+                    'ha_sync_port_batch_sent', 'ha_sync_port_batch_rcv',
+                    'ha_send_port_batch_not_found',
+                    'ha_rcv_port_not_in_port_batch', 'bad_port_to_free',
+                    'consecutive_port_free', 'partition_port_free',
+                    'pool_port_batch_port_free',
+                    'port_allocated_from_quota_consecutive',
+                    'port_allocated_from_quota_partition',
+                    'port_allocated_from_quota_pool_port_batch',
+                    'port_freed_from_quota_consecutive',
+                    'port_freed_from_quota_partition',
+                    'port_freed_from_quota_pool_port_batch',
+                    'port_batch_allocated_to_quota',
+                    'port_batch_freed_from_quota',
+                    'specific_port_allocated_from_quota_consecutive',
+                    'specific_port_allocated_from_quota_partition',
+                    'specific_port_allocated_from_quota_pool_port_batch',
+                    'port_batch_container_alloc_failure',
+                    'port_batch_container_alloc_race_free',
+                    'port_overloading_destination_conflict',
+                    'port_overloading_out_of_memory',
+                    'port_overloading_assign_user',
+                    'port_overloading_assign_user_port_batch',
+                    'port_overloading_inc', 'port_overloading_dec_on_conflict',
+                    'port_overloading_dec_on_free',
+                    'port_overloading_free_port_on_conflict',
+                    'port_overloading_free_port_batch_on_conflict',
+                    'port_overloading_inc_overflow',
+                    'port_overloading_attempt_consecutive_ports',
+                    'port_overloading_attempt_same_partition',
+                    'port_overloading_attempt_diff_partition',
+                    'port_overloading_attempt_failed',
+                    'port_overloading_conn_free_retry_lookup',
+                    'port_overloading_conn_free_not_found',
+                    'port_overloading_smp_mem_allocated',
+                    'port_overloading_smp_mem_freed',
+                    'port_overloading_smp_inserted',
+                    'port_overloading_smp_inserted_tcp_shadow',
+                    'port_overloading_smp_inserted_udp_shadow',
+                    'port_overloading_smp_free_tcp_shadow',
+                    'port_overloading_smp_free_udp_shadow',
+                    'port_overloading_smp_put_in_del_q_from_conn',
+                    'port_overloading_smp_free_dec_failure',
+                    'port_overloading_smp_free_no_quota',
+                    'port_overloading_smp_free_port',
+                    'port_overloading_smp_free_port_from_quota',
+                    'port_overloading_for_no_ports',
+                    'port_overloading_for_no_ports_success',
+                    'port_overloading_for_quota_exceeded',
+                    'port_overloading_for_quota_exceeded_success',
+                    'port_overloading_for_quota_exceeded_race',
+                    'port_overloading_for_quota_exceeded_race_success',
+                    'port_overloading_for_new_user',
+                    'port_overloading_for_new_user_success',
+                    'ha_port_overloading_attempt_failed',
+                    'ha_port_overloading_for_no_ports',
+                    'ha_port_overloading_for_no_ports_success',
+                    'ha_port_overloading_for_quota_exceeded',
+                    'ha_port_overloading_for_quota_exceeded_success',
+                    'ha_port_overloading_for_quota_exceeded_race',
+                    'ha_port_overloading_for_quota_exceeded_race_success',
+                    'ha_port_overloading_for_new_user',
+                    'ha_port_overloading_for_new_user_success'
+                ]
+            },
+            'counters3': {
+                'type':
+                'str',
+                'choices': [
+                    'nat_pool_force_delete', 'quota_ext_too_many',
+                    'nat_pool_not_found_on_free', 'standby_class_list_drop',
+                    'fullcone_inbound_nat_pool_mismatch', 'bad_ip_tot_len',
+                    'ip_checksum_verified', 'ip_checksum_fixed',
+                    'ip_checksum_bad_drop', 'ip_frag_checksum_fixed',
+                    'l4_checksum_verified', 'l4_checksum_fixed',
+                    'l4_checksum_bad_drop', 'jumbo_list_bad_l4_len',
+                    'frag_list_bad_l4_len',
+                    'nat_pool_attempt_adding_multiple_free_batches',
+                    'nat_pool_add_free_batch_failed', 'mgcp_alg_no_quota',
+                    'mgcp_alg_quota_inc_failure', 'mgcp_alg_no_nat_ip',
+                    'mgcp_alg_reuse_fullcone', 'mgcp_alg_fullcone_mismatch',
+                    'mgcp_alg_alloc_port_failure',
+                    'mgcp_alg_create_fullcone_failure',
+                    'mgcp_alg_release_port_failure',
+                    'mgcp_alg_single_rtp_fullcone',
+                    'mgcp_alg_single_rtcp_fullcone',
+                    'mgcp_alg_rtcp_fullcone_mismatch',
+                    'mgcp_alg_reuse_rtp_rtcp_fullcone',
+                    'mgcp_alg_alloc_rtp_rtcp_port_failure',
+                    'mgcp_alg_alloc_single_port_failure',
+                    'mgcp_alg_create_single_fullcone_failure',
+                    'mgcp_alg_create_rtp_fullcone_failure',
+                    'mgcp_alg_create_rtcp_fullcone_failure',
+                    'mgcp_alg_port_pair_alloc_from_consecutive',
+                    'mgcp_alg_port_pair_alloc_from_partition',
+                    'mgcp_alg_port_pair_alloc_from_pool_port_batch',
+                    'mgcp_alg_port_pair_alloc_from_quota_consecutive',
+                    'mgcp_alg_port_pair_alloc_from_quota_partition',
+                    'mgcp_alg_port_pair_alloc_from_quota_partition_error',
+                    'mgcp_alg_port_pair_alloc_from_quota_pool_port_batch',
+                    'user_quota_unusable_drop', 'user_quota_unusable',
+                    'nat_pool_same_port_batch_udp_failed',
+                    'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp',
+                    'rev_ingress_packets_tcp', 'rev_egress_packets_tcp',
+                    'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp',
+                    'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp',
+                    'fwd_ingress_packets_udp', 'fwd_egress_packets_udp',
+                    'rev_ingress_packets_udp', 'rev_egress_packets_udp',
+                    'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp',
+                    'rev_ingress_bytes_udp', 'rev_egress_bytes_udp',
+                    'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp',
+                    'rev_ingress_packets_icmp', 'rev_egress_packets_icmp',
+                    'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp',
+                    'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp',
+                    'fwd_ingress_packets_others', 'fwd_egress_packets_others',
+                    'rev_ingress_packets_others', 'rev_egress_packets_others',
+                    'fwd_ingress_bytes_others', 'fwd_egress_bytes_others',
+                    'rev_ingress_bytes_others', 'rev_egress_bytes_others',
+                    'fwd_ingress_pkt_size_range1',
+                    'fwd_ingress_pkt_size_range2',
+                    'fwd_ingress_pkt_size_range3',
+                    'fwd_ingress_pkt_size_range4',
+                    'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
+                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4',
+                    'rev_ingress_pkt_size_range1',
+                    'rev_ingress_pkt_size_range2',
+                    'rev_ingress_pkt_size_range3',
+                    'rev_ingress_pkt_size_range4',
+                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2',
+                    'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4',
+                    'prefix_quota_mismatch'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'total_tcp_allocated': {
+                'type': 'str',
+            },
+            'total_tcp_freed': {
+                'type': 'str',
+            },
+            'total_udp_allocated': {
+                'type': 'str',
+            },
+            'total_udp_freed': {
+                'type': 'str',
+            },
+            'total_icmp_allocated': {
+                'type': 'str',
+            },
+            'total_icmp_freed': {
+                'type': 'str',
+            },
+            'data_session_created': {
+                'type': 'str',
+            },
+            'data_session_freed': {
+                'type': 'str',
+            },
+            'user_quota_created': {
+                'type': 'str',
+            },
+            'user_quota_put_in_del_q': {
+                'type': 'str',
+            },
+            'user_quota_failure': {
+                'type': 'str',
+            },
+            'nat_port_unavailable_tcp': {
+                'type': 'str',
+            },
+            'nat_port_unavailable_udp': {
+                'type': 'str',
+            },
+            'nat_port_unavailable_icmp': {
+                'type': 'str',
+            },
+            'new_user_resource_unavailable': {
+                'type': 'str',
+            },
+            'tcp_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'udp_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'icmp_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'extended_quota_matched': {
+                'type': 'str',
+            },
+            'extended_quota_exceeded': {
+                'type': 'str',
+            },
+            'data_sesn_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'data_sesn_rate_user_quota_exceeded': {
+                'type': 'str',
+            },
+            'tcp_fullcone_created': {
+                'type': 'str',
+            },
+            'tcp_fullcone_freed': {
+                'type': 'str',
+            },
+            'udp_fullcone_created': {
+                'type': 'str',
+            },
+            'udp_fullcone_freed': {
+                'type': 'str',
+            },
+            'fullcone_failure': {
+                'type': 'str',
+            },
+            'hairpin': {
+                'type': 'str',
+            },
+            'fullcone_self_hairpinning_drop': {
+                'type': 'str',
+            },
+            'endpoint_indep_map_match': {
+                'type': 'str',
+            },
+            'endpoint_indep_filter_match': {
+                'type': 'str',
+            },
+            'inbound_filtered': {
+                'type': 'str',
+            },
+            'eif_limit_exceeded': {
+                'type': 'str',
+            },
+            'total_tcp_overloaded': {
+                'type': 'str',
+            },
+            'total_udp_overloaded': {
+                'type': 'str',
+            },
+            'port_overloading_smp_inserted_tcp': {
+                'type': 'str',
+            },
+            'port_overloading_smp_inserted_udp': {
+                'type': 'str',
+            },
+            'port_overloading_smp_free_tcp': {
+                'type': 'str',
+            },
+            'port_overloading_smp_free_udp': {
+                'type': 'str',
+            },
+            'nat_pool_unusable': {
+                'type': 'str',
+            },
+            'ha_nat_pool_unusable': {
+                'type': 'str',
+            },
+            'ha_nat_pool_batch_type_mismatch': {
+                'type': 'str',
+            },
+            'no_radius_profile_match': {
+                'type': 'str',
+            },
+            'truncated_packet': {
+                'type': 'str',
+            },
+            'lid_drop': {
+                'type': 'str',
+            },
+            'lid_pass_through': {
+                'type': 'str',
+            },
+            'no_class_list_match': {
+                'type': 'str',
+            },
+            'class_list_permit_drop': {
+                'type': 'str',
+            },
+            'user_quota_unusable_drop': {
+                'type': 'str',
+            },
+            'user_quota_unusable': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_udp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_udp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_udp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_udp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_udp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_udp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_udp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_udp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_icmp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_others': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_others': {
+                'type': 'str',
+            },
+            'rev_egress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'prefix_quota_mismatch': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -994,7 +1617,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -1004,7 +1629,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -1024,7 +1651,6 @@ def get_stats(module):
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, stats_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -1049,9 +1675,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -1067,7 +1691,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -1116,7 +1742,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["global"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -1134,8 +1759,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1151,8 +1775,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -1216,12 +1839,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1249,14 +1870,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -1284,7 +1905,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

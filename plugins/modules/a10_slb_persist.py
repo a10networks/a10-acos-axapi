@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_persist
 description:
@@ -373,9 +372,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -384,7 +384,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -392,7 +391,12 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -400,20 +404,390 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hash_tbl_trylock_fail', 'hash_tbl_create_ok', 'hash_tbl_create_fail', 'hash_tbl_free', 'hash_tbl_rst_updown', 'hash_tbl_rst_adddel', 'url_hash_pri', 'url_hash_enqueue', 'url_hash_sec', 'url_hash_fail', 'header_hash_pri', 'header_hash_enqueue', 'header_hash_sec', 'header_hash_fail', 'src_ip', 'src_ip_enqueue', 'src_ip_fail', 'src_ip_new_sess_cache', 'src_ip_new_sess_cache_fail', 'src_ip_new_sess_sel', 'src_ip_new_sess_sel_fail', 'src_ip_hash_pri', 'src_ip_hash_enqueue', 'src_ip_hash_sec', 'src_ip_hash_fail', 'src_ip_enforce', 'dst_ip', 'dst_ip_enqueue', 'dst_ip_fail', 'dst_ip_new_sess_cache', 'dst_ip_new_sess_cache_fail', 'dst_ip_new_sess_sel', 'dst_ip_new_sess_sel_fail', 'dst_ip_hash_pri', 'dst_ip_hash_enqueue', 'dst_ip_hash_sec', 'dst_ip_hash_fail', 'cssl_sid_not_found', 'cssl_sid_match', 'cssl_sid_not_match', 'sssl_sid_not_found', 'sssl_sid_reset', 'sssl_sid_match', 'sssl_sid_not_match', 'ssl_sid_persist_ok', 'ssl_sid_persist_fail', 'ssl_sid_session_ok', 'ssl_sid_session_fail', 'cookie_persist_ok', 'cookie_persist_fail', 'cookie_not_found', 'cookie_pass_thru', 'cookie_invalid']}},
-        'oper': {'type': 'dict', 'persist_cpu_list': {'type': 'list', 'hash_tbl_trylock_fail': {'type': 'int', }, 'hash_tbl_create_ok': {'type': 'int', }, 'hash_tbl_create_fail': {'type': 'int', }, 'hash_tbl_free': {'type': 'int', }, 'hash_tbl_rst_updown': {'type': 'int', }, 'hash_tbl_rst_adddel': {'type': 'int', }, 'url_hash_pri': {'type': 'int', }, 'url_hash_enqueue': {'type': 'int', }, 'url_hash_sec': {'type': 'int', }, 'url_hash_fail': {'type': 'int', }, 'header_hash_pri': {'type': 'int', }, 'header_hash_enqueue': {'type': 'int', }, 'header_hash_sec': {'type': 'int', }, 'header_hash_fail': {'type': 'int', }, 'src_ip': {'type': 'int', }, 'src_ip_enqueue': {'type': 'int', }, 'src_ip_fail': {'type': 'int', }, 'src_ip_new_sess_cache': {'type': 'int', }, 'src_ip_new_sess_cache_fail': {'type': 'int', }, 'src_ip_new_sess_sel': {'type': 'int', }, 'src_ip_new_sess_sel_fail': {'type': 'int', }, 'src_ip_hash_pri': {'type': 'int', }, 'src_ip_hash_enqueue': {'type': 'int', }, 'src_ip_hash_sec': {'type': 'int', }, 'src_ip_hash_fail': {'type': 'int', }, 'src_ip_enforce': {'type': 'int', }, 'dst_ip': {'type': 'int', }, 'dst_ip_enqueue': {'type': 'int', }, 'dst_ip_fail': {'type': 'int', }, 'dst_ip_new_sess_cache': {'type': 'int', }, 'dst_ip_new_sess_cache_fail': {'type': 'int', }, 'dst_ip_new_sess_sel': {'type': 'int', }, 'dst_ip_new_sess_sel_fail': {'type': 'int', }, 'dst_ip_hash_pri': {'type': 'int', }, 'dst_ip_hash_enqueue': {'type': 'int', }, 'dst_ip_hash_sec': {'type': 'int', }, 'dst_ip_hash_fail': {'type': 'int', }, 'cssl_sid_not_found': {'type': 'int', }, 'cssl_sid_match': {'type': 'int', }, 'cssl_sid_not_match': {'type': 'int', }, 'sssl_sid_not_found': {'type': 'int', }, 'sssl_sid_reset': {'type': 'int', }, 'sssl_sid_match': {'type': 'int', }, 'sssl_sid_not_match': {'type': 'int', }, 'ssl_sid_persist_ok': {'type': 'int', }, 'ssl_sid_persist_fail': {'type': 'int', }, 'ssl_sid_session_ok': {'type': 'int', }, 'ssl_sid_session_fail': {'type': 'int', }, 'cookie_persist_ok': {'type': 'int', }, 'cookie_persist_fail': {'type': 'int', }, 'cookie_not_found': {'type': 'int', }, 'cookie_pass_thru': {'type': 'int', }, 'cookie_invalid': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
-        'stats': {'type': 'dict', 'hash_tbl_trylock_fail': {'type': 'str', }, 'hash_tbl_create_ok': {'type': 'str', }, 'hash_tbl_create_fail': {'type': 'str', }, 'hash_tbl_free': {'type': 'str', }, 'hash_tbl_rst_updown': {'type': 'str', }, 'hash_tbl_rst_adddel': {'type': 'str', }, 'url_hash_pri': {'type': 'str', }, 'url_hash_enqueue': {'type': 'str', }, 'url_hash_sec': {'type': 'str', }, 'url_hash_fail': {'type': 'str', }, 'header_hash_pri': {'type': 'str', }, 'header_hash_enqueue': {'type': 'str', }, 'header_hash_sec': {'type': 'str', }, 'header_hash_fail': {'type': 'str', }, 'src_ip': {'type': 'str', }, 'src_ip_enqueue': {'type': 'str', }, 'src_ip_fail': {'type': 'str', }, 'src_ip_new_sess_cache': {'type': 'str', }, 'src_ip_new_sess_cache_fail': {'type': 'str', }, 'src_ip_new_sess_sel': {'type': 'str', }, 'src_ip_new_sess_sel_fail': {'type': 'str', }, 'src_ip_hash_pri': {'type': 'str', }, 'src_ip_hash_enqueue': {'type': 'str', }, 'src_ip_hash_sec': {'type': 'str', }, 'src_ip_hash_fail': {'type': 'str', }, 'src_ip_enforce': {'type': 'str', }, 'dst_ip': {'type': 'str', }, 'dst_ip_enqueue': {'type': 'str', }, 'dst_ip_fail': {'type': 'str', }, 'dst_ip_new_sess_cache': {'type': 'str', }, 'dst_ip_new_sess_cache_fail': {'type': 'str', }, 'dst_ip_new_sess_sel': {'type': 'str', }, 'dst_ip_new_sess_sel_fail': {'type': 'str', }, 'dst_ip_hash_pri': {'type': 'str', }, 'dst_ip_hash_enqueue': {'type': 'str', }, 'dst_ip_hash_sec': {'type': 'str', }, 'dst_ip_hash_fail': {'type': 'str', }, 'cssl_sid_not_found': {'type': 'str', }, 'cssl_sid_match': {'type': 'str', }, 'cssl_sid_not_match': {'type': 'str', }, 'sssl_sid_not_found': {'type': 'str', }, 'sssl_sid_reset': {'type': 'str', }, 'sssl_sid_match': {'type': 'str', }, 'sssl_sid_not_match': {'type': 'str', }, 'ssl_sid_persist_ok': {'type': 'str', }, 'ssl_sid_persist_fail': {'type': 'str', }, 'ssl_sid_session_ok': {'type': 'str', }, 'ssl_sid_session_fail': {'type': 'str', }, 'cookie_persist_ok': {'type': 'str', }, 'cookie_persist_fail': {'type': 'str', }, 'cookie_not_found': {'type': 'str', }, 'cookie_pass_thru': {'type': 'str', }, 'cookie_invalid': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'hash_tbl_trylock_fail', 'hash_tbl_create_ok',
+                    'hash_tbl_create_fail', 'hash_tbl_free',
+                    'hash_tbl_rst_updown', 'hash_tbl_rst_adddel',
+                    'url_hash_pri', 'url_hash_enqueue', 'url_hash_sec',
+                    'url_hash_fail', 'header_hash_pri', 'header_hash_enqueue',
+                    'header_hash_sec', 'header_hash_fail', 'src_ip',
+                    'src_ip_enqueue', 'src_ip_fail', 'src_ip_new_sess_cache',
+                    'src_ip_new_sess_cache_fail', 'src_ip_new_sess_sel',
+                    'src_ip_new_sess_sel_fail', 'src_ip_hash_pri',
+                    'src_ip_hash_enqueue', 'src_ip_hash_sec',
+                    'src_ip_hash_fail', 'src_ip_enforce', 'dst_ip',
+                    'dst_ip_enqueue', 'dst_ip_fail', 'dst_ip_new_sess_cache',
+                    'dst_ip_new_sess_cache_fail', 'dst_ip_new_sess_sel',
+                    'dst_ip_new_sess_sel_fail', 'dst_ip_hash_pri',
+                    'dst_ip_hash_enqueue', 'dst_ip_hash_sec',
+                    'dst_ip_hash_fail', 'cssl_sid_not_found', 'cssl_sid_match',
+                    'cssl_sid_not_match', 'sssl_sid_not_found',
+                    'sssl_sid_reset', 'sssl_sid_match', 'sssl_sid_not_match',
+                    'ssl_sid_persist_ok', 'ssl_sid_persist_fail',
+                    'ssl_sid_session_ok', 'ssl_sid_session_fail',
+                    'cookie_persist_ok', 'cookie_persist_fail',
+                    'cookie_not_found', 'cookie_pass_thru', 'cookie_invalid'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'persist_cpu_list': {
+                'type': 'list',
+                'hash_tbl_trylock_fail': {
+                    'type': 'int',
+                },
+                'hash_tbl_create_ok': {
+                    'type': 'int',
+                },
+                'hash_tbl_create_fail': {
+                    'type': 'int',
+                },
+                'hash_tbl_free': {
+                    'type': 'int',
+                },
+                'hash_tbl_rst_updown': {
+                    'type': 'int',
+                },
+                'hash_tbl_rst_adddel': {
+                    'type': 'int',
+                },
+                'url_hash_pri': {
+                    'type': 'int',
+                },
+                'url_hash_enqueue': {
+                    'type': 'int',
+                },
+                'url_hash_sec': {
+                    'type': 'int',
+                },
+                'url_hash_fail': {
+                    'type': 'int',
+                },
+                'header_hash_pri': {
+                    'type': 'int',
+                },
+                'header_hash_enqueue': {
+                    'type': 'int',
+                },
+                'header_hash_sec': {
+                    'type': 'int',
+                },
+                'header_hash_fail': {
+                    'type': 'int',
+                },
+                'src_ip': {
+                    'type': 'int',
+                },
+                'src_ip_enqueue': {
+                    'type': 'int',
+                },
+                'src_ip_fail': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_cache': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_cache_fail': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_sel': {
+                    'type': 'int',
+                },
+                'src_ip_new_sess_sel_fail': {
+                    'type': 'int',
+                },
+                'src_ip_hash_pri': {
+                    'type': 'int',
+                },
+                'src_ip_hash_enqueue': {
+                    'type': 'int',
+                },
+                'src_ip_hash_sec': {
+                    'type': 'int',
+                },
+                'src_ip_hash_fail': {
+                    'type': 'int',
+                },
+                'src_ip_enforce': {
+                    'type': 'int',
+                },
+                'dst_ip': {
+                    'type': 'int',
+                },
+                'dst_ip_enqueue': {
+                    'type': 'int',
+                },
+                'dst_ip_fail': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_cache': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_cache_fail': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_sel': {
+                    'type': 'int',
+                },
+                'dst_ip_new_sess_sel_fail': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_pri': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_enqueue': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_sec': {
+                    'type': 'int',
+                },
+                'dst_ip_hash_fail': {
+                    'type': 'int',
+                },
+                'cssl_sid_not_found': {
+                    'type': 'int',
+                },
+                'cssl_sid_match': {
+                    'type': 'int',
+                },
+                'cssl_sid_not_match': {
+                    'type': 'int',
+                },
+                'sssl_sid_not_found': {
+                    'type': 'int',
+                },
+                'sssl_sid_reset': {
+                    'type': 'int',
+                },
+                'sssl_sid_match': {
+                    'type': 'int',
+                },
+                'sssl_sid_not_match': {
+                    'type': 'int',
+                },
+                'ssl_sid_persist_ok': {
+                    'type': 'int',
+                },
+                'ssl_sid_persist_fail': {
+                    'type': 'int',
+                },
+                'ssl_sid_session_ok': {
+                    'type': 'int',
+                },
+                'ssl_sid_session_fail': {
+                    'type': 'int',
+                },
+                'cookie_persist_ok': {
+                    'type': 'int',
+                },
+                'cookie_persist_fail': {
+                    'type': 'int',
+                },
+                'cookie_not_found': {
+                    'type': 'int',
+                },
+                'cookie_pass_thru': {
+                    'type': 'int',
+                },
+                'cookie_invalid': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'hash_tbl_trylock_fail': {
+                'type': 'str',
+            },
+            'hash_tbl_create_ok': {
+                'type': 'str',
+            },
+            'hash_tbl_create_fail': {
+                'type': 'str',
+            },
+            'hash_tbl_free': {
+                'type': 'str',
+            },
+            'hash_tbl_rst_updown': {
+                'type': 'str',
+            },
+            'hash_tbl_rst_adddel': {
+                'type': 'str',
+            },
+            'url_hash_pri': {
+                'type': 'str',
+            },
+            'url_hash_enqueue': {
+                'type': 'str',
+            },
+            'url_hash_sec': {
+                'type': 'str',
+            },
+            'url_hash_fail': {
+                'type': 'str',
+            },
+            'header_hash_pri': {
+                'type': 'str',
+            },
+            'header_hash_enqueue': {
+                'type': 'str',
+            },
+            'header_hash_sec': {
+                'type': 'str',
+            },
+            'header_hash_fail': {
+                'type': 'str',
+            },
+            'src_ip': {
+                'type': 'str',
+            },
+            'src_ip_enqueue': {
+                'type': 'str',
+            },
+            'src_ip_fail': {
+                'type': 'str',
+            },
+            'src_ip_new_sess_cache': {
+                'type': 'str',
+            },
+            'src_ip_new_sess_cache_fail': {
+                'type': 'str',
+            },
+            'src_ip_new_sess_sel': {
+                'type': 'str',
+            },
+            'src_ip_new_sess_sel_fail': {
+                'type': 'str',
+            },
+            'src_ip_hash_pri': {
+                'type': 'str',
+            },
+            'src_ip_hash_enqueue': {
+                'type': 'str',
+            },
+            'src_ip_hash_sec': {
+                'type': 'str',
+            },
+            'src_ip_hash_fail': {
+                'type': 'str',
+            },
+            'src_ip_enforce': {
+                'type': 'str',
+            },
+            'dst_ip': {
+                'type': 'str',
+            },
+            'dst_ip_enqueue': {
+                'type': 'str',
+            },
+            'dst_ip_fail': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_cache': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_cache_fail': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_sel': {
+                'type': 'str',
+            },
+            'dst_ip_new_sess_sel_fail': {
+                'type': 'str',
+            },
+            'dst_ip_hash_pri': {
+                'type': 'str',
+            },
+            'dst_ip_hash_enqueue': {
+                'type': 'str',
+            },
+            'dst_ip_hash_sec': {
+                'type': 'str',
+            },
+            'dst_ip_hash_fail': {
+                'type': 'str',
+            },
+            'cssl_sid_not_found': {
+                'type': 'str',
+            },
+            'cssl_sid_match': {
+                'type': 'str',
+            },
+            'cssl_sid_not_match': {
+                'type': 'str',
+            },
+            'sssl_sid_not_found': {
+                'type': 'str',
+            },
+            'sssl_sid_reset': {
+                'type': 'str',
+            },
+            'sssl_sid_match': {
+                'type': 'str',
+            },
+            'sssl_sid_not_match': {
+                'type': 'str',
+            },
+            'ssl_sid_persist_ok': {
+                'type': 'str',
+            },
+            'ssl_sid_persist_fail': {
+                'type': 'str',
+            },
+            'ssl_sid_session_ok': {
+                'type': 'str',
+            },
+            'ssl_sid_session_fail': {
+                'type': 'str',
+            },
+            'cookie_persist_ok': {
+                'type': 'str',
+            },
+            'cookie_persist_fail': {
+                'type': 'str',
+            },
+            'cookie_not_found': {
+                'type': 'str',
+            },
+            'cookie_pass_thru': {
+                'type': 'str',
+            },
+            'cookie_invalid': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -489,7 +863,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -499,7 +875,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -529,7 +907,6 @@ def get_stats(module):
     return _get(module, stats_url(module), params=query_params)
 
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
 
@@ -552,9 +929,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -570,7 +945,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -619,7 +996,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["persist"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -637,8 +1013,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -654,8 +1029,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -719,12 +1093,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -752,14 +1124,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -789,7 +1161,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

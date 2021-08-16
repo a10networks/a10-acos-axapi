@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_system_resource_accounting
 description:
@@ -144,9 +143,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -155,7 +155,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -163,7 +162,11 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "template_list", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "template_list",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -171,19 +174,411 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'template_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'app_resources': {'type': 'dict', 'gslb_device_cfg': {'type': 'dict', 'gslb_device_max': {'type': 'int', }, 'gslb_device_min_guarantee': {'type': 'int', }}, 'gslb_geo_location_cfg': {'type': 'dict', 'gslb_geo_location_max': {'type': 'int', }, 'gslb_geo_location_min_guarantee': {'type': 'int', }}, 'gslb_ip_list_cfg': {'type': 'dict', 'gslb_ip_list_max': {'type': 'int', }, 'gslb_ip_list_min_guarantee': {'type': 'int', }}, 'gslb_policy_cfg': {'type': 'dict', 'gslb_policy_max': {'type': 'int', }, 'gslb_policy_min_guarantee': {'type': 'int', }}, 'gslb_service_cfg': {'type': 'dict', 'gslb_service_max': {'type': 'int', }, 'gslb_service_min_guarantee': {'type': 'int', }}, 'gslb_service_ip_cfg': {'type': 'dict', 'gslb_service_ip_max': {'type': 'int', }, 'gslb_service_ip_min_guarantee': {'type': 'int', }}, 'gslb_service_port_cfg': {'type': 'dict', 'gslb_service_port_max': {'type': 'int', }, 'gslb_service_port_min_guarantee': {'type': 'int', }}, 'gslb_site_cfg': {'type': 'dict', 'gslb_site_max': {'type': 'int', }, 'gslb_site_min_guarantee': {'type': 'int', }}, 'gslb_svc_group_cfg': {'type': 'dict', 'gslb_svc_group_max': {'type': 'int', }, 'gslb_svc_group_min_guarantee': {'type': 'int', }}, 'gslb_template_cfg': {'type': 'dict', 'gslb_template_max': {'type': 'int', }, 'gslb_template_min_guarantee': {'type': 'int', }}, 'gslb_zone_cfg': {'type': 'dict', 'gslb_zone_max': {'type': 'int', }, 'gslb_zone_min_guarantee': {'type': 'int', }}, 'health_monitor_cfg': {'type': 'dict', 'health_monitor_max': {'type': 'int', }, 'health_monitor_min_guarantee': {'type': 'int', }}, 'real_port_cfg': {'type': 'dict', 'real_port_max': {'type': 'int', }, 'real_port_min_guarantee': {'type': 'int', }}, 'real_server_cfg': {'type': 'dict', 'real_server_max': {'type': 'int', }, 'real_server_min_guarantee': {'type': 'int', }}, 'service_group_cfg': {'type': 'dict', 'service_group_max': {'type': 'int', }, 'service_group_min_guarantee': {'type': 'int', }}, 'virtual_server_cfg': {'type': 'dict', 'virtual_server_max': {'type': 'int', }, 'virtual_server_min_guarantee': {'type': 'int', }}, 'threshold': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'network_resources': {'type': 'dict', 'static_ipv4_route_cfg': {'type': 'dict', 'static_ipv4_route_max': {'type': 'int', }, 'static_ipv4_route_min_guarantee': {'type': 'int', }}, 'static_ipv6_route_cfg': {'type': 'dict', 'static_ipv6_route_max': {'type': 'int', }, 'static_ipv6_route_min_guarantee': {'type': 'int', }}, 'ipv4_acl_line_cfg': {'type': 'dict', 'ipv4_acl_line_max': {'type': 'int', }, 'ipv4_acl_line_min_guarantee': {'type': 'int', }}, 'ipv6_acl_line_cfg': {'type': 'dict', 'ipv6_acl_line_max': {'type': 'int', }, 'ipv6_acl_line_min_guarantee': {'type': 'int', }}, 'static_arp_cfg': {'type': 'dict', 'static_arp_max': {'type': 'int', }, 'static_arp_min_guarantee': {'type': 'int', }}, 'static_neighbor_cfg': {'type': 'dict', 'static_neighbor_max': {'type': 'int', }, 'static_neighbor_min_guarantee': {'type': 'int', }}, 'static_mac_cfg': {'type': 'dict', 'static_mac_max': {'type': 'int', }, 'static_mac_min_guarantee': {'type': 'int', }}, 'object_group_cfg': {'type': 'dict', 'object_group_max': {'type': 'int', }, 'object_group_min_guarantee': {'type': 'int', }}, 'object_group_clause_cfg': {'type': 'dict', 'object_group_clause_max': {'type': 'int', }, 'object_group_clause_min_guarantee': {'type': 'int', }}, 'threshold': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'system_resources': {'type': 'dict', 'bw_limit_cfg': {'type': 'dict', 'bw_limit_max': {'type': 'int', }, 'bw_limit_watermark_disable': {'type': 'bool', }}, 'concurrent_session_limit_cfg': {'type': 'dict', 'concurrent_session_limit_max': {'type': 'int', }}, 'l4_session_limit_cfg': {'type': 'dict', 'l4_session_limit_max': {'type': 'str', }, 'l4_session_limit_min_guarantee': {'type': 'str', }}, 'l4cps_limit_cfg': {'type': 'dict', 'l4cps_limit_max': {'type': 'int', }}, 'l7cps_limit_cfg': {'type': 'dict', 'l7cps_limit_max': {'type': 'int', }}, 'natcps_limit_cfg': {'type': 'dict', 'natcps_limit_max': {'type': 'int', }}, 'fwcps_limit_cfg': {'type': 'dict', 'fwcps_limit_max': {'type': 'int', }}, 'ssl_throughput_limit_cfg': {'type': 'dict', 'ssl_throughput_limit_max': {'type': 'int', }, 'ssl_throughput_limit_watermark_disable': {'type': 'bool', }}, 'sslcps_limit_cfg': {'type': 'dict', 'sslcps_limit_max': {'type': 'int', }}, 'threshold': {'type': 'int', }, 'uuid': {'type': 'str', }}},
-        'oper': {'type': 'dict', 'scope': {'type': 'str', }, 'partition_resource': {'type': 'list', 'partition_name': {'type': 'str', }, 'res_type': {'type': 'list', 'resource_type': {'type': 'str', }, 'resources': {'type': 'list', 'resource_name': {'type': 'str', }, 'current': {'type': 'str', }, 'minimum': {'type': 'str', }, 'maximum': {'type': 'str', }, 'utilization': {'type': 'str', }, 'max_exceed': {'type': 'str', }, 'threshold_exceed': {'type': 'str', }, 'average': {'type': 'str', }, 'peak': {'type': 'str', }, 'cap': {'type': 'str', }, 'cap_utilization': {'type': 'str', }}}}}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'template_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'app_resources': {
+                'type': 'dict',
+                'gslb_device_cfg': {
+                    'type': 'dict',
+                    'gslb_device_max': {
+                        'type': 'int',
+                    },
+                    'gslb_device_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_geo_location_cfg': {
+                    'type': 'dict',
+                    'gslb_geo_location_max': {
+                        'type': 'int',
+                    },
+                    'gslb_geo_location_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_ip_list_cfg': {
+                    'type': 'dict',
+                    'gslb_ip_list_max': {
+                        'type': 'int',
+                    },
+                    'gslb_ip_list_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_policy_cfg': {
+                    'type': 'dict',
+                    'gslb_policy_max': {
+                        'type': 'int',
+                    },
+                    'gslb_policy_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_service_cfg': {
+                    'type': 'dict',
+                    'gslb_service_max': {
+                        'type': 'int',
+                    },
+                    'gslb_service_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_service_ip_cfg': {
+                    'type': 'dict',
+                    'gslb_service_ip_max': {
+                        'type': 'int',
+                    },
+                    'gslb_service_ip_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_service_port_cfg': {
+                    'type': 'dict',
+                    'gslb_service_port_max': {
+                        'type': 'int',
+                    },
+                    'gslb_service_port_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_site_cfg': {
+                    'type': 'dict',
+                    'gslb_site_max': {
+                        'type': 'int',
+                    },
+                    'gslb_site_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_svc_group_cfg': {
+                    'type': 'dict',
+                    'gslb_svc_group_max': {
+                        'type': 'int',
+                    },
+                    'gslb_svc_group_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_template_cfg': {
+                    'type': 'dict',
+                    'gslb_template_max': {
+                        'type': 'int',
+                    },
+                    'gslb_template_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'gslb_zone_cfg': {
+                    'type': 'dict',
+                    'gslb_zone_max': {
+                        'type': 'int',
+                    },
+                    'gslb_zone_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'health_monitor_cfg': {
+                    'type': 'dict',
+                    'health_monitor_max': {
+                        'type': 'int',
+                    },
+                    'health_monitor_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'real_port_cfg': {
+                    'type': 'dict',
+                    'real_port_max': {
+                        'type': 'int',
+                    },
+                    'real_port_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'real_server_cfg': {
+                    'type': 'dict',
+                    'real_server_max': {
+                        'type': 'int',
+                    },
+                    'real_server_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'service_group_cfg': {
+                    'type': 'dict',
+                    'service_group_max': {
+                        'type': 'int',
+                    },
+                    'service_group_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'virtual_server_cfg': {
+                    'type': 'dict',
+                    'virtual_server_max': {
+                        'type': 'int',
+                    },
+                    'virtual_server_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'network_resources': {
+                'type': 'dict',
+                'static_ipv4_route_cfg': {
+                    'type': 'dict',
+                    'static_ipv4_route_max': {
+                        'type': 'int',
+                    },
+                    'static_ipv4_route_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_ipv6_route_cfg': {
+                    'type': 'dict',
+                    'static_ipv6_route_max': {
+                        'type': 'int',
+                    },
+                    'static_ipv6_route_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'ipv4_acl_line_cfg': {
+                    'type': 'dict',
+                    'ipv4_acl_line_max': {
+                        'type': 'int',
+                    },
+                    'ipv4_acl_line_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'ipv6_acl_line_cfg': {
+                    'type': 'dict',
+                    'ipv6_acl_line_max': {
+                        'type': 'int',
+                    },
+                    'ipv6_acl_line_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_arp_cfg': {
+                    'type': 'dict',
+                    'static_arp_max': {
+                        'type': 'int',
+                    },
+                    'static_arp_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_neighbor_cfg': {
+                    'type': 'dict',
+                    'static_neighbor_max': {
+                        'type': 'int',
+                    },
+                    'static_neighbor_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'static_mac_cfg': {
+                    'type': 'dict',
+                    'static_mac_max': {
+                        'type': 'int',
+                    },
+                    'static_mac_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'object_group_cfg': {
+                    'type': 'dict',
+                    'object_group_max': {
+                        'type': 'int',
+                    },
+                    'object_group_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'object_group_clause_cfg': {
+                    'type': 'dict',
+                    'object_group_clause_max': {
+                        'type': 'int',
+                    },
+                    'object_group_clause_min_guarantee': {
+                        'type': 'int',
+                    }
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'system_resources': {
+                'type': 'dict',
+                'bw_limit_cfg': {
+                    'type': 'dict',
+                    'bw_limit_max': {
+                        'type': 'int',
+                    },
+                    'bw_limit_watermark_disable': {
+                        'type': 'bool',
+                    }
+                },
+                'concurrent_session_limit_cfg': {
+                    'type': 'dict',
+                    'concurrent_session_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'l4_session_limit_cfg': {
+                    'type': 'dict',
+                    'l4_session_limit_max': {
+                        'type': 'str',
+                    },
+                    'l4_session_limit_min_guarantee': {
+                        'type': 'str',
+                    }
+                },
+                'l4cps_limit_cfg': {
+                    'type': 'dict',
+                    'l4cps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'l7cps_limit_cfg': {
+                    'type': 'dict',
+                    'l7cps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'natcps_limit_cfg': {
+                    'type': 'dict',
+                    'natcps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'fwcps_limit_cfg': {
+                    'type': 'dict',
+                    'fwcps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'ssl_throughput_limit_cfg': {
+                    'type': 'dict',
+                    'ssl_throughput_limit_max': {
+                        'type': 'int',
+                    },
+                    'ssl_throughput_limit_watermark_disable': {
+                        'type': 'bool',
+                    }
+                },
+                'sslcps_limit_cfg': {
+                    'type': 'dict',
+                    'sslcps_limit_max': {
+                        'type': 'int',
+                    }
+                },
+                'threshold': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'scope': {
+                'type': 'str',
+            },
+            'partition_resource': {
+                'type': 'list',
+                'partition_name': {
+                    'type': 'str',
+                },
+                'res_type': {
+                    'type': 'list',
+                    'resource_type': {
+                        'type': 'str',
+                    },
+                    'resources': {
+                        'type': 'list',
+                        'resource_name': {
+                            'type': 'str',
+                        },
+                        'current': {
+                            'type': 'str',
+                        },
+                        'minimum': {
+                            'type': 'str',
+                        },
+                        'maximum': {
+                            'type': 'str',
+                        },
+                        'utilization': {
+                            'type': 'str',
+                        },
+                        'max_exceed': {
+                            'type': 'str',
+                        },
+                        'threshold_exceed': {
+                            'type': 'str',
+                        },
+                        'average': {
+                            'type': 'str',
+                        },
+                        'peak': {
+                            'type': 'str',
+                        },
+                        'cap': {
+                            'type': 'str',
+                        },
+                        'cap_utilization': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            }
+        }
     })
     return rv
 
@@ -253,7 +648,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -263,7 +660,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -283,7 +682,6 @@ def get_oper(module):
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, oper_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -308,9 +706,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -326,7 +722,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -375,7 +773,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["resource-accounting"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -393,8 +790,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -410,8 +806,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -475,12 +870,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -508,14 +901,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -543,7 +936,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

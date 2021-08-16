@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_class_list
 description:
@@ -358,9 +357,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -369,7 +369,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -377,7 +376,19 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ac_list", "dns", "file", "ipv4_list", "ipv6_list", "name", "oper", "str_list", "ntype", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "ac_list",
+    "dns",
+    "file",
+    "ipv4_list",
+    "ipv6_list",
+    "name",
+    "oper",
+    "str_list",
+    "ntype",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -385,27 +396,307 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'ntype': {'type': 'str', 'choices': ['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']},
-        'file': {'type': 'bool', },
-        'ipv4_list': {'type': 'list', 'ipv4addr': {'type': 'str', }, 'lid': {'type': 'int', }, 'glid': {'type': 'int', }, 'shared_partition_glid': {'type': 'bool', }, 'glid_shared': {'type': 'int', }, 'lsn_lid': {'type': 'int', }, 'lsn_radius_profile': {'type': 'int', }, 'age': {'type': 'int', }},
-        'ipv6_list': {'type': 'list', 'ipv6_addr': {'type': 'str', }, 'v6_lid': {'type': 'int', }, 'v6_glid': {'type': 'int', }, 'shared_partition_v6_glid': {'type': 'bool', }, 'v6_glid_shared': {'type': 'int', }, 'v6_lsn_lid': {'type': 'int', }, 'v6_lsn_radius_profile': {'type': 'int', }, 'v6_age': {'type': 'int', }},
-        'dns': {'type': 'list', 'dns_match_type': {'type': 'str', 'choices': ['contains', 'ends-with', 'starts-with']}, 'dns_match_string': {'type': 'str', }, 'dns_lid': {'type': 'int', }, 'dns_glid': {'type': 'int', }, 'shared_partition_dns_glid': {'type': 'bool', }, 'dns_glid_shared': {'type': 'int', }},
-        'str_list': {'type': 'list', 'str': {'type': 'str', }, 'str_lid_dummy': {'type': 'bool', }, 'str_lid': {'type': 'int', }, 'str_glid_dummy': {'type': 'bool', }, 'str_glid': {'type': 'int', }, 'shared_partition_str_glid': {'type': 'bool', }, 'str_glid_shared': {'type': 'int', }, 'value_str': {'type': 'str', }},
-        'ac_list': {'type': 'list', 'ac_match_type': {'type': 'str', 'choices': ['contains', 'ends-with', 'equals', 'starts-with']}, 'ac_key_string': {'type': 'str', }, 'ac_value': {'type': 'str', }},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'oper': {'type': 'dict', 'ntype': {'type': 'str', 'choices': ['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive', '[ipv4]', '[ipv6]', '[dns]', '[dns, ipv4]', '[dns, ipv6]']}, 'file_or_string': {'type': 'str', 'choices': ['file', 'config']}, 'user_tag': {'type': 'str', }, 'ipv4_total_single_ip': {'type': 'int', }, 'ipv4_total_subnet': {'type': 'int', }, 'ipv6_total_single_ip': {'type': 'int', }, 'ipv6_total_subnet': {'type': 'int', }, 'dns_total_entries': {'type': 'int', }, 'string_total_entries': {'type': 'int', }, 'ac_total_entries': {'type': 'int', }, 'ipv4_entries': {'type': 'list', 'ipv4_addr': {'type': 'str', }, 'ipv4_lid': {'type': 'int', }, 'ipv4_glid': {'type': 'int', }, 'ipv4_lsn_lid': {'type': 'int', }, 'ipv4_lsn_radius_profile': {'type': 'int', }, 'ipv4_hit_count': {'type': 'int', }, 'ipv4_age': {'type': 'int', }}, 'ipv6_entries': {'type': 'list', 'ipv6addr': {'type': 'str', }, 'ipv6_lid': {'type': 'int', }, 'ipv6_glid': {'type': 'int', }, 'ipv6_lsn_lid': {'type': 'int', }, 'ipv6_lsn_radius_profile': {'type': 'int', }, 'ipv6_hit_count': {'type': 'int', }, 'ipv6_age': {'type': 'int', }}, 'dns_entries': {'type': 'list', 'dns_match_type': {'type': 'str', 'choices': ['contains', 'ends-with', 'starts-with']}, 'dns_match_string': {'type': 'str', }, 'dns_lid': {'type': 'int', }, 'dns_glid': {'type': 'int', }, 'dns_hit_count': {'type': 'int', }}, 'string_entries': {'type': 'list', 'string_key': {'type': 'str', }, 'string_value': {'type': 'str', }, 'string_lid': {'type': 'int', }, 'string_glid': {'type': 'int', }, 'string_hit_count': {'type': 'int', }}, 'ac_entries': {'type': 'list', 'ac_match_type': {'type': 'str', 'choices': ['contains', 'ends-with', 'starts-with', 'equals']}, 'ac_match_string': {'type': 'str', }, 'ac_match_value': {'type': 'str', }, 'ac_hit_count': {'type': 'int', }}, 'name': {'type': 'str', 'required': True, }}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'ntype': {
+            'type':
+            'str',
+            'choices':
+            ['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
+        },
+        'file': {
+            'type': 'bool',
+        },
+        'ipv4_list': {
+            'type': 'list',
+            'ipv4addr': {
+                'type': 'str',
+            },
+            'lid': {
+                'type': 'int',
+            },
+            'glid': {
+                'type': 'int',
+            },
+            'shared_partition_glid': {
+                'type': 'bool',
+            },
+            'glid_shared': {
+                'type': 'int',
+            },
+            'lsn_lid': {
+                'type': 'int',
+            },
+            'lsn_radius_profile': {
+                'type': 'int',
+            },
+            'age': {
+                'type': 'int',
+            }
+        },
+        'ipv6_list': {
+            'type': 'list',
+            'ipv6_addr': {
+                'type': 'str',
+            },
+            'v6_lid': {
+                'type': 'int',
+            },
+            'v6_glid': {
+                'type': 'int',
+            },
+            'shared_partition_v6_glid': {
+                'type': 'bool',
+            },
+            'v6_glid_shared': {
+                'type': 'int',
+            },
+            'v6_lsn_lid': {
+                'type': 'int',
+            },
+            'v6_lsn_radius_profile': {
+                'type': 'int',
+            },
+            'v6_age': {
+                'type': 'int',
+            }
+        },
+        'dns': {
+            'type': 'list',
+            'dns_match_type': {
+                'type': 'str',
+                'choices': ['contains', 'ends-with', 'starts-with']
+            },
+            'dns_match_string': {
+                'type': 'str',
+            },
+            'dns_lid': {
+                'type': 'int',
+            },
+            'dns_glid': {
+                'type': 'int',
+            },
+            'shared_partition_dns_glid': {
+                'type': 'bool',
+            },
+            'dns_glid_shared': {
+                'type': 'int',
+            }
+        },
+        'str_list': {
+            'type': 'list',
+            'str': {
+                'type': 'str',
+            },
+            'str_lid_dummy': {
+                'type': 'bool',
+            },
+            'str_lid': {
+                'type': 'int',
+            },
+            'str_glid_dummy': {
+                'type': 'bool',
+            },
+            'str_glid': {
+                'type': 'int',
+            },
+            'shared_partition_str_glid': {
+                'type': 'bool',
+            },
+            'str_glid_shared': {
+                'type': 'int',
+            },
+            'value_str': {
+                'type': 'str',
+            }
+        },
+        'ac_list': {
+            'type': 'list',
+            'ac_match_type': {
+                'type': 'str',
+                'choices': ['contains', 'ends-with', 'equals', 'starts-with']
+            },
+            'ac_key_string': {
+                'type': 'str',
+            },
+            'ac_value': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'oper': {
+            'type': 'dict',
+            'ntype': {
+                'type':
+                'str',
+                'choices': [
+                    'ac', 'dns', 'ipv4', 'ipv6', 'string',
+                    'string-case-insensitive', '[ipv4]', '[ipv6]', '[dns]',
+                    '[dns, ipv4]', '[dns, ipv6]'
+                ]
+            },
+            'file_or_string': {
+                'type': 'str',
+                'choices': ['file', 'config']
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'ipv4_total_single_ip': {
+                'type': 'int',
+            },
+            'ipv4_total_subnet': {
+                'type': 'int',
+            },
+            'ipv6_total_single_ip': {
+                'type': 'int',
+            },
+            'ipv6_total_subnet': {
+                'type': 'int',
+            },
+            'dns_total_entries': {
+                'type': 'int',
+            },
+            'string_total_entries': {
+                'type': 'int',
+            },
+            'ac_total_entries': {
+                'type': 'int',
+            },
+            'ipv4_entries': {
+                'type': 'list',
+                'ipv4_addr': {
+                    'type': 'str',
+                },
+                'ipv4_lid': {
+                    'type': 'int',
+                },
+                'ipv4_glid': {
+                    'type': 'int',
+                },
+                'ipv4_lsn_lid': {
+                    'type': 'int',
+                },
+                'ipv4_lsn_radius_profile': {
+                    'type': 'int',
+                },
+                'ipv4_hit_count': {
+                    'type': 'int',
+                },
+                'ipv4_age': {
+                    'type': 'int',
+                }
+            },
+            'ipv6_entries': {
+                'type': 'list',
+                'ipv6addr': {
+                    'type': 'str',
+                },
+                'ipv6_lid': {
+                    'type': 'int',
+                },
+                'ipv6_glid': {
+                    'type': 'int',
+                },
+                'ipv6_lsn_lid': {
+                    'type': 'int',
+                },
+                'ipv6_lsn_radius_profile': {
+                    'type': 'int',
+                },
+                'ipv6_hit_count': {
+                    'type': 'int',
+                },
+                'ipv6_age': {
+                    'type': 'int',
+                }
+            },
+            'dns_entries': {
+                'type': 'list',
+                'dns_match_type': {
+                    'type': 'str',
+                    'choices': ['contains', 'ends-with', 'starts-with']
+                },
+                'dns_match_string': {
+                    'type': 'str',
+                },
+                'dns_lid': {
+                    'type': 'int',
+                },
+                'dns_glid': {
+                    'type': 'int',
+                },
+                'dns_hit_count': {
+                    'type': 'int',
+                }
+            },
+            'string_entries': {
+                'type': 'list',
+                'string_key': {
+                    'type': 'str',
+                },
+                'string_value': {
+                    'type': 'str',
+                },
+                'string_lid': {
+                    'type': 'int',
+                },
+                'string_glid': {
+                    'type': 'int',
+                },
+                'string_hit_count': {
+                    'type': 'int',
+                }
+            },
+            'ac_entries': {
+                'type': 'list',
+                'ac_match_type': {
+                    'type': 'str',
+                    'choices':
+                    ['contains', 'ends-with', 'starts-with', 'equals']
+                },
+                'ac_match_string': {
+                    'type': 'str',
+                },
+                'ac_match_value': {
+                    'type': 'str',
+                },
+                'ac_hit_count': {
+                    'type': 'int',
+                }
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
+        }
     })
     return rv
 
@@ -476,7 +767,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -486,7 +779,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -506,7 +801,6 @@ def get_oper(module):
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, oper_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -531,9 +825,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -550,7 +842,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -599,7 +893,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["class-list"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -617,8 +910,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -634,8 +926,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -699,12 +990,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -732,14 +1021,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -767,7 +1056,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

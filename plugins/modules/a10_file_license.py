@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_file_license
 description:
@@ -156,9 +155,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -167,7 +167,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -175,7 +174,16 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "device", "dst_file", "file", "file_handle", "oper", "size", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "action",
+    "device",
+    "dst_file",
+    "file",
+    "file_handle",
+    "oper",
+    "size",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -183,24 +191,91 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'file_content': {'type': 'str', },'device': {'type': 'int', },
-        'file': {'type': 'str', },
-        'size': {'type': 'int', },
-        'file_handle': {'type': 'str', },
-        'action': {'type': 'str', 'choices': ['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']},
-        'dst_file': {'type': 'str', },
-        'uuid': {'type': 'str', },
-        'oper': {'type': 'dict', 'host_id': {'type': 'str', }, 'feature_list': {'type': 'list', 'feature_installed': {'type': 'str', }, 'version': {'type': 'str', }, 'expire_date': {'type': 'str', }, 'notice': {'type': 'str', }, 'Temporary': {'type': 'str', }, 'SN': {'type': 'str', }, 'bandwidth': {'type': 'str', }}, 'file_list': {'type': 'list', 'file_name': {'type': 'str', }}}
+    rv.update({
+        'file_content': {
+            'type': 'str',
+        },
+        'device': {
+            'type': 'int',
+        },
+        'file': {
+            'type': 'str',
+        },
+        'size': {
+            'type': 'int',
+        },
+        'file_handle': {
+            'type': 'str',
+        },
+        'action': {
+            'type':
+            'str',
+            'choices': [
+                'create', 'import', 'export', 'copy', 'rename', 'check',
+                'replace', 'delete'
+            ]
+        },
+        'dst_file': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'oper': {
+            'type': 'dict',
+            'host_id': {
+                'type': 'str',
+            },
+            'feature_list': {
+                'type': 'list',
+                'feature_installed': {
+                    'type': 'str',
+                },
+                'version': {
+                    'type': 'str',
+                },
+                'expire_date': {
+                    'type': 'str',
+                },
+                'notice': {
+                    'type': 'str',
+                },
+                'Temporary': {
+                    'type': 'str',
+                },
+                'SN': {
+                    'type': 'str',
+                },
+                'bandwidth': {
+                    'type': 'str',
+                }
+            },
+            'file_list': {
+                'type': 'list',
+                'file_name': {
+                    'type': 'str',
+                }
+            }
+        }
     })
     return rv
 
@@ -246,7 +321,8 @@ def _get(module, url, params={}):
 
 def _post(module, url, params={}, file_content=None, file_name=None):
     file_payload = {'file_content': file_content, 'file_name': file_name}
-    resp = module.client.post(url, params=params,
+    resp = module.client.post(url,
+                              params=params,
                               file_content=file_content,
                               file_name=file_name)
     params.update(file_payload)
@@ -274,7 +350,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -284,7 +362,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -322,7 +402,6 @@ def get_oper(module):
     return _get(module, oper_url(module), params=query_params)
 
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
 
@@ -345,9 +424,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -363,7 +440,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -432,14 +511,15 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload):
     try:
         if module.params["action"] == "import":
-            call_result = _post(module, new_url(module), payload,
+            call_result = _post(module,
+                                new_url(module),
+                                payload,
                                 file_content=module.params["file_content"],
                                 file_name=module.params["file"])
         else:
             call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -451,7 +531,9 @@ def create(module, result, payload):
 def update(module, result, existing_config, payload):
     try:
         if module.params["action"] == "import":
-            call_result = _post(module, existing_url(module), payload,
+            call_result = _post(module,
+                                existing_url(module),
+                                payload,
                                 file_content=module.params["file_content"],
                                 file_name=module.params["file"])
         else:
@@ -460,8 +542,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -509,12 +590,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -542,19 +621,19 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config, file_info = get(module)
     result["axapi_calls"].append(existing_config)
-    
+
     if file_info:
         existing_config = existing_config["response_body"]
     else:
@@ -578,7 +657,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

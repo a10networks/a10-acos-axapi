@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_radius_server
 description:
@@ -369,9 +368,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -380,7 +380,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -388,7 +387,26 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["accounting_interim_update", "accounting_on", "accounting_start", "accounting_stop", "attribute", "attribute_name", "custom_attribute_name", "disable_reply", "encrypted", "listen_port", "oper", "remote", "sampling_enable", "secret", "secret_string", "stats", "uuid", "vrid", ]
+AVAILABLE_PROPERTIES = [
+    "accounting_interim_update",
+    "accounting_on",
+    "accounting_start",
+    "accounting_stop",
+    "attribute",
+    "attribute_name",
+    "custom_attribute_name",
+    "disable_reply",
+    "encrypted",
+    "listen_port",
+    "oper",
+    "remote",
+    "sampling_enable",
+    "secret",
+    "secret_string",
+    "stats",
+    "uuid",
+    "vrid",
+]
 
 
 def get_default_argspec():
@@ -396,34 +414,261 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'listen_port': {'type': 'int', },
-        'remote': {'type': 'dict', 'ip_list': {'type': 'list', 'ip_list_name': {'type': 'str', }, 'ip_list_secret': {'type': 'bool', }, 'ip_list_secret_string': {'type': 'str', }, 'ip_list_encrypted': {'type': 'str', }}},
-        'secret': {'type': 'bool', },
-        'secret_string': {'type': 'str', },
-        'encrypted': {'type': 'str', },
-        'vrid': {'type': 'int', },
-        'attribute': {'type': 'list', 'attribute_value': {'type': 'str', 'choices': ['inside-ipv6-prefix', 'inside-ip', 'inside-ipv6', 'imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3']}, 'prefix_length': {'type': 'str', 'choices': ['32', '48', '64', '80', '96', '112']}, 'prefix_vendor': {'type': 'int', }, 'prefix_number': {'type': 'int', }, 'name': {'type': 'str', }, 'value': {'type': 'str', 'choices': ['hexadecimal']}, 'custom_vendor': {'type': 'int', }, 'custom_number': {'type': 'int', }, 'vendor': {'type': 'int', }, 'number': {'type': 'int', }},
-        'disable_reply': {'type': 'bool', },
-        'accounting_start': {'type': 'str', 'choices': ['ignore', 'append-entry', 'replace-entry']},
-        'accounting_stop': {'type': 'str', 'choices': ['ignore', 'delete-entry', 'delete-entry-and-sessions']},
-        'accounting_interim_update': {'type': 'str', 'choices': ['ignore', 'append-entry', 'replace-entry']},
-        'accounting_on': {'type': 'str', 'choices': ['ignore', 'delete-entries-using-attribute']},
-        'attribute_name': {'type': 'str', 'choices': ['msisdn', 'imei', 'imsi']},
-        'custom_attribute_name': {'type': 'str', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'msisdn-received', 'imei-received', 'imsi-received', 'custom-received', 'radius-request-received', 'radius-request-dropped', 'request-bad-secret-dropped', 'request-no-key-vap-dropped', 'request-malformed-dropped', 'request-ignored', 'radius-table-full', 'secret-not-configured-dropped', 'ha-standby-dropped', 'ipv6-prefix-length-mismatch', 'invalid-key', 'smp-created', 'smp-deleted', 'smp-mem-allocated', 'smp-mem-alloc-failed', 'smp-mem-freed', 'smp-in-rml', 'mem-allocated', 'mem-alloc-failed', 'mem-freed', 'ha-sync-create-sent', 'ha-sync-delete-sent', 'ha-sync-create-recv', 'ha-sync-delete-recv', 'acct-on-filters-full', 'acct-on-dup-request', 'ip-mismatch-delete', 'ip-add-race-drop', 'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop', 'radius-packets-redirected', 'radius-packets-redirect-fail-dropped', 'radius-packets-process-local', 'radius-packets-dropped-not-lo']}},
-        'oper': {'type': 'dict', 'radius_table_entries_list': {'type': 'list', 'inside_ip': {'type': 'str', }, 'inside_ipv6': {'type': 'str', }, 'prefix_len': {'type': 'int', }, 'msisdn': {'type': 'str', }, 'imei': {'type': 'str', }, 'imsi': {'type': 'str', }, 'custom1_attr_value': {'type': 'str', }, 'custom2_attr_value': {'type': 'str', }, 'custom3_attr_value': {'type': 'str', }, 'is_obsolete': {'type': 'bool', }}, 'total_entries': {'type': 'int', }, 'custom_attr_name': {'type': 'str', }, 'custom_attr_value': {'type': 'str', }, 'starts_with': {'type': 'bool', }, 'case_insensitive': {'type': 'bool', }},
-        'stats': {'type': 'dict', 'msisdn_received': {'type': 'str', }, 'imei_received': {'type': 'str', }, 'imsi_received': {'type': 'str', }, 'custom_received': {'type': 'str', }, 'radius_request_received': {'type': 'str', }, 'radius_request_dropped': {'type': 'str', }, 'request_bad_secret_dropped': {'type': 'str', }, 'request_no_key_vap_dropped': {'type': 'str', }, 'request_malformed_dropped': {'type': 'str', }, 'request_ignored': {'type': 'str', }, 'radius_table_full': {'type': 'str', }, 'secret_not_configured_dropped': {'type': 'str', }, 'ha_standby_dropped': {'type': 'str', }, 'ipv6_prefix_length_mismatch': {'type': 'str', }, 'invalid_key': {'type': 'str', }, 'smp_created': {'type': 'str', }, 'smp_deleted': {'type': 'str', }}
+    rv.update({
+        'listen_port': {
+            'type': 'int',
+        },
+        'remote': {
+            'type': 'dict',
+            'ip_list': {
+                'type': 'list',
+                'ip_list_name': {
+                    'type': 'str',
+                },
+                'ip_list_secret': {
+                    'type': 'bool',
+                },
+                'ip_list_secret_string': {
+                    'type': 'str',
+                },
+                'ip_list_encrypted': {
+                    'type': 'str',
+                }
+            }
+        },
+        'secret': {
+            'type': 'bool',
+        },
+        'secret_string': {
+            'type': 'str',
+        },
+        'encrypted': {
+            'type': 'str',
+        },
+        'vrid': {
+            'type': 'int',
+        },
+        'attribute': {
+            'type': 'list',
+            'attribute_value': {
+                'type':
+                'str',
+                'choices': [
+                    'inside-ipv6-prefix', 'inside-ip', 'inside-ipv6', 'imei',
+                    'imsi', 'msisdn', 'custom1', 'custom2', 'custom3'
+                ]
+            },
+            'prefix_length': {
+                'type': 'str',
+                'choices': ['32', '48', '64', '80', '96', '112']
+            },
+            'prefix_vendor': {
+                'type': 'int',
+            },
+            'prefix_number': {
+                'type': 'int',
+            },
+            'name': {
+                'type': 'str',
+            },
+            'value': {
+                'type': 'str',
+                'choices': ['hexadecimal']
+            },
+            'custom_vendor': {
+                'type': 'int',
+            },
+            'custom_number': {
+                'type': 'int',
+            },
+            'vendor': {
+                'type': 'int',
+            },
+            'number': {
+                'type': 'int',
+            }
+        },
+        'disable_reply': {
+            'type': 'bool',
+        },
+        'accounting_start': {
+            'type': 'str',
+            'choices': ['ignore', 'append-entry', 'replace-entry']
+        },
+        'accounting_stop': {
+            'type': 'str',
+            'choices': ['ignore', 'delete-entry', 'delete-entry-and-sessions']
+        },
+        'accounting_interim_update': {
+            'type': 'str',
+            'choices': ['ignore', 'append-entry', 'replace-entry']
+        },
+        'accounting_on': {
+            'type': 'str',
+            'choices': ['ignore', 'delete-entries-using-attribute']
+        },
+        'attribute_name': {
+            'type': 'str',
+            'choices': ['msisdn', 'imei', 'imsi']
+        },
+        'custom_attribute_name': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'msisdn-received', 'imei-received', 'imsi-received',
+                    'custom-received', 'radius-request-received',
+                    'radius-request-dropped', 'request-bad-secret-dropped',
+                    'request-no-key-vap-dropped', 'request-malformed-dropped',
+                    'request-ignored', 'radius-table-full',
+                    'secret-not-configured-dropped', 'ha-standby-dropped',
+                    'ipv6-prefix-length-mismatch', 'invalid-key',
+                    'smp-created', 'smp-deleted', 'smp-mem-allocated',
+                    'smp-mem-alloc-failed', 'smp-mem-freed', 'smp-in-rml',
+                    'mem-allocated', 'mem-alloc-failed', 'mem-freed',
+                    'ha-sync-create-sent', 'ha-sync-delete-sent',
+                    'ha-sync-create-recv', 'ha-sync-delete-recv',
+                    'acct-on-filters-full', 'acct-on-dup-request',
+                    'ip-mismatch-delete', 'ip-add-race-drop',
+                    'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop',
+                    'radius-packets-redirected',
+                    'radius-packets-redirect-fail-dropped',
+                    'radius-packets-process-local',
+                    'radius-packets-dropped-not-lo'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'radius_table_entries_list': {
+                'type': 'list',
+                'inside_ip': {
+                    'type': 'str',
+                },
+                'inside_ipv6': {
+                    'type': 'str',
+                },
+                'prefix_len': {
+                    'type': 'int',
+                },
+                'msisdn': {
+                    'type': 'str',
+                },
+                'imei': {
+                    'type': 'str',
+                },
+                'imsi': {
+                    'type': 'str',
+                },
+                'custom1_attr_value': {
+                    'type': 'str',
+                },
+                'custom2_attr_value': {
+                    'type': 'str',
+                },
+                'custom3_attr_value': {
+                    'type': 'str',
+                },
+                'is_obsolete': {
+                    'type': 'bool',
+                }
+            },
+            'total_entries': {
+                'type': 'int',
+            },
+            'custom_attr_name': {
+                'type': 'str',
+            },
+            'custom_attr_value': {
+                'type': 'str',
+            },
+            'starts_with': {
+                'type': 'bool',
+            },
+            'case_insensitive': {
+                'type': 'bool',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'msisdn_received': {
+                'type': 'str',
+            },
+            'imei_received': {
+                'type': 'str',
+            },
+            'imsi_received': {
+                'type': 'str',
+            },
+            'custom_received': {
+                'type': 'str',
+            },
+            'radius_request_received': {
+                'type': 'str',
+            },
+            'radius_request_dropped': {
+                'type': 'str',
+            },
+            'request_bad_secret_dropped': {
+                'type': 'str',
+            },
+            'request_no_key_vap_dropped': {
+                'type': 'str',
+            },
+            'request_malformed_dropped': {
+                'type': 'str',
+            },
+            'request_ignored': {
+                'type': 'str',
+            },
+            'radius_table_full': {
+                'type': 'str',
+            },
+            'secret_not_configured_dropped': {
+                'type': 'str',
+            },
+            'ha_standby_dropped': {
+                'type': 'str',
+            },
+            'ipv6_prefix_length_mismatch': {
+                'type': 'str',
+            },
+            'invalid_key': {
+                'type': 'str',
+            },
+            'smp_created': {
+                'type': 'str',
+            },
+            'smp_deleted': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -499,7 +744,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -509,7 +756,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -539,7 +788,6 @@ def get_stats(module):
     return _get(module, stats_url(module), params=query_params)
 
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
 
@@ -562,9 +810,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -580,7 +826,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -629,7 +877,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["server"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -647,8 +894,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -664,8 +910,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -729,12 +974,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -762,14 +1005,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -799,7 +1042,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

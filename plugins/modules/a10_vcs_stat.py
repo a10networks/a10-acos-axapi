@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_vcs_stat
 description:
@@ -479,9 +478,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -490,7 +490,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -498,7 +497,11 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -506,19 +509,302 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'elect_recv_err', 'elect_send_err', 'elect_recv_byte', 'elect_send_byte', 'elect_pdu_master_recv', 'elect_pdu_master_cand_recv', 'elect_pdu_slave_recv', 'elect_pdu_master_take_over_recv', 'elect_pdu_unknown_recv', 'elect_pdu_master_sent', 'elect_pdu_master_cand_sent', 'elect_pdu_slave_sent', 'elect_pdu_master_take_over_sent', 'elect_pdu_unknown_sent', 'elect_pdu_inval', 'elect_pdu_hw_mismatch', 'elect_pdu_cluster_mismatch', 'elect_pdu_dev_id_collision', 'elect_mc_discard_master', 'elect_mc_replace_master', 'elect_mc_dup_masterr', 'elect_mc_reset_timer_by_mc', 'elect_mc_reset_timer_by_mto', 'elect_slave_dup_master', 'elect_slave_discard_challenger', 'elect_slave_replace_challenger', 'elect_slave_dup_challenger', 'elect_slave_discard_neighbour', 'elect_slave_too_many_neighbour', 'elect_slave_dup_neighbour', 'elect_master_discard_challenger', 'elect_master_new_challenger', 'elect_master_replace_challenger', 'elect_master_dup_challenger', 'elect_master_discard_neighbour', 'elect_master_too_many_neighbour', 'elect_master_dup_neighbour', 'elect_enter_master_cand_stat', 'elect_enter_slave', 'elect_enter_master', 'elect_enter_master_take_over', 'elect_leave_master_cand', 'elect_leave_slave', 'elect_leave_master', 'elect_leave_master_take_over', 'master_slave_start_err', 'master_slave_start', 'master_slave_stop', 'master_cfg_upd', 'master_cfg_upd_l_fail', 'master_cfg_upd_r_fail', 'master_cfg_upd_notif_err', 'master_cfg_upd_result_err', 'slave_recv_err', 'slave_send_err', 'slave_recv_bytes', 'slave_sent_bytes', 'slave_n_recv', 'slave_n_sent', 'slave_msg_inval', 'slave_keepalive', 'slave_cfg_upd', 'slave_cfg_upd_fail', 'daemon_n_elec_start', 'daemon_n_elec_stop', 'daemon_recv_err', 'daemon_send_err', 'daemon_recv_bytes', 'daemon_sent_bytes', 'daemon_n_recv', 'daemon_n_sent', 'daemon_msg_inval', 'daemon_msg_handle_failure']}},
-        'stats': {'type': 'dict', 'elect_recv_err': {'type': 'str', }, 'elect_send_err': {'type': 'str', }, 'elect_recv_byte': {'type': 'str', }, 'elect_send_byte': {'type': 'str', }, 'elect_pdu_master_recv': {'type': 'str', }, 'elect_pdu_master_cand_recv': {'type': 'str', }, 'elect_pdu_slave_recv': {'type': 'str', }, 'elect_pdu_master_take_over_recv': {'type': 'str', }, 'elect_pdu_unknown_recv': {'type': 'str', }, 'elect_pdu_master_sent': {'type': 'str', }, 'elect_pdu_master_cand_sent': {'type': 'str', }, 'elect_pdu_slave_sent': {'type': 'str', }, 'elect_pdu_master_take_over_sent': {'type': 'str', }, 'elect_pdu_unknown_sent': {'type': 'str', }, 'elect_pdu_inval': {'type': 'str', }, 'elect_pdu_hw_mismatch': {'type': 'str', }, 'elect_pdu_cluster_mismatch': {'type': 'str', }, 'elect_pdu_dev_id_collision': {'type': 'str', }, 'elect_mc_discard_master': {'type': 'str', }, 'elect_mc_replace_master': {'type': 'str', }, 'elect_mc_dup_masterr': {'type': 'str', }, 'elect_mc_reset_timer_by_mc': {'type': 'str', }, 'elect_mc_reset_timer_by_mto': {'type': 'str', }, 'elect_slave_dup_master': {'type': 'str', }, 'elect_slave_discard_challenger': {'type': 'str', }, 'elect_slave_replace_challenger': {'type': 'str', }, 'elect_slave_dup_challenger': {'type': 'str', }, 'elect_slave_discard_neighbour': {'type': 'str', }, 'elect_slave_too_many_neighbour': {'type': 'str', }, 'elect_slave_dup_neighbour': {'type': 'str', }, 'elect_master_discard_challenger': {'type': 'str', }, 'elect_master_new_challenger': {'type': 'str', }, 'elect_master_replace_challenger': {'type': 'str', }, 'elect_master_dup_challenger': {'type': 'str', }, 'elect_master_discard_neighbour': {'type': 'str', }, 'elect_master_too_many_neighbour': {'type': 'str', }, 'elect_master_dup_neighbour': {'type': 'str', }, 'elect_enter_master_cand_stat': {'type': 'str', }, 'elect_enter_slave': {'type': 'str', }, 'elect_enter_master': {'type': 'str', }, 'elect_enter_master_take_over': {'type': 'str', }, 'elect_leave_master_cand': {'type': 'str', }, 'elect_leave_slave': {'type': 'str', }, 'elect_leave_master': {'type': 'str', }, 'elect_leave_master_take_over': {'type': 'str', }, 'master_slave_start_err': {'type': 'str', }, 'master_slave_start': {'type': 'str', }, 'master_slave_stop': {'type': 'str', }, 'master_cfg_upd': {'type': 'str', }, 'master_cfg_upd_l_fail': {'type': 'str', }, 'master_cfg_upd_r_fail': {'type': 'str', }, 'master_cfg_upd_notif_err': {'type': 'str', }, 'master_cfg_upd_result_err': {'type': 'str', }, 'slave_recv_err': {'type': 'str', }, 'slave_send_err': {'type': 'str', }, 'slave_recv_bytes': {'type': 'str', }, 'slave_sent_bytes': {'type': 'str', }, 'slave_n_recv': {'type': 'str', }, 'slave_n_sent': {'type': 'str', }, 'slave_msg_inval': {'type': 'str', }, 'slave_keepalive': {'type': 'str', }, 'slave_cfg_upd': {'type': 'str', }, 'slave_cfg_upd_fail': {'type': 'str', }, 'daemon_n_elec_start': {'type': 'str', }, 'daemon_n_elec_stop': {'type': 'str', }, 'daemon_recv_err': {'type': 'str', }, 'daemon_send_err': {'type': 'str', }, 'daemon_recv_bytes': {'type': 'str', }, 'daemon_sent_bytes': {'type': 'str', }, 'daemon_n_recv': {'type': 'str', }, 'daemon_n_sent': {'type': 'str', }, 'daemon_msg_inval': {'type': 'str', }, 'daemon_msg_handle_failure': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'elect_recv_err', 'elect_send_err',
+                    'elect_recv_byte', 'elect_send_byte',
+                    'elect_pdu_master_recv', 'elect_pdu_master_cand_recv',
+                    'elect_pdu_slave_recv', 'elect_pdu_master_take_over_recv',
+                    'elect_pdu_unknown_recv', 'elect_pdu_master_sent',
+                    'elect_pdu_master_cand_sent', 'elect_pdu_slave_sent',
+                    'elect_pdu_master_take_over_sent',
+                    'elect_pdu_unknown_sent', 'elect_pdu_inval',
+                    'elect_pdu_hw_mismatch', 'elect_pdu_cluster_mismatch',
+                    'elect_pdu_dev_id_collision', 'elect_mc_discard_master',
+                    'elect_mc_replace_master', 'elect_mc_dup_masterr',
+                    'elect_mc_reset_timer_by_mc',
+                    'elect_mc_reset_timer_by_mto', 'elect_slave_dup_master',
+                    'elect_slave_discard_challenger',
+                    'elect_slave_replace_challenger',
+                    'elect_slave_dup_challenger',
+                    'elect_slave_discard_neighbour',
+                    'elect_slave_too_many_neighbour',
+                    'elect_slave_dup_neighbour',
+                    'elect_master_discard_challenger',
+                    'elect_master_new_challenger',
+                    'elect_master_replace_challenger',
+                    'elect_master_dup_challenger',
+                    'elect_master_discard_neighbour',
+                    'elect_master_too_many_neighbour',
+                    'elect_master_dup_neighbour',
+                    'elect_enter_master_cand_stat', 'elect_enter_slave',
+                    'elect_enter_master', 'elect_enter_master_take_over',
+                    'elect_leave_master_cand', 'elect_leave_slave',
+                    'elect_leave_master', 'elect_leave_master_take_over',
+                    'master_slave_start_err', 'master_slave_start',
+                    'master_slave_stop', 'master_cfg_upd',
+                    'master_cfg_upd_l_fail', 'master_cfg_upd_r_fail',
+                    'master_cfg_upd_notif_err', 'master_cfg_upd_result_err',
+                    'slave_recv_err', 'slave_send_err', 'slave_recv_bytes',
+                    'slave_sent_bytes', 'slave_n_recv', 'slave_n_sent',
+                    'slave_msg_inval', 'slave_keepalive', 'slave_cfg_upd',
+                    'slave_cfg_upd_fail', 'daemon_n_elec_start',
+                    'daemon_n_elec_stop', 'daemon_recv_err', 'daemon_send_err',
+                    'daemon_recv_bytes', 'daemon_sent_bytes', 'daemon_n_recv',
+                    'daemon_n_sent', 'daemon_msg_inval',
+                    'daemon_msg_handle_failure'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'elect_recv_err': {
+                'type': 'str',
+            },
+            'elect_send_err': {
+                'type': 'str',
+            },
+            'elect_recv_byte': {
+                'type': 'str',
+            },
+            'elect_send_byte': {
+                'type': 'str',
+            },
+            'elect_pdu_master_recv': {
+                'type': 'str',
+            },
+            'elect_pdu_master_cand_recv': {
+                'type': 'str',
+            },
+            'elect_pdu_slave_recv': {
+                'type': 'str',
+            },
+            'elect_pdu_master_take_over_recv': {
+                'type': 'str',
+            },
+            'elect_pdu_unknown_recv': {
+                'type': 'str',
+            },
+            'elect_pdu_master_sent': {
+                'type': 'str',
+            },
+            'elect_pdu_master_cand_sent': {
+                'type': 'str',
+            },
+            'elect_pdu_slave_sent': {
+                'type': 'str',
+            },
+            'elect_pdu_master_take_over_sent': {
+                'type': 'str',
+            },
+            'elect_pdu_unknown_sent': {
+                'type': 'str',
+            },
+            'elect_pdu_inval': {
+                'type': 'str',
+            },
+            'elect_pdu_hw_mismatch': {
+                'type': 'str',
+            },
+            'elect_pdu_cluster_mismatch': {
+                'type': 'str',
+            },
+            'elect_pdu_dev_id_collision': {
+                'type': 'str',
+            },
+            'elect_mc_discard_master': {
+                'type': 'str',
+            },
+            'elect_mc_replace_master': {
+                'type': 'str',
+            },
+            'elect_mc_dup_masterr': {
+                'type': 'str',
+            },
+            'elect_mc_reset_timer_by_mc': {
+                'type': 'str',
+            },
+            'elect_mc_reset_timer_by_mto': {
+                'type': 'str',
+            },
+            'elect_slave_dup_master': {
+                'type': 'str',
+            },
+            'elect_slave_discard_challenger': {
+                'type': 'str',
+            },
+            'elect_slave_replace_challenger': {
+                'type': 'str',
+            },
+            'elect_slave_dup_challenger': {
+                'type': 'str',
+            },
+            'elect_slave_discard_neighbour': {
+                'type': 'str',
+            },
+            'elect_slave_too_many_neighbour': {
+                'type': 'str',
+            },
+            'elect_slave_dup_neighbour': {
+                'type': 'str',
+            },
+            'elect_master_discard_challenger': {
+                'type': 'str',
+            },
+            'elect_master_new_challenger': {
+                'type': 'str',
+            },
+            'elect_master_replace_challenger': {
+                'type': 'str',
+            },
+            'elect_master_dup_challenger': {
+                'type': 'str',
+            },
+            'elect_master_discard_neighbour': {
+                'type': 'str',
+            },
+            'elect_master_too_many_neighbour': {
+                'type': 'str',
+            },
+            'elect_master_dup_neighbour': {
+                'type': 'str',
+            },
+            'elect_enter_master_cand_stat': {
+                'type': 'str',
+            },
+            'elect_enter_slave': {
+                'type': 'str',
+            },
+            'elect_enter_master': {
+                'type': 'str',
+            },
+            'elect_enter_master_take_over': {
+                'type': 'str',
+            },
+            'elect_leave_master_cand': {
+                'type': 'str',
+            },
+            'elect_leave_slave': {
+                'type': 'str',
+            },
+            'elect_leave_master': {
+                'type': 'str',
+            },
+            'elect_leave_master_take_over': {
+                'type': 'str',
+            },
+            'master_slave_start_err': {
+                'type': 'str',
+            },
+            'master_slave_start': {
+                'type': 'str',
+            },
+            'master_slave_stop': {
+                'type': 'str',
+            },
+            'master_cfg_upd': {
+                'type': 'str',
+            },
+            'master_cfg_upd_l_fail': {
+                'type': 'str',
+            },
+            'master_cfg_upd_r_fail': {
+                'type': 'str',
+            },
+            'master_cfg_upd_notif_err': {
+                'type': 'str',
+            },
+            'master_cfg_upd_result_err': {
+                'type': 'str',
+            },
+            'slave_recv_err': {
+                'type': 'str',
+            },
+            'slave_send_err': {
+                'type': 'str',
+            },
+            'slave_recv_bytes': {
+                'type': 'str',
+            },
+            'slave_sent_bytes': {
+                'type': 'str',
+            },
+            'slave_n_recv': {
+                'type': 'str',
+            },
+            'slave_n_sent': {
+                'type': 'str',
+            },
+            'slave_msg_inval': {
+                'type': 'str',
+            },
+            'slave_keepalive': {
+                'type': 'str',
+            },
+            'slave_cfg_upd': {
+                'type': 'str',
+            },
+            'slave_cfg_upd_fail': {
+                'type': 'str',
+            },
+            'daemon_n_elec_start': {
+                'type': 'str',
+            },
+            'daemon_n_elec_stop': {
+                'type': 'str',
+            },
+            'daemon_recv_err': {
+                'type': 'str',
+            },
+            'daemon_send_err': {
+                'type': 'str',
+            },
+            'daemon_recv_bytes': {
+                'type': 'str',
+            },
+            'daemon_sent_bytes': {
+                'type': 'str',
+            },
+            'daemon_n_recv': {
+                'type': 'str',
+            },
+            'daemon_n_sent': {
+                'type': 'str',
+            },
+            'daemon_msg_inval': {
+                'type': 'str',
+            },
+            'daemon_msg_handle_failure': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -588,7 +874,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -598,7 +886,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -618,7 +908,6 @@ def get_stats(module):
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, stats_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -643,9 +932,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -661,7 +948,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -710,7 +999,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["stat"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -728,8 +1016,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -745,8 +1032,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -810,12 +1096,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -843,14 +1127,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -878,7 +1162,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

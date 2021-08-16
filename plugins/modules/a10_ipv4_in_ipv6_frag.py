@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_ipv4_in_ipv6_frag
 description:
@@ -321,9 +320,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -332,7 +332,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -340,7 +339,11 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -348,19 +351,194 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'session-inserted', 'session-expired', 'icmp-rcv', 'icmpv6-rcv', 'udp-rcv', 'tcp-rcv', 'ipip-rcv', 'ipv6ip-rcv', 'other-rcv', 'icmp-dropped', 'icmpv6-dropped', 'udp-dropped', 'tcp-dropped', 'ipip-dropped', 'ipv6ip-dropped', 'other-dropped', 'overlap-error', 'bad-ip-len', 'too-small', 'first-tcp-too-small', 'first-l4-too-small', 'total-sessions-exceeded', 'no-session-memory', 'fast-aging-set', 'fast-aging-unset', 'fragment-queue-success', 'unaligned-len', 'exceeded-len', 'duplicate-first-frag', 'duplicate-last-frag', 'total-fragments-exceeded', 'fragment-queue-failure', 'reassembly-success', 'max-len-exceeded', 'reassembly-failure', 'policy-drop', 'error-drop', 'high-cpu-threshold', 'low-cpu-threshold', 'cpu-threshold-drop', 'ipd-entry-drop', 'max-packets-exceeded', 'session-packets-exceeded', 'frag-session-count', 'sctp-rcv', 'sctp-dropped']}},
-        'stats': {'type': 'dict', 'session_inserted': {'type': 'str', }, 'session_expired': {'type': 'str', }, 'icmp_rcv': {'type': 'str', }, 'icmpv6_rcv': {'type': 'str', }, 'udp_rcv': {'type': 'str', }, 'tcp_rcv': {'type': 'str', }, 'ipip_rcv': {'type': 'str', }, 'ipv6ip_rcv': {'type': 'str', }, 'other_rcv': {'type': 'str', }, 'icmp_dropped': {'type': 'str', }, 'icmpv6_dropped': {'type': 'str', }, 'udp_dropped': {'type': 'str', }, 'tcp_dropped': {'type': 'str', }, 'ipip_dropped': {'type': 'str', }, 'ipv6ip_dropped': {'type': 'str', }, 'other_dropped': {'type': 'str', }, 'overlap_error': {'type': 'str', }, 'bad_ip_len': {'type': 'str', }, 'too_small': {'type': 'str', }, 'first_tcp_too_small': {'type': 'str', }, 'first_l4_too_small': {'type': 'str', }, 'total_sessions_exceeded': {'type': 'str', }, 'no_session_memory': {'type': 'str', }, 'fast_aging_set': {'type': 'str', }, 'fast_aging_unset': {'type': 'str', }, 'fragment_queue_success': {'type': 'str', }, 'unaligned_len': {'type': 'str', }, 'exceeded_len': {'type': 'str', }, 'duplicate_first_frag': {'type': 'str', }, 'duplicate_last_frag': {'type': 'str', }, 'total_fragments_exceeded': {'type': 'str', }, 'fragment_queue_failure': {'type': 'str', }, 'reassembly_success': {'type': 'str', }, 'max_len_exceeded': {'type': 'str', }, 'reassembly_failure': {'type': 'str', }, 'policy_drop': {'type': 'str', }, 'error_drop': {'type': 'str', }, 'high_cpu_threshold': {'type': 'str', }, 'low_cpu_threshold': {'type': 'str', }, 'cpu_threshold_drop': {'type': 'str', }, 'ipd_entry_drop': {'type': 'str', }, 'max_packets_exceeded': {'type': 'str', }, 'session_packets_exceeded': {'type': 'str', }, 'sctp_rcv': {'type': 'str', }, 'sctp_dropped': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'session-inserted', 'session-expired', 'icmp-rcv',
+                    'icmpv6-rcv', 'udp-rcv', 'tcp-rcv', 'ipip-rcv',
+                    'ipv6ip-rcv', 'other-rcv', 'icmp-dropped',
+                    'icmpv6-dropped', 'udp-dropped', 'tcp-dropped',
+                    'ipip-dropped', 'ipv6ip-dropped', 'other-dropped',
+                    'overlap-error', 'bad-ip-len', 'too-small',
+                    'first-tcp-too-small', 'first-l4-too-small',
+                    'total-sessions-exceeded', 'no-session-memory',
+                    'fast-aging-set', 'fast-aging-unset',
+                    'fragment-queue-success', 'unaligned-len', 'exceeded-len',
+                    'duplicate-first-frag', 'duplicate-last-frag',
+                    'total-fragments-exceeded', 'fragment-queue-failure',
+                    'reassembly-success', 'max-len-exceeded',
+                    'reassembly-failure', 'policy-drop', 'error-drop',
+                    'high-cpu-threshold', 'low-cpu-threshold',
+                    'cpu-threshold-drop', 'ipd-entry-drop',
+                    'max-packets-exceeded', 'session-packets-exceeded',
+                    'frag-session-count', 'sctp-rcv', 'sctp-dropped'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'session_inserted': {
+                'type': 'str',
+            },
+            'session_expired': {
+                'type': 'str',
+            },
+            'icmp_rcv': {
+                'type': 'str',
+            },
+            'icmpv6_rcv': {
+                'type': 'str',
+            },
+            'udp_rcv': {
+                'type': 'str',
+            },
+            'tcp_rcv': {
+                'type': 'str',
+            },
+            'ipip_rcv': {
+                'type': 'str',
+            },
+            'ipv6ip_rcv': {
+                'type': 'str',
+            },
+            'other_rcv': {
+                'type': 'str',
+            },
+            'icmp_dropped': {
+                'type': 'str',
+            },
+            'icmpv6_dropped': {
+                'type': 'str',
+            },
+            'udp_dropped': {
+                'type': 'str',
+            },
+            'tcp_dropped': {
+                'type': 'str',
+            },
+            'ipip_dropped': {
+                'type': 'str',
+            },
+            'ipv6ip_dropped': {
+                'type': 'str',
+            },
+            'other_dropped': {
+                'type': 'str',
+            },
+            'overlap_error': {
+                'type': 'str',
+            },
+            'bad_ip_len': {
+                'type': 'str',
+            },
+            'too_small': {
+                'type': 'str',
+            },
+            'first_tcp_too_small': {
+                'type': 'str',
+            },
+            'first_l4_too_small': {
+                'type': 'str',
+            },
+            'total_sessions_exceeded': {
+                'type': 'str',
+            },
+            'no_session_memory': {
+                'type': 'str',
+            },
+            'fast_aging_set': {
+                'type': 'str',
+            },
+            'fast_aging_unset': {
+                'type': 'str',
+            },
+            'fragment_queue_success': {
+                'type': 'str',
+            },
+            'unaligned_len': {
+                'type': 'str',
+            },
+            'exceeded_len': {
+                'type': 'str',
+            },
+            'duplicate_first_frag': {
+                'type': 'str',
+            },
+            'duplicate_last_frag': {
+                'type': 'str',
+            },
+            'total_fragments_exceeded': {
+                'type': 'str',
+            },
+            'fragment_queue_failure': {
+                'type': 'str',
+            },
+            'reassembly_success': {
+                'type': 'str',
+            },
+            'max_len_exceeded': {
+                'type': 'str',
+            },
+            'reassembly_failure': {
+                'type': 'str',
+            },
+            'policy_drop': {
+                'type': 'str',
+            },
+            'error_drop': {
+                'type': 'str',
+            },
+            'high_cpu_threshold': {
+                'type': 'str',
+            },
+            'low_cpu_threshold': {
+                'type': 'str',
+            },
+            'cpu_threshold_drop': {
+                'type': 'str',
+            },
+            'ipd_entry_drop': {
+                'type': 'str',
+            },
+            'max_packets_exceeded': {
+                'type': 'str',
+            },
+            'session_packets_exceeded': {
+                'type': 'str',
+            },
+            'sctp_rcv': {
+                'type': 'str',
+            },
+            'sctp_dropped': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -430,7 +608,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -440,7 +620,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -460,7 +642,6 @@ def get_stats(module):
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, stats_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -485,9 +666,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -503,7 +682,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -552,7 +733,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["frag"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -570,8 +750,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -587,8 +766,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -652,12 +830,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -685,14 +861,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -720,7 +896,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

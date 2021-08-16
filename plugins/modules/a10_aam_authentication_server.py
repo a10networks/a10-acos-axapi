@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_aam_authentication_server
 description:
@@ -206,9 +205,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -217,7 +217,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -225,7 +224,14 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ldap", "ocsp", "oper", "radius", "uuid", "windows", ]
+AVAILABLE_PROPERTIES = [
+    "ldap",
+    "ocsp",
+    "oper",
+    "radius",
+    "uuid",
+    "windows",
+]
 
 
 def get_default_argspec():
@@ -233,22 +239,572 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'ldap': {'type': 'dict', 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error', 'ssl-session-created', 'ssl-session-failure', 'ldaps-idle-conn-num', 'ldaps-inuse-conn-num', 'pw-expiry', 'pw-change-success', 'pw-change-failure']}}, 'instance_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'host': {'type': 'dict', 'hostip': {'type': 'str', }, 'hostipv6': {'type': 'str', }}, 'base': {'type': 'str', }, 'port': {'type': 'int', }, 'port_hm': {'type': 'str', }, 'port_hm_disable': {'type': 'bool', }, 'pwdmaxage': {'type': 'int', }, 'admin_dn': {'type': 'str', }, 'admin_secret': {'type': 'bool', }, 'secret_string': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'timeout': {'type': 'int', }, 'dn_attribute': {'type': 'str', }, 'default_domain': {'type': 'str', }, 'bind_with_dn': {'type': 'bool', }, 'derive_bind_dn': {'type': 'dict', 'username_attr': {'type': 'str', }}, 'health_check': {'type': 'bool', }, 'health_check_string': {'type': 'str', }, 'health_check_disable': {'type': 'bool', }, 'protocol': {'type': 'str', 'choices': ['ldap', 'ldaps', 'starttls']}, 'ca_cert': {'type': 'str', }, 'ldaps_conn_reuse_idle_timeout': {'type': 'int', }, 'auth_type': {'type': 'str', 'choices': ['ad', 'open-ldap']}, 'prompt_pw_change_before_exp': {'type': 'int', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'admin-bind-success', 'admin-bind-failure', 'bind-success', 'bind-failure', 'search-success', 'search-failure', 'authorize-success', 'authorize-failure', 'timeout-error', 'other-error', 'request', 'ssl-session-created', 'ssl-session-failure', 'pw_expiry', 'pw_change_success', 'pw_change_failure']}}}},
-        'ocsp': {'type': 'dict', 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'stapling-certificate-good', 'stapling-certificate-revoked', 'stapling-certificate-unknown', 'stapling-request-normal', 'stapling-request-dropped', 'stapling-response-success', 'stapling-response-failure', 'stapling-response-error', 'stapling-response-timeout', 'stapling-response-other', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error']}}, 'instance_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'url': {'type': 'str', }, 'responder_ca': {'type': 'str', }, 'responder_cert': {'type': 'str', }, 'health_check': {'type': 'bool', }, 'health_check_string': {'type': 'str', }, 'health_check_disable': {'type': 'bool', }, 'port_health_check': {'type': 'str', }, 'port_health_check_disable': {'type': 'bool', }, 'http_version': {'type': 'bool', }, 'version_type': {'type': 'str', 'choices': ['1.1']}, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'request', 'certificate-good', 'certificate-revoked', 'certificate-unknown', 'timeout', 'fail', 'stapling-request', 'stapling-certificate-good', 'stapling-certificate-revoked', 'stapling-certificate-unknown', 'stapling-timeout', 'stapling-fail']}}}},
-        'radius': {'type': 'dict', 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'authen_success', 'authen_failure', 'authorize_success', 'authorize_failure', 'access_challenge', 'timeout_error', 'other_error', 'request', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other', 'job-start-error', 'polling-control-error', 'accounting-request-sent', 'accounting-success', 'accounting-failure']}}, 'instance_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'host': {'type': 'dict', 'hostip': {'type': 'str', }, 'hostipv6': {'type': 'str', }}, 'secret': {'type': 'bool', }, 'secret_string': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'port': {'type': 'int', }, 'port_hm': {'type': 'str', }, 'port_hm_disable': {'type': 'bool', }, 'interval': {'type': 'int', }, 'retry': {'type': 'int', }, 'health_check': {'type': 'bool', }, 'health_check_string': {'type': 'str', }, 'health_check_disable': {'type': 'bool', }, 'accounting_port': {'type': 'int', }, 'acct_port_hm': {'type': 'str', }, 'acct_port_hm_disable': {'type': 'bool', }, 'auth_type': {'type': 'str', 'choices': ['pap', 'mschapv2', 'mschapv2-pap']}, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'authen_success', 'authen_failure', 'authorize_success', 'authorize_failure', 'access_challenge', 'timeout_error', 'other_error', 'request', 'accounting-request-sent', 'accounting-success', 'accounting-failure']}}}},
-        'windows': {'type': 'dict', 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'ntlm-authentication-success', 'ntlm-authentication-failure', 'ntlm-proto-negotiation-success', 'ntlm-proto-negotiation-failure', 'ntlm-session-setup-success', 'ntlm-session-setup-failed', 'kerberos-request-normal', 'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other', 'kerberos-job-start-error', 'kerberos-polling-control-error', 'ntlm-prepare-req-success', 'ntlm-prepare-req-failed', 'ntlm-timeout-error', 'ntlm-other-error', 'ntlm-request-normal', 'ntlm-request-dropped', 'ntlm-response-success', 'ntlm-response-failure', 'ntlm-response-error', 'ntlm-response-timeout', 'ntlm-response-other', 'ntlm-job-start-error', 'ntlm-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure']}}, 'instance_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'host': {'type': 'dict', 'hostip': {'type': 'str', }, 'hostipv6': {'type': 'str', }}, 'timeout': {'type': 'int', }, 'auth_protocol': {'type': 'dict', 'ntlm_disable': {'type': 'bool', }, 'ntlm_version': {'type': 'int', }, 'ntlm_health_check': {'type': 'str', }, 'ntlm_health_check_disable': {'type': 'bool', }, 'kerberos_disable': {'type': 'bool', }, 'kerberos_port': {'type': 'int', }, 'kport_hm': {'type': 'str', }, 'kport_hm_disable': {'type': 'bool', }, 'kerberos_password_change_port': {'type': 'int', }}, 'realm': {'type': 'str', }, 'support_apacheds_kdc': {'type': 'bool', }, 'health_check': {'type': 'bool', }, 'health_check_string': {'type': 'str', }, 'health_check_disable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success', 'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error']}}}},
-        'oper': {'type': 'dict', 'rserver_count': {'type': 'int', }, 'rport_count': {'type': 'int', }, 'rserver_list': {'type': 'list', 'server_name': {'type': 'str', }, 'host': {'type': 'str', }, 'ip': {'type': 'str', }, 'hm': {'type': 'str', }, 'status': {'type': 'str', }, 'max_conn': {'type': 'int', }, 'weight': {'type': 'int', }, 'rport_list': {'type': 'list', 'port': {'type': 'int', }, 'protocol': {'type': 'str', }, 'port_state': {'type': 'str', }, 'port_hm': {'type': 'str', }, 'port_status': {'type': 'str', }, 'port_max_conn': {'type': 'int', }, 'port_weight': {'type': 'int', }, 'sg_list': {'type': 'list', 'sg_name': {'type': 'str', }, 'sg_state': {'type': 'str', }}}}, 'name': {'type': 'str', }, 'part_id': {'type': 'int', }, 'get_count': {'type': 'str', }, 'ldap': {'type': 'dict', 'oper': {'type': 'dict', 'ldaps_server_list': {'type': 'list', 'ldap_uri': {'type': 'str', }, 'ldaps_idle_conn_num': {'type': 'int', }, 'ldaps_idle_conn_fd_list': {'type': 'str', }, 'ldaps_inuse_conn_num': {'type': 'int', }, 'ldaps_inuse_conn_fd_list': {'type': 'str', }}}}}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'ldap': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'admin-bind-success', 'admin-bind-failure',
+                        'bind-success', 'bind-failure', 'search-success',
+                        'search-failure', 'authorize-success',
+                        'authorize-failure', 'timeout-error', 'other-error',
+                        'request', 'request-normal', 'request-dropped',
+                        'response-success', 'response-failure',
+                        'response-error', 'response-timeout', 'response-other',
+                        'job-start-error', 'polling-control-error',
+                        'ssl-session-created', 'ssl-session-failure',
+                        'ldaps-idle-conn-num', 'ldaps-inuse-conn-num',
+                        'pw-expiry', 'pw-change-success', 'pw-change-failure'
+                    ]
+                }
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'host': {
+                    'type': 'dict',
+                    'hostip': {
+                        'type': 'str',
+                    },
+                    'hostipv6': {
+                        'type': 'str',
+                    }
+                },
+                'base': {
+                    'type': 'str',
+                },
+                'port': {
+                    'type': 'int',
+                },
+                'port_hm': {
+                    'type': 'str',
+                },
+                'port_hm_disable': {
+                    'type': 'bool',
+                },
+                'pwdmaxage': {
+                    'type': 'int',
+                },
+                'admin_dn': {
+                    'type': 'str',
+                },
+                'admin_secret': {
+                    'type': 'bool',
+                },
+                'secret_string': {
+                    'type': 'str',
+                },
+                'encrypted': {
+                    'type': 'str',
+                },
+                'timeout': {
+                    'type': 'int',
+                },
+                'dn_attribute': {
+                    'type': 'str',
+                },
+                'default_domain': {
+                    'type': 'str',
+                },
+                'bind_with_dn': {
+                    'type': 'bool',
+                },
+                'derive_bind_dn': {
+                    'type': 'dict',
+                    'username_attr': {
+                        'type': 'str',
+                    }
+                },
+                'health_check': {
+                    'type': 'bool',
+                },
+                'health_check_string': {
+                    'type': 'str',
+                },
+                'health_check_disable': {
+                    'type': 'bool',
+                },
+                'protocol': {
+                    'type': 'str',
+                    'choices': ['ldap', 'ldaps', 'starttls']
+                },
+                'ca_cert': {
+                    'type': 'str',
+                },
+                'ldaps_conn_reuse_idle_timeout': {
+                    'type': 'int',
+                },
+                'auth_type': {
+                    'type': 'str',
+                    'choices': ['ad', 'open-ldap']
+                },
+                'prompt_pw_change_before_exp': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'all', 'admin-bind-success', 'admin-bind-failure',
+                            'bind-success', 'bind-failure', 'search-success',
+                            'search-failure', 'authorize-success',
+                            'authorize-failure', 'timeout-error',
+                            'other-error', 'request', 'ssl-session-created',
+                            'ssl-session-failure', 'pw_expiry',
+                            'pw_change_success', 'pw_change_failure'
+                        ]
+                    }
+                }
+            }
+        },
+        'ocsp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'stapling-certificate-good',
+                        'stapling-certificate-revoked',
+                        'stapling-certificate-unknown',
+                        'stapling-request-normal', 'stapling-request-dropped',
+                        'stapling-response-success',
+                        'stapling-response-failure', 'stapling-response-error',
+                        'stapling-response-timeout', 'stapling-response-other',
+                        'request-normal', 'request-dropped',
+                        'response-success', 'response-failure',
+                        'response-error', 'response-timeout', 'response-other',
+                        'job-start-error', 'polling-control-error'
+                    ]
+                }
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'url': {
+                    'type': 'str',
+                },
+                'responder_ca': {
+                    'type': 'str',
+                },
+                'responder_cert': {
+                    'type': 'str',
+                },
+                'health_check': {
+                    'type': 'bool',
+                },
+                'health_check_string': {
+                    'type': 'str',
+                },
+                'health_check_disable': {
+                    'type': 'bool',
+                },
+                'port_health_check': {
+                    'type': 'str',
+                },
+                'port_health_check_disable': {
+                    'type': 'bool',
+                },
+                'http_version': {
+                    'type': 'bool',
+                },
+                'version_type': {
+                    'type': 'str',
+                    'choices': ['1.1']
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'all', 'request', 'certificate-good',
+                            'certificate-revoked', 'certificate-unknown',
+                            'timeout', 'fail', 'stapling-request',
+                            'stapling-certificate-good',
+                            'stapling-certificate-revoked',
+                            'stapling-certificate-unknown', 'stapling-timeout',
+                            'stapling-fail'
+                        ]
+                    }
+                }
+            }
+        },
+        'radius': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'authen_success', 'authen_failure',
+                        'authorize_success', 'authorize_failure',
+                        'access_challenge', 'timeout_error', 'other_error',
+                        'request', 'request-normal', 'request-dropped',
+                        'response-success', 'response-failure',
+                        'response-error', 'response-timeout', 'response-other',
+                        'job-start-error', 'polling-control-error',
+                        'accounting-request-sent', 'accounting-success',
+                        'accounting-failure'
+                    ]
+                }
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'host': {
+                    'type': 'dict',
+                    'hostip': {
+                        'type': 'str',
+                    },
+                    'hostipv6': {
+                        'type': 'str',
+                    }
+                },
+                'secret': {
+                    'type': 'bool',
+                },
+                'secret_string': {
+                    'type': 'str',
+                },
+                'encrypted': {
+                    'type': 'str',
+                },
+                'port': {
+                    'type': 'int',
+                },
+                'port_hm': {
+                    'type': 'str',
+                },
+                'port_hm_disable': {
+                    'type': 'bool',
+                },
+                'interval': {
+                    'type': 'int',
+                },
+                'retry': {
+                    'type': 'int',
+                },
+                'health_check': {
+                    'type': 'bool',
+                },
+                'health_check_string': {
+                    'type': 'str',
+                },
+                'health_check_disable': {
+                    'type': 'bool',
+                },
+                'accounting_port': {
+                    'type': 'int',
+                },
+                'acct_port_hm': {
+                    'type': 'str',
+                },
+                'acct_port_hm_disable': {
+                    'type': 'bool',
+                },
+                'auth_type': {
+                    'type': 'str',
+                    'choices': ['pap', 'mschapv2', 'mschapv2-pap']
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'all', 'authen_success', 'authen_failure',
+                            'authorize_success', 'authorize_failure',
+                            'access_challenge', 'timeout_error', 'other_error',
+                            'request', 'accounting-request-sent',
+                            'accounting-success', 'accounting-failure'
+                        ]
+                    }
+                }
+            }
+        },
+        'windows': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'kerberos-request-send',
+                        'kerberos-response-get', 'kerberos-timeout-error',
+                        'kerberos-other-error', 'ntlm-authentication-success',
+                        'ntlm-authentication-failure',
+                        'ntlm-proto-negotiation-success',
+                        'ntlm-proto-negotiation-failure',
+                        'ntlm-session-setup-success',
+                        'ntlm-session-setup-failed', 'kerberos-request-normal',
+                        'kerberos-request-dropped',
+                        'kerberos-response-success',
+                        'kerberos-response-failure', 'kerberos-response-error',
+                        'kerberos-response-timeout', 'kerberos-response-other',
+                        'kerberos-job-start-error',
+                        'kerberos-polling-control-error',
+                        'ntlm-prepare-req-success', 'ntlm-prepare-req-failed',
+                        'ntlm-timeout-error', 'ntlm-other-error',
+                        'ntlm-request-normal', 'ntlm-request-dropped',
+                        'ntlm-response-success', 'ntlm-response-failure',
+                        'ntlm-response-error', 'ntlm-response-timeout',
+                        'ntlm-response-other', 'ntlm-job-start-error',
+                        'ntlm-polling-control-error', 'kerberos-pw-expiry',
+                        'kerberos-pw-change-success',
+                        'kerberos-pw-change-failure'
+                    ]
+                }
+            },
+            'instance_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'host': {
+                    'type': 'dict',
+                    'hostip': {
+                        'type': 'str',
+                    },
+                    'hostipv6': {
+                        'type': 'str',
+                    }
+                },
+                'timeout': {
+                    'type': 'int',
+                },
+                'auth_protocol': {
+                    'type': 'dict',
+                    'ntlm_disable': {
+                        'type': 'bool',
+                    },
+                    'ntlm_version': {
+                        'type': 'int',
+                    },
+                    'ntlm_health_check': {
+                        'type': 'str',
+                    },
+                    'ntlm_health_check_disable': {
+                        'type': 'bool',
+                    },
+                    'kerberos_disable': {
+                        'type': 'bool',
+                    },
+                    'kerberos_port': {
+                        'type': 'int',
+                    },
+                    'kport_hm': {
+                        'type': 'str',
+                    },
+                    'kport_hm_disable': {
+                        'type': 'bool',
+                    },
+                    'kerberos_password_change_port': {
+                        'type': 'int',
+                    }
+                },
+                'realm': {
+                    'type': 'str',
+                },
+                'support_apacheds_kdc': {
+                    'type': 'bool',
+                },
+                'health_check': {
+                    'type': 'bool',
+                },
+                'health_check_string': {
+                    'type': 'str',
+                },
+                'health_check_disable': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'all', 'krb_send_req_success',
+                            'krb_get_resp_success', 'krb_timeout_error',
+                            'krb_other_error', 'krb_pw_expiry',
+                            'krb_pw_change_success', 'krb_pw_change_failure',
+                            'ntlm_proto_nego_success',
+                            'ntlm_proto_nego_failure',
+                            'ntlm_session_setup_success',
+                            'ntlm_session_setup_failure',
+                            'ntlm_prepare_req_success',
+                            'ntlm_prepare_req_error', 'ntlm_auth_success',
+                            'ntlm_auth_failure', 'ntlm_timeout_error',
+                            'ntlm_other_error'
+                        ]
+                    }
+                }
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'rserver_count': {
+                'type': 'int',
+            },
+            'rport_count': {
+                'type': 'int',
+            },
+            'rserver_list': {
+                'type': 'list',
+                'server_name': {
+                    'type': 'str',
+                },
+                'host': {
+                    'type': 'str',
+                },
+                'ip': {
+                    'type': 'str',
+                },
+                'hm': {
+                    'type': 'str',
+                },
+                'status': {
+                    'type': 'str',
+                },
+                'max_conn': {
+                    'type': 'int',
+                },
+                'weight': {
+                    'type': 'int',
+                },
+                'rport_list': {
+                    'type': 'list',
+                    'port': {
+                        'type': 'int',
+                    },
+                    'protocol': {
+                        'type': 'str',
+                    },
+                    'port_state': {
+                        'type': 'str',
+                    },
+                    'port_hm': {
+                        'type': 'str',
+                    },
+                    'port_status': {
+                        'type': 'str',
+                    },
+                    'port_max_conn': {
+                        'type': 'int',
+                    },
+                    'port_weight': {
+                        'type': 'int',
+                    },
+                    'sg_list': {
+                        'type': 'list',
+                        'sg_name': {
+                            'type': 'str',
+                        },
+                        'sg_state': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            },
+            'name': {
+                'type': 'str',
+            },
+            'part_id': {
+                'type': 'int',
+            },
+            'get_count': {
+                'type': 'str',
+            },
+            'ldap': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'ldaps_server_list': {
+                        'type': 'list',
+                        'ldap_uri': {
+                            'type': 'str',
+                        },
+                        'ldaps_idle_conn_num': {
+                            'type': 'int',
+                        },
+                        'ldaps_idle_conn_fd_list': {
+                            'type': 'str',
+                        },
+                        'ldaps_inuse_conn_num': {
+                            'type': 'int',
+                        },
+                        'ldaps_inuse_conn_fd_list': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            }
+        }
     })
     return rv
 
@@ -318,7 +874,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -328,7 +886,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -348,7 +908,6 @@ def get_oper(module):
         for k, v in module.params["oper"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, oper_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -373,9 +932,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -391,7 +948,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -440,7 +999,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["server"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -458,8 +1016,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -475,8 +1032,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -540,12 +1096,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -573,14 +1127,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -608,7 +1162,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

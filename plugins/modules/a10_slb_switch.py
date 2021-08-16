@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_switch
 description:
@@ -537,9 +536,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -548,7 +548,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -556,7 +555,11 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -564,19 +567,355 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'fwlb', 'licexpire_drop', 'bwl_drop', 'rx_kernel', 'rx_arp_req', 'rx_arp_resp', 'vlan_flood', 'l2_def_vlan_drop', 'ipv4_noroute_drop', 'ipv6_noroute_drop', 'prot_down_drop', 'l2_forward', 'l3_forward_ip', 'l3_forward_ipv6', 'l4_process', 'unknown_prot_drop', 'ttl_exceeded_drop', 'linkdown_drop', 'sport_drop', 'incorrect_len_drop', 'ip_defrag', 'acl_deny', 'ipfrag_tcp', 'ipfrag_overlap', 'ipfrag_timeout', 'ipfrag_overload', 'ipfrag_reasmoks', 'ipfrag_reasmfails', 'land_drop', 'ipoptions_drop', 'badpkt_drop', 'pingofdeath_drop', 'allfrag_drop', 'tcpnoflag_drop', 'tcpsynfrag_drop', 'tcpsynfin_drop', 'ipsec_drop', 'bpdu_rcvd', 'bpdu_sent', 'ctrl_syn_rate_drop', 'ip_defrag_invalid_len', 'ipv4_frag_6rd_ok', 'ipv4_frag_6rd_drop', 'no_ip_drop', 'ipv6frag_udp', 'ipv6frag_udp_dropped', 'ipv6frag_tcp_dropped', 'ipv6frag_ipip_ok', 'ipv6frag_ipip_dropped', 'ip_frag_oversize', 'ip_frag_too_many', 'ipv4_novlanfwd_drop', 'ipv6_novlanfwd_drop', 'fpga_error_pkt1', 'fpga_error_pkt2', 'max_arp_drop', 'ipv6frag_tcp', 'ipv6frag_icmp', 'ipv6frag_ospf', 'ipv6frag_esp', 'l4_in_ctrl_cpu', 'mgmt_svc_drop', 'jumbo_frag_drop', 'ipv6_jumbo_frag_drop', 'ipipv6_jumbo_frag_drop', 'ipv6_ndisc_dad_solicits', 'ipv6_ndisc_dad_adverts', 'ipv6_ndisc_mac_changes', 'ipv6_ndisc_out_of_memory', 'sp_non_ctrl_pkt_drop', 'urpf_pkt_drop', 'fw_smp_zone_mismatch', 'ipfrag_udp', 'ipfrag_icmp', 'ipfrag_ospf', 'ipfrag_esp', 'ipfrag_tcp_dropped', 'ipfrag_udp_dropped', 'ipfrag_ipip_dropped', 'redirect_fwd_fail', 'redirect_fwd_sent', 'redirect_rev_fail', 'redirect_rev_sent', 'redirect_setup_fail', 'ip_frag_sent', 'invalid_rx_arp_pkt', 'invalid_sender_mac_arp_drop', 'dev_based_arp_drop', 'scaleout_arp_drop', 'virtual_ip_not_found_arp_drop', 'inactive_static_nat_pool_arp_drop', 'inactive_nat_pool_arp_drop', 'scaleout_hairpin_arp_drop', 'self_grat_arp_drop', 'self_grat_nat_ip_arp_drop', 'ip_not_found_arp_drop', 'dev_link_down_arp_drop', 'lacp_tx_intf_err_drop']}},
-        'stats': {'type': 'dict', 'fwlb': {'type': 'str', }, 'licexpire_drop': {'type': 'str', }, 'bwl_drop': {'type': 'str', }, 'rx_kernel': {'type': 'str', }, 'rx_arp_req': {'type': 'str', }, 'rx_arp_resp': {'type': 'str', }, 'vlan_flood': {'type': 'str', }, 'l2_def_vlan_drop': {'type': 'str', }, 'ipv4_noroute_drop': {'type': 'str', }, 'ipv6_noroute_drop': {'type': 'str', }, 'prot_down_drop': {'type': 'str', }, 'l2_forward': {'type': 'str', }, 'l3_forward_ip': {'type': 'str', }, 'l3_forward_ipv6': {'type': 'str', }, 'l4_process': {'type': 'str', }, 'unknown_prot_drop': {'type': 'str', }, 'ttl_exceeded_drop': {'type': 'str', }, 'linkdown_drop': {'type': 'str', }, 'sport_drop': {'type': 'str', }, 'incorrect_len_drop': {'type': 'str', }, 'ip_defrag': {'type': 'str', }, 'acl_deny': {'type': 'str', }, 'ipfrag_tcp': {'type': 'str', }, 'ipfrag_overlap': {'type': 'str', }, 'ipfrag_timeout': {'type': 'str', }, 'ipfrag_overload': {'type': 'str', }, 'ipfrag_reasmoks': {'type': 'str', }, 'ipfrag_reasmfails': {'type': 'str', }, 'badpkt_drop': {'type': 'str', }, 'ipsec_drop': {'type': 'str', }, 'bpdu_rcvd': {'type': 'str', }, 'bpdu_sent': {'type': 'str', }, 'ctrl_syn_rate_drop': {'type': 'str', }, 'ip_defrag_invalid_len': {'type': 'str', }, 'ipv4_frag_6rd_ok': {'type': 'str', }, 'ipv4_frag_6rd_drop': {'type': 'str', }, 'no_ip_drop': {'type': 'str', }, 'ipv6frag_udp': {'type': 'str', }, 'ipv6frag_udp_dropped': {'type': 'str', }, 'ipv6frag_tcp_dropped': {'type': 'str', }, 'ipv6frag_ipip_ok': {'type': 'str', }, 'ipv6frag_ipip_dropped': {'type': 'str', }, 'ip_frag_oversize': {'type': 'str', }, 'ip_frag_too_many': {'type': 'str', }, 'ipv4_novlanfwd_drop': {'type': 'str', }, 'ipv6_novlanfwd_drop': {'type': 'str', }, 'fpga_error_pkt1': {'type': 'str', }, 'fpga_error_pkt2': {'type': 'str', }, 'max_arp_drop': {'type': 'str', }, 'ipv6frag_tcp': {'type': 'str', }, 'ipv6frag_icmp': {'type': 'str', }, 'ipv6frag_ospf': {'type': 'str', }, 'ipv6frag_esp': {'type': 'str', }, 'l4_in_ctrl_cpu': {'type': 'str', }, 'mgmt_svc_drop': {'type': 'str', }, 'jumbo_frag_drop': {'type': 'str', }, 'ipv6_jumbo_frag_drop': {'type': 'str', }, 'ipipv6_jumbo_frag_drop': {'type': 'str', }, 'ipv6_ndisc_dad_solicits': {'type': 'str', }, 'ipv6_ndisc_dad_adverts': {'type': 'str', }, 'ipv6_ndisc_mac_changes': {'type': 'str', }, 'ipv6_ndisc_out_of_memory': {'type': 'str', }, 'sp_non_ctrl_pkt_drop': {'type': 'str', }, 'urpf_pkt_drop': {'type': 'str', }, 'fw_smp_zone_mismatch': {'type': 'str', }, 'ipfrag_udp': {'type': 'str', }, 'ipfrag_icmp': {'type': 'str', }, 'ipfrag_ospf': {'type': 'str', }, 'ipfrag_esp': {'type': 'str', }, 'ipfrag_tcp_dropped': {'type': 'str', }, 'ipfrag_udp_dropped': {'type': 'str', }, 'ipfrag_ipip_dropped': {'type': 'str', }, 'redirect_fwd_fail': {'type': 'str', }, 'redirect_fwd_sent': {'type': 'str', }, 'redirect_rev_fail': {'type': 'str', }, 'redirect_rev_sent': {'type': 'str', }, 'redirect_setup_fail': {'type': 'str', }, 'ip_frag_sent': {'type': 'str', }, 'invalid_rx_arp_pkt': {'type': 'str', }, 'invalid_sender_mac_arp_drop': {'type': 'str', }, 'dev_based_arp_drop': {'type': 'str', }, 'scaleout_arp_drop': {'type': 'str', }, 'virtual_ip_not_found_arp_drop': {'type': 'str', }, 'inactive_static_nat_pool_arp_drop': {'type': 'str', }, 'inactive_nat_pool_arp_drop': {'type': 'str', }, 'scaleout_hairpin_arp_drop': {'type': 'str', }, 'self_grat_arp_drop': {'type': 'str', }, 'self_grat_nat_ip_arp_drop': {'type': 'str', }, 'ip_not_found_arp_drop': {'type': 'str', }, 'dev_link_down_arp_drop': {'type': 'str', }, 'lacp_tx_intf_err_drop': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'fwlb', 'licexpire_drop', 'bwl_drop', 'rx_kernel',
+                    'rx_arp_req', 'rx_arp_resp', 'vlan_flood',
+                    'l2_def_vlan_drop', 'ipv4_noroute_drop',
+                    'ipv6_noroute_drop', 'prot_down_drop', 'l2_forward',
+                    'l3_forward_ip', 'l3_forward_ipv6', 'l4_process',
+                    'unknown_prot_drop', 'ttl_exceeded_drop', 'linkdown_drop',
+                    'sport_drop', 'incorrect_len_drop', 'ip_defrag',
+                    'acl_deny', 'ipfrag_tcp', 'ipfrag_overlap',
+                    'ipfrag_timeout', 'ipfrag_overload', 'ipfrag_reasmoks',
+                    'ipfrag_reasmfails', 'land_drop', 'ipoptions_drop',
+                    'badpkt_drop', 'pingofdeath_drop', 'allfrag_drop',
+                    'tcpnoflag_drop', 'tcpsynfrag_drop', 'tcpsynfin_drop',
+                    'ipsec_drop', 'bpdu_rcvd', 'bpdu_sent',
+                    'ctrl_syn_rate_drop', 'ip_defrag_invalid_len',
+                    'ipv4_frag_6rd_ok', 'ipv4_frag_6rd_drop', 'no_ip_drop',
+                    'ipv6frag_udp', 'ipv6frag_udp_dropped',
+                    'ipv6frag_tcp_dropped', 'ipv6frag_ipip_ok',
+                    'ipv6frag_ipip_dropped', 'ip_frag_oversize',
+                    'ip_frag_too_many', 'ipv4_novlanfwd_drop',
+                    'ipv6_novlanfwd_drop', 'fpga_error_pkt1',
+                    'fpga_error_pkt2', 'max_arp_drop', 'ipv6frag_tcp',
+                    'ipv6frag_icmp', 'ipv6frag_ospf', 'ipv6frag_esp',
+                    'l4_in_ctrl_cpu', 'mgmt_svc_drop', 'jumbo_frag_drop',
+                    'ipv6_jumbo_frag_drop', 'ipipv6_jumbo_frag_drop',
+                    'ipv6_ndisc_dad_solicits', 'ipv6_ndisc_dad_adverts',
+                    'ipv6_ndisc_mac_changes', 'ipv6_ndisc_out_of_memory',
+                    'sp_non_ctrl_pkt_drop', 'urpf_pkt_drop',
+                    'fw_smp_zone_mismatch', 'ipfrag_udp', 'ipfrag_icmp',
+                    'ipfrag_ospf', 'ipfrag_esp', 'ipfrag_tcp_dropped',
+                    'ipfrag_udp_dropped', 'ipfrag_ipip_dropped',
+                    'redirect_fwd_fail', 'redirect_fwd_sent',
+                    'redirect_rev_fail', 'redirect_rev_sent',
+                    'redirect_setup_fail', 'ip_frag_sent',
+                    'invalid_rx_arp_pkt', 'invalid_sender_mac_arp_drop',
+                    'dev_based_arp_drop', 'scaleout_arp_drop',
+                    'virtual_ip_not_found_arp_drop',
+                    'inactive_static_nat_pool_arp_drop',
+                    'inactive_nat_pool_arp_drop', 'scaleout_hairpin_arp_drop',
+                    'self_grat_arp_drop', 'self_grat_nat_ip_arp_drop',
+                    'ip_not_found_arp_drop', 'dev_link_down_arp_drop',
+                    'lacp_tx_intf_err_drop'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'fwlb': {
+                'type': 'str',
+            },
+            'licexpire_drop': {
+                'type': 'str',
+            },
+            'bwl_drop': {
+                'type': 'str',
+            },
+            'rx_kernel': {
+                'type': 'str',
+            },
+            'rx_arp_req': {
+                'type': 'str',
+            },
+            'rx_arp_resp': {
+                'type': 'str',
+            },
+            'vlan_flood': {
+                'type': 'str',
+            },
+            'l2_def_vlan_drop': {
+                'type': 'str',
+            },
+            'ipv4_noroute_drop': {
+                'type': 'str',
+            },
+            'ipv6_noroute_drop': {
+                'type': 'str',
+            },
+            'prot_down_drop': {
+                'type': 'str',
+            },
+            'l2_forward': {
+                'type': 'str',
+            },
+            'l3_forward_ip': {
+                'type': 'str',
+            },
+            'l3_forward_ipv6': {
+                'type': 'str',
+            },
+            'l4_process': {
+                'type': 'str',
+            },
+            'unknown_prot_drop': {
+                'type': 'str',
+            },
+            'ttl_exceeded_drop': {
+                'type': 'str',
+            },
+            'linkdown_drop': {
+                'type': 'str',
+            },
+            'sport_drop': {
+                'type': 'str',
+            },
+            'incorrect_len_drop': {
+                'type': 'str',
+            },
+            'ip_defrag': {
+                'type': 'str',
+            },
+            'acl_deny': {
+                'type': 'str',
+            },
+            'ipfrag_tcp': {
+                'type': 'str',
+            },
+            'ipfrag_overlap': {
+                'type': 'str',
+            },
+            'ipfrag_timeout': {
+                'type': 'str',
+            },
+            'ipfrag_overload': {
+                'type': 'str',
+            },
+            'ipfrag_reasmoks': {
+                'type': 'str',
+            },
+            'ipfrag_reasmfails': {
+                'type': 'str',
+            },
+            'badpkt_drop': {
+                'type': 'str',
+            },
+            'ipsec_drop': {
+                'type': 'str',
+            },
+            'bpdu_rcvd': {
+                'type': 'str',
+            },
+            'bpdu_sent': {
+                'type': 'str',
+            },
+            'ctrl_syn_rate_drop': {
+                'type': 'str',
+            },
+            'ip_defrag_invalid_len': {
+                'type': 'str',
+            },
+            'ipv4_frag_6rd_ok': {
+                'type': 'str',
+            },
+            'ipv4_frag_6rd_drop': {
+                'type': 'str',
+            },
+            'no_ip_drop': {
+                'type': 'str',
+            },
+            'ipv6frag_udp': {
+                'type': 'str',
+            },
+            'ipv6frag_udp_dropped': {
+                'type': 'str',
+            },
+            'ipv6frag_tcp_dropped': {
+                'type': 'str',
+            },
+            'ipv6frag_ipip_ok': {
+                'type': 'str',
+            },
+            'ipv6frag_ipip_dropped': {
+                'type': 'str',
+            },
+            'ip_frag_oversize': {
+                'type': 'str',
+            },
+            'ip_frag_too_many': {
+                'type': 'str',
+            },
+            'ipv4_novlanfwd_drop': {
+                'type': 'str',
+            },
+            'ipv6_novlanfwd_drop': {
+                'type': 'str',
+            },
+            'fpga_error_pkt1': {
+                'type': 'str',
+            },
+            'fpga_error_pkt2': {
+                'type': 'str',
+            },
+            'max_arp_drop': {
+                'type': 'str',
+            },
+            'ipv6frag_tcp': {
+                'type': 'str',
+            },
+            'ipv6frag_icmp': {
+                'type': 'str',
+            },
+            'ipv6frag_ospf': {
+                'type': 'str',
+            },
+            'ipv6frag_esp': {
+                'type': 'str',
+            },
+            'l4_in_ctrl_cpu': {
+                'type': 'str',
+            },
+            'mgmt_svc_drop': {
+                'type': 'str',
+            },
+            'jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'ipv6_jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'ipipv6_jumbo_frag_drop': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_dad_solicits': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_dad_adverts': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_mac_changes': {
+                'type': 'str',
+            },
+            'ipv6_ndisc_out_of_memory': {
+                'type': 'str',
+            },
+            'sp_non_ctrl_pkt_drop': {
+                'type': 'str',
+            },
+            'urpf_pkt_drop': {
+                'type': 'str',
+            },
+            'fw_smp_zone_mismatch': {
+                'type': 'str',
+            },
+            'ipfrag_udp': {
+                'type': 'str',
+            },
+            'ipfrag_icmp': {
+                'type': 'str',
+            },
+            'ipfrag_ospf': {
+                'type': 'str',
+            },
+            'ipfrag_esp': {
+                'type': 'str',
+            },
+            'ipfrag_tcp_dropped': {
+                'type': 'str',
+            },
+            'ipfrag_udp_dropped': {
+                'type': 'str',
+            },
+            'ipfrag_ipip_dropped': {
+                'type': 'str',
+            },
+            'redirect_fwd_fail': {
+                'type': 'str',
+            },
+            'redirect_fwd_sent': {
+                'type': 'str',
+            },
+            'redirect_rev_fail': {
+                'type': 'str',
+            },
+            'redirect_rev_sent': {
+                'type': 'str',
+            },
+            'redirect_setup_fail': {
+                'type': 'str',
+            },
+            'ip_frag_sent': {
+                'type': 'str',
+            },
+            'invalid_rx_arp_pkt': {
+                'type': 'str',
+            },
+            'invalid_sender_mac_arp_drop': {
+                'type': 'str',
+            },
+            'dev_based_arp_drop': {
+                'type': 'str',
+            },
+            'scaleout_arp_drop': {
+                'type': 'str',
+            },
+            'virtual_ip_not_found_arp_drop': {
+                'type': 'str',
+            },
+            'inactive_static_nat_pool_arp_drop': {
+                'type': 'str',
+            },
+            'inactive_nat_pool_arp_drop': {
+                'type': 'str',
+            },
+            'scaleout_hairpin_arp_drop': {
+                'type': 'str',
+            },
+            'self_grat_arp_drop': {
+                'type': 'str',
+            },
+            'self_grat_nat_ip_arp_drop': {
+                'type': 'str',
+            },
+            'ip_not_found_arp_drop': {
+                'type': 'str',
+            },
+            'dev_link_down_arp_drop': {
+                'type': 'str',
+            },
+            'lacp_tx_intf_err_drop': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -646,7 +985,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -656,7 +997,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -676,7 +1019,6 @@ def get_stats(module):
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, stats_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -701,9 +1043,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -719,7 +1059,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -768,7 +1110,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["switch"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -786,8 +1127,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -803,8 +1143,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -868,12 +1207,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -901,14 +1238,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -936,7 +1273,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

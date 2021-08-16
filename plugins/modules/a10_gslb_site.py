@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_gslb_site
 description:
@@ -407,9 +406,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -418,7 +418,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -426,7 +425,27 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["active_rdt", "auto_map", "bw_cost", "controller", "disable", "easy_rdt", "ip_server_list", "limit", "multiple_geo_locations", "oper", "sampling_enable", "site_name", "slb_dev_list", "stats", "template", "threshold", "user_tag", "uuid", "weight", ]
+AVAILABLE_PROPERTIES = [
+    "active_rdt",
+    "auto_map",
+    "bw_cost",
+    "controller",
+    "disable",
+    "easy_rdt",
+    "ip_server_list",
+    "limit",
+    "multiple_geo_locations",
+    "oper",
+    "sampling_enable",
+    "site_name",
+    "slb_dev_list",
+    "stats",
+    "template",
+    "threshold",
+    "user_tag",
+    "uuid",
+    "weight",
+]
 
 
 def get_default_argspec():
@@ -434,35 +453,524 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'site_name': {'type': 'str', 'required': True, },
-        'auto_map': {'type': 'bool', },
-        'disable': {'type': 'bool', },
-        'weight': {'type': 'int', },
-        'multiple_geo_locations': {'type': 'list', 'geo_location': {'type': 'str', }},
-        'template': {'type': 'str', },
-        'bw_cost': {'type': 'bool', },
-        'limit': {'type': 'int', },
-        'threshold': {'type': 'int', },
-        'controller': {'type': 'str', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}},
-        'ip_server_list': {'type': 'list', 'ip_server_name': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits']}}},
-        'active_rdt': {'type': 'dict', 'aging_time': {'type': 'int', }, 'smooth_factor': {'type': 'int', }, 'range_factor': {'type': 'int', }, 'limit': {'type': 'int', }, 'mask': {'type': 'str', }, 'ignore_count': {'type': 'int', }, 'bind_geoloc': {'type': 'bool', }, 'overlap': {'type': 'bool', }, 'uuid': {'type': 'str', }},
-        'easy_rdt': {'type': 'dict', 'aging_time': {'type': 'int', }, 'smooth_factor': {'type': 'int', }, 'range_factor': {'type': 'int', }, 'limit': {'type': 'int', }, 'mask': {'type': 'str', }, 'ignore_count': {'type': 'int', }, 'bind_geoloc': {'type': 'bool', }, 'overlap': {'type': 'bool', }, 'uuid': {'type': 'str', }},
-        'slb_dev_list': {'type': 'list', 'device_name': {'type': 'str', 'required': True, }, 'ip_address': {'type': 'str', }, 'admin_preference': {'type': 'int', }, 'client_ip': {'type': 'str', }, 'rdt_value': {'type': 'int', }, 'auto_detect': {'type': 'str', 'choices': ['ip', 'port', 'ip-and-port', 'disabled']}, 'auto_map': {'type': 'bool', }, 'max_client': {'type': 'int', }, 'proto_aging_time': {'type': 'int', }, 'proto_aging_fast': {'type': 'bool', }, 'health_check_action': {'type': 'str', 'choices': ['health-check', 'health-check-disable']}, 'gateway_ip_addr': {'type': 'str', }, 'proto_compatible': {'type': 'bool', }, 'msg_format_acos_2x': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'vip_server': {'type': 'dict', 'vip_server_v4_list': {'type': 'list', 'ipv4': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'dev_vip_hits']}}}, 'vip_server_v6_list': {'type': 'list', 'ipv6': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'dev_vip_hits']}}}, 'vip_server_name_list': {'type': 'list', 'vip_name': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'dev_vip_hits']}}}}},
-        'oper': {'type': 'dict', 'gslb_site': {'type': 'str', }, 'state': {'type': 'str', }, 'type_last': {'type': 'list', 'ntype': {'type': 'str', }, 'last': {'type': 'str', }}, 'client_ldns_list': {'type': 'list', 'client_ip': {'type': 'str', }, 'age': {'type': 'int', }, 'ntype': {'type': 'str', }, 'rdt_sample1': {'type': 'int', }, 'rdt_sample2': {'type': 'int', }, 'rdt_sample3': {'type': 'int', }, 'rdt_sample4': {'type': 'int', }, 'rdt_sample5': {'type': 'int', }, 'rdt_sample6': {'type': 'int', }, 'rdt_sample7': {'type': 'int', }, 'rdt_sample8': {'type': 'int', }}, 'site_name': {'type': 'str', 'required': True, }, 'ip_server_list': {'type': 'list', 'ip_server_name': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'ip_server': {'type': 'str', }, 'ip_address': {'type': 'str', }, 'state': {'type': 'str', }, 'ip_server_port': {'type': 'list', 'vport': {'type': 'int', }, 'vport_state': {'type': 'str', }}}}, 'slb_dev_list': {'type': 'list', 'device_name': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'dev_name': {'type': 'str', }, 'dev_ip': {'type': 'str', }, 'dev_attr': {'type': 'str', }, 'dev_admin_preference': {'type': 'int', }, 'dev_session_num': {'type': 'int', }, 'dev_session_util': {'type': 'int', }, 'dev_gw_state': {'type': 'str', }, 'dev_ip_cnt': {'type': 'int', }, 'dev_state': {'type': 'str', }, 'client_ldns_list': {'type': 'list', 'client_ip': {'type': 'str', }, 'age': {'type': 'int', }, 'ntype': {'type': 'str', }, 'rdt_sample1': {'type': 'int', }, 'rdt_sample2': {'type': 'int', }, 'rdt_sample3': {'type': 'int', }, 'rdt_sample4': {'type': 'int', }, 'rdt_sample5': {'type': 'int', }, 'rdt_sample6': {'type': 'int', }, 'rdt_sample7': {'type': 'int', }, 'rdt_sample8': {'type': 'int', }}}, 'vip_server': {'type': 'dict', 'oper': {'type': 'dict', }, 'vip_server_v4_list': {'type': 'list', 'ipv4': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'dev_vip_addr': {'type': 'str', }, 'dev_vip_state': {'type': 'str', }, 'dev_vip_port_list': {'type': 'list', 'dev_vip_port_num': {'type': 'int', }, 'dev_vip_port_state': {'type': 'str', }}}}, 'vip_server_v6_list': {'type': 'list', 'ipv6': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'dev_vip_addr': {'type': 'str', }, 'dev_vip_state': {'type': 'str', }, 'dev_vip_port_list': {'type': 'list', 'dev_vip_port_num': {'type': 'int', }, 'dev_vip_port_state': {'type': 'str', }}}}, 'vip_server_name_list': {'type': 'list', 'vip_name': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'dev_vip_addr': {'type': 'str', }, 'dev_vip_state': {'type': 'str', }, 'dev_vip_port_list': {'type': 'list', 'dev_vip_port_num': {'type': 'int', }, 'dev_vip_port_state': {'type': 'str', }}}}}}},
-        'stats': {'type': 'dict', 'hits': {'type': 'str', }, 'site_name': {'type': 'str', 'required': True, }, 'ip_server_list': {'type': 'list', 'ip_server_name': {'type': 'str', 'required': True, }, 'stats': {'type': 'dict', 'hits': {'type': 'str', }}}, 'slb_dev_list': {'type': 'list', }}
+    rv.update({
+        'site_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'auto_map': {
+            'type': 'bool',
+        },
+        'disable': {
+            'type': 'bool',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'multiple_geo_locations': {
+            'type': 'list',
+            'geo_location': {
+                'type': 'str',
+            }
+        },
+        'template': {
+            'type': 'str',
+        },
+        'bw_cost': {
+            'type': 'bool',
+        },
+        'limit': {
+            'type': 'int',
+        },
+        'threshold': {
+            'type': 'int',
+        },
+        'controller': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type': 'str',
+                'choices': ['all', 'hits']
+            }
+        },
+        'ip_server_list': {
+            'type': 'list',
+            'ip_server_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type': 'str',
+                    'choices': ['all', 'hits']
+                }
+            }
+        },
+        'active_rdt': {
+            'type': 'dict',
+            'aging_time': {
+                'type': 'int',
+            },
+            'smooth_factor': {
+                'type': 'int',
+            },
+            'range_factor': {
+                'type': 'int',
+            },
+            'limit': {
+                'type': 'int',
+            },
+            'mask': {
+                'type': 'str',
+            },
+            'ignore_count': {
+                'type': 'int',
+            },
+            'bind_geoloc': {
+                'type': 'bool',
+            },
+            'overlap': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'easy_rdt': {
+            'type': 'dict',
+            'aging_time': {
+                'type': 'int',
+            },
+            'smooth_factor': {
+                'type': 'int',
+            },
+            'range_factor': {
+                'type': 'int',
+            },
+            'limit': {
+                'type': 'int',
+            },
+            'mask': {
+                'type': 'str',
+            },
+            'ignore_count': {
+                'type': 'int',
+            },
+            'bind_geoloc': {
+                'type': 'bool',
+            },
+            'overlap': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'slb_dev_list': {
+            'type': 'list',
+            'device_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'ip_address': {
+                'type': 'str',
+            },
+            'admin_preference': {
+                'type': 'int',
+            },
+            'client_ip': {
+                'type': 'str',
+            },
+            'rdt_value': {
+                'type': 'int',
+            },
+            'auto_detect': {
+                'type': 'str',
+                'choices': ['ip', 'port', 'ip-and-port', 'disabled']
+            },
+            'auto_map': {
+                'type': 'bool',
+            },
+            'max_client': {
+                'type': 'int',
+            },
+            'proto_aging_time': {
+                'type': 'int',
+            },
+            'proto_aging_fast': {
+                'type': 'bool',
+            },
+            'health_check_action': {
+                'type': 'str',
+                'choices': ['health-check', 'health-check-disable']
+            },
+            'gateway_ip_addr': {
+                'type': 'str',
+            },
+            'proto_compatible': {
+                'type': 'bool',
+            },
+            'msg_format_acos_2x': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'vip_server': {
+                'type': 'dict',
+                'vip_server_v4_list': {
+                    'type': 'list',
+                    'ipv4': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'dev_vip_hits']
+                        }
+                    }
+                },
+                'vip_server_v6_list': {
+                    'type': 'list',
+                    'ipv6': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'dev_vip_hits']
+                        }
+                    }
+                },
+                'vip_server_name_list': {
+                    'type': 'list',
+                    'vip_name': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'uuid': {
+                        'type': 'str',
+                    },
+                    'sampling_enable': {
+                        'type': 'list',
+                        'counters1': {
+                            'type': 'str',
+                            'choices': ['all', 'dev_vip_hits']
+                        }
+                    }
+                }
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'gslb_site': {
+                'type': 'str',
+            },
+            'state': {
+                'type': 'str',
+            },
+            'type_last': {
+                'type': 'list',
+                'ntype': {
+                    'type': 'str',
+                },
+                'last': {
+                    'type': 'str',
+                }
+            },
+            'client_ldns_list': {
+                'type': 'list',
+                'client_ip': {
+                    'type': 'str',
+                },
+                'age': {
+                    'type': 'int',
+                },
+                'ntype': {
+                    'type': 'str',
+                },
+                'rdt_sample1': {
+                    'type': 'int',
+                },
+                'rdt_sample2': {
+                    'type': 'int',
+                },
+                'rdt_sample3': {
+                    'type': 'int',
+                },
+                'rdt_sample4': {
+                    'type': 'int',
+                },
+                'rdt_sample5': {
+                    'type': 'int',
+                },
+                'rdt_sample6': {
+                    'type': 'int',
+                },
+                'rdt_sample7': {
+                    'type': 'int',
+                },
+                'rdt_sample8': {
+                    'type': 'int',
+                }
+            },
+            'site_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'ip_server_list': {
+                'type': 'list',
+                'ip_server_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'ip_server': {
+                        'type': 'str',
+                    },
+                    'ip_address': {
+                        'type': 'str',
+                    },
+                    'state': {
+                        'type': 'str',
+                    },
+                    'ip_server_port': {
+                        'type': 'list',
+                        'vport': {
+                            'type': 'int',
+                        },
+                        'vport_state': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            },
+            'slb_dev_list': {
+                'type': 'list',
+                'device_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'dev_name': {
+                        'type': 'str',
+                    },
+                    'dev_ip': {
+                        'type': 'str',
+                    },
+                    'dev_attr': {
+                        'type': 'str',
+                    },
+                    'dev_admin_preference': {
+                        'type': 'int',
+                    },
+                    'dev_session_num': {
+                        'type': 'int',
+                    },
+                    'dev_session_util': {
+                        'type': 'int',
+                    },
+                    'dev_gw_state': {
+                        'type': 'str',
+                    },
+                    'dev_ip_cnt': {
+                        'type': 'int',
+                    },
+                    'dev_state': {
+                        'type': 'str',
+                    },
+                    'client_ldns_list': {
+                        'type': 'list',
+                        'client_ip': {
+                            'type': 'str',
+                        },
+                        'age': {
+                            'type': 'int',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'rdt_sample1': {
+                            'type': 'int',
+                        },
+                        'rdt_sample2': {
+                            'type': 'int',
+                        },
+                        'rdt_sample3': {
+                            'type': 'int',
+                        },
+                        'rdt_sample4': {
+                            'type': 'int',
+                        },
+                        'rdt_sample5': {
+                            'type': 'int',
+                        },
+                        'rdt_sample6': {
+                            'type': 'int',
+                        },
+                        'rdt_sample7': {
+                            'type': 'int',
+                        },
+                        'rdt_sample8': {
+                            'type': 'int',
+                        }
+                    }
+                },
+                'vip_server': {
+                    'type': 'dict',
+                    'oper': {
+                        'type': 'dict',
+                    },
+                    'vip_server_v4_list': {
+                        'type': 'list',
+                        'ipv4': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'oper': {
+                            'type': 'dict',
+                            'dev_vip_addr': {
+                                'type': 'str',
+                            },
+                            'dev_vip_state': {
+                                'type': 'str',
+                            },
+                            'dev_vip_port_list': {
+                                'type': 'list',
+                                'dev_vip_port_num': {
+                                    'type': 'int',
+                                },
+                                'dev_vip_port_state': {
+                                    'type': 'str',
+                                }
+                            }
+                        }
+                    },
+                    'vip_server_v6_list': {
+                        'type': 'list',
+                        'ipv6': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'oper': {
+                            'type': 'dict',
+                            'dev_vip_addr': {
+                                'type': 'str',
+                            },
+                            'dev_vip_state': {
+                                'type': 'str',
+                            },
+                            'dev_vip_port_list': {
+                                'type': 'list',
+                                'dev_vip_port_num': {
+                                    'type': 'int',
+                                },
+                                'dev_vip_port_state': {
+                                    'type': 'str',
+                                }
+                            }
+                        }
+                    },
+                    'vip_server_name_list': {
+                        'type': 'list',
+                        'vip_name': {
+                            'type': 'str',
+                            'required': True,
+                        },
+                        'oper': {
+                            'type': 'dict',
+                            'dev_vip_addr': {
+                                'type': 'str',
+                            },
+                            'dev_vip_state': {
+                                'type': 'str',
+                            },
+                            'dev_vip_port_list': {
+                                'type': 'list',
+                                'dev_vip_port_num': {
+                                    'type': 'int',
+                                },
+                                'dev_vip_port_state': {
+                                    'type': 'str',
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'hits': {
+                'type': 'str',
+            },
+            'site_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'ip_server_list': {
+                'type': 'list',
+                'ip_server_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'hits': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'slb_dev_list': {
+                'type': 'list',
+            }
+        }
     })
     return rv
 
@@ -539,7 +1047,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -549,7 +1059,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -579,7 +1091,6 @@ def get_stats(module):
     return _get(module, stats_url(module), params=query_params)
 
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
 
@@ -602,9 +1113,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -621,7 +1130,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -670,7 +1181,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["site"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -688,8 +1198,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -705,8 +1214,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -770,12 +1278,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -803,14 +1309,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -840,7 +1346,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_template_server
 description:
@@ -266,9 +265,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -277,7 +277,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -285,7 +284,40 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["add", "bw_rate_limit", "bw_rate_limit_acct", "bw_rate_limit_duration", "bw_rate_limit_no_logging", "bw_rate_limit_resume", "conn_limit", "conn_limit_no_logging", "conn_rate_limit", "conn_rate_limit_no_logging", "dns_fail_interval", "dns_query_interval", "dynamic_server_prefix", "every", "extended_stats", "health_check", "health_check_disable", "initial_slow_start", "log_selection_failure", "max_dynamic_server", "min_ttl_ratio", "name", "rate_interval", "resume", "slow_start", "spoofing_cache", "stats_data_action", "till", "times", "user_tag", "uuid", "weight", ]
+AVAILABLE_PROPERTIES = [
+    "add",
+    "bw_rate_limit",
+    "bw_rate_limit_acct",
+    "bw_rate_limit_duration",
+    "bw_rate_limit_no_logging",
+    "bw_rate_limit_resume",
+    "conn_limit",
+    "conn_limit_no_logging",
+    "conn_rate_limit",
+    "conn_rate_limit_no_logging",
+    "dns_fail_interval",
+    "dns_query_interval",
+    "dynamic_server_prefix",
+    "every",
+    "extended_stats",
+    "health_check",
+    "health_check_disable",
+    "initial_slow_start",
+    "log_selection_failure",
+    "max_dynamic_server",
+    "min_ttl_ratio",
+    "name",
+    "rate_interval",
+    "resume",
+    "slow_start",
+    "spoofing_cache",
+    "stats_data_action",
+    "till",
+    "times",
+    "user_tag",
+    "uuid",
+    "weight",
+]
 
 
 def get_default_argspec():
@@ -293,48 +325,126 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'conn_limit': {'type': 'int', },
-        'resume': {'type': 'int', },
-        'conn_limit_no_logging': {'type': 'bool', },
-        'conn_rate_limit': {'type': 'int', },
-        'rate_interval': {'type': 'str', 'choices': ['100ms', 'second']},
-        'conn_rate_limit_no_logging': {'type': 'bool', },
-        'dns_query_interval': {'type': 'int', },
-        'dns_fail_interval': {'type': 'int', },
-        'dynamic_server_prefix': {'type': 'str', },
-        'extended_stats': {'type': 'bool', },
-        'log_selection_failure': {'type': 'bool', },
-        'health_check': {'type': 'str', },
-        'health_check_disable': {'type': 'bool', },
-        'max_dynamic_server': {'type': 'int', },
-        'min_ttl_ratio': {'type': 'int', },
-        'weight': {'type': 'int', },
-        'spoofing_cache': {'type': 'bool', },
-        'stats_data_action': {'type': 'str', 'choices': ['stats-data-enable', 'stats-data-disable']},
-        'slow_start': {'type': 'bool', },
-        'initial_slow_start': {'type': 'int', },
-        'add': {'type': 'int', },
-        'times': {'type': 'int', },
-        'every': {'type': 'int', },
-        'till': {'type': 'int', },
-        'bw_rate_limit_acct': {'type': 'str', 'choices': ['to-server-only', 'from-server-only', 'all']},
-        'bw_rate_limit': {'type': 'int', },
-        'bw_rate_limit_resume': {'type': 'int', },
-        'bw_rate_limit_duration': {'type': 'int', },
-        'bw_rate_limit_no_logging': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', }
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'conn_limit': {
+            'type': 'int',
+        },
+        'resume': {
+            'type': 'int',
+        },
+        'conn_limit_no_logging': {
+            'type': 'bool',
+        },
+        'conn_rate_limit': {
+            'type': 'int',
+        },
+        'rate_interval': {
+            'type': 'str',
+            'choices': ['100ms', 'second']
+        },
+        'conn_rate_limit_no_logging': {
+            'type': 'bool',
+        },
+        'dns_query_interval': {
+            'type': 'int',
+        },
+        'dns_fail_interval': {
+            'type': 'int',
+        },
+        'dynamic_server_prefix': {
+            'type': 'str',
+        },
+        'extended_stats': {
+            'type': 'bool',
+        },
+        'log_selection_failure': {
+            'type': 'bool',
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'max_dynamic_server': {
+            'type': 'int',
+        },
+        'min_ttl_ratio': {
+            'type': 'int',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'spoofing_cache': {
+            'type': 'bool',
+        },
+        'stats_data_action': {
+            'type': 'str',
+            'choices': ['stats-data-enable', 'stats-data-disable']
+        },
+        'slow_start': {
+            'type': 'bool',
+        },
+        'initial_slow_start': {
+            'type': 'int',
+        },
+        'add': {
+            'type': 'int',
+        },
+        'times': {
+            'type': 'int',
+        },
+        'every': {
+            'type': 'int',
+        },
+        'till': {
+            'type': 'int',
+        },
+        'bw_rate_limit_acct': {
+            'type': 'str',
+            'choices': ['to-server-only', 'from-server-only', 'all']
+        },
+        'bw_rate_limit': {
+            'type': 'int',
+        },
+        'bw_rate_limit_resume': {
+            'type': 'int',
+        },
+        'bw_rate_limit_duration': {
+            'type': 'int',
+        },
+        'bw_rate_limit_no_logging': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        }
     })
     return rv
 
@@ -399,7 +509,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -409,7 +521,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -421,7 +535,6 @@ def get(module):
 
 def get_list(module):
     return _get(module, list_url(module))
-
 
 
 def _to_axapi(key):
@@ -446,9 +559,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -465,7 +576,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -514,7 +627,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["server"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -532,8 +644,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -549,8 +660,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -614,12 +724,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -647,14 +755,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -680,7 +788,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

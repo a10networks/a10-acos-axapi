@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_system_hardware_forward
 description:
@@ -337,9 +336,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -348,7 +348,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -356,7 +355,11 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -364,19 +367,208 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hit-counts', 'hit-index', 'ipv4-forward-counts', 'ipv6-forward-counts', 'hw-fwd-module-status', 'hw-fwd-prog-reqs', 'hw-fwd-prog-errors', 'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch', 'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count', 'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index', 'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count', 'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count', 'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop', 'hw-fwd-flow-qdr-full-drop', 'hw-fwd-phyport-mismatch-drop', 'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop', 'hw-fwd-protocol-mismatch-drop', 'hw-fwd-avail-ipv4-entry', 'hw-fwd-avail-ipv6-entry', 'hw-fwd-entry-create', 'hw-fwd-entry-create-failure', 'hw-fwd-entry-create-fail-server-down', 'hw-fwd-entry-create-fail-max-entry', 'hw-fwd-entry-free', 'hw-fwd-entry-free-opp-entry', 'hw-fwd-entry-free-no-hw-prog', 'hw-fwd-entry-free-no-conn', 'hw-fwd-entry-free-no-sw-entry', 'hw-fwd-entry-counter', 'hw-fwd-entry-age-out', 'hw-fwd-entry-age-out-idle', 'hw-fwd-entry-age-out-tcp-fin', 'hw-fwd-entry-age-out-tcp-rst', 'hw-fwd-entry-age-out-invalid-dst', 'hw-fwd-entry-force-hw-invalidate', 'hw-fwd-entry-invalidate-server-down', 'hw-fwd-tcam-create', 'hw-fwd-tcam-free', 'hw-fwd-tcam-counter']}},
-        'stats': {'type': 'dict', 'hit_counts': {'type': 'str', }, 'hit_index': {'type': 'str', }, 'ipv4_forward_counts': {'type': 'str', }, 'ipv6_forward_counts': {'type': 'str', }, 'hw_fwd_module_status': {'type': 'str', }, 'hw_fwd_prog_reqs': {'type': 'str', }, 'hw_fwd_prog_errors': {'type': 'str', }, 'hw_fwd_flow_singlebit_errors': {'type': 'str', }, 'hw_fwd_flow_tag_mismatch': {'type': 'str', }, 'hw_fwd_flow_seq_mismatch': {'type': 'str', }, 'hw_fwd_ageout_drop_count': {'type': 'str', }, 'hw_fwd_invalidation_drop': {'type': 'str', }, 'hw_fwd_flow_hit_index': {'type': 'str', }, 'hw_fwd_flow_reason_flags': {'type': 'str', }, 'hw_fwd_flow_drop_count': {'type': 'str', }, 'hw_fwd_flow_error_count': {'type': 'str', }, 'hw_fwd_flow_unalign_count': {'type': 'str', }, 'hw_fwd_flow_underflow_count': {'type': 'str', }, 'hw_fwd_flow_tx_full_drop': {'type': 'str', }, 'hw_fwd_flow_qdr_full_drop': {'type': 'str', }, 'hw_fwd_phyport_mismatch_drop': {'type': 'str', }, 'hw_fwd_vlanid_mismatch_drop': {'type': 'str', }, 'hw_fwd_vmid_drop': {'type': 'str', }, 'hw_fwd_protocol_mismatch_drop': {'type': 'str', }, 'hw_fwd_avail_ipv4_entry': {'type': 'str', }, 'hw_fwd_avail_ipv6_entry': {'type': 'str', }, 'hw_fwd_entry_create': {'type': 'str', }, 'hw_fwd_entry_create_failure': {'type': 'str', }, 'hw_fwd_entry_create_fail_server_down': {'type': 'str', }, 'hw_fwd_entry_create_fail_max_entry': {'type': 'str', }, 'hw_fwd_entry_free': {'type': 'str', }, 'hw_fwd_entry_free_opp_entry': {'type': 'str', }, 'hw_fwd_entry_free_no_hw_prog': {'type': 'str', }, 'hw_fwd_entry_free_no_conn': {'type': 'str', }, 'hw_fwd_entry_free_no_sw_entry': {'type': 'str', }, 'hw_fwd_entry_counter': {'type': 'str', }, 'hw_fwd_entry_age_out': {'type': 'str', }, 'hw_fwd_entry_age_out_idle': {'type': 'str', }, 'hw_fwd_entry_age_out_tcp_fin': {'type': 'str', }, 'hw_fwd_entry_age_out_tcp_rst': {'type': 'str', }, 'hw_fwd_entry_age_out_invalid_dst': {'type': 'str', }, 'hw_fwd_entry_force_hw_invalidate': {'type': 'str', }, 'hw_fwd_entry_invalidate_server_down': {'type': 'str', }, 'hw_fwd_tcam_create': {'type': 'str', }, 'hw_fwd_tcam_free': {'type': 'str', }, 'hw_fwd_tcam_counter': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'hit-counts', 'hit-index', 'ipv4-forward-counts',
+                    'ipv6-forward-counts', 'hw-fwd-module-status',
+                    'hw-fwd-prog-reqs', 'hw-fwd-prog-errors',
+                    'hw-fwd-flow-singlebit-errors', 'hw-fwd-flow-tag-mismatch',
+                    'hw-fwd-flow-seq-mismatch', 'hw-fwd-ageout-drop-count',
+                    'hw-fwd-invalidation-drop', 'hw-fwd-flow-hit-index',
+                    'hw-fwd-flow-reason-flags', 'hw-fwd-flow-drop-count',
+                    'hw-fwd-flow-error-count', 'hw-fwd-flow-unalign-count',
+                    'hw-fwd-flow-underflow-count', 'hw-fwd-flow-tx-full-drop',
+                    'hw-fwd-flow-qdr-full-drop',
+                    'hw-fwd-phyport-mismatch-drop',
+                    'hw-fwd-vlanid-mismatch-drop', 'hw-fwd-vmid-drop',
+                    'hw-fwd-protocol-mismatch-drop', 'hw-fwd-avail-ipv4-entry',
+                    'hw-fwd-avail-ipv6-entry', 'hw-fwd-entry-create',
+                    'hw-fwd-entry-create-failure',
+                    'hw-fwd-entry-create-fail-server-down',
+                    'hw-fwd-entry-create-fail-max-entry', 'hw-fwd-entry-free',
+                    'hw-fwd-entry-free-opp-entry',
+                    'hw-fwd-entry-free-no-hw-prog',
+                    'hw-fwd-entry-free-no-conn',
+                    'hw-fwd-entry-free-no-sw-entry', 'hw-fwd-entry-counter',
+                    'hw-fwd-entry-age-out', 'hw-fwd-entry-age-out-idle',
+                    'hw-fwd-entry-age-out-tcp-fin',
+                    'hw-fwd-entry-age-out-tcp-rst',
+                    'hw-fwd-entry-age-out-invalid-dst',
+                    'hw-fwd-entry-force-hw-invalidate',
+                    'hw-fwd-entry-invalidate-server-down',
+                    'hw-fwd-tcam-create', 'hw-fwd-tcam-free',
+                    'hw-fwd-tcam-counter'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'hit_counts': {
+                'type': 'str',
+            },
+            'hit_index': {
+                'type': 'str',
+            },
+            'ipv4_forward_counts': {
+                'type': 'str',
+            },
+            'ipv6_forward_counts': {
+                'type': 'str',
+            },
+            'hw_fwd_module_status': {
+                'type': 'str',
+            },
+            'hw_fwd_prog_reqs': {
+                'type': 'str',
+            },
+            'hw_fwd_prog_errors': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_singlebit_errors': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_tag_mismatch': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_seq_mismatch': {
+                'type': 'str',
+            },
+            'hw_fwd_ageout_drop_count': {
+                'type': 'str',
+            },
+            'hw_fwd_invalidation_drop': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_hit_index': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_reason_flags': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_drop_count': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_error_count': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_unalign_count': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_underflow_count': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_tx_full_drop': {
+                'type': 'str',
+            },
+            'hw_fwd_flow_qdr_full_drop': {
+                'type': 'str',
+            },
+            'hw_fwd_phyport_mismatch_drop': {
+                'type': 'str',
+            },
+            'hw_fwd_vlanid_mismatch_drop': {
+                'type': 'str',
+            },
+            'hw_fwd_vmid_drop': {
+                'type': 'str',
+            },
+            'hw_fwd_protocol_mismatch_drop': {
+                'type': 'str',
+            },
+            'hw_fwd_avail_ipv4_entry': {
+                'type': 'str',
+            },
+            'hw_fwd_avail_ipv6_entry': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_create': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_create_failure': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_create_fail_server_down': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_create_fail_max_entry': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_free': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_free_opp_entry': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_free_no_hw_prog': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_free_no_conn': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_free_no_sw_entry': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_counter': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_age_out': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_age_out_idle': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_age_out_tcp_fin': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_age_out_tcp_rst': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_age_out_invalid_dst': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_force_hw_invalidate': {
+                'type': 'str',
+            },
+            'hw_fwd_entry_invalidate_server_down': {
+                'type': 'str',
+            },
+            'hw_fwd_tcam_create': {
+                'type': 'str',
+            },
+            'hw_fwd_tcam_free': {
+                'type': 'str',
+            },
+            'hw_fwd_tcam_counter': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -446,7 +638,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -456,7 +650,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -476,7 +672,6 @@ def get_stats(module):
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, stats_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -501,9 +696,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -519,7 +712,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -568,7 +763,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["hardware-forward"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -586,8 +780,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -603,8 +796,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -652,12 +844,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -685,14 +875,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -720,7 +910,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

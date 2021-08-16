@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep
 description:
@@ -370,9 +369,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -381,7 +381,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -389,7 +388,17 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["destination_ip_address_list", "encap", "host_list", "id", "sampling_enable", "source_ip_address", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "destination_ip_address_list",
+    "encap",
+    "host_list",
+    "id",
+    "sampling_enable",
+    "source_ip_address",
+    "stats",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -397,25 +406,256 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'id': {'type': 'int', 'required': True, },
-        'encap': {'type': 'str', 'choices': ['nvgre', 'vxlan']},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'cfg_err_count', 'flooded_pkt_count', 'encap_unresolved_count', 'unknown_encap_rx_pkt', 'unknown_encap_tx_pkt', 'arp_req_sent', 'vtep_host_learned', 'vtep_host_learn_error', 'invalid_lif_rx', 'invalid_lif_tx', 'unknown_vtep_tx', 'unknown_vtep_rx', 'unhandled_pkt_rx', 'unhandled_pkt_tx', 'total_pkts_rx', 'total_bytes_rx', 'unicast_pkt_rx', 'bcast_pkt_rx', 'mcast_pkt_rx', 'dropped_pkt_rx', 'encap_miss_pkts_rx', 'bad_chksum_pks_rx', 'requeue_pkts_in', 'pkts_out', 'total_bytes_tx', 'unicast_pkt_tx', 'bcast_pkt_tx', 'mcast_pkt_tx', 'dropped_pkts_tx', 'large_pkts_rx', 'dot1q_pkts_rx', 'frag_pkts_tx', 'reassembled_pkts_rx', 'bad_inner_ipv4_len_rx', 'bad_inner_ipv6_len_rx', 'lif_un_init_rx']}},
-        'source_ip_address': {'type': 'dict', 'ip_address': {'type': 'str', }, 'uuid': {'type': 'str', }, 'vni_list': {'type': 'list', 'segment': {'type': 'int', 'required': True, }, 'partition': {'type': 'str', }, 'gateway': {'type': 'bool', }, 'lif': {'type': 'int', }, 'uuid': {'type': 'str', }}},
-        'destination_ip_address_list': {'type': 'list', 'ip_address': {'type': 'str', 'required': True, }, 'encap': {'type': 'str', 'choices': ['nvgre', 'vxlan']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'vni_list': {'type': 'list', 'segment': {'type': 'int', 'required': True, }, 'uuid': {'type': 'str', }}},
-        'host_list': {'type': 'list', 'ip_addr': {'type': 'str', 'required': True, }, 'overlay_mac_addr': {'type': 'str', 'required': True, }, 'vni': {'type': 'int', 'required': True, }, 'destination_vtep': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }},
-        'stats': {'type': 'dict', 'cfg_err_count': {'type': 'str', }, 'flooded_pkt_count': {'type': 'str', }, 'encap_unresolved_count': {'type': 'str', }, 'unknown_encap_rx_pkt': {'type': 'str', }, 'unknown_encap_tx_pkt': {'type': 'str', }, 'arp_req_sent': {'type': 'str', }, 'vtep_host_learned': {'type': 'str', }, 'vtep_host_learn_error': {'type': 'str', }, 'invalid_lif_rx': {'type': 'str', }, 'invalid_lif_tx': {'type': 'str', }, 'unknown_vtep_tx': {'type': 'str', }, 'unknown_vtep_rx': {'type': 'str', }, 'unhandled_pkt_rx': {'type': 'str', }, 'unhandled_pkt_tx': {'type': 'str', }, 'total_pkts_rx': {'type': 'str', }, 'total_bytes_rx': {'type': 'str', }, 'unicast_pkt_rx': {'type': 'str', }, 'bcast_pkt_rx': {'type': 'str', }, 'mcast_pkt_rx': {'type': 'str', }, 'dropped_pkt_rx': {'type': 'str', }, 'encap_miss_pkts_rx': {'type': 'str', }, 'bad_chksum_pks_rx': {'type': 'str', }, 'requeue_pkts_in': {'type': 'str', }, 'pkts_out': {'type': 'str', }, 'total_bytes_tx': {'type': 'str', }, 'unicast_pkt_tx': {'type': 'str', }, 'bcast_pkt_tx': {'type': 'str', }, 'mcast_pkt_tx': {'type': 'str', }, 'dropped_pkts_tx': {'type': 'str', }, 'large_pkts_rx': {'type': 'str', }, 'dot1q_pkts_rx': {'type': 'str', }, 'frag_pkts_tx': {'type': 'str', }, 'reassembled_pkts_rx': {'type': 'str', }, 'bad_inner_ipv4_len_rx': {'type': 'str', }, 'bad_inner_ipv6_len_rx': {'type': 'str', }, 'lif_un_init_rx': {'type': 'str', }, 'id': {'type': 'int', 'required': True, }}
+    rv.update({
+        'id': {
+            'type': 'int',
+            'required': True,
+        },
+        'encap': {
+            'type': 'str',
+            'choices': ['nvgre', 'vxlan']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'cfg_err_count', 'flooded_pkt_count',
+                    'encap_unresolved_count', 'unknown_encap_rx_pkt',
+                    'unknown_encap_tx_pkt', 'arp_req_sent',
+                    'vtep_host_learned', 'vtep_host_learn_error',
+                    'invalid_lif_rx', 'invalid_lif_tx', 'unknown_vtep_tx',
+                    'unknown_vtep_rx', 'unhandled_pkt_rx', 'unhandled_pkt_tx',
+                    'total_pkts_rx', 'total_bytes_rx', 'unicast_pkt_rx',
+                    'bcast_pkt_rx', 'mcast_pkt_rx', 'dropped_pkt_rx',
+                    'encap_miss_pkts_rx', 'bad_chksum_pks_rx',
+                    'requeue_pkts_in', 'pkts_out', 'total_bytes_tx',
+                    'unicast_pkt_tx', 'bcast_pkt_tx', 'mcast_pkt_tx',
+                    'dropped_pkts_tx', 'large_pkts_rx', 'dot1q_pkts_rx',
+                    'frag_pkts_tx', 'reassembled_pkts_rx',
+                    'bad_inner_ipv4_len_rx', 'bad_inner_ipv6_len_rx',
+                    'lif_un_init_rx'
+                ]
+            }
+        },
+        'source_ip_address': {
+            'type': 'dict',
+            'ip_address': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'vni_list': {
+                'type': 'list',
+                'segment': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'partition': {
+                    'type': 'str',
+                },
+                'gateway': {
+                    'type': 'bool',
+                },
+                'lif': {
+                    'type': 'int',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'destination_ip_address_list': {
+            'type': 'list',
+            'ip_address': {
+                'type': 'str',
+                'required': True,
+            },
+            'encap': {
+                'type': 'str',
+                'choices': ['nvgre', 'vxlan']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'vni_list': {
+                'type': 'list',
+                'segment': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'host_list': {
+            'type': 'list',
+            'ip_addr': {
+                'type': 'str',
+                'required': True,
+            },
+            'overlay_mac_addr': {
+                'type': 'str',
+                'required': True,
+            },
+            'vni': {
+                'type': 'int',
+                'required': True,
+            },
+            'destination_vtep': {
+                'type': 'str',
+                'required': True,
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'cfg_err_count': {
+                'type': 'str',
+            },
+            'flooded_pkt_count': {
+                'type': 'str',
+            },
+            'encap_unresolved_count': {
+                'type': 'str',
+            },
+            'unknown_encap_rx_pkt': {
+                'type': 'str',
+            },
+            'unknown_encap_tx_pkt': {
+                'type': 'str',
+            },
+            'arp_req_sent': {
+                'type': 'str',
+            },
+            'vtep_host_learned': {
+                'type': 'str',
+            },
+            'vtep_host_learn_error': {
+                'type': 'str',
+            },
+            'invalid_lif_rx': {
+                'type': 'str',
+            },
+            'invalid_lif_tx': {
+                'type': 'str',
+            },
+            'unknown_vtep_tx': {
+                'type': 'str',
+            },
+            'unknown_vtep_rx': {
+                'type': 'str',
+            },
+            'unhandled_pkt_rx': {
+                'type': 'str',
+            },
+            'unhandled_pkt_tx': {
+                'type': 'str',
+            },
+            'total_pkts_rx': {
+                'type': 'str',
+            },
+            'total_bytes_rx': {
+                'type': 'str',
+            },
+            'unicast_pkt_rx': {
+                'type': 'str',
+            },
+            'bcast_pkt_rx': {
+                'type': 'str',
+            },
+            'mcast_pkt_rx': {
+                'type': 'str',
+            },
+            'dropped_pkt_rx': {
+                'type': 'str',
+            },
+            'encap_miss_pkts_rx': {
+                'type': 'str',
+            },
+            'bad_chksum_pks_rx': {
+                'type': 'str',
+            },
+            'requeue_pkts_in': {
+                'type': 'str',
+            },
+            'pkts_out': {
+                'type': 'str',
+            },
+            'total_bytes_tx': {
+                'type': 'str',
+            },
+            'unicast_pkt_tx': {
+                'type': 'str',
+            },
+            'bcast_pkt_tx': {
+                'type': 'str',
+            },
+            'mcast_pkt_tx': {
+                'type': 'str',
+            },
+            'dropped_pkts_tx': {
+                'type': 'str',
+            },
+            'large_pkts_rx': {
+                'type': 'str',
+            },
+            'dot1q_pkts_rx': {
+                'type': 'str',
+            },
+            'frag_pkts_tx': {
+                'type': 'str',
+            },
+            'reassembled_pkts_rx': {
+                'type': 'str',
+            },
+            'bad_inner_ipv4_len_rx': {
+                'type': 'str',
+            },
+            'bad_inner_ipv6_len_rx': {
+                'type': 'str',
+            },
+            'lif_un_init_rx': {
+                'type': 'str',
+            },
+            'id': {
+                'type': 'int',
+                'required': True,
+            }
+        }
     })
     return rv
 
@@ -486,7 +726,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -496,7 +738,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -516,7 +760,6 @@ def get_stats(module):
         for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
     return _get(module, stats_url(module), params=query_params)
-
 
 
 def _to_axapi(key):
@@ -541,9 +784,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -560,7 +801,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -609,7 +852,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["vtep"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -627,8 +869,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -644,8 +885,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -709,12 +949,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -742,14 +980,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -777,7 +1015,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_system_tcp
 description:
@@ -153,9 +152,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -164,7 +164,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -172,7 +171,12 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -180,20 +184,208 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'activeopens', 'passiveopens', 'attemptfails', 'estabresets', 'insegs', 'outsegs', 'retranssegs', 'inerrs', 'outrsts', 'sock_alloc', 'orphan_count', 'mem_alloc', 'recv_mem', 'send_mem', 'currestab', 'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2', 'currtimew', 'currclose', 'currclsw', 'currlack', 'currlstn', 'currclsg', 'pawsactiverejected', 'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack', 'ax_rexmit_syn', 'tcpabortontimeout', 'noroute', 'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied']}},
-        'oper': {'type': 'dict', 'tcp_cpu_list': {'type': 'list', 'currestab': {'type': 'int', }, 'activeopens': {'type': 'int', }, 'passiveopens': {'type': 'int', }, 'attemptfails': {'type': 'int', }, 'insegs': {'type': 'int', }, 'outsegs': {'type': 'int', }, 'retranssegs': {'type': 'int', }, 'estabresets': {'type': 'int', }, 'outrsts': {'type': 'int', }, 'noroute': {'type': 'int', }, 'tfo_conns': {'type': 'int', }, 'tfo_actives': {'type': 'int', }, 'tfo_denied': {'type': 'int', }, 'inerrs': {'type': 'int', }, 'sock_alloc': {'type': 'int', }, 'orphan_count': {'type': 'int', }, 'mem_alloc': {'type': 'int', }, 'recv_mem': {'type': 'int', }, 'send_mem': {'type': 'int', }, 'currsyssnt': {'type': 'int', }, 'currsynrcv': {'type': 'int', }, 'currfinw1': {'type': 'int', }, 'currfinw2': {'type': 'int', }, 'currtimew': {'type': 'int', }, 'currclose': {'type': 'int', }, 'currclsw': {'type': 'int', }, 'currlack': {'type': 'int', }, 'currlstn': {'type': 'int', }, 'currclsg': {'type': 'int', }, 'pawsactiverejected': {'type': 'int', }, 'syn_rcv_rstack': {'type': 'int', }, 'syn_rcv_rst': {'type': 'int', }, 'syn_rcv_ack': {'type': 'int', }, 'tcpabortontimeout': {'type': 'int', }, 'ax_rexmit_syn': {'type': 'int', }, 'exceedmss': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
-        'stats': {'type': 'str', 'required': False, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'connattempt', 'connects', 'drops', 'conndrops', 'closed', 'segstimed', 'rttupdated', 'delack', 'timeoutdrop', 'rexmttimeo', 'persisttimeo', 'keeptimeo', 'keepprobe', 'keepdrops', 'sndtotal', 'sndpack', 'sndbyte', 'sndrexmitpack', 'sndrexmitbyte', 'sndrexmitbad', 'sndacks', 'sndprobe', 'sndurg', 'sndwinup', 'sndctrl', 'sndrst', 'sndfin', 'sndsyn', 'rcvtotal', 'rcvpack', 'rcvbyte', 'rcvbadoff', 'rcvmemdrop', 'rcvduppack', 'rcvdupbyte', 'rcvpartduppack', 'rcvpartdupbyte', 'rcvoopack', 'rcvoobyte', 'rcvpackafterwin', 'rcvbyteafterwin', 'rcvwinprobe', 'rcvdupack', 'rcvacktoomuch', 'rcvackpack', 'rcvackbyte', 'rcvwinupd', 'pawsdrop', 'predack', 'preddat', 'persistdrop', 'badrst', 'finwait2_drops', 'sack_recovery_episode', 'sack_rexmits', 'sack_rexmit_bytes', 'sack_rcv_blocks', 'sack_send_blocks', 'sndcack', 'cacklim', 'reassmemdrop', 'reasstimeout', 'cc_idle', 'cc_reduce', 'rcvdsack', 'a2brcvwnd', 'a2bsackpresent', 'a2bdupack', 'a2brxdata', 'a2btcpoptions', 'a2boodata', 'a2bpartialack', 'a2bfsmtransition', 'a2btransitionnum', 'b2atransitionnum', 'bad_iochan', 'atcpforward', 'atcpsent', 'atcprexmitsadrop', 'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail', 'a2bappbuffering', 'atcpsendfail', 'earlyrexmit', 'mburstlim', 'a2bsndwnd', 'proxyheaderv1', 'proxyheaderv2']}}}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'activeopens', 'passiveopens', 'attemptfails',
+                    'estabresets', 'insegs', 'outsegs', 'retranssegs',
+                    'inerrs', 'outrsts', 'sock_alloc', 'orphan_count',
+                    'mem_alloc', 'recv_mem', 'send_mem', 'currestab',
+                    'currsyssnt', 'currsynrcv', 'currfinw1', 'currfinw2',
+                    'currtimew', 'currclose', 'currclsw', 'currlack',
+                    'currlstn', 'currclsg', 'pawsactiverejected',
+                    'syn_rcv_rstack', 'syn_rcv_rst', 'syn_rcv_ack',
+                    'ax_rexmit_syn', 'tcpabortontimeout', 'noroute',
+                    'exceedmss', 'tfo_conns', 'tfo_actives', 'tfo_denied'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'tcp_cpu_list': {
+                'type': 'list',
+                'currestab': {
+                    'type': 'int',
+                },
+                'activeopens': {
+                    'type': 'int',
+                },
+                'passiveopens': {
+                    'type': 'int',
+                },
+                'attemptfails': {
+                    'type': 'int',
+                },
+                'insegs': {
+                    'type': 'int',
+                },
+                'outsegs': {
+                    'type': 'int',
+                },
+                'retranssegs': {
+                    'type': 'int',
+                },
+                'estabresets': {
+                    'type': 'int',
+                },
+                'outrsts': {
+                    'type': 'int',
+                },
+                'noroute': {
+                    'type': 'int',
+                },
+                'tfo_conns': {
+                    'type': 'int',
+                },
+                'tfo_actives': {
+                    'type': 'int',
+                },
+                'tfo_denied': {
+                    'type': 'int',
+                },
+                'inerrs': {
+                    'type': 'int',
+                },
+                'sock_alloc': {
+                    'type': 'int',
+                },
+                'orphan_count': {
+                    'type': 'int',
+                },
+                'mem_alloc': {
+                    'type': 'int',
+                },
+                'recv_mem': {
+                    'type': 'int',
+                },
+                'send_mem': {
+                    'type': 'int',
+                },
+                'currsyssnt': {
+                    'type': 'int',
+                },
+                'currsynrcv': {
+                    'type': 'int',
+                },
+                'currfinw1': {
+                    'type': 'int',
+                },
+                'currfinw2': {
+                    'type': 'int',
+                },
+                'currtimew': {
+                    'type': 'int',
+                },
+                'currclose': {
+                    'type': 'int',
+                },
+                'currclsw': {
+                    'type': 'int',
+                },
+                'currlack': {
+                    'type': 'int',
+                },
+                'currlstn': {
+                    'type': 'int',
+                },
+                'currclsg': {
+                    'type': 'int',
+                },
+                'pawsactiverejected': {
+                    'type': 'int',
+                },
+                'syn_rcv_rstack': {
+                    'type': 'int',
+                },
+                'syn_rcv_rst': {
+                    'type': 'int',
+                },
+                'syn_rcv_ack': {
+                    'type': 'int',
+                },
+                'tcpabortontimeout': {
+                    'type': 'int',
+                },
+                'ax_rexmit_syn': {
+                    'type': 'int',
+                },
+                'exceedmss': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
+        'stats': {
+            'type': 'str',
+            'required': False,
+            'uuid': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'connattempt', 'connects', 'drops', 'conndrops',
+                        'closed', 'segstimed', 'rttupdated', 'delack',
+                        'timeoutdrop', 'rexmttimeo', 'persisttimeo',
+                        'keeptimeo', 'keepprobe', 'keepdrops', 'sndtotal',
+                        'sndpack', 'sndbyte', 'sndrexmitpack', 'sndrexmitbyte',
+                        'sndrexmitbad', 'sndacks', 'sndprobe', 'sndurg',
+                        'sndwinup', 'sndctrl', 'sndrst', 'sndfin', 'sndsyn',
+                        'rcvtotal', 'rcvpack', 'rcvbyte', 'rcvbadoff',
+                        'rcvmemdrop', 'rcvduppack', 'rcvdupbyte',
+                        'rcvpartduppack', 'rcvpartdupbyte', 'rcvoopack',
+                        'rcvoobyte', 'rcvpackafterwin', 'rcvbyteafterwin',
+                        'rcvwinprobe', 'rcvdupack', 'rcvacktoomuch',
+                        'rcvackpack', 'rcvackbyte', 'rcvwinupd', 'pawsdrop',
+                        'predack', 'preddat', 'persistdrop', 'badrst',
+                        'finwait2_drops', 'sack_recovery_episode',
+                        'sack_rexmits', 'sack_rexmit_bytes', 'sack_rcv_blocks',
+                        'sack_send_blocks', 'sndcack', 'cacklim',
+                        'reassmemdrop', 'reasstimeout', 'cc_idle', 'cc_reduce',
+                        'rcvdsack', 'a2brcvwnd', 'a2bsackpresent', 'a2bdupack',
+                        'a2brxdata', 'a2btcpoptions', 'a2boodata',
+                        'a2bpartialack', 'a2bfsmtransition',
+                        'a2btransitionnum', 'b2atransitionnum', 'bad_iochan',
+                        'atcpforward', 'atcpsent', 'atcprexmitsadrop',
+                        'atcpsendbackack', 'atcprexmit', 'atcpbuffallocfail',
+                        'a2bappbuffering', 'atcpsendfail', 'earlyrexmit',
+                        'mburstlim', 'a2bsndwnd', 'proxyheaderv1',
+                        'proxyheaderv2'
+                    ]
+                }
+            }
+        }
     })
     return rv
 
@@ -269,7 +461,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -279,7 +473,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -309,7 +505,6 @@ def get_stats(module):
     return _get(module, stats_url(module), params=query_params)
 
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
 
@@ -332,9 +527,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -350,7 +543,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -399,7 +594,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["tcp"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -417,8 +611,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -434,8 +627,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -499,12 +691,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -532,14 +722,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -569,7 +759,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

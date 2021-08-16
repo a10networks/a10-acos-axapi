@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_server_port
 description:
@@ -558,9 +557,10 @@ axapi_calls:
 EXAMPLES = """
 """
 
+import copy
+
 # standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-import copy
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
@@ -569,7 +569,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
     'supported_by': 'community',
@@ -577,7 +576,35 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "alternate_port", "auth_cfg", "conn_limit", "conn_resume", "extended_stats", "follow_port_protocol", "health_check", "health_check_disable", "health_check_follow_port", "no_logging", "no_ssl", "oper", "port_number", "protocol", "range", "rport_health_check_shared", "sampling_enable", "shared_rport_health_check", "stats", "stats_data_action", "support_http2", "template_port", "template_server_ssl", "user_tag", "uuid", "weight", ]
+AVAILABLE_PROPERTIES = [
+    "action",
+    "alternate_port",
+    "auth_cfg",
+    "conn_limit",
+    "conn_resume",
+    "extended_stats",
+    "follow_port_protocol",
+    "health_check",
+    "health_check_disable",
+    "health_check_follow_port",
+    "no_logging",
+    "no_ssl",
+    "oper",
+    "port_number",
+    "protocol",
+    "range",
+    "rport_health_check_shared",
+    "sampling_enable",
+    "shared_rport_health_check",
+    "stats",
+    "stats_data_action",
+    "support_http2",
+    "template_port",
+    "template_server_ssl",
+    "user_tag",
+    "uuid",
+    "weight",
+]
 
 
 def get_default_argspec():
@@ -585,48 +612,437 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'port_number': {'type': 'int', 'required': True, },
-        'protocol': {'type': 'str', 'required': True, 'choices': ['tcp', 'udp']},
-        'range': {'type': 'int', },
-        'template_port': {'type': 'str', },
-        'template_server_ssl': {'type': 'str', },
-        'action': {'type': 'str', 'choices': ['enable', 'disable', 'disable-with-health-check']},
-        'no_ssl': {'type': 'bool', },
-        'health_check': {'type': 'str', },
-        'shared_rport_health_check': {'type': 'bool', },
-        'rport_health_check_shared': {'type': 'str', },
-        'health_check_follow_port': {'type': 'int', },
-        'follow_port_protocol': {'type': 'str', 'choices': ['tcp', 'udp']},
-        'health_check_disable': {'type': 'bool', },
-        'support_http2': {'type': 'bool', },
-        'weight': {'type': 'int', },
-        'conn_limit': {'type': 'int', },
-        'no_logging': {'type': 'bool', },
-        'conn_resume': {'type': 'int', },
-        'stats_data_action': {'type': 'str', 'choices': ['stats-data-enable', 'stats-data-disable']},
-        'extended_stats': {'type': 'bool', },
-        'alternate_port': {'type': 'list', 'alternate': {'type': 'int', }, 'alternate_name': {'type': 'str', }, 'alternate_server_port': {'type': 'int', }},
-        'auth_cfg': {'type': 'dict', 'service_principal_name': {'type': 'str', }},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'curr_req', 'total_req', 'total_req_succ', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'last_total_conn', 'peak_conn', 'es_resp_200', 'es_resp_300', 'es_resp_400', 'es_resp_500', 'es_resp_other', 'es_req_count', 'es_resp_count', 'es_resp_invalid_http', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_good_status_code', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'resp-count', 'resp-1xx', 'resp-2xx', 'resp-3xx', 'resp-4xx', 'resp-5xx', 'resp-other', 'resp-latency', 'curr_pconn']}},
-        'oper': {'type': 'dict', 'state': {'type': 'str', 'choices': ['Up', 'Down', 'Disabled', 'Maintenance', 'Unknown', 'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE', 'DIS-EXCEED-RATE', 'DIS-DAMP']}, 'curr_conn_rate': {'type': 'int', }, 'conn_rate_unit': {'type': 'str', }, 'slow_start_conn_limit': {'type': 'int', }, 'curr_observe_rate': {'type': 'int', }, 'down_grace_period_allowed': {'type': 'int', }, 'current_time': {'type': 'int', }, 'down_time_grace_period': {'type': 'int', }, 'diameter_enabled': {'type': 'int', }, 'es_resp_time': {'type': 'int', }, 'inband_hm_reassign_num': {'type': 'int', }, 'disable': {'type': 'int', }, 'hm_key': {'type': 'int', }, 'hm_index': {'type': 'int', }, 'soft_down_time': {'type': 'int', }, 'aflow_conn_limit': {'type': 'int', }, 'aflow_queue_size': {'type': 'int', }, 'resv_conn': {'type': 'int', }, 'ip': {'type': 'str', }, 'ipv6': {'type': 'str', }, 'vrid': {'type': 'int', }, 'ha_group_id': {'type': 'int', }, 'ports_consumed': {'type': 'int', }, 'ports_consumed_total': {'type': 'int', }, 'ports_freed_total': {'type': 'int', }, 'alloc_failed': {'type': 'int', }, 'drs_auto_nat_list': {'type': 'list', 'drs_name': {'type': 'str', }, 'drs_port': {'type': 'int', }, 'ip': {'type': 'str', }, 'ipv6': {'type': 'str', }, 'vrid': {'type': 'int', }, 'ha_group_id': {'type': 'int', }, 'ports_consumed': {'type': 'int', }, 'ports_consumed_total': {'type': 'int', }, 'ports_freed_total': {'type': 'int', }, 'alloc_failed': {'type': 'int', }}, 'pool_name': {'type': 'str', }, 'nat_pool_addr_list': {'type': 'list', 'nat_ip': {'type': 'str', }, 'ports_consumed': {'type': 'int', }, 'ports_consumed_total': {'type': 'int', }, 'ports_freed_total': {'type': 'int', }, 'alloc_failed': {'type': 'int', }}, 'drs_ip_nat_list': {'type': 'list', 'drs_name': {'type': 'str', }, 'drs_port': {'type': 'int', }, 'pool_name': {'type': 'str', }, 'nat_pool_addr_list': {'type': 'list', 'nat_ip': {'type': 'str', }, 'ports_consumed': {'type': 'int', }, 'ports_consumed_total': {'type': 'int', }, 'ports_freed_total': {'type': 'int', }, 'alloc_failed': {'type': 'int', }}}, 'port_number': {'type': 'int', 'required': True, }, 'protocol': {'type': 'str', 'required': True, 'choices': ['tcp', 'udp']}},
-        'stats': {'type': 'dict', 'curr_conn': {'type': 'str', }, 'curr_req': {'type': 'str', }, 'total_req': {'type': 'str', }, 'total_req_succ': {'type': 'str', }, 'total_fwd_bytes': {'type': 'str', }, 'total_fwd_pkts': {'type': 'str', }, 'total_rev_bytes': {'type': 'str', }, 'total_rev_pkts': {'type': 'str', }, 'total_conn': {'type': 'str', }, 'last_total_conn': {'type': 'str', }, 'peak_conn': {'type': 'str', }, 'es_resp_200': {'type': 'str', }, 'es_resp_300': {'type': 'str', }, 'es_resp_400': {'type': 'str', }, 'es_resp_500': {'type': 'str', }, 'es_resp_other': {'type': 'str', }, 'es_req_count': {'type': 'str', }, 'es_resp_count': {'type': 'str', }, 'es_resp_invalid_http': {'type': 'str', }, 'total_rev_pkts_inspected': {'type': 'str', }, 'total_rev_pkts_inspected_good_status_code': {'type': 'str', }, 'response_time': {'type': 'str', }, 'fastest_rsp_time': {'type': 'str', }, 'slowest_rsp_time': {'type': 'str', }, 'curr_ssl_conn': {'type': 'str', }, 'total_ssl_conn': {'type': 'str', }, 'resp_count': {'type': 'str', }, 'resp_1xx': {'type': 'str', }, 'resp_2xx': {'type': 'str', }, 'resp_3xx': {'type': 'str', }, 'resp_4xx': {'type': 'str', }, 'resp_5xx': {'type': 'str', }, 'resp_other': {'type': 'str', }, 'resp_latency': {'type': 'str', }, 'curr_pconn': {'type': 'str', }, 'port_number': {'type': 'int', 'required': True, }, 'protocol': {'type': 'str', 'required': True, 'choices': ['tcp', 'udp']}}
+    rv.update({
+        'port_number': {
+            'type': 'int',
+            'required': True,
+        },
+        'protocol': {
+            'type': 'str',
+            'required': True,
+            'choices': ['tcp', 'udp']
+        },
+        'range': {
+            'type': 'int',
+        },
+        'template_port': {
+            'type': 'str',
+        },
+        'template_server_ssl': {
+            'type': 'str',
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable', 'disable-with-health-check']
+        },
+        'no_ssl': {
+            'type': 'bool',
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'shared_rport_health_check': {
+            'type': 'bool',
+        },
+        'rport_health_check_shared': {
+            'type': 'str',
+        },
+        'health_check_follow_port': {
+            'type': 'int',
+        },
+        'follow_port_protocol': {
+            'type': 'str',
+            'choices': ['tcp', 'udp']
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'support_http2': {
+            'type': 'bool',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'conn_limit': {
+            'type': 'int',
+        },
+        'no_logging': {
+            'type': 'bool',
+        },
+        'conn_resume': {
+            'type': 'int',
+        },
+        'stats_data_action': {
+            'type': 'str',
+            'choices': ['stats-data-enable', 'stats-data-disable']
+        },
+        'extended_stats': {
+            'type': 'bool',
+        },
+        'alternate_port': {
+            'type': 'list',
+            'alternate': {
+                'type': 'int',
+            },
+            'alternate_name': {
+                'type': 'str',
+            },
+            'alternate_server_port': {
+                'type': 'int',
+            }
+        },
+        'auth_cfg': {
+            'type': 'dict',
+            'service_principal_name': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'curr_req', 'total_req', 'total_req_succ',
+                    'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes',
+                    'total_rev_pkts', 'total_conn', 'last_total_conn',
+                    'peak_conn', 'es_resp_200', 'es_resp_300', 'es_resp_400',
+                    'es_resp_500', 'es_resp_other', 'es_req_count',
+                    'es_resp_count', 'es_resp_invalid_http',
+                    'total_rev_pkts_inspected',
+                    'total_rev_pkts_inspected_good_status_code',
+                    'response_time', 'fastest_rsp_time', 'slowest_rsp_time',
+                    'curr_ssl_conn', 'total_ssl_conn', 'resp-count',
+                    'resp-1xx', 'resp-2xx', 'resp-3xx', 'resp-4xx', 'resp-5xx',
+                    'resp-other', 'resp-latency', 'curr_pconn'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type':
+                'str',
+                'choices': [
+                    'Up', 'Down', 'Disabled', 'Maintenance', 'Unknown',
+                    'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE', 'DIS-EXCEED-RATE',
+                    'DIS-DAMP'
+                ]
+            },
+            'curr_conn_rate': {
+                'type': 'int',
+            },
+            'conn_rate_unit': {
+                'type': 'str',
+            },
+            'slow_start_conn_limit': {
+                'type': 'int',
+            },
+            'curr_observe_rate': {
+                'type': 'int',
+            },
+            'down_grace_period_allowed': {
+                'type': 'int',
+            },
+            'current_time': {
+                'type': 'int',
+            },
+            'down_time_grace_period': {
+                'type': 'int',
+            },
+            'diameter_enabled': {
+                'type': 'int',
+            },
+            'es_resp_time': {
+                'type': 'int',
+            },
+            'inband_hm_reassign_num': {
+                'type': 'int',
+            },
+            'disable': {
+                'type': 'int',
+            },
+            'hm_key': {
+                'type': 'int',
+            },
+            'hm_index': {
+                'type': 'int',
+            },
+            'soft_down_time': {
+                'type': 'int',
+            },
+            'aflow_conn_limit': {
+                'type': 'int',
+            },
+            'aflow_queue_size': {
+                'type': 'int',
+            },
+            'resv_conn': {
+                'type': 'int',
+            },
+            'ip': {
+                'type': 'str',
+            },
+            'ipv6': {
+                'type': 'str',
+            },
+            'vrid': {
+                'type': 'int',
+            },
+            'ha_group_id': {
+                'type': 'int',
+            },
+            'ports_consumed': {
+                'type': 'int',
+            },
+            'ports_consumed_total': {
+                'type': 'int',
+            },
+            'ports_freed_total': {
+                'type': 'int',
+            },
+            'alloc_failed': {
+                'type': 'int',
+            },
+            'drs_auto_nat_list': {
+                'type': 'list',
+                'drs_name': {
+                    'type': 'str',
+                },
+                'drs_port': {
+                    'type': 'int',
+                },
+                'ip': {
+                    'type': 'str',
+                },
+                'ipv6': {
+                    'type': 'str',
+                },
+                'vrid': {
+                    'type': 'int',
+                },
+                'ha_group_id': {
+                    'type': 'int',
+                },
+                'ports_consumed': {
+                    'type': 'int',
+                },
+                'ports_consumed_total': {
+                    'type': 'int',
+                },
+                'ports_freed_total': {
+                    'type': 'int',
+                },
+                'alloc_failed': {
+                    'type': 'int',
+                }
+            },
+            'pool_name': {
+                'type': 'str',
+            },
+            'nat_pool_addr_list': {
+                'type': 'list',
+                'nat_ip': {
+                    'type': 'str',
+                },
+                'ports_consumed': {
+                    'type': 'int',
+                },
+                'ports_consumed_total': {
+                    'type': 'int',
+                },
+                'ports_freed_total': {
+                    'type': 'int',
+                },
+                'alloc_failed': {
+                    'type': 'int',
+                }
+            },
+            'drs_ip_nat_list': {
+                'type': 'list',
+                'drs_name': {
+                    'type': 'str',
+                },
+                'drs_port': {
+                    'type': 'int',
+                },
+                'pool_name': {
+                    'type': 'str',
+                },
+                'nat_pool_addr_list': {
+                    'type': 'list',
+                    'nat_ip': {
+                        'type': 'str',
+                    },
+                    'ports_consumed': {
+                        'type': 'int',
+                    },
+                    'ports_consumed_total': {
+                        'type': 'int',
+                    },
+                    'ports_freed_total': {
+                        'type': 'int',
+                    },
+                    'alloc_failed': {
+                        'type': 'int',
+                    }
+                }
+            },
+            'port_number': {
+                'type': 'int',
+                'required': True,
+            },
+            'protocol': {
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp']
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'curr_conn': {
+                'type': 'str',
+            },
+            'curr_req': {
+                'type': 'str',
+            },
+            'total_req': {
+                'type': 'str',
+            },
+            'total_req_succ': {
+                'type': 'str',
+            },
+            'total_fwd_bytes': {
+                'type': 'str',
+            },
+            'total_fwd_pkts': {
+                'type': 'str',
+            },
+            'total_rev_bytes': {
+                'type': 'str',
+            },
+            'total_rev_pkts': {
+                'type': 'str',
+            },
+            'total_conn': {
+                'type': 'str',
+            },
+            'last_total_conn': {
+                'type': 'str',
+            },
+            'peak_conn': {
+                'type': 'str',
+            },
+            'es_resp_200': {
+                'type': 'str',
+            },
+            'es_resp_300': {
+                'type': 'str',
+            },
+            'es_resp_400': {
+                'type': 'str',
+            },
+            'es_resp_500': {
+                'type': 'str',
+            },
+            'es_resp_other': {
+                'type': 'str',
+            },
+            'es_req_count': {
+                'type': 'str',
+            },
+            'es_resp_count': {
+                'type': 'str',
+            },
+            'es_resp_invalid_http': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected': {
+                'type': 'str',
+            },
+            'total_rev_pkts_inspected_good_status_code': {
+                'type': 'str',
+            },
+            'response_time': {
+                'type': 'str',
+            },
+            'fastest_rsp_time': {
+                'type': 'str',
+            },
+            'slowest_rsp_time': {
+                'type': 'str',
+            },
+            'curr_ssl_conn': {
+                'type': 'str',
+            },
+            'total_ssl_conn': {
+                'type': 'str',
+            },
+            'resp_count': {
+                'type': 'str',
+            },
+            'resp_1xx': {
+                'type': 'str',
+            },
+            'resp_2xx': {
+                'type': 'str',
+            },
+            'resp_3xx': {
+                'type': 'str',
+            },
+            'resp_4xx': {
+                'type': 'str',
+            },
+            'resp_5xx': {
+                'type': 'str',
+            },
+            'resp_other': {
+                'type': 'str',
+            },
+            'resp_latency': {
+                'type': 'str',
+            },
+            'curr_pconn': {
+                'type': 'str',
+            },
+            'port_number': {
+                'type': 'int',
+                'required': True,
+            },
+            'protocol': {
+                'type': 'str',
+                'required': True,
+                'choices': ['tcp', 'udp']
+            }
+        }
     })
     # Parent keys
-    rv.update(dict(
-        server_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(server_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -704,7 +1120,9 @@ def _switch_device_context(module, device_id):
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
-        "request_body": {"device-id": device_id},
+        "request_body": {
+            "device-id": device_id
+        },
         "response_body": module.client.change_context(device_id)
     }
     return call_result
@@ -714,7 +1132,9 @@ def _active_partition(module, a10_partition):
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
-        "request_body": {"curr_part_name": a10_partition},
+        "request_body": {
+            "curr_part_name": a10_partition
+        },
         "response_body": module.client.activate_partition(a10_partition)
     }
     return call_result
@@ -744,7 +1164,6 @@ def get_stats(module):
     return _get(module, stats_url(module), params=query_params)
 
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
 
@@ -767,9 +1186,7 @@ def _build_dict_from_param(param):
 
 
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
 
 
 def new_url(module):
@@ -788,7 +1205,9 @@ def new_url(module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
 
     errors = []
     marg = []
@@ -837,7 +1256,6 @@ def report_changes(module, result, existing_config, payload):
         change_results["modified_values"].update(**payload)
         return change_results
 
-
     config_changes = copy.deepcopy(existing_config)
     for k, v in payload["port"].items():
         v = 1 if str(v).lower() == "true" else v
@@ -855,8 +1273,7 @@ def create(module, result, payload):
     try:
         call_result = _post(module, new_url(module), payload)
         result["axapi_calls"].append(call_result)
-        result["modified_values"].update(
-                **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -872,8 +1289,7 @@ def update(module, result, existing_config, payload):
         if call_result["response_body"] == existing_config:
             result["changed"] = False
         else:
-            result["modified_values"].update(
-                **call_result["response_body"])
+            result["modified_values"].update(**call_result["response_body"])
             result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
@@ -937,12 +1353,10 @@ def replace(module, result, existing_config, payload):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -970,14 +1384,14 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     if a10_partition:
-        result["axapi_calls"].append(
-            _active_partition(module, a10_partition))
+        result["axapi_calls"].append(_active_partition(module, a10_partition))
 
     if a10_device_context_id:
-         result["axapi_calls"].append(
+        result["axapi_calls"].append(
             _switch_device_context(module, a10_device_context_id))
 
     existing_config = get(module)
@@ -1007,7 +1421,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
