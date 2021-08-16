@@ -1,0 +1,10 @@
+---
+- name: Deactivate partition
+  a10.acos_axapi.a10_partition:
+    partition_name: new_partition
+    state: absent
+
+- name: Delete partition
+  a10.acos_axapi.a10_delete_partition:
+    partition_name: new_partition
+    id: 6

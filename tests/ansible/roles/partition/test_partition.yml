@@ -1,0 +1,5 @@
+---
+- name: Create partition
+  a10.acos_axapi.a10_partition:
+    partition_name: new_partition
+    id: 6
