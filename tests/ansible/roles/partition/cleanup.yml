@@ -1,4 +1,11 @@
 ---
+- name: Delete virtual server in partition
+  a10.acos_axapi.a10_slb_virtual_server:
+    a10_partition: "new_partition"
+    name: vs1
+    ip_address: "1.2.42.1"
+    state: absent
+
 - name: Deactivate partition
   a10.acos_axapi.a10_partition:
     partition_name: new_partition
