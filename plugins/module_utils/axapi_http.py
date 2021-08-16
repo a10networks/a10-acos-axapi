@@ -13,7 +13,6 @@
 #    under the License.
 
 
-# TODO(mdurrant) - Organize these imports
 import errno
 import json
 import logging
@@ -200,7 +199,7 @@ class HttpClient(object):
 
     def activate_partition(self, partition):
         url = "/axapi/v3/active-partition"
-        shared = True if partition == "shared" else False
+        shared = "true" if partition == "shared" else "false"
         payload = {
             "curr_part_name": partition,
             "shared": shared
@@ -301,7 +300,7 @@ class A10Client(object):
 
     def activate_partition(self, partition):
         url = "/axapi/v3/active-partition"
-        shared = True if partition == "shared" else False
+        shared = "true" if partition == "shared" else "false"
         payload = {
             "curr_part_name": partition,
             "shared": shared 

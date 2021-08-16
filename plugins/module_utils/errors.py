@@ -14,6 +14,7 @@
 
 
 class ACOSException(Exception):
+
     def __init__(self, code=1, msg=''):
         self.code = code
         self.msg = msg
@@ -49,6 +50,15 @@ class Exists(ACOSException):
 
 class NotFound(ACOSException):
     pass
+
+
+class ResourceNotFound(ACOSException):
+
+    def __init__(self, code=1, msg=''):
+        self.code = code
+        self.msg = ("One of the provided string values "
+                    "did not match a resource in the partition.")
+        super(ACOSException, self).__init__(msg)
 
 
 class NoSuchServiceGroup(ACOSException):
