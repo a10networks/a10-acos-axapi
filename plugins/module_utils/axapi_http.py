@@ -200,9 +200,10 @@ class HttpClient(object):
 
     def activate_partition(self, partition):
         url = "/axapi/v3/active-partition"
+        shared = True if partition == "shared" else False
         payload = {
-            "curr_part_name": partition["name"],
-            "shared": partition["shared"]
+            "curr_part_name": partition,
+            "shared": shared
         }
         try:
             self.post(url, {"active-partition": payload})
@@ -300,11 +301,15 @@ class A10Client(object):
 
     def activate_partition(self, partition):
         url = "/axapi/v3/active-partition"
+        shared = True if partition == "shared" else False
         payload = {
-            "curr_part_name": partition["name"],
-            "shared": partition["shared"]
+            "curr_part_name": partition,
+            "shared": shared 
         }
-        self.post(url, {"active-partition": payload})
+        try:
+            self.post(url, {"active-partition": payload})
+        except Exception as ex:
+            raise Exception("Could not activate due to: {0}".format(ex))
 
     def change_context(self, device_context_id):
         url = "/axapi/v3/device-context"
