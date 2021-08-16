@@ -138,6 +138,11 @@ RESPONSE_CODES = {
             '*': ae.NotFound
         }
     },
+    134479926: {
+        '*': {
+            '*': ae.ResourceNotFound
+        }
+    },
     1023656962: {
         '*': {
             '*': ae.NotFound

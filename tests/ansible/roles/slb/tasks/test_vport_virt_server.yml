@@ -2,7 +2,7 @@
 - name:  Test creation of a virtual server w/ vport 
   a10.acos_axapi.a10_slb_virtual_server:
     ip_address: 10.0.0.4
-    netmask: 255.255.255.0
+    netmask: 255.255.255.255
     name: vs1
     port_list:
       - port_number: 80
@@ -10,16 +10,16 @@
   register: virt_resp
 - assert:
     that:
-      - "virt_resp['virtual-server']['name'] == 'vs1'"
-      - "virt_resp['virtual-server']['ip-address'] == '10.0.0.4'"
-      - "virt_resp['virtual-server']['netmask'] == '/24'"
-      - "virt_resp['virtual-server']['port-list'][0]['protocol'] == 'tcp'"
-      - "virt_resp['virtual-server']['port-list'][0]['port-number'] == 80"
+      - "virt_resp['modified_values']['virtual-server']['name'] == 'vs1'"
+      - "virt_resp['modified_values']['virtual-server']['ip-address'] == '10.0.0.4'"
+      - "virt_resp['modified_values']['virtual-server']['netmask'] == '/32'"
+      - "virt_resp['modified_values']['virtual-server']['port-list'][0]['protocol'] == 'tcp'"
+      - "virt_resp['modified_values']['virtual-server']['port-list'][0]['port-number'] == 80"
 
 - name: Test update of vport on virtual server
   a10.acos_axapi.a10_slb_virtual_server:
     ip_address: 10.0.0.4
-    netmask: 255.255.255.0
+    netmask: 255.255.255.255
     name: vs1
     port_list:
       - port_number: 80
@@ -28,4 +28,4 @@
   register: port_resp
 - assert:
     that:
-      - "port_resp['virtual-server']['port-list'][0]['action'] == 'disable'"
+      - "port_resp['modified_values']['virtual-server']['port-list'][0]['action'] == 'disable'"

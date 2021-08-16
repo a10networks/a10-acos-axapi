@@ -7,9 +7,9 @@
   register: sg_resp
 - assert:
     that:
-      - "sg_resp['service-group']['name'] == 'sg1'"
-      - "sg_resp['service-group']['protocol'] == 'tcp'"
-      - "sg_resp['service-group']['lb-method'] == 'weighted-rr'"
+      - "sg_resp['modified_values']['service-group']['name'] == 'sg1'"
+      - "sg_resp['modified_values']['service-group']['protocol'] == 'tcp'"
+      - "sg_resp['modified_values']['service-group']['lb-method'] == 'weighted-rr'"
 
 - name: Test server create 
   a10.acos_axapi.a10_slb_server:
@@ -18,8 +18,8 @@
   register: sv_resp
 - assert:
     that:
-      - "sv_resp['server']['name'] == 'sv1'"
-      - "sv_resp['server']['host'] == '10.0.0.1'"
+      - "sv_resp['modified_values']['server']['name'] == 'sv1'"
+      - "sv_resp['modified_values']['server']['host'] == '10.0.0.1'"
 
 - name: Test association of member server
   a10.acos_axapi.a10_slb_service_group_member:
@@ -29,5 +29,5 @@
   register: mem_resp
 - assert:
     that:
-      - "mem_resp['member']['name'] == 'sv1'"
-      - "mem_resp['member']['port'] == 80"
+      - "mem_resp['modified_values']['member']['name'] == 'sv1'"
+      - "mem_resp['modified_values']['member']['port'] == 80"

@@ -13,7 +13,6 @@
 #    under the License.
 
 
-# TODO(mdurrant) - Organize these imports
 import errno
 import json
 import logging
@@ -200,9 +199,10 @@ class HttpClient(object):
 
     def activate_partition(self, partition):
         url = "/axapi/v3/active-partition"
+        shared = "true" if partition == "shared" else "false"
         payload = {
-            "curr_part_name": partition["name"],
-            "shared": partition["shared"]
+            "curr_part_name": partition,
+            "shared": shared
         }
         try:
             self.post(url, {"active-partition": payload})
@@ -300,11 +300,15 @@ class A10Client(object):
 
     def activate_partition(self, partition):
         url = "/axapi/v3/active-partition"
+        shared = "true" if partition == "shared" else "false"
         payload = {
-            "curr_part_name": partition["name"],
-            "shared": partition["shared"]
+            "curr_part_name": partition,
+            "shared": shared 
         }
-        self.post(url, {"active-partition": payload})
+        try:
+            self.post(url, {"active-partition": payload})
+        except Exception as ex:
+            raise Exception("Could not activate due to: {0}".format(ex))
 
     def change_context(self, device_context_id):
         url = "/axapi/v3/device-context"

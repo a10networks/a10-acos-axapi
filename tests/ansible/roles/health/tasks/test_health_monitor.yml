@@ -3,9 +3,10 @@
   a10.acos_axapi.a10_health_monitor:
     name: hm1
   register: hm_resp
+
 - assert:
     that:
-      - "hm_resp['monitor']['name'] == 'hm1'"
+      - "hm_resp['modified_values']['monitor']['name'] == 'hm1'"
 
 - name: Set health monitor method to tcp
   a10.acos_axapi.a10_health_monitor_method_tcp:
@@ -18,7 +19,7 @@
   register: hm_tcp
 - assert:
     that:
-      - "hm_tcp['tcp']['method-tcp'] == 1"
-      - "hm_tcp['tcp']['port-send'] == 'ping'"
-      - "hm_tcp['tcp']['port-resp']['port-contains'] == 'ping'"
-      - "hm_tcp['tcp']['tcp-port'] == 80"
+      - "hm_tcp['modified_values']['tcp']['method-tcp'] == 1"
+      - "hm_tcp['modified_values']['tcp']['port-send'] == 'ping'"
+      - "hm_tcp['modified_values']['tcp']['port-resp']['port-contains'] == 'ping'"
+      - "hm_tcp['modified_values']['tcp']['tcp-port'] == 80"

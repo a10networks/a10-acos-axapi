@@ -3,6 +3,7 @@
   a10.acos_axapi.a10_network_vlan:
     vlan_num: 2
   register: net_vlan
+
 - assert:
     that:
-      - "net_vlan['vlan']['vlan-num'] == 2"
+      - "net_vlan['modified_values']['vlan']['vlan-num'] == 2"

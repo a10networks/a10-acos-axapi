@@ -1,2 +1,2 @@
 #!/bin/bash
-ansible-playbook ansible/execute_tests.yml
+ansible-playbook ansible/execute_tests.yml -vvv
