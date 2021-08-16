@@ -10,15 +10,14 @@ If Bug Fix:
 **This is optional if you are an external contributor**
 - Required: Add links to tickets closed here
 
-## Connected SDK generator PR
+## Connected SDK generator PR (Optional)
 *Note: This is a private repository*
 
 ## Technical Approach
 - Required: Overview of approach taken to solve the problem
 - Optional: List of tasks completed w/ links 
 
-## General Playbook Changes 
-**This is optional**
+## General Playbook Changes (Optional)
 
 ## Test Cases
 - Required: List edge cases tested against in unit tests 
