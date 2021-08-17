@@ -475,12 +475,6 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'supported_by': 'community',
-    'status': ['preview']
-}
-
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = [
     "oper",
@@ -1225,6 +1219,8 @@ def create(module, result, payload):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
+    finally:
+        module.client.session.close()
     return result
 
 
@@ -1241,6 +1237,8 @@ def update(module, result, existing_config, payload):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
+    finally:
+        module.client.session.close()
     return result
 
 
@@ -1267,6 +1265,8 @@ def delete(module, result):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
+    finally:
+        module.client.session.close()
     return result
 
 
@@ -1295,6 +1295,8 @@ def replace(module, result, existing_config, payload):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
+    finally:
+        module.client.session.close()
     return result
 
 
@@ -1362,6 +1364,7 @@ def run_command(module):
             result["axapi_calls"].append(get_oper(module))
         elif module.params.get("get_type") == "stats":
             result["axapi_calls"].append(get_stats(module))
+
     module.client.session.close()
     return result
 
