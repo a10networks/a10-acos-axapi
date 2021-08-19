@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_system_session
 description:
@@ -419,17 +420,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -437,262 +439,19 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'total_l4_conn', 'conn_counter',
-                    'conn_freed_counter', 'total_l4_packet_count',
-                    'total_l7_packet_count', 'total_l4_conn_proxy',
-                    'total_l7_conn', 'total_tcp_conn', 'curr_free_conn',
-                    'tcp_est_counter', 'tcp_half_open_counter',
-                    'tcp_half_close_counter', 'udp_counter', 'ip_counter',
-                    'other_counter', 'reverse_nat_tcp_counter',
-                    'reverse_nat_udp_counter', 'tcp_syn_half_open_counter',
-                    'conn_smp_alloc_counter', 'conn_smp_free_counter',
-                    'conn_smp_aged_counter', 'ssl_count_curr',
-                    'ssl_count_total', 'server_ssl_count_curr',
-                    'server_ssl_count_total', 'client_ssl_reuse_total',
-                    'server_ssl_reuse_total', 'ssl_failed_total',
-                    'ssl_failed_ca_verification', 'ssl_server_cert_error',
-                    'ssl_client_cert_auth_fail', 'total_ip_nat_conn',
-                    'total_l2l3_conn', 'client_ssl_ctx_malloc_failure',
-                    'conn_type_0_available', 'conn_type_1_available',
-                    'conn_type_2_available', 'conn_type_3_available',
-                    'conn_type_4_available', 'conn_smp_type_0_available',
-                    'conn_smp_type_1_available', 'conn_smp_type_2_available',
-                    'conn_smp_type_3_available', 'conn_smp_type_4_available',
-                    'sctp-half-open-counter', 'sctp-est-counter',
-                    'nonssl_bypass', 'ssl_failsafe_total',
-                    'ssl_forward_proxy_failed_handshake_total',
-                    'ssl_forward_proxy_failed_tcp_total',
-                    'ssl_forward_proxy_failed_crypto_total',
-                    'ssl_forward_proxy_failed_cert_verify_total',
-                    'ssl_forward_proxy_invalid_ocsp_stapling_total',
-                    'ssl_forward_proxy_revoked_ocsp_total',
-                    'ssl_forward_proxy_failed_cert_signing_total',
-                    'ssl_forward_proxy_failed_ssl_version_total',
-                    'ssl_forward_proxy_sni_bypass_total',
-                    'ssl_forward_proxy_client_auth_bypass_total',
-                    'conn_app_smp_alloc_counter', 'diameter_conn_counter',
-                    'diameter_conn_freed_counter', 'debug_tcp_counter',
-                    'debug_udp_counter', 'total_fw_conn', 'total_local_conn',
-                    'total_curr_conn', 'client_ssl_fatal_alert',
-                    'client_ssl_fin_rst', 'fp_session_fin_rst',
-                    'server_ssl_fatal_alert', 'server_ssl_fin_rst',
-                    'client_template_int_err', 'client_template_unknown_err',
-                    'server_template_int_err', 'server_template_unknown_err',
-                    'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total',
-                    'ssl_forward_proxy_cert_subject_bypass_total',
-                    'ssl_forward_proxy_cert_issuer_bypass_total',
-                    'ssl_forward_proxy_cert_san_bypass_total',
-                    'ssl_forward_proxy_no_sni_bypass_total',
-                    'ssl_forward_proxy_no_sni_reset_total',
-                    'ssl_forward_proxy_username_bypass_total',
-                    'ssl_forward_proxy_ad_grpup_bypass_total',
-                    'diameter_concurrent_user_sessions_counter'
-                ]
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'total_l4_conn': {
-                'type': 'str',
-            },
-            'conn_counter': {
-                'type': 'str',
-            },
-            'conn_freed_counter': {
-                'type': 'str',
-            },
-            'total_l4_packet_count': {
-                'type': 'str',
-            },
-            'total_l7_packet_count': {
-                'type': 'str',
-            },
-            'total_l4_conn_proxy': {
-                'type': 'str',
-            },
-            'total_l7_conn': {
-                'type': 'str',
-            },
-            'total_tcp_conn': {
-                'type': 'str',
-            },
-            'curr_free_conn': {
-                'type': 'str',
-            },
-            'tcp_est_counter': {
-                'type': 'str',
-            },
-            'tcp_half_open_counter': {
-                'type': 'str',
-            },
-            'tcp_half_close_counter': {
-                'type': 'str',
-            },
-            'udp_counter': {
-                'type': 'str',
-            },
-            'ip_counter': {
-                'type': 'str',
-            },
-            'other_counter': {
-                'type': 'str',
-            },
-            'reverse_nat_tcp_counter': {
-                'type': 'str',
-            },
-            'reverse_nat_udp_counter': {
-                'type': 'str',
-            },
-            'tcp_syn_half_open_counter': {
-                'type': 'str',
-            },
-            'conn_smp_alloc_counter': {
-                'type': 'str',
-            },
-            'conn_smp_free_counter': {
-                'type': 'str',
-            },
-            'conn_smp_aged_counter': {
-                'type': 'str',
-            },
-            'ssl_count_curr': {
-                'type': 'str',
-            },
-            'ssl_count_total': {
-                'type': 'str',
-            },
-            'server_ssl_count_curr': {
-                'type': 'str',
-            },
-            'server_ssl_count_total': {
-                'type': 'str',
-            },
-            'client_ssl_reuse_total': {
-                'type': 'str',
-            },
-            'server_ssl_reuse_total': {
-                'type': 'str',
-            },
-            'total_ip_nat_conn': {
-                'type': 'str',
-            },
-            'total_l2l3_conn': {
-                'type': 'str',
-            },
-            'conn_type_0_available': {
-                'type': 'str',
-            },
-            'conn_type_1_available': {
-                'type': 'str',
-            },
-            'conn_type_2_available': {
-                'type': 'str',
-            },
-            'conn_type_3_available': {
-                'type': 'str',
-            },
-            'conn_type_4_available': {
-                'type': 'str',
-            },
-            'conn_smp_type_0_available': {
-                'type': 'str',
-            },
-            'conn_smp_type_1_available': {
-                'type': 'str',
-            },
-            'conn_smp_type_2_available': {
-                'type': 'str',
-            },
-            'conn_smp_type_3_available': {
-                'type': 'str',
-            },
-            'conn_smp_type_4_available': {
-                'type': 'str',
-            },
-            'sctp_half_open_counter': {
-                'type': 'str',
-            },
-            'sctp_est_counter': {
-                'type': 'str',
-            },
-            'conn_app_smp_alloc_counter': {
-                'type': 'str',
-            },
-            'diameter_conn_counter': {
-                'type': 'str',
-            },
-            'diameter_conn_freed_counter': {
-                'type': 'str',
-            },
-            'total_fw_conn': {
-                'type': 'str',
-            },
-            'total_local_conn': {
-                'type': 'str',
-            },
-            'total_curr_conn': {
-                'type': 'str',
-            },
-            'client_ssl_fatal_alert': {
-                'type': 'str',
-            },
-            'client_ssl_fin_rst': {
-                'type': 'str',
-            },
-            'fp_session_fin_rst': {
-                'type': 'str',
-            },
-            'server_ssl_fatal_alert': {
-                'type': 'str',
-            },
-            'server_ssl_fin_rst': {
-                'type': 'str',
-            },
-            'client_template_int_err': {
-                'type': 'str',
-            },
-            'client_template_unknown_err': {
-                'type': 'str',
-            },
-            'server_template_int_err': {
-                'type': 'str',
-            },
-            'server_template_unknown_err': {
-                'type': 'str',
-            },
-            'diameter_concurrent_user_sessions_counter': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'total_l4_conn', 'conn_counter', 'conn_freed_counter', 'total_l4_packet_count', 'total_l7_packet_count', 'total_l4_conn_proxy', 'total_l7_conn', 'total_tcp_conn', 'curr_free_conn', 'tcp_est_counter', 'tcp_half_open_counter', 'tcp_half_close_counter', 'udp_counter', 'ip_counter', 'other_counter', 'reverse_nat_tcp_counter', 'reverse_nat_udp_counter', 'tcp_syn_half_open_counter', 'conn_smp_alloc_counter', 'conn_smp_free_counter', 'conn_smp_aged_counter', 'ssl_count_curr', 'ssl_count_total', 'server_ssl_count_curr', 'server_ssl_count_total', 'client_ssl_reuse_total', 'server_ssl_reuse_total', 'ssl_failed_total', 'ssl_failed_ca_verification', 'ssl_server_cert_error', 'ssl_client_cert_auth_fail', 'total_ip_nat_conn', 'total_l2l3_conn', 'client_ssl_ctx_malloc_failure', 'conn_type_0_available', 'conn_type_1_available', 'conn_type_2_available', 'conn_type_3_available', 'conn_type_4_available', 'conn_smp_type_0_available', 'conn_smp_type_1_available', 'conn_smp_type_2_available', 'conn_smp_type_3_available', 'conn_smp_type_4_available', 'sctp-half-open-counter', 'sctp-est-counter', 'nonssl_bypass', 'ssl_failsafe_total', 'ssl_forward_proxy_failed_handshake_total', 'ssl_forward_proxy_failed_tcp_total', 'ssl_forward_proxy_failed_crypto_total', 'ssl_forward_proxy_failed_cert_verify_total', 'ssl_forward_proxy_invalid_ocsp_stapling_total', 'ssl_forward_proxy_revoked_ocsp_total', 'ssl_forward_proxy_failed_cert_signing_total', 'ssl_forward_proxy_failed_ssl_version_total', 'ssl_forward_proxy_sni_bypass_total', 'ssl_forward_proxy_client_auth_bypass_total', 'conn_app_smp_alloc_counter', 'diameter_conn_counter', 'diameter_conn_freed_counter', 'debug_tcp_counter', 'debug_udp_counter', 'total_fw_conn', 'total_local_conn', 'total_curr_conn', 'client_ssl_fatal_alert', 'client_ssl_fin_rst', 'fp_session_fin_rst', 'server_ssl_fatal_alert', 'server_ssl_fin_rst', 'client_template_int_err', 'client_template_unknown_err', 'server_template_int_err', 'server_template_unknown_err', 'total_debug_conn', 'ssl_forward_proxy_failed_aflex_total', 'ssl_forward_proxy_cert_subject_bypass_total', 'ssl_forward_proxy_cert_issuer_bypass_total', 'ssl_forward_proxy_cert_san_bypass_total', 'ssl_forward_proxy_no_sni_bypass_total', 'ssl_forward_proxy_no_sni_reset_total', 'ssl_forward_proxy_username_bypass_total', 'ssl_forward_proxy_ad_grpup_bypass_total', 'diameter_concurrent_user_sessions_counter']}},
+        'stats': {'type': 'dict', 'total_l4_conn': {'type': 'str', }, 'conn_counter': {'type': 'str', }, 'conn_freed_counter': {'type': 'str', }, 'total_l4_packet_count': {'type': 'str', }, 'total_l7_packet_count': {'type': 'str', }, 'total_l4_conn_proxy': {'type': 'str', }, 'total_l7_conn': {'type': 'str', }, 'total_tcp_conn': {'type': 'str', }, 'curr_free_conn': {'type': 'str', }, 'tcp_est_counter': {'type': 'str', }, 'tcp_half_open_counter': {'type': 'str', }, 'tcp_half_close_counter': {'type': 'str', }, 'udp_counter': {'type': 'str', }, 'ip_counter': {'type': 'str', }, 'other_counter': {'type': 'str', }, 'reverse_nat_tcp_counter': {'type': 'str', }, 'reverse_nat_udp_counter': {'type': 'str', }, 'tcp_syn_half_open_counter': {'type': 'str', }, 'conn_smp_alloc_counter': {'type': 'str', }, 'conn_smp_free_counter': {'type': 'str', }, 'conn_smp_aged_counter': {'type': 'str', }, 'ssl_count_curr': {'type': 'str', }, 'ssl_count_total': {'type': 'str', }, 'server_ssl_count_curr': {'type': 'str', }, 'server_ssl_count_total': {'type': 'str', }, 'client_ssl_reuse_total': {'type': 'str', }, 'server_ssl_reuse_total': {'type': 'str', }, 'total_ip_nat_conn': {'type': 'str', }, 'total_l2l3_conn': {'type': 'str', }, 'conn_type_0_available': {'type': 'str', }, 'conn_type_1_available': {'type': 'str', }, 'conn_type_2_available': {'type': 'str', }, 'conn_type_3_available': {'type': 'str', }, 'conn_type_4_available': {'type': 'str', }, 'conn_smp_type_0_available': {'type': 'str', }, 'conn_smp_type_1_available': {'type': 'str', }, 'conn_smp_type_2_available': {'type': 'str', }, 'conn_smp_type_3_available': {'type': 'str', }, 'conn_smp_type_4_available': {'type': 'str', }, 'sctp_half_open_counter': {'type': 'str', }, 'sctp_est_counter': {'type': 'str', }, 'conn_app_smp_alloc_counter': {'type': 'str', }, 'diameter_conn_counter': {'type': 'str', }, 'diameter_conn_freed_counter': {'type': 'str', }, 'total_fw_conn': {'type': 'str', }, 'total_local_conn': {'type': 'str', }, 'total_curr_conn': {'type': 'str', }, 'client_ssl_fatal_alert': {'type': 'str', }, 'client_ssl_fin_rst': {'type': 'str', }, 'fp_session_fin_rst': {'type': 'str', }, 'server_ssl_fatal_alert': {'type': 'str', }, 'server_ssl_fin_rst': {'type': 'str', }, 'client_template_int_err': {'type': 'str', }, 'client_template_unknown_err': {'type': 'str', }, 'server_template_int_err': {'type': 'str', }, 'server_template_unknown_err': {'type': 'str', }, 'diameter_concurrent_user_sessions_counter': {'type': 'str', }}
     })
     return rv
 
@@ -707,122 +466,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
-
-
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def get_stats(module):
-    query_params = {}
-    if module.params.get("stats"):
-        for k, v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-    return _get(module, stats_url(module), params=query_params)
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -831,54 +474,6 @@ def new_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -900,41 +495,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("session", module)
+    payload = utils.build_json("session", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -947,17 +530,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -973,29 +550,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1010,11 +571,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1023,44 +589,52 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
-        elif module.params.get("get_type") == "stats":
-            result["axapi_calls"].append(get_stats(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "stats":
+                result["axapi_calls"].append(
+                    api_client.get_stats(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

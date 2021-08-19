@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_global
 description:
@@ -1327,19 +1328,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "create_port_mapping_file",
-    "port_mapping_files_count",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["create_port_mapping_file", "port_mapping_files_count", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -1347,986 +1347,21 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'create_port_mapping_file': {
-            'type': 'bool',
-        },
-        'port_mapping_files_count': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'total-nat-in-use', 'total-tcp-allocated',
-                    'total-tcp-freed', 'total-udp-allocated',
-                    'total-udp-freed', 'total-icmp-allocated',
-                    'total-icmp-freed', 'nat44-data-session-created',
-                    'nat44-data-session-freed', 'nat64-data-session-created',
-                    'nat64-data-session-freed', 'dslite-data-session-created',
-                    'dslite-data-session-freed', 'nat-port-unavailable-tcp',
-                    'nat-port-unavailable-udp', 'nat-port-unavailable-icmp',
-                    'session-user-quota-exceeded',
-                    'nat44-tcp-fullcone-created', 'nat44-tcp-fullcone-freed',
-                    'nat44-udp-fullcone-created', 'nat44-udp-fullcone-freed',
-                    'nat44-udp-alg-fullcone-created',
-                    'nat44-udp-alg-fullcone-freed',
-                    'nat64-tcp-fullcone-created', 'nat64-tcp-fullcone-freed',
-                    'nat64-udp-fullcone-created', 'nat64-udp-fullcone-freed',
-                    'nat64-udp-alg-fullcone-created',
-                    'nat64-udp-alg-fullcone-freed',
-                    'dslite-tcp-fullcone-created', 'dslite-tcp-fullcone-freed',
-                    'dslite-udp-fullcone-created', 'dslite-udp-fullcone-freed',
-                    'dslite-udp-alg-fullcone-created',
-                    'dslite-udp-alg-fullcone-freed', 'fullcone-failure',
-                    'nat44-eim-match', 'nat64-eim-match', 'dslite-eim-match',
-                    'nat44-eif-match', 'nat64-eif-match', 'dslite-eif-match',
-                    'nat44-inbound-filtered', 'nat64-inbound-filtered',
-                    'dslite-inbound-filtered', 'nat44-eif-limit-exceeded',
-                    'nat64-eif-limit-exceeded', 'dslite-eif-limit-exceeded',
-                    'nat44-hairpin', 'nat64-hairpin', 'dslite-hairpin',
-                    'standby-drop', 'fixed-nat-fullcone-self-hairpinning-drop',
-                    'sixrd-drop', 'dest-rlist-drop', 'dest-rlist-pass-through',
-                    'dest-rlist-snat-drop', 'cross-cpu-helper-created',
-                    'cross-cpu-helper-free-retry-lookup',
-                    'cross-cpu-helper-free-not-found', 'cross-cpu-helper-free',
-                    'cross-cpu-rcv', 'cross-cpu-bad-l3', 'cross-cpu-bad-l4',
-                    'cross-cpu-no-session', 'cross-cpu-helper-deleted',
-                    'cross-cpu-helper-fixed-nat-lid-standby',
-                    'cross-cpu-helper-cpu-mismatch', 'cross-cpu-sent',
-                    'config-not-found', 'fullcone-in-del-q',
-                    'fullcone-overflow', 'fullcone-inbound-idx-mismatch',
-                    'fullcone-retry-lookup', 'fullcone-not-found',
-                    'fullcone-overflow-eim', 'fullcone-overflow-eif',
-                    'ha-config-mismatch', 'ha-user-quota-exceeded',
-                    'ha-fullcone-mismatch', 'ha-dnat-mismatch',
-                    'ha-nat-port-unavailable', 'ha-fullcone-failure',
-                    'ha-endpoint-indep-map-match', 'udp-alg-eim-mismatch',
-                    'udp-alg-no-nat-ip', 'udp-alg-alloc-failure',
-                    'mtu-exceeded', 'frag', 'frag-icmp',
-                    'periodic-log-msg-alloc', 'periodic-log-msg-free',
-                    'disable-log-msg-alloc', 'disable-log-msg-free',
-                    'sip-alg-reuse-contact-fullcone',
-                    'sip-alg-contact-fullcone-mismatch',
-                    'sip-alg-create-contact-fullcone-failure',
-                    'sip-alg-single-rtp-fullcone',
-                    'sip-alg-rtcp-fullcone-mismatch',
-                    'sip-alg-reuse-rtp-rtcp-fullcone',
-                    'sip-alg-single-rtcp-fullcone',
-                    'sip-alg-create-rtp-fullcone-failure',
-                    'sip-alg-create-rtcp-fullcone-failure',
-                    'icmp-out-of-state-uqe-admin-filtered-sent',
-                    'icmp-out-of-state-uqe-host-unreachable-sent',
-                    'icmp-out-of-state-uqe-dropped', 'nat-esp-ip-conflicts',
-                    'total-tcp-allocated-shadow', 'total-tcp-freed-shadow',
-                    'total-udp-allocated-shadow', 'total-udp-freed-shadow',
-                    'total-icmp-allocated-shadow', 'total-icmp-freed-shadow',
-                    'nat44-data-session-created-shadow',
-                    'nat44-data-session-freed-shadow',
-                    'nat64-data-session-created-shadow',
-                    'nat64-data-session-freed-shadow',
-                    'dslite-data-session-created-shadow',
-                    'dslite-data-session-freed-shadow',
-                    'nat44-tcp-fullcone-created-shadow',
-                    'nat44-tcp-fullcone-freed-shadow',
-                    'nat44-udp-fullcone-created-shadow',
-                    'nat44-udp-fullcone-freed-shadow',
-                    'nat44-udp-alg-fullcone-created-shadow'
-                ]
-            },
-            'counters2': {
-                'type':
-                'str',
-                'choices': [
-                    'nat44-udp-alg-fullcone-freed-shadow',
-                    'nat64-tcp-fullcone-created-shadow',
-                    'nat64-tcp-fullcone-freed-shadow',
-                    'nat64-udp-fullcone-created-shadow',
-                    'nat64-udp-fullcone-freed-shadow',
-                    'nat64-udp-alg-fullcone-created-shadow',
-                    'nat64-udp-alg-fullcone-freed-shadow',
-                    'dslite-tcp-fullcone-created-shadow',
-                    'dslite-tcp-fullcone-freed-shadow',
-                    'dslite-udp-fullcone-created-shadow',
-                    'dslite-udp-fullcone-freed-shadow',
-                    'dslite-udp-alg-fullcone-created-shadow',
-                    'dslite-udp-alg-fullcone-freed-shadow',
-                    'h323-alg-reuse-fullcone', 'h323-alg-fullcone-mismatch',
-                    'h323-alg-create-fullcone-failure',
-                    'h323-alg-single-rtp-fullcone',
-                    'h323-alg-rtcp-fullcone-mismatch',
-                    'h323-alg-reuse-rtp-rtcp-fullcone',
-                    'h323-alg-single-rtcp-fullcone',
-                    'h323-alg-create-rtp-fullcone-failure',
-                    'h323-alg-create-rtcp-fullcone-failure',
-                    'mgcp-alg-reuse-fullcone', 'mgcp-alg-fullcone-mismatch',
-                    'mgcp-alg-create-fullcone-failure',
-                    'mgcp-alg-single-rtp-fullcone',
-                    'mgcp-alg-rtcp-fullcone-mismatch',
-                    'mgcp-alg-reuse-rtp-rtcp-fullcone',
-                    'mgcp-alg-single-rtcp-fullcone',
-                    'mgcp-alg-create-rtp-fullcone-failure',
-                    'mgcp-alg-create-rtcp-fullcone-failure',
-                    'user-unusable-drop', 'ipv4-user-unusable',
-                    'ipv6-user-unusable', 'ipd-disabled', 'dslite_tunnel_frag',
-                    'total-tcp-overload-acquired',
-                    'total-udp-overload-acquired',
-                    'total-tcp-overload-released',
-                    'total-udp-overload-released', 'total-tcp-alloc-overload',
-                    'total-udp-alloc-overload', 'total-tcp-free-overload',
-                    'total-udp-free-overload',
-                    'port-overload-smp-delete-scheduled',
-                    'port-overload-smp-mem-allocated',
-                    'port-overload-out-of-memory', 'port-overload-smp-free',
-                    'port-overload-smp-free-no-lid',
-                    'port-overload-free-smp-not-found', 'port-overload-failed',
-                    'total-tcp-overload-acquired-shadow',
-                    'total-udp-overload-acquired-shadow',
-                    'total-tcp-overload-released-shadow',
-                    'total-udp-overload-released-shadow',
-                    'total-tcp-alloc-overload-shadow',
-                    'total-udp-alloc-overload-shadow',
-                    'total-tcp-free-overload-shadow',
-                    'total-udp-free-overload-shadow',
-                    'ha-session-user-quota-exceeded',
-                    'tcp-user-quota-exceeded', 'udp-user-quota-exceeded',
-                    'icmp-user-quota-exceeded', 'ha-tcp-user-quota-exceeded',
-                    'ha-udp-user-quota-exceeded',
-                    'ha-icmp-user-quota-exceeded',
-                    'ha-nat-port-unavailable-tcp',
-                    'ha-nat-port-unavailable-udp',
-                    'ha-nat-port-unavailable-icmp',
-                    'fnat44_fwd_ingress_packets_tcp',
-                    'fnat44_fwd_egress_packets_tcp',
-                    'fnat44_rev_ingress_packets_tcp',
-                    'fnat44_rev_egress_packets_tcp',
-                    'fnat44_fwd_ingress_bytes_tcp',
-                    'fnat44_fwd_egress_bytes_tcp',
-                    'fnat44_rev_ingress_bytes_tcp',
-                    'fnat44_rev_egress_bytes_tcp',
-                    'fnat44_fwd_ingress_packets_udp',
-                    'fnat44_fwd_egress_packets_udp',
-                    'fnat44_rev_ingress_packets_udp',
-                    'fnat44_rev_egress_packets_udp',
-                    'fnat44_fwd_ingress_bytes_udp',
-                    'fnat44_fwd_egress_bytes_udp',
-                    'fnat44_rev_ingress_bytes_udp',
-                    'fnat44_rev_egress_bytes_udp',
-                    'fnat44_fwd_ingress_packets_icmp',
-                    'fnat44_fwd_egress_packets_icmp',
-                    'fnat44_rev_ingress_packets_icmp',
-                    'fnat44_rev_egress_packets_icmp',
-                    'fnat44_fwd_ingress_bytes_icmp',
-                    'fnat44_fwd_egress_bytes_icmp',
-                    'fnat44_rev_ingress_bytes_icmp',
-                    'fnat44_rev_egress_bytes_icmp',
-                    'fnat44_fwd_ingress_packets_others',
-                    'fnat44_fwd_egress_packets_others',
-                    'fnat44_rev_ingress_packets_others',
-                    'fnat44_rev_egress_packets_others',
-                    'fnat44_fwd_ingress_bytes_others',
-                    'fnat44_fwd_egress_bytes_others',
-                    'fnat44_rev_ingress_bytes_others',
-                    'fnat44_rev_egress_bytes_others',
-                    'fnat44_fwd_ingress_pkt_size_range1',
-                    'fnat44_fwd_ingress_pkt_size_range2',
-                    'fnat44_fwd_ingress_pkt_size_range3',
-                    'fnat44_fwd_ingress_pkt_size_range4',
-                    'fnat44_fwd_egress_pkt_size_range1'
-                ]
-            },
-            'counters3': {
-                'type':
-                'str',
-                'choices': [
-                    'fnat44_fwd_egress_pkt_size_range2',
-                    'fnat44_fwd_egress_pkt_size_range3',
-                    'fnat44_fwd_egress_pkt_size_range4',
-                    'fnat44_rev_ingress_pkt_size_range1',
-                    'fnat44_rev_ingress_pkt_size_range2',
-                    'fnat44_rev_ingress_pkt_size_range3',
-                    'fnat44_rev_ingress_pkt_size_range4',
-                    'fnat44_rev_egress_pkt_size_range1',
-                    'fnat44_rev_egress_pkt_size_range2',
-                    'fnat44_rev_egress_pkt_size_range3',
-                    'fnat44_rev_egress_pkt_size_range4',
-                    'fnat64_fwd_ingress_packets_tcp',
-                    'fnat64_fwd_egress_packets_tcp',
-                    'fnat64_rev_ingress_packets_tcp',
-                    'fnat64_rev_egress_packets_tcp',
-                    'fnat64_fwd_ingress_bytes_tcp',
-                    'fnat64_fwd_egress_bytes_tcp',
-                    'fnat64_rev_ingress_bytes_tcp',
-                    'fnat64_rev_egress_bytes_tcp',
-                    'fnat64_fwd_ingress_packets_udp',
-                    'fnat64_fwd_egress_packets_udp',
-                    'fnat64_rev_ingress_packets_udp',
-                    'fnat64_rev_egress_packets_udp',
-                    'fnat64_fwd_ingress_bytes_udp',
-                    'fnat64_fwd_egress_bytes_udp',
-                    'fnat64_rev_ingress_bytes_udp',
-                    'fnat64_rev_egress_bytes_udp',
-                    'fnat64_fwd_ingress_packets_icmp',
-                    'fnat64_fwd_egress_packets_icmp',
-                    'fnat64_rev_ingress_packets_icmp',
-                    'fnat64_rev_egress_packets_icmp',
-                    'fnat64_fwd_ingress_bytes_icmp',
-                    'fnat64_fwd_egress_bytes_icmp',
-                    'fnat64_rev_ingress_bytes_icmp',
-                    'fnat64_rev_egress_bytes_icmp',
-                    'fnat64_fwd_ingress_packets_others',
-                    'fnat64_fwd_egress_packets_others',
-                    'fnat64_rev_ingress_packets_others',
-                    'fnat64_rev_egress_packets_others',
-                    'fnat64_fwd_ingress_bytes_others',
-                    'fnat64_fwd_egress_bytes_others',
-                    'fnat64_rev_ingress_bytes_others',
-                    'fnat64_rev_egress_bytes_others',
-                    'fnat64_fwd_ingress_pkt_size_range1',
-                    'fnat64_fwd_ingress_pkt_size_range2',
-                    'fnat64_fwd_ingress_pkt_size_range3',
-                    'fnat64_fwd_ingress_pkt_size_range4',
-                    'fnat64_fwd_egress_pkt_size_range1',
-                    'fnat64_fwd_egress_pkt_size_range2',
-                    'fnat64_fwd_egress_pkt_size_range3',
-                    'fnat64_fwd_egress_pkt_size_range4',
-                    'fnat64_rev_ingress_pkt_size_range1',
-                    'fnat64_rev_ingress_pkt_size_range2',
-                    'fnat64_rev_ingress_pkt_size_range3',
-                    'fnat64_rev_ingress_pkt_size_range4',
-                    'fnat64_rev_egress_pkt_size_range1',
-                    'fnat64_rev_egress_pkt_size_range2',
-                    'fnat64_rev_egress_pkt_size_range3',
-                    'fnat64_rev_egress_pkt_size_range4',
-                    'fnatdslite_fwd_ingress_packets_tcp',
-                    'fnatdslite_fwd_egress_packets_tcp',
-                    'fnatdslite_rev_ingress_packets_tcp',
-                    'fnatdslite_rev_egress_packets_tcp',
-                    'fnatdslite_fwd_ingress_bytes_tcp',
-                    'fnatdslite_fwd_egress_bytes_tcp',
-                    'fnatdslite_rev_ingress_bytes_tcp',
-                    'fnatdslite_rev_egress_bytes_tcp',
-                    'fnatdslite_fwd_ingress_packets_udp',
-                    'fnatdslite_fwd_egress_packets_udp',
-                    'fnatdslite_rev_ingress_packets_udp',
-                    'fnatdslite_rev_egress_packets_udp',
-                    'fnatdslite_fwd_ingress_bytes_udp',
-                    'fnatdslite_fwd_egress_bytes_udp',
-                    'fnatdslite_rev_ingress_bytes_udp',
-                    'fnatdslite_rev_egress_bytes_udp',
-                    'fnatdslite_fwd_ingress_packets_icmp',
-                    'fnatdslite_fwd_egress_packets_icmp',
-                    'fnatdslite_rev_ingress_packets_icmp',
-                    'fnatdslite_rev_egress_packets_icmp',
-                    'fnatdslite_fwd_ingress_bytes_icmp',
-                    'fnatdslite_fwd_egress_bytes_icmp',
-                    'fnatdslite_rev_ingress_bytes_icmp',
-                    'fnatdslite_rev_egress_bytes_icmp',
-                    'fnatdslite_fwd_ingress_packets_others',
-                    'fnatdslite_fwd_egress_packets_others',
-                    'fnatdslite_rev_ingress_packets_others',
-                    'fnatdslite_rev_egress_packets_others',
-                    'fnatdslite_fwd_ingress_bytes_others',
-                    'fnatdslite_fwd_egress_bytes_others',
-                    'fnatdslite_rev_ingress_bytes_others',
-                    'fnatdslite_rev_egress_bytes_others',
-                    'fnatdslite_fwd_ingress_pkt_size_range1'
-                ]
-            },
-            'counters4': {
-                'type':
-                'str',
-                'choices': [
-                    'fnatdslite_fwd_ingress_pkt_size_range2',
-                    'fnatdslite_fwd_ingress_pkt_size_range3',
-                    'fnatdslite_fwd_ingress_pkt_size_range4',
-                    'fnatdslite_fwd_egress_pkt_size_range1',
-                    'fnatdslite_fwd_egress_pkt_size_range2',
-                    'fnatdslite_fwd_egress_pkt_size_range3',
-                    'fnatdslite_fwd_egress_pkt_size_range4',
-                    'fnatdslite_rev_ingress_pkt_size_range1',
-                    'fnatdslite_rev_ingress_pkt_size_range2',
-                    'fnatdslite_rev_ingress_pkt_size_range3',
-                    'fnatdslite_rev_ingress_pkt_size_range4',
-                    'fnatdslite_rev_egress_pkt_size_range1',
-                    'fnatdslite_rev_egress_pkt_size_range2',
-                    'fnatdslite_rev_egress_pkt_size_range3',
-                    'fnatdslite_rev_egress_pkt_size_range4'
-                ]
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'total_nat_in_use': {
-                'type': 'str',
-            },
-            'total_tcp_allocated': {
-                'type': 'str',
-            },
-            'total_tcp_freed': {
-                'type': 'str',
-            },
-            'total_udp_allocated': {
-                'type': 'str',
-            },
-            'total_udp_freed': {
-                'type': 'str',
-            },
-            'total_icmp_allocated': {
-                'type': 'str',
-            },
-            'total_icmp_freed': {
-                'type': 'str',
-            },
-            'nat44_data_session_created': {
-                'type': 'str',
-            },
-            'nat44_data_session_freed': {
-                'type': 'str',
-            },
-            'nat64_data_session_created': {
-                'type': 'str',
-            },
-            'nat64_data_session_freed': {
-                'type': 'str',
-            },
-            'dslite_data_session_created': {
-                'type': 'str',
-            },
-            'dslite_data_session_freed': {
-                'type': 'str',
-            },
-            'nat_port_unavailable_tcp': {
-                'type': 'str',
-            },
-            'nat_port_unavailable_udp': {
-                'type': 'str',
-            },
-            'nat_port_unavailable_icmp': {
-                'type': 'str',
-            },
-            'session_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'nat44_tcp_fullcone_created': {
-                'type': 'str',
-            },
-            'nat44_tcp_fullcone_freed': {
-                'type': 'str',
-            },
-            'nat44_udp_fullcone_created': {
-                'type': 'str',
-            },
-            'nat44_udp_fullcone_freed': {
-                'type': 'str',
-            },
-            'nat44_udp_alg_fullcone_created': {
-                'type': 'str',
-            },
-            'nat44_udp_alg_fullcone_freed': {
-                'type': 'str',
-            },
-            'nat64_tcp_fullcone_created': {
-                'type': 'str',
-            },
-            'nat64_tcp_fullcone_freed': {
-                'type': 'str',
-            },
-            'nat64_udp_fullcone_created': {
-                'type': 'str',
-            },
-            'nat64_udp_fullcone_freed': {
-                'type': 'str',
-            },
-            'nat64_udp_alg_fullcone_created': {
-                'type': 'str',
-            },
-            'nat64_udp_alg_fullcone_freed': {
-                'type': 'str',
-            },
-            'dslite_tcp_fullcone_created': {
-                'type': 'str',
-            },
-            'dslite_tcp_fullcone_freed': {
-                'type': 'str',
-            },
-            'dslite_udp_fullcone_created': {
-                'type': 'str',
-            },
-            'dslite_udp_fullcone_freed': {
-                'type': 'str',
-            },
-            'dslite_udp_alg_fullcone_created': {
-                'type': 'str',
-            },
-            'dslite_udp_alg_fullcone_freed': {
-                'type': 'str',
-            },
-            'fullcone_failure': {
-                'type': 'str',
-            },
-            'nat44_eim_match': {
-                'type': 'str',
-            },
-            'nat64_eim_match': {
-                'type': 'str',
-            },
-            'dslite_eim_match': {
-                'type': 'str',
-            },
-            'nat44_eif_match': {
-                'type': 'str',
-            },
-            'nat64_eif_match': {
-                'type': 'str',
-            },
-            'dslite_eif_match': {
-                'type': 'str',
-            },
-            'nat44_inbound_filtered': {
-                'type': 'str',
-            },
-            'nat64_inbound_filtered': {
-                'type': 'str',
-            },
-            'dslite_inbound_filtered': {
-                'type': 'str',
-            },
-            'nat44_eif_limit_exceeded': {
-                'type': 'str',
-            },
-            'nat64_eif_limit_exceeded': {
-                'type': 'str',
-            },
-            'dslite_eif_limit_exceeded': {
-                'type': 'str',
-            },
-            'nat44_hairpin': {
-                'type': 'str',
-            },
-            'nat64_hairpin': {
-                'type': 'str',
-            },
-            'dslite_hairpin': {
-                'type': 'str',
-            },
-            'standby_drop': {
-                'type': 'str',
-            },
-            'fixed_nat_fullcone_self_hairpinning_drop': {
-                'type': 'str',
-            },
-            'sixrd_drop': {
-                'type': 'str',
-            },
-            'dest_rlist_drop': {
-                'type': 'str',
-            },
-            'dest_rlist_pass_through': {
-                'type': 'str',
-            },
-            'dest_rlist_snat_drop': {
-                'type': 'str',
-            },
-            'config_not_found': {
-                'type': 'str',
-            },
-            'total_tcp_overload_acquired': {
-                'type': 'str',
-            },
-            'total_udp_overload_acquired': {
-                'type': 'str',
-            },
-            'total_tcp_overload_released': {
-                'type': 'str',
-            },
-            'total_udp_overload_released': {
-                'type': 'str',
-            },
-            'total_tcp_alloc_overload': {
-                'type': 'str',
-            },
-            'total_udp_alloc_overload': {
-                'type': 'str',
-            },
-            'total_tcp_free_overload': {
-                'type': 'str',
-            },
-            'total_udp_free_overload': {
-                'type': 'str',
-            },
-            'port_overload_failed': {
-                'type': 'str',
-            },
-            'ha_session_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'tcp_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'udp_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'icmp_user_quota_exceeded': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_packets_others': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_packets_others': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat44_fwd_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat44_fwd_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat44_rev_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat44_rev_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_packets_udp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_packets_others': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_packets_others': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat64_fwd_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat64_fwd_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat64_rev_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnat64_rev_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_packets_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_bytes_tcp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_packets_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_packets_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_packets_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_bytes_udp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_packets_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_bytes_icmp': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_packets_others': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_packets_others': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_packets_others': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_bytes_others': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_bytes_others': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnatdslite_fwd_egress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_ingress_pkt_size_range4': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_pkt_size_range1': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_pkt_size_range2': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_pkt_size_range3': {
-                'type': 'str',
-            },
-            'fnatdslite_rev_egress_pkt_size_range4': {
-                'type': 'str',
-            }
-        }
+    rv.update({'create_port_mapping_file': {'type': 'bool', },
+        'port_mapping_files_count': {'type': 'int', },
+        'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'total-nat-in-use', 'total-tcp-allocated', 'total-tcp-freed', 'total-udp-allocated', 'total-udp-freed', 'total-icmp-allocated', 'total-icmp-freed', 'nat44-data-session-created', 'nat44-data-session-freed', 'nat64-data-session-created', 'nat64-data-session-freed', 'dslite-data-session-created', 'dslite-data-session-freed', 'nat-port-unavailable-tcp', 'nat-port-unavailable-udp', 'nat-port-unavailable-icmp', 'session-user-quota-exceeded', 'nat44-tcp-fullcone-created', 'nat44-tcp-fullcone-freed', 'nat44-udp-fullcone-created', 'nat44-udp-fullcone-freed', 'nat44-udp-alg-fullcone-created', 'nat44-udp-alg-fullcone-freed', 'nat64-tcp-fullcone-created', 'nat64-tcp-fullcone-freed', 'nat64-udp-fullcone-created', 'nat64-udp-fullcone-freed', 'nat64-udp-alg-fullcone-created', 'nat64-udp-alg-fullcone-freed', 'dslite-tcp-fullcone-created', 'dslite-tcp-fullcone-freed', 'dslite-udp-fullcone-created', 'dslite-udp-fullcone-freed', 'dslite-udp-alg-fullcone-created', 'dslite-udp-alg-fullcone-freed', 'fullcone-failure', 'nat44-eim-match', 'nat64-eim-match', 'dslite-eim-match', 'nat44-eif-match', 'nat64-eif-match', 'dslite-eif-match', 'nat44-inbound-filtered', 'nat64-inbound-filtered', 'dslite-inbound-filtered', 'nat44-eif-limit-exceeded', 'nat64-eif-limit-exceeded', 'dslite-eif-limit-exceeded', 'nat44-hairpin', 'nat64-hairpin', 'dslite-hairpin', 'standby-drop', 'fixed-nat-fullcone-self-hairpinning-drop', 'sixrd-drop', 'dest-rlist-drop', 'dest-rlist-pass-through', 'dest-rlist-snat-drop', 'cross-cpu-helper-created', 'cross-cpu-helper-free-retry-lookup', 'cross-cpu-helper-free-not-found', 'cross-cpu-helper-free', 'cross-cpu-rcv', 'cross-cpu-bad-l3', 'cross-cpu-bad-l4', 'cross-cpu-no-session', 'cross-cpu-helper-deleted', 'cross-cpu-helper-fixed-nat-lid-standby', 'cross-cpu-helper-cpu-mismatch', 'cross-cpu-sent', 'config-not-found', 'fullcone-in-del-q', 'fullcone-overflow', 'fullcone-inbound-idx-mismatch', 'fullcone-retry-lookup', 'fullcone-not-found', 'fullcone-overflow-eim', 'fullcone-overflow-eif', 'ha-config-mismatch', 'ha-user-quota-exceeded', 'ha-fullcone-mismatch', 'ha-dnat-mismatch', 'ha-nat-port-unavailable', 'ha-fullcone-failure', 'ha-endpoint-indep-map-match', 'udp-alg-eim-mismatch', 'udp-alg-no-nat-ip', 'udp-alg-alloc-failure', 'mtu-exceeded', 'frag', 'frag-icmp', 'periodic-log-msg-alloc', 'periodic-log-msg-free', 'disable-log-msg-alloc', 'disable-log-msg-free', 'sip-alg-reuse-contact-fullcone', 'sip-alg-contact-fullcone-mismatch', 'sip-alg-create-contact-fullcone-failure', 'sip-alg-single-rtp-fullcone', 'sip-alg-rtcp-fullcone-mismatch', 'sip-alg-reuse-rtp-rtcp-fullcone', 'sip-alg-single-rtcp-fullcone', 'sip-alg-create-rtp-fullcone-failure', 'sip-alg-create-rtcp-fullcone-failure', 'icmp-out-of-state-uqe-admin-filtered-sent', 'icmp-out-of-state-uqe-host-unreachable-sent', 'icmp-out-of-state-uqe-dropped', 'nat-esp-ip-conflicts', 'total-tcp-allocated-shadow', 'total-tcp-freed-shadow', 'total-udp-allocated-shadow', 'total-udp-freed-shadow', 'total-icmp-allocated-shadow', 'total-icmp-freed-shadow', 'nat44-data-session-created-shadow', 'nat44-data-session-freed-shadow', 'nat64-data-session-created-shadow', 'nat64-data-session-freed-shadow', 'dslite-data-session-created-shadow', 'dslite-data-session-freed-shadow', 'nat44-tcp-fullcone-created-shadow', 'nat44-tcp-fullcone-freed-shadow', 'nat44-udp-fullcone-created-shadow', 'nat44-udp-fullcone-freed-shadow', 'nat44-udp-alg-fullcone-created-shadow']}, 'counters2': {'type': 'str', 'choices': ['nat44-udp-alg-fullcone-freed-shadow', 'nat64-tcp-fullcone-created-shadow', 'nat64-tcp-fullcone-freed-shadow', 'nat64-udp-fullcone-created-shadow', 'nat64-udp-fullcone-freed-shadow', 'nat64-udp-alg-fullcone-created-shadow', 'nat64-udp-alg-fullcone-freed-shadow', 'dslite-tcp-fullcone-created-shadow', 'dslite-tcp-fullcone-freed-shadow', 'dslite-udp-fullcone-created-shadow', 'dslite-udp-fullcone-freed-shadow', 'dslite-udp-alg-fullcone-created-shadow', 'dslite-udp-alg-fullcone-freed-shadow', 'h323-alg-reuse-fullcone', 'h323-alg-fullcone-mismatch', 'h323-alg-create-fullcone-failure', 'h323-alg-single-rtp-fullcone', 'h323-alg-rtcp-fullcone-mismatch', 'h323-alg-reuse-rtp-rtcp-fullcone', 'h323-alg-single-rtcp-fullcone', 'h323-alg-create-rtp-fullcone-failure', 'h323-alg-create-rtcp-fullcone-failure', 'mgcp-alg-reuse-fullcone', 'mgcp-alg-fullcone-mismatch', 'mgcp-alg-create-fullcone-failure', 'mgcp-alg-single-rtp-fullcone', 'mgcp-alg-rtcp-fullcone-mismatch', 'mgcp-alg-reuse-rtp-rtcp-fullcone', 'mgcp-alg-single-rtcp-fullcone', 'mgcp-alg-create-rtp-fullcone-failure', 'mgcp-alg-create-rtcp-fullcone-failure', 'user-unusable-drop', 'ipv4-user-unusable', 'ipv6-user-unusable', 'ipd-disabled', 'dslite_tunnel_frag', 'total-tcp-overload-acquired', 'total-udp-overload-acquired', 'total-tcp-overload-released', 'total-udp-overload-released', 'total-tcp-alloc-overload', 'total-udp-alloc-overload', 'total-tcp-free-overload', 'total-udp-free-overload', 'port-overload-smp-delete-scheduled', 'port-overload-smp-mem-allocated', 'port-overload-out-of-memory', 'port-overload-smp-free', 'port-overload-smp-free-no-lid', 'port-overload-free-smp-not-found', 'port-overload-failed', 'total-tcp-overload-acquired-shadow', 'total-udp-overload-acquired-shadow', 'total-tcp-overload-released-shadow', 'total-udp-overload-released-shadow', 'total-tcp-alloc-overload-shadow', 'total-udp-alloc-overload-shadow', 'total-tcp-free-overload-shadow', 'total-udp-free-overload-shadow', 'ha-session-user-quota-exceeded', 'tcp-user-quota-exceeded', 'udp-user-quota-exceeded', 'icmp-user-quota-exceeded', 'ha-tcp-user-quota-exceeded', 'ha-udp-user-quota-exceeded', 'ha-icmp-user-quota-exceeded', 'ha-nat-port-unavailable-tcp', 'ha-nat-port-unavailable-udp', 'ha-nat-port-unavailable-icmp', 'fnat44_fwd_ingress_packets_tcp', 'fnat44_fwd_egress_packets_tcp', 'fnat44_rev_ingress_packets_tcp', 'fnat44_rev_egress_packets_tcp', 'fnat44_fwd_ingress_bytes_tcp', 'fnat44_fwd_egress_bytes_tcp', 'fnat44_rev_ingress_bytes_tcp', 'fnat44_rev_egress_bytes_tcp', 'fnat44_fwd_ingress_packets_udp', 'fnat44_fwd_egress_packets_udp', 'fnat44_rev_ingress_packets_udp', 'fnat44_rev_egress_packets_udp', 'fnat44_fwd_ingress_bytes_udp', 'fnat44_fwd_egress_bytes_udp', 'fnat44_rev_ingress_bytes_udp', 'fnat44_rev_egress_bytes_udp', 'fnat44_fwd_ingress_packets_icmp', 'fnat44_fwd_egress_packets_icmp', 'fnat44_rev_ingress_packets_icmp', 'fnat44_rev_egress_packets_icmp', 'fnat44_fwd_ingress_bytes_icmp', 'fnat44_fwd_egress_bytes_icmp', 'fnat44_rev_ingress_bytes_icmp', 'fnat44_rev_egress_bytes_icmp', 'fnat44_fwd_ingress_packets_others', 'fnat44_fwd_egress_packets_others', 'fnat44_rev_ingress_packets_others', 'fnat44_rev_egress_packets_others', 'fnat44_fwd_ingress_bytes_others', 'fnat44_fwd_egress_bytes_others', 'fnat44_rev_ingress_bytes_others', 'fnat44_rev_egress_bytes_others', 'fnat44_fwd_ingress_pkt_size_range1', 'fnat44_fwd_ingress_pkt_size_range2', 'fnat44_fwd_ingress_pkt_size_range3', 'fnat44_fwd_ingress_pkt_size_range4', 'fnat44_fwd_egress_pkt_size_range1']}, 'counters3': {'type': 'str', 'choices': ['fnat44_fwd_egress_pkt_size_range2', 'fnat44_fwd_egress_pkt_size_range3', 'fnat44_fwd_egress_pkt_size_range4', 'fnat44_rev_ingress_pkt_size_range1', 'fnat44_rev_ingress_pkt_size_range2', 'fnat44_rev_ingress_pkt_size_range3', 'fnat44_rev_ingress_pkt_size_range4', 'fnat44_rev_egress_pkt_size_range1', 'fnat44_rev_egress_pkt_size_range2', 'fnat44_rev_egress_pkt_size_range3', 'fnat44_rev_egress_pkt_size_range4', 'fnat64_fwd_ingress_packets_tcp', 'fnat64_fwd_egress_packets_tcp', 'fnat64_rev_ingress_packets_tcp', 'fnat64_rev_egress_packets_tcp', 'fnat64_fwd_ingress_bytes_tcp', 'fnat64_fwd_egress_bytes_tcp', 'fnat64_rev_ingress_bytes_tcp', 'fnat64_rev_egress_bytes_tcp', 'fnat64_fwd_ingress_packets_udp', 'fnat64_fwd_egress_packets_udp', 'fnat64_rev_ingress_packets_udp', 'fnat64_rev_egress_packets_udp', 'fnat64_fwd_ingress_bytes_udp', 'fnat64_fwd_egress_bytes_udp', 'fnat64_rev_ingress_bytes_udp', 'fnat64_rev_egress_bytes_udp', 'fnat64_fwd_ingress_packets_icmp', 'fnat64_fwd_egress_packets_icmp', 'fnat64_rev_ingress_packets_icmp', 'fnat64_rev_egress_packets_icmp', 'fnat64_fwd_ingress_bytes_icmp', 'fnat64_fwd_egress_bytes_icmp', 'fnat64_rev_ingress_bytes_icmp', 'fnat64_rev_egress_bytes_icmp', 'fnat64_fwd_ingress_packets_others', 'fnat64_fwd_egress_packets_others', 'fnat64_rev_ingress_packets_others', 'fnat64_rev_egress_packets_others', 'fnat64_fwd_ingress_bytes_others', 'fnat64_fwd_egress_bytes_others', 'fnat64_rev_ingress_bytes_others', 'fnat64_rev_egress_bytes_others', 'fnat64_fwd_ingress_pkt_size_range1', 'fnat64_fwd_ingress_pkt_size_range2', 'fnat64_fwd_ingress_pkt_size_range3', 'fnat64_fwd_ingress_pkt_size_range4', 'fnat64_fwd_egress_pkt_size_range1', 'fnat64_fwd_egress_pkt_size_range2', 'fnat64_fwd_egress_pkt_size_range3', 'fnat64_fwd_egress_pkt_size_range4', 'fnat64_rev_ingress_pkt_size_range1', 'fnat64_rev_ingress_pkt_size_range2', 'fnat64_rev_ingress_pkt_size_range3', 'fnat64_rev_ingress_pkt_size_range4', 'fnat64_rev_egress_pkt_size_range1', 'fnat64_rev_egress_pkt_size_range2', 'fnat64_rev_egress_pkt_size_range3', 'fnat64_rev_egress_pkt_size_range4', 'fnatdslite_fwd_ingress_packets_tcp', 'fnatdslite_fwd_egress_packets_tcp', 'fnatdslite_rev_ingress_packets_tcp', 'fnatdslite_rev_egress_packets_tcp', 'fnatdslite_fwd_ingress_bytes_tcp', 'fnatdslite_fwd_egress_bytes_tcp', 'fnatdslite_rev_ingress_bytes_tcp', 'fnatdslite_rev_egress_bytes_tcp', 'fnatdslite_fwd_ingress_packets_udp', 'fnatdslite_fwd_egress_packets_udp', 'fnatdslite_rev_ingress_packets_udp', 'fnatdslite_rev_egress_packets_udp', 'fnatdslite_fwd_ingress_bytes_udp', 'fnatdslite_fwd_egress_bytes_udp', 'fnatdslite_rev_ingress_bytes_udp', 'fnatdslite_rev_egress_bytes_udp', 'fnatdslite_fwd_ingress_packets_icmp', 'fnatdslite_fwd_egress_packets_icmp', 'fnatdslite_rev_ingress_packets_icmp', 'fnatdslite_rev_egress_packets_icmp', 'fnatdslite_fwd_ingress_bytes_icmp', 'fnatdslite_fwd_egress_bytes_icmp', 'fnatdslite_rev_ingress_bytes_icmp', 'fnatdslite_rev_egress_bytes_icmp', 'fnatdslite_fwd_ingress_packets_others', 'fnatdslite_fwd_egress_packets_others', 'fnatdslite_rev_ingress_packets_others', 'fnatdslite_rev_egress_packets_others', 'fnatdslite_fwd_ingress_bytes_others', 'fnatdslite_fwd_egress_bytes_others', 'fnatdslite_rev_ingress_bytes_others', 'fnatdslite_rev_egress_bytes_others', 'fnatdslite_fwd_ingress_pkt_size_range1']}, 'counters4': {'type': 'str', 'choices': ['fnatdslite_fwd_ingress_pkt_size_range2', 'fnatdslite_fwd_ingress_pkt_size_range3', 'fnatdslite_fwd_ingress_pkt_size_range4', 'fnatdslite_fwd_egress_pkt_size_range1', 'fnatdslite_fwd_egress_pkt_size_range2', 'fnatdslite_fwd_egress_pkt_size_range3', 'fnatdslite_fwd_egress_pkt_size_range4', 'fnatdslite_rev_ingress_pkt_size_range1', 'fnatdslite_rev_ingress_pkt_size_range2', 'fnatdslite_rev_ingress_pkt_size_range3', 'fnatdslite_rev_ingress_pkt_size_range4', 'fnatdslite_rev_egress_pkt_size_range1', 'fnatdslite_rev_egress_pkt_size_range2', 'fnatdslite_rev_egress_pkt_size_range3', 'fnatdslite_rev_egress_pkt_size_range4']}},
+        'stats': {'type': 'dict', 'total_nat_in_use': {'type': 'str', }, 'total_tcp_allocated': {'type': 'str', }, 'total_tcp_freed': {'type': 'str', }, 'total_udp_allocated': {'type': 'str', }, 'total_udp_freed': {'type': 'str', }, 'total_icmp_allocated': {'type': 'str', }, 'total_icmp_freed': {'type': 'str', }, 'nat44_data_session_created': {'type': 'str', }, 'nat44_data_session_freed': {'type': 'str', }, 'nat64_data_session_created': {'type': 'str', }, 'nat64_data_session_freed': {'type': 'str', }, 'dslite_data_session_created': {'type': 'str', }, 'dslite_data_session_freed': {'type': 'str', }, 'nat_port_unavailable_tcp': {'type': 'str', }, 'nat_port_unavailable_udp': {'type': 'str', }, 'nat_port_unavailable_icmp': {'type': 'str', }, 'session_user_quota_exceeded': {'type': 'str', }, 'nat44_tcp_fullcone_created': {'type': 'str', }, 'nat44_tcp_fullcone_freed': {'type': 'str', }, 'nat44_udp_fullcone_created': {'type': 'str', }, 'nat44_udp_fullcone_freed': {'type': 'str', }, 'nat44_udp_alg_fullcone_created': {'type': 'str', }, 'nat44_udp_alg_fullcone_freed': {'type': 'str', }, 'nat64_tcp_fullcone_created': {'type': 'str', }, 'nat64_tcp_fullcone_freed': {'type': 'str', }, 'nat64_udp_fullcone_created': {'type': 'str', }, 'nat64_udp_fullcone_freed': {'type': 'str', }, 'nat64_udp_alg_fullcone_created': {'type': 'str', }, 'nat64_udp_alg_fullcone_freed': {'type': 'str', }, 'dslite_tcp_fullcone_created': {'type': 'str', }, 'dslite_tcp_fullcone_freed': {'type': 'str', }, 'dslite_udp_fullcone_created': {'type': 'str', }, 'dslite_udp_fullcone_freed': {'type': 'str', }, 'dslite_udp_alg_fullcone_created': {'type': 'str', }, 'dslite_udp_alg_fullcone_freed': {'type': 'str', }, 'fullcone_failure': {'type': 'str', }, 'nat44_eim_match': {'type': 'str', }, 'nat64_eim_match': {'type': 'str', }, 'dslite_eim_match': {'type': 'str', }, 'nat44_eif_match': {'type': 'str', }, 'nat64_eif_match': {'type': 'str', }, 'dslite_eif_match': {'type': 'str', }, 'nat44_inbound_filtered': {'type': 'str', }, 'nat64_inbound_filtered': {'type': 'str', }, 'dslite_inbound_filtered': {'type': 'str', }, 'nat44_eif_limit_exceeded': {'type': 'str', }, 'nat64_eif_limit_exceeded': {'type': 'str', }, 'dslite_eif_limit_exceeded': {'type': 'str', }, 'nat44_hairpin': {'type': 'str', }, 'nat64_hairpin': {'type': 'str', }, 'dslite_hairpin': {'type': 'str', }, 'standby_drop': {'type': 'str', }, 'fixed_nat_fullcone_self_hairpinning_drop': {'type': 'str', }, 'sixrd_drop': {'type': 'str', }, 'dest_rlist_drop': {'type': 'str', }, 'dest_rlist_pass_through': {'type': 'str', }, 'dest_rlist_snat_drop': {'type': 'str', }, 'config_not_found': {'type': 'str', }, 'total_tcp_overload_acquired': {'type': 'str', }, 'total_udp_overload_acquired': {'type': 'str', }, 'total_tcp_overload_released': {'type': 'str', }, 'total_udp_overload_released': {'type': 'str', }, 'total_tcp_alloc_overload': {'type': 'str', }, 'total_udp_alloc_overload': {'type': 'str', }, 'total_tcp_free_overload': {'type': 'str', }, 'total_udp_free_overload': {'type': 'str', }, 'port_overload_failed': {'type': 'str', }, 'ha_session_user_quota_exceeded': {'type': 'str', }, 'tcp_user_quota_exceeded': {'type': 'str', }, 'udp_user_quota_exceeded': {'type': 'str', }, 'icmp_user_quota_exceeded': {'type': 'str', }, 'fnat44_fwd_ingress_packets_tcp': {'type': 'str', }, 'fnat44_fwd_egress_packets_tcp': {'type': 'str', }, 'fnat44_rev_ingress_packets_tcp': {'type': 'str', }, 'fnat44_rev_egress_packets_tcp': {'type': 'str', }, 'fnat44_fwd_ingress_bytes_tcp': {'type': 'str', }, 'fnat44_fwd_egress_bytes_tcp': {'type': 'str', }, 'fnat44_rev_ingress_bytes_tcp': {'type': 'str', }, 'fnat44_rev_egress_bytes_tcp': {'type': 'str', }, 'fnat44_fwd_ingress_packets_udp': {'type': 'str', }, 'fnat44_fwd_egress_packets_udp': {'type': 'str', }, 'fnat44_rev_ingress_packets_udp': {'type': 'str', }, 'fnat44_rev_egress_packets_udp': {'type': 'str', }, 'fnat44_fwd_ingress_bytes_udp': {'type': 'str', }, 'fnat44_fwd_egress_bytes_udp': {'type': 'str', }, 'fnat44_rev_ingress_bytes_udp': {'type': 'str', }, 'fnat44_rev_egress_bytes_udp': {'type': 'str', }, 'fnat44_fwd_ingress_packets_icmp': {'type': 'str', }, 'fnat44_fwd_egress_packets_icmp': {'type': 'str', }, 'fnat44_rev_ingress_packets_icmp': {'type': 'str', }, 'fnat44_rev_egress_packets_icmp': {'type': 'str', }, 'fnat44_fwd_ingress_bytes_icmp': {'type': 'str', }, 'fnat44_fwd_egress_bytes_icmp': {'type': 'str', }, 'fnat44_rev_ingress_bytes_icmp': {'type': 'str', }, 'fnat44_rev_egress_bytes_icmp': {'type': 'str', }, 'fnat44_fwd_ingress_packets_others': {'type': 'str', }, 'fnat44_fwd_egress_packets_others': {'type': 'str', }, 'fnat44_rev_ingress_packets_others': {'type': 'str', }, 'fnat44_rev_egress_packets_others': {'type': 'str', }, 'fnat44_fwd_ingress_bytes_others': {'type': 'str', }, 'fnat44_fwd_egress_bytes_others': {'type': 'str', }, 'fnat44_rev_ingress_bytes_others': {'type': 'str', }, 'fnat44_rev_egress_bytes_others': {'type': 'str', }, 'fnat44_fwd_ingress_pkt_size_range1': {'type': 'str', }, 'fnat44_fwd_ingress_pkt_size_range2': {'type': 'str', }, 'fnat44_fwd_ingress_pkt_size_range3': {'type': 'str', }, 'fnat44_fwd_ingress_pkt_size_range4': {'type': 'str', }, 'fnat44_fwd_egress_pkt_size_range1': {'type': 'str', }, 'fnat44_fwd_egress_pkt_size_range2': {'type': 'str', }, 'fnat44_fwd_egress_pkt_size_range3': {'type': 'str', }, 'fnat44_fwd_egress_pkt_size_range4': {'type': 'str', }, 'fnat44_rev_ingress_pkt_size_range1': {'type': 'str', }, 'fnat44_rev_ingress_pkt_size_range2': {'type': 'str', }, 'fnat44_rev_ingress_pkt_size_range3': {'type': 'str', }, 'fnat44_rev_ingress_pkt_size_range4': {'type': 'str', }, 'fnat44_rev_egress_pkt_size_range1': {'type': 'str', }, 'fnat44_rev_egress_pkt_size_range2': {'type': 'str', }, 'fnat44_rev_egress_pkt_size_range3': {'type': 'str', }, 'fnat44_rev_egress_pkt_size_range4': {'type': 'str', }, 'fnat64_fwd_ingress_packets_tcp': {'type': 'str', }, 'fnat64_fwd_egress_packets_tcp': {'type': 'str', }, 'fnat64_rev_ingress_packets_tcp': {'type': 'str', }, 'fnat64_rev_egress_packets_tcp': {'type': 'str', }, 'fnat64_fwd_ingress_bytes_tcp': {'type': 'str', }, 'fnat64_fwd_egress_bytes_tcp': {'type': 'str', }, 'fnat64_rev_ingress_bytes_tcp': {'type': 'str', }, 'fnat64_rev_egress_bytes_tcp': {'type': 'str', }, 'fnat64_fwd_ingress_packets_udp': {'type': 'str', }, 'fnat64_fwd_egress_packets_udp': {'type': 'str', }, 'fnat64_rev_ingress_packets_udp': {'type': 'str', }, 'fnat64_rev_egress_packets_udp': {'type': 'str', }, 'fnat64_fwd_ingress_bytes_udp': {'type': 'str', }, 'fnat64_fwd_egress_bytes_udp': {'type': 'str', }, 'fnat64_rev_ingress_bytes_udp': {'type': 'str', }, 'fnat64_rev_egress_bytes_udp': {'type': 'str', }, 'fnat64_fwd_ingress_packets_icmp': {'type': 'str', }, 'fnat64_fwd_egress_packets_icmp': {'type': 'str', }, 'fnat64_rev_ingress_packets_icmp': {'type': 'str', }, 'fnat64_rev_egress_packets_icmp': {'type': 'str', }, 'fnat64_fwd_ingress_bytes_icmp': {'type': 'str', }, 'fnat64_fwd_egress_bytes_icmp': {'type': 'str', }, 'fnat64_rev_ingress_bytes_icmp': {'type': 'str', }, 'fnat64_rev_egress_bytes_icmp': {'type': 'str', }, 'fnat64_fwd_ingress_packets_others': {'type': 'str', }, 'fnat64_fwd_egress_packets_others': {'type': 'str', }, 'fnat64_rev_ingress_packets_others': {'type': 'str', }, 'fnat64_rev_egress_packets_others': {'type': 'str', }, 'fnat64_fwd_ingress_bytes_others': {'type': 'str', }, 'fnat64_fwd_egress_bytes_others': {'type': 'str', }, 'fnat64_rev_ingress_bytes_others': {'type': 'str', }, 'fnat64_rev_egress_bytes_others': {'type': 'str', }, 'fnat64_fwd_ingress_pkt_size_range1': {'type': 'str', }, 'fnat64_fwd_ingress_pkt_size_range2': {'type': 'str', }, 'fnat64_fwd_ingress_pkt_size_range3': {'type': 'str', }, 'fnat64_fwd_ingress_pkt_size_range4': {'type': 'str', }, 'fnat64_fwd_egress_pkt_size_range1': {'type': 'str', }, 'fnat64_fwd_egress_pkt_size_range2': {'type': 'str', }, 'fnat64_fwd_egress_pkt_size_range3': {'type': 'str', }, 'fnat64_fwd_egress_pkt_size_range4': {'type': 'str', }, 'fnat64_rev_ingress_pkt_size_range1': {'type': 'str', }, 'fnat64_rev_ingress_pkt_size_range2': {'type': 'str', }, 'fnat64_rev_ingress_pkt_size_range3': {'type': 'str', }, 'fnat64_rev_ingress_pkt_size_range4': {'type': 'str', }, 'fnat64_rev_egress_pkt_size_range1': {'type': 'str', }, 'fnat64_rev_egress_pkt_size_range2': {'type': 'str', }, 'fnat64_rev_egress_pkt_size_range3': {'type': 'str', }, 'fnat64_rev_egress_pkt_size_range4': {'type': 'str', }, 'fnatdslite_fwd_ingress_packets_tcp': {'type': 'str', }, 'fnatdslite_fwd_egress_packets_tcp': {'type': 'str', }, 'fnatdslite_rev_ingress_packets_tcp': {'type': 'str', }, 'fnatdslite_rev_egress_packets_tcp': {'type': 'str', }, 'fnatdslite_fwd_ingress_bytes_tcp': {'type': 'str', }, 'fnatdslite_fwd_egress_bytes_tcp': {'type': 'str', }, 'fnatdslite_rev_ingress_bytes_tcp': {'type': 'str', }, 'fnatdslite_rev_egress_bytes_tcp': {'type': 'str', }, 'fnatdslite_fwd_ingress_packets_udp': {'type': 'str', }, 'fnatdslite_fwd_egress_packets_udp': {'type': 'str', }, 'fnatdslite_rev_ingress_packets_udp': {'type': 'str', }, 'fnatdslite_rev_egress_packets_udp': {'type': 'str', }, 'fnatdslite_fwd_ingress_bytes_udp': {'type': 'str', }, 'fnatdslite_fwd_egress_bytes_udp': {'type': 'str', }, 'fnatdslite_rev_ingress_bytes_udp': {'type': 'str', }, 'fnatdslite_rev_egress_bytes_udp': {'type': 'str', }, 'fnatdslite_fwd_ingress_packets_icmp': {'type': 'str', }, 'fnatdslite_fwd_egress_packets_icmp': {'type': 'str', }, 'fnatdslite_rev_ingress_packets_icmp': {'type': 'str', }, 'fnatdslite_rev_egress_packets_icmp': {'type': 'str', }, 'fnatdslite_fwd_ingress_bytes_icmp': {'type': 'str', }, 'fnatdslite_fwd_egress_bytes_icmp': {'type': 'str', }, 'fnatdslite_rev_ingress_bytes_icmp': {'type': 'str', }, 'fnatdslite_rev_egress_bytes_icmp': {'type': 'str', }, 'fnatdslite_fwd_ingress_packets_others': {'type': 'str', }, 'fnatdslite_fwd_egress_packets_others': {'type': 'str', }, 'fnatdslite_rev_ingress_packets_others': {'type': 'str', }, 'fnatdslite_rev_egress_packets_others': {'type': 'str', }, 'fnatdslite_fwd_ingress_bytes_others': {'type': 'str', }, 'fnatdslite_fwd_egress_bytes_others': {'type': 'str', }, 'fnatdslite_rev_ingress_bytes_others': {'type': 'str', }, 'fnatdslite_rev_egress_bytes_others': {'type': 'str', }, 'fnatdslite_fwd_ingress_pkt_size_range1': {'type': 'str', }, 'fnatdslite_fwd_ingress_pkt_size_range2': {'type': 'str', }, 'fnatdslite_fwd_ingress_pkt_size_range3': {'type': 'str', }, 'fnatdslite_fwd_ingress_pkt_size_range4': {'type': 'str', }, 'fnatdslite_fwd_egress_pkt_size_range1': {'type': 'str', }, 'fnatdslite_fwd_egress_pkt_size_range2': {'type': 'str', }, 'fnatdslite_fwd_egress_pkt_size_range3': {'type': 'str', }, 'fnatdslite_fwd_egress_pkt_size_range4': {'type': 'str', }, 'fnatdslite_rev_ingress_pkt_size_range1': {'type': 'str', }, 'fnatdslite_rev_ingress_pkt_size_range2': {'type': 'str', }, 'fnatdslite_rev_ingress_pkt_size_range3': {'type': 'str', }, 'fnatdslite_rev_ingress_pkt_size_range4': {'type': 'str', }, 'fnatdslite_rev_egress_pkt_size_range1': {'type': 'str', }, 'fnatdslite_rev_egress_pkt_size_range2': {'type': 'str', }, 'fnatdslite_rev_egress_pkt_size_range3': {'type': 'str', }, 'fnatdslite_rev_egress_pkt_size_range4': {'type': 'str', }}
     })
     return rv
 
@@ -2341,122 +1376,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
-
-
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def get_stats(module):
-    query_params = {}
-    if module.params.get("stats"):
-        for k, v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-    return _get(module, stats_url(module), params=query_params)
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -2465,54 +1384,6 @@ def new_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -2534,41 +1405,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("global", module)
+    payload = utils.build_json("global", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -2581,17 +1440,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -2607,29 +1460,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -2644,11 +1481,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -2657,44 +1499,52 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
-        elif module.params.get("get_type") == "stats":
-            result["axapi_calls"].append(get_stats(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "stats":
+                result["axapi_calls"].append(
+                    api_client.get_stats(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

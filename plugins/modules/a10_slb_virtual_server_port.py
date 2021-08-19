@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port
 description:
@@ -1369,164 +1370,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "acl_id_list",
-    "acl_name_list",
-    "action",
-    "aflex_scripts",
-    "alt_protocol1",
-    "alt_protocol2",
-    "alternate_port",
-    "alternate_port_number",
-    "auth_cfg",
-    "auto",
-    "clientip_sticky_nat",
-    "conn_limit",
-    "cpu_compute",
-    "def_selection_if_pref_failed",
-    "enable_playerid_check",
-    "eth_fwd",
-    "eth_rev",
-    "expand",
-    "extended_stats",
-    "force_routing_mode",
-    "gslb_enable",
-    "ha_conn_mirror",
-    "ip_map_list",
-    "ip_only_lb",
-    "ipinip",
-    "l7_hardware_assist",
-    "memory_compute",
-    "message_switching",
-    "name",
-    "no_auto_up_on_aflex",
-    "no_dest_nat",
-    "no_logging",
-    "on_syn",
-    "oper",
-    "optimization_level",
-    "persist_type",
-    "pool",
-    "pool_shared",
-    "port_number",
-    "port_translation",
-    "precedence",
-    "protocol",
-    "range",
-    "rate",
-    "redirect_to_https",
-    "req_fail",
-    "reset",
-    "reset_on_server_selection_fail",
-    "resolve_web_cat_list",
-    "rtp_sip_call_id_match",
-    "sampling_enable",
-    "scaleout_bucket_count",
-    "scaleout_device_group",
-    "secs",
-    "serv_sel_fail",
-    "server_group",
-    "service_group",
-    "shared_partition_cache_template",
-    "shared_partition_client_ssl_template",
-    "shared_partition_connection_reuse_template",
-    "shared_partition_diameter_template",
-    "shared_partition_dns_template",
-    "shared_partition_dynamic_service_template",
-    "shared_partition_external_service_template",
-    "shared_partition_http_policy_template",
-    "shared_partition_http_template",
-    "shared_partition_persist_cookie_template",
-    "shared_partition_persist_destination_ip_template",
-    "shared_partition_persist_source_ip_template",
-    "shared_partition_persist_ssl_sid_template",
-    "shared_partition_policy_template",
-    "shared_partition_pool",
-    "shared_partition_server_ssl_template",
-    "shared_partition_tcp",
-    "shared_partition_tcp_proxy_template",
-    "shared_partition_udp",
-    "shared_partition_virtual_port_template",
-    "skip_rev_hash",
-    "snat_on_vip",
-    "stats",
-    "stats_data_action",
-    "support_http2",
-    "syn_cookie",
-    "template_cache",
-    "template_cache_shared",
-    "template_client_ssh",
-    "template_client_ssl",
-    "template_client_ssl_shared",
-    "template_connection_reuse",
-    "template_connection_reuse_shared",
-    "template_dblb",
-    "template_diameter",
-    "template_diameter_shared",
-    "template_dns",
-    "template_dns_shared",
-    "template_dynamic_service",
-    "template_dynamic_service_shared",
-    "template_external_service",
-    "template_external_service_shared",
-    "template_file_inspection",
-    "template_fix",
-    "template_ftp",
-    "template_http",
-    "template_http_policy",
-    "template_http_policy_shared",
-    "template_http_shared",
-    "template_imap_pop3",
-    "template_persist_cookie",
-    "template_persist_cookie_shared",
-    "template_persist_destination_ip",
-    "template_persist_destination_ip_shared",
-    "template_persist_source_ip",
-    "template_persist_source_ip_shared",
-    "template_persist_ssl_sid",
-    "template_persist_ssl_sid_shared",
-    "template_policy",
-    "template_policy_shared",
-    "template_reqmod_icap",
-    "template_respmod_icap",
-    "template_scaleout",
-    "template_server_ssh",
-    "template_server_ssl",
-    "template_server_ssl_shared",
-    "template_sip",
-    "template_smpp",
-    "template_smtp",
-    "template_ssli",
-    "template_tcp",
-    "template_tcp_proxy",
-    "template_tcp_proxy_client",
-    "template_tcp_proxy_server",
-    "template_tcp_proxy_shared",
-    "template_tcp_shared",
-    "template_udp",
-    "template_udp_shared",
-    "template_virtual_port",
-    "template_virtual_port_shared",
-    "trunk_fwd",
-    "trunk_rev",
-    "use_alternate_port",
-    "use_cgnv6",
-    "use_default_if_no_server",
-    "use_rcv_hop_for_resp",
-    "use_rcv_hop_group",
-    "user_tag",
-    "uuid",
-    "view",
-    "waf_template",
-    "when_down",
-    "when_down_protocol2",
-]
+AVAILABLE_PROPERTIES = ["acl_id_list", "acl_name_list", "action", "aflex_scripts", "alt_protocol1", "alt_protocol2", "alternate_port", "alternate_port_number", "auth_cfg", "auto", "clientip_sticky_nat", "conn_limit", "cpu_compute", "def_selection_if_pref_failed", "enable_playerid_check", "eth_fwd", "eth_rev", "expand", "extended_stats", "force_routing_mode", "gslb_enable", "ha_conn_mirror", "ip_map_list", "ip_only_lb", "ipinip", "l7_hardware_assist", "memory_compute", "message_switching", "name", "no_auto_up_on_aflex", "no_dest_nat", "no_logging", "on_syn", "oper", "optimization_level", "persist_type", "pool", "pool_shared", "port_number", "port_translation", "precedence", "protocol", "range", "rate", "redirect_to_https", "req_fail", "reset", "reset_on_server_selection_fail", "resolve_web_cat_list", "rtp_sip_call_id_match", "sampling_enable", "scaleout_bucket_count", "scaleout_device_group", "secs", "serv_sel_fail", "server_group", "service_group", "shared_partition_cache_template", "shared_partition_client_ssl_template", "shared_partition_connection_reuse_template", "shared_partition_diameter_template", "shared_partition_dns_template", "shared_partition_dynamic_service_template", "shared_partition_external_service_template", "shared_partition_http_policy_template", "shared_partition_http_template", "shared_partition_persist_cookie_template", "shared_partition_persist_destination_ip_template", "shared_partition_persist_source_ip_template", "shared_partition_persist_ssl_sid_template", "shared_partition_policy_template", "shared_partition_pool", "shared_partition_server_ssl_template", "shared_partition_tcp", "shared_partition_tcp_proxy_template", "shared_partition_udp", "shared_partition_virtual_port_template", "skip_rev_hash", "snat_on_vip", "stats", "stats_data_action", "support_http2", "syn_cookie", "template_cache", "template_cache_shared", "template_client_ssh", "template_client_ssl", "template_client_ssl_shared", "template_connection_reuse", "template_connection_reuse_shared", "template_dblb", "template_diameter", "template_diameter_shared", "template_dns", "template_dns_shared", "template_dynamic_service", "template_dynamic_service_shared", "template_external_service", "template_external_service_shared", "template_file_inspection", "template_fix", "template_ftp", "template_http", "template_http_policy", "template_http_policy_shared", "template_http_shared", "template_imap_pop3", "template_persist_cookie", "template_persist_cookie_shared", "template_persist_destination_ip", "template_persist_destination_ip_shared", "template_persist_source_ip", "template_persist_source_ip_shared", "template_persist_ssl_sid", "template_persist_ssl_sid_shared", "template_policy", "template_policy_shared", "template_reqmod_icap", "template_respmod_icap", "template_scaleout", "template_server_ssh", "template_server_ssl", "template_server_ssl_shared", "template_sip", "template_smpp", "template_smtp", "template_ssli", "template_tcp", "template_tcp_proxy", "template_tcp_proxy_client", "template_tcp_proxy_server", "template_tcp_proxy_shared", "template_tcp_shared", "template_udp", "template_udp_shared", "template_virtual_port", "template_virtual_port_shared", "trunk_fwd", "trunk_rev", "use_alternate_port", "use_cgnv6", "use_default_if_no_server", "use_rcv_hop_for_resp", "use_rcv_hop_group", "user_tag", "uuid", "view", "waf_template", "when_down", "when_down_protocol2", ]
 
 
 def get_default_argspec():
@@ -1534,1176 +1389,171 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'port_number': {
-            'type': 'int',
-            'required': True,
-        },
-        'protocol': {
-            'type':
-            'str',
-            'required':
-            True,
-            'choices': [
-                'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
-                'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp',
-                'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli', 'ssh',
-                'tcp-proxy', 'tftp', 'fast-fix'
-            ]
-        },
-        'range': {
-            'type': 'int',
-        },
-        'alternate_port': {
-            'type': 'bool',
-        },
-        'optimization_level': {
-            'type': 'str',
-            'choices': ['0', '1']
-        },
-        'support_http2': {
-            'type': 'bool',
-        },
-        'ip_only_lb': {
-            'type': 'bool',
-        },
-        'name': {
-            'type': 'str',
-        },
-        'conn_limit': {
-            'type': 'int',
-        },
-        'reset': {
-            'type': 'bool',
-        },
-        'no_logging': {
-            'type': 'bool',
-        },
-        'use_alternate_port': {
-            'type': 'bool',
-        },
-        'alternate_port_number': {
-            'type': 'int',
-        },
-        'alt_protocol1': {
-            'type': 'str',
-            'choices': ['http']
-        },
-        'serv_sel_fail': {
-            'type': 'bool',
-        },
-        'when_down': {
-            'type': 'bool',
-        },
-        'alt_protocol2': {
-            'type': 'str',
-            'choices': ['tcp']
-        },
-        'req_fail': {
-            'type': 'bool',
-        },
-        'when_down_protocol2': {
-            'type': 'bool',
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'def_selection_if_pref_failed': {
-            'type':
-            'str',
-            'choices': [
-                'def-selection-if-pref-failed',
-                'def-selection-if-pref-failed-disable'
-            ]
-        },
-        'ha_conn_mirror': {
-            'type': 'bool',
-        },
-        'on_syn': {
-            'type': 'bool',
-        },
-        'skip_rev_hash': {
-            'type': 'bool',
-        },
-        'message_switching': {
-            'type': 'bool',
-        },
-        'force_routing_mode': {
-            'type': 'bool',
-        },
-        'rate': {
-            'type': 'int',
-        },
-        'secs': {
-            'type': 'int',
-        },
-        'reset_on_server_selection_fail': {
-            'type': 'bool',
-        },
-        'clientip_sticky_nat': {
-            'type': 'bool',
-        },
-        'extended_stats': {
-            'type': 'bool',
-        },
-        'gslb_enable': {
-            'type': 'bool',
-        },
-        'view': {
-            'type': 'int',
-        },
-        'snat_on_vip': {
-            'type': 'bool',
-        },
-        'stats_data_action': {
-            'type': 'str',
-            'choices': ['stats-data-enable', 'stats-data-disable']
-        },
-        'syn_cookie': {
-            'type': 'bool',
-        },
-        'expand': {
-            'type': 'bool',
-        },
-        'acl_id_list': {
-            'type': 'list',
-            'acl_id': {
-                'type': 'int',
-            },
-            'acl_id_src_nat_pool': {
-                'type': 'str',
-            },
-            'acl_id_seq_num': {
-                'type': 'int',
-            },
-            'shared_partition_pool_id': {
-                'type': 'bool',
-            },
-            'acl_id_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'acl_id_seq_num_shared': {
-                'type': 'int',
-            },
-            'acl_id_shared': {
-                'type': 'int',
-            },
-            'v_acl_id_src_nat_pool': {
-                'type': 'str',
-            },
-            'v_acl_id_seq_num': {
-                'type': 'int',
-            },
-            'v_shared_partition_pool_id': {
-                'type': 'bool',
-            },
-            'v_acl_id_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'v_acl_id_seq_num_shared': {
-                'type': 'int',
-            }
-        },
-        'acl_name_list': {
-            'type': 'list',
-            'acl_name': {
-                'type': 'str',
-            },
-            'acl_name_src_nat_pool': {
-                'type': 'str',
-            },
-            'acl_name_seq_num': {
-                'type': 'int',
-            },
-            'shared_partition_pool_name': {
-                'type': 'bool',
-            },
-            'acl_name_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'acl_name_seq_num_shared': {
-                'type': 'int',
-            },
-            'acl_name_shared': {
-                'type': 'str',
-            },
-            'v_acl_name_src_nat_pool': {
-                'type': 'str',
-            },
-            'v_acl_name_seq_num': {
-                'type': 'int',
-            },
-            'v_shared_partition_pool_name': {
-                'type': 'bool',
-            },
-            'v_acl_name_src_nat_pool_shared': {
-                'type': 'str',
-            },
-            'v_acl_name_seq_num_shared': {
-                'type': 'int',
-            }
-        },
-        'template_policy': {
-            'type': 'str',
-        },
-        'shared_partition_policy_template': {
-            'type': 'bool',
-        },
-        'template_policy_shared': {
-            'type': 'str',
-        },
-        'aflex_scripts': {
-            'type': 'list',
-            'aflex': {
-                'type': 'str',
-            },
-            'aflex_shared': {
-                'type': 'str',
-            }
-        },
-        'no_auto_up_on_aflex': {
-            'type': 'bool',
-        },
-        'scaleout_bucket_count': {
-            'type': 'int',
-        },
-        'scaleout_device_group': {
-            'type': 'int',
-        },
-        'pool': {
-            'type': 'str',
-        },
-        'shared_partition_pool': {
-            'type': 'bool',
-        },
-        'pool_shared': {
-            'type': 'str',
-        },
-        'auto': {
-            'type': 'bool',
-        },
-        'precedence': {
-            'type': 'bool',
-        },
-        'use_cgnv6': {
-            'type': 'bool',
-        },
-        'enable_playerid_check': {
-            'type': 'bool',
-        },
-        'service_group': {
-            'type': 'str',
-        },
-        'ipinip': {
-            'type': 'bool',
-        },
-        'ip_map_list': {
-            'type': 'str',
-        },
-        'rtp_sip_call_id_match': {
-            'type': 'bool',
-        },
-        'use_rcv_hop_for_resp': {
-            'type': 'bool',
-        },
-        'persist_type': {
-            'type':
-            'str',
-            'choices': [
-                'src-dst-ip-swap-persist', 'use-src-ip-for-dst-persist',
-                'use-dst-ip-for-src-persist'
-            ]
-        },
-        'use_rcv_hop_group': {
-            'type': 'bool',
-        },
-        'server_group': {
-            'type': 'str',
-        },
-        'eth_fwd': {
-            'type': 'str',
-        },
-        'trunk_fwd': {
-            'type': 'str',
-        },
-        'eth_rev': {
-            'type': 'str',
-        },
-        'trunk_rev': {
-            'type': 'str',
-        },
-        'template_sip': {
-            'type': 'str',
-        },
-        'template_smpp': {
-            'type': 'str',
-        },
-        'template_dblb': {
-            'type': 'str',
-        },
-        'template_connection_reuse': {
-            'type': 'str',
-        },
-        'shared_partition_connection_reuse_template': {
-            'type': 'bool',
-        },
-        'template_connection_reuse_shared': {
-            'type': 'str',
-        },
-        'template_dns': {
-            'type': 'str',
-        },
-        'shared_partition_dns_template': {
-            'type': 'bool',
-        },
-        'template_dns_shared': {
-            'type': 'str',
-        },
-        'template_dynamic_service': {
-            'type': 'str',
-        },
-        'shared_partition_dynamic_service_template': {
-            'type': 'bool',
-        },
-        'template_dynamic_service_shared': {
-            'type': 'str',
-        },
-        'template_persist_source_ip': {
-            'type': 'str',
-        },
-        'shared_partition_persist_source_ip_template': {
-            'type': 'bool',
-        },
-        'template_persist_source_ip_shared': {
-            'type': 'str',
-        },
-        'template_persist_destination_ip': {
-            'type': 'str',
-        },
-        'shared_partition_persist_destination_ip_template': {
-            'type': 'bool',
-        },
-        'template_persist_destination_ip_shared': {
-            'type': 'str',
-        },
-        'template_persist_ssl_sid': {
-            'type': 'str',
-        },
-        'shared_partition_persist_ssl_sid_template': {
-            'type': 'bool',
-        },
-        'template_persist_ssl_sid_shared': {
-            'type': 'str',
-        },
-        'template_persist_cookie': {
-            'type': 'str',
-        },
-        'shared_partition_persist_cookie_template': {
-            'type': 'bool',
-        },
-        'template_persist_cookie_shared': {
-            'type': 'str',
-        },
-        'template_imap_pop3': {
-            'type': 'str',
-        },
-        'template_smtp': {
-            'type': 'str',
-        },
-        'template_http': {
-            'type': 'str',
-        },
-        'shared_partition_http_template': {
-            'type': 'bool',
-        },
-        'template_http_shared': {
-            'type': 'str',
-        },
-        'template_http_policy': {
-            'type': 'str',
-        },
-        'shared_partition_http_policy_template': {
-            'type': 'bool',
-        },
-        'template_http_policy_shared': {
-            'type': 'str',
-        },
-        'redirect_to_https': {
-            'type': 'bool',
-        },
-        'template_external_service': {
-            'type': 'str',
-        },
-        'shared_partition_external_service_template': {
-            'type': 'bool',
-        },
-        'template_external_service_shared': {
-            'type': 'str',
-        },
-        'template_reqmod_icap': {
-            'type': 'str',
-        },
-        'template_respmod_icap': {
-            'type': 'str',
-        },
-        'template_file_inspection': {
-            'type': 'str',
-        },
-        'template_server_ssl': {
-            'type': 'str',
-        },
-        'shared_partition_server_ssl_template': {
-            'type': 'bool',
-        },
-        'template_server_ssl_shared': {
-            'type': 'str',
-        },
-        'template_client_ssl': {
-            'type': 'str',
-        },
-        'shared_partition_client_ssl_template': {
-            'type': 'bool',
-        },
-        'template_client_ssl_shared': {
-            'type': 'str',
-        },
-        'template_server_ssh': {
-            'type': 'str',
-        },
-        'template_client_ssh': {
-            'type': 'str',
-        },
-        'template_udp': {
-            'type': 'str',
-        },
-        'shared_partition_udp': {
-            'type': 'bool',
-        },
-        'template_udp_shared': {
-            'type': 'str',
-        },
-        'template_tcp': {
-            'type': 'str',
-        },
-        'shared_partition_tcp': {
-            'type': 'bool',
-        },
-        'template_tcp_shared': {
-            'type': 'str',
-        },
-        'template_virtual_port': {
-            'type': 'str',
-        },
-        'shared_partition_virtual_port_template': {
-            'type': 'bool',
-        },
-        'template_virtual_port_shared': {
-            'type': 'str',
-        },
-        'template_ftp': {
-            'type': 'str',
-        },
-        'template_diameter': {
-            'type': 'str',
-        },
-        'shared_partition_diameter_template': {
-            'type': 'bool',
-        },
-        'template_diameter_shared': {
-            'type': 'str',
-        },
-        'template_cache': {
-            'type': 'str',
-        },
-        'shared_partition_cache_template': {
-            'type': 'bool',
-        },
-        'template_cache_shared': {
-            'type': 'str',
-        },
-        'template_fix': {
-            'type': 'str',
-        },
-        'waf_template': {
-            'type': 'str',
-        },
-        'template_ssli': {
-            'type': 'str',
-        },
-        'template_tcp_proxy_client': {
-            'type': 'str',
-        },
-        'template_tcp_proxy_server': {
-            'type': 'str',
-        },
-        'template_tcp_proxy': {
-            'type': 'str',
-        },
-        'shared_partition_tcp_proxy_template': {
-            'type': 'bool',
-        },
-        'template_tcp_proxy_shared': {
-            'type': 'str',
-        },
-        'use_default_if_no_server': {
-            'type': 'bool',
-        },
-        'template_scaleout': {
-            'type': 'str',
-        },
-        'no_dest_nat': {
-            'type': 'bool',
-        },
-        'port_translation': {
-            'type': 'bool',
-        },
-        'l7_hardware_assist': {
-            'type': 'bool',
-        },
-        'auth_cfg': {
-            'type': 'dict',
-            'aaa_policy': {
-                'type': 'str',
-            }
-        },
-        'cpu_compute': {
-            'type': 'bool',
-        },
-        'memory_compute': {
-            'type': 'bool',
-        },
-        'resolve_web_cat_list': {
-            'type': 'str',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn',
-                    'total_tcp_conn', 'total_conn', 'total_fwd_bytes',
-                    'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts',
-                    'total_dns_pkts', 'total_mf_dns_pkts',
-                    'es_total_failure_actions', 'compression_bytes_before',
-                    'compression_bytes_after', 'compression_hit',
-                    'compression_miss', 'compression_miss_no_client',
-                    'compression_miss_template_exclusion', 'curr_req',
-                    'total_req', 'total_req_succ', 'peak_conn',
-                    'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time',
-                    'slowest_rsp_time', 'loc_permit', 'loc_deny', 'loc_conn',
-                    'curr_ssl_conn', 'total_ssl_conn',
-                    'backend-time-to-first-byte', 'backend-time-to-last-byte',
-                    'in-latency', 'out-latency', 'total_fwd_bytes_out',
-                    'total_fwd_pkts_out', 'total_rev_bytes_out',
-                    'total_rev_pkts_out', 'curr_req_rate', 'curr_resp',
-                    'total_resp', 'total_resp_succ', 'curr_resp_rate',
-                    'curr_conn_overflow', 'dnsrrl_total_allowed',
-                    'dnsrrl_total_dropped', 'dnsrrl_total_slipped',
-                    'dnsrrl_bad_fqdn', 'throughput-bits-per-sec',
-                    'dynamic-memory-alloc', 'dynamic-memory-free',
-                    'dynamic-memory', 'ip_only_lb_fwd_bytes',
-                    'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts',
-                    'ip_only_lb_rev_pkts'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'state': {
-                'type': 'str',
-                'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
-            },
-            'loc_list': {
-                'type': 'str',
-            },
-            'geo_location': {
-                'type': 'str',
-            },
-            'level_str': {
-                'type': 'str',
-            },
-            'group_id': {
-                'type': 'int',
-            },
-            'loc_max_depth': {
-                'type': 'int',
-            },
-            'loc_success': {
-                'type': 'int',
-            },
-            'loc_error': {
-                'type': 'int',
-            },
-            'loc_override': {
-                'type': 'int',
-            },
-            'loc_last': {
-                'type': 'str',
-            },
-            'http_hits_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                },
-                'hits_count': {
-                    'type': 'int',
-                }
-            },
-            'http_vport_cpu_list': {
-                'type': 'list',
-                'status_200': {
-                    'type': 'int',
-                },
-                'status_201': {
-                    'type': 'int',
-                },
-                'status_202': {
-                    'type': 'int',
-                },
-                'status_203': {
-                    'type': 'int',
-                },
-                'status_204': {
-                    'type': 'int',
-                },
-                'status_205': {
-                    'type': 'int',
-                },
-                'status_206': {
-                    'type': 'int',
-                },
-                'status_207': {
-                    'type': 'int',
-                },
-                'status_100': {
-                    'type': 'int',
-                },
-                'status_101': {
-                    'type': 'int',
-                },
-                'status_102': {
-                    'type': 'int',
-                },
-                'status_300': {
-                    'type': 'int',
-                },
-                'status_301': {
-                    'type': 'int',
-                },
-                'status_302': {
-                    'type': 'int',
-                },
-                'status_303': {
-                    'type': 'int',
-                },
-                'status_304': {
-                    'type': 'int',
-                },
-                'status_305': {
-                    'type': 'int',
-                },
-                'status_306': {
-                    'type': 'int',
-                },
-                'status_307': {
-                    'type': 'int',
-                },
-                'status_400': {
-                    'type': 'int',
-                },
-                'status_401': {
-                    'type': 'int',
-                },
-                'status_402': {
-                    'type': 'int',
-                },
-                'status_403': {
-                    'type': 'int',
-                },
-                'status_404': {
-                    'type': 'int',
-                },
-                'status_405': {
-                    'type': 'int',
-                },
-                'status_406': {
-                    'type': 'int',
-                },
-                'status_407': {
-                    'type': 'int',
-                },
-                'status_408': {
-                    'type': 'int',
-                },
-                'status_409': {
-                    'type': 'int',
-                },
-                'status_410': {
-                    'type': 'int',
-                },
-                'status_411': {
-                    'type': 'int',
-                },
-                'status_412': {
-                    'type': 'int',
-                },
-                'status_413': {
-                    'type': 'int',
-                },
-                'status_414': {
-                    'type': 'int',
-                },
-                'status_415': {
-                    'type': 'int',
-                },
-                'status_416': {
-                    'type': 'int',
-                },
-                'status_417': {
-                    'type': 'int',
-                },
-                'status_418': {
-                    'type': 'int',
-                },
-                'status_422': {
-                    'type': 'int',
-                },
-                'status_423': {
-                    'type': 'int',
-                },
-                'status_424': {
-                    'type': 'int',
-                },
-                'status_425': {
-                    'type': 'int',
-                },
-                'status_426': {
-                    'type': 'int',
-                },
-                'status_449': {
-                    'type': 'int',
-                },
-                'status_450': {
-                    'type': 'int',
-                },
-                'status_500': {
-                    'type': 'int',
-                },
-                'status_501': {
-                    'type': 'int',
-                },
-                'status_502': {
-                    'type': 'int',
-                },
-                'status_503': {
-                    'type': 'int',
-                },
-                'status_504': {
-                    'type': 'int',
-                },
-                'status_504_ax': {
-                    'type': 'int',
-                },
-                'status_505': {
-                    'type': 'int',
-                },
-                'status_506': {
-                    'type': 'int',
-                },
-                'status_507': {
-                    'type': 'int',
-                },
-                'status_508': {
-                    'type': 'int',
-                },
-                'status_509': {
-                    'type': 'int',
-                },
-                'status_510': {
-                    'type': 'int',
-                },
-                'status_1xx': {
-                    'type': 'int',
-                },
-                'status_2xx': {
-                    'type': 'int',
-                },
-                'status_3xx': {
-                    'type': 'int',
-                },
-                'status_4xx': {
-                    'type': 'int',
-                },
-                'status_5xx': {
-                    'type': 'int',
-                },
-                'status_6xx': {
-                    'type': 'int',
-                },
-                'status_unknown': {
-                    'type': 'int',
-                },
-                'ws_handshake_request': {
-                    'type': 'int',
-                },
-                'ws_handshake_success': {
-                    'type': 'int',
-                },
-                'ws_client_switch': {
-                    'type': 'int',
-                },
-                'ws_server_switch': {
-                    'type': 'int',
-                },
-                'REQ_10u': {
-                    'type': 'int',
-                },
-                'REQ_20u': {
-                    'type': 'int',
-                },
-                'REQ_50u': {
-                    'type': 'int',
-                },
-                'REQ_100u': {
-                    'type': 'int',
-                },
-                'REQ_200u': {
-                    'type': 'int',
-                },
-                'REQ_500u': {
-                    'type': 'int',
-                },
-                'REQ_1m': {
-                    'type': 'int',
-                },
-                'REQ_2m': {
-                    'type': 'int',
-                },
-                'REQ_5m': {
-                    'type': 'int',
-                },
-                'REQ_10m': {
-                    'type': 'int',
-                },
-                'REQ_20m': {
-                    'type': 'int',
-                },
-                'REQ_50m': {
-                    'type': 'int',
-                },
-                'REQ_100m': {
-                    'type': 'int',
-                },
-                'REQ_200m': {
-                    'type': 'int',
-                },
-                'REQ_500m': {
-                    'type': 'int',
-                },
-                'REQ_1s': {
-                    'type': 'int',
-                },
-                'REQ_2s': {
-                    'type': 'int',
-                },
-                'REQ_5s': {
-                    'type': 'int',
-                },
-                'REQ_OVER_5s': {
-                    'type': 'int',
-                },
-                'curr_http2_conn': {
-                    'type': 'int',
-                },
-                'total_http2_conn': {
-                    'type': 'int',
-                },
-                'peak_http2_conn': {
-                    'type': 'int',
-                },
-                'total_http2_bytes': {
-                    'type': 'int',
-                },
-                'http2_control_bytes': {
-                    'type': 'int',
-                },
-                'http2_header_bytes': {
-                    'type': 'int',
-                },
-                'http2_data_bytes': {
-                    'type': 'int',
-                },
-                'http2_reset_received': {
-                    'type': 'int',
-                },
-                'http2_reset_sent': {
-                    'type': 'int',
-                },
-                'http2_goaway_received': {
-                    'type': 'int',
-                },
-                'http2_goaway_sent': {
-                    'type': 'int',
-                },
-                'stream_closed': {
-                    'type': 'int',
-                },
-                'header_length_long': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            },
-            'http_host_hits': {
-                'type': 'bool',
-            },
-            'http_url_hits': {
-                'type': 'bool',
-            },
-            'http_vport': {
-                'type': 'bool',
-            },
-            'real_curr_conn': {
-                'type': 'int',
-            },
-            'port_number': {
-                'type': 'int',
-                'required': True,
-            },
-            'protocol': {
-                'type':
-                'str',
-                'required':
-                True,
-                'choices': [
-                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
-                    'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                    'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                    'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips',
-                    'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
-                    'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                ]
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'curr_conn': {
-                'type': 'str',
-            },
-            'total_l4_conn': {
-                'type': 'str',
-            },
-            'total_l7_conn': {
-                'type': 'str',
-            },
-            'total_tcp_conn': {
-                'type': 'str',
-            },
-            'total_conn': {
-                'type': 'str',
-            },
-            'total_fwd_bytes': {
-                'type': 'str',
-            },
-            'total_fwd_pkts': {
-                'type': 'str',
-            },
-            'total_rev_bytes': {
-                'type': 'str',
-            },
-            'total_rev_pkts': {
-                'type': 'str',
-            },
-            'total_dns_pkts': {
-                'type': 'str',
-            },
-            'total_mf_dns_pkts': {
-                'type': 'str',
-            },
-            'es_total_failure_actions': {
-                'type': 'str',
-            },
-            'compression_bytes_before': {
-                'type': 'str',
-            },
-            'compression_bytes_after': {
-                'type': 'str',
-            },
-            'compression_hit': {
-                'type': 'str',
-            },
-            'compression_miss': {
-                'type': 'str',
-            },
-            'compression_miss_no_client': {
-                'type': 'str',
-            },
-            'compression_miss_template_exclusion': {
-                'type': 'str',
-            },
-            'curr_req': {
-                'type': 'str',
-            },
-            'total_req': {
-                'type': 'str',
-            },
-            'total_req_succ': {
-                'type': 'str',
-            },
-            'peak_conn': {
-                'type': 'str',
-            },
-            'curr_conn_rate': {
-                'type': 'str',
-            },
-            'last_rsp_time': {
-                'type': 'str',
-            },
-            'fastest_rsp_time': {
-                'type': 'str',
-            },
-            'slowest_rsp_time': {
-                'type': 'str',
-            },
-            'loc_permit': {
-                'type': 'str',
-            },
-            'loc_deny': {
-                'type': 'str',
-            },
-            'loc_conn': {
-                'type': 'str',
-            },
-            'curr_ssl_conn': {
-                'type': 'str',
-            },
-            'total_ssl_conn': {
-                'type': 'str',
-            },
-            'backend_time_to_first_byte': {
-                'type': 'str',
-            },
-            'backend_time_to_last_byte': {
-                'type': 'str',
-            },
-            'in_latency': {
-                'type': 'str',
-            },
-            'out_latency': {
-                'type': 'str',
-            },
-            'total_fwd_bytes_out': {
-                'type': 'str',
-            },
-            'total_fwd_pkts_out': {
-                'type': 'str',
-            },
-            'total_rev_bytes_out': {
-                'type': 'str',
-            },
-            'total_rev_pkts_out': {
-                'type': 'str',
-            },
-            'curr_req_rate': {
-                'type': 'str',
-            },
-            'curr_resp': {
-                'type': 'str',
-            },
-            'total_resp': {
-                'type': 'str',
-            },
-            'total_resp_succ': {
-                'type': 'str',
-            },
-            'curr_resp_rate': {
-                'type': 'str',
-            },
-            'curr_conn_overflow': {
-                'type': 'str',
-            },
-            'dnsrrl_total_allowed': {
-                'type': 'str',
-            },
-            'dnsrrl_total_dropped': {
-                'type': 'str',
-            },
-            'dnsrrl_total_slipped': {
-                'type': 'str',
-            },
-            'dnsrrl_bad_fqdn': {
-                'type': 'str',
-            },
-            'throughput_bits_per_sec': {
-                'type': 'str',
-            },
-            'dynamic_memory': {
-                'type': 'str',
-            },
-            'ip_only_lb_fwd_bytes': {
-                'type': 'str',
-            },
-            'ip_only_lb_rev_bytes': {
-                'type': 'str',
-            },
-            'ip_only_lb_fwd_pkts': {
-                'type': 'str',
-            },
-            'ip_only_lb_rev_pkts': {
-                'type': 'str',
-            },
-            'port_number': {
-                'type': 'int',
-                'required': True,
-            },
-            'protocol': {
-                'type':
-                'str',
-                'required':
-                True,
-                'choices': [
-                    'tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp',
-                    'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https',
-                    'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql',
-                    'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips',
-                    'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli',
-                    'ssh', 'tcp-proxy', 'tftp', 'fast-fix'
-                ]
-            }
-        }
+    rv.update({'port_number': {'type': 'int', 'required': True, },
+        'protocol': {'type': 'str', 'required': True, 'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']},
+        'range': {'type': 'int', },
+        'alternate_port': {'type': 'bool', },
+        'optimization_level': {'type': 'str', 'choices': ['0', '1']},
+        'support_http2': {'type': 'bool', },
+        'ip_only_lb': {'type': 'bool', },
+        'name': {'type': 'str', },
+        'conn_limit': {'type': 'int', },
+        'reset': {'type': 'bool', },
+        'no_logging': {'type': 'bool', },
+        'use_alternate_port': {'type': 'bool', },
+        'alternate_port_number': {'type': 'int', },
+        'alt_protocol1': {'type': 'str', 'choices': ['http']},
+        'serv_sel_fail': {'type': 'bool', },
+        'when_down': {'type': 'bool', },
+        'alt_protocol2': {'type': 'str', 'choices': ['tcp']},
+        'req_fail': {'type': 'bool', },
+        'when_down_protocol2': {'type': 'bool', },
+        'action': {'type': 'str', 'choices': ['enable', 'disable']},
+        'def_selection_if_pref_failed': {'type': 'str', 'choices': ['def-selection-if-pref-failed', 'def-selection-if-pref-failed-disable']},
+        'ha_conn_mirror': {'type': 'bool', },
+        'on_syn': {'type': 'bool', },
+        'skip_rev_hash': {'type': 'bool', },
+        'message_switching': {'type': 'bool', },
+        'force_routing_mode': {'type': 'bool', },
+        'rate': {'type': 'int', },
+        'secs': {'type': 'int', },
+        'reset_on_server_selection_fail': {'type': 'bool', },
+        'clientip_sticky_nat': {'type': 'bool', },
+        'extended_stats': {'type': 'bool', },
+        'gslb_enable': {'type': 'bool', },
+        'view': {'type': 'int', },
+        'snat_on_vip': {'type': 'bool', },
+        'stats_data_action': {'type': 'str', 'choices': ['stats-data-enable', 'stats-data-disable']},
+        'syn_cookie': {'type': 'bool', },
+        'expand': {'type': 'bool', },
+        'acl_id_list': {'type': 'list', 'acl_id': {'type': 'int', }, 'acl_id_src_nat_pool': {'type': 'str', }, 'acl_id_seq_num': {'type': 'int', }, 'shared_partition_pool_id': {'type': 'bool', }, 'acl_id_src_nat_pool_shared': {'type': 'str', }, 'acl_id_seq_num_shared': {'type': 'int', }, 'acl_id_shared': {'type': 'int', }, 'v_acl_id_src_nat_pool': {'type': 'str', }, 'v_acl_id_seq_num': {'type': 'int', }, 'v_shared_partition_pool_id': {'type': 'bool', }, 'v_acl_id_src_nat_pool_shared': {'type': 'str', }, 'v_acl_id_seq_num_shared': {'type': 'int', }},
+        'acl_name_list': {'type': 'list', 'acl_name': {'type': 'str', }, 'acl_name_src_nat_pool': {'type': 'str', }, 'acl_name_seq_num': {'type': 'int', }, 'shared_partition_pool_name': {'type': 'bool', }, 'acl_name_src_nat_pool_shared': {'type': 'str', }, 'acl_name_seq_num_shared': {'type': 'int', }, 'acl_name_shared': {'type': 'str', }, 'v_acl_name_src_nat_pool': {'type': 'str', }, 'v_acl_name_seq_num': {'type': 'int', }, 'v_shared_partition_pool_name': {'type': 'bool', }, 'v_acl_name_src_nat_pool_shared': {'type': 'str', }, 'v_acl_name_seq_num_shared': {'type': 'int', }},
+        'template_policy': {'type': 'str', },
+        'shared_partition_policy_template': {'type': 'bool', },
+        'template_policy_shared': {'type': 'str', },
+        'aflex_scripts': {'type': 'list', 'aflex': {'type': 'str', }, 'aflex_shared': {'type': 'str', }},
+        'no_auto_up_on_aflex': {'type': 'bool', },
+        'scaleout_bucket_count': {'type': 'int', },
+        'scaleout_device_group': {'type': 'int', },
+        'pool': {'type': 'str', },
+        'shared_partition_pool': {'type': 'bool', },
+        'pool_shared': {'type': 'str', },
+        'auto': {'type': 'bool', },
+        'precedence': {'type': 'bool', },
+        'use_cgnv6': {'type': 'bool', },
+        'enable_playerid_check': {'type': 'bool', },
+        'service_group': {'type': 'str', },
+        'ipinip': {'type': 'bool', },
+        'ip_map_list': {'type': 'str', },
+        'rtp_sip_call_id_match': {'type': 'bool', },
+        'use_rcv_hop_for_resp': {'type': 'bool', },
+        'persist_type': {'type': 'str', 'choices': ['src-dst-ip-swap-persist', 'use-src-ip-for-dst-persist', 'use-dst-ip-for-src-persist']},
+        'use_rcv_hop_group': {'type': 'bool', },
+        'server_group': {'type': 'str', },
+        'eth_fwd': {'type': 'str', },
+        'trunk_fwd': {'type': 'str', },
+        'eth_rev': {'type': 'str', },
+        'trunk_rev': {'type': 'str', },
+        'template_sip': {'type': 'str', },
+        'template_smpp': {'type': 'str', },
+        'template_dblb': {'type': 'str', },
+        'template_connection_reuse': {'type': 'str', },
+        'shared_partition_connection_reuse_template': {'type': 'bool', },
+        'template_connection_reuse_shared': {'type': 'str', },
+        'template_dns': {'type': 'str', },
+        'shared_partition_dns_template': {'type': 'bool', },
+        'template_dns_shared': {'type': 'str', },
+        'template_dynamic_service': {'type': 'str', },
+        'shared_partition_dynamic_service_template': {'type': 'bool', },
+        'template_dynamic_service_shared': {'type': 'str', },
+        'template_persist_source_ip': {'type': 'str', },
+        'shared_partition_persist_source_ip_template': {'type': 'bool', },
+        'template_persist_source_ip_shared': {'type': 'str', },
+        'template_persist_destination_ip': {'type': 'str', },
+        'shared_partition_persist_destination_ip_template': {'type': 'bool', },
+        'template_persist_destination_ip_shared': {'type': 'str', },
+        'template_persist_ssl_sid': {'type': 'str', },
+        'shared_partition_persist_ssl_sid_template': {'type': 'bool', },
+        'template_persist_ssl_sid_shared': {'type': 'str', },
+        'template_persist_cookie': {'type': 'str', },
+        'shared_partition_persist_cookie_template': {'type': 'bool', },
+        'template_persist_cookie_shared': {'type': 'str', },
+        'template_imap_pop3': {'type': 'str', },
+        'template_smtp': {'type': 'str', },
+        'template_http': {'type': 'str', },
+        'shared_partition_http_template': {'type': 'bool', },
+        'template_http_shared': {'type': 'str', },
+        'template_http_policy': {'type': 'str', },
+        'shared_partition_http_policy_template': {'type': 'bool', },
+        'template_http_policy_shared': {'type': 'str', },
+        'redirect_to_https': {'type': 'bool', },
+        'template_external_service': {'type': 'str', },
+        'shared_partition_external_service_template': {'type': 'bool', },
+        'template_external_service_shared': {'type': 'str', },
+        'template_reqmod_icap': {'type': 'str', },
+        'template_respmod_icap': {'type': 'str', },
+        'template_file_inspection': {'type': 'str', },
+        'template_server_ssl': {'type': 'str', },
+        'shared_partition_server_ssl_template': {'type': 'bool', },
+        'template_server_ssl_shared': {'type': 'str', },
+        'template_client_ssl': {'type': 'str', },
+        'shared_partition_client_ssl_template': {'type': 'bool', },
+        'template_client_ssl_shared': {'type': 'str', },
+        'template_server_ssh': {'type': 'str', },
+        'template_client_ssh': {'type': 'str', },
+        'template_udp': {'type': 'str', },
+        'shared_partition_udp': {'type': 'bool', },
+        'template_udp_shared': {'type': 'str', },
+        'template_tcp': {'type': 'str', },
+        'shared_partition_tcp': {'type': 'bool', },
+        'template_tcp_shared': {'type': 'str', },
+        'template_virtual_port': {'type': 'str', },
+        'shared_partition_virtual_port_template': {'type': 'bool', },
+        'template_virtual_port_shared': {'type': 'str', },
+        'template_ftp': {'type': 'str', },
+        'template_diameter': {'type': 'str', },
+        'shared_partition_diameter_template': {'type': 'bool', },
+        'template_diameter_shared': {'type': 'str', },
+        'template_cache': {'type': 'str', },
+        'shared_partition_cache_template': {'type': 'bool', },
+        'template_cache_shared': {'type': 'str', },
+        'template_fix': {'type': 'str', },
+        'waf_template': {'type': 'str', },
+        'template_ssli': {'type': 'str', },
+        'template_tcp_proxy_client': {'type': 'str', },
+        'template_tcp_proxy_server': {'type': 'str', },
+        'template_tcp_proxy': {'type': 'str', },
+        'shared_partition_tcp_proxy_template': {'type': 'bool', },
+        'template_tcp_proxy_shared': {'type': 'str', },
+        'use_default_if_no_server': {'type': 'bool', },
+        'template_scaleout': {'type': 'str', },
+        'no_dest_nat': {'type': 'bool', },
+        'port_translation': {'type': 'bool', },
+        'l7_hardware_assist': {'type': 'bool', },
+        'auth_cfg': {'type': 'dict', 'aaa_policy': {'type': 'str', }},
+        'cpu_compute': {'type': 'bool', },
+        'memory_compute': {'type': 'bool', },
+        'resolve_web_cat_list': {'type': 'str', },
+        'uuid': {'type': 'str', },
+        'user_tag': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'total_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before', 'compression_bytes_after', 'compression_hit', 'compression_miss', 'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time', 'loc_permit', 'loc_deny', 'loc_conn', 'curr_ssl_conn', 'total_ssl_conn', 'backend-time-to-first-byte', 'backend-time-to-last-byte', 'in-latency', 'out-latency', 'total_fwd_bytes_out', 'total_fwd_pkts_out', 'total_rev_bytes_out', 'total_rev_pkts_out', 'curr_req_rate', 'curr_resp', 'total_resp', 'total_resp_succ', 'curr_resp_rate', 'curr_conn_overflow', 'dnsrrl_total_allowed', 'dnsrrl_total_dropped', 'dnsrrl_total_slipped', 'dnsrrl_bad_fqdn', 'throughput-bits-per-sec', 'dynamic-memory-alloc', 'dynamic-memory-free', 'dynamic-memory', 'ip_only_lb_fwd_bytes', 'ip_only_lb_rev_bytes', 'ip_only_lb_fwd_pkts', 'ip_only_lb_rev_pkts']}},
+        'oper': {'type': 'dict', 'state': {'type': 'str', 'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']}, 'loc_list': {'type': 'str', }, 'geo_location': {'type': 'str', }, 'level_str': {'type': 'str', }, 'group_id': {'type': 'int', }, 'loc_max_depth': {'type': 'int', }, 'loc_success': {'type': 'int', }, 'loc_error': {'type': 'int', }, 'loc_override': {'type': 'int', }, 'loc_last': {'type': 'str', }, 'http_hits_list': {'type': 'list', 'name': {'type': 'str', }, 'hits_count': {'type': 'int', }}, 'http_vport_cpu_list': {'type': 'list', 'status_200': {'type': 'int', }, 'status_201': {'type': 'int', }, 'status_202': {'type': 'int', }, 'status_203': {'type': 'int', }, 'status_204': {'type': 'int', }, 'status_205': {'type': 'int', }, 'status_206': {'type': 'int', }, 'status_207': {'type': 'int', }, 'status_100': {'type': 'int', }, 'status_101': {'type': 'int', }, 'status_102': {'type': 'int', }, 'status_300': {'type': 'int', }, 'status_301': {'type': 'int', }, 'status_302': {'type': 'int', }, 'status_303': {'type': 'int', }, 'status_304': {'type': 'int', }, 'status_305': {'type': 'int', }, 'status_306': {'type': 'int', }, 'status_307': {'type': 'int', }, 'status_400': {'type': 'int', }, 'status_401': {'type': 'int', }, 'status_402': {'type': 'int', }, 'status_403': {'type': 'int', }, 'status_404': {'type': 'int', }, 'status_405': {'type': 'int', }, 'status_406': {'type': 'int', }, 'status_407': {'type': 'int', }, 'status_408': {'type': 'int', }, 'status_409': {'type': 'int', }, 'status_410': {'type': 'int', }, 'status_411': {'type': 'int', }, 'status_412': {'type': 'int', }, 'status_413': {'type': 'int', }, 'status_414': {'type': 'int', }, 'status_415': {'type': 'int', }, 'status_416': {'type': 'int', }, 'status_417': {'type': 'int', }, 'status_418': {'type': 'int', }, 'status_422': {'type': 'int', }, 'status_423': {'type': 'int', }, 'status_424': {'type': 'int', }, 'status_425': {'type': 'int', }, 'status_426': {'type': 'int', }, 'status_449': {'type': 'int', }, 'status_450': {'type': 'int', }, 'status_500': {'type': 'int', }, 'status_501': {'type': 'int', }, 'status_502': {'type': 'int', }, 'status_503': {'type': 'int', }, 'status_504': {'type': 'int', }, 'status_504_ax': {'type': 'int', }, 'status_505': {'type': 'int', }, 'status_506': {'type': 'int', }, 'status_507': {'type': 'int', }, 'status_508': {'type': 'int', }, 'status_509': {'type': 'int', }, 'status_510': {'type': 'int', }, 'status_1xx': {'type': 'int', }, 'status_2xx': {'type': 'int', }, 'status_3xx': {'type': 'int', }, 'status_4xx': {'type': 'int', }, 'status_5xx': {'type': 'int', }, 'status_6xx': {'type': 'int', }, 'status_unknown': {'type': 'int', }, 'ws_handshake_request': {'type': 'int', }, 'ws_handshake_success': {'type': 'int', }, 'ws_client_switch': {'type': 'int', }, 'ws_server_switch': {'type': 'int', }, 'REQ_10u': {'type': 'int', }, 'REQ_20u': {'type': 'int', }, 'REQ_50u': {'type': 'int', }, 'REQ_100u': {'type': 'int', }, 'REQ_200u': {'type': 'int', }, 'REQ_500u': {'type': 'int', }, 'REQ_1m': {'type': 'int', }, 'REQ_2m': {'type': 'int', }, 'REQ_5m': {'type': 'int', }, 'REQ_10m': {'type': 'int', }, 'REQ_20m': {'type': 'int', }, 'REQ_50m': {'type': 'int', }, 'REQ_100m': {'type': 'int', }, 'REQ_200m': {'type': 'int', }, 'REQ_500m': {'type': 'int', }, 'REQ_1s': {'type': 'int', }, 'REQ_2s': {'type': 'int', }, 'REQ_5s': {'type': 'int', }, 'REQ_OVER_5s': {'type': 'int', }, 'curr_http2_conn': {'type': 'int', }, 'total_http2_conn': {'type': 'int', }, 'peak_http2_conn': {'type': 'int', }, 'total_http2_bytes': {'type': 'int', }, 'http2_control_bytes': {'type': 'int', }, 'http2_header_bytes': {'type': 'int', }, 'http2_data_bytes': {'type': 'int', }, 'http2_reset_received': {'type': 'int', }, 'http2_reset_sent': {'type': 'int', }, 'http2_goaway_received': {'type': 'int', }, 'http2_goaway_sent': {'type': 'int', }, 'stream_closed': {'type': 'int', }, 'header_length_long': {'type': 'int', }}, 'cpu_count': {'type': 'int', }, 'http_host_hits': {'type': 'bool', }, 'http_url_hits': {'type': 'bool', }, 'http_vport': {'type': 'bool', }, 'real_curr_conn': {'type': 'int', }, 'port_number': {'type': 'int', 'required': True, }, 'protocol': {'type': 'str', 'required': True, 'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']}},
+        'stats': {'type': 'dict', 'curr_conn': {'type': 'str', }, 'total_l4_conn': {'type': 'str', }, 'total_l7_conn': {'type': 'str', }, 'total_tcp_conn': {'type': 'str', }, 'total_conn': {'type': 'str', }, 'total_fwd_bytes': {'type': 'str', }, 'total_fwd_pkts': {'type': 'str', }, 'total_rev_bytes': {'type': 'str', }, 'total_rev_pkts': {'type': 'str', }, 'total_dns_pkts': {'type': 'str', }, 'total_mf_dns_pkts': {'type': 'str', }, 'es_total_failure_actions': {'type': 'str', }, 'compression_bytes_before': {'type': 'str', }, 'compression_bytes_after': {'type': 'str', }, 'compression_hit': {'type': 'str', }, 'compression_miss': {'type': 'str', }, 'compression_miss_no_client': {'type': 'str', }, 'compression_miss_template_exclusion': {'type': 'str', }, 'curr_req': {'type': 'str', }, 'total_req': {'type': 'str', }, 'total_req_succ': {'type': 'str', }, 'peak_conn': {'type': 'str', }, 'curr_conn_rate': {'type': 'str', }, 'last_rsp_time': {'type': 'str', }, 'fastest_rsp_time': {'type': 'str', }, 'slowest_rsp_time': {'type': 'str', }, 'loc_permit': {'type': 'str', }, 'loc_deny': {'type': 'str', }, 'loc_conn': {'type': 'str', }, 'curr_ssl_conn': {'type': 'str', }, 'total_ssl_conn': {'type': 'str', }, 'backend_time_to_first_byte': {'type': 'str', }, 'backend_time_to_last_byte': {'type': 'str', }, 'in_latency': {'type': 'str', }, 'out_latency': {'type': 'str', }, 'total_fwd_bytes_out': {'type': 'str', }, 'total_fwd_pkts_out': {'type': 'str', }, 'total_rev_bytes_out': {'type': 'str', }, 'total_rev_pkts_out': {'type': 'str', }, 'curr_req_rate': {'type': 'str', }, 'curr_resp': {'type': 'str', }, 'total_resp': {'type': 'str', }, 'total_resp_succ': {'type': 'str', }, 'curr_resp_rate': {'type': 'str', }, 'curr_conn_overflow': {'type': 'str', }, 'dnsrrl_total_allowed': {'type': 'str', }, 'dnsrrl_total_dropped': {'type': 'str', }, 'dnsrrl_total_slipped': {'type': 'str', }, 'dnsrrl_bad_fqdn': {'type': 'str', }, 'throughput_bits_per_sec': {'type': 'str', }, 'dynamic_memory': {'type': 'str', }, 'ip_only_lb_fwd_bytes': {'type': 'str', }, 'ip_only_lb_rev_bytes': {'type': 'str', }, 'ip_only_lb_fwd_pkts': {'type': 'str', }, 'ip_only_lb_rev_pkts': {'type': 'str', }, 'port_number': {'type': 'int', 'required': True, }, 'protocol': {'type': 'str', 'required': True, 'choices': ['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli', 'ssh', 'tcp-proxy', 'tftp', 'fast-fix']}}
     })
     # Parent keys
-    rv.update(dict(virtual_server_name=dict(type='str', required=True), ))
+    rv.update(dict(
+        virtual_server_name=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -2720,136 +1570,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
-
-
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def get_oper(module):
-    query_params = {}
-    if module.params.get("oper"):
-        for k, v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v
-    return _get(module, oper_url(module), params=query_params)
-
-
-def get_stats(module):
-    query_params = {}
-    if module.params.get("stats"):
-        for k, v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-    return _get(module, stats_url(module), params=query_params)
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -2861,54 +1581,6 @@ def new_url(module):
     f_dict["virtual_server_name"] = module.params["virtual_server_name"]
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -2930,41 +1602,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("port", module)
+    payload = utils.build_json("port", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -2977,17 +1637,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -3003,29 +1657,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -3040,11 +1678,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -3053,46 +1696,55 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
-        elif module.params.get("get_type") == "oper":
-            result["axapi_calls"].append(get_oper(module))
-        elif module.params.get("get_type") == "stats":
-            result["axapi_calls"].append(get_stats(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "oper":
+                result["axapi_calls"].append(
+                    api_client.get_oper(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "stats":
+                result["axapi_calls"].append(
+                    api_client.get_stats(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

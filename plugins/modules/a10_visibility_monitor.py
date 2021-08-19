@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_visibility_monitor
 description:
@@ -303,29 +304,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "agent_list",
-    "debug_list",
-    "delete_debug_file",
-    "index_sessions",
-    "index_sessions_type",
-    "mon_entity_topk",
-    "monitor_key",
-    "netflow",
-    "primary_monitor",
-    "replay_debug_file",
-    "secondary_monitor",
-    "sflow",
-    "source_entity_topk",
-    "template",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["agent_list", "debug_list", "delete_debug_file", "index_sessions", "index_sessions_type", "mon_entity_topk", "monitor_key", "netflow", "primary_monitor", "replay_debug_file", "secondary_monitor", "sflow", "source_entity_topk", "template", "uuid", ]
 
 
 def get_default_argspec():
@@ -333,244 +323,31 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'primary_monitor': {
-            'type': 'str',
-            'required': True,
-            'choices': ['traffic']
-        },
-        'monitor_key': {
-            'type': 'str',
-            'choices': ['source', 'dest', 'service', 'source-nat-ip']
-        },
-        'mon_entity_topk': {
-            'type': 'bool',
-        },
-        'source_entity_topk': {
-            'type': 'bool',
-        },
-        'index_sessions': {
-            'type': 'bool',
-        },
-        'index_sessions_type': {
-            'type': 'str',
-            'choices': ['per-cpu']
-        },
-        'template': {
-            'type': 'dict',
-            'notification': {
-                'type': 'list',
-                'notif_template_name': {
-                    'type': 'str',
-                }
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'agent_list': {
-            'type': 'list',
-            'agent_name': {
-                'type': 'str',
-                'required': True,
-            },
-            'agent_v4_addr': {
-                'type': 'str',
-            },
-            'agent_v6_addr': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'sflow-packets-received',
-                        'sflow-samples-received', 'sflow-samples-bad-len',
-                        'sflow-samples-non-std', 'sflow-samples-skipped',
-                        'sflow-sample-record-bad-len',
-                        'sflow-samples-sent-for-detection',
-                        'sflow-sample-record-invalid-layer2',
-                        'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled',
-                        'netflow-disabled', 'netflow-v5-packets-received',
-                        'netflow-v5-samples-received',
-                        'netflow-v5-samples-sent-for-detection',
-                        'netflow-v5-sample-records-bad-len',
-                        'netflow-v5-max-records-exceed',
-                        'netflow-v9-packets-received',
-                        'netflow-v9-samples-received',
-                        'netflow-v9-samples-sent-for-detection',
-                        'netflow-v9-sample-records-bad-len',
-                        'netflow-v9-max-records-exceed',
-                        'netflow-v10-packets-received',
-                        'netflow-v10-samples-received',
-                        'netflow-v10-samples-sent-for-detection',
-                        'netflow-v10-sample-records-bad-len',
-                        'netflow-v10-max-records-exceed',
-                        'netflow-tcp-sample-received',
-                        'netflow-udp-sample-received',
-                        'netflow-icmp-sample-received',
-                        'netflow-other-sample-received',
-                        'netflow-record-copy-oom-error',
-                        'netflow-record-rse-invalid',
-                        'netflow-sample-flow-dur-error'
-                    ]
-                }
-            }
-        },
-        'sflow': {
-            'type': 'dict',
-            'listening_port': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'netflow': {
-            'type': 'dict',
-            'listening_port': {
-                'type': 'int',
-            },
-            'template_active_timeout': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'debug_list': {
-            'type': 'list',
-            'debug_ip_addr': {
-                'type': 'str',
-                'required': True,
-            },
-            'debug_port': {
-                'type': 'int',
-                'required': True,
-            },
-            'debug_protocol': {
-                'type': 'str',
-                'required': True,
-                'choices': ['TCP', 'UDP', 'ICMP']
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'replay_debug_file': {
-            'type': 'dict',
-            'debug_ip_addr': {
-                'type': 'str',
-            },
-            'debug_port': {
-                'type': 'int',
-            },
-            'debug_protocol': {
-                'type': 'str',
-                'choices': ['TCP', 'UDP', 'ICMP']
-            }
-        },
-        'delete_debug_file': {
-            'type': 'dict',
-            'debug_ip_addr': {
-                'type': 'str',
-            },
-            'debug_port': {
-                'type': 'int',
-            },
-            'debug_protocol': {
-                'type': 'str',
-                'choices': ['TCP', 'UDP', 'ICMP']
-            }
-        },
-        'secondary_monitor': {
-            'type': 'dict',
-            'secondary_monitoring_key': {
-                'type': 'str',
-                'choices': ['service']
-            },
-            'mon_entity_topk': {
-                'type': 'bool',
-            },
-            'source_entity_topk': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'debug_list': {
-                'type': 'list',
-                'debug_ip_addr': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'debug_port': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'delete_debug_file': {
-                'type': 'dict',
-                'debug_ip_addr': {
-                    'type': 'str',
-                },
-                'debug_port': {
-                    'type': 'int',
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                }
-            },
-            'replay_debug_file': {
-                'type': 'dict',
-                'debug_ip_addr': {
-                    'type': 'str',
-                },
-                'debug_port': {
-                    'type': 'int',
-                },
-                'debug_protocol': {
-                    'type': 'str',
-                    'choices': ['TCP', 'UDP', 'ICMP']
-                }
-            }
-        }
+    rv.update({'primary_monitor': {'type': 'str', 'required': True, 'choices': ['traffic']},
+        'monitor_key': {'type': 'str', 'choices': ['source', 'dest', 'service', 'source-nat-ip']},
+        'mon_entity_topk': {'type': 'bool', },
+        'source_entity_topk': {'type': 'bool', },
+        'index_sessions': {'type': 'bool', },
+        'index_sessions_type': {'type': 'str', 'choices': ['per-cpu']},
+        'template': {'type': 'dict', 'notification': {'type': 'list', 'notif_template_name': {'type': 'str', }}},
+        'uuid': {'type': 'str', },
+        'agent_list': {'type': 'list', 'agent_name': {'type': 'str', 'required': True, }, 'agent_v4_addr': {'type': 'str', }, 'agent_v6_addr': {'type': 'str', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'sflow-packets-received', 'sflow-samples-received', 'sflow-samples-bad-len', 'sflow-samples-non-std', 'sflow-samples-skipped', 'sflow-sample-record-bad-len', 'sflow-samples-sent-for-detection', 'sflow-sample-record-invalid-layer2', 'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled', 'netflow-disabled', 'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len', 'netflow-v9-max-records-exceed', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received', 'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error']}}},
+        'sflow': {'type': 'dict', 'listening_port': {'type': 'int', }, 'uuid': {'type': 'str', }},
+        'netflow': {'type': 'dict', 'listening_port': {'type': 'int', }, 'template_active_timeout': {'type': 'int', }, 'uuid': {'type': 'str', }},
+        'debug_list': {'type': 'list', 'debug_ip_addr': {'type': 'str', 'required': True, }, 'debug_port': {'type': 'int', 'required': True, }, 'debug_protocol': {'type': 'str', 'required': True, 'choices': ['TCP', 'UDP', 'ICMP']}, 'uuid': {'type': 'str', }},
+        'replay_debug_file': {'type': 'dict', 'debug_ip_addr': {'type': 'str', }, 'debug_port': {'type': 'int', }, 'debug_protocol': {'type': 'str', 'choices': ['TCP', 'UDP', 'ICMP']}},
+        'delete_debug_file': {'type': 'dict', 'debug_ip_addr': {'type': 'str', }, 'debug_port': {'type': 'int', }, 'debug_protocol': {'type': 'str', 'choices': ['TCP', 'UDP', 'ICMP']}},
+        'secondary_monitor': {'type': 'dict', 'secondary_monitoring_key': {'type': 'str', 'choices': ['service']}, 'mon_entity_topk': {'type': 'bool', }, 'source_entity_topk': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'debug_list': {'type': 'list', 'debug_ip_addr': {'type': 'str', 'required': True, }, 'debug_port': {'type': 'int', 'required': True, }, 'debug_protocol': {'type': 'str', 'required': True, 'choices': ['TCP', 'UDP', 'ICMP']}, 'uuid': {'type': 'str', }}, 'delete_debug_file': {'type': 'dict', 'debug_ip_addr': {'type': 'str', }, 'debug_port': {'type': 'int', }, 'debug_protocol': {'type': 'str', 'choices': ['TCP', 'UDP', 'ICMP']}}, 'replay_debug_file': {'type': 'dict', 'debug_ip_addr': {'type': 'str', }, 'debug_port': {'type': 'int', }, 'debug_protocol': {'type': 'str', 'choices': ['TCP', 'UDP', 'ICMP']}}}
     })
     return rv
 
@@ -585,108 +362,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -695,54 +370,6 @@ def new_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -764,41 +391,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("monitor", module)
+    payload = utils.build_json("monitor", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -811,17 +426,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -837,29 +446,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -874,11 +467,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -887,42 +485,49 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_interface_ethernet_ipv6
 description:
@@ -366,26 +367,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "access_list_cfg",
-    "address_list",
-    "inside",
-    "ipv6_enable",
-    "ospf",
-    "outside",
-    "rip",
-    "router",
-    "router_adver",
-    "stateful_firewall",
-    "ttl_ignore",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["access_list_cfg", "address_list", "inside", "ipv6_enable", "ospf", "outside", "rip", "router", "router_adver", "stateful_firewall", "ttl_ignore", "uuid", ]
 
 
 def get_default_argspec():
@@ -393,327 +386,33 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'address_list': {
-            'type': 'list',
-            'ipv6_addr': {
-                'type': 'str',
-            },
-            'address_type': {
-                'type': 'str',
-                'choices': ['anycast', 'link-local']
-            }
-        },
-        'inside': {
-            'type': 'bool',
-        },
-        'outside': {
-            'type': 'bool',
-        },
-        'ipv6_enable': {
-            'type': 'bool',
-        },
-        'ttl_ignore': {
-            'type': 'bool',
-        },
-        'access_list_cfg': {
-            'type': 'dict',
-            'v6_acl_name': {
-                'type': 'str',
-            },
-            'inbound': {
-                'type': 'bool',
-            }
-        },
-        'router_adver': {
-            'type': 'dict',
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'hop_limit': {
-                'type': 'int',
-            },
-            'max_interval': {
-                'type': 'int',
-            },
-            'min_interval': {
-                'type': 'int',
-            },
-            'default_lifetime': {
-                'type': 'int',
-            },
-            'rate_limit': {
-                'type': 'int',
-            },
-            'reachable_time': {
-                'type': 'int',
-            },
-            'retransmit_timer': {
-                'type': 'int',
-            },
-            'adver_mtu_disable': {
-                'type': 'bool',
-            },
-            'adver_mtu': {
-                'type': 'int',
-            },
-            'prefix_list': {
-                'type': 'list',
-                'prefix': {
-                    'type': 'str',
-                },
-                'not_autonomous': {
-                    'type': 'bool',
-                },
-                'not_on_link': {
-                    'type': 'bool',
-                },
-                'preferred_lifetime': {
-                    'type': 'int',
-                },
-                'valid_lifetime': {
-                    'type': 'int',
-                }
-            },
-            'managed_config_action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'other_config_action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'adver_vrid': {
-                'type': 'int',
-            },
-            'use_floating_ip': {
-                'type': 'bool',
-            },
-            'floating_ip': {
-                'type': 'str',
-            },
-            'adver_vrid_default': {
-                'type': 'bool',
-            },
-            'use_floating_ip_default_vrid': {
-                'type': 'bool',
-            },
-            'floating_ip_default_vrid': {
-                'type': 'str',
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'stateful_firewall': {
-            'type': 'dict',
-            'inside': {
-                'type': 'bool',
-            },
-            'class_list': {
-                'type': 'str',
-            },
-            'outside': {
-                'type': 'bool',
-            },
-            'access_list': {
-                'type': 'bool',
-            },
-            'acl_name': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'router': {
-            'type': 'dict',
-            'ripng': {
-                'type': 'dict',
-                'rip': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'ospf': {
-                'type': 'dict',
-                'area_list': {
-                    'type': 'list',
-                    'area_id_num': {
-                        'type': 'int',
-                    },
-                    'area_id_addr': {
-                        'type': 'str',
-                    },
-                    'tag': {
-                        'type': 'str',
-                    },
-                    'instance_id': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'isis': {
-                'type': 'dict',
-                'tag': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'rip': {
-            'type': 'dict',
-            'split_horizon_cfg': {
-                'type': 'dict',
-                'state': {
-                    'type': 'str',
-                    'choices': ['poisoned', 'disable', 'enable']
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'ospf': {
-            'type': 'dict',
-            'network_list': {
-                'type': 'list',
-                'broadcast_type': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'broadcast', 'non-broadcast', 'point-to-point',
-                        'point-to-multipoint'
-                    ]
-                },
-                'p2mp_nbma': {
-                    'type': 'bool',
-                },
-                'network_instance_id': {
-                    'type': 'int',
-                }
-            },
-            'bfd': {
-                'type': 'bool',
-            },
-            'disable': {
-                'type': 'bool',
-            },
-            'cost_cfg': {
-                'type': 'list',
-                'cost': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'dead_interval_cfg': {
-                'type': 'list',
-                'dead_interval': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'hello_interval_cfg': {
-                'type': 'list',
-                'hello_interval': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'mtu_ignore_cfg': {
-                'type': 'list',
-                'mtu_ignore': {
-                    'type': 'bool',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'neighbor_cfg': {
-                'type': 'list',
-                'neighbor': {
-                    'type': 'str',
-                },
-                'neig_inst': {
-                    'type': 'int',
-                },
-                'neighbor_cost': {
-                    'type': 'int',
-                },
-                'neighbor_poll_interval': {
-                    'type': 'int',
-                },
-                'neighbor_priority': {
-                    'type': 'int',
-                }
-            },
-            'priority_cfg': {
-                'type': 'list',
-                'priority': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'retransmit_interval_cfg': {
-                'type': 'list',
-                'retransmit_interval': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'transmit_delay_cfg': {
-                'type': 'list',
-                'transmit_delay': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        }
+    rv.update({'address_list': {'type': 'list', 'ipv6_addr': {'type': 'str', }, 'address_type': {'type': 'str', 'choices': ['anycast', 'link-local']}},
+        'inside': {'type': 'bool', },
+        'outside': {'type': 'bool', },
+        'ipv6_enable': {'type': 'bool', },
+        'ttl_ignore': {'type': 'bool', },
+        'access_list_cfg': {'type': 'dict', 'v6_acl_name': {'type': 'str', }, 'inbound': {'type': 'bool', }},
+        'router_adver': {'type': 'dict', 'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'hop_limit': {'type': 'int', }, 'max_interval': {'type': 'int', }, 'min_interval': {'type': 'int', }, 'default_lifetime': {'type': 'int', }, 'rate_limit': {'type': 'int', }, 'reachable_time': {'type': 'int', }, 'retransmit_timer': {'type': 'int', }, 'adver_mtu_disable': {'type': 'bool', }, 'adver_mtu': {'type': 'int', }, 'prefix_list': {'type': 'list', 'prefix': {'type': 'str', }, 'not_autonomous': {'type': 'bool', }, 'not_on_link': {'type': 'bool', }, 'preferred_lifetime': {'type': 'int', }, 'valid_lifetime': {'type': 'int', }}, 'managed_config_action': {'type': 'str', 'choices': ['enable', 'disable']}, 'other_config_action': {'type': 'str', 'choices': ['enable', 'disable']}, 'adver_vrid': {'type': 'int', }, 'use_floating_ip': {'type': 'bool', }, 'floating_ip': {'type': 'str', }, 'adver_vrid_default': {'type': 'bool', }, 'use_floating_ip_default_vrid': {'type': 'bool', }, 'floating_ip_default_vrid': {'type': 'str', }},
+        'uuid': {'type': 'str', },
+        'stateful_firewall': {'type': 'dict', 'inside': {'type': 'bool', }, 'class_list': {'type': 'str', }, 'outside': {'type': 'bool', }, 'access_list': {'type': 'bool', }, 'acl_name': {'type': 'str', }, 'uuid': {'type': 'str', }},
+        'router': {'type': 'dict', 'ripng': {'type': 'dict', 'rip': {'type': 'bool', }, 'uuid': {'type': 'str', }}, 'ospf': {'type': 'dict', 'area_list': {'type': 'list', 'area_id_num': {'type': 'int', }, 'area_id_addr': {'type': 'str', }, 'tag': {'type': 'str', }, 'instance_id': {'type': 'int', }}, 'uuid': {'type': 'str', }}, 'isis': {'type': 'dict', 'tag': {'type': 'str', }, 'uuid': {'type': 'str', }}},
+        'rip': {'type': 'dict', 'split_horizon_cfg': {'type': 'dict', 'state': {'type': 'str', 'choices': ['poisoned', 'disable', 'enable']}}, 'uuid': {'type': 'str', }},
+        'ospf': {'type': 'dict', 'network_list': {'type': 'list', 'broadcast_type': {'type': 'str', 'choices': ['broadcast', 'non-broadcast', 'point-to-point', 'point-to-multipoint']}, 'p2mp_nbma': {'type': 'bool', }, 'network_instance_id': {'type': 'int', }}, 'bfd': {'type': 'bool', }, 'disable': {'type': 'bool', }, 'cost_cfg': {'type': 'list', 'cost': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'dead_interval_cfg': {'type': 'list', 'dead_interval': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'hello_interval_cfg': {'type': 'list', 'hello_interval': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'mtu_ignore_cfg': {'type': 'list', 'mtu_ignore': {'type': 'bool', }, 'instance_id': {'type': 'int', }}, 'neighbor_cfg': {'type': 'list', 'neighbor': {'type': 'str', }, 'neig_inst': {'type': 'int', }, 'neighbor_cost': {'type': 'int', }, 'neighbor_poll_interval': {'type': 'int', }, 'neighbor_priority': {'type': 'int', }}, 'priority_cfg': {'type': 'list', 'priority': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'retransmit_interval_cfg': {'type': 'list', 'retransmit_interval': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'transmit_delay_cfg': {'type': 'list', 'transmit_delay': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'uuid': {'type': 'str', }}
     })
     # Parent keys
-    rv.update(dict(ethernet_ifnum=dict(type='str', required=True), ))
+    rv.update(dict(
+        ethernet_ifnum=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -728,108 +427,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -839,54 +436,6 @@ def new_url(module):
     f_dict["ethernet_ifnum"] = module.params["ethernet_ifnum"]
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -908,41 +457,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("ipv6", module)
+    payload = utils.build_json("ipv6", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -955,17 +492,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -981,29 +512,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1018,11 +533,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1031,42 +551,49 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

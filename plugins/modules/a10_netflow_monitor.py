@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_netflow_monitor
 description:
@@ -910,30 +911,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "custom_record",
-    "destination",
-    "disable",
-    "disable_log_by_destination",
-    "flow_timeout",
-    "name",
-    "protocol",
-    "record",
-    "resend_template",
-    "sample",
-    "sampling_enable",
-    "source_address",
-    "source_ip_use_mgmt",
-    "stats",
-    "user_tag",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["custom_record", "destination", "disable", "disable_log_by_destination", "flow_timeout", "name", "protocol", "record", "resend_template", "sample", "sampling_enable", "source_address", "source_ip_use_mgmt", "stats", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -941,781 +930,32 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'disable': {
-            'type': 'bool',
-        },
-        'source_ip_use_mgmt': {
-            'type': 'bool',
-        },
-        'flow_timeout': {
-            'type': 'int',
-        },
-        'protocol': {
-            'type': 'str',
-            'choices': ['v9', 'v10']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'packets-sent', 'bytes-sent', 'nat44-records-sent',
-                    'nat44-records-sent-failure', 'nat64-records-sent',
-                    'nat64-records-sent-failure', 'dslite-records-sent',
-                    'dslite-records-sent-failure',
-                    'session-event-nat44-records-sent',
-                    'session-event-nat44-records-sent-failure',
-                    'session-event-nat64-records-sent',
-                    'session-event-nat64-records-sent-failure',
-                    'session-event-dslite-records-sent',
-                    'session-event-dslite-records-sent-failure',
-                    'session-event-fw4-records-sent',
-                    'session-event-fw4-records-sent-failure',
-                    'session-event-fw6-records-sent',
-                    'session-event-fw6-records-sent-failure',
-                    'port-mapping-nat44-records-sent',
-                    'port-mapping-nat44-records-sent-failure',
-                    'port-mapping-nat64-records-sent',
-                    'port-mapping-nat64-records-sent-failure',
-                    'port-mapping-dslite-records-sent',
-                    'port-mapping-dslite-records-sent-failure',
-                    'netflow-v5-records-sent',
-                    'netflow-v5-records-sent-failure',
-                    'netflow-v5-ext-records-sent',
-                    'netflow-v5-ext-records-sent-failure',
-                    'port-batching-nat44-records-sent',
-                    'port-batching-nat44-records-sent-failure',
-                    'port-batching-nat64-records-sent',
-                    'port-batching-nat64-records-sent-failure',
-                    'port-batching-dslite-records-sent',
-                    'port-batching-dslite-records-sent-failure',
-                    'port-batching-v2-nat44-records-sent',
-                    'port-batching-v2-nat44-records-sent-failure',
-                    'port-batching-v2-nat64-records-sent',
-                    'port-batching-v2-nat64-records-sent-failure',
-                    'port-batching-v2-dslite-records-sent',
-                    'port-batching-v2-dslite-records-sent-failure',
-                    'custom-session-event-nat44-creation-records-sent',
-                    'custom-session-event-nat44-creation-records-sent-failure',
-                    'custom-session-event-nat64-creation-records-sent',
-                    'custom-session-event-nat64-creation-records-sent-failure',
-                    'custom-session-event-dslite-creation-records-sent',
-                    'custom-session-event-dslite-creation-records-sent-failure',
-                    'custom-session-event-nat44-deletion-records-sent',
-                    'custom-session-event-nat44-deletion-records-sent-failure',
-                    'custom-session-event-nat64-deletion-records-sent',
-                    'custom-session-event-nat64-deletion-records-sent-failure',
-                    'custom-session-event-dslite-deletion-records-sent',
-                    'custom-session-event-dslite-deletion-records-sent-failure',
-                    'custom-session-event-fw4-creation-records-sent',
-                    'custom-session-event-fw4-creation-records-sent-failure',
-                    'custom-session-event-fw6-creation-records-sent',
-                    'custom-session-event-fw6-creation-records-sent-failure',
-                    'custom-session-event-fw4-deletion-records-sent',
-                    'custom-session-event-fw4-deletion-records-sent-failure',
-                    'custom-session-event-fw6-deletion-records-sent',
-                    'custom-session-event-fw6-deletion-records-sent-failure',
-                    'custom-deny-reset-event-fw4-records-sent',
-                    'custom-deny-reset-event-fw4-records-sent-failure',
-                    'custom-deny-reset-event-fw6-records-sent',
-                    'custom-deny-reset-event-fw6-records-sent-failure',
-                    'custom-port-mapping-nat44-creation-records-sent',
-                    'custom-port-mapping-nat44-creation-records-sent-failure',
-                    'custom-port-mapping-nat64-creation-records-sent',
-                    'custom-port-mapping-nat64-creation-records-sent-failure',
-                    'custom-port-mapping-dslite-creation-records-sent',
-                    'custom-port-mapping-dslite-creation-records-sent-failure',
-                    'custom-port-mapping-nat44-deletion-records-sent',
-                    'custom-port-mapping-nat44-deletion-records-sent-failure',
-                    'custom-port-mapping-nat64-deletion-records-sent',
-                    'custom-port-mapping-nat64-deletion-records-sent-failure',
-                    'custom-port-mapping-dslite-deletion-records-sent',
-                    'custom-port-mapping-dslite-deletion-records-sent-failure',
-                    'custom-port-batching-nat44-creation-records-sent',
-                    'custom-port-batching-nat44-creation-records-sent-failure',
-                    'custom-port-batching-nat64-creation-records-sent',
-                    'custom-port-batching-nat64-creation-records-sent-failure',
-                    'custom-port-batching-dslite-creation-records-sent',
-                    'custom-port-batching-dslite-creation-records-sent-failure',
-                    'custom-port-batching-nat44-deletion-records-sent',
-                    'custom-port-batching-nat44-deletion-records-sent-failure',
-                    'custom-port-batching-nat64-deletion-records-sent',
-                    'custom-port-batching-nat64-deletion-records-sent-failure',
-                    'custom-port-batching-dslite-deletion-records-sent',
-                    'custom-port-batching-dslite-deletion-records-sent-failure',
-                    'custom-port-batching-v2-nat44-creation-records-sent'
-                ]
-            },
-            'counters2': {
-                'type':
-                'str',
-                'choices': [
-                    'custom-port-batching-v2-nat44-creation-records-sent-failure',
-                    'custom-port-batching-v2-nat64-creation-records-sent',
-                    'custom-port-batching-v2-nat64-creation-records-sent-failure',
-                    'custom-port-batching-v2-dslite-creation-records-sent',
-                    'custom-port-batching-v2-dslite-creation-records-sent-failure',
-                    'custom-port-batching-v2-nat44-deletion-records-sent',
-                    'custom-port-batching-v2-nat44-deletion-records-sent-failure',
-                    'custom-port-batching-v2-nat64-deletion-records-sent',
-                    'custom-port-batching-v2-nat64-deletion-records-sent-failure',
-                    'custom-port-batching-v2-dslite-deletion-records-sent',
-                    'custom-port-batching-v2-dslite-deletion-records-sent-failure',
-                    'reduced-logs-by-destination'
-                ]
-            }
-        },
-        'disable_log_by_destination': {
-            'type': 'dict',
-            'tcp_list': {
-                'type': 'list',
-                'tcp_port_start': {
-                    'type': 'int',
-                },
-                'tcp_port_end': {
-                    'type': 'int',
-                }
-            },
-            'udp_list': {
-                'type': 'list',
-                'udp_port_start': {
-                    'type': 'int',
-                },
-                'udp_port_end': {
-                    'type': 'int',
-                }
-            },
-            'icmp': {
-                'type': 'bool',
-            },
-            'others': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ip_list': {
-                'type': 'list',
-                'ipv4_addr': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'tcp_list': {
-                    'type': 'list',
-                    'tcp_port_start': {
-                        'type': 'int',
-                    },
-                    'tcp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'udp_list': {
-                    'type': 'list',
-                    'udp_port_start': {
-                        'type': 'int',
-                    },
-                    'udp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'icmp': {
-                    'type': 'bool',
-                },
-                'others': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'user_tag': {
-                    'type': 'str',
-                }
-            },
-            'ip6_list': {
-                'type': 'list',
-                'ipv6_addr': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'tcp_list': {
-                    'type': 'list',
-                    'tcp_port_start': {
-                        'type': 'int',
-                    },
-                    'tcp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'udp_list': {
-                    'type': 'list',
-                    'udp_port_start': {
-                        'type': 'int',
-                    },
-                    'udp_port_end': {
-                        'type': 'int',
-                    }
-                },
-                'icmp': {
-                    'type': 'bool',
-                },
-                'others': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'user_tag': {
-                    'type': 'str',
-                }
-            }
-        },
-        'record': {
-            'type': 'dict',
-            'netflow_v5': {
-                'type': 'bool',
-            },
-            'netflow_v5_ext': {
-                'type': 'bool',
-            },
-            'nat44': {
-                'type': 'bool',
-            },
-            'nat64': {
-                'type': 'bool',
-            },
-            'dslite': {
-                'type': 'bool',
-            },
-            'sesn_event_nat44': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'sesn_event_nat64': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'sesn_event_dslite': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'sesn_event_fw4': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'sesn_event_fw6': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_mapping_nat44': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_mapping_nat64': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_mapping_dslite': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_batch_nat44': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_batch_nat64': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_batch_dslite': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_batch_v2_nat44': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_batch_v2_nat64': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'port_batch_v2_dslite': {
-                'type': 'str',
-                'choices': ['both', 'creation', 'deletion']
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'custom_record': {
-            'type': 'dict',
-            'custom_cfg': {
-                'type': 'list',
-                'event': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'sesn-event-nat44-creation',
-                        'sesn-event-nat44-deletion',
-                        'sesn-event-nat64-creation',
-                        'sesn-event-nat64-deletion',
-                        'sesn-event-dslite-creation',
-                        'sesn-event-dslite-deletion',
-                        'sesn-event-fw4-creation', 'sesn-event-fw4-deletion',
-                        'sesn-event-fw6-creation', 'sesn-event-fw6-deletion',
-                        'deny-reset-event-fw4', 'deny-reset-event-fw6',
-                        'port-mapping-nat44-creation',
-                        'port-mapping-nat44-deletion',
-                        'port-mapping-nat64-creation',
-                        'port-mapping-nat64-deletion',
-                        'port-mapping-dslite-creation',
-                        'port-mapping-dslite-deletion',
-                        'port-batch-nat44-creation',
-                        'port-batch-nat44-deletion',
-                        'port-batch-nat64-creation',
-                        'port-batch-nat64-deletion',
-                        'port-batch-dslite-creation',
-                        'port-batch-dslite-deletion',
-                        'port-batch-v2-nat44-creation',
-                        'port-batch-v2-nat44-deletion',
-                        'port-batch-v2-nat64-creation',
-                        'port-batch-v2-nat64-deletion',
-                        'port-batch-v2-dslite-creation',
-                        'port-batch-v2-dslite-deletion'
-                    ]
-                },
-                'ipfix_template': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'destination': {
-            'type': 'dict',
-            'service_group': {
-                'type': 'str',
-            },
-            'ip_cfg': {
-                'type': 'dict',
-                'ip': {
-                    'type': 'str',
-                },
-                'port4': {
-                    'type': 'int',
-                }
-            },
-            'ipv6_cfg': {
-                'type': 'dict',
-                'ipv6': {
-                    'type': 'str',
-                },
-                'port6': {
-                    'type': 'int',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'source_address': {
-            'type': 'dict',
-            'ip': {
-                'type': 'str',
-            },
-            'ipv6': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'resend_template': {
-            'type': 'dict',
-            'timeout': {
-                'type': 'int',
-            },
-            'records': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'sample': {
-            'type': 'dict',
-            'ethernet_list': {
-                'type': 'list',
-                'ifindex': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            've_list': {
-                'type': 'list',
-                've_num': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'nat_pool_list': {
-                'type': 'list',
-                'pool_name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'packets_sent': {
-                'type': 'str',
-            },
-            'bytes_sent': {
-                'type': 'str',
-            },
-            'nat44_records_sent': {
-                'type': 'str',
-            },
-            'nat44_records_sent_failure': {
-                'type': 'str',
-            },
-            'nat64_records_sent': {
-                'type': 'str',
-            },
-            'nat64_records_sent_failure': {
-                'type': 'str',
-            },
-            'dslite_records_sent': {
-                'type': 'str',
-            },
-            'dslite_records_sent_failure': {
-                'type': 'str',
-            },
-            'session_event_nat44_records_sent': {
-                'type': 'str',
-            },
-            'session_event_nat44_records_sent_failure': {
-                'type': 'str',
-            },
-            'session_event_nat64_records_sent': {
-                'type': 'str',
-            },
-            'session_event_nat64_records_sent_failure': {
-                'type': 'str',
-            },
-            'session_event_dslite_records_sent': {
-                'type': 'str',
-            },
-            'session_event_dslite_records_sent_failure': {
-                'type': 'str',
-            },
-            'session_event_fw4_records_sent': {
-                'type': 'str',
-            },
-            'session_event_fw4_records_sent_failure': {
-                'type': 'str',
-            },
-            'session_event_fw6_records_sent': {
-                'type': 'str',
-            },
-            'session_event_fw6_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_mapping_nat44_records_sent': {
-                'type': 'str',
-            },
-            'port_mapping_nat44_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_mapping_nat64_records_sent': {
-                'type': 'str',
-            },
-            'port_mapping_nat64_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_mapping_dslite_records_sent': {
-                'type': 'str',
-            },
-            'port_mapping_dslite_records_sent_failure': {
-                'type': 'str',
-            },
-            'netflow_v5_records_sent': {
-                'type': 'str',
-            },
-            'netflow_v5_records_sent_failure': {
-                'type': 'str',
-            },
-            'netflow_v5_ext_records_sent': {
-                'type': 'str',
-            },
-            'netflow_v5_ext_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_batching_nat44_records_sent': {
-                'type': 'str',
-            },
-            'port_batching_nat44_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_batching_nat64_records_sent': {
-                'type': 'str',
-            },
-            'port_batching_nat64_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_batching_dslite_records_sent': {
-                'type': 'str',
-            },
-            'port_batching_dslite_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_batching_v2_nat44_records_sent': {
-                'type': 'str',
-            },
-            'port_batching_v2_nat44_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_batching_v2_nat64_records_sent': {
-                'type': 'str',
-            },
-            'port_batching_v2_nat64_records_sent_failure': {
-                'type': 'str',
-            },
-            'port_batching_v2_dslite_records_sent': {
-                'type': 'str',
-            },
-            'port_batching_v2_dslite_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_nat44_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_nat44_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_nat64_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_nat64_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_dslite_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_dslite_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_nat44_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_nat44_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_nat64_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_nat64_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_dslite_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_dslite_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_fw4_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_fw4_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_fw6_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_fw6_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_fw4_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_fw4_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_session_event_fw6_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_session_event_fw6_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_deny_reset_event_fw4_records_sent': {
-                'type': 'str',
-            },
-            'custom_deny_reset_event_fw4_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_deny_reset_event_fw6_records_sent': {
-                'type': 'str',
-            },
-            'custom_deny_reset_event_fw6_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat44_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat44_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat64_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat64_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_mapping_dslite_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_mapping_dslite_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat44_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat44_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat64_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_mapping_nat64_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_mapping_dslite_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_mapping_dslite_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat44_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat44_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat64_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat64_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_dslite_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_dslite_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat44_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat44_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat64_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_nat64_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_dslite_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_dslite_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat44_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat44_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat64_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat64_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_dslite_creation_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_dslite_creation_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat44_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat44_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat64_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_nat64_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_dslite_deletion_records_sent': {
-                'type': 'str',
-            },
-            'custom_port_batching_v2_dslite_deletion_records_sent_failure': {
-                'type': 'str',
-            },
-            'reduced_logs_by_destination': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
-        }
+    rv.update({'name': {'type': 'str', 'required': True, },
+        'disable': {'type': 'bool', },
+        'source_ip_use_mgmt': {'type': 'bool', },
+        'flow_timeout': {'type': 'int', },
+        'protocol': {'type': 'str', 'choices': ['v9', 'v10']},
+        'uuid': {'type': 'str', },
+        'user_tag': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'packets-sent', 'bytes-sent', 'nat44-records-sent', 'nat44-records-sent-failure', 'nat64-records-sent', 'nat64-records-sent-failure', 'dslite-records-sent', 'dslite-records-sent-failure', 'session-event-nat44-records-sent', 'session-event-nat44-records-sent-failure', 'session-event-nat64-records-sent', 'session-event-nat64-records-sent-failure', 'session-event-dslite-records-sent', 'session-event-dslite-records-sent-failure', 'session-event-fw4-records-sent', 'session-event-fw4-records-sent-failure', 'session-event-fw6-records-sent', 'session-event-fw6-records-sent-failure', 'port-mapping-nat44-records-sent', 'port-mapping-nat44-records-sent-failure', 'port-mapping-nat64-records-sent', 'port-mapping-nat64-records-sent-failure', 'port-mapping-dslite-records-sent', 'port-mapping-dslite-records-sent-failure', 'netflow-v5-records-sent', 'netflow-v5-records-sent-failure', 'netflow-v5-ext-records-sent', 'netflow-v5-ext-records-sent-failure', 'port-batching-nat44-records-sent', 'port-batching-nat44-records-sent-failure', 'port-batching-nat64-records-sent', 'port-batching-nat64-records-sent-failure', 'port-batching-dslite-records-sent', 'port-batching-dslite-records-sent-failure', 'port-batching-v2-nat44-records-sent', 'port-batching-v2-nat44-records-sent-failure', 'port-batching-v2-nat64-records-sent', 'port-batching-v2-nat64-records-sent-failure', 'port-batching-v2-dslite-records-sent', 'port-batching-v2-dslite-records-sent-failure', 'custom-session-event-nat44-creation-records-sent', 'custom-session-event-nat44-creation-records-sent-failure', 'custom-session-event-nat64-creation-records-sent', 'custom-session-event-nat64-creation-records-sent-failure', 'custom-session-event-dslite-creation-records-sent', 'custom-session-event-dslite-creation-records-sent-failure', 'custom-session-event-nat44-deletion-records-sent', 'custom-session-event-nat44-deletion-records-sent-failure', 'custom-session-event-nat64-deletion-records-sent', 'custom-session-event-nat64-deletion-records-sent-failure', 'custom-session-event-dslite-deletion-records-sent', 'custom-session-event-dslite-deletion-records-sent-failure', 'custom-session-event-fw4-creation-records-sent', 'custom-session-event-fw4-creation-records-sent-failure', 'custom-session-event-fw6-creation-records-sent', 'custom-session-event-fw6-creation-records-sent-failure', 'custom-session-event-fw4-deletion-records-sent', 'custom-session-event-fw4-deletion-records-sent-failure', 'custom-session-event-fw6-deletion-records-sent', 'custom-session-event-fw6-deletion-records-sent-failure', 'custom-deny-reset-event-fw4-records-sent', 'custom-deny-reset-event-fw4-records-sent-failure', 'custom-deny-reset-event-fw6-records-sent', 'custom-deny-reset-event-fw6-records-sent-failure', 'custom-port-mapping-nat44-creation-records-sent', 'custom-port-mapping-nat44-creation-records-sent-failure', 'custom-port-mapping-nat64-creation-records-sent', 'custom-port-mapping-nat64-creation-records-sent-failure', 'custom-port-mapping-dslite-creation-records-sent', 'custom-port-mapping-dslite-creation-records-sent-failure', 'custom-port-mapping-nat44-deletion-records-sent', 'custom-port-mapping-nat44-deletion-records-sent-failure', 'custom-port-mapping-nat64-deletion-records-sent', 'custom-port-mapping-nat64-deletion-records-sent-failure', 'custom-port-mapping-dslite-deletion-records-sent', 'custom-port-mapping-dslite-deletion-records-sent-failure', 'custom-port-batching-nat44-creation-records-sent', 'custom-port-batching-nat44-creation-records-sent-failure', 'custom-port-batching-nat64-creation-records-sent', 'custom-port-batching-nat64-creation-records-sent-failure', 'custom-port-batching-dslite-creation-records-sent', 'custom-port-batching-dslite-creation-records-sent-failure', 'custom-port-batching-nat44-deletion-records-sent', 'custom-port-batching-nat44-deletion-records-sent-failure', 'custom-port-batching-nat64-deletion-records-sent', 'custom-port-batching-nat64-deletion-records-sent-failure', 'custom-port-batching-dslite-deletion-records-sent', 'custom-port-batching-dslite-deletion-records-sent-failure', 'custom-port-batching-v2-nat44-creation-records-sent']}, 'counters2': {'type': 'str', 'choices': ['custom-port-batching-v2-nat44-creation-records-sent-failure', 'custom-port-batching-v2-nat64-creation-records-sent', 'custom-port-batching-v2-nat64-creation-records-sent-failure', 'custom-port-batching-v2-dslite-creation-records-sent', 'custom-port-batching-v2-dslite-creation-records-sent-failure', 'custom-port-batching-v2-nat44-deletion-records-sent', 'custom-port-batching-v2-nat44-deletion-records-sent-failure', 'custom-port-batching-v2-nat64-deletion-records-sent', 'custom-port-batching-v2-nat64-deletion-records-sent-failure', 'custom-port-batching-v2-dslite-deletion-records-sent', 'custom-port-batching-v2-dslite-deletion-records-sent-failure', 'reduced-logs-by-destination']}},
+        'disable_log_by_destination': {'type': 'dict', 'tcp_list': {'type': 'list', 'tcp_port_start': {'type': 'int', }, 'tcp_port_end': {'type': 'int', }}, 'udp_list': {'type': 'list', 'udp_port_start': {'type': 'int', }, 'udp_port_end': {'type': 'int', }}, 'icmp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'ip_list': {'type': 'list', 'ipv4_addr': {'type': 'str', 'required': True, }, 'tcp_list': {'type': 'list', 'tcp_port_start': {'type': 'int', }, 'tcp_port_end': {'type': 'int', }}, 'udp_list': {'type': 'list', 'udp_port_start': {'type': 'int', }, 'udp_port_end': {'type': 'int', }}, 'icmp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}, 'ip6_list': {'type': 'list', 'ipv6_addr': {'type': 'str', 'required': True, }, 'tcp_list': {'type': 'list', 'tcp_port_start': {'type': 'int', }, 'tcp_port_end': {'type': 'int', }}, 'udp_list': {'type': 'list', 'udp_port_start': {'type': 'int', }, 'udp_port_end': {'type': 'int', }}, 'icmp': {'type': 'bool', }, 'others': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}},
+        'record': {'type': 'dict', 'netflow_v5': {'type': 'bool', }, 'netflow_v5_ext': {'type': 'bool', }, 'nat44': {'type': 'bool', }, 'nat64': {'type': 'bool', }, 'dslite': {'type': 'bool', }, 'sesn_event_nat44': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'sesn_event_nat64': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'sesn_event_dslite': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'sesn_event_fw4': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'sesn_event_fw6': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_mapping_nat44': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_mapping_nat64': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_mapping_dslite': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_batch_nat44': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_batch_nat64': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_batch_dslite': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_batch_v2_nat44': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_batch_v2_nat64': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'port_batch_v2_dslite': {'type': 'str', 'choices': ['both', 'creation', 'deletion']}, 'uuid': {'type': 'str', }},
+        'custom_record': {'type': 'dict', 'custom_cfg': {'type': 'list', 'event': {'type': 'str', 'choices': ['sesn-event-nat44-creation', 'sesn-event-nat44-deletion', 'sesn-event-nat64-creation', 'sesn-event-nat64-deletion', 'sesn-event-dslite-creation', 'sesn-event-dslite-deletion', 'sesn-event-fw4-creation', 'sesn-event-fw4-deletion', 'sesn-event-fw6-creation', 'sesn-event-fw6-deletion', 'deny-reset-event-fw4', 'deny-reset-event-fw6', 'port-mapping-nat44-creation', 'port-mapping-nat44-deletion', 'port-mapping-nat64-creation', 'port-mapping-nat64-deletion', 'port-mapping-dslite-creation', 'port-mapping-dslite-deletion', 'port-batch-nat44-creation', 'port-batch-nat44-deletion', 'port-batch-nat64-creation', 'port-batch-nat64-deletion', 'port-batch-dslite-creation', 'port-batch-dslite-deletion', 'port-batch-v2-nat44-creation', 'port-batch-v2-nat44-deletion', 'port-batch-v2-nat64-creation', 'port-batch-v2-nat64-deletion', 'port-batch-v2-dslite-creation', 'port-batch-v2-dslite-deletion']}, 'ipfix_template': {'type': 'str', }}, 'uuid': {'type': 'str', }},
+        'destination': {'type': 'dict', 'service_group': {'type': 'str', }, 'ip_cfg': {'type': 'dict', 'ip': {'type': 'str', }, 'port4': {'type': 'int', }}, 'ipv6_cfg': {'type': 'dict', 'ipv6': {'type': 'str', }, 'port6': {'type': 'int', }}, 'uuid': {'type': 'str', }},
+        'source_address': {'type': 'dict', 'ip': {'type': 'str', }, 'ipv6': {'type': 'str', }, 'uuid': {'type': 'str', }},
+        'resend_template': {'type': 'dict', 'timeout': {'type': 'int', }, 'records': {'type': 'int', }, 'uuid': {'type': 'str', }},
+        'sample': {'type': 'dict', 'ethernet_list': {'type': 'list', 'ifindex': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }}, 've_list': {'type': 'list', 've_num': {'type': 'int', 'required': True, }, 'uuid': {'type': 'str', }}, 'nat_pool_list': {'type': 'list', 'pool_name': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }}},
+        'stats': {'type': 'dict', 'packets_sent': {'type': 'str', }, 'bytes_sent': {'type': 'str', }, 'nat44_records_sent': {'type': 'str', }, 'nat44_records_sent_failure': {'type': 'str', }, 'nat64_records_sent': {'type': 'str', }, 'nat64_records_sent_failure': {'type': 'str', }, 'dslite_records_sent': {'type': 'str', }, 'dslite_records_sent_failure': {'type': 'str', }, 'session_event_nat44_records_sent': {'type': 'str', }, 'session_event_nat44_records_sent_failure': {'type': 'str', }, 'session_event_nat64_records_sent': {'type': 'str', }, 'session_event_nat64_records_sent_failure': {'type': 'str', }, 'session_event_dslite_records_sent': {'type': 'str', }, 'session_event_dslite_records_sent_failure': {'type': 'str', }, 'session_event_fw4_records_sent': {'type': 'str', }, 'session_event_fw4_records_sent_failure': {'type': 'str', }, 'session_event_fw6_records_sent': {'type': 'str', }, 'session_event_fw6_records_sent_failure': {'type': 'str', }, 'port_mapping_nat44_records_sent': {'type': 'str', }, 'port_mapping_nat44_records_sent_failure': {'type': 'str', }, 'port_mapping_nat64_records_sent': {'type': 'str', }, 'port_mapping_nat64_records_sent_failure': {'type': 'str', }, 'port_mapping_dslite_records_sent': {'type': 'str', }, 'port_mapping_dslite_records_sent_failure': {'type': 'str', }, 'netflow_v5_records_sent': {'type': 'str', }, 'netflow_v5_records_sent_failure': {'type': 'str', }, 'netflow_v5_ext_records_sent': {'type': 'str', }, 'netflow_v5_ext_records_sent_failure': {'type': 'str', }, 'port_batching_nat44_records_sent': {'type': 'str', }, 'port_batching_nat44_records_sent_failure': {'type': 'str', }, 'port_batching_nat64_records_sent': {'type': 'str', }, 'port_batching_nat64_records_sent_failure': {'type': 'str', }, 'port_batching_dslite_records_sent': {'type': 'str', }, 'port_batching_dslite_records_sent_failure': {'type': 'str', }, 'port_batching_v2_nat44_records_sent': {'type': 'str', }, 'port_batching_v2_nat44_records_sent_failure': {'type': 'str', }, 'port_batching_v2_nat64_records_sent': {'type': 'str', }, 'port_batching_v2_nat64_records_sent_failure': {'type': 'str', }, 'port_batching_v2_dslite_records_sent': {'type': 'str', }, 'port_batching_v2_dslite_records_sent_failure': {'type': 'str', }, 'custom_session_event_nat44_creation_records_sent': {'type': 'str', }, 'custom_session_event_nat44_creation_records_sent_failure': {'type': 'str', }, 'custom_session_event_nat64_creation_records_sent': {'type': 'str', }, 'custom_session_event_nat64_creation_records_sent_failure': {'type': 'str', }, 'custom_session_event_dslite_creation_records_sent': {'type': 'str', }, 'custom_session_event_dslite_creation_records_sent_failure': {'type': 'str', }, 'custom_session_event_nat44_deletion_records_sent': {'type': 'str', }, 'custom_session_event_nat44_deletion_records_sent_failure': {'type': 'str', }, 'custom_session_event_nat64_deletion_records_sent': {'type': 'str', }, 'custom_session_event_nat64_deletion_records_sent_failure': {'type': 'str', }, 'custom_session_event_dslite_deletion_records_sent': {'type': 'str', }, 'custom_session_event_dslite_deletion_records_sent_failure': {'type': 'str', }, 'custom_session_event_fw4_creation_records_sent': {'type': 'str', }, 'custom_session_event_fw4_creation_records_sent_failure': {'type': 'str', }, 'custom_session_event_fw6_creation_records_sent': {'type': 'str', }, 'custom_session_event_fw6_creation_records_sent_failure': {'type': 'str', }, 'custom_session_event_fw4_deletion_records_sent': {'type': 'str', }, 'custom_session_event_fw4_deletion_records_sent_failure': {'type': 'str', }, 'custom_session_event_fw6_deletion_records_sent': {'type': 'str', }, 'custom_session_event_fw6_deletion_records_sent_failure': {'type': 'str', }, 'custom_deny_reset_event_fw4_records_sent': {'type': 'str', }, 'custom_deny_reset_event_fw4_records_sent_failure': {'type': 'str', }, 'custom_deny_reset_event_fw6_records_sent': {'type': 'str', }, 'custom_deny_reset_event_fw6_records_sent_failure': {'type': 'str', }, 'custom_port_mapping_nat44_creation_records_sent': {'type': 'str', }, 'custom_port_mapping_nat44_creation_records_sent_failure': {'type': 'str', }, 'custom_port_mapping_nat64_creation_records_sent': {'type': 'str', }, 'custom_port_mapping_nat64_creation_records_sent_failure': {'type': 'str', }, 'custom_port_mapping_dslite_creation_records_sent': {'type': 'str', }, 'custom_port_mapping_dslite_creation_records_sent_failure': {'type': 'str', }, 'custom_port_mapping_nat44_deletion_records_sent': {'type': 'str', }, 'custom_port_mapping_nat44_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_mapping_nat64_deletion_records_sent': {'type': 'str', }, 'custom_port_mapping_nat64_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_mapping_dslite_deletion_records_sent': {'type': 'str', }, 'custom_port_mapping_dslite_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_batching_nat44_creation_records_sent': {'type': 'str', }, 'custom_port_batching_nat44_creation_records_sent_failure': {'type': 'str', }, 'custom_port_batching_nat64_creation_records_sent': {'type': 'str', }, 'custom_port_batching_nat64_creation_records_sent_failure': {'type': 'str', }, 'custom_port_batching_dslite_creation_records_sent': {'type': 'str', }, 'custom_port_batching_dslite_creation_records_sent_failure': {'type': 'str', }, 'custom_port_batching_nat44_deletion_records_sent': {'type': 'str', }, 'custom_port_batching_nat44_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_batching_nat64_deletion_records_sent': {'type': 'str', }, 'custom_port_batching_nat64_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_batching_dslite_deletion_records_sent': {'type': 'str', }, 'custom_port_batching_dslite_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_batching_v2_nat44_creation_records_sent': {'type': 'str', }, 'custom_port_batching_v2_nat44_creation_records_sent_failure': {'type': 'str', }, 'custom_port_batching_v2_nat64_creation_records_sent': {'type': 'str', }, 'custom_port_batching_v2_nat64_creation_records_sent_failure': {'type': 'str', }, 'custom_port_batching_v2_dslite_creation_records_sent': {'type': 'str', }, 'custom_port_batching_v2_dslite_creation_records_sent_failure': {'type': 'str', }, 'custom_port_batching_v2_nat44_deletion_records_sent': {'type': 'str', }, 'custom_port_batching_v2_nat44_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_batching_v2_nat64_deletion_records_sent': {'type': 'str', }, 'custom_port_batching_v2_nat64_deletion_records_sent_failure': {'type': 'str', }, 'custom_port_batching_v2_dslite_deletion_records_sent': {'type': 'str', }, 'custom_port_batching_v2_dslite_deletion_records_sent_failure': {'type': 'str', }, 'reduced_logs_by_destination': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
     })
     return rv
 
@@ -1731,122 +971,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
-
-
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def get_stats(module):
-    query_params = {}
-    if module.params.get("stats"):
-        for k, v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-    return _get(module, stats_url(module), params=query_params)
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -1856,54 +980,6 @@ def new_url(module):
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -1925,41 +1001,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("monitor", module)
+    payload = utils.build_json("monitor", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -1972,17 +1036,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -1998,29 +1056,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -2035,11 +1077,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -2048,44 +1095,52 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
-        elif module.params.get("get_type") == "stats":
-            result["axapi_calls"].append(get_stats(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "stats":
+                result["axapi_calls"].append(
+                    api_client.get_stats(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_router_bgp_address_family_ipv6
 description:
@@ -294,25 +295,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "aggregate_address_list",
-    "auto_summary",
-    "bgp",
-    "distance",
-    "maximum_paths_value",
-    "neighbor",
-    "network",
-    "originate",
-    "redistribute",
-    "synchronization",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["aggregate_address_list", "auto_summary", "bgp", "distance", "maximum_paths_value", "neighbor", "network", "originate", "redistribute", "synchronization", "uuid", ]
 
 
 def get_default_argspec():
@@ -322,548 +316,30 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'bgp': {
-            'type': 'dict',
-            'dampening': {
-                'type': 'bool',
-            },
-            'dampening_half': {
-                'type': 'int',
-            },
-            'dampening_start_reuse': {
-                'type': 'int',
-            },
-            'dampening_start_supress': {
-                'type': 'int',
-            },
-            'dampening_max_supress': {
-                'type': 'int',
-            },
-            'dampening_unreachability': {
-                'type': 'int',
-            },
-            'route_map': {
-                'type': 'str',
-            }
-        },
-        'distance': {
-            'type': 'dict',
-            'distance_ext': {
-                'type': 'int',
-            },
-            'distance_int': {
-                'type': 'int',
-            },
-            'distance_local': {
-                'type': 'int',
-            }
-        },
-        'maximum_paths_value': {
-            'type': 'int',
-        },
-        'originate': {
-            'type': 'bool',
-        },
-        'aggregate_address_list': {
-            'type': 'list',
-            'aggregate_address': {
-                'type': 'str',
-            },
-            'as_set': {
-                'type': 'bool',
-            },
-            'summary_only': {
-                'type': 'bool',
-            }
-        },
-        'auto_summary': {
-            'type': 'bool',
-        },
-        'synchronization': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'network': {
-            'type': 'dict',
-            'synchronization': {
-                'type': 'dict',
-                'network_synchronization': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'ipv6_network_list': {
-                'type': 'list',
-                'network_ipv6': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'backdoor': {
-                    'type': 'bool',
-                },
-                'description': {
-                    'type': 'str',
-                },
-                'comm_value': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'neighbor': {
-            'type': 'dict',
-            'peer_group_neighbor_list': {
-                'type': 'list',
-                'peer_group': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'activate': {
-                    'type': 'bool',
-                },
-                'allowas_in': {
-                    'type': 'bool',
-                },
-                'allowas_in_count': {
-                    'type': 'int',
-                },
-                'prefix_list_direction': {
-                    'type': 'str',
-                    'choices': ['both', 'receive', 'send']
-                },
-                'default_originate': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'distribute_lists': {
-                    'type': 'list',
-                    'distribute_list': {
-                        'type': 'str',
-                    },
-                    'distribute_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'neighbor_filter_lists': {
-                    'type': 'list',
-                    'filter_list': {
-                        'type': 'str',
-                    },
-                    'filter_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'maximum_prefix': {
-                    'type': 'int',
-                },
-                'maximum_prefix_thres': {
-                    'type': 'int',
-                },
-                'next_hop_self': {
-                    'type': 'bool',
-                },
-                'neighbor_prefix_lists': {
-                    'type': 'list',
-                    'nbr_prefix_list': {
-                        'type': 'str',
-                    },
-                    'nbr_prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'remove_private_as': {
-                    'type': 'bool',
-                },
-                'neighbor_route_map_lists': {
-                    'type': 'list',
-                    'nbr_route_map': {
-                        'type': 'str',
-                    },
-                    'nbr_rmap_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'send_community_val': {
-                    'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
-                },
-                'inbound': {
-                    'type': 'bool',
-                },
-                'unsuppress_map': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'ipv4_neighbor_list': {
-                'type': 'list',
-                'neighbor_ipv4': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'peer_group_name': {
-                    'type': 'str',
-                },
-                'activate': {
-                    'type': 'bool',
-                },
-                'allowas_in': {
-                    'type': 'bool',
-                },
-                'allowas_in_count': {
-                    'type': 'int',
-                },
-                'prefix_list_direction': {
-                    'type': 'str',
-                    'choices': ['both', 'receive', 'send']
-                },
-                'default_originate': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'distribute_lists': {
-                    'type': 'list',
-                    'distribute_list': {
-                        'type': 'str',
-                    },
-                    'distribute_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'neighbor_filter_lists': {
-                    'type': 'list',
-                    'filter_list': {
-                        'type': 'str',
-                    },
-                    'filter_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'maximum_prefix': {
-                    'type': 'int',
-                },
-                'maximum_prefix_thres': {
-                    'type': 'int',
-                },
-                'next_hop_self': {
-                    'type': 'bool',
-                },
-                'neighbor_prefix_lists': {
-                    'type': 'list',
-                    'nbr_prefix_list': {
-                        'type': 'str',
-                    },
-                    'nbr_prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'remove_private_as': {
-                    'type': 'bool',
-                },
-                'neighbor_route_map_lists': {
-                    'type': 'list',
-                    'nbr_route_map': {
-                        'type': 'str',
-                    },
-                    'nbr_rmap_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'send_community_val': {
-                    'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
-                },
-                'inbound': {
-                    'type': 'bool',
-                },
-                'unsuppress_map': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'ipv6_neighbor_list': {
-                'type': 'list',
-                'neighbor_ipv6': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'peer_group_name': {
-                    'type': 'str',
-                },
-                'activate': {
-                    'type': 'bool',
-                },
-                'allowas_in': {
-                    'type': 'bool',
-                },
-                'allowas_in_count': {
-                    'type': 'int',
-                },
-                'prefix_list_direction': {
-                    'type': 'str',
-                    'choices': ['both', 'receive', 'send']
-                },
-                'default_originate': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                },
-                'distribute_lists': {
-                    'type': 'list',
-                    'distribute_list': {
-                        'type': 'str',
-                    },
-                    'distribute_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'neighbor_filter_lists': {
-                    'type': 'list',
-                    'filter_list': {
-                        'type': 'str',
-                    },
-                    'filter_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'maximum_prefix': {
-                    'type': 'int',
-                },
-                'maximum_prefix_thres': {
-                    'type': 'int',
-                },
-                'next_hop_self': {
-                    'type': 'bool',
-                },
-                'neighbor_prefix_lists': {
-                    'type': 'list',
-                    'nbr_prefix_list': {
-                        'type': 'str',
-                    },
-                    'nbr_prefix_list_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'remove_private_as': {
-                    'type': 'bool',
-                },
-                'neighbor_route_map_lists': {
-                    'type': 'list',
-                    'nbr_route_map': {
-                        'type': 'str',
-                    },
-                    'nbr_rmap_direction': {
-                        'type': 'str',
-                        'choices': ['in', 'out']
-                    }
-                },
-                'send_community_val': {
-                    'type': 'str',
-                    'choices': ['both', 'none', 'standard', 'extended']
-                },
-                'inbound': {
-                    'type': 'bool',
-                },
-                'unsuppress_map': {
-                    'type': 'str',
-                },
-                'weight': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'redistribute': {
-            'type': 'dict',
-            'connected_cfg': {
-                'type': 'dict',
-                'connected': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'floating_ip_cfg': {
-                'type': 'dict',
-                'floating_ip': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'nat64_cfg': {
-                'type': 'dict',
-                'nat64': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'nat_map_cfg': {
-                'type': 'dict',
-                'nat_map': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'lw4o6_cfg': {
-                'type': 'dict',
-                'lw4o6': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'static_nat_cfg': {
-                'type': 'dict',
-                'static_nat': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'ip_nat_cfg': {
-                'type': 'dict',
-                'ip_nat': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'ip_nat_list_cfg': {
-                'type': 'dict',
-                'ip_nat_list': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'isis_cfg': {
-                'type': 'dict',
-                'isis': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'ospf_cfg': {
-                'type': 'dict',
-                'ospf': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'rip_cfg': {
-                'type': 'dict',
-                'rip': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'static_cfg': {
-                'type': 'dict',
-                'static': {
-                    'type': 'bool',
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'vip': {
-                'type': 'dict',
-                'only_flagged_cfg': {
-                    'type': 'dict',
-                    'only_flagged': {
-                        'type': 'bool',
-                    },
-                    'route_map': {
-                        'type': 'str',
-                    }
-                },
-                'only_not_flagged_cfg': {
-                    'type': 'dict',
-                    'only_not_flagged': {
-                        'type': 'bool',
-                    },
-                    'route_map': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        }
+    rv.update({'bgp': {'type': 'dict', 'dampening': {'type': 'bool', }, 'dampening_half': {'type': 'int', }, 'dampening_start_reuse': {'type': 'int', }, 'dampening_start_supress': {'type': 'int', }, 'dampening_max_supress': {'type': 'int', }, 'dampening_unreachability': {'type': 'int', }, 'route_map': {'type': 'str', }},
+        'distance': {'type': 'dict', 'distance_ext': {'type': 'int', }, 'distance_int': {'type': 'int', }, 'distance_local': {'type': 'int', }},
+        'maximum_paths_value': {'type': 'int', },
+        'originate': {'type': 'bool', },
+        'aggregate_address_list': {'type': 'list', 'aggregate_address': {'type': 'str', }, 'as_set': {'type': 'bool', }, 'summary_only': {'type': 'bool', }},
+        'auto_summary': {'type': 'bool', },
+        'synchronization': {'type': 'bool', },
+        'uuid': {'type': 'str', },
+        'network': {'type': 'dict', 'synchronization': {'type': 'dict', 'network_synchronization': {'type': 'bool', }, 'uuid': {'type': 'str', }}, 'ipv6_network_list': {'type': 'list', 'network_ipv6': {'type': 'str', 'required': True, }, 'route_map': {'type': 'str', }, 'backdoor': {'type': 'bool', }, 'description': {'type': 'str', }, 'comm_value': {'type': 'str', }, 'uuid': {'type': 'str', }}},
+        'neighbor': {'type': 'dict', 'peer_group_neighbor_list': {'type': 'list', 'peer_group': {'type': 'str', 'required': True, }, 'activate': {'type': 'bool', }, 'allowas_in': {'type': 'bool', }, 'allowas_in_count': {'type': 'int', }, 'prefix_list_direction': {'type': 'str', 'choices': ['both', 'receive', 'send']}, 'default_originate': {'type': 'bool', }, 'route_map': {'type': 'str', }, 'distribute_lists': {'type': 'list', 'distribute_list': {'type': 'str', }, 'distribute_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'neighbor_filter_lists': {'type': 'list', 'filter_list': {'type': 'str', }, 'filter_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'maximum_prefix': {'type': 'int', }, 'maximum_prefix_thres': {'type': 'int', }, 'next_hop_self': {'type': 'bool', }, 'neighbor_prefix_lists': {'type': 'list', 'nbr_prefix_list': {'type': 'str', }, 'nbr_prefix_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'remove_private_as': {'type': 'bool', }, 'neighbor_route_map_lists': {'type': 'list', 'nbr_route_map': {'type': 'str', }, 'nbr_rmap_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'send_community_val': {'type': 'str', 'choices': ['both', 'none', 'standard', 'extended']}, 'inbound': {'type': 'bool', }, 'unsuppress_map': {'type': 'str', }, 'weight': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'ipv4_neighbor_list': {'type': 'list', 'neighbor_ipv4': {'type': 'str', 'required': True, }, 'peer_group_name': {'type': 'str', }, 'activate': {'type': 'bool', }, 'allowas_in': {'type': 'bool', }, 'allowas_in_count': {'type': 'int', }, 'prefix_list_direction': {'type': 'str', 'choices': ['both', 'receive', 'send']}, 'default_originate': {'type': 'bool', }, 'route_map': {'type': 'str', }, 'distribute_lists': {'type': 'list', 'distribute_list': {'type': 'str', }, 'distribute_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'neighbor_filter_lists': {'type': 'list', 'filter_list': {'type': 'str', }, 'filter_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'maximum_prefix': {'type': 'int', }, 'maximum_prefix_thres': {'type': 'int', }, 'next_hop_self': {'type': 'bool', }, 'neighbor_prefix_lists': {'type': 'list', 'nbr_prefix_list': {'type': 'str', }, 'nbr_prefix_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'remove_private_as': {'type': 'bool', }, 'neighbor_route_map_lists': {'type': 'list', 'nbr_route_map': {'type': 'str', }, 'nbr_rmap_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'send_community_val': {'type': 'str', 'choices': ['both', 'none', 'standard', 'extended']}, 'inbound': {'type': 'bool', }, 'unsuppress_map': {'type': 'str', }, 'weight': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'ipv6_neighbor_list': {'type': 'list', 'neighbor_ipv6': {'type': 'str', 'required': True, }, 'peer_group_name': {'type': 'str', }, 'activate': {'type': 'bool', }, 'allowas_in': {'type': 'bool', }, 'allowas_in_count': {'type': 'int', }, 'prefix_list_direction': {'type': 'str', 'choices': ['both', 'receive', 'send']}, 'default_originate': {'type': 'bool', }, 'route_map': {'type': 'str', }, 'distribute_lists': {'type': 'list', 'distribute_list': {'type': 'str', }, 'distribute_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'neighbor_filter_lists': {'type': 'list', 'filter_list': {'type': 'str', }, 'filter_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'maximum_prefix': {'type': 'int', }, 'maximum_prefix_thres': {'type': 'int', }, 'next_hop_self': {'type': 'bool', }, 'neighbor_prefix_lists': {'type': 'list', 'nbr_prefix_list': {'type': 'str', }, 'nbr_prefix_list_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'remove_private_as': {'type': 'bool', }, 'neighbor_route_map_lists': {'type': 'list', 'nbr_route_map': {'type': 'str', }, 'nbr_rmap_direction': {'type': 'str', 'choices': ['in', 'out']}}, 'send_community_val': {'type': 'str', 'choices': ['both', 'none', 'standard', 'extended']}, 'inbound': {'type': 'bool', }, 'unsuppress_map': {'type': 'str', }, 'weight': {'type': 'int', }, 'uuid': {'type': 'str', }}},
+        'redistribute': {'type': 'dict', 'connected_cfg': {'type': 'dict', 'connected': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'floating_ip_cfg': {'type': 'dict', 'floating_ip': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'nat64_cfg': {'type': 'dict', 'nat64': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'nat_map_cfg': {'type': 'dict', 'nat_map': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'lw4o6_cfg': {'type': 'dict', 'lw4o6': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'static_nat_cfg': {'type': 'dict', 'static_nat': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'ip_nat_cfg': {'type': 'dict', 'ip_nat': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'ip_nat_list_cfg': {'type': 'dict', 'ip_nat_list': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'isis_cfg': {'type': 'dict', 'isis': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'ospf_cfg': {'type': 'dict', 'ospf': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'rip_cfg': {'type': 'dict', 'rip': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'static_cfg': {'type': 'dict', 'static': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'vip': {'type': 'dict', 'only_flagged_cfg': {'type': 'dict', 'only_flagged': {'type': 'bool', }, 'route_map': {'type': 'str', }}, 'only_not_flagged_cfg': {'type': 'dict', 'only_not_flagged': {'type': 'bool', }, 'route_map': {'type': 'str', }}}, 'uuid': {'type': 'str', }}
     })
     # Parent keys
-    rv.update(dict(bgp_as_number=dict(type='str', required=True), ))
+    rv.update(dict(
+        bgp_as_number=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -878,108 +354,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -989,54 +363,6 @@ def new_url(module):
     f_dict["bgp_as_number"] = module.params["bgp_as_number"]
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -1058,41 +384,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("ipv6", module)
+    payload = utils.build_json("ipv6", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -1103,29 +417,13 @@ def present(module, result, existing_config):
     return result
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1140,11 +438,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1153,39 +456,46 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

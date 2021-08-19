@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_router_ipv6_ospf
 description:
@@ -354,32 +355,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "abr_type_option",
-    "area_list",
-    "auto_cost_reference_bandwidth",
-    "bfd_all_interfaces",
-    "default_information",
-    "default_metric",
-    "distribute_internal_list",
-    "distribute_list",
-    "ha_standby_extra_cost",
-    "log_adjacency_changes",
-    "max_concurrent_dd",
-    "passive_interface",
-    "process_id",
-    "redistribute",
-    "router_id",
-    "timers",
-    "user_tag",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["abr_type_option", "area_list", "auto_cost_reference_bandwidth", "bfd_all_interfaces", "default_information", "default_metric", "distribute_internal_list", "distribute_list", "ha_standby_extra_cost", "log_adjacency_changes", "max_concurrent_dd", "passive_interface", "process_id", "redistribute", "router_id", "timers", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -387,322 +374,34 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'process_id': {
-            'type': 'str',
-            'required': True,
-        },
-        'abr_type_option': {
-            'type': 'str',
-            'choices': ['cisco', 'ibm', 'standard']
-        },
-        'auto_cost_reference_bandwidth': {
-            'type': 'int',
-        },
-        'bfd_all_interfaces': {
-            'type': 'bool',
-        },
-        'default_metric': {
-            'type': 'int',
-        },
-        'distribute_internal_list': {
-            'type': 'list',
-            'ntype': {
-                'type':
-                'str',
-                'choices': [
-                    'lw4o6', 'nat64', 'static-nat', 'floating-ip', 'ip-nat',
-                    'ip-nat-list', 'vip', 'vip-only-flagged'
-                ]
-            },
-            'area_ipv4': {
-                'type': 'str',
-            },
-            'area_num': {
-                'type': 'int',
-            },
-            'cost': {
-                'type': 'int',
-            }
-        },
-        'distribute_list': {
-            'type': 'dict',
-            'prefix_list': {
-                'type': 'dict',
-                'value': {
-                    'type': 'str',
-                },
-                'direction': {
-                    'type': 'str',
-                    'choices': ['in']
-                }
-            }
-        },
-        'log_adjacency_changes': {
-            'type': 'str',
-            'choices': ['detail', 'disable']
-        },
-        'ha_standby_extra_cost': {
-            'type': 'list',
-            'extra_cost': {
-                'type': 'int',
-            },
-            'group': {
-                'type': 'int',
-            }
-        },
-        'max_concurrent_dd': {
-            'type': 'int',
-        },
-        'passive_interface': {
-            'type': 'dict',
-            'loopback_cfg': {
-                'type': 'list',
-                'loopback': {
-                    'type': 'str',
-                }
-            },
-            'trunk_cfg': {
-                'type': 'list',
-                'trunk': {
-                    'type': 'str',
-                }
-            },
-            've_cfg': {
-                'type': 'list',
-                've': {
-                    'type': 'str',
-                }
-            },
-            'tunnel_cfg': {
-                'type': 'list',
-                'tunnel': {
-                    'type': 'str',
-                }
-            },
-            'eth_cfg': {
-                'type': 'list',
-                'ethernet': {
-                    'type': 'str',
-                }
-            }
-        },
-        'router_id': {
-            'type': 'str',
-        },
-        'timers': {
-            'type': 'dict',
-            'spf': {
-                'type': 'dict',
-                'exp': {
-                    'type': 'dict',
-                    'min_delay': {
-                        'type': 'int',
-                    },
-                    'max_delay': {
-                        'type': 'int',
-                    }
-                }
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'default_information': {
-            'type': 'dict',
-            'originate': {
-                'type': 'bool',
-            },
-            'always': {
-                'type': 'bool',
-            },
-            'metric': {
-                'type': 'int',
-            },
-            'metric_type': {
-                'type': 'int',
-            },
-            'route_map': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'area_list': {
-            'type': 'list',
-            'area_ipv4': {
-                'type': 'str',
-                'required': True,
-            },
-            'area_num': {
-                'type': 'int',
-                'required': True,
-            },
-            'default_cost': {
-                'type': 'int',
-            },
-            'range_list': {
-                'type': 'list',
-                'value': {
-                    'type': 'str',
-                },
-                'option': {
-                    'type': 'str',
-                    'choices': ['advertise', 'not-advertise']
-                }
-            },
-            'stub': {
-                'type': 'bool',
-            },
-            'no_summary': {
-                'type': 'bool',
-            },
-            'virtual_link_list': {
-                'type': 'list',
-                'value': {
-                    'type': 'str',
-                },
-                'dead_interval': {
-                    'type': 'int',
-                },
-                'bfd': {
-                    'type': 'bool',
-                },
-                'hello_interval': {
-                    'type': 'int',
-                },
-                'retransmit_interval': {
-                    'type': 'int',
-                },
-                'transmit_delay': {
-                    'type': 'int',
-                },
-                'instance_id': {
-                    'type': 'int',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'redistribute': {
-            'type': 'dict',
-            'redist_list': {
-                'type': 'list',
-                'ntype': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
-                        'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis',
-                        'rip', 'static'
-                    ]
-                },
-                'metric': {
-                    'type': 'int',
-                },
-                'metric_type': {
-                    'type': 'str',
-                    'choices': ['1', '2']
-                },
-                'route_map': {
-                    'type': 'str',
-                }
-            },
-            'ospf_list': {
-                'type': 'list',
-                'ospf': {
-                    'type': 'bool',
-                },
-                'process_id': {
-                    'type': 'str',
-                },
-                'metric_ospf': {
-                    'type': 'int',
-                },
-                'metric_type_ospf': {
-                    'type': 'str',
-                    'choices': ['1', '2']
-                },
-                'route_map_ospf': {
-                    'type': 'str',
-                }
-            },
-            'ip_nat': {
-                'type': 'bool',
-            },
-            'metric_ip_nat': {
-                'type': 'int',
-            },
-            'metric_type_ip_nat': {
-                'type': 'str',
-                'choices': ['1', '2']
-            },
-            'route_map_ip_nat': {
-                'type': 'str',
-            },
-            'ip_nat_floating_list': {
-                'type': 'list',
-                'ip_nat_prefix': {
-                    'type': 'str',
-                },
-                'ip_nat_floating_IP_forward': {
-                    'type': 'str',
-                }
-            },
-            'vip_list': {
-                'type': 'list',
-                'type_vip': {
-                    'type': 'str',
-                    'choices': ['only-flagged', 'only-not-flagged']
-                },
-                'metric_vip': {
-                    'type': 'int',
-                },
-                'metric_type_vip': {
-                    'type': 'str',
-                    'choices': ['1', '2']
-                },
-                'route_map_vip': {
-                    'type': 'str',
-                }
-            },
-            'vip_floating_list': {
-                'type': 'list',
-                'vip_address': {
-                    'type': 'str',
-                },
-                'vip_floating_IP_forward': {
-                    'type': 'str',
-                }
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        }
+    rv.update({'process_id': {'type': 'str', 'required': True, },
+        'abr_type_option': {'type': 'str', 'choices': ['cisco', 'ibm', 'standard']},
+        'auto_cost_reference_bandwidth': {'type': 'int', },
+        'bfd_all_interfaces': {'type': 'bool', },
+        'default_metric': {'type': 'int', },
+        'distribute_internal_list': {'type': 'list', 'ntype': {'type': 'str', 'choices': ['lw4o6', 'nat64', 'static-nat', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip', 'vip-only-flagged']}, 'area_ipv4': {'type': 'str', }, 'area_num': {'type': 'int', }, 'cost': {'type': 'int', }},
+        'distribute_list': {'type': 'dict', 'prefix_list': {'type': 'dict', 'value': {'type': 'str', }, 'direction': {'type': 'str', 'choices': ['in']}}},
+        'log_adjacency_changes': {'type': 'str', 'choices': ['detail', 'disable']},
+        'ha_standby_extra_cost': {'type': 'list', 'extra_cost': {'type': 'int', }, 'group': {'type': 'int', }},
+        'max_concurrent_dd': {'type': 'int', },
+        'passive_interface': {'type': 'dict', 'loopback_cfg': {'type': 'list', 'loopback': {'type': 'str', }}, 'trunk_cfg': {'type': 'list', 'trunk': {'type': 'str', }}, 've_cfg': {'type': 'list', 've': {'type': 'str', }}, 'tunnel_cfg': {'type': 'list', 'tunnel': {'type': 'str', }}, 'eth_cfg': {'type': 'list', 'ethernet': {'type': 'str', }}},
+        'router_id': {'type': 'str', },
+        'timers': {'type': 'dict', 'spf': {'type': 'dict', 'exp': {'type': 'dict', 'min_delay': {'type': 'int', }, 'max_delay': {'type': 'int', }}}},
+        'uuid': {'type': 'str', },
+        'user_tag': {'type': 'str', },
+        'default_information': {'type': 'dict', 'originate': {'type': 'bool', }, 'always': {'type': 'bool', }, 'metric': {'type': 'int', }, 'metric_type': {'type': 'int', }, 'route_map': {'type': 'str', }, 'uuid': {'type': 'str', }},
+        'area_list': {'type': 'list', 'area_ipv4': {'type': 'str', 'required': True, }, 'area_num': {'type': 'int', 'required': True, }, 'default_cost': {'type': 'int', }, 'range_list': {'type': 'list', 'value': {'type': 'str', }, 'option': {'type': 'str', 'choices': ['advertise', 'not-advertise']}}, 'stub': {'type': 'bool', }, 'no_summary': {'type': 'bool', }, 'virtual_link_list': {'type': 'list', 'value': {'type': 'str', }, 'dead_interval': {'type': 'int', }, 'bfd': {'type': 'bool', }, 'hello_interval': {'type': 'int', }, 'retransmit_interval': {'type': 'int', }, 'transmit_delay': {'type': 'int', }, 'instance_id': {'type': 'int', }}, 'uuid': {'type': 'str', }},
+        'redistribute': {'type': 'dict', 'redist_list': {'type': 'list', 'ntype': {'type': 'str', 'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'static-nat', 'nat64', 'lw4o6', 'isis', 'rip', 'static']}, 'metric': {'type': 'int', }, 'metric_type': {'type': 'str', 'choices': ['1', '2']}, 'route_map': {'type': 'str', }}, 'ospf_list': {'type': 'list', 'ospf': {'type': 'bool', }, 'process_id': {'type': 'str', }, 'metric_ospf': {'type': 'int', }, 'metric_type_ospf': {'type': 'str', 'choices': ['1', '2']}, 'route_map_ospf': {'type': 'str', }}, 'ip_nat': {'type': 'bool', }, 'metric_ip_nat': {'type': 'int', }, 'metric_type_ip_nat': {'type': 'str', 'choices': ['1', '2']}, 'route_map_ip_nat': {'type': 'str', }, 'ip_nat_floating_list': {'type': 'list', 'ip_nat_prefix': {'type': 'str', }, 'ip_nat_floating_IP_forward': {'type': 'str', }}, 'vip_list': {'type': 'list', 'type_vip': {'type': 'str', 'choices': ['only-flagged', 'only-not-flagged']}, 'metric_vip': {'type': 'int', }, 'metric_type_vip': {'type': 'str', 'choices': ['1', '2']}, 'route_map_vip': {'type': 'str', }}, 'vip_floating_list': {'type': 'list', 'vip_address': {'type': 'str', }, 'vip_floating_IP_forward': {'type': 'str', }}, 'uuid': {'type': 'str', }}
     })
     return rv
 
@@ -718,108 +417,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -829,54 +426,6 @@ def new_url(module):
     f_dict["process-id"] = ""
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -898,41 +447,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("ospf", module)
+    payload = utils.build_json("ospf", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -945,17 +482,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -971,29 +502,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1008,11 +523,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1021,42 +541,49 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

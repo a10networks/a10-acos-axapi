@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_template_cache
 description:
@@ -367,33 +368,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    wrapper as api_client
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    utils
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "accept_reload_req",
-    "age",
-    "default_policy_nocache",
-    "disable_insert_age",
-    "disable_insert_via",
-    "local_uri_policy",
-    "logging",
-    "max_cache_size",
-    "max_content_size",
-    "min_content_size",
-    "name",
-    "remove_cookies",
-    "replacement_policy",
-    "sampling_enable",
-    "stats",
-    "uri_policy",
-    "user_tag",
-    "uuid",
-    "verify_host",
-]
+AVAILABLE_PROPERTIES = ["accept_reload_req", "age", "default_policy_nocache", "disable_insert_age", "disable_insert_via", "local_uri_policy", "logging", "max_cache_size", "max_content_size", "min_content_size", "name", "remove_cookies", "replacement_policy", "sampling_enable", "stats", "uri_policy", "user_tag", "uuid", "verify_host", ]
 
 
 def get_default_argspec():
@@ -401,210 +387,35 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'accept_reload_req': {
-            'type': 'bool',
-        },
-        'age': {
-            'type': 'int',
-        },
-        'default_policy_nocache': {
-            'type': 'bool',
-        },
-        'disable_insert_age': {
-            'type': 'bool',
-        },
-        'disable_insert_via': {
-            'type': 'bool',
-        },
-        'max_cache_size': {
-            'type': 'int',
-        },
-        'min_content_size': {
-            'type': 'int',
-        },
-        'max_content_size': {
-            'type': 'int',
-        },
-        'local_uri_policy': {
-            'type': 'list',
-            'local_uri': {
-                'type': 'str',
-            }
-        },
-        'uri_policy': {
-            'type': 'list',
-            'uri': {
-                'type': 'str',
-            },
-            'cache_action': {
-                'type': 'str',
-                'choices': ['cache', 'nocache']
-            },
-            'cache_value': {
-                'type': 'int',
-            },
-            'invalidate': {
-                'type': 'str',
-            }
-        },
-        'remove_cookies': {
-            'type': 'bool',
-        },
-        'replacement_policy': {
-            'type': 'str',
-            'choices': ['LFU']
-        },
-        'logging': {
-            'type': 'str',
-        },
-        'verify_host': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'hits', 'miss', 'bytes_served', 'total_req',
-                    'caching_req', 'nc_req_header', 'nc_res_header',
-                    'rv_success', 'rv_failure', 'ims_request', 'nm_response',
-                    'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304',
-                    'rsp_type_other', 'rsp_no_compress', 'rsp_gzip',
-                    'rsp_deflate', 'rsp_other', 'nocache_match', 'match',
-                    'invalidate_match', 'content_toobig', 'content_toosmall',
-                    'entry_create_failures', 'mem_size', 'entry_num',
-                    'replaced_entry', 'aging_entry', 'cleaned_entry'
-                ]
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'hits': {
-                'type': 'str',
-            },
-            'miss': {
-                'type': 'str',
-            },
-            'bytes_served': {
-                'type': 'str',
-            },
-            'total_req': {
-                'type': 'str',
-            },
-            'caching_req': {
-                'type': 'str',
-            },
-            'nc_req_header': {
-                'type': 'str',
-            },
-            'nc_res_header': {
-                'type': 'str',
-            },
-            'rv_success': {
-                'type': 'str',
-            },
-            'rv_failure': {
-                'type': 'str',
-            },
-            'ims_request': {
-                'type': 'str',
-            },
-            'nm_response': {
-                'type': 'str',
-            },
-            'rsp_type_CL': {
-                'type': 'str',
-            },
-            'rsp_type_CE': {
-                'type': 'str',
-            },
-            'rsp_type_304': {
-                'type': 'str',
-            },
-            'rsp_type_other': {
-                'type': 'str',
-            },
-            'rsp_no_compress': {
-                'type': 'str',
-            },
-            'rsp_gzip': {
-                'type': 'str',
-            },
-            'rsp_deflate': {
-                'type': 'str',
-            },
-            'rsp_other': {
-                'type': 'str',
-            },
-            'nocache_match': {
-                'type': 'str',
-            },
-            'match': {
-                'type': 'str',
-            },
-            'invalidate_match': {
-                'type': 'str',
-            },
-            'content_toobig': {
-                'type': 'str',
-            },
-            'content_toosmall': {
-                'type': 'str',
-            },
-            'entry_create_failures': {
-                'type': 'str',
-            },
-            'mem_size': {
-                'type': 'str',
-            },
-            'entry_num': {
-                'type': 'str',
-            },
-            'replaced_entry': {
-                'type': 'str',
-            },
-            'aging_entry': {
-                'type': 'str',
-            },
-            'cleaned_entry': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
-        }
+    rv.update({'name': {'type': 'str', 'required': True, },
+        'accept_reload_req': {'type': 'bool', },
+        'age': {'type': 'int', },
+        'default_policy_nocache': {'type': 'bool', },
+        'disable_insert_age': {'type': 'bool', },
+        'disable_insert_via': {'type': 'bool', },
+        'max_cache_size': {'type': 'int', },
+        'min_content_size': {'type': 'int', },
+        'max_content_size': {'type': 'int', },
+        'local_uri_policy': {'type': 'list', 'local_uri': {'type': 'str', }},
+        'uri_policy': {'type': 'list', 'uri': {'type': 'str', }, 'cache_action': {'type': 'str', 'choices': ['cache', 'nocache']}, 'cache_value': {'type': 'int', }, 'invalidate': {'type': 'str', }},
+        'remove_cookies': {'type': 'bool', },
+        'replacement_policy': {'type': 'str', 'choices': ['LFU']},
+        'logging': {'type': 'str', },
+        'verify_host': {'type': 'bool', },
+        'uuid': {'type': 'str', },
+        'user_tag': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate', 'rsp_other', 'nocache_match', 'match', 'invalidate_match', 'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry']}},
+        'stats': {'type': 'dict', 'hits': {'type': 'str', }, 'miss': {'type': 'str', }, 'bytes_served': {'type': 'str', }, 'total_req': {'type': 'str', }, 'caching_req': {'type': 'str', }, 'nc_req_header': {'type': 'str', }, 'nc_res_header': {'type': 'str', }, 'rv_success': {'type': 'str', }, 'rv_failure': {'type': 'str', }, 'ims_request': {'type': 'str', }, 'nm_response': {'type': 'str', }, 'rsp_type_CL': {'type': 'str', }, 'rsp_type_CE': {'type': 'str', }, 'rsp_type_304': {'type': 'str', }, 'rsp_type_other': {'type': 'str', }, 'rsp_no_compress': {'type': 'str', }, 'rsp_gzip': {'type': 'str', }, 'rsp_deflate': {'type': 'str', }, 'rsp_other': {'type': 'str', }, 'nocache_match': {'type': 'str', }, 'match': {'type': 'str', }, 'invalidate_match': {'type': 'str', }, 'content_toobig': {'type': 'str', }, 'content_toosmall': {'type': 'str', }, 'entry_create_failures': {'type': 'str', }, 'mem_size': {'type': 'str', }, 'entry_num': {'type': 'str', }, 'replaced_entry': {'type': 'str', }, 'aging_entry': {'type': 'str', }, 'cleaned_entry': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
     })
     return rv
 
@@ -620,122 +431,6 @@ def existing_url(module):
     return url_base.format(**f_dict)
 
 
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
-
-
-def list_url(module):
-    """Return the URL for a list of resources"""
-    ret = existing_url(module)
-    return ret[0:ret.rfind('/')]
-
-
-def _get(module, url, params={}):
-
-    resp = None
-    try:
-        resp = module.client.get(url, params=params)
-    except a10_ex.NotFound:
-        resp = "Not Found"
-
-    call_result = {
-        "endpoint": url,
-        "http_method": "GET",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _post(module, url, params={}, file_content=None, file_name=None):
-    resp = module.client.post(url, params=params)
-    resp = resp if resp else {}
-    call_result = {
-        "endpoint": url,
-        "http_method": "POST",
-        "request_body": params,
-        "response_body": resp,
-    }
-    return call_result
-
-
-def _delete(module, url):
-    call_result = {
-        "endpoint": url,
-        "http_method": "DELETE",
-        "request_body": {},
-        "response_body": module.client.delete(url),
-    }
-    return call_result
-
-
-def _switch_device_context(module, device_id):
-    call_result = {
-        "endpoint": "/axapi/v3/device-context",
-        "http_method": "POST",
-        "request_body": {
-            "device-id": device_id
-        },
-        "response_body": module.client.change_context(device_id)
-    }
-    return call_result
-
-
-def _active_partition(module, a10_partition):
-    call_result = {
-        "endpoint": "/axapi/v3/active-partition",
-        "http_method": "POST",
-        "request_body": {
-            "curr_part_name": a10_partition
-        },
-        "response_body": module.client.activate_partition(a10_partition)
-    }
-    return call_result
-
-
-def get(module):
-    return _get(module, existing_url(module))
-
-
-def get_list(module):
-    return _get(module, list_url(module))
-
-
-def get_stats(module):
-    query_params = {}
-    if module.params.get("stats"):
-        for k, v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-    return _get(module, stats_url(module), params=query_params)
-
-
-def _to_axapi(key):
-    return translateBlacklist(key, KW_OUT).replace("_", "-")
-
-
-def _build_dict_from_param(param):
-    rv = {}
-
-    for k, v in param.items():
-        hk = _to_axapi(k)
-        if isinstance(v, dict):
-            v_dict = _build_dict_from_param(v)
-            rv[hk] = v_dict
-        elif isinstance(v, list):
-            nv = [_build_dict_from_param(x) for x in v]
-            rv[hk] = nv
-        else:
-            rv[hk] = v
-
-    return rv
-
-
-def build_envelope(title, data):
-    return {title: data}
-
-
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -745,54 +440,6 @@ def new_url(module):
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
-
-
-def validate(params):
-    # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
-    present_keys = sorted([
-        x for x in requires_one_of if x in params and params.get(x) is not None
-    ])
-
-    errors = []
-    marg = []
-
-    if not len(requires_one_of):
-        return REQUIRED_VALID
-
-    if len(present_keys) == 0:
-        rc, msg = REQUIRED_NOT_SET
-        marg = requires_one_of
-    elif requires_one_of == present_keys:
-        rc, msg = REQUIRED_MUTEX
-        marg = present_keys
-    else:
-        rc, msg = REQUIRED_VALID
-
-    if not rc:
-        errors.append(msg.format(", ".join(marg)))
-
-    return rc, errors
-
-
-def build_json(title, module):
-    rv = {}
-
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
-
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
-
-    return build_envelope(title, rv)
 
 
 def report_changes(module, result, existing_config, payload):
@@ -814,41 +461,29 @@ def report_changes(module, result, existing_config, payload):
     return change_results
 
 
-def create(module, result, payload):
-    try:
-        call_result = _post(module, new_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        result["modified_values"].update(**call_result["response_body"])
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def create(module, result, payload={}):
+    call_result = api_client.post(module.client, new_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    result["modified_values"].update(
+        **call_result["response_body"])
+    result["changed"] = True
     return result
 
 
-def update(module, result, existing_config, payload):
-    try:
-        call_result = _post(module, existing_url(module), payload)
-        result["axapi_calls"].append(call_result)
-        if call_result["response_body"] == existing_config:
-            result["changed"] = False
-        else:
-            result["modified_values"].update(**call_result["response_body"])
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
+def update(module, result, existing_config, payload={}):
+    call_result = api_client.post(module.client, existing_url(module), payload)
+    result["axapi_calls"].append(call_result)
+    if call_result["response_body"] == existing_config:
+        result["changed"] = False
+    else:
+        result["modified_values"].update(
+            **call_result["response_body"])
+        result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = build_json("cache", module)
+    payload = utils.build_json("cache", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -861,17 +496,11 @@ def present(module, result, existing_config):
 
 def delete(module, result):
     try:
-        call_result = _delete(module, existing_url(module))
+        call_result = api_client.delete(module.client, existing_url(module))
         result["axapi_calls"].append(call_result)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
     return result
 
 
@@ -887,29 +516,13 @@ def absent(module, result, existing_config):
     return delete(module, result)
 
 
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    finally:
-        module.client.session.close()
-    return result
-
-
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[])
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[]
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -924,11 +537,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
+
     valid = True
 
     run_errors = []
     if state == 'present':
-        valid, validation_errors = validate(module.params)
+        requires_one_of = sorted([])
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -937,44 +555,52 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
 
-    if a10_partition:
-        result["axapi_calls"].append(_active_partition(module, a10_partition))
+    try:
+        if a10_partition:
+            result["axapi_calls"].append(
+                api_client.active_partition(module.client, a10_partition))
 
-    if a10_device_context_id:
-        result["axapi_calls"].append(
-            _switch_device_context(module, a10_device_context_id))
+        if a10_device_context_id:
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
-    existing_config = get(module)
-    result["axapi_calls"].append(existing_config)
-    if existing_config['response_body'] != 'Not Found':
-        existing_config = existing_config["response_body"]
-    else:
-        existing_config = None
+        existing_config = api_client.get(module.client, existing_url(module))
+        result["axapi_calls"].append(existing_config)
+        if existing_config['response_body'] != 'Not Found':
+            existing_config = existing_config["response_body"]
+        else:
+            existing_config = None
 
-    if state == 'present':
-        result = present(module, result, existing_config)
+        if state == 'present':
+            result = present(module, result, existing_config)
 
-    if state == 'absent':
-        result = absent(module, result, existing_config)
+        if state == 'absent':
+            result = absent(module, result, existing_config)
 
-    if state == 'noop':
-        if module.params.get("get_type") == "single":
-            result["axapi_calls"].append(get(module))
-        elif module.params.get("get_type") == "list":
-            result["axapi_calls"].append(get_list(module))
-        elif module.params.get("get_type") == "stats":
-            result["axapi_calls"].append(get_stats(module))
+        if state == 'noop':
+            if module.params.get("get_type") == "single":
+                result["axapi_calls"].append(
+                    api_client.get(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "list":
+                result["axapi_calls"].append(
+                    api_client.get_list(module.client, existing_url(module)))
+            elif module.params.get("get_type") == "stats":
+                result["axapi_calls"].append(
+                    api_client.get_stats(module.client, existing_url(module)))
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    finally:
+        if module.client.session.session_id:
+            module.client.session.close()
 
-    module.client.session.close()
     return result
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
