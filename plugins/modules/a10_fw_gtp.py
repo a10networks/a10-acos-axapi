@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_fw_gtp
 description:
@@ -371,9 +370,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -385,9 +382,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["gtp_value", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "gtp_value",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -395,20 +396,235 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'gtp_value': {'type': 'str', 'choices': ['enable']},
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'create-session-request', 'create-session-response', 'path-management-message', 'delete-session-request', 'delete-session-response', 'reserved-field-set-drop', 'tunnel-id-flag-drop', 'message-filtering-drop', 'reserved-information-element-drop', 'mandatory-information-element-drop', 'filter-list-drop', 'invalid-teid-drop', 'out-of-state-drop', 'message-length-drop', 'unsupported-message-type-v2', 'fast-conn-setup', 'out-of-session-memory', 'no-fwd-route', 'no-rev-route', 'invalid-key', 'create-session-request-retransmit', 'delete-session-request-retransmit', 'response-cause-not-accepted', 'invalid-imsi-len-drop', 'invalid-apn-len-drop', 'create-pdp-context-request-v1', 'create-pdp-context-response-v1', 'path-management-message-v1', 'reserved-field-set-drop-v1', 'message-filtering-drop-v1', 'reserved-information-element-drop-v1', 'mandatory-information-element-drop-v1', 'filter-list-drop-v1', 'invalid-teid-drop-v1', 'message-length-drop-v1', 'version-not-supported', 'unsupported-message-type-v1', 'delete-pdp-context-request-v1', 'delete-pdp-context-response-v1', 'create-pdp-context-request-v0', 'create-pdp-context-response-v0', 'delete-pdp-context-request-v0', 'delete-pdp-context-response-v0', 'path-management-message-v0', 'message-filtering-drop-v0', 'unsupported-message-type-v0', 'invalid-flow-label-drop-v0', 'invalid-tid-drop-v0', 'message-length-drop-v0', 'mandatory-information-element-drop-v0', 'filter-list-drop-v0', 'gtp-in-gtp-drop']}},
-        'stats': {'type': 'dict', 'create_session_request': {'type': 'str', }, 'create_session_response': {'type': 'str', }, 'path_management_message': {'type': 'str', }, 'delete_session_request': {'type': 'str', }, 'delete_session_response': {'type': 'str', }, 'reserved_field_set_drop': {'type': 'str', }, 'tunnel_id_flag_drop': {'type': 'str', }, 'message_filtering_drop': {'type': 'str', }, 'reserved_information_element_drop': {'type': 'str', }, 'mandatory_information_element_drop': {'type': 'str', }, 'filter_list_drop': {'type': 'str', }, 'invalid_teid_drop': {'type': 'str', }, 'out_of_state_drop': {'type': 'str', }, 'message_length_drop': {'type': 'str', }, 'unsupported_message_type_v2': {'type': 'str', }, 'fast_conn_setup': {'type': 'str', }, 'out_of_session_memory': {'type': 'str', }, 'no_fwd_route': {'type': 'str', }, 'no_rev_route': {'type': 'str', }, 'invalid_key': {'type': 'str', }, 'create_session_request_retransmit': {'type': 'str', }, 'delete_session_request_retransmit': {'type': 'str', }, 'response_cause_not_accepted': {'type': 'str', }, 'invalid_imsi_len_drop': {'type': 'str', }, 'invalid_apn_len_drop': {'type': 'str', }, 'create_pdp_context_request_v1': {'type': 'str', }, 'create_pdp_context_response_v1': {'type': 'str', }, 'path_management_message_v1': {'type': 'str', }, 'reserved_field_set_drop_v1': {'type': 'str', }, 'message_filtering_drop_v1': {'type': 'str', }, 'reserved_information_element_drop_v1': {'type': 'str', }, 'mandatory_information_element_drop_v1': {'type': 'str', }, 'filter_list_drop_v1': {'type': 'str', }, 'invalid_teid_drop_v1': {'type': 'str', }, 'message_length_drop_v1': {'type': 'str', }, 'version_not_supported': {'type': 'str', }, 'unsupported_message_type_v1': {'type': 'str', }, 'delete_pdp_context_request_v1': {'type': 'str', }, 'delete_pdp_context_response_v1': {'type': 'str', }, 'create_pdp_context_request_v0': {'type': 'str', }, 'create_pdp_context_response_v0': {'type': 'str', }, 'delete_pdp_context_request_v0': {'type': 'str', }, 'delete_pdp_context_response_v0': {'type': 'str', }, 'path_management_message_v0': {'type': 'str', }, 'message_filtering_drop_v0': {'type': 'str', }, 'unsupported_message_type_v0': {'type': 'str', }, 'invalid_flow_label_drop_v0': {'type': 'str', }, 'invalid_tid_drop_v0': {'type': 'str', }, 'message_length_drop_v0': {'type': 'str', }, 'mandatory_information_element_drop_v0': {'type': 'str', }, 'filter_list_drop_v0': {'type': 'str', }, 'gtp_in_gtp_drop': {'type': 'str', }}
+    rv.update({
+        'gtp_value': {
+            'type': 'str',
+            'choices': ['enable']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'create-session-request', 'create-session-response',
+                    'path-management-message', 'delete-session-request',
+                    'delete-session-response', 'reserved-field-set-drop',
+                    'tunnel-id-flag-drop', 'message-filtering-drop',
+                    'reserved-information-element-drop',
+                    'mandatory-information-element-drop', 'filter-list-drop',
+                    'invalid-teid-drop', 'out-of-state-drop',
+                    'message-length-drop', 'unsupported-message-type-v2',
+                    'fast-conn-setup', 'out-of-session-memory', 'no-fwd-route',
+                    'no-rev-route', 'invalid-key',
+                    'create-session-request-retransmit',
+                    'delete-session-request-retransmit',
+                    'response-cause-not-accepted', 'invalid-imsi-len-drop',
+                    'invalid-apn-len-drop', 'create-pdp-context-request-v1',
+                    'create-pdp-context-response-v1',
+                    'path-management-message-v1', 'reserved-field-set-drop-v1',
+                    'message-filtering-drop-v1',
+                    'reserved-information-element-drop-v1',
+                    'mandatory-information-element-drop-v1',
+                    'filter-list-drop-v1', 'invalid-teid-drop-v1',
+                    'message-length-drop-v1', 'version-not-supported',
+                    'unsupported-message-type-v1',
+                    'delete-pdp-context-request-v1',
+                    'delete-pdp-context-response-v1',
+                    'create-pdp-context-request-v0',
+                    'create-pdp-context-response-v0',
+                    'delete-pdp-context-request-v0',
+                    'delete-pdp-context-response-v0',
+                    'path-management-message-v0', 'message-filtering-drop-v0',
+                    'unsupported-message-type-v0',
+                    'invalid-flow-label-drop-v0', 'invalid-tid-drop-v0',
+                    'message-length-drop-v0',
+                    'mandatory-information-element-drop-v0',
+                    'filter-list-drop-v0', 'gtp-in-gtp-drop'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'create_session_request': {
+                'type': 'str',
+            },
+            'create_session_response': {
+                'type': 'str',
+            },
+            'path_management_message': {
+                'type': 'str',
+            },
+            'delete_session_request': {
+                'type': 'str',
+            },
+            'delete_session_response': {
+                'type': 'str',
+            },
+            'reserved_field_set_drop': {
+                'type': 'str',
+            },
+            'tunnel_id_flag_drop': {
+                'type': 'str',
+            },
+            'message_filtering_drop': {
+                'type': 'str',
+            },
+            'reserved_information_element_drop': {
+                'type': 'str',
+            },
+            'mandatory_information_element_drop': {
+                'type': 'str',
+            },
+            'filter_list_drop': {
+                'type': 'str',
+            },
+            'invalid_teid_drop': {
+                'type': 'str',
+            },
+            'out_of_state_drop': {
+                'type': 'str',
+            },
+            'message_length_drop': {
+                'type': 'str',
+            },
+            'unsupported_message_type_v2': {
+                'type': 'str',
+            },
+            'fast_conn_setup': {
+                'type': 'str',
+            },
+            'out_of_session_memory': {
+                'type': 'str',
+            },
+            'no_fwd_route': {
+                'type': 'str',
+            },
+            'no_rev_route': {
+                'type': 'str',
+            },
+            'invalid_key': {
+                'type': 'str',
+            },
+            'create_session_request_retransmit': {
+                'type': 'str',
+            },
+            'delete_session_request_retransmit': {
+                'type': 'str',
+            },
+            'response_cause_not_accepted': {
+                'type': 'str',
+            },
+            'invalid_imsi_len_drop': {
+                'type': 'str',
+            },
+            'invalid_apn_len_drop': {
+                'type': 'str',
+            },
+            'create_pdp_context_request_v1': {
+                'type': 'str',
+            },
+            'create_pdp_context_response_v1': {
+                'type': 'str',
+            },
+            'path_management_message_v1': {
+                'type': 'str',
+            },
+            'reserved_field_set_drop_v1': {
+                'type': 'str',
+            },
+            'message_filtering_drop_v1': {
+                'type': 'str',
+            },
+            'reserved_information_element_drop_v1': {
+                'type': 'str',
+            },
+            'mandatory_information_element_drop_v1': {
+                'type': 'str',
+            },
+            'filter_list_drop_v1': {
+                'type': 'str',
+            },
+            'invalid_teid_drop_v1': {
+                'type': 'str',
+            },
+            'message_length_drop_v1': {
+                'type': 'str',
+            },
+            'version_not_supported': {
+                'type': 'str',
+            },
+            'unsupported_message_type_v1': {
+                'type': 'str',
+            },
+            'delete_pdp_context_request_v1': {
+                'type': 'str',
+            },
+            'delete_pdp_context_response_v1': {
+                'type': 'str',
+            },
+            'create_pdp_context_request_v0': {
+                'type': 'str',
+            },
+            'create_pdp_context_response_v0': {
+                'type': 'str',
+            },
+            'delete_pdp_context_request_v0': {
+                'type': 'str',
+            },
+            'delete_pdp_context_response_v0': {
+                'type': 'str',
+            },
+            'path_management_message_v0': {
+                'type': 'str',
+            },
+            'message_filtering_drop_v0': {
+                'type': 'str',
+            },
+            'unsupported_message_type_v0': {
+                'type': 'str',
+            },
+            'invalid_flow_label_drop_v0': {
+                'type': 'str',
+            },
+            'invalid_tid_drop_v0': {
+                'type': 'str',
+            },
+            'message_length_drop_v0': {
+                'type': 'str',
+            },
+            'mandatory_information_element_drop_v0': {
+                'type': 'str',
+            },
+            'filter_list_drop_v0': {
+                'type': 'str',
+            },
+            'gtp_in_gtp_drop': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -455,8 +671,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -467,8 +682,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -508,12 +722,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -528,16 +740,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -546,15 +758,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -591,7 +803,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

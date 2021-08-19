@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_sys_ut_event_action_tcp
 description:
@@ -229,9 +228,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -243,9 +240,21 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ack_seq_number", "checksum", "dest_port", "dest_port_value", "flags", "nat_pool", "options", "seq_number", "src_port", "urgent", "uuid", "window", ]
+AVAILABLE_PROPERTIES = [
+    "ack_seq_number",
+    "checksum",
+    "dest_port",
+    "dest_port_value",
+    "flags",
+    "nat_pool",
+    "options",
+    "seq_number",
+    "src_port",
+    "urgent",
+    "uuid",
+    "window",
+]
 
 
 def get_default_argspec():
@@ -253,34 +262,120 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'src_port': {'type': 'int', },
-        'dest_port': {'type': 'bool', },
-        'dest_port_value': {'type': 'int', },
-        'nat_pool': {'type': 'str', },
-        'seq_number': {'type': 'str', 'choices': ['valid', 'invalid']},
-        'ack_seq_number': {'type': 'str', 'choices': ['valid', 'invalid']},
-        'checksum': {'type': 'str', 'choices': ['valid', 'invalid']},
-        'urgent': {'type': 'str', 'choices': ['valid', 'invalid']},
-        'window': {'type': 'str', 'choices': ['valid', 'invalid']},
-        'uuid': {'type': 'str', },
-        'flags': {'type': 'dict', 'syn': {'type': 'bool', }, 'ack': {'type': 'bool', }, 'fin': {'type': 'bool', }, 'rst': {'type': 'bool', }, 'psh': {'type': 'bool', }, 'ece': {'type': 'bool', }, 'urg': {'type': 'bool', }, 'cwr': {'type': 'bool', }, 'uuid': {'type': 'str', }},
-        'options': {'type': 'dict', 'mss': {'type': 'int', }, 'wscale': {'type': 'int', }, 'sack_type': {'type': 'str', 'choices': ['permitted', 'block']}, 'time_stamp_enable': {'type': 'bool', }, 'nop': {'type': 'bool', }, 'uuid': {'type': 'str', }}
+    rv.update({
+        'src_port': {
+            'type': 'int',
+        },
+        'dest_port': {
+            'type': 'bool',
+        },
+        'dest_port_value': {
+            'type': 'int',
+        },
+        'nat_pool': {
+            'type': 'str',
+        },
+        'seq_number': {
+            'type': 'str',
+            'choices': ['valid', 'invalid']
+        },
+        'ack_seq_number': {
+            'type': 'str',
+            'choices': ['valid', 'invalid']
+        },
+        'checksum': {
+            'type': 'str',
+            'choices': ['valid', 'invalid']
+        },
+        'urgent': {
+            'type': 'str',
+            'choices': ['valid', 'invalid']
+        },
+        'window': {
+            'type': 'str',
+            'choices': ['valid', 'invalid']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'flags': {
+            'type': 'dict',
+            'syn': {
+                'type': 'bool',
+            },
+            'ack': {
+                'type': 'bool',
+            },
+            'fin': {
+                'type': 'bool',
+            },
+            'rst': {
+                'type': 'bool',
+            },
+            'psh': {
+                'type': 'bool',
+            },
+            'ece': {
+                'type': 'bool',
+            },
+            'urg': {
+                'type': 'bool',
+            },
+            'cwr': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'options': {
+            'type': 'dict',
+            'mss': {
+                'type': 'int',
+            },
+            'wscale': {
+                'type': 'int',
+            },
+            'sack_type': {
+                'type': 'str',
+                'choices': ['permitted', 'block']
+            },
+            'time_stamp_enable': {
+                'type': 'bool',
+            },
+            'nop': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        }
     })
     # Parent keys
-    rv.update(dict(
-        action_direction=dict(type='str', required=True),
-        event_number=dict(type='str', required=True),
-    ))
+    rv.update(
+        dict(
+            action_direction=dict(type='str', required=True),
+            event_number=dict(type='str', required=True),
+        ))
     return rv
 
 
@@ -330,8 +425,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -342,8 +436,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -383,12 +476,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -403,16 +494,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -421,15 +512,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -463,7 +554,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

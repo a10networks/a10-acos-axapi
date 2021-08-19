@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_aam_authorization_policy
 description:
@@ -273,9 +272,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -287,9 +284,20 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["attribute_list", "attribute_rule", "extended_filter", "forward_policy_authorize_only", "jwt_authorization", "jwt_claim_map_list", "name", "server", "service_group", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "attribute_list",
+    "attribute_rule",
+    "extended_filter",
+    "forward_policy_authorize_only",
+    "jwt_authorization",
+    "jwt_claim_map_list",
+    "name",
+    "server",
+    "service_group",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -297,27 +305,155 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'attribute_rule': {'type': 'str', },
-        'server': {'type': 'str', },
-        'service_group': {'type': 'str', },
-        'extended_filter': {'type': 'str', },
-        'jwt_authorization': {'type': 'str', },
-        'forward_policy_authorize_only': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'attribute_list': {'type': 'list', 'attr_num': {'type': 'int', 'required': True, }, 'attribute_name': {'type': 'str', }, 'any': {'type': 'bool', }, 'attr_type': {'type': 'bool', }, 'string_type': {'type': 'bool', }, 'integer_type': {'type': 'bool', }, 'ip_type': {'type': 'bool', }, 'attr_str': {'type': 'str', 'choices': ['match', 'sub-string']}, 'attr_str_val': {'type': 'str', }, 'attr_int': {'type': 'str', 'choices': ['equal', 'not-equal', 'less-than', 'more-than', 'less-than-equal-to', 'more-than-equal-to']}, 'attr_int_val': {'type': 'int', }, 'attr_ip': {'type': 'str', 'choices': ['equal', 'not-equal']}, 'attr_ipv4': {'type': 'str', }, 'A10_AX_AUTH_URI': {'type': 'bool', }, 'custom_attr_type': {'type': 'bool', }, 'custom_attr_str': {'type': 'str', 'choices': ['match', 'sub-string']}, 'a10_dynamic_defined': {'type': 'bool', }, 'uuid': {'type': 'str', }},
-        'jwt_claim_map_list': {'type': 'list', 'attr_num': {'type': 'int', 'required': True, }, 'claim': {'type': 'str', }, 'ntype': {'type': 'bool', }, 'string_type': {'type': 'bool', }, 'number_type': {'type': 'bool', }, 'boolean_type': {'type': 'bool', }, 'str_val': {'type': 'str', }, 'num_val': {'type': 'int', }, 'bool_val': {'type': 'str', 'choices': ['true', 'false']}, 'uuid': {'type': 'str', }}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'attribute_rule': {
+            'type': 'str',
+        },
+        'server': {
+            'type': 'str',
+        },
+        'service_group': {
+            'type': 'str',
+        },
+        'extended_filter': {
+            'type': 'str',
+        },
+        'jwt_authorization': {
+            'type': 'str',
+        },
+        'forward_policy_authorize_only': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'attribute_list': {
+            'type': 'list',
+            'attr_num': {
+                'type': 'int',
+                'required': True,
+            },
+            'attribute_name': {
+                'type': 'str',
+            },
+            'any': {
+                'type': 'bool',
+            },
+            'attr_type': {
+                'type': 'bool',
+            },
+            'string_type': {
+                'type': 'bool',
+            },
+            'integer_type': {
+                'type': 'bool',
+            },
+            'ip_type': {
+                'type': 'bool',
+            },
+            'attr_str': {
+                'type': 'str',
+                'choices': ['match', 'sub-string']
+            },
+            'attr_str_val': {
+                'type': 'str',
+            },
+            'attr_int': {
+                'type':
+                'str',
+                'choices': [
+                    'equal', 'not-equal', 'less-than', 'more-than',
+                    'less-than-equal-to', 'more-than-equal-to'
+                ]
+            },
+            'attr_int_val': {
+                'type': 'int',
+            },
+            'attr_ip': {
+                'type': 'str',
+                'choices': ['equal', 'not-equal']
+            },
+            'attr_ipv4': {
+                'type': 'str',
+            },
+            'A10_AX_AUTH_URI': {
+                'type': 'bool',
+            },
+            'custom_attr_type': {
+                'type': 'bool',
+            },
+            'custom_attr_str': {
+                'type': 'str',
+                'choices': ['match', 'sub-string']
+            },
+            'a10_dynamic_defined': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'jwt_claim_map_list': {
+            'type': 'list',
+            'attr_num': {
+                'type': 'int',
+                'required': True,
+            },
+            'claim': {
+                'type': 'str',
+            },
+            'ntype': {
+                'type': 'bool',
+            },
+            'string_type': {
+                'type': 'bool',
+            },
+            'number_type': {
+                'type': 'bool',
+            },
+            'boolean_type': {
+                'type': 'bool',
+            },
+            'str_val': {
+                'type': 'str',
+            },
+            'num_val': {
+                'type': 'int',
+            },
+            'bool_val': {
+                'type': 'str',
+                'choices': ['true', 'false']
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -366,8 +502,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -378,8 +513,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -419,12 +553,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -439,16 +571,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -457,15 +589,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -499,7 +631,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

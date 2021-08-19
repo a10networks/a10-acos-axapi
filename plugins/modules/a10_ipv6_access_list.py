@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_ipv6_access_list
 description:
@@ -285,9 +284,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -299,9 +296,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name", "rules", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "name",
+    "rules",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -309,20 +310,170 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'rules': {'type': 'list', 'seq_num': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['deny', 'permit', 'l3-vlan-fwd-disable']}, 'remark': {'type': 'str', }, 'icmp': {'type': 'bool', }, 'tcp': {'type': 'bool', }, 'udp': {'type': 'bool', }, 'ipv6': {'type': 'bool', }, 'service_obj_group': {'type': 'str', }, 'geo_location': {'type': 'str', }, 'icmp_type': {'type': 'int', }, 'any_type': {'type': 'bool', }, 'special_type': {'type': 'str', 'choices': ['echo-reply', 'echo-request', 'packet-too-big', 'param-prob', 'time-exceeded', 'dest-unreachable']}, 'any_code': {'type': 'bool', }, 'icmp_code': {'type': 'int', }, 'special_code': {'type': 'str', 'choices': ['addr-unreachable', 'admin-prohibited', 'no-route', 'not-neighbour', 'port-unreachable']}, 'src_any': {'type': 'bool', }, 'src_host': {'type': 'str', }, 'src_subnet': {'type': 'str', }, 'src_object_group': {'type': 'str', }, 'src_eq': {'type': 'int', }, 'src_gt': {'type': 'int', }, 'src_lt': {'type': 'int', }, 'src_range': {'type': 'int', }, 'src_port_end': {'type': 'int', }, 'dst_any': {'type': 'bool', }, 'dst_host': {'type': 'str', }, 'dst_subnet': {'type': 'str', }, 'dst_object_group': {'type': 'str', }, 'dst_eq': {'type': 'int', }, 'dst_gt': {'type': 'int', }, 'dst_lt': {'type': 'int', }, 'dst_range': {'type': 'int', }, 'dst_port_end': {'type': 'int', }, 'fragments': {'type': 'bool', }, 'vlan': {'type': 'int', }, 'ethernet': {'type': 'str', }, 'trunk': {'type': 'str', }, 'dscp': {'type': 'int', }, 'established': {'type': 'bool', }, 'acl_log': {'type': 'bool', }},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', }
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'rules': {
+            'type': 'list',
+            'seq_num': {
+                'type': 'int',
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['deny', 'permit', 'l3-vlan-fwd-disable']
+            },
+            'remark': {
+                'type': 'str',
+            },
+            'icmp': {
+                'type': 'bool',
+            },
+            'tcp': {
+                'type': 'bool',
+            },
+            'udp': {
+                'type': 'bool',
+            },
+            'ipv6': {
+                'type': 'bool',
+            },
+            'service_obj_group': {
+                'type': 'str',
+            },
+            'geo_location': {
+                'type': 'str',
+            },
+            'icmp_type': {
+                'type': 'int',
+            },
+            'any_type': {
+                'type': 'bool',
+            },
+            'special_type': {
+                'type':
+                'str',
+                'choices': [
+                    'echo-reply', 'echo-request', 'packet-too-big',
+                    'param-prob', 'time-exceeded', 'dest-unreachable'
+                ]
+            },
+            'any_code': {
+                'type': 'bool',
+            },
+            'icmp_code': {
+                'type': 'int',
+            },
+            'special_code': {
+                'type':
+                'str',
+                'choices': [
+                    'addr-unreachable', 'admin-prohibited', 'no-route',
+                    'not-neighbour', 'port-unreachable'
+                ]
+            },
+            'src_any': {
+                'type': 'bool',
+            },
+            'src_host': {
+                'type': 'str',
+            },
+            'src_subnet': {
+                'type': 'str',
+            },
+            'src_object_group': {
+                'type': 'str',
+            },
+            'src_eq': {
+                'type': 'int',
+            },
+            'src_gt': {
+                'type': 'int',
+            },
+            'src_lt': {
+                'type': 'int',
+            },
+            'src_range': {
+                'type': 'int',
+            },
+            'src_port_end': {
+                'type': 'int',
+            },
+            'dst_any': {
+                'type': 'bool',
+            },
+            'dst_host': {
+                'type': 'str',
+            },
+            'dst_subnet': {
+                'type': 'str',
+            },
+            'dst_object_group': {
+                'type': 'str',
+            },
+            'dst_eq': {
+                'type': 'int',
+            },
+            'dst_gt': {
+                'type': 'int',
+            },
+            'dst_lt': {
+                'type': 'int',
+            },
+            'dst_range': {
+                'type': 'int',
+            },
+            'dst_port_end': {
+                'type': 'int',
+            },
+            'fragments': {
+                'type': 'bool',
+            },
+            'vlan': {
+                'type': 'int',
+            },
+            'ethernet': {
+                'type': 'str',
+            },
+            'trunk': {
+                'type': 'str',
+            },
+            'dscp': {
+                'type': 'int',
+            },
+            'established': {
+                'type': 'bool',
+            },
+            'acl_log': {
+                'type': 'bool',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        }
     })
     return rv
 
@@ -371,8 +522,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -383,14 +533,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("access-list", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("access-list", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -424,12 +574,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -444,16 +592,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -462,15 +610,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -504,7 +652,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

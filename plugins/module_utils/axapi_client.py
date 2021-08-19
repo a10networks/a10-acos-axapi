@@ -178,16 +178,21 @@ class A10Client(object):
             resp = self.session.http_client.request(
                 method, url, params, self.session.get_auth_header(),
                 **kwargs)
-            if resp.status_code == 204:
-                return None
-            elif resp.status_code == 200:
-                return {}
-            elif params.get('commandList'):
+
+            if params.get('commandList'):
                 return self._parse_show_config_resp(resp.text)
-            else:
+
+            # Validate json response
+            try:
                 resp = resp.json()
-                self.session.http_client.eval_resp(
-                    resp, method, url, self.session.header)
+            except ValueError as e:
+                # The response is not JSON but it still succeeded.
+                if resp.status_code in [200, 204]:
+                    return resp.text
+                else:
+                    raise e
+            self.session.http_client.eval_resp(
+                resp, method, url, self.session.header)
         except Exception as e:
             self.session.close()
             raise e

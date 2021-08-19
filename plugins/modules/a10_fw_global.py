@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_fw_global
 description:
@@ -549,9 +548,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -563,9 +560,20 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alg_processing", "disable_app_list", "disable_ip_fw_sessions", "extended_matching", "listen_on_port_timeout", "natip_ddos_protection", "permit_default_action", "respond_to_user_mac", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "alg_processing",
+    "disable_app_list",
+    "disable_ip_fw_sessions",
+    "extended_matching",
+    "listen_on_port_timeout",
+    "natip_ddos_protection",
+    "permit_default_action",
+    "respond_to_user_mac",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -573,27 +581,345 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'disable_ip_fw_sessions': {'type': 'bool', },
-        'alg_processing': {'type': 'str', 'choices': ['honor-rule-set', 'override-rule-set']},
-        'extended_matching': {'type': 'str', 'choices': ['disable']},
-        'permit_default_action': {'type': 'str', 'choices': ['forward', 'next-service-mode']},
-        'natip_ddos_protection': {'type': 'str', 'choices': ['enable', 'disable']},
-        'listen_on_port_timeout': {'type': 'int', },
-        'respond_to_user_mac': {'type': 'bool', },
-        'disable_app_list': {'type': 'list', 'disable_application_protocol': {'type': 'str', }, 'disable_application_category': {'type': 'str', 'choices': ['aaa', 'adult-content', 'advertising', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency', 'database', 'disposable-email', 'ebook-reader', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'mobile', 'map-service', 'multimedia-streaming', 'networking', 'news-portal', 'peer-to-peer', 'remote-access', 'scada', 'social-networks', 'software-update', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites', 'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration', 'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions', 'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government', 'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals', 'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers', 'web-ext-real-estate', 'web-ext-reference-and-research', 'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements', 'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service']}},
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'tcp_fullcone_created', 'tcp_fullcone_freed', 'udp_fullcone_created', 'udp_fullcone_freed', 'fullcone_creation_failure', 'data_session_created', 'data_session_freed', 'fullcone_in_del_q', 'fullcone_retry_lookup', 'fullcone_not_found', 'fullcone_overflow_eim', 'fullcone_overflow_eif', 'udp_fullcone_created_shadow', 'tcp_fullcone_created_shadow', 'udp_fullcone_freed_shadow', 'tcp_fullcone_freed_shadow', 'fullcone_created', 'fullcone_freed', 'fullcone_ext_too_many', 'fullcone_ext_mem_allocated', 'fullcone_ext_mem_alloc_failure', 'fullcone_ext_mem_alloc_init_faulure', 'fullcone_ext_mem_freed', 'fullcone_ext_added', 'ha_fullcone_failure', 'data_session_created_shadow', 'data_session_freed_shadow', 'active_fullcone_session', 'limit-entry-failure', 'limit-entry-allocated', 'limit-entry-mem-freed', 'limit-entry-created', 'limit-entry-not-in-bucket', 'limit-entry-marked-deleted', 'invalid-lid-drop', 'src-session-limit-exceeded', 'limit-exceeded', 'limit-entry-per-cpu-mem-allocated', 'limit-entry-per-cpu-mem-allocation-failed', 'limit-entry-per-cpu-mem-freed', 'alg_default_port_disable', 'no_fwd_route', 'no_rev_route', 'no_fwd_l2_dst', 'no_rev_l2_dst', 'urpf_pkt_drop', 'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp', 'rev_ingress_packets_tcp', 'rev_egress_packets_tcp', 'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp', 'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp', 'fwd_ingress_packets_udp', 'fwd_egress_packets_udp', 'rev_ingress_packets_udp', 'rev_egress_packets_udp', 'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp', 'rev_ingress_bytes_udp', 'rev_egress_bytes_udp', 'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp', 'rev_ingress_packets_icmp', 'rev_egress_packets_icmp', 'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp', 'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp', 'fwd_ingress_packets_others', 'fwd_egress_packets_others', 'rev_ingress_packets_others', 'rev_egress_packets_others', 'fwd_ingress_bytes_others', 'fwd_egress_bytes_others', 'rev_ingress_bytes_others', 'rev_egress_bytes_others', 'fwd_ingress_pkt_size_range1', 'fwd_ingress_pkt_size_range2', 'fwd_ingress_pkt_size_range3', 'fwd_ingress_pkt_size_range4', 'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2', 'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4', 'rev_ingress_pkt_size_range1', 'rev_ingress_pkt_size_range2', 'rev_ingress_pkt_size_range3', 'rev_ingress_pkt_size_range4', 'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2', 'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4']}},
-        'stats': {'type': 'dict', 'tcp_fullcone_created': {'type': 'str', }, 'tcp_fullcone_freed': {'type': 'str', }, 'udp_fullcone_created': {'type': 'str', }, 'udp_fullcone_freed': {'type': 'str', }, 'fullcone_creation_failure': {'type': 'str', }, 'data_session_created': {'type': 'str', }, 'data_session_freed': {'type': 'str', }, 'active_fullcone_session': {'type': 'str', }, 'limit_entry_created': {'type': 'str', }, 'limit_entry_marked_deleted': {'type': 'str', }, 'fwd_ingress_packets_tcp': {'type': 'str', }, 'fwd_egress_packets_tcp': {'type': 'str', }, 'rev_ingress_packets_tcp': {'type': 'str', }, 'rev_egress_packets_tcp': {'type': 'str', }, 'fwd_ingress_bytes_tcp': {'type': 'str', }, 'fwd_egress_bytes_tcp': {'type': 'str', }, 'rev_ingress_bytes_tcp': {'type': 'str', }, 'rev_egress_bytes_tcp': {'type': 'str', }, 'fwd_ingress_packets_udp': {'type': 'str', }, 'fwd_egress_packets_udp': {'type': 'str', }, 'rev_ingress_packets_udp': {'type': 'str', }, 'rev_egress_packets_udp': {'type': 'str', }, 'fwd_ingress_bytes_udp': {'type': 'str', }, 'fwd_egress_bytes_udp': {'type': 'str', }, 'rev_ingress_bytes_udp': {'type': 'str', }, 'rev_egress_bytes_udp': {'type': 'str', }, 'fwd_ingress_packets_icmp': {'type': 'str', }, 'fwd_egress_packets_icmp': {'type': 'str', }, 'rev_ingress_packets_icmp': {'type': 'str', }, 'rev_egress_packets_icmp': {'type': 'str', }, 'fwd_ingress_bytes_icmp': {'type': 'str', }, 'fwd_egress_bytes_icmp': {'type': 'str', }, 'rev_ingress_bytes_icmp': {'type': 'str', }, 'rev_egress_bytes_icmp': {'type': 'str', }, 'fwd_ingress_packets_others': {'type': 'str', }, 'fwd_egress_packets_others': {'type': 'str', }, 'rev_ingress_packets_others': {'type': 'str', }, 'rev_egress_packets_others': {'type': 'str', }, 'fwd_ingress_bytes_others': {'type': 'str', }, 'fwd_egress_bytes_others': {'type': 'str', }, 'rev_ingress_bytes_others': {'type': 'str', }, 'rev_egress_bytes_others': {'type': 'str', }, 'fwd_ingress_pkt_size_range1': {'type': 'str', }, 'fwd_ingress_pkt_size_range2': {'type': 'str', }, 'fwd_ingress_pkt_size_range3': {'type': 'str', }, 'fwd_ingress_pkt_size_range4': {'type': 'str', }, 'fwd_egress_pkt_size_range1': {'type': 'str', }, 'fwd_egress_pkt_size_range2': {'type': 'str', }, 'fwd_egress_pkt_size_range3': {'type': 'str', }, 'fwd_egress_pkt_size_range4': {'type': 'str', }, 'rev_ingress_pkt_size_range1': {'type': 'str', }, 'rev_ingress_pkt_size_range2': {'type': 'str', }, 'rev_ingress_pkt_size_range3': {'type': 'str', }, 'rev_ingress_pkt_size_range4': {'type': 'str', }, 'rev_egress_pkt_size_range1': {'type': 'str', }, 'rev_egress_pkt_size_range2': {'type': 'str', }, 'rev_egress_pkt_size_range3': {'type': 'str', }, 'rev_egress_pkt_size_range4': {'type': 'str', }}
+    rv.update({
+        'disable_ip_fw_sessions': {
+            'type': 'bool',
+        },
+        'alg_processing': {
+            'type': 'str',
+            'choices': ['honor-rule-set', 'override-rule-set']
+        },
+        'extended_matching': {
+            'type': 'str',
+            'choices': ['disable']
+        },
+        'permit_default_action': {
+            'type': 'str',
+            'choices': ['forward', 'next-service-mode']
+        },
+        'natip_ddos_protection': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'listen_on_port_timeout': {
+            'type': 'int',
+        },
+        'respond_to_user_mac': {
+            'type': 'bool',
+        },
+        'disable_app_list': {
+            'type': 'list',
+            'disable_application_protocol': {
+                'type': 'str',
+            },
+            'disable_application_category': {
+                'type':
+                'str',
+                'choices': [
+                    'aaa', 'adult-content', 'advertising',
+                    'analytics-and-statistics', 'anonymizers-and-proxies',
+                    'audio-chat', 'basic', 'blog', 'cdn', 'chat',
+                    'classified-ads', 'cloud-based-services', 'crowdfunding',
+                    'cryptocurrency', 'database', 'disposable-email',
+                    'ebook-reader', 'email', 'enterprise', 'file-management',
+                    'file-transfer', 'forum', 'gaming',
+                    'instant-messaging-and-multimedia-conferencing',
+                    'internet-of-things', 'mobile', 'map-service',
+                    'multimedia-streaming', 'networking', 'news-portal',
+                    'peer-to-peer', 'remote-access', 'scada',
+                    'social-networks', 'software-update', 'standards-based',
+                    'transportation', 'video-chat', 'voip', 'vpn-tunnels',
+                    'web', 'web-e-commerce', 'web-search-engines',
+                    'web-websites', 'webmails', 'web-ext-adult',
+                    'web-ext-auctions', 'web-ext-blogs',
+                    'web-ext-business-and-economy', 'web-ext-cdns',
+                    'web-ext-collaboration',
+                    'web-ext-computer-and-internet-info',
+                    'web-ext-computer-and-internet-security', 'web-ext-dating',
+                    'web-ext-educational-institutions',
+                    'web-ext-entertainment-and-arts',
+                    'web-ext-fashion-and-beauty', 'web-ext-file-share',
+                    'web-ext-financial-services', 'web-ext-gambling',
+                    'web-ext-games', 'web-ext-government',
+                    'web-ext-health-and-medicine',
+                    'web-ext-individual-stock-advice-and-tools',
+                    'web-ext-internet-portals', 'web-ext-job-search',
+                    'web-ext-local-information', 'web-ext-malware',
+                    'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news',
+                    'web-ext-p2p', 'web-ext-parked-sites',
+                    'web-ext-proxy-avoid-and-anonymizers',
+                    'web-ext-real-estate', 'web-ext-reference-and-research',
+                    'web-ext-search-engines', 'web-ext-shopping',
+                    'web-ext-social-network', 'web-ext-society',
+                    'web-ext-software', 'web-ext-sports',
+                    'web-ext-streaming-media', 'web-ext-training-and-tools',
+                    'web-ext-translation', 'web-ext-travel',
+                    'web-ext-web-advertisements', 'web-ext-web-based-email',
+                    'web-ext-web-hosting', 'web-ext-web-service'
+                ]
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'tcp_fullcone_created', 'tcp_fullcone_freed',
+                    'udp_fullcone_created', 'udp_fullcone_freed',
+                    'fullcone_creation_failure', 'data_session_created',
+                    'data_session_freed', 'fullcone_in_del_q',
+                    'fullcone_retry_lookup', 'fullcone_not_found',
+                    'fullcone_overflow_eim', 'fullcone_overflow_eif',
+                    'udp_fullcone_created_shadow',
+                    'tcp_fullcone_created_shadow', 'udp_fullcone_freed_shadow',
+                    'tcp_fullcone_freed_shadow', 'fullcone_created',
+                    'fullcone_freed', 'fullcone_ext_too_many',
+                    'fullcone_ext_mem_allocated',
+                    'fullcone_ext_mem_alloc_failure',
+                    'fullcone_ext_mem_alloc_init_faulure',
+                    'fullcone_ext_mem_freed', 'fullcone_ext_added',
+                    'ha_fullcone_failure', 'data_session_created_shadow',
+                    'data_session_freed_shadow', 'active_fullcone_session',
+                    'limit-entry-failure', 'limit-entry-allocated',
+                    'limit-entry-mem-freed', 'limit-entry-created',
+                    'limit-entry-not-in-bucket', 'limit-entry-marked-deleted',
+                    'invalid-lid-drop', 'src-session-limit-exceeded',
+                    'limit-exceeded', 'limit-entry-per-cpu-mem-allocated',
+                    'limit-entry-per-cpu-mem-allocation-failed',
+                    'limit-entry-per-cpu-mem-freed',
+                    'alg_default_port_disable', 'no_fwd_route', 'no_rev_route',
+                    'no_fwd_l2_dst', 'no_rev_l2_dst', 'urpf_pkt_drop',
+                    'fwd_ingress_packets_tcp', 'fwd_egress_packets_tcp',
+                    'rev_ingress_packets_tcp', 'rev_egress_packets_tcp',
+                    'fwd_ingress_bytes_tcp', 'fwd_egress_bytes_tcp',
+                    'rev_ingress_bytes_tcp', 'rev_egress_bytes_tcp',
+                    'fwd_ingress_packets_udp', 'fwd_egress_packets_udp',
+                    'rev_ingress_packets_udp', 'rev_egress_packets_udp',
+                    'fwd_ingress_bytes_udp', 'fwd_egress_bytes_udp',
+                    'rev_ingress_bytes_udp', 'rev_egress_bytes_udp',
+                    'fwd_ingress_packets_icmp', 'fwd_egress_packets_icmp',
+                    'rev_ingress_packets_icmp', 'rev_egress_packets_icmp',
+                    'fwd_ingress_bytes_icmp', 'fwd_egress_bytes_icmp',
+                    'rev_ingress_bytes_icmp', 'rev_egress_bytes_icmp',
+                    'fwd_ingress_packets_others', 'fwd_egress_packets_others',
+                    'rev_ingress_packets_others', 'rev_egress_packets_others',
+                    'fwd_ingress_bytes_others', 'fwd_egress_bytes_others',
+                    'rev_ingress_bytes_others', 'rev_egress_bytes_others',
+                    'fwd_ingress_pkt_size_range1',
+                    'fwd_ingress_pkt_size_range2',
+                    'fwd_ingress_pkt_size_range3',
+                    'fwd_ingress_pkt_size_range4',
+                    'fwd_egress_pkt_size_range1', 'fwd_egress_pkt_size_range2',
+                    'fwd_egress_pkt_size_range3', 'fwd_egress_pkt_size_range4',
+                    'rev_ingress_pkt_size_range1',
+                    'rev_ingress_pkt_size_range2',
+                    'rev_ingress_pkt_size_range3',
+                    'rev_ingress_pkt_size_range4',
+                    'rev_egress_pkt_size_range1', 'rev_egress_pkt_size_range2',
+                    'rev_egress_pkt_size_range3', 'rev_egress_pkt_size_range4'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'tcp_fullcone_created': {
+                'type': 'str',
+            },
+            'tcp_fullcone_freed': {
+                'type': 'str',
+            },
+            'udp_fullcone_created': {
+                'type': 'str',
+            },
+            'udp_fullcone_freed': {
+                'type': 'str',
+            },
+            'fullcone_creation_failure': {
+                'type': 'str',
+            },
+            'data_session_created': {
+                'type': 'str',
+            },
+            'data_session_freed': {
+                'type': 'str',
+            },
+            'active_fullcone_session': {
+                'type': 'str',
+            },
+            'limit_entry_created': {
+                'type': 'str',
+            },
+            'limit_entry_marked_deleted': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_tcp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_tcp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_udp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_udp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_udp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_udp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_udp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_udp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_udp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_udp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_icmp': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_packets_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_icmp': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_icmp': {
+                'type': 'str',
+            },
+            'fwd_ingress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_egress_packets_others': {
+                'type': 'str',
+            },
+            'rev_ingress_packets_others': {
+                'type': 'str',
+            },
+            'rev_egress_packets_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_egress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_ingress_bytes_others': {
+                'type': 'str',
+            },
+            'rev_egress_bytes_others': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'fwd_egress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'rev_ingress_pkt_size_range4': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range1': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range2': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range3': {
+                'type': 'str',
+            },
+            'rev_egress_pkt_size_range4': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -640,8 +966,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -652,8 +977,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -693,12 +1017,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -713,16 +1035,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -731,15 +1053,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -776,7 +1098,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

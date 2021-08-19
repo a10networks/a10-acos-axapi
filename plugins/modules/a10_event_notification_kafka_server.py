@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_event_notification_kafka_server
 description:
@@ -411,9 +410,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -425,9 +422,16 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["host_ipv4", "oper", "port", "sampling_enable", "stats", "use_mgmt_port", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "host_ipv4",
+    "oper",
+    "port",
+    "sampling_enable",
+    "stats",
+    "use_mgmt_port",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -435,23 +439,264 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'host_ipv4': {'type': 'str', },
-        'use_mgmt_port': {'type': 'bool', },
-        'port': {'type': 'int', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'pr-acos-harmony-topic', 'avro-device-status-topic', 'avro-partition-metrics-topic', 'avro-generic-sent', 'pr-acos-harmony-topic-enqueue-err', 'pr-acos-harmony-topic-dequeue-err', 'avro-generic-failed-encoding', 'avro-generic-failed-sending', 'avro-device-status-topic-enqueue-err', 'avro-device-status-topic-dequeue-err', 'avro-partition-metrics-topic-enqueue-err', 'avro-partition-metrics-topic-dequeue-err', 'kafka-unknown-topic-dequeue-err', 'kafka-broker-down', 'kafka-queue-full-err', 'pr-throttle-drop', 'pr-not-allowed-drop', 'pr-be-ttfb-anomaly', 'pr-be-ttlb-anomaly', 'pr-in-latency-threshold-exceed', 'pr-out-latency-threshold-exceed', 'pr-out-latency-anomaly', 'pr-in-latency-anomaly', 'kafka-topic-error', 'pc-encoding-failed', 'pc-acos-harmony-topic', 'pc-acos-harmony-topic-dequeue-err', 'cgn-pc-acos-harmony-topic', 'cgn-pc-acos-harmony-topic-dequeue-err', 'cgn-pe-acos-harmony-topic', 'cgn-pe-acos-harmony-topic-dequeue-err', 'fw-pc-acos-harmony-topic', 'fw-pc-acos-harmony-topic-dequeue-err', 'fw-deny-pc-acos-harmony-topic', 'fw-deny-pc-acos-harmony-topic-dequeue-err', 'fw-rst-pc-acos-harmony-topic', 'fw-rst-pc-acos-harmony-topic-dequeue-err', 'cgn-summary-error-acos-harmony-topic', 'cgn-summary-error-acos-harmony-topic-dequeue-err', 'rule-set-application-metrics-topic', 'rule-set-application-metrics-topic-dequeue-err', 'slb-ssl-stats-metrics-topic', 'slb-ssl-stats-metrics-topic-dequeue-err', 'slb-client-ssl-counters-metrics-topic', 'slb-client-ssl-counters-metrics-topic-dequeue-err', 'slb-server-ssl-counters-metrics-topic', 'slb-server-ssl-counters-metrics-topic-dequeue-err', 'pc-throttle-drop', 'metrics-dropped-pt-missing', 'ssli-pc-acos-harmony-topic', 'ssli-pc-acos-harmony-topic-dequeue-err', 'ssli-pe-acos-harmony-topic', 'ssli-pe-acos-harmony-topic-dequeue-err', 'analytics-bus-restart']}},
-        'oper': {'type': 'dict', 'kafka_broker_state': {'type': 'str', 'choices': ['Up', 'Down']}},
-        'stats': {'type': 'dict', 'pr_acos_harmony_topic': {'type': 'str', }, 'avro_device_status_topic': {'type': 'str', }, 'avro_partition_metrics_topic': {'type': 'str', }, 'avro_generic_sent': {'type': 'str', }, 'pr_acos_harmony_topic_enqueue_err': {'type': 'str', }, 'pr_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'avro_generic_failed_encoding': {'type': 'str', }, 'avro_generic_failed_sending': {'type': 'str', }, 'avro_device_status_topic_enqueue_err': {'type': 'str', }, 'avro_device_status_topic_dequeue_err': {'type': 'str', }, 'avro_partition_metrics_topic_enqueue_err': {'type': 'str', }, 'avro_partition_metrics_topic_dequeue_err': {'type': 'str', }, 'kafka_unknown_topic_dequeue_err': {'type': 'str', }, 'kafka_broker_down': {'type': 'str', }, 'kafka_queue_full_err': {'type': 'str', }, 'pr_throttle_drop': {'type': 'str', }, 'pr_not_allowed_drop': {'type': 'str', }, 'pr_be_ttfb_anomaly': {'type': 'str', }, 'pr_be_ttlb_anomaly': {'type': 'str', }, 'pr_in_latency_threshold_exceed': {'type': 'str', }, 'pr_out_latency_threshold_exceed': {'type': 'str', }, 'pr_out_latency_anomaly': {'type': 'str', }, 'pr_in_latency_anomaly': {'type': 'str', }, 'kafka_topic_error': {'type': 'str', }, 'pc_encoding_failed': {'type': 'str', }, 'pc_acos_harmony_topic': {'type': 'str', }, 'pc_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'cgn_pc_acos_harmony_topic': {'type': 'str', }, 'cgn_pc_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'cgn_pe_acos_harmony_topic': {'type': 'str', }, 'cgn_pe_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'fw_pc_acos_harmony_topic': {'type': 'str', }, 'fw_pc_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'fw_deny_pc_acos_harmony_topic': {'type': 'str', }, 'fw_deny_pc_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'fw_rst_pc_acos_harmony_topic': {'type': 'str', }, 'fw_rst_pc_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'cgn_summary_error_acos_harmony_topic': {'type': 'str', }, 'cgn_summary_error_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'rule_set_application_metrics_topic': {'type': 'str', }, 'rule_set_application_metrics_topic_dequeue_err': {'type': 'str', }, 'slb_ssl_stats_metrics_topic': {'type': 'str', }, 'slb_ssl_stats_metrics_topic_dequeue_err': {'type': 'str', }, 'slb_client_ssl_counters_metrics_topic': {'type': 'str', }, 'slb_client_ssl_counters_metrics_topic_dequeue_err': {'type': 'str', }, 'slb_server_ssl_counters_metrics_topic': {'type': 'str', }, 'slb_server_ssl_counters_metrics_topic_dequeue_err': {'type': 'str', }, 'pc_throttle_drop': {'type': 'str', }, 'metrics_dropped_pt_missing': {'type': 'str', }, 'ssli_pc_acos_harmony_topic': {'type': 'str', }, 'ssli_pc_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'ssli_pe_acos_harmony_topic': {'type': 'str', }, 'ssli_pe_acos_harmony_topic_dequeue_err': {'type': 'str', }, 'analytics_bus_restart': {'type': 'str', }}
+    rv.update({
+        'host_ipv4': {
+            'type': 'str',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'port': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'pr-acos-harmony-topic', 'avro-device-status-topic',
+                    'avro-partition-metrics-topic', 'avro-generic-sent',
+                    'pr-acos-harmony-topic-enqueue-err',
+                    'pr-acos-harmony-topic-dequeue-err',
+                    'avro-generic-failed-encoding',
+                    'avro-generic-failed-sending',
+                    'avro-device-status-topic-enqueue-err',
+                    'avro-device-status-topic-dequeue-err',
+                    'avro-partition-metrics-topic-enqueue-err',
+                    'avro-partition-metrics-topic-dequeue-err',
+                    'kafka-unknown-topic-dequeue-err', 'kafka-broker-down',
+                    'kafka-queue-full-err', 'pr-throttle-drop',
+                    'pr-not-allowed-drop', 'pr-be-ttfb-anomaly',
+                    'pr-be-ttlb-anomaly', 'pr-in-latency-threshold-exceed',
+                    'pr-out-latency-threshold-exceed',
+                    'pr-out-latency-anomaly', 'pr-in-latency-anomaly',
+                    'kafka-topic-error', 'pc-encoding-failed',
+                    'pc-acos-harmony-topic',
+                    'pc-acos-harmony-topic-dequeue-err',
+                    'cgn-pc-acos-harmony-topic',
+                    'cgn-pc-acos-harmony-topic-dequeue-err',
+                    'cgn-pe-acos-harmony-topic',
+                    'cgn-pe-acos-harmony-topic-dequeue-err',
+                    'fw-pc-acos-harmony-topic',
+                    'fw-pc-acos-harmony-topic-dequeue-err',
+                    'fw-deny-pc-acos-harmony-topic',
+                    'fw-deny-pc-acos-harmony-topic-dequeue-err',
+                    'fw-rst-pc-acos-harmony-topic',
+                    'fw-rst-pc-acos-harmony-topic-dequeue-err',
+                    'cgn-summary-error-acos-harmony-topic',
+                    'cgn-summary-error-acos-harmony-topic-dequeue-err',
+                    'rule-set-application-metrics-topic',
+                    'rule-set-application-metrics-topic-dequeue-err',
+                    'slb-ssl-stats-metrics-topic',
+                    'slb-ssl-stats-metrics-topic-dequeue-err',
+                    'slb-client-ssl-counters-metrics-topic',
+                    'slb-client-ssl-counters-metrics-topic-dequeue-err',
+                    'slb-server-ssl-counters-metrics-topic',
+                    'slb-server-ssl-counters-metrics-topic-dequeue-err',
+                    'pc-throttle-drop', 'metrics-dropped-pt-missing',
+                    'ssli-pc-acos-harmony-topic',
+                    'ssli-pc-acos-harmony-topic-dequeue-err',
+                    'ssli-pe-acos-harmony-topic',
+                    'ssli-pe-acos-harmony-topic-dequeue-err',
+                    'analytics-bus-restart'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'kafka_broker_state': {
+                'type': 'str',
+                'choices': ['Up', 'Down']
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'pr_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'avro_device_status_topic': {
+                'type': 'str',
+            },
+            'avro_partition_metrics_topic': {
+                'type': 'str',
+            },
+            'avro_generic_sent': {
+                'type': 'str',
+            },
+            'pr_acos_harmony_topic_enqueue_err': {
+                'type': 'str',
+            },
+            'pr_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'avro_generic_failed_encoding': {
+                'type': 'str',
+            },
+            'avro_generic_failed_sending': {
+                'type': 'str',
+            },
+            'avro_device_status_topic_enqueue_err': {
+                'type': 'str',
+            },
+            'avro_device_status_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'avro_partition_metrics_topic_enqueue_err': {
+                'type': 'str',
+            },
+            'avro_partition_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'kafka_unknown_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'kafka_broker_down': {
+                'type': 'str',
+            },
+            'kafka_queue_full_err': {
+                'type': 'str',
+            },
+            'pr_throttle_drop': {
+                'type': 'str',
+            },
+            'pr_not_allowed_drop': {
+                'type': 'str',
+            },
+            'pr_be_ttfb_anomaly': {
+                'type': 'str',
+            },
+            'pr_be_ttlb_anomaly': {
+                'type': 'str',
+            },
+            'pr_in_latency_threshold_exceed': {
+                'type': 'str',
+            },
+            'pr_out_latency_threshold_exceed': {
+                'type': 'str',
+            },
+            'pr_out_latency_anomaly': {
+                'type': 'str',
+            },
+            'pr_in_latency_anomaly': {
+                'type': 'str',
+            },
+            'kafka_topic_error': {
+                'type': 'str',
+            },
+            'pc_encoding_failed': {
+                'type': 'str',
+            },
+            'pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'cgn_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'cgn_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'cgn_pe_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'cgn_pe_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'fw_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'fw_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'fw_deny_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'fw_deny_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'fw_rst_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'fw_rst_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'cgn_summary_error_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'cgn_summary_error_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'rule_set_application_metrics_topic': {
+                'type': 'str',
+            },
+            'rule_set_application_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'slb_ssl_stats_metrics_topic': {
+                'type': 'str',
+            },
+            'slb_ssl_stats_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'slb_client_ssl_counters_metrics_topic': {
+                'type': 'str',
+            },
+            'slb_client_ssl_counters_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'slb_server_ssl_counters_metrics_topic': {
+                'type': 'str',
+            },
+            'slb_server_ssl_counters_metrics_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'pc_throttle_drop': {
+                'type': 'str',
+            },
+            'metrics_dropped_pt_missing': {
+                'type': 'str',
+            },
+            'ssli_pc_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'ssli_pc_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'ssli_pe_acos_harmony_topic': {
+                'type': 'str',
+            },
+            'ssli_pe_acos_harmony_topic_dequeue_err': {
+                'type': 'str',
+            },
+            'analytics_bus_restart': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -498,8 +743,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -510,8 +754,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -551,12 +794,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -571,16 +812,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -589,15 +830,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -637,7 +878,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

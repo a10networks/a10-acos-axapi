@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_generic_proxy
 description:
@@ -466,9 +465,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -480,9 +477,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -490,20 +491,505 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'client_fail', 'server_fail', 'no_sess', 'user_session', 'acr_out', 'acr_in', 'aca_out', 'aca_in', 'cea_out', 'cea_in', 'cer_out', 'cer_in', 'dwr_out', 'dwr_in', 'dwa_out', 'dwa_in', 'str_out', 'str_in', 'sta_out', 'sta_in', 'asr_out', 'asr_in', 'asa_out', 'asa_in', 'other_out', 'other_in', 'total_http_req_enter_gen', 'mismatch_fwd_id', 'mismatch_rev_id', 'unkwn_cmd_code', 'no_session_id', 'no_fwd_tuple', 'no_rev_tuple', 'dcmsg_fwd_in', 'dcmsg_fwd_out', 'dcmsg_rev_in', 'dcmsg_rev_out', 'dcmsg_error', 'retry_client_request', 'retry_client_request_fail', 'reply_unknown_session_id', 'ccr_out', 'ccr_in', 'cca_out', 'cca_in', 'ccr_i', 'ccr_u', 'ccr_t', 'cca_t', 'terminate_on_cca_t', 'forward_unknown_session_id', 'update_latest_server', 'client_select_fail', 'close_conn_when_vport_down', 'invalid_avp', 'reselect_fwd_tuple', 'reselect_fwd_tuple_other_cpu', 'reselect_rev_tuple', 'conn_closed_by_client', 'conn_closed_by_server', 'reply_invalid_avp_value', 'reply_unable_to_deliver', 'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out', 'dpa_in']}},
-        'oper': {'type': 'dict', 'l4_cpu_list': {'type': 'list', 'curr_proxy_conns': {'type': 'int', }, 'total_proxy_conns': {'type': 'int', }, 'total_http_conn_generic_proxy': {'type': 'int', }, 'client_fail': {'type': 'int', }, 'server_fail': {'type': 'int', }, 'server_selection_fail': {'type': 'int', }, 'no_route_fail': {'type': 'int', }, 'source_nat_fail': {'type': 'int', }, 'user_session': {'type': 'str', }, 'acr_out': {'type': 'int', }, 'acr_in': {'type': 'int', }, 'aca_out': {'type': 'int', }, 'aca_in': {'type': 'int', }, 'dpr_out': {'type': 'int', }, 'dpr_in': {'type': 'int', }, 'dpa_out': {'type': 'int', }, 'dpa_in': {'type': 'int', }, 'cea_out': {'type': 'int', }, 'cea_in': {'type': 'int', }, 'cer_out': {'type': 'int', }, 'cer_in': {'type': 'int', }, 'dwa_out': {'type': 'int', }, 'dwa_in': {'type': 'int', }, 'dwr_out': {'type': 'int', }, 'dwr_in': {'type': 'int', }, 'str_out': {'type': 'int', }, 'str_in': {'type': 'int', }, 'sta_out': {'type': 'int', }, 'sta_in': {'type': 'int', }, 'asr_out': {'type': 'int', }, 'asr_in': {'type': 'int', }, 'asa_out': {'type': 'int', }, 'asa_in': {'type': 'int', }, 'other_out': {'type': 'int', }, 'other_in': {'type': 'int', }, 'mismatch_fwd_id': {'type': 'int', }, 'mismatch_rev_id': {'type': 'int', }, 'unkwn_cmd_code': {'type': 'int', }, 'no_session_id': {'type': 'int', }, 'no_fwd_tuple': {'type': 'int', }, 'no_rev_tuple': {'type': 'int', }, 'dcmsg_fwd_in': {'type': 'int', }, 'dcmsg_fwd_out': {'type': 'int', }, 'dcmsg_rev_in': {'type': 'int', }, 'dcmsg_rev_out': {'type': 'int', }, 'dcmsg_error': {'type': 'int', }, 'retry_client_request': {'type': 'int', }, 'retry_client_request_fail': {'type': 'int', }, 'reply_unknown_session_id': {'type': 'int', }, 'ccr_out': {'type': 'int', }, 'ccr_in': {'type': 'int', }, 'cca_out': {'type': 'int', }, 'cca_in': {'type': 'int', }, 'ccr_i': {'type': 'int', }, 'ccr_u': {'type': 'int', }, 'ccr_t': {'type': 'int', }, 'cca_t': {'type': 'int', }, 'terminate_on_cca_t': {'type': 'int', }, 'forward_unknown_session_id': {'type': 'int', }, 'update_latest_server': {'type': 'int', }, 'client_select_fail': {'type': 'int', }, 'close_conn_when_vport_down': {'type': 'int', }, 'invalid_avp': {'type': 'int', }, 'reselect_fwd_tuple': {'type': 'int', }, 'reselect_fwd_tuple_other_cpu': {'type': 'int', }, 'reselect_rev_tuple': {'type': 'int', }, 'conn_closed_by_client': {'type': 'int', }, 'conn_closed_by_server': {'type': 'int', }, 'reply_invalid_avp_value': {'type': 'int', }, 'reply_unable_to_deliver': {'type': 'int', }, 'reply_error_info_fail': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
-        'stats': {'type': 'dict', 'num': {'type': 'str', }, 'curr': {'type': 'str', }, 'total': {'type': 'str', }, 'svrsel_fail': {'type': 'str', }, 'no_route': {'type': 'str', }, 'snat_fail': {'type': 'str', }, 'client_fail': {'type': 'str', }, 'server_fail': {'type': 'str', }, 'no_sess': {'type': 'str', }, 'user_session': {'type': 'str', }, 'acr_out': {'type': 'str', }, 'acr_in': {'type': 'str', }, 'aca_out': {'type': 'str', }, 'aca_in': {'type': 'str', }, 'cea_out': {'type': 'str', }, 'cea_in': {'type': 'str', }, 'cer_out': {'type': 'str', }, 'cer_in': {'type': 'str', }, 'dwr_out': {'type': 'str', }, 'dwr_in': {'type': 'str', }, 'dwa_out': {'type': 'str', }, 'dwa_in': {'type': 'str', }, 'str_out': {'type': 'str', }, 'str_in': {'type': 'str', }, 'sta_out': {'type': 'str', }, 'sta_in': {'type': 'str', }, 'asr_out': {'type': 'str', }, 'asr_in': {'type': 'str', }, 'asa_out': {'type': 'str', }, 'asa_in': {'type': 'str', }, 'other_out': {'type': 'str', }, 'other_in': {'type': 'str', }, 'total_http_req_enter_gen': {'type': 'str', }, 'mismatch_fwd_id': {'type': 'str', }, 'mismatch_rev_id': {'type': 'str', }, 'unkwn_cmd_code': {'type': 'str', }, 'no_session_id': {'type': 'str', }, 'no_fwd_tuple': {'type': 'str', }, 'no_rev_tuple': {'type': 'str', }, 'dcmsg_fwd_in': {'type': 'str', }, 'dcmsg_fwd_out': {'type': 'str', }, 'dcmsg_rev_in': {'type': 'str', }, 'dcmsg_rev_out': {'type': 'str', }, 'dcmsg_error': {'type': 'str', }, 'retry_client_request': {'type': 'str', }, 'retry_client_request_fail': {'type': 'str', }, 'reply_unknown_session_id': {'type': 'str', }, 'ccr_out': {'type': 'str', }, 'ccr_in': {'type': 'str', }, 'cca_out': {'type': 'str', }, 'cca_in': {'type': 'str', }, 'ccr_i': {'type': 'str', }, 'ccr_u': {'type': 'str', }, 'ccr_t': {'type': 'str', }, 'cca_t': {'type': 'str', }, 'terminate_on_cca_t': {'type': 'str', }, 'forward_unknown_session_id': {'type': 'str', }, 'update_latest_server': {'type': 'str', }, 'client_select_fail': {'type': 'str', }, 'close_conn_when_vport_down': {'type': 'str', }, 'invalid_avp': {'type': 'str', }, 'reselect_fwd_tuple': {'type': 'str', }, 'reselect_fwd_tuple_other_cpu': {'type': 'str', }, 'reselect_rev_tuple': {'type': 'str', }, 'conn_closed_by_client': {'type': 'str', }, 'conn_closed_by_server': {'type': 'str', }, 'reply_invalid_avp_value': {'type': 'str', }, 'reply_unable_to_deliver': {'type': 'str', }, 'reply_error_info_fail': {'type': 'str', }, 'dpr_out': {'type': 'str', }, 'dpr_in': {'type': 'str', }, 'dpa_out': {'type': 'str', }, 'dpa_in': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route',
+                    'snat_fail', 'client_fail', 'server_fail', 'no_sess',
+                    'user_session', 'acr_out', 'acr_in', 'aca_out', 'aca_in',
+                    'cea_out', 'cea_in', 'cer_out', 'cer_in', 'dwr_out',
+                    'dwr_in', 'dwa_out', 'dwa_in', 'str_out', 'str_in',
+                    'sta_out', 'sta_in', 'asr_out', 'asr_in', 'asa_out',
+                    'asa_in', 'other_out', 'other_in',
+                    'total_http_req_enter_gen', 'mismatch_fwd_id',
+                    'mismatch_rev_id', 'unkwn_cmd_code', 'no_session_id',
+                    'no_fwd_tuple', 'no_rev_tuple', 'dcmsg_fwd_in',
+                    'dcmsg_fwd_out', 'dcmsg_rev_in', 'dcmsg_rev_out',
+                    'dcmsg_error', 'retry_client_request',
+                    'retry_client_request_fail', 'reply_unknown_session_id',
+                    'ccr_out', 'ccr_in', 'cca_out', 'cca_in', 'ccr_i', 'ccr_u',
+                    'ccr_t', 'cca_t', 'terminate_on_cca_t',
+                    'forward_unknown_session_id', 'update_latest_server',
+                    'client_select_fail', 'close_conn_when_vport_down',
+                    'invalid_avp', 'reselect_fwd_tuple',
+                    'reselect_fwd_tuple_other_cpu', 'reselect_rev_tuple',
+                    'conn_closed_by_client', 'conn_closed_by_server',
+                    'reply_invalid_avp_value', 'reply_unable_to_deliver',
+                    'reply_error_info_fail', 'dpr_out', 'dpr_in', 'dpa_out',
+                    'dpa_in'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'curr_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_http_conn_generic_proxy': {
+                    'type': 'int',
+                },
+                'client_fail': {
+                    'type': 'int',
+                },
+                'server_fail': {
+                    'type': 'int',
+                },
+                'server_selection_fail': {
+                    'type': 'int',
+                },
+                'no_route_fail': {
+                    'type': 'int',
+                },
+                'source_nat_fail': {
+                    'type': 'int',
+                },
+                'user_session': {
+                    'type': 'str',
+                },
+                'acr_out': {
+                    'type': 'int',
+                },
+                'acr_in': {
+                    'type': 'int',
+                },
+                'aca_out': {
+                    'type': 'int',
+                },
+                'aca_in': {
+                    'type': 'int',
+                },
+                'dpr_out': {
+                    'type': 'int',
+                },
+                'dpr_in': {
+                    'type': 'int',
+                },
+                'dpa_out': {
+                    'type': 'int',
+                },
+                'dpa_in': {
+                    'type': 'int',
+                },
+                'cea_out': {
+                    'type': 'int',
+                },
+                'cea_in': {
+                    'type': 'int',
+                },
+                'cer_out': {
+                    'type': 'int',
+                },
+                'cer_in': {
+                    'type': 'int',
+                },
+                'dwa_out': {
+                    'type': 'int',
+                },
+                'dwa_in': {
+                    'type': 'int',
+                },
+                'dwr_out': {
+                    'type': 'int',
+                },
+                'dwr_in': {
+                    'type': 'int',
+                },
+                'str_out': {
+                    'type': 'int',
+                },
+                'str_in': {
+                    'type': 'int',
+                },
+                'sta_out': {
+                    'type': 'int',
+                },
+                'sta_in': {
+                    'type': 'int',
+                },
+                'asr_out': {
+                    'type': 'int',
+                },
+                'asr_in': {
+                    'type': 'int',
+                },
+                'asa_out': {
+                    'type': 'int',
+                },
+                'asa_in': {
+                    'type': 'int',
+                },
+                'other_out': {
+                    'type': 'int',
+                },
+                'other_in': {
+                    'type': 'int',
+                },
+                'mismatch_fwd_id': {
+                    'type': 'int',
+                },
+                'mismatch_rev_id': {
+                    'type': 'int',
+                },
+                'unkwn_cmd_code': {
+                    'type': 'int',
+                },
+                'no_session_id': {
+                    'type': 'int',
+                },
+                'no_fwd_tuple': {
+                    'type': 'int',
+                },
+                'no_rev_tuple': {
+                    'type': 'int',
+                },
+                'dcmsg_fwd_in': {
+                    'type': 'int',
+                },
+                'dcmsg_fwd_out': {
+                    'type': 'int',
+                },
+                'dcmsg_rev_in': {
+                    'type': 'int',
+                },
+                'dcmsg_rev_out': {
+                    'type': 'int',
+                },
+                'dcmsg_error': {
+                    'type': 'int',
+                },
+                'retry_client_request': {
+                    'type': 'int',
+                },
+                'retry_client_request_fail': {
+                    'type': 'int',
+                },
+                'reply_unknown_session_id': {
+                    'type': 'int',
+                },
+                'ccr_out': {
+                    'type': 'int',
+                },
+                'ccr_in': {
+                    'type': 'int',
+                },
+                'cca_out': {
+                    'type': 'int',
+                },
+                'cca_in': {
+                    'type': 'int',
+                },
+                'ccr_i': {
+                    'type': 'int',
+                },
+                'ccr_u': {
+                    'type': 'int',
+                },
+                'ccr_t': {
+                    'type': 'int',
+                },
+                'cca_t': {
+                    'type': 'int',
+                },
+                'terminate_on_cca_t': {
+                    'type': 'int',
+                },
+                'forward_unknown_session_id': {
+                    'type': 'int',
+                },
+                'update_latest_server': {
+                    'type': 'int',
+                },
+                'client_select_fail': {
+                    'type': 'int',
+                },
+                'close_conn_when_vport_down': {
+                    'type': 'int',
+                },
+                'invalid_avp': {
+                    'type': 'int',
+                },
+                'reselect_fwd_tuple': {
+                    'type': 'int',
+                },
+                'reselect_fwd_tuple_other_cpu': {
+                    'type': 'int',
+                },
+                'reselect_rev_tuple': {
+                    'type': 'int',
+                },
+                'conn_closed_by_client': {
+                    'type': 'int',
+                },
+                'conn_closed_by_server': {
+                    'type': 'int',
+                },
+                'reply_invalid_avp_value': {
+                    'type': 'int',
+                },
+                'reply_unable_to_deliver': {
+                    'type': 'int',
+                },
+                'reply_error_info_fail': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'num': {
+                'type': 'str',
+            },
+            'curr': {
+                'type': 'str',
+            },
+            'total': {
+                'type': 'str',
+            },
+            'svrsel_fail': {
+                'type': 'str',
+            },
+            'no_route': {
+                'type': 'str',
+            },
+            'snat_fail': {
+                'type': 'str',
+            },
+            'client_fail': {
+                'type': 'str',
+            },
+            'server_fail': {
+                'type': 'str',
+            },
+            'no_sess': {
+                'type': 'str',
+            },
+            'user_session': {
+                'type': 'str',
+            },
+            'acr_out': {
+                'type': 'str',
+            },
+            'acr_in': {
+                'type': 'str',
+            },
+            'aca_out': {
+                'type': 'str',
+            },
+            'aca_in': {
+                'type': 'str',
+            },
+            'cea_out': {
+                'type': 'str',
+            },
+            'cea_in': {
+                'type': 'str',
+            },
+            'cer_out': {
+                'type': 'str',
+            },
+            'cer_in': {
+                'type': 'str',
+            },
+            'dwr_out': {
+                'type': 'str',
+            },
+            'dwr_in': {
+                'type': 'str',
+            },
+            'dwa_out': {
+                'type': 'str',
+            },
+            'dwa_in': {
+                'type': 'str',
+            },
+            'str_out': {
+                'type': 'str',
+            },
+            'str_in': {
+                'type': 'str',
+            },
+            'sta_out': {
+                'type': 'str',
+            },
+            'sta_in': {
+                'type': 'str',
+            },
+            'asr_out': {
+                'type': 'str',
+            },
+            'asr_in': {
+                'type': 'str',
+            },
+            'asa_out': {
+                'type': 'str',
+            },
+            'asa_in': {
+                'type': 'str',
+            },
+            'other_out': {
+                'type': 'str',
+            },
+            'other_in': {
+                'type': 'str',
+            },
+            'total_http_req_enter_gen': {
+                'type': 'str',
+            },
+            'mismatch_fwd_id': {
+                'type': 'str',
+            },
+            'mismatch_rev_id': {
+                'type': 'str',
+            },
+            'unkwn_cmd_code': {
+                'type': 'str',
+            },
+            'no_session_id': {
+                'type': 'str',
+            },
+            'no_fwd_tuple': {
+                'type': 'str',
+            },
+            'no_rev_tuple': {
+                'type': 'str',
+            },
+            'dcmsg_fwd_in': {
+                'type': 'str',
+            },
+            'dcmsg_fwd_out': {
+                'type': 'str',
+            },
+            'dcmsg_rev_in': {
+                'type': 'str',
+            },
+            'dcmsg_rev_out': {
+                'type': 'str',
+            },
+            'dcmsg_error': {
+                'type': 'str',
+            },
+            'retry_client_request': {
+                'type': 'str',
+            },
+            'retry_client_request_fail': {
+                'type': 'str',
+            },
+            'reply_unknown_session_id': {
+                'type': 'str',
+            },
+            'ccr_out': {
+                'type': 'str',
+            },
+            'ccr_in': {
+                'type': 'str',
+            },
+            'cca_out': {
+                'type': 'str',
+            },
+            'cca_in': {
+                'type': 'str',
+            },
+            'ccr_i': {
+                'type': 'str',
+            },
+            'ccr_u': {
+                'type': 'str',
+            },
+            'ccr_t': {
+                'type': 'str',
+            },
+            'cca_t': {
+                'type': 'str',
+            },
+            'terminate_on_cca_t': {
+                'type': 'str',
+            },
+            'forward_unknown_session_id': {
+                'type': 'str',
+            },
+            'update_latest_server': {
+                'type': 'str',
+            },
+            'client_select_fail': {
+                'type': 'str',
+            },
+            'close_conn_when_vport_down': {
+                'type': 'str',
+            },
+            'invalid_avp': {
+                'type': 'str',
+            },
+            'reselect_fwd_tuple': {
+                'type': 'str',
+            },
+            'reselect_fwd_tuple_other_cpu': {
+                'type': 'str',
+            },
+            'reselect_rev_tuple': {
+                'type': 'str',
+            },
+            'conn_closed_by_client': {
+                'type': 'str',
+            },
+            'conn_closed_by_server': {
+                'type': 'str',
+            },
+            'reply_invalid_avp_value': {
+                'type': 'str',
+            },
+            'reply_unable_to_deliver': {
+                'type': 'str',
+            },
+            'reply_error_info_fail': {
+                'type': 'str',
+            },
+            'dpr_out': {
+                'type': 'str',
+            },
+            'dpr_in': {
+                'type': 'str',
+            },
+            'dpa_out': {
+                'type': 'str',
+            },
+            'dpa_in': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -550,8 +1036,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -562,14 +1047,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("generic-proxy", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("generic-proxy", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -603,12 +1088,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -623,16 +1106,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -641,15 +1124,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -689,7 +1172,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

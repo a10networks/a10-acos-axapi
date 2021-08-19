@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template
 description:
@@ -290,9 +289,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -304,9 +301,15 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["app_resources", "name", "network_resources", "system_resources", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "app_resources",
+    "name",
+    "network_resources",
+    "system_resources",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -314,22 +317,351 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'app_resources': {'type': 'dict', 'gslb_device_cfg': {'type': 'dict', 'gslb_device_max': {'type': 'int', }, 'gslb_device_min_guarantee': {'type': 'int', }}, 'gslb_geo_location_cfg': {'type': 'dict', 'gslb_geo_location_max': {'type': 'int', }, 'gslb_geo_location_min_guarantee': {'type': 'int', }}, 'gslb_ip_list_cfg': {'type': 'dict', 'gslb_ip_list_max': {'type': 'int', }, 'gslb_ip_list_min_guarantee': {'type': 'int', }}, 'gslb_policy_cfg': {'type': 'dict', 'gslb_policy_max': {'type': 'int', }, 'gslb_policy_min_guarantee': {'type': 'int', }}, 'gslb_service_cfg': {'type': 'dict', 'gslb_service_max': {'type': 'int', }, 'gslb_service_min_guarantee': {'type': 'int', }}, 'gslb_service_ip_cfg': {'type': 'dict', 'gslb_service_ip_max': {'type': 'int', }, 'gslb_service_ip_min_guarantee': {'type': 'int', }}, 'gslb_service_port_cfg': {'type': 'dict', 'gslb_service_port_max': {'type': 'int', }, 'gslb_service_port_min_guarantee': {'type': 'int', }}, 'gslb_site_cfg': {'type': 'dict', 'gslb_site_max': {'type': 'int', }, 'gslb_site_min_guarantee': {'type': 'int', }}, 'gslb_svc_group_cfg': {'type': 'dict', 'gslb_svc_group_max': {'type': 'int', }, 'gslb_svc_group_min_guarantee': {'type': 'int', }}, 'gslb_template_cfg': {'type': 'dict', 'gslb_template_max': {'type': 'int', }, 'gslb_template_min_guarantee': {'type': 'int', }}, 'gslb_zone_cfg': {'type': 'dict', 'gslb_zone_max': {'type': 'int', }, 'gslb_zone_min_guarantee': {'type': 'int', }}, 'health_monitor_cfg': {'type': 'dict', 'health_monitor_max': {'type': 'int', }, 'health_monitor_min_guarantee': {'type': 'int', }}, 'real_port_cfg': {'type': 'dict', 'real_port_max': {'type': 'int', }, 'real_port_min_guarantee': {'type': 'int', }}, 'real_server_cfg': {'type': 'dict', 'real_server_max': {'type': 'int', }, 'real_server_min_guarantee': {'type': 'int', }}, 'service_group_cfg': {'type': 'dict', 'service_group_max': {'type': 'int', }, 'service_group_min_guarantee': {'type': 'int', }}, 'virtual_server_cfg': {'type': 'dict', 'virtual_server_max': {'type': 'int', }, 'virtual_server_min_guarantee': {'type': 'int', }}, 'threshold': {'type': 'int', }, 'uuid': {'type': 'str', }},
-        'network_resources': {'type': 'dict', 'static_ipv4_route_cfg': {'type': 'dict', 'static_ipv4_route_max': {'type': 'int', }, 'static_ipv4_route_min_guarantee': {'type': 'int', }}, 'static_ipv6_route_cfg': {'type': 'dict', 'static_ipv6_route_max': {'type': 'int', }, 'static_ipv6_route_min_guarantee': {'type': 'int', }}, 'ipv4_acl_line_cfg': {'type': 'dict', 'ipv4_acl_line_max': {'type': 'int', }, 'ipv4_acl_line_min_guarantee': {'type': 'int', }}, 'ipv6_acl_line_cfg': {'type': 'dict', 'ipv6_acl_line_max': {'type': 'int', }, 'ipv6_acl_line_min_guarantee': {'type': 'int', }}, 'static_arp_cfg': {'type': 'dict', 'static_arp_max': {'type': 'int', }, 'static_arp_min_guarantee': {'type': 'int', }}, 'static_neighbor_cfg': {'type': 'dict', 'static_neighbor_max': {'type': 'int', }, 'static_neighbor_min_guarantee': {'type': 'int', }}, 'static_mac_cfg': {'type': 'dict', 'static_mac_max': {'type': 'int', }, 'static_mac_min_guarantee': {'type': 'int', }}, 'object_group_cfg': {'type': 'dict', 'object_group_max': {'type': 'int', }, 'object_group_min_guarantee': {'type': 'int', }}, 'object_group_clause_cfg': {'type': 'dict', 'object_group_clause_max': {'type': 'int', }, 'object_group_clause_min_guarantee': {'type': 'int', }}, 'threshold': {'type': 'int', }, 'uuid': {'type': 'str', }},
-        'system_resources': {'type': 'dict', 'bw_limit_cfg': {'type': 'dict', 'bw_limit_max': {'type': 'int', }, 'bw_limit_watermark_disable': {'type': 'bool', }}, 'concurrent_session_limit_cfg': {'type': 'dict', 'concurrent_session_limit_max': {'type': 'int', }}, 'l4_session_limit_cfg': {'type': 'dict', 'l4_session_limit_max': {'type': 'str', }, 'l4_session_limit_min_guarantee': {'type': 'str', }}, 'l4cps_limit_cfg': {'type': 'dict', 'l4cps_limit_max': {'type': 'int', }}, 'l7cps_limit_cfg': {'type': 'dict', 'l7cps_limit_max': {'type': 'int', }}, 'natcps_limit_cfg': {'type': 'dict', 'natcps_limit_max': {'type': 'int', }}, 'fwcps_limit_cfg': {'type': 'dict', 'fwcps_limit_max': {'type': 'int', }}, 'ssl_throughput_limit_cfg': {'type': 'dict', 'ssl_throughput_limit_max': {'type': 'int', }, 'ssl_throughput_limit_watermark_disable': {'type': 'bool', }}, 'sslcps_limit_cfg': {'type': 'dict', 'sslcps_limit_max': {'type': 'int', }}, 'threshold': {'type': 'int', }, 'uuid': {'type': 'str', }}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'app_resources': {
+            'type': 'dict',
+            'gslb_device_cfg': {
+                'type': 'dict',
+                'gslb_device_max': {
+                    'type': 'int',
+                },
+                'gslb_device_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_geo_location_cfg': {
+                'type': 'dict',
+                'gslb_geo_location_max': {
+                    'type': 'int',
+                },
+                'gslb_geo_location_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_ip_list_cfg': {
+                'type': 'dict',
+                'gslb_ip_list_max': {
+                    'type': 'int',
+                },
+                'gslb_ip_list_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_policy_cfg': {
+                'type': 'dict',
+                'gslb_policy_max': {
+                    'type': 'int',
+                },
+                'gslb_policy_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_service_cfg': {
+                'type': 'dict',
+                'gslb_service_max': {
+                    'type': 'int',
+                },
+                'gslb_service_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_service_ip_cfg': {
+                'type': 'dict',
+                'gslb_service_ip_max': {
+                    'type': 'int',
+                },
+                'gslb_service_ip_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_service_port_cfg': {
+                'type': 'dict',
+                'gslb_service_port_max': {
+                    'type': 'int',
+                },
+                'gslb_service_port_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_site_cfg': {
+                'type': 'dict',
+                'gslb_site_max': {
+                    'type': 'int',
+                },
+                'gslb_site_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_svc_group_cfg': {
+                'type': 'dict',
+                'gslb_svc_group_max': {
+                    'type': 'int',
+                },
+                'gslb_svc_group_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_template_cfg': {
+                'type': 'dict',
+                'gslb_template_max': {
+                    'type': 'int',
+                },
+                'gslb_template_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'gslb_zone_cfg': {
+                'type': 'dict',
+                'gslb_zone_max': {
+                    'type': 'int',
+                },
+                'gslb_zone_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'health_monitor_cfg': {
+                'type': 'dict',
+                'health_monitor_max': {
+                    'type': 'int',
+                },
+                'health_monitor_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'real_port_cfg': {
+                'type': 'dict',
+                'real_port_max': {
+                    'type': 'int',
+                },
+                'real_port_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'real_server_cfg': {
+                'type': 'dict',
+                'real_server_max': {
+                    'type': 'int',
+                },
+                'real_server_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'service_group_cfg': {
+                'type': 'dict',
+                'service_group_max': {
+                    'type': 'int',
+                },
+                'service_group_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'virtual_server_cfg': {
+                'type': 'dict',
+                'virtual_server_max': {
+                    'type': 'int',
+                },
+                'virtual_server_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'threshold': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'network_resources': {
+            'type': 'dict',
+            'static_ipv4_route_cfg': {
+                'type': 'dict',
+                'static_ipv4_route_max': {
+                    'type': 'int',
+                },
+                'static_ipv4_route_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_ipv6_route_cfg': {
+                'type': 'dict',
+                'static_ipv6_route_max': {
+                    'type': 'int',
+                },
+                'static_ipv6_route_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'ipv4_acl_line_cfg': {
+                'type': 'dict',
+                'ipv4_acl_line_max': {
+                    'type': 'int',
+                },
+                'ipv4_acl_line_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'ipv6_acl_line_cfg': {
+                'type': 'dict',
+                'ipv6_acl_line_max': {
+                    'type': 'int',
+                },
+                'ipv6_acl_line_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_arp_cfg': {
+                'type': 'dict',
+                'static_arp_max': {
+                    'type': 'int',
+                },
+                'static_arp_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_neighbor_cfg': {
+                'type': 'dict',
+                'static_neighbor_max': {
+                    'type': 'int',
+                },
+                'static_neighbor_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'static_mac_cfg': {
+                'type': 'dict',
+                'static_mac_max': {
+                    'type': 'int',
+                },
+                'static_mac_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'object_group_cfg': {
+                'type': 'dict',
+                'object_group_max': {
+                    'type': 'int',
+                },
+                'object_group_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'object_group_clause_cfg': {
+                'type': 'dict',
+                'object_group_clause_max': {
+                    'type': 'int',
+                },
+                'object_group_clause_min_guarantee': {
+                    'type': 'int',
+                }
+            },
+            'threshold': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'system_resources': {
+            'type': 'dict',
+            'bw_limit_cfg': {
+                'type': 'dict',
+                'bw_limit_max': {
+                    'type': 'int',
+                },
+                'bw_limit_watermark_disable': {
+                    'type': 'bool',
+                }
+            },
+            'concurrent_session_limit_cfg': {
+                'type': 'dict',
+                'concurrent_session_limit_max': {
+                    'type': 'int',
+                }
+            },
+            'l4_session_limit_cfg': {
+                'type': 'dict',
+                'l4_session_limit_max': {
+                    'type': 'str',
+                },
+                'l4_session_limit_min_guarantee': {
+                    'type': 'str',
+                }
+            },
+            'l4cps_limit_cfg': {
+                'type': 'dict',
+                'l4cps_limit_max': {
+                    'type': 'int',
+                }
+            },
+            'l7cps_limit_cfg': {
+                'type': 'dict',
+                'l7cps_limit_max': {
+                    'type': 'int',
+                }
+            },
+            'natcps_limit_cfg': {
+                'type': 'dict',
+                'natcps_limit_max': {
+                    'type': 'int',
+                }
+            },
+            'fwcps_limit_cfg': {
+                'type': 'dict',
+                'fwcps_limit_max': {
+                    'type': 'int',
+                }
+            },
+            'ssl_throughput_limit_cfg': {
+                'type': 'dict',
+                'ssl_throughput_limit_max': {
+                    'type': 'int',
+                },
+                'ssl_throughput_limit_watermark_disable': {
+                    'type': 'bool',
+                }
+            },
+            'sslcps_limit_cfg': {
+                'type': 'dict',
+                'sslcps_limit_max': {
+                    'type': 'int',
+                }
+            },
+            'threshold': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -378,8 +710,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -390,8 +721,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -431,12 +761,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -451,16 +779,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -469,15 +797,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -511,7 +839,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

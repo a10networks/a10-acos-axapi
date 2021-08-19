@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_router_rip
 description:
@@ -303,9 +302,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -317,9 +314,26 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cisco_metric_behavior", "default_information", "default_metric", "distance_list_cfg", "distribute_list", "neighbor", "network_addresses", "network_interface_list_cfg", "offset_list", "passive_interface_list", "recv_buffer_size", "redistribute", "rip_maximum_prefix_cfg", "route_cfg", "timers", "uuid", "version", ]
+AVAILABLE_PROPERTIES = [
+    "cisco_metric_behavior",
+    "default_information",
+    "default_metric",
+    "distance_list_cfg",
+    "distribute_list",
+    "neighbor",
+    "network_addresses",
+    "network_interface_list_cfg",
+    "offset_list",
+    "passive_interface_list",
+    "recv_buffer_size",
+    "redistribute",
+    "rip_maximum_prefix_cfg",
+    "route_cfg",
+    "timers",
+    "uuid",
+    "version",
+]
 
 
 def get_default_argspec():
@@ -327,33 +341,269 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'cisco_metric_behavior': {'type': 'str', 'choices': ['enable', 'disable']},
-        'default_information': {'type': 'str', 'choices': ['originate']},
-        'default_metric': {'type': 'int', },
-        'recv_buffer_size': {'type': 'int', },
-        'version': {'type': 'int', },
-        'rip_maximum_prefix_cfg': {'type': 'dict', 'maximum_prefix': {'type': 'int', }, 'maximum_prefix_thres': {'type': 'int', }},
-        'timers': {'type': 'dict', 'timers_cfg': {'type': 'dict', 'basic': {'type': 'int', }, 'val_2': {'type': 'int', }, 'val_3': {'type': 'int', }}},
-        'passive_interface_list': {'type': 'list', 'ethernet': {'type': 'str', }, 'loopback': {'type': 'str', }, 'trunk': {'type': 'str', }, 'tunnel': {'type': 'str', }, 've': {'type': 'str', }},
-        'neighbor': {'type': 'list', 'value': {'type': 'str', }},
-        'route_cfg': {'type': 'list', 'route': {'type': 'str', }},
-        'network_addresses': {'type': 'list', 'network_ipv4_mask': {'type': 'str', }},
-        'network_interface_list_cfg': {'type': 'list', 'ethernet': {'type': 'str', }, 'loopback': {'type': 'str', }, 'trunk': {'type': 'str', }, 'tunnel': {'type': 'str', }, 've': {'type': 'str', }},
-        'distance_list_cfg': {'type': 'list', 'distance': {'type': 'int', }, 'distance_ipv4_mask': {'type': 'str', }, 'distance_acl': {'type': 'str', }},
-        'uuid': {'type': 'str', },
-        'distribute_list': {'type': 'dict', 'acl_cfg': {'type': 'list', 'acl': {'type': 'str', }, 'acl_direction': {'type': 'str', 'choices': ['in', 'out']}, 'ethernet': {'type': 'str', }, 'loopback': {'type': 'str', }, 'trunk': {'type': 'str', }, 'tunnel': {'type': 'str', }, 've': {'type': 'str', }}, 'uuid': {'type': 'str', }, 'prefix': {'type': 'dict', 'prefix_cfg': {'type': 'list', 'prefix_list': {'type': 'str', }, 'prefix_list_direction': {'type': 'str', 'choices': ['in', 'out']}, 'ethernet': {'type': 'str', }, 'loopback': {'type': 'str', }, 'trunk': {'type': 'str', }, 'tunnel': {'type': 'str', }, 've': {'type': 'str', }}, 'uuid': {'type': 'str', }}},
-        'offset_list': {'type': 'dict', 'acl_cfg': {'type': 'list', 'acl': {'type': 'str', }, 'offset_list_direction': {'type': 'str', 'choices': ['in', 'out']}, 'metric': {'type': 'int', }, 'ethernet': {'type': 'str', }, 'loopback': {'type': 'str', }, 'trunk': {'type': 'str', }, 'tunnel': {'type': 'str', }, 've': {'type': 'str', }}, 'uuid': {'type': 'str', }},
-        'redistribute': {'type': 'dict', 'redist_list': {'type': 'list', 'ntype': {'type': 'str', 'choices': ['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'isis', 'lw4o6', 'nat-map', 'static-nat', 'ospf', 'static']}, 'metric': {'type': 'int', }, 'route_map': {'type': 'str', }}, 'vip_list': {'type': 'list', 'vip_type': {'type': 'str', 'choices': ['only-flagged', 'only-not-flagged']}, 'vip_metric': {'type': 'int', }, 'vip_route_map': {'type': 'str', }}, 'uuid': {'type': 'str', }}
+    rv.update({
+        'cisco_metric_behavior': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'default_information': {
+            'type': 'str',
+            'choices': ['originate']
+        },
+        'default_metric': {
+            'type': 'int',
+        },
+        'recv_buffer_size': {
+            'type': 'int',
+        },
+        'version': {
+            'type': 'int',
+        },
+        'rip_maximum_prefix_cfg': {
+            'type': 'dict',
+            'maximum_prefix': {
+                'type': 'int',
+            },
+            'maximum_prefix_thres': {
+                'type': 'int',
+            }
+        },
+        'timers': {
+            'type': 'dict',
+            'timers_cfg': {
+                'type': 'dict',
+                'basic': {
+                    'type': 'int',
+                },
+                'val_2': {
+                    'type': 'int',
+                },
+                'val_3': {
+                    'type': 'int',
+                }
+            }
+        },
+        'passive_interface_list': {
+            'type': 'list',
+            'ethernet': {
+                'type': 'str',
+            },
+            'loopback': {
+                'type': 'str',
+            },
+            'trunk': {
+                'type': 'str',
+            },
+            'tunnel': {
+                'type': 'str',
+            },
+            've': {
+                'type': 'str',
+            }
+        },
+        'neighbor': {
+            'type': 'list',
+            'value': {
+                'type': 'str',
+            }
+        },
+        'route_cfg': {
+            'type': 'list',
+            'route': {
+                'type': 'str',
+            }
+        },
+        'network_addresses': {
+            'type': 'list',
+            'network_ipv4_mask': {
+                'type': 'str',
+            }
+        },
+        'network_interface_list_cfg': {
+            'type': 'list',
+            'ethernet': {
+                'type': 'str',
+            },
+            'loopback': {
+                'type': 'str',
+            },
+            'trunk': {
+                'type': 'str',
+            },
+            'tunnel': {
+                'type': 'str',
+            },
+            've': {
+                'type': 'str',
+            }
+        },
+        'distance_list_cfg': {
+            'type': 'list',
+            'distance': {
+                'type': 'int',
+            },
+            'distance_ipv4_mask': {
+                'type': 'str',
+            },
+            'distance_acl': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'distribute_list': {
+            'type': 'dict',
+            'acl_cfg': {
+                'type': 'list',
+                'acl': {
+                    'type': 'str',
+                },
+                'acl_direction': {
+                    'type': 'str',
+                    'choices': ['in', 'out']
+                },
+                'ethernet': {
+                    'type': 'str',
+                },
+                'loopback': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'tunnel': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'prefix': {
+                'type': 'dict',
+                'prefix_cfg': {
+                    'type': 'list',
+                    'prefix_list': {
+                        'type': 'str',
+                    },
+                    'prefix_list_direction': {
+                        'type': 'str',
+                        'choices': ['in', 'out']
+                    },
+                    'ethernet': {
+                        'type': 'str',
+                    },
+                    'loopback': {
+                        'type': 'str',
+                    },
+                    'trunk': {
+                        'type': 'str',
+                    },
+                    'tunnel': {
+                        'type': 'str',
+                    },
+                    've': {
+                        'type': 'str',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'offset_list': {
+            'type': 'dict',
+            'acl_cfg': {
+                'type': 'list',
+                'acl': {
+                    'type': 'str',
+                },
+                'offset_list_direction': {
+                    'type': 'str',
+                    'choices': ['in', 'out']
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'ethernet': {
+                    'type': 'str',
+                },
+                'loopback': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                },
+                'tunnel': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
+                'type': 'list',
+                'ntype': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
+                        'ip-nat', 'isis', 'lw4o6', 'nat-map', 'static-nat',
+                        'ospf', 'static'
+                    ]
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'route_map': {
+                    'type': 'str',
+                }
+            },
+            'vip_list': {
+                'type': 'list',
+                'vip_type': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                },
+                'vip_metric': {
+                    'type': 'int',
+                },
+                'vip_route_map': {
+                    'type': 'str',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -400,8 +650,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -412,8 +661,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -453,12 +701,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -473,16 +719,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -491,15 +737,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -533,7 +779,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

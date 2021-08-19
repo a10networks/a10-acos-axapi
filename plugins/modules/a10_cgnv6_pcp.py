@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_pcp
 description:
@@ -280,9 +279,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -294,9 +291,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["default_template", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "default_template",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -304,20 +305,160 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'default_template': {'type': 'str', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'packets-rcv', 'lsn-map-process-success', 'dslite-map-process-success', 'nat64-map-process-success', 'lsn-peer-process-success', 'dslite-peer-process-success', 'nat64-peer-process-success', 'lsn-announce-process-success', 'dslite-announce-process-success', 'nat64-announce-process-success', 'pkt-not-request-drop', 'pkt-too-short-drop', 'noroute-drop', 'unsupported-version', 'not-authorized', 'malform-request', 'unsupp-opcode', 'unsupp-option', 'malform-option', 'no-resources', 'unsupp-protocol', 'user-quota-exceeded', 'cannot-provide-suggest', 'address-mismatch', 'excessive-remote-peers', 'pkt-not-from-nat-inside', 'l4-process-error', 'internal-error-drop', 'unsol_ance_sent_succ', 'unsol_ance_sent_fail', 'ha_sync_epoch_sent', 'ha_sync_epoch_rcv', 'fullcone-ext-alloc', 'fullcone-ext-free', 'fullcone-ext-alloc-failure', 'fullcone-ext-notfound', 'fullcone-ext-reuse', 'client-nonce-mismatch', 'map-filter-set', 'map-filter-deny', 'inter-board-pkts']}},
-        'stats': {'type': 'dict', 'packets_rcv': {'type': 'str', }, 'lsn_map_process_success': {'type': 'str', }, 'dslite_map_process_success': {'type': 'str', }, 'nat64_map_process_success': {'type': 'str', }, 'lsn_peer_process_success': {'type': 'str', }, 'dslite_peer_process_success': {'type': 'str', }, 'nat64_peer_process_success': {'type': 'str', }, 'lsn_announce_process_success': {'type': 'str', }, 'dslite_announce_process_success': {'type': 'str', }, 'nat64_announce_process_success': {'type': 'str', }, 'pkt_not_request_drop': {'type': 'str', }, 'pkt_too_short_drop': {'type': 'str', }, 'noroute_drop': {'type': 'str', }, 'unsupported_version': {'type': 'str', }, 'not_authorized': {'type': 'str', }, 'malform_request': {'type': 'str', }, 'unsupp_opcode': {'type': 'str', }, 'unsupp_option': {'type': 'str', }, 'malform_option': {'type': 'str', }, 'no_resources': {'type': 'str', }, 'unsupp_protocol': {'type': 'str', }, 'user_quota_exceeded': {'type': 'str', }, 'cannot_provide_suggest': {'type': 'str', }, 'address_mismatch': {'type': 'str', }, 'excessive_remote_peers': {'type': 'str', }, 'pkt_not_from_nat_inside': {'type': 'str', }, 'l4_process_error': {'type': 'str', }, 'internal_error_drop': {'type': 'str', }, 'unsol_ance_sent_succ': {'type': 'str', }, 'unsol_ance_sent_fail': {'type': 'str', }, 'ha_sync_epoch_sent': {'type': 'str', }, 'ha_sync_epoch_rcv': {'type': 'str', }}
+    rv.update({
+        'default_template': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'packets-rcv', 'lsn-map-process-success',
+                    'dslite-map-process-success', 'nat64-map-process-success',
+                    'lsn-peer-process-success', 'dslite-peer-process-success',
+                    'nat64-peer-process-success',
+                    'lsn-announce-process-success',
+                    'dslite-announce-process-success',
+                    'nat64-announce-process-success', 'pkt-not-request-drop',
+                    'pkt-too-short-drop', 'noroute-drop',
+                    'unsupported-version', 'not-authorized', 'malform-request',
+                    'unsupp-opcode', 'unsupp-option', 'malform-option',
+                    'no-resources', 'unsupp-protocol', 'user-quota-exceeded',
+                    'cannot-provide-suggest', 'address-mismatch',
+                    'excessive-remote-peers', 'pkt-not-from-nat-inside',
+                    'l4-process-error', 'internal-error-drop',
+                    'unsol_ance_sent_succ', 'unsol_ance_sent_fail',
+                    'ha_sync_epoch_sent', 'ha_sync_epoch_rcv',
+                    'fullcone-ext-alloc', 'fullcone-ext-free',
+                    'fullcone-ext-alloc-failure', 'fullcone-ext-notfound',
+                    'fullcone-ext-reuse', 'client-nonce-mismatch',
+                    'map-filter-set', 'map-filter-deny', 'inter-board-pkts'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'packets_rcv': {
+                'type': 'str',
+            },
+            'lsn_map_process_success': {
+                'type': 'str',
+            },
+            'dslite_map_process_success': {
+                'type': 'str',
+            },
+            'nat64_map_process_success': {
+                'type': 'str',
+            },
+            'lsn_peer_process_success': {
+                'type': 'str',
+            },
+            'dslite_peer_process_success': {
+                'type': 'str',
+            },
+            'nat64_peer_process_success': {
+                'type': 'str',
+            },
+            'lsn_announce_process_success': {
+                'type': 'str',
+            },
+            'dslite_announce_process_success': {
+                'type': 'str',
+            },
+            'nat64_announce_process_success': {
+                'type': 'str',
+            },
+            'pkt_not_request_drop': {
+                'type': 'str',
+            },
+            'pkt_too_short_drop': {
+                'type': 'str',
+            },
+            'noroute_drop': {
+                'type': 'str',
+            },
+            'unsupported_version': {
+                'type': 'str',
+            },
+            'not_authorized': {
+                'type': 'str',
+            },
+            'malform_request': {
+                'type': 'str',
+            },
+            'unsupp_opcode': {
+                'type': 'str',
+            },
+            'unsupp_option': {
+                'type': 'str',
+            },
+            'malform_option': {
+                'type': 'str',
+            },
+            'no_resources': {
+                'type': 'str',
+            },
+            'unsupp_protocol': {
+                'type': 'str',
+            },
+            'user_quota_exceeded': {
+                'type': 'str',
+            },
+            'cannot_provide_suggest': {
+                'type': 'str',
+            },
+            'address_mismatch': {
+                'type': 'str',
+            },
+            'excessive_remote_peers': {
+                'type': 'str',
+            },
+            'pkt_not_from_nat_inside': {
+                'type': 'str',
+            },
+            'l4_process_error': {
+                'type': 'str',
+            },
+            'internal_error_drop': {
+                'type': 'str',
+            },
+            'unsol_ance_sent_succ': {
+                'type': 'str',
+            },
+            'unsol_ance_sent_fail': {
+                'type': 'str',
+            },
+            'ha_sync_epoch_sent': {
+                'type': 'str',
+            },
+            'ha_sync_epoch_rcv': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -364,8 +505,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -376,8 +516,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -417,12 +556,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -437,16 +574,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -455,15 +592,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -500,7 +637,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

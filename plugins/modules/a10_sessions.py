@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_sessions
 description:
@@ -298,9 +297,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -312,9 +309,14 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ext", "oper", "smp", "smp_table", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "ext",
+    "oper",
+    "smp",
+    "smp_table",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -322,21 +324,331 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'ext': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'smp': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'smp_table': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'oper': {'type': 'dict', 'session_list': {'type': 'list', 'protocol': {'type': 'str', }, 'forward_source': {'type': 'str', }, 'forward_dest': {'type': 'str', }, 'reverse_source': {'type': 'str', }, 'reverse_dest': {'type': 'str', }, 'rate': {'type': 'int', }, 'limit': {'type': 'int', }, 'drop': {'type': 'int', }, 'peak_rate': {'type': 'int', }, 'age': {'type': 'int', }, 'hash': {'type': 'int', }, 'flags': {'type': 'str', }, 'app_type': {'type': 'str', }, '100ms': {'type': 'str', }, 'sip_call_id': {'type': 'str', }, 'app_name': {'type': 'str', }, 'service_name': {'type': 'str', }, 'rserver_name': {'type': 'str', }, 'category_name': {'type': 'str', }, 'bytes': {'type': 'int', }, 'duration': {'type': 'int', }, 'conn_idx': {'type': 'int', }, 'extension_fields_list': {'type': 'list', 'ext_field_name': {'type': 'str', }, 'ext_field_val': {'type': 'str', }}}, 'total_sessions': {'type': 'int', }, 'app_sessions': {'type': 'int', }, 'filter_type': {'type': 'str', 'choices': ['ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw', 'clear-all', 'full-width', 'debug', 'application', 'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6']}, 'src_ipv4_addr': {'type': 'str', }, 'dst_ipv4_addr': {'type': 'str', }, 'nat_ipv4_addr': {'type': 'str', }, 'src_ipv6_addr': {'type': 'str', }, 'dst_ipv6_addr': {'type': 'str', }, 'name_str': {'type': 'str', }, 'dest_port': {'type': 'int', }, 'src_port': {'type': 'int', }, 'nat_port': {'type': 'int', }, 'app_category': {'type': 'str', }, 'app': {'type': 'str', }, 'l4_protocol': {'type': 'str', 'choices': ['udp', 'tcp', 'icmp', 'icmpv6']}, 'fw_helper_sessions': {'type': 'bool', }, 'fw_ip_type': {'type': 'str', 'choices': ['ipv4', 'ipv6']}, 'fw_rule': {'type': 'str', }, 'fw_dest_zone': {'type': 'str', }, 'fw_src_zone': {'type': 'str', }, 'fw_dest_obj': {'type': 'str', }, 'fw_src_obj': {'type': 'str', }, 'fw_dest_obj_grp': {'type': 'str', }, 'fw_src_obj_grp': {'type': 'str', }, 'fw_dest_rserver': {'type': 'str', }, 'fw_src_rserver': {'type': 'str', }, 'fw_dest_vserver': {'type': 'str', }, 'application': {'type': 'str', }, 'session_id': {'type': 'str', }, 'zone_name': {'type': 'str', }, 'sport_rate_limit_exceed': {'type': 'bool', }, 'sport_rate_limit_curr': {'type': 'bool', }, 'src_ipv6_prefix': {'type': 'str', }, 'dst_ipv6_prefix': {'type': 'str', }, 'check_inside_user': {'type': 'bool', }, 'full_width': {'type': 'bool', }, 'ext': {'type': 'dict', 'oper': {'type': 'dict', 'session_ext_list': {'type': 'list', 'ntype': {'type': 'str', }, 'alloc': {'type': 'int', }, 'free': {'type': 'int', }, 'fail': {'type': 'int', }, 'cpu_round_robin_fail': {'type': 'int', }}}}, 'smp': {'type': 'dict', 'oper': {'type': 'dict', 'session_smp_list': {'type': 'list', 'ntype': {'type': 'str', }, 'alloc': {'type': 'int', }, 'free': {'type': 'int', }, 'alloc_fail': {'type': 'int', }}}}, 'smp_table': {'type': 'dict', 'oper': {'type': 'dict', 'entry_list': {'type': 'list', 'src4': {'type': 'str', }, 'src6': {'type': 'str', }, 'dst4': {'type': 'str', }, 'dst6': {'type': 'str', }, 'srcport': {'type': 'int', }, 'dstport': {'type': 'int', }, 'ttl': {'type': 'int', }, 'ntype': {'type': 'str', }, 'payload': {'type': 'str', }}}}}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'ext': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'smp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'smp_table': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'session_list': {
+                'type': 'list',
+                'protocol': {
+                    'type': 'str',
+                },
+                'forward_source': {
+                    'type': 'str',
+                },
+                'forward_dest': {
+                    'type': 'str',
+                },
+                'reverse_source': {
+                    'type': 'str',
+                },
+                'reverse_dest': {
+                    'type': 'str',
+                },
+                'rate': {
+                    'type': 'int',
+                },
+                'limit': {
+                    'type': 'int',
+                },
+                'drop': {
+                    'type': 'int',
+                },
+                'peak_rate': {
+                    'type': 'int',
+                },
+                'age': {
+                    'type': 'int',
+                },
+                'hash': {
+                    'type': 'int',
+                },
+                'flags': {
+                    'type': 'str',
+                },
+                'app_type': {
+                    'type': 'str',
+                },
+                '100ms': {
+                    'type': 'str',
+                },
+                'sip_call_id': {
+                    'type': 'str',
+                },
+                'app_name': {
+                    'type': 'str',
+                },
+                'service_name': {
+                    'type': 'str',
+                },
+                'rserver_name': {
+                    'type': 'str',
+                },
+                'category_name': {
+                    'type': 'str',
+                },
+                'bytes': {
+                    'type': 'int',
+                },
+                'duration': {
+                    'type': 'int',
+                },
+                'conn_idx': {
+                    'type': 'int',
+                },
+                'extension_fields_list': {
+                    'type': 'list',
+                    'ext_field_name': {
+                        'type': 'str',
+                    },
+                    'ext_field_val': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'total_sessions': {
+                'type': 'int',
+            },
+            'app_sessions': {
+                'type': 'int',
+            },
+            'filter_type': {
+                'type':
+                'str',
+                'choices': [
+                    'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip',
+                    'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id',
+                    'persist-dst-ip', 'persist-src-ip', 'persist-uie',
+                    'persist-ssl-id', 'radius', 'server', 'virtual-server',
+                    'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch',
+                    'local', 'fw', 'clear-all', 'full-width', 'debug',
+                    'application', 'ipsec', 'diameter', 'zone',
+                    'source-port-rate-limit', 'source-port-rate-limitv4',
+                    'source-port-rate-limitv6'
+                ]
+            },
+            'src_ipv4_addr': {
+                'type': 'str',
+            },
+            'dst_ipv4_addr': {
+                'type': 'str',
+            },
+            'nat_ipv4_addr': {
+                'type': 'str',
+            },
+            'src_ipv6_addr': {
+                'type': 'str',
+            },
+            'dst_ipv6_addr': {
+                'type': 'str',
+            },
+            'name_str': {
+                'type': 'str',
+            },
+            'dest_port': {
+                'type': 'int',
+            },
+            'src_port': {
+                'type': 'int',
+            },
+            'nat_port': {
+                'type': 'int',
+            },
+            'app_category': {
+                'type': 'str',
+            },
+            'app': {
+                'type': 'str',
+            },
+            'l4_protocol': {
+                'type': 'str',
+                'choices': ['udp', 'tcp', 'icmp', 'icmpv6']
+            },
+            'fw_helper_sessions': {
+                'type': 'bool',
+            },
+            'fw_ip_type': {
+                'type': 'str',
+                'choices': ['ipv4', 'ipv6']
+            },
+            'fw_rule': {
+                'type': 'str',
+            },
+            'fw_dest_zone': {
+                'type': 'str',
+            },
+            'fw_src_zone': {
+                'type': 'str',
+            },
+            'fw_dest_obj': {
+                'type': 'str',
+            },
+            'fw_src_obj': {
+                'type': 'str',
+            },
+            'fw_dest_obj_grp': {
+                'type': 'str',
+            },
+            'fw_src_obj_grp': {
+                'type': 'str',
+            },
+            'fw_dest_rserver': {
+                'type': 'str',
+            },
+            'fw_src_rserver': {
+                'type': 'str',
+            },
+            'fw_dest_vserver': {
+                'type': 'str',
+            },
+            'application': {
+                'type': 'str',
+            },
+            'session_id': {
+                'type': 'str',
+            },
+            'zone_name': {
+                'type': 'str',
+            },
+            'sport_rate_limit_exceed': {
+                'type': 'bool',
+            },
+            'sport_rate_limit_curr': {
+                'type': 'bool',
+            },
+            'src_ipv6_prefix': {
+                'type': 'str',
+            },
+            'dst_ipv6_prefix': {
+                'type': 'str',
+            },
+            'check_inside_user': {
+                'type': 'bool',
+            },
+            'full_width': {
+                'type': 'bool',
+            },
+            'ext': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'session_ext_list': {
+                        'type': 'list',
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'alloc': {
+                            'type': 'int',
+                        },
+                        'free': {
+                            'type': 'int',
+                        },
+                        'fail': {
+                            'type': 'int',
+                        },
+                        'cpu_round_robin_fail': {
+                            'type': 'int',
+                        }
+                    }
+                }
+            },
+            'smp': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'session_smp_list': {
+                        'type': 'list',
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'alloc': {
+                            'type': 'int',
+                        },
+                        'free': {
+                            'type': 'int',
+                        },
+                        'alloc_fail': {
+                            'type': 'int',
+                        }
+                    }
+                }
+            },
+            'smp_table': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'entry_list': {
+                        'type': 'list',
+                        'src4': {
+                            'type': 'str',
+                        },
+                        'src6': {
+                            'type': 'str',
+                        },
+                        'dst4': {
+                            'type': 'str',
+                        },
+                        'dst6': {
+                            'type': 'str',
+                        },
+                        'srcport': {
+                            'type': 'int',
+                        },
+                        'dstport': {
+                            'type': 'int',
+                        },
+                        'ttl': {
+                            'type': 'int',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'payload': {
+                            'type': 'str',
+                        }
+                    }
+                }
+            }
+        }
     })
     return rv
 
@@ -383,8 +695,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -395,8 +706,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -436,12 +746,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -456,16 +764,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -474,15 +782,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -519,7 +827,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

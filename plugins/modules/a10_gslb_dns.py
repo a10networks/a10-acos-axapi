@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_gslb_dns
 description:
@@ -291,9 +290,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -305,9 +302,15 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action", "logging", "sampling_enable", "stats", "template", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "action",
+    "logging",
+    "sampling_enable",
+    "stats",
+    "template",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -315,22 +318,167 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'action': {'type': 'str', 'choices': ['none', 'drop', 'reject', 'ignore']},
-        'logging': {'type': 'str', 'choices': ['none', 'query', 'response', 'both']},
-        'template': {'type': 'str', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'total-query', 'total-response', 'bad-packet-query', 'bad-packet-response', 'bad-header-query', 'bad-header-response', 'bad-format-query', 'bad-format-response', 'bad-service-query', 'bad-service-response', 'bad-class-query', 'bad-class-response', 'bad-type-query', 'bad-type-response', 'no_answer', 'metric_health_check', 'metric_weighted_ip', 'metric_weighted_site', 'metric_capacity', 'metric_active_server', 'metric_easy_rdt', 'metric_active_rdt', 'metric_geographic', 'metric_connection_load', 'metric_number_of_sessions', 'metric_active_weight', 'metric_admin_preference', 'metric_bandwidth_quality', 'metric_bandwidth_cost', 'metric_user', 'metric_least_reponse', 'metric_admin_ip', 'metric_round_robin']}},
-        'stats': {'type': 'dict', 'total_query': {'type': 'str', }, 'total_response': {'type': 'str', }, 'bad_packet_query': {'type': 'str', }, 'bad_packet_response': {'type': 'str', }, 'bad_header_query': {'type': 'str', }, 'bad_header_response': {'type': 'str', }, 'bad_format_query': {'type': 'str', }, 'bad_format_response': {'type': 'str', }, 'bad_service_query': {'type': 'str', }, 'bad_service_response': {'type': 'str', }, 'bad_class_query': {'type': 'str', }, 'bad_class_response': {'type': 'str', }, 'bad_type_query': {'type': 'str', }, 'bad_type_response': {'type': 'str', }, 'no_answer': {'type': 'str', }, 'metric_health_check': {'type': 'str', }, 'metric_weighted_ip': {'type': 'str', }, 'metric_weighted_site': {'type': 'str', }, 'metric_capacity': {'type': 'str', }, 'metric_active_server': {'type': 'str', }, 'metric_easy_rdt': {'type': 'str', }, 'metric_active_rdt': {'type': 'str', }, 'metric_geographic': {'type': 'str', }, 'metric_connection_load': {'type': 'str', }, 'metric_number_of_sessions': {'type': 'str', }, 'metric_active_weight': {'type': 'str', }, 'metric_admin_preference': {'type': 'str', }, 'metric_bandwidth_quality': {'type': 'str', }, 'metric_bandwidth_cost': {'type': 'str', }, 'metric_user': {'type': 'str', }, 'metric_least_reponse': {'type': 'str', }, 'metric_admin_ip': {'type': 'str', }, 'metric_round_robin': {'type': 'str', }}
+    rv.update({
+        'action': {
+            'type': 'str',
+            'choices': ['none', 'drop', 'reject', 'ignore']
+        },
+        'logging': {
+            'type': 'str',
+            'choices': ['none', 'query', 'response', 'both']
+        },
+        'template': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'total-query', 'total-response', 'bad-packet-query',
+                    'bad-packet-response', 'bad-header-query',
+                    'bad-header-response', 'bad-format-query',
+                    'bad-format-response', 'bad-service-query',
+                    'bad-service-response', 'bad-class-query',
+                    'bad-class-response', 'bad-type-query',
+                    'bad-type-response', 'no_answer', 'metric_health_check',
+                    'metric_weighted_ip', 'metric_weighted_site',
+                    'metric_capacity', 'metric_active_server',
+                    'metric_easy_rdt', 'metric_active_rdt',
+                    'metric_geographic', 'metric_connection_load',
+                    'metric_number_of_sessions', 'metric_active_weight',
+                    'metric_admin_preference', 'metric_bandwidth_quality',
+                    'metric_bandwidth_cost', 'metric_user',
+                    'metric_least_reponse', 'metric_admin_ip',
+                    'metric_round_robin'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'total_query': {
+                'type': 'str',
+            },
+            'total_response': {
+                'type': 'str',
+            },
+            'bad_packet_query': {
+                'type': 'str',
+            },
+            'bad_packet_response': {
+                'type': 'str',
+            },
+            'bad_header_query': {
+                'type': 'str',
+            },
+            'bad_header_response': {
+                'type': 'str',
+            },
+            'bad_format_query': {
+                'type': 'str',
+            },
+            'bad_format_response': {
+                'type': 'str',
+            },
+            'bad_service_query': {
+                'type': 'str',
+            },
+            'bad_service_response': {
+                'type': 'str',
+            },
+            'bad_class_query': {
+                'type': 'str',
+            },
+            'bad_class_response': {
+                'type': 'str',
+            },
+            'bad_type_query': {
+                'type': 'str',
+            },
+            'bad_type_response': {
+                'type': 'str',
+            },
+            'no_answer': {
+                'type': 'str',
+            },
+            'metric_health_check': {
+                'type': 'str',
+            },
+            'metric_weighted_ip': {
+                'type': 'str',
+            },
+            'metric_weighted_site': {
+                'type': 'str',
+            },
+            'metric_capacity': {
+                'type': 'str',
+            },
+            'metric_active_server': {
+                'type': 'str',
+            },
+            'metric_easy_rdt': {
+                'type': 'str',
+            },
+            'metric_active_rdt': {
+                'type': 'str',
+            },
+            'metric_geographic': {
+                'type': 'str',
+            },
+            'metric_connection_load': {
+                'type': 'str',
+            },
+            'metric_number_of_sessions': {
+                'type': 'str',
+            },
+            'metric_active_weight': {
+                'type': 'str',
+            },
+            'metric_admin_preference': {
+                'type': 'str',
+            },
+            'metric_bandwidth_quality': {
+                'type': 'str',
+            },
+            'metric_bandwidth_cost': {
+                'type': 'str',
+            },
+            'metric_user': {
+                'type': 'str',
+            },
+            'metric_least_reponse': {
+                'type': 'str',
+            },
+            'metric_admin_ip': {
+                'type': 'str',
+            },
+            'metric_round_robin': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -377,8 +525,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -389,8 +536,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -430,12 +576,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -450,16 +594,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -468,15 +612,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -513,7 +657,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

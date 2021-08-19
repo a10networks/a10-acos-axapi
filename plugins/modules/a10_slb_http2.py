@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_http2
 description:
@@ -648,9 +647,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -662,9 +659,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -672,20 +673,767 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'curr_proxy', 'total_proxy', 'connection_preface_rcvd', 'control_frame', 'headers_frame', 'continuation_frame', 'rst_frame_rcvd', 'settings_frame', 'window_update_frame', 'ping_frame', 'goaway_frame', 'priority_frame', 'data_frame', 'unknown_frame', 'connection_preface_sent', 'settings_frame_sent', 'settings_ack_sent', 'empty_settings_sent', 'ping_frame_sent', 'window_update_frame_sent', 'rst_frame_sent', 'goaway_frame_sent', 'header_to_app', 'data_to_app', 'protocol_error', 'internal_error', 'proxy_alloc_error', 'split_buff_fail', 'invalid_frame_size', 'error_max_invalid_stream', 'data_no_stream', 'flow_control_error', 'settings_timeout', 'frame_size_error', 'refused_stream', 'cancel', 'compression_error', 'connect_error', 'enhance_your_calm', 'inadequate_security', 'http_1_1_required', 'deflate_alloc_fail', 'inflate_alloc_fail', 'inflate_header_fail', 'bad_connection_preface', 'cant_allocate_control_frame', 'cant_allocate_settings_frame', 'bad_frame_type_for_stream_state', 'wrong_stream_state', 'data_queue_alloc_error', 'buff_alloc_error', 'cant_allocate_rst_frame', 'cant_allocate_goaway_frame', 'cant_allocate_ping_frame', 'cant_allocate_stream', 'cant_allocate_window_frame', 'header_no_stream', 'header_padlen_gt_frame_payload', 'streams_gt_max_concur_streams', 'idle_state_unexpected_frame', 'reserved_local_state_unexpected_frame', 'reserved_remote_state_unexpected_frame', 'half_closed_remote_state_unexpected_frame', 'closed_state_unexpected_frame', 'zero_window_size_on_stream', 'exceeds_max_window_size_stream', 'stream_closed', 'continuation_before_headers', 'invalid_frame_during_headers', 'headers_after_continuation', 'invalid_push_promise', 'invalid_stream_id', 'headers_interleaved', 'trailers_no_end_stream', 'invalid_setting_value', 'invalid_window_update', 'frame_header_bytes_received', 'frame_header_bytes_sent', 'control_bytes_received', 'control_bytes_sent', 'header_bytes_received', 'header_bytes_sent', 'data_bytes_received', 'data_bytes_sent', 'total_bytes_received', 'total_bytes_sent', 'peak_proxy', 'control_frame_sent', 'continuation_frame_sent', 'data_frame_sent', 'headers_frame_sent', 'priority_frame_sent', 'settings_ack_rcvd', 'empty_settings_rcvd', 'alloc_fail_total', 'err_rcvd_total', 'err_sent_total', 'err_sent_proto_err', 'err_sent_internal_err', 'err_sent_flow_control', 'err_sent_setting_timeout', 'err_sent_stream_closed', 'err_sent_frame_size_err', 'err_sent_refused_stream', 'err_sent_cancel', 'err_sent_compression_err', 'err_sent_connect_err', 'err_sent_your_calm', 'err_sent_inadequate_security', 'err_sent_http11_required']}},
-        'oper': {'type': 'dict', 'http2_cpu_list': {'type': 'list', 'curr_proxy': {'type': 'int', }, 'peak_proxy': {'type': 'int', }, 'total_proxy': {'type': 'int', }, 'connection_preface_rcvd': {'type': 'int', }, 'connection_preface_sent': {'type': 'int', }, 'control_frame': {'type': 'int', }, 'control_frame_sent': {'type': 'int', }, 'continuation_frame': {'type': 'int', }, 'continuation_frame_sent': {'type': 'int', }, 'data_frame': {'type': 'int', }, 'data_frame_sent': {'type': 'int', }, 'data_to_app': {'type': 'int', }, 'goaway_frame': {'type': 'int', }, 'goaway_frame_sent': {'type': 'int', }, 'headers_frame': {'type': 'int', }, 'headers_frame_sent': {'type': 'int', }, 'header_to_app': {'type': 'int', }, 'ping_frame': {'type': 'int', }, 'ping_frame_sent': {'type': 'int', }, 'priority_frame': {'type': 'int', }, 'priority_frame_sent': {'type': 'int', }, 'rst_frame_rcvd': {'type': 'int', }, 'rst_frame_sent': {'type': 'int', }, 'settings_frame': {'type': 'int', }, 'settings_frame_sent': {'type': 'int', }, 'settings_ack_rcvd': {'type': 'int', }, 'settings_ack_sent': {'type': 'int', }, 'empty_settings_rcvd': {'type': 'int', }, 'empty_settings_sent': {'type': 'int', }, 'window_update_frame': {'type': 'int', }, 'window_update_frame_sent': {'type': 'int', }, 'unknown_frame': {'type': 'int', }, 'split_buff_fail': {'type': 'int', }, 'invalid_frame_size': {'type': 'int', }, 'error_max_invalid_stream': {'type': 'int', }, 'data_no_stream': {'type': 'int', }, 'bad_connection_preface': {'type': 'int', }, 'bad_frame_type_for_stream_state': {'type': 'int', }, 'wrong_stream_state': {'type': 'int', }, 'alloc_fail_total': {'type': 'int', }, 'proxy_alloc_error': {'type': 'int', }, 'deflate_alloc_fail': {'type': 'int', }, 'inflate_alloc_fail': {'type': 'int', }, 'data_queue_alloc_error': {'type': 'int', }, 'buff_alloc_error': {'type': 'int', }, 'cant_allocate_control_frame': {'type': 'int', }, 'cant_allocate_settings_frame': {'type': 'int', }, 'cant_allocate_rst_frame': {'type': 'int', }, 'cant_allocate_goaway_frame': {'type': 'int', }, 'cant_allocate_ping_frame': {'type': 'int', }, 'cant_allocate_stream': {'type': 'int', }, 'cant_allocate_window_frame': {'type': 'int', }, 'inflate_header_fail': {'type': 'int', }, 'header_no_stream': {'type': 'int', }, 'header_padlen_gt_frame_payload': {'type': 'int', }, 'streams_gt_max_concur_streams': {'type': 'int', }, 'idle_state_unexpected_frame': {'type': 'int', }, 'reserved_local_state_unexpected_frame': {'type': 'int', }, 'reserved_remote_state_unexpected_frame': {'type': 'int', }, 'half_closed_remote_state_unexpected_frame': {'type': 'int', }, 'closed_state_unexpected_frame': {'type': 'int', }, 'zero_window_size_on_stream': {'type': 'int', }, 'exceeds_max_window_size_stream': {'type': 'int', }, 'continuation_before_headers': {'type': 'int', }, 'invalid_frame_during_headers': {'type': 'int', }, 'headers_after_continuation': {'type': 'int', }, 'invalid_push_promise': {'type': 'int', }, 'invalid_stream_id': {'type': 'int', }, 'headers_interleaved': {'type': 'int', }, 'trailers_no_end_stream': {'type': 'int', }, 'invalid_setting_value': {'type': 'int', }, 'invalid_window_update': {'type': 'int', }, 'err_rcvd_total': {'type': 'int', }, 'protocol_error': {'type': 'int', }, 'internal_error': {'type': 'int', }, 'flow_control_error': {'type': 'int', }, 'settings_timeout': {'type': 'int', }, 'stream_closed': {'type': 'int', }, 'frame_size_error': {'type': 'int', }, 'refused_stream': {'type': 'int', }, 'cancel': {'type': 'int', }, 'compression_error': {'type': 'int', }, 'connect_error': {'type': 'int', }, 'enhance_your_calm': {'type': 'int', }, 'inadequate_security': {'type': 'int', }, 'http_1_1_required': {'type': 'int', }, 'err_sent_total': {'type': 'int', }, 'err_sent_proto_err': {'type': 'int', }, 'err_sent_internal_err': {'type': 'int', }, 'err_sent_flow_control': {'type': 'int', }, 'err_sent_setting_timeout': {'type': 'int', }, 'err_sent_stream_closed': {'type': 'int', }, 'err_sent_frame_size_err': {'type': 'int', }, 'err_sent_refused_stream': {'type': 'int', }, 'err_sent_cancel': {'type': 'int', }, 'err_sent_compression_err': {'type': 'int', }, 'err_sent_connect_err': {'type': 'int', }, 'err_sent_your_calm': {'type': 'int', }, 'err_sent_inadequate_security': {'type': 'int', }, 'err_sent_http11_required': {'type': 'int', }, 'frame_header_bytes_received': {'type': 'int', }, 'frame_header_bytes_sent': {'type': 'int', }, 'control_bytes_received': {'type': 'int', }, 'control_bytes_sent': {'type': 'int', }, 'header_bytes_received': {'type': 'int', }, 'header_bytes_sent': {'type': 'int', }, 'data_bytes_received': {'type': 'int', }, 'data_bytes_sent': {'type': 'int', }, 'total_bytes_received': {'type': 'int', }, 'total_bytes_sent': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
-        'stats': {'type': 'dict', 'curr_proxy': {'type': 'str', }, 'total_proxy': {'type': 'str', }, 'connection_preface_rcvd': {'type': 'str', }, 'control_frame': {'type': 'str', }, 'headers_frame': {'type': 'str', }, 'continuation_frame': {'type': 'str', }, 'rst_frame_rcvd': {'type': 'str', }, 'settings_frame': {'type': 'str', }, 'window_update_frame': {'type': 'str', }, 'ping_frame': {'type': 'str', }, 'goaway_frame': {'type': 'str', }, 'priority_frame': {'type': 'str', }, 'data_frame': {'type': 'str', }, 'unknown_frame': {'type': 'str', }, 'connection_preface_sent': {'type': 'str', }, 'settings_frame_sent': {'type': 'str', }, 'settings_ack_sent': {'type': 'str', }, 'empty_settings_sent': {'type': 'str', }, 'ping_frame_sent': {'type': 'str', }, 'window_update_frame_sent': {'type': 'str', }, 'rst_frame_sent': {'type': 'str', }, 'goaway_frame_sent': {'type': 'str', }, 'header_to_app': {'type': 'str', }, 'data_to_app': {'type': 'str', }, 'protocol_error': {'type': 'str', }, 'internal_error': {'type': 'str', }, 'proxy_alloc_error': {'type': 'str', }, 'split_buff_fail': {'type': 'str', }, 'invalid_frame_size': {'type': 'str', }, 'error_max_invalid_stream': {'type': 'str', }, 'data_no_stream': {'type': 'str', }, 'flow_control_error': {'type': 'str', }, 'settings_timeout': {'type': 'str', }, 'frame_size_error': {'type': 'str', }, 'refused_stream': {'type': 'str', }, 'cancel': {'type': 'str', }, 'compression_error': {'type': 'str', }, 'connect_error': {'type': 'str', }, 'enhance_your_calm': {'type': 'str', }, 'inadequate_security': {'type': 'str', }, 'http_1_1_required': {'type': 'str', }, 'deflate_alloc_fail': {'type': 'str', }, 'inflate_alloc_fail': {'type': 'str', }, 'inflate_header_fail': {'type': 'str', }, 'bad_connection_preface': {'type': 'str', }, 'cant_allocate_control_frame': {'type': 'str', }, 'cant_allocate_settings_frame': {'type': 'str', }, 'bad_frame_type_for_stream_state': {'type': 'str', }, 'wrong_stream_state': {'type': 'str', }, 'data_queue_alloc_error': {'type': 'str', }, 'buff_alloc_error': {'type': 'str', }, 'cant_allocate_rst_frame': {'type': 'str', }, 'cant_allocate_goaway_frame': {'type': 'str', }, 'cant_allocate_ping_frame': {'type': 'str', }, 'cant_allocate_stream': {'type': 'str', }, 'cant_allocate_window_frame': {'type': 'str', }, 'header_no_stream': {'type': 'str', }, 'header_padlen_gt_frame_payload': {'type': 'str', }, 'streams_gt_max_concur_streams': {'type': 'str', }, 'idle_state_unexpected_frame': {'type': 'str', }, 'reserved_local_state_unexpected_frame': {'type': 'str', }, 'reserved_remote_state_unexpected_frame': {'type': 'str', }, 'half_closed_remote_state_unexpected_frame': {'type': 'str', }, 'closed_state_unexpected_frame': {'type': 'str', }, 'zero_window_size_on_stream': {'type': 'str', }, 'exceeds_max_window_size_stream': {'type': 'str', }, 'stream_closed': {'type': 'str', }, 'continuation_before_headers': {'type': 'str', }, 'invalid_frame_during_headers': {'type': 'str', }, 'headers_after_continuation': {'type': 'str', }, 'invalid_push_promise': {'type': 'str', }, 'invalid_stream_id': {'type': 'str', }, 'headers_interleaved': {'type': 'str', }, 'trailers_no_end_stream': {'type': 'str', }, 'invalid_setting_value': {'type': 'str', }, 'invalid_window_update': {'type': 'str', }, 'frame_header_bytes_received': {'type': 'str', }, 'frame_header_bytes_sent': {'type': 'str', }, 'control_bytes_received': {'type': 'str', }, 'control_bytes_sent': {'type': 'str', }, 'header_bytes_received': {'type': 'str', }, 'header_bytes_sent': {'type': 'str', }, 'data_bytes_received': {'type': 'str', }, 'data_bytes_sent': {'type': 'str', }, 'total_bytes_received': {'type': 'str', }, 'total_bytes_sent': {'type': 'str', }, 'peak_proxy': {'type': 'str', }, 'control_frame_sent': {'type': 'str', }, 'continuation_frame_sent': {'type': 'str', }, 'data_frame_sent': {'type': 'str', }, 'headers_frame_sent': {'type': 'str', }, 'priority_frame_sent': {'type': 'str', }, 'settings_ack_rcvd': {'type': 'str', }, 'empty_settings_rcvd': {'type': 'str', }, 'alloc_fail_total': {'type': 'str', }, 'err_rcvd_total': {'type': 'str', }, 'err_sent_total': {'type': 'str', }, 'err_sent_proto_err': {'type': 'str', }, 'err_sent_internal_err': {'type': 'str', }, 'err_sent_flow_control': {'type': 'str', }, 'err_sent_setting_timeout': {'type': 'str', }, 'err_sent_stream_closed': {'type': 'str', }, 'err_sent_frame_size_err': {'type': 'str', }, 'err_sent_refused_stream': {'type': 'str', }, 'err_sent_cancel': {'type': 'str', }, 'err_sent_compression_err': {'type': 'str', }, 'err_sent_connect_err': {'type': 'str', }, 'err_sent_your_calm': {'type': 'str', }, 'err_sent_inadequate_security': {'type': 'str', }, 'err_sent_http11_required': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'curr_proxy', 'total_proxy',
+                    'connection_preface_rcvd', 'control_frame',
+                    'headers_frame', 'continuation_frame', 'rst_frame_rcvd',
+                    'settings_frame', 'window_update_frame', 'ping_frame',
+                    'goaway_frame', 'priority_frame', 'data_frame',
+                    'unknown_frame', 'connection_preface_sent',
+                    'settings_frame_sent', 'settings_ack_sent',
+                    'empty_settings_sent', 'ping_frame_sent',
+                    'window_update_frame_sent', 'rst_frame_sent',
+                    'goaway_frame_sent', 'header_to_app', 'data_to_app',
+                    'protocol_error', 'internal_error', 'proxy_alloc_error',
+                    'split_buff_fail', 'invalid_frame_size',
+                    'error_max_invalid_stream', 'data_no_stream',
+                    'flow_control_error', 'settings_timeout',
+                    'frame_size_error', 'refused_stream', 'cancel',
+                    'compression_error', 'connect_error', 'enhance_your_calm',
+                    'inadequate_security', 'http_1_1_required',
+                    'deflate_alloc_fail', 'inflate_alloc_fail',
+                    'inflate_header_fail', 'bad_connection_preface',
+                    'cant_allocate_control_frame',
+                    'cant_allocate_settings_frame',
+                    'bad_frame_type_for_stream_state', 'wrong_stream_state',
+                    'data_queue_alloc_error', 'buff_alloc_error',
+                    'cant_allocate_rst_frame', 'cant_allocate_goaway_frame',
+                    'cant_allocate_ping_frame', 'cant_allocate_stream',
+                    'cant_allocate_window_frame', 'header_no_stream',
+                    'header_padlen_gt_frame_payload',
+                    'streams_gt_max_concur_streams',
+                    'idle_state_unexpected_frame',
+                    'reserved_local_state_unexpected_frame',
+                    'reserved_remote_state_unexpected_frame',
+                    'half_closed_remote_state_unexpected_frame',
+                    'closed_state_unexpected_frame',
+                    'zero_window_size_on_stream',
+                    'exceeds_max_window_size_stream', 'stream_closed',
+                    'continuation_before_headers',
+                    'invalid_frame_during_headers',
+                    'headers_after_continuation', 'invalid_push_promise',
+                    'invalid_stream_id', 'headers_interleaved',
+                    'trailers_no_end_stream', 'invalid_setting_value',
+                    'invalid_window_update', 'frame_header_bytes_received',
+                    'frame_header_bytes_sent', 'control_bytes_received',
+                    'control_bytes_sent', 'header_bytes_received',
+                    'header_bytes_sent', 'data_bytes_received',
+                    'data_bytes_sent', 'total_bytes_received',
+                    'total_bytes_sent', 'peak_proxy', 'control_frame_sent',
+                    'continuation_frame_sent', 'data_frame_sent',
+                    'headers_frame_sent', 'priority_frame_sent',
+                    'settings_ack_rcvd', 'empty_settings_rcvd',
+                    'alloc_fail_total', 'err_rcvd_total', 'err_sent_total',
+                    'err_sent_proto_err', 'err_sent_internal_err',
+                    'err_sent_flow_control', 'err_sent_setting_timeout',
+                    'err_sent_stream_closed', 'err_sent_frame_size_err',
+                    'err_sent_refused_stream', 'err_sent_cancel',
+                    'err_sent_compression_err', 'err_sent_connect_err',
+                    'err_sent_your_calm', 'err_sent_inadequate_security',
+                    'err_sent_http11_required'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'http2_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'peak_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'connection_preface_rcvd': {
+                    'type': 'int',
+                },
+                'connection_preface_sent': {
+                    'type': 'int',
+                },
+                'control_frame': {
+                    'type': 'int',
+                },
+                'control_frame_sent': {
+                    'type': 'int',
+                },
+                'continuation_frame': {
+                    'type': 'int',
+                },
+                'continuation_frame_sent': {
+                    'type': 'int',
+                },
+                'data_frame': {
+                    'type': 'int',
+                },
+                'data_frame_sent': {
+                    'type': 'int',
+                },
+                'data_to_app': {
+                    'type': 'int',
+                },
+                'goaway_frame': {
+                    'type': 'int',
+                },
+                'goaway_frame_sent': {
+                    'type': 'int',
+                },
+                'headers_frame': {
+                    'type': 'int',
+                },
+                'headers_frame_sent': {
+                    'type': 'int',
+                },
+                'header_to_app': {
+                    'type': 'int',
+                },
+                'ping_frame': {
+                    'type': 'int',
+                },
+                'ping_frame_sent': {
+                    'type': 'int',
+                },
+                'priority_frame': {
+                    'type': 'int',
+                },
+                'priority_frame_sent': {
+                    'type': 'int',
+                },
+                'rst_frame_rcvd': {
+                    'type': 'int',
+                },
+                'rst_frame_sent': {
+                    'type': 'int',
+                },
+                'settings_frame': {
+                    'type': 'int',
+                },
+                'settings_frame_sent': {
+                    'type': 'int',
+                },
+                'settings_ack_rcvd': {
+                    'type': 'int',
+                },
+                'settings_ack_sent': {
+                    'type': 'int',
+                },
+                'empty_settings_rcvd': {
+                    'type': 'int',
+                },
+                'empty_settings_sent': {
+                    'type': 'int',
+                },
+                'window_update_frame': {
+                    'type': 'int',
+                },
+                'window_update_frame_sent': {
+                    'type': 'int',
+                },
+                'unknown_frame': {
+                    'type': 'int',
+                },
+                'split_buff_fail': {
+                    'type': 'int',
+                },
+                'invalid_frame_size': {
+                    'type': 'int',
+                },
+                'error_max_invalid_stream': {
+                    'type': 'int',
+                },
+                'data_no_stream': {
+                    'type': 'int',
+                },
+                'bad_connection_preface': {
+                    'type': 'int',
+                },
+                'bad_frame_type_for_stream_state': {
+                    'type': 'int',
+                },
+                'wrong_stream_state': {
+                    'type': 'int',
+                },
+                'alloc_fail_total': {
+                    'type': 'int',
+                },
+                'proxy_alloc_error': {
+                    'type': 'int',
+                },
+                'deflate_alloc_fail': {
+                    'type': 'int',
+                },
+                'inflate_alloc_fail': {
+                    'type': 'int',
+                },
+                'data_queue_alloc_error': {
+                    'type': 'int',
+                },
+                'buff_alloc_error': {
+                    'type': 'int',
+                },
+                'cant_allocate_control_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_settings_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_rst_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_goaway_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_ping_frame': {
+                    'type': 'int',
+                },
+                'cant_allocate_stream': {
+                    'type': 'int',
+                },
+                'cant_allocate_window_frame': {
+                    'type': 'int',
+                },
+                'inflate_header_fail': {
+                    'type': 'int',
+                },
+                'header_no_stream': {
+                    'type': 'int',
+                },
+                'header_padlen_gt_frame_payload': {
+                    'type': 'int',
+                },
+                'streams_gt_max_concur_streams': {
+                    'type': 'int',
+                },
+                'idle_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'reserved_local_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'reserved_remote_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'half_closed_remote_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'closed_state_unexpected_frame': {
+                    'type': 'int',
+                },
+                'zero_window_size_on_stream': {
+                    'type': 'int',
+                },
+                'exceeds_max_window_size_stream': {
+                    'type': 'int',
+                },
+                'continuation_before_headers': {
+                    'type': 'int',
+                },
+                'invalid_frame_during_headers': {
+                    'type': 'int',
+                },
+                'headers_after_continuation': {
+                    'type': 'int',
+                },
+                'invalid_push_promise': {
+                    'type': 'int',
+                },
+                'invalid_stream_id': {
+                    'type': 'int',
+                },
+                'headers_interleaved': {
+                    'type': 'int',
+                },
+                'trailers_no_end_stream': {
+                    'type': 'int',
+                },
+                'invalid_setting_value': {
+                    'type': 'int',
+                },
+                'invalid_window_update': {
+                    'type': 'int',
+                },
+                'err_rcvd_total': {
+                    'type': 'int',
+                },
+                'protocol_error': {
+                    'type': 'int',
+                },
+                'internal_error': {
+                    'type': 'int',
+                },
+                'flow_control_error': {
+                    'type': 'int',
+                },
+                'settings_timeout': {
+                    'type': 'int',
+                },
+                'stream_closed': {
+                    'type': 'int',
+                },
+                'frame_size_error': {
+                    'type': 'int',
+                },
+                'refused_stream': {
+                    'type': 'int',
+                },
+                'cancel': {
+                    'type': 'int',
+                },
+                'compression_error': {
+                    'type': 'int',
+                },
+                'connect_error': {
+                    'type': 'int',
+                },
+                'enhance_your_calm': {
+                    'type': 'int',
+                },
+                'inadequate_security': {
+                    'type': 'int',
+                },
+                'http_1_1_required': {
+                    'type': 'int',
+                },
+                'err_sent_total': {
+                    'type': 'int',
+                },
+                'err_sent_proto_err': {
+                    'type': 'int',
+                },
+                'err_sent_internal_err': {
+                    'type': 'int',
+                },
+                'err_sent_flow_control': {
+                    'type': 'int',
+                },
+                'err_sent_setting_timeout': {
+                    'type': 'int',
+                },
+                'err_sent_stream_closed': {
+                    'type': 'int',
+                },
+                'err_sent_frame_size_err': {
+                    'type': 'int',
+                },
+                'err_sent_refused_stream': {
+                    'type': 'int',
+                },
+                'err_sent_cancel': {
+                    'type': 'int',
+                },
+                'err_sent_compression_err': {
+                    'type': 'int',
+                },
+                'err_sent_connect_err': {
+                    'type': 'int',
+                },
+                'err_sent_your_calm': {
+                    'type': 'int',
+                },
+                'err_sent_inadequate_security': {
+                    'type': 'int',
+                },
+                'err_sent_http11_required': {
+                    'type': 'int',
+                },
+                'frame_header_bytes_received': {
+                    'type': 'int',
+                },
+                'frame_header_bytes_sent': {
+                    'type': 'int',
+                },
+                'control_bytes_received': {
+                    'type': 'int',
+                },
+                'control_bytes_sent': {
+                    'type': 'int',
+                },
+                'header_bytes_received': {
+                    'type': 'int',
+                },
+                'header_bytes_sent': {
+                    'type': 'int',
+                },
+                'data_bytes_received': {
+                    'type': 'int',
+                },
+                'data_bytes_sent': {
+                    'type': 'int',
+                },
+                'total_bytes_received': {
+                    'type': 'int',
+                },
+                'total_bytes_sent': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'curr_proxy': {
+                'type': 'str',
+            },
+            'total_proxy': {
+                'type': 'str',
+            },
+            'connection_preface_rcvd': {
+                'type': 'str',
+            },
+            'control_frame': {
+                'type': 'str',
+            },
+            'headers_frame': {
+                'type': 'str',
+            },
+            'continuation_frame': {
+                'type': 'str',
+            },
+            'rst_frame_rcvd': {
+                'type': 'str',
+            },
+            'settings_frame': {
+                'type': 'str',
+            },
+            'window_update_frame': {
+                'type': 'str',
+            },
+            'ping_frame': {
+                'type': 'str',
+            },
+            'goaway_frame': {
+                'type': 'str',
+            },
+            'priority_frame': {
+                'type': 'str',
+            },
+            'data_frame': {
+                'type': 'str',
+            },
+            'unknown_frame': {
+                'type': 'str',
+            },
+            'connection_preface_sent': {
+                'type': 'str',
+            },
+            'settings_frame_sent': {
+                'type': 'str',
+            },
+            'settings_ack_sent': {
+                'type': 'str',
+            },
+            'empty_settings_sent': {
+                'type': 'str',
+            },
+            'ping_frame_sent': {
+                'type': 'str',
+            },
+            'window_update_frame_sent': {
+                'type': 'str',
+            },
+            'rst_frame_sent': {
+                'type': 'str',
+            },
+            'goaway_frame_sent': {
+                'type': 'str',
+            },
+            'header_to_app': {
+                'type': 'str',
+            },
+            'data_to_app': {
+                'type': 'str',
+            },
+            'protocol_error': {
+                'type': 'str',
+            },
+            'internal_error': {
+                'type': 'str',
+            },
+            'proxy_alloc_error': {
+                'type': 'str',
+            },
+            'split_buff_fail': {
+                'type': 'str',
+            },
+            'invalid_frame_size': {
+                'type': 'str',
+            },
+            'error_max_invalid_stream': {
+                'type': 'str',
+            },
+            'data_no_stream': {
+                'type': 'str',
+            },
+            'flow_control_error': {
+                'type': 'str',
+            },
+            'settings_timeout': {
+                'type': 'str',
+            },
+            'frame_size_error': {
+                'type': 'str',
+            },
+            'refused_stream': {
+                'type': 'str',
+            },
+            'cancel': {
+                'type': 'str',
+            },
+            'compression_error': {
+                'type': 'str',
+            },
+            'connect_error': {
+                'type': 'str',
+            },
+            'enhance_your_calm': {
+                'type': 'str',
+            },
+            'inadequate_security': {
+                'type': 'str',
+            },
+            'http_1_1_required': {
+                'type': 'str',
+            },
+            'deflate_alloc_fail': {
+                'type': 'str',
+            },
+            'inflate_alloc_fail': {
+                'type': 'str',
+            },
+            'inflate_header_fail': {
+                'type': 'str',
+            },
+            'bad_connection_preface': {
+                'type': 'str',
+            },
+            'cant_allocate_control_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_settings_frame': {
+                'type': 'str',
+            },
+            'bad_frame_type_for_stream_state': {
+                'type': 'str',
+            },
+            'wrong_stream_state': {
+                'type': 'str',
+            },
+            'data_queue_alloc_error': {
+                'type': 'str',
+            },
+            'buff_alloc_error': {
+                'type': 'str',
+            },
+            'cant_allocate_rst_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_goaway_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_ping_frame': {
+                'type': 'str',
+            },
+            'cant_allocate_stream': {
+                'type': 'str',
+            },
+            'cant_allocate_window_frame': {
+                'type': 'str',
+            },
+            'header_no_stream': {
+                'type': 'str',
+            },
+            'header_padlen_gt_frame_payload': {
+                'type': 'str',
+            },
+            'streams_gt_max_concur_streams': {
+                'type': 'str',
+            },
+            'idle_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'reserved_local_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'reserved_remote_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'half_closed_remote_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'closed_state_unexpected_frame': {
+                'type': 'str',
+            },
+            'zero_window_size_on_stream': {
+                'type': 'str',
+            },
+            'exceeds_max_window_size_stream': {
+                'type': 'str',
+            },
+            'stream_closed': {
+                'type': 'str',
+            },
+            'continuation_before_headers': {
+                'type': 'str',
+            },
+            'invalid_frame_during_headers': {
+                'type': 'str',
+            },
+            'headers_after_continuation': {
+                'type': 'str',
+            },
+            'invalid_push_promise': {
+                'type': 'str',
+            },
+            'invalid_stream_id': {
+                'type': 'str',
+            },
+            'headers_interleaved': {
+                'type': 'str',
+            },
+            'trailers_no_end_stream': {
+                'type': 'str',
+            },
+            'invalid_setting_value': {
+                'type': 'str',
+            },
+            'invalid_window_update': {
+                'type': 'str',
+            },
+            'frame_header_bytes_received': {
+                'type': 'str',
+            },
+            'frame_header_bytes_sent': {
+                'type': 'str',
+            },
+            'control_bytes_received': {
+                'type': 'str',
+            },
+            'control_bytes_sent': {
+                'type': 'str',
+            },
+            'header_bytes_received': {
+                'type': 'str',
+            },
+            'header_bytes_sent': {
+                'type': 'str',
+            },
+            'data_bytes_received': {
+                'type': 'str',
+            },
+            'data_bytes_sent': {
+                'type': 'str',
+            },
+            'total_bytes_received': {
+                'type': 'str',
+            },
+            'total_bytes_sent': {
+                'type': 'str',
+            },
+            'peak_proxy': {
+                'type': 'str',
+            },
+            'control_frame_sent': {
+                'type': 'str',
+            },
+            'continuation_frame_sent': {
+                'type': 'str',
+            },
+            'data_frame_sent': {
+                'type': 'str',
+            },
+            'headers_frame_sent': {
+                'type': 'str',
+            },
+            'priority_frame_sent': {
+                'type': 'str',
+            },
+            'settings_ack_rcvd': {
+                'type': 'str',
+            },
+            'empty_settings_rcvd': {
+                'type': 'str',
+            },
+            'alloc_fail_total': {
+                'type': 'str',
+            },
+            'err_rcvd_total': {
+                'type': 'str',
+            },
+            'err_sent_total': {
+                'type': 'str',
+            },
+            'err_sent_proto_err': {
+                'type': 'str',
+            },
+            'err_sent_internal_err': {
+                'type': 'str',
+            },
+            'err_sent_flow_control': {
+                'type': 'str',
+            },
+            'err_sent_setting_timeout': {
+                'type': 'str',
+            },
+            'err_sent_stream_closed': {
+                'type': 'str',
+            },
+            'err_sent_frame_size_err': {
+                'type': 'str',
+            },
+            'err_sent_refused_stream': {
+                'type': 'str',
+            },
+            'err_sent_cancel': {
+                'type': 'str',
+            },
+            'err_sent_compression_err': {
+                'type': 'str',
+            },
+            'err_sent_connect_err': {
+                'type': 'str',
+            },
+            'err_sent_your_calm': {
+                'type': 'str',
+            },
+            'err_sent_inadequate_security': {
+                'type': 'str',
+            },
+            'err_sent_http11_required': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -732,8 +1480,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -744,8 +1491,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -785,12 +1531,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -805,16 +1549,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -823,15 +1567,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -871,7 +1615,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

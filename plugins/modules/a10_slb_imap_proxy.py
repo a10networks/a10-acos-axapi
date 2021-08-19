@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_imap_proxy
 description:
@@ -359,9 +358,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -373,9 +370,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -383,20 +384,288 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route', 'snat_fail', 'feat', 'cc', 'data_ssl', 'line_too_long', 'line_mem_freed', 'invalid_start_line', 'auth_tls', 'prot', 'pbsz', 'pasv', 'port', 'request_dont_care', 'client_auth_tls', 'cant_find_pasv', 'pasv_addr_ne_server', 'smp_create_fail', 'data_server_conn_fail', 'data_send_fail', 'epsv', 'cant_find_epsv', 'data_curr', 'data_total', 'auth_unsupported', 'adat', 'unsupported_pbsz_value', 'unsupported_prot_value', 'unsupported_command', 'control_to_clear', 'control_to_ssl', 'bad_sequence', 'rsv_persist_conn_fail', 'smp_v6_fail', 'smp_v4_fail', 'insert_tuple_fail', 'cl_est_err', 'ser_connecting_err', 'server_response_err', 'cl_request_err', 'data_conn_start_err', 'data_serv_connecting_err', 'data_serv_connected_err', 'request', 'capability', 'start_tls', 'login']}},
-        'oper': {'type': 'dict', 'l4_cpu_list': {'type': 'list', 'current_proxy_conns': {'type': 'int', }, 'total_proxy_conns': {'type': 'int', }, 'total_imap_request': {'type': 'int', }, 'server_selection_failure': {'type': 'int', }, 'no_route_failure': {'type': 'int', }, 'source_nat_failure': {'type': 'int', }, 'start_tls_cmd': {'type': 'int', }, 'login_packet': {'type': 'int', }, 'capability_packet': {'type': 'int', }, 'request_line_freed': {'type': 'int', }, 'inv_start_line': {'type': 'int', }, 'other_cmd': {'type': 'int', }, 'imap_line_too_long': {'type': 'int', }, 'control_chn_ssl': {'type': 'int', }, 'bad_seq': {'type': 'int', }, 'serv_sel_persist_fail': {'type': 'int', }, 'serv_sel_smpv6_fail': {'type': 'int', }, 'serv_sel_smpv4_fail': {'type': 'int', }, 'serv_sel_ins_tpl_fail': {'type': 'int', }, 'client_est_state_err': {'type': 'int', }, 'serv_ctng_state_err': {'type': 'int', }, 'serv_resp_state_err': {'type': 'int', }, 'client_rq_state_err': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
-        'stats': {'type': 'dict', 'num': {'type': 'str', }, 'curr': {'type': 'str', }, 'total': {'type': 'str', }, 'svrsel_fail': {'type': 'str', }, 'no_route': {'type': 'str', }, 'snat_fail': {'type': 'str', }, 'feat': {'type': 'str', }, 'cc': {'type': 'str', }, 'data_ssl': {'type': 'str', }, 'line_too_long': {'type': 'str', }, 'line_mem_freed': {'type': 'str', }, 'invalid_start_line': {'type': 'str', }, 'auth_tls': {'type': 'str', }, 'prot': {'type': 'str', }, 'pbsz': {'type': 'str', }, 'pasv': {'type': 'str', }, 'port': {'type': 'str', }, 'request_dont_care': {'type': 'str', }, 'client_auth_tls': {'type': 'str', }, 'cant_find_pasv': {'type': 'str', }, 'pasv_addr_ne_server': {'type': 'str', }, 'smp_create_fail': {'type': 'str', }, 'data_server_conn_fail': {'type': 'str', }, 'data_send_fail': {'type': 'str', }, 'epsv': {'type': 'str', }, 'cant_find_epsv': {'type': 'str', }, 'data_curr': {'type': 'str', }, 'data_total': {'type': 'str', }, 'auth_unsupported': {'type': 'str', }, 'adat': {'type': 'str', }, 'unsupported_pbsz_value': {'type': 'str', }, 'unsupported_prot_value': {'type': 'str', }, 'unsupported_command': {'type': 'str', }, 'control_to_clear': {'type': 'str', }, 'control_to_ssl': {'type': 'str', }, 'bad_sequence': {'type': 'str', }, 'rsv_persist_conn_fail': {'type': 'str', }, 'smp_v6_fail': {'type': 'str', }, 'smp_v4_fail': {'type': 'str', }, 'insert_tuple_fail': {'type': 'str', }, 'cl_est_err': {'type': 'str', }, 'ser_connecting_err': {'type': 'str', }, 'server_response_err': {'type': 'str', }, 'cl_request_err': {'type': 'str', }, 'data_conn_start_err': {'type': 'str', }, 'data_serv_connecting_err': {'type': 'str', }, 'data_serv_connected_err': {'type': 'str', }, 'request': {'type': 'str', }, 'capability': {'type': 'str', }, 'start_tls': {'type': 'str', }, 'login': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'num', 'curr', 'total', 'svrsel_fail', 'no_route',
+                    'snat_fail', 'feat', 'cc', 'data_ssl', 'line_too_long',
+                    'line_mem_freed', 'invalid_start_line', 'auth_tls', 'prot',
+                    'pbsz', 'pasv', 'port', 'request_dont_care',
+                    'client_auth_tls', 'cant_find_pasv', 'pasv_addr_ne_server',
+                    'smp_create_fail', 'data_server_conn_fail',
+                    'data_send_fail', 'epsv', 'cant_find_epsv', 'data_curr',
+                    'data_total', 'auth_unsupported', 'adat',
+                    'unsupported_pbsz_value', 'unsupported_prot_value',
+                    'unsupported_command', 'control_to_clear',
+                    'control_to_ssl', 'bad_sequence', 'rsv_persist_conn_fail',
+                    'smp_v6_fail', 'smp_v4_fail', 'insert_tuple_fail',
+                    'cl_est_err', 'ser_connecting_err', 'server_response_err',
+                    'cl_request_err', 'data_conn_start_err',
+                    'data_serv_connecting_err', 'data_serv_connected_err',
+                    'request', 'capability', 'start_tls', 'login'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'current_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_proxy_conns': {
+                    'type': 'int',
+                },
+                'total_imap_request': {
+                    'type': 'int',
+                },
+                'server_selection_failure': {
+                    'type': 'int',
+                },
+                'no_route_failure': {
+                    'type': 'int',
+                },
+                'source_nat_failure': {
+                    'type': 'int',
+                },
+                'start_tls_cmd': {
+                    'type': 'int',
+                },
+                'login_packet': {
+                    'type': 'int',
+                },
+                'capability_packet': {
+                    'type': 'int',
+                },
+                'request_line_freed': {
+                    'type': 'int',
+                },
+                'inv_start_line': {
+                    'type': 'int',
+                },
+                'other_cmd': {
+                    'type': 'int',
+                },
+                'imap_line_too_long': {
+                    'type': 'int',
+                },
+                'control_chn_ssl': {
+                    'type': 'int',
+                },
+                'bad_seq': {
+                    'type': 'int',
+                },
+                'serv_sel_persist_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_smpv6_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_smpv4_fail': {
+                    'type': 'int',
+                },
+                'serv_sel_ins_tpl_fail': {
+                    'type': 'int',
+                },
+                'client_est_state_err': {
+                    'type': 'int',
+                },
+                'serv_ctng_state_err': {
+                    'type': 'int',
+                },
+                'serv_resp_state_err': {
+                    'type': 'int',
+                },
+                'client_rq_state_err': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'num': {
+                'type': 'str',
+            },
+            'curr': {
+                'type': 'str',
+            },
+            'total': {
+                'type': 'str',
+            },
+            'svrsel_fail': {
+                'type': 'str',
+            },
+            'no_route': {
+                'type': 'str',
+            },
+            'snat_fail': {
+                'type': 'str',
+            },
+            'feat': {
+                'type': 'str',
+            },
+            'cc': {
+                'type': 'str',
+            },
+            'data_ssl': {
+                'type': 'str',
+            },
+            'line_too_long': {
+                'type': 'str',
+            },
+            'line_mem_freed': {
+                'type': 'str',
+            },
+            'invalid_start_line': {
+                'type': 'str',
+            },
+            'auth_tls': {
+                'type': 'str',
+            },
+            'prot': {
+                'type': 'str',
+            },
+            'pbsz': {
+                'type': 'str',
+            },
+            'pasv': {
+                'type': 'str',
+            },
+            'port': {
+                'type': 'str',
+            },
+            'request_dont_care': {
+                'type': 'str',
+            },
+            'client_auth_tls': {
+                'type': 'str',
+            },
+            'cant_find_pasv': {
+                'type': 'str',
+            },
+            'pasv_addr_ne_server': {
+                'type': 'str',
+            },
+            'smp_create_fail': {
+                'type': 'str',
+            },
+            'data_server_conn_fail': {
+                'type': 'str',
+            },
+            'data_send_fail': {
+                'type': 'str',
+            },
+            'epsv': {
+                'type': 'str',
+            },
+            'cant_find_epsv': {
+                'type': 'str',
+            },
+            'data_curr': {
+                'type': 'str',
+            },
+            'data_total': {
+                'type': 'str',
+            },
+            'auth_unsupported': {
+                'type': 'str',
+            },
+            'adat': {
+                'type': 'str',
+            },
+            'unsupported_pbsz_value': {
+                'type': 'str',
+            },
+            'unsupported_prot_value': {
+                'type': 'str',
+            },
+            'unsupported_command': {
+                'type': 'str',
+            },
+            'control_to_clear': {
+                'type': 'str',
+            },
+            'control_to_ssl': {
+                'type': 'str',
+            },
+            'bad_sequence': {
+                'type': 'str',
+            },
+            'rsv_persist_conn_fail': {
+                'type': 'str',
+            },
+            'smp_v6_fail': {
+                'type': 'str',
+            },
+            'smp_v4_fail': {
+                'type': 'str',
+            },
+            'insert_tuple_fail': {
+                'type': 'str',
+            },
+            'cl_est_err': {
+                'type': 'str',
+            },
+            'ser_connecting_err': {
+                'type': 'str',
+            },
+            'server_response_err': {
+                'type': 'str',
+            },
+            'cl_request_err': {
+                'type': 'str',
+            },
+            'data_conn_start_err': {
+                'type': 'str',
+            },
+            'data_serv_connecting_err': {
+                'type': 'str',
+            },
+            'data_serv_connected_err': {
+                'type': 'str',
+            },
+            'request': {
+                'type': 'str',
+            },
+            'capability': {
+                'type': 'str',
+            },
+            'start_tls': {
+                'type': 'str',
+            },
+            'login': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -443,8 +712,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -455,14 +723,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("imap-proxy", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("imap-proxy", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -496,12 +764,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -516,16 +782,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -534,15 +800,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -582,7 +848,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

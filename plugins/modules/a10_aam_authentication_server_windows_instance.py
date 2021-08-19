@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_aam_authentication_server_windows_instance
 description:
@@ -293,9 +292,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -307,9 +304,21 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auth_protocol", "health_check", "health_check_disable", "health_check_string", "host", "name", "realm", "sampling_enable", "stats", "support_apacheds_kdc", "timeout", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "auth_protocol",
+    "health_check",
+    "health_check_disable",
+    "health_check_string",
+    "host",
+    "name",
+    "realm",
+    "sampling_enable",
+    "stats",
+    "support_apacheds_kdc",
+    "timeout",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -317,28 +326,165 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'host': {'type': 'dict', 'hostip': {'type': 'str', }, 'hostipv6': {'type': 'str', }},
-        'timeout': {'type': 'int', },
-        'auth_protocol': {'type': 'dict', 'ntlm_disable': {'type': 'bool', }, 'ntlm_version': {'type': 'int', }, 'ntlm_health_check': {'type': 'str', }, 'ntlm_health_check_disable': {'type': 'bool', }, 'kerberos_disable': {'type': 'bool', }, 'kerberos_port': {'type': 'int', }, 'kport_hm': {'type': 'str', }, 'kport_hm_disable': {'type': 'bool', }, 'kerberos_password_change_port': {'type': 'int', }},
-        'realm': {'type': 'str', },
-        'support_apacheds_kdc': {'type': 'bool', },
-        'health_check': {'type': 'bool', },
-        'health_check_string': {'type': 'str', },
-        'health_check_disable': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success', 'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error']}},
-        'stats': {'type': 'dict', 'krb_send_req_success': {'type': 'str', }, 'krb_get_resp_success': {'type': 'str', }, 'krb_timeout_error': {'type': 'str', }, 'krb_other_error': {'type': 'str', }, 'krb_pw_expiry': {'type': 'str', }, 'krb_pw_change_success': {'type': 'str', }, 'krb_pw_change_failure': {'type': 'str', }, 'ntlm_proto_nego_success': {'type': 'str', }, 'ntlm_proto_nego_failure': {'type': 'str', }, 'ntlm_session_setup_success': {'type': 'str', }, 'ntlm_session_setup_failure': {'type': 'str', }, 'ntlm_prepare_req_success': {'type': 'str', }, 'ntlm_prepare_req_error': {'type': 'str', }, 'ntlm_auth_success': {'type': 'str', }, 'ntlm_auth_failure': {'type': 'str', }, 'ntlm_timeout_error': {'type': 'str', }, 'ntlm_other_error': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'host': {
+            'type': 'dict',
+            'hostip': {
+                'type': 'str',
+            },
+            'hostipv6': {
+                'type': 'str',
+            }
+        },
+        'timeout': {
+            'type': 'int',
+        },
+        'auth_protocol': {
+            'type': 'dict',
+            'ntlm_disable': {
+                'type': 'bool',
+            },
+            'ntlm_version': {
+                'type': 'int',
+            },
+            'ntlm_health_check': {
+                'type': 'str',
+            },
+            'ntlm_health_check_disable': {
+                'type': 'bool',
+            },
+            'kerberos_disable': {
+                'type': 'bool',
+            },
+            'kerberos_port': {
+                'type': 'int',
+            },
+            'kport_hm': {
+                'type': 'str',
+            },
+            'kport_hm_disable': {
+                'type': 'bool',
+            },
+            'kerberos_password_change_port': {
+                'type': 'int',
+            }
+        },
+        'realm': {
+            'type': 'str',
+        },
+        'support_apacheds_kdc': {
+            'type': 'bool',
+        },
+        'health_check': {
+            'type': 'bool',
+        },
+        'health_check_string': {
+            'type': 'str',
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'krb_send_req_success', 'krb_get_resp_success',
+                    'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry',
+                    'krb_pw_change_success', 'krb_pw_change_failure',
+                    'ntlm_proto_nego_success', 'ntlm_proto_nego_failure',
+                    'ntlm_session_setup_success', 'ntlm_session_setup_failure',
+                    'ntlm_prepare_req_success', 'ntlm_prepare_req_error',
+                    'ntlm_auth_success', 'ntlm_auth_failure',
+                    'ntlm_timeout_error', 'ntlm_other_error'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'krb_send_req_success': {
+                'type': 'str',
+            },
+            'krb_get_resp_success': {
+                'type': 'str',
+            },
+            'krb_timeout_error': {
+                'type': 'str',
+            },
+            'krb_other_error': {
+                'type': 'str',
+            },
+            'krb_pw_expiry': {
+                'type': 'str',
+            },
+            'krb_pw_change_success': {
+                'type': 'str',
+            },
+            'krb_pw_change_failure': {
+                'type': 'str',
+            },
+            'ntlm_proto_nego_success': {
+                'type': 'str',
+            },
+            'ntlm_proto_nego_failure': {
+                'type': 'str',
+            },
+            'ntlm_session_setup_success': {
+                'type': 'str',
+            },
+            'ntlm_session_setup_failure': {
+                'type': 'str',
+            },
+            'ntlm_prepare_req_success': {
+                'type': 'str',
+            },
+            'ntlm_prepare_req_error': {
+                'type': 'str',
+            },
+            'ntlm_auth_success': {
+                'type': 'str',
+            },
+            'ntlm_auth_failure': {
+                'type': 'str',
+            },
+            'ntlm_timeout_error': {
+                'type': 'str',
+            },
+            'ntlm_other_error': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
+        }
     })
     return rv
 
@@ -387,8 +533,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -399,8 +544,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -440,12 +584,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -460,16 +602,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -478,15 +620,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -523,7 +665,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

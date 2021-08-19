@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_file_inspection
 description:
@@ -122,9 +121,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -136,9 +133,10 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["stats", ]
+AVAILABLE_PROPERTIES = [
+    "stats",
+]
 
 
 def get_default_argspec():
@@ -146,24 +144,247 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'stats': {'type': 'dict', 'file_inspection': {'type': 'dict', 'download_bad_blocked': {'type': 'str', }, 'download_bad_allowed': {'type': 'str', }, 'download_bad_ext_inspect': {'type': 'str', }, 'download_suspect_blocked': {'type': 'str', }, 'download_suspect_ext_inspect': {'type': 'str', }, 'download_suspect_allowed': {'type': 'str', }, 'download_good_blocked': {'type': 'str', }, 'download_good_ext_inspect': {'type': 'str', }, 'download_good_allowed': {'type': 'str', }, 'upload_bad_blocked': {'type': 'str', }, 'upload_bad_allowed': {'type': 'str', }, 'upload_bad_ext_inspect': {'type': 'str', }, 'upload_suspect_blocked': {'type': 'str', }, 'upload_suspect_ext_inspect': {'type': 'str', }, 'upload_suspect_allowed': {'type': 'str', }, 'upload_good_blocked': {'type': 'str', }, 'upload_good_ext_inspect': {'type': 'str', }, 'upload_good_allowed': {'type': 'str', }, 'icap_200': {'type': 'str', }, 'icap_204': {'type': 'str', }, 'icap_500': {'type': 'str', }, 'icap_other_status_code': {'type': 'str', }, 'icap_connect_fail': {'type': 'str', }, 'icap_connection_created': {'type': 'str', }, 'icap_connection_established': {'type': 'str', }, 'icap_connection_closed': {'type': 'str', }, 'icap_connection_rst': {'type': 'str', }, 'icap_bytes_sent': {'type': 'str', }, 'icap_bytes_received': {'type': 'str', }, 'bypass_aflex': {'type': 'str', }, 'bypass_large_file': {'type': 'str', }, 'bypass_service_disabled': {'type': 'str', }, 'bypass_service_down': {'type': 'str', }, 'reset_service_down': {'type': 'str', }, 'bypass_max_concurrent_files_reached': {'type': 'str', }, 'bypass_non_inspection': {'type': 'str', }, 'non_supported_file': {'type': 'str', }, 'transactions_alloc': {'type': 'str', }, 'transactions_free': {'type': 'str', }, 'transactions_failure': {'type': 'str', }, 'transactions_aborted': {'type': 'str', }, 'orig_conn_bytes_received': {'type': 'str', }, 'orig_conn_bytes_sent': {'type': 'str', }, 'orig_conn_bytes_bypassed': {'type': 'str', }, 'bypass_buffered_overlimit': {'type': 'str', }, 'total_bandwidth': {'type': 'str', }, 'total_suspect_bandwidth': {'type': 'str', }, 'total_bad_bandwidth': {'type': 'str', }, 'total_good_bandwidth': {'type': 'str', }, 'total_file_size_less_1m': {'type': 'str', }, 'total_file_size_1_5m': {'type': 'str', }, 'total_file_size_5_8m': {'type': 'str', }, 'total_file_size_8_32m': {'type': 'str', }, 'total_file_size_over_32m': {'type': 'str', }, 'suspect_file_size_less_1m': {'type': 'str', }, 'suspect_file_size_1_5m': {'type': 'str', }, 'suspect_file_size_5_8m': {'type': 'str', }, 'suspect_file_size_8_32m': {'type': 'str', }, 'suspect_file_size_over_32m': {'type': 'str', }, 'good_file_size_less_1m': {'type': 'str', }, 'good_file_size_1_5m': {'type': 'str', }, 'good_file_size_5_8m': {'type': 'str', }, 'good_file_size_8_32m': {'type': 'str', }, 'good_file_size_over_32m': {'type': 'str', }, 'bad_file_size_less_1m': {'type': 'str', }, 'bad_file_size_1_5m': {'type': 'str', }, 'bad_file_size_5_8m': {'type': 'str', }, 'bad_file_size_8_32m': {'type': 'str', }, 'bad_file_size_over_32m': {'type': 'str', }}}
+    rv.update({
+        'stats': {
+            'type': 'dict',
+            'file_inspection': {
+                'type': 'dict',
+                'download_bad_blocked': {
+                    'type': 'str',
+                },
+                'download_bad_allowed': {
+                    'type': 'str',
+                },
+                'download_bad_ext_inspect': {
+                    'type': 'str',
+                },
+                'download_suspect_blocked': {
+                    'type': 'str',
+                },
+                'download_suspect_ext_inspect': {
+                    'type': 'str',
+                },
+                'download_suspect_allowed': {
+                    'type': 'str',
+                },
+                'download_good_blocked': {
+                    'type': 'str',
+                },
+                'download_good_ext_inspect': {
+                    'type': 'str',
+                },
+                'download_good_allowed': {
+                    'type': 'str',
+                },
+                'upload_bad_blocked': {
+                    'type': 'str',
+                },
+                'upload_bad_allowed': {
+                    'type': 'str',
+                },
+                'upload_bad_ext_inspect': {
+                    'type': 'str',
+                },
+                'upload_suspect_blocked': {
+                    'type': 'str',
+                },
+                'upload_suspect_ext_inspect': {
+                    'type': 'str',
+                },
+                'upload_suspect_allowed': {
+                    'type': 'str',
+                },
+                'upload_good_blocked': {
+                    'type': 'str',
+                },
+                'upload_good_ext_inspect': {
+                    'type': 'str',
+                },
+                'upload_good_allowed': {
+                    'type': 'str',
+                },
+                'icap_200': {
+                    'type': 'str',
+                },
+                'icap_204': {
+                    'type': 'str',
+                },
+                'icap_500': {
+                    'type': 'str',
+                },
+                'icap_other_status_code': {
+                    'type': 'str',
+                },
+                'icap_connect_fail': {
+                    'type': 'str',
+                },
+                'icap_connection_created': {
+                    'type': 'str',
+                },
+                'icap_connection_established': {
+                    'type': 'str',
+                },
+                'icap_connection_closed': {
+                    'type': 'str',
+                },
+                'icap_connection_rst': {
+                    'type': 'str',
+                },
+                'icap_bytes_sent': {
+                    'type': 'str',
+                },
+                'icap_bytes_received': {
+                    'type': 'str',
+                },
+                'bypass_aflex': {
+                    'type': 'str',
+                },
+                'bypass_large_file': {
+                    'type': 'str',
+                },
+                'bypass_service_disabled': {
+                    'type': 'str',
+                },
+                'bypass_service_down': {
+                    'type': 'str',
+                },
+                'reset_service_down': {
+                    'type': 'str',
+                },
+                'bypass_max_concurrent_files_reached': {
+                    'type': 'str',
+                },
+                'bypass_non_inspection': {
+                    'type': 'str',
+                },
+                'non_supported_file': {
+                    'type': 'str',
+                },
+                'transactions_alloc': {
+                    'type': 'str',
+                },
+                'transactions_free': {
+                    'type': 'str',
+                },
+                'transactions_failure': {
+                    'type': 'str',
+                },
+                'transactions_aborted': {
+                    'type': 'str',
+                },
+                'orig_conn_bytes_received': {
+                    'type': 'str',
+                },
+                'orig_conn_bytes_sent': {
+                    'type': 'str',
+                },
+                'orig_conn_bytes_bypassed': {
+                    'type': 'str',
+                },
+                'bypass_buffered_overlimit': {
+                    'type': 'str',
+                },
+                'total_bandwidth': {
+                    'type': 'str',
+                },
+                'total_suspect_bandwidth': {
+                    'type': 'str',
+                },
+                'total_bad_bandwidth': {
+                    'type': 'str',
+                },
+                'total_good_bandwidth': {
+                    'type': 'str',
+                },
+                'total_file_size_less_1m': {
+                    'type': 'str',
+                },
+                'total_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'total_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'total_file_size_8_32m': {
+                    'type': 'str',
+                },
+                'total_file_size_over_32m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_less_1m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_8_32m': {
+                    'type': 'str',
+                },
+                'suspect_file_size_over_32m': {
+                    'type': 'str',
+                },
+                'good_file_size_less_1m': {
+                    'type': 'str',
+                },
+                'good_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'good_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'good_file_size_8_32m': {
+                    'type': 'str',
+                },
+                'good_file_size_over_32m': {
+                    'type': 'str',
+                },
+                'bad_file_size_less_1m': {
+                    'type': 'str',
+                },
+                'bad_file_size_1_5m': {
+                    'type': 'str',
+                },
+                'bad_file_size_5_8m': {
+                    'type': 'str',
+                },
+                'bad_file_size_8_32m': {
+                    'type': 'str',
+                },
+                'bad_file_size_over_32m': {
+                    'type': 'str',
+                }
+            }
+        }
     })
     # Parent keys
-    rv.update(dict(
-        protocol=dict(type='str', required=True),
-        port_number=dict(type='str', required=True),
-        virtual_server_name=dict(type='str', required=True),
-    ))
+    rv.update(
+        dict(
+            protocol=dict(type='str', required=True),
+            port_number=dict(type='str', required=True),
+            virtual_server_name=dict(type='str', required=True),
+        ))
     return rv
 
 
@@ -215,8 +436,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -227,8 +447,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -268,12 +487,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -288,16 +505,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -306,15 +523,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -351,7 +568,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

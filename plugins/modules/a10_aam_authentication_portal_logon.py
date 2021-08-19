@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_aam_authentication_portal_logon
 description:
@@ -353,9 +352,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -367,9 +364,21 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action_url", "background", "enable_passcode", "fail_msg_cfg", "passcode_cfg", "passcode_var", "password_cfg", "password_var", "submit_text", "username_cfg", "username_var", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "action_url",
+    "background",
+    "enable_passcode",
+    "fail_msg_cfg",
+    "passcode_cfg",
+    "passcode_var",
+    "password_cfg",
+    "password_var",
+    "submit_text",
+    "username_cfg",
+    "username_var",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -377,33 +386,239 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'background': {'type': 'dict', 'bgfile': {'type': 'str', }, 'bgstyle': {'type': 'str', 'choices': ['tile', 'stretch', 'fit']}, 'bgcolor_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'bgcolor_value': {'type': 'str', }},
-        'fail_msg_cfg': {'type': 'dict', 'fail_msg': {'type': 'bool', }, 'fail_text': {'type': 'str', }, 'fail_font': {'type': 'bool', }, 'fail_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'fail_font_custom': {'type': 'str', }, 'fail_size': {'type': 'int', }, 'fail_color': {'type': 'bool', }, 'fail_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'fail_color_value': {'type': 'str', }, 'authz_fail_msg': {'type': 'str', }},
-        'action_url': {'type': 'str', },
-        'username_cfg': {'type': 'dict', 'username': {'type': 'bool', }, 'user_text': {'type': 'str', }, 'user_font': {'type': 'bool', }, 'user_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'user_font_custom': {'type': 'str', }, 'user_size': {'type': 'int', }, 'user_color': {'type': 'bool', }, 'user_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'user_color_value': {'type': 'str', }},
-        'username_var': {'type': 'str', },
-        'password_cfg': {'type': 'dict', 'password': {'type': 'bool', }, 'pass_text': {'type': 'str', }, 'pass_font': {'type': 'bool', }, 'pass_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'pass_font_custom': {'type': 'str', }, 'pass_size': {'type': 'int', }, 'pass_color': {'type': 'bool', }, 'pass_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'pass_color_value': {'type': 'str', }},
-        'password_var': {'type': 'str', },
-        'enable_passcode': {'type': 'bool', },
-        'passcode_cfg': {'type': 'dict', 'passcode': {'type': 'bool', }, 'passcode_text': {'type': 'str', }, 'passcode_font': {'type': 'bool', }, 'passcode_face': {'type': 'str', 'choices': ['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']}, 'passcode_font_custom': {'type': 'str', }, 'passcode_size': {'type': 'int', }, 'passcode_color': {'type': 'bool', }, 'passcode_color_name': {'type': 'str', 'choices': ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']}, 'passcode_color_value': {'type': 'str', }},
-        'passcode_var': {'type': 'str', },
-        'submit_text': {'type': 'str', },
-        'uuid': {'type': 'str', }
+    rv.update({
+        'background': {
+            'type': 'dict',
+            'bgfile': {
+                'type': 'str',
+            },
+            'bgstyle': {
+                'type': 'str',
+                'choices': ['tile', 'stretch', 'fit']
+            },
+            'bgcolor_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'bgcolor_value': {
+                'type': 'str',
+            }
+        },
+        'fail_msg_cfg': {
+            'type': 'dict',
+            'fail_msg': {
+                'type': 'bool',
+            },
+            'fail_text': {
+                'type': 'str',
+            },
+            'fail_font': {
+                'type': 'bool',
+            },
+            'fail_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'fail_font_custom': {
+                'type': 'str',
+            },
+            'fail_size': {
+                'type': 'int',
+            },
+            'fail_color': {
+                'type': 'bool',
+            },
+            'fail_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'fail_color_value': {
+                'type': 'str',
+            },
+            'authz_fail_msg': {
+                'type': 'str',
+            }
+        },
+        'action_url': {
+            'type': 'str',
+        },
+        'username_cfg': {
+            'type': 'dict',
+            'username': {
+                'type': 'bool',
+            },
+            'user_text': {
+                'type': 'str',
+            },
+            'user_font': {
+                'type': 'bool',
+            },
+            'user_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'user_font_custom': {
+                'type': 'str',
+            },
+            'user_size': {
+                'type': 'int',
+            },
+            'user_color': {
+                'type': 'bool',
+            },
+            'user_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'user_color_value': {
+                'type': 'str',
+            }
+        },
+        'username_var': {
+            'type': 'str',
+        },
+        'password_cfg': {
+            'type': 'dict',
+            'password': {
+                'type': 'bool',
+            },
+            'pass_text': {
+                'type': 'str',
+            },
+            'pass_font': {
+                'type': 'bool',
+            },
+            'pass_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'pass_font_custom': {
+                'type': 'str',
+            },
+            'pass_size': {
+                'type': 'int',
+            },
+            'pass_color': {
+                'type': 'bool',
+            },
+            'pass_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'pass_color_value': {
+                'type': 'str',
+            }
+        },
+        'password_var': {
+            'type': 'str',
+        },
+        'enable_passcode': {
+            'type': 'bool',
+        },
+        'passcode_cfg': {
+            'type': 'dict',
+            'passcode': {
+                'type': 'bool',
+            },
+            'passcode_text': {
+                'type': 'str',
+            },
+            'passcode_font': {
+                'type': 'bool',
+            },
+            'passcode_face': {
+                'type':
+                'str',
+                'choices': [
+                    'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                    'Verdana'
+                ]
+            },
+            'passcode_font_custom': {
+                'type': 'str',
+            },
+            'passcode_size': {
+                'type': 'int',
+            },
+            'passcode_color': {
+                'type': 'bool',
+            },
+            'passcode_color_name': {
+                'type':
+                'str',
+                'choices': [
+                    'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                    'red', 'silver', 'teal', 'white', 'yellow'
+                ]
+            },
+            'passcode_color_value': {
+                'type': 'str',
+            }
+        },
+        'passcode_var': {
+            'type': 'str',
+        },
+        'submit_text': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        }
     })
     # Parent keys
-    rv.update(dict(
-        portal_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(portal_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -451,8 +666,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -463,8 +677,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -504,12 +717,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -524,16 +735,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -542,15 +753,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -584,7 +795,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

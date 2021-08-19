@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_interface_management
 description:
@@ -436,9 +435,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -450,9 +447,23 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list", "action", "broadcast_rate_limit", "duplexity", "flow_control", "ip", "ipv6", "lldp", "oper", "sampling_enable", "secondary_ip", "speed", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "access_list",
+    "action",
+    "broadcast_rate_limit",
+    "duplexity",
+    "flow_control",
+    "ip",
+    "ipv6",
+    "lldp",
+    "oper",
+    "sampling_enable",
+    "secondary_ip",
+    "speed",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -462,28 +473,313 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'access_list': {'type': 'dict', 'acl_id': {'type': 'int', }, 'acl_name': {'type': 'str', }},
-        'duplexity': {'type': 'str', 'choices': ['Full', 'Half', 'auto']},
-        'speed': {'type': 'str', 'choices': ['10', '100', '1000', 'auto']},
-        'flow_control': {'type': 'bool', },
-        'broadcast_rate_limit': {'type': 'dict', 'bcast_rate_limit_enable': {'type': 'bool', }, 'rate': {'type': 'int', }},
-        'ip': {'type': 'dict', 'ipv4_address': {'type': 'str', }, 'ipv4_netmask': {'type': 'str', }, 'dhcp': {'type': 'bool', }, 'control_apps_use_mgmt_port': {'type': 'bool', }, 'default_gateway': {'type': 'str', }},
-        'secondary_ip': {'type': 'dict', 'secondary_ip': {'type': 'bool', }, 'ipv4_address': {'type': 'str', }, 'ipv4_netmask': {'type': 'str', }, 'dhcp': {'type': 'bool', }, 'control_apps_use_mgmt_port': {'type': 'bool', }, 'default_gateway': {'type': 'str', }},
-        'ipv6': {'type': 'list', 'ipv6_addr': {'type': 'str', }, 'address_type': {'type': 'str', 'choices': ['link-local']}, 'v6_acl_name': {'type': 'str', }, 'inbound': {'type': 'bool', }, 'default_ipv6_gateway': {'type': 'str', }},
-        'action': {'type': 'str', 'choices': ['enable', 'disable']},
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'packets_input', 'bytes_input', 'received_broadcasts', 'received_multicasts', 'received_unicasts', 'input_errors', 'crc', 'frame', 'input_err_short', 'input_err_long', 'packets_output', 'bytes_output', 'transmitted_broadcasts', 'transmitted_multicasts', 'transmitted_unicasts', 'output_errors', 'collisions']}},
-        'lldp': {'type': 'dict', 'enable_cfg': {'type': 'dict', 'rt_enable': {'type': 'bool', }, 'rx': {'type': 'bool', }, 'tx': {'type': 'bool', }}, 'notification_cfg': {'type': 'dict', 'notification': {'type': 'bool', }, 'notif_enable': {'type': 'bool', }}, 'tx_dot1_cfg': {'type': 'dict', 'tx_dot1_tlvs': {'type': 'bool', }, 'link_aggregation': {'type': 'bool', }, 'vlan': {'type': 'bool', }}, 'tx_tlvs_cfg': {'type': 'dict', 'tx_tlvs': {'type': 'bool', }, 'exclude': {'type': 'bool', }, 'management_address': {'type': 'bool', }, 'port_description': {'type': 'bool', }, 'system_capabilities': {'type': 'bool', }, 'system_description': {'type': 'bool', }, 'system_name': {'type': 'bool', }}, 'uuid': {'type': 'str', }},
-        'oper': {'type': 'dict', 'interface': {'type': 'str', }, 'state': {'type': 'int', }, 'line_protocol': {'type': 'str', }, 'link_type': {'type': 'str', 'choices': ['GigabitEthernet', '10Gig', '40Gig']}, 'mac': {'type': 'str', }, 'ipv4_addr': {'type': 'str', }, 'ipv4_mask': {'type': 'str', }, 'ipv4_default_gateway': {'type': 'str', }, 'ipv6_addr': {'type': 'str', }, 'ipv6_prefix': {'type': 'str', }, 'ipv6_link_local': {'type': 'str', }, 'ipv6_link_local_prefix': {'type': 'str', }, 'ipv6_default_gateway': {'type': 'str', }, 'speed': {'type': 'str', }, 'duplexity': {'type': 'str', }, 'mtu': {'type': 'int', }, 'flow_control': {'type': 'int', }, 'ipv4_acl': {'type': 'str', }, 'ipv6_acl': {'type': 'str', }, 'dhcp_enabled': {'type': 'int', }},
-        'stats': {'type': 'dict', 'packets_input': {'type': 'str', }, 'bytes_input': {'type': 'str', }, 'received_broadcasts': {'type': 'str', }, 'received_multicasts': {'type': 'str', }, 'received_unicasts': {'type': 'str', }, 'input_errors': {'type': 'str', }, 'crc': {'type': 'str', }, 'frame': {'type': 'str', }, 'input_err_short': {'type': 'str', }, 'input_err_long': {'type': 'str', }, 'packets_output': {'type': 'str', }, 'bytes_output': {'type': 'str', }, 'transmitted_broadcasts': {'type': 'str', }, 'transmitted_multicasts': {'type': 'str', }, 'transmitted_unicasts': {'type': 'str', }, 'output_errors': {'type': 'str', }, 'collisions': {'type': 'str', }}
+    rv.update({
+        'access_list': {
+            'type': 'dict',
+            'acl_id': {
+                'type': 'int',
+            },
+            'acl_name': {
+                'type': 'str',
+            }
+        },
+        'duplexity': {
+            'type': 'str',
+            'choices': ['Full', 'Half', 'auto']
+        },
+        'speed': {
+            'type': 'str',
+            'choices': ['10', '100', '1000', 'auto']
+        },
+        'flow_control': {
+            'type': 'bool',
+        },
+        'broadcast_rate_limit': {
+            'type': 'dict',
+            'bcast_rate_limit_enable': {
+                'type': 'bool',
+            },
+            'rate': {
+                'type': 'int',
+            }
+        },
+        'ip': {
+            'type': 'dict',
+            'ipv4_address': {
+                'type': 'str',
+            },
+            'ipv4_netmask': {
+                'type': 'str',
+            },
+            'dhcp': {
+                'type': 'bool',
+            },
+            'control_apps_use_mgmt_port': {
+                'type': 'bool',
+            },
+            'default_gateway': {
+                'type': 'str',
+            }
+        },
+        'secondary_ip': {
+            'type': 'dict',
+            'secondary_ip': {
+                'type': 'bool',
+            },
+            'ipv4_address': {
+                'type': 'str',
+            },
+            'ipv4_netmask': {
+                'type': 'str',
+            },
+            'dhcp': {
+                'type': 'bool',
+            },
+            'control_apps_use_mgmt_port': {
+                'type': 'bool',
+            },
+            'default_gateway': {
+                'type': 'str',
+            }
+        },
+        'ipv6': {
+            'type': 'list',
+            'ipv6_addr': {
+                'type': 'str',
+            },
+            'address_type': {
+                'type': 'str',
+                'choices': ['link-local']
+            },
+            'v6_acl_name': {
+                'type': 'str',
+            },
+            'inbound': {
+                'type': 'bool',
+            },
+            'default_ipv6_gateway': {
+                'type': 'str',
+            }
+        },
+        'action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'packets_input', 'bytes_input',
+                    'received_broadcasts', 'received_multicasts',
+                    'received_unicasts', 'input_errors', 'crc', 'frame',
+                    'input_err_short', 'input_err_long', 'packets_output',
+                    'bytes_output', 'transmitted_broadcasts',
+                    'transmitted_multicasts', 'transmitted_unicasts',
+                    'output_errors', 'collisions'
+                ]
+            }
+        },
+        'lldp': {
+            'type': 'dict',
+            'enable_cfg': {
+                'type': 'dict',
+                'rt_enable': {
+                    'type': 'bool',
+                },
+                'rx': {
+                    'type': 'bool',
+                },
+                'tx': {
+                    'type': 'bool',
+                }
+            },
+            'notification_cfg': {
+                'type': 'dict',
+                'notification': {
+                    'type': 'bool',
+                },
+                'notif_enable': {
+                    'type': 'bool',
+                }
+            },
+            'tx_dot1_cfg': {
+                'type': 'dict',
+                'tx_dot1_tlvs': {
+                    'type': 'bool',
+                },
+                'link_aggregation': {
+                    'type': 'bool',
+                },
+                'vlan': {
+                    'type': 'bool',
+                }
+            },
+            'tx_tlvs_cfg': {
+                'type': 'dict',
+                'tx_tlvs': {
+                    'type': 'bool',
+                },
+                'exclude': {
+                    'type': 'bool',
+                },
+                'management_address': {
+                    'type': 'bool',
+                },
+                'port_description': {
+                    'type': 'bool',
+                },
+                'system_capabilities': {
+                    'type': 'bool',
+                },
+                'system_description': {
+                    'type': 'bool',
+                },
+                'system_name': {
+                    'type': 'bool',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'interface': {
+                'type': 'str',
+            },
+            'state': {
+                'type': 'int',
+            },
+            'line_protocol': {
+                'type': 'str',
+            },
+            'link_type': {
+                'type': 'str',
+                'choices': ['GigabitEthernet', '10Gig', '40Gig']
+            },
+            'mac': {
+                'type': 'str',
+            },
+            'ipv4_addr': {
+                'type': 'str',
+            },
+            'ipv4_mask': {
+                'type': 'str',
+            },
+            'ipv4_default_gateway': {
+                'type': 'str',
+            },
+            'ipv6_addr': {
+                'type': 'str',
+            },
+            'ipv6_prefix': {
+                'type': 'str',
+            },
+            'ipv6_link_local': {
+                'type': 'str',
+            },
+            'ipv6_link_local_prefix': {
+                'type': 'str',
+            },
+            'ipv6_default_gateway': {
+                'type': 'str',
+            },
+            'speed': {
+                'type': 'str',
+            },
+            'duplexity': {
+                'type': 'str',
+            },
+            'mtu': {
+                'type': 'int',
+            },
+            'flow_control': {
+                'type': 'int',
+            },
+            'ipv4_acl': {
+                'type': 'str',
+            },
+            'ipv6_acl': {
+                'type': 'str',
+            },
+            'dhcp_enabled': {
+                'type': 'int',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'packets_input': {
+                'type': 'str',
+            },
+            'bytes_input': {
+                'type': 'str',
+            },
+            'received_broadcasts': {
+                'type': 'str',
+            },
+            'received_multicasts': {
+                'type': 'str',
+            },
+            'received_unicasts': {
+                'type': 'str',
+            },
+            'input_errors': {
+                'type': 'str',
+            },
+            'crc': {
+                'type': 'str',
+            },
+            'frame': {
+                'type': 'str',
+            },
+            'input_err_short': {
+                'type': 'str',
+            },
+            'input_err_long': {
+                'type': 'str',
+            },
+            'packets_output': {
+                'type': 'str',
+            },
+            'bytes_output': {
+                'type': 'str',
+            },
+            'transmitted_broadcasts': {
+                'type': 'str',
+            },
+            'transmitted_multicasts': {
+                'type': 'str',
+            },
+            'transmitted_unicasts': {
+                'type': 'str',
+            },
+            'output_errors': {
+                'type': 'str',
+            },
+            'collisions': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -530,8 +826,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -542,14 +837,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("management", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("management", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -561,12 +856,10 @@ def present(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -581,16 +874,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -599,15 +892,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -644,7 +937,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

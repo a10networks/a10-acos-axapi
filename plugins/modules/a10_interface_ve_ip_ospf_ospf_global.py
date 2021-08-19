@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_interface_ve_ip_ospf_ospf_global
 description:
@@ -240,9 +239,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -254,9 +251,25 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["authentication_cfg", "authentication_key", "bfd_cfg", "cost", "database_filter_cfg", "dead_interval", "disable", "hello_interval", "message_digest_cfg", "mtu", "mtu_ignore", "network", "priority", "retransmit_interval", "transmit_delay", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "authentication_cfg",
+    "authentication_key",
+    "bfd_cfg",
+    "cost",
+    "database_filter_cfg",
+    "dead_interval",
+    "disable",
+    "hello_interval",
+    "message_digest_cfg",
+    "mtu",
+    "mtu_ignore",
+    "network",
+    "priority",
+    "retransmit_interval",
+    "transmit_delay",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -264,37 +277,125 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'authentication_cfg': {'type': 'dict', 'authentication': {'type': 'bool', }, 'value': {'type': 'str', 'choices': ['message-digest', 'null']}},
-        'authentication_key': {'type': 'str', },
-        'bfd_cfg': {'type': 'dict', 'bfd': {'type': 'bool', }, 'disable': {'type': 'bool', }},
-        'cost': {'type': 'int', },
-        'database_filter_cfg': {'type': 'dict', 'database_filter': {'type': 'str', 'choices': ['all']}, 'out': {'type': 'bool', }},
-        'dead_interval': {'type': 'int', },
-        'disable': {'type': 'str', 'choices': ['all']},
-        'hello_interval': {'type': 'int', },
-        'message_digest_cfg': {'type': 'list', 'message_digest_key': {'type': 'int', }, 'md5': {'type': 'dict', 'md5_value': {'type': 'str', }, 'encrypted': {'type': 'str', }}},
-        'mtu': {'type': 'int', },
-        'mtu_ignore': {'type': 'bool', },
-        'network': {'type': 'dict', 'broadcast': {'type': 'bool', }, 'non_broadcast': {'type': 'bool', }, 'point_to_point': {'type': 'bool', }, 'point_to_multipoint': {'type': 'bool', }, 'p2mp_nbma': {'type': 'bool', }},
-        'priority': {'type': 'int', },
-        'retransmit_interval': {'type': 'int', },
-        'transmit_delay': {'type': 'int', },
-        'uuid': {'type': 'str', }
+    rv.update({
+        'authentication_cfg': {
+            'type': 'dict',
+            'authentication': {
+                'type': 'bool',
+            },
+            'value': {
+                'type': 'str',
+                'choices': ['message-digest', 'null']
+            }
+        },
+        'authentication_key': {
+            'type': 'str',
+        },
+        'bfd_cfg': {
+            'type': 'dict',
+            'bfd': {
+                'type': 'bool',
+            },
+            'disable': {
+                'type': 'bool',
+            }
+        },
+        'cost': {
+            'type': 'int',
+        },
+        'database_filter_cfg': {
+            'type': 'dict',
+            'database_filter': {
+                'type': 'str',
+                'choices': ['all']
+            },
+            'out': {
+                'type': 'bool',
+            }
+        },
+        'dead_interval': {
+            'type': 'int',
+        },
+        'disable': {
+            'type': 'str',
+            'choices': ['all']
+        },
+        'hello_interval': {
+            'type': 'int',
+        },
+        'message_digest_cfg': {
+            'type': 'list',
+            'message_digest_key': {
+                'type': 'int',
+            },
+            'md5': {
+                'type': 'dict',
+                'md5_value': {
+                    'type': 'str',
+                },
+                'encrypted': {
+                    'type': 'str',
+                }
+            }
+        },
+        'mtu': {
+            'type': 'int',
+        },
+        'mtu_ignore': {
+            'type': 'bool',
+        },
+        'network': {
+            'type': 'dict',
+            'broadcast': {
+                'type': 'bool',
+            },
+            'non_broadcast': {
+                'type': 'bool',
+            },
+            'point_to_point': {
+                'type': 'bool',
+            },
+            'point_to_multipoint': {
+                'type': 'bool',
+            },
+            'p2mp_nbma': {
+                'type': 'bool',
+            }
+        },
+        'priority': {
+            'type': 'int',
+        },
+        'retransmit_interval': {
+            'type': 'int',
+        },
+        'transmit_delay': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        }
     })
     # Parent keys
-    rv.update(dict(
-        ve_ifnum=dict(type='str', required=True),
-    ))
+    rv.update(dict(ve_ifnum=dict(type='str', required=True), ))
     return rv
 
 
@@ -342,8 +443,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -354,14 +454,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("ospf-global", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("ospf-global", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -395,12 +495,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -415,16 +513,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -433,15 +531,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -475,7 +573,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

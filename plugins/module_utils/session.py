@@ -46,11 +46,16 @@ class Session(object):
             self.close()
 
         resp = self.http_client.post(url, payload)
-        if resp.status_code == 204:
-            resp = None
-        else:
+        # Validate json response
+        try:
             resp = resp.json()
-            self.http_client.eval_resp(resp, 'POST', url, self.header)
+        except ValueError as e:
+            # The response is not JSON but it still succeeded.
+            if resp.status_code in [200, 204]:
+                return resp.text
+            else:
+                raise e
+        self.http_client.eval_resp(resp, 'POST', url, self.header)
 
         if "authresponse" in resp:
             self.session_id = str(resp['authresponse']['signature'])
@@ -67,9 +72,16 @@ class Session(object):
         self.session_id = None
         url = '/axapi/v3/logoff'
         resp = self.http_client.post(url, headers=self.header)
-        if resp.status_code == 204:
-            resp = None
-        else:
+
+        # Validate json response
+        try:
             resp = resp.json()
-            self.http_client.eval_resp(resp, 'POST', url, self.header)
+        except ValueError as e:
+            # The response is not JSON but it still succeeded.
+            if resp.status_code in [200, 204]:
+                return resp.text
+            else:
+                raise e
+
+        self.http_client.eval_resp(resp, 'POST', url, self.header)
         return resp

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_aam_authentication_service_group
 description:
@@ -314,9 +313,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -328,9 +325,20 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["health_check", "health_check_disable", "lb_method", "member_list", "name", "oper", "protocol", "sampling_enable", "stats", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "health_check",
+    "health_check_disable",
+    "lb_method",
+    "member_list",
+    "name",
+    "oper",
+    "protocol",
+    "sampling_enable",
+    "stats",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -338,27 +346,393 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'protocol': {'type': 'str', 'choices': ['tcp', 'udp']},
-        'lb_method': {'type': 'str', 'choices': ['round-robin']},
-        'health_check': {'type': 'str', },
-        'health_check_disable': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'server_selection_fail_drop', 'server_selection_fail_reset', 'service_peak_conn', 'service_healthy_host', 'service_unhealthy_host', 'service_req_count', 'service_resp_count', 'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx', 'service_resp_5xx', 'service_curr_conn_overflow']}},
-        'member_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'port': {'type': 'int', 'required': True, }, 'member_state': {'type': 'str', 'choices': ['enable', 'disable']}, 'member_priority': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn', 'curr_conn_overflow']}}},
-        'oper': {'type': 'dict', 'state': {'type': 'str', 'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']}, 'servers_up': {'type': 'int', }, 'servers_down': {'type': 'int', }, 'servers_disable': {'type': 'int', }, 'servers_total': {'type': 'int', }, 'stateless_current_rate': {'type': 'int', }, 'stateless_current_usage': {'type': 'int', }, 'stateless_state': {'type': 'int', }, 'stateless_type': {'type': 'int', }, 'hm_dsr_enable_all_vip': {'type': 'int', }, 'pri_affinity_priority': {'type': 'int', }, 'filter': {'type': 'str', 'choices': ['sgm-sort-config']}, 'sgm_list': {'type': 'list', 'sgm_name': {'type': 'str', }, 'sgm_port': {'type': 'int', }}, 'name': {'type': 'str', 'required': True, }, 'member_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'port': {'type': 'int', 'required': True, }, 'oper': {'type': 'dict', 'state': {'type': 'str', 'choices': ['UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE']}, 'hm_key': {'type': 'int', }, 'hm_index': {'type': 'int', }, 'drs_list': {'type': 'list', 'drs_name': {'type': 'str', }, 'drs_state': {'type': 'str', }, 'drs_hm_key': {'type': 'int', }, 'drs_hm_index': {'type': 'int', }, 'drs_port': {'type': 'int', }, 'drs_priority': {'type': 'int', }, 'drs_curr_conn': {'type': 'int', }, 'drs_pers_conn': {'type': 'int', }, 'drs_total_conn': {'type': 'int', }, 'drs_curr_req': {'type': 'int', }, 'drs_total_req': {'type': 'int', }, 'drs_total_req_succ': {'type': 'int', }, 'drs_rev_pkts': {'type': 'int', }, 'drs_fwd_pkts': {'type': 'int', }, 'drs_rev_bts': {'type': 'int', }, 'drs_fwd_bts': {'type': 'int', }, 'drs_peak_conn': {'type': 'int', }, 'drs_rsp_time': {'type': 'int', }, 'drs_frsp_time': {'type': 'int', }, 'drs_srsp_time': {'type': 'int', }}, 'alt_list': {'type': 'list', 'alt_name': {'type': 'str', }, 'alt_port': {'type': 'int', }, 'alt_state': {'type': 'str', }, 'alt_curr_conn': {'type': 'int', }, 'alt_total_conn': {'type': 'int', }, 'alt_rev_pkts': {'type': 'int', }, 'alt_fwd_pkts': {'type': 'int', }, 'alt_peak_conn': {'type': 'int', }}}}},
-        'stats': {'type': 'dict', 'server_selection_fail_drop': {'type': 'str', }, 'server_selection_fail_reset': {'type': 'str', }, 'service_peak_conn': {'type': 'str', }, 'service_healthy_host': {'type': 'str', }, 'service_unhealthy_host': {'type': 'str', }, 'service_req_count': {'type': 'str', }, 'service_resp_count': {'type': 'str', }, 'service_resp_2xx': {'type': 'str', }, 'service_resp_3xx': {'type': 'str', }, 'service_resp_4xx': {'type': 'str', }, 'service_resp_5xx': {'type': 'str', }, 'service_curr_conn_overflow': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }, 'member_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'port': {'type': 'int', 'required': True, }, 'stats': {'type': 'dict', 'curr_conn': {'type': 'str', }, 'total_fwd_bytes': {'type': 'str', }, 'total_fwd_pkts': {'type': 'str', }, 'total_rev_bytes': {'type': 'str', }, 'total_rev_pkts': {'type': 'str', }, 'total_conn': {'type': 'str', }, 'total_rev_pkts_inspected': {'type': 'str', }, 'total_rev_pkts_inspected_status_code_2xx': {'type': 'str', }, 'total_rev_pkts_inspected_status_code_non_5xx': {'type': 'str', }, 'curr_req': {'type': 'str', }, 'total_req': {'type': 'str', }, 'total_req_succ': {'type': 'str', }, 'peak_conn': {'type': 'str', }, 'response_time': {'type': 'str', }, 'fastest_rsp_time': {'type': 'str', }, 'slowest_rsp_time': {'type': 'str', }, 'curr_ssl_conn': {'type': 'str', }, 'total_ssl_conn': {'type': 'str', }, 'curr_conn_overflow': {'type': 'str', }}}}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'protocol': {
+            'type': 'str',
+            'choices': ['tcp', 'udp']
+        },
+        'lb_method': {
+            'type': 'str',
+            'choices': ['round-robin']
+        },
+        'health_check': {
+            'type': 'str',
+        },
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'server_selection_fail_drop',
+                    'server_selection_fail_reset', 'service_peak_conn',
+                    'service_healthy_host', 'service_unhealthy_host',
+                    'service_req_count', 'service_resp_count',
+                    'service_resp_2xx', 'service_resp_3xx', 'service_resp_4xx',
+                    'service_resp_5xx', 'service_curr_conn_overflow'
+                ]
+            }
+        },
+        'member_list': {
+            'type': 'list',
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'port': {
+                'type': 'int',
+                'required': True,
+            },
+            'member_state': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'member_priority': {
+                'type': 'int',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'total_fwd_bytes', 'total_fwd_pkts',
+                        'total_rev_bytes', 'total_rev_pkts', 'total_conn',
+                        'total_rev_pkts_inspected',
+                        'total_rev_pkts_inspected_status_code_2xx',
+                        'total_rev_pkts_inspected_status_code_non_5xx',
+                        'curr_req', 'total_req', 'total_req_succ', 'peak_conn',
+                        'response_time', 'fastest_rsp_time',
+                        'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn',
+                        'curr_conn_overflow'
+                    ]
+                }
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+                'choices': ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
+            },
+            'servers_up': {
+                'type': 'int',
+            },
+            'servers_down': {
+                'type': 'int',
+            },
+            'servers_disable': {
+                'type': 'int',
+            },
+            'servers_total': {
+                'type': 'int',
+            },
+            'stateless_current_rate': {
+                'type': 'int',
+            },
+            'stateless_current_usage': {
+                'type': 'int',
+            },
+            'stateless_state': {
+                'type': 'int',
+            },
+            'stateless_type': {
+                'type': 'int',
+            },
+            'hm_dsr_enable_all_vip': {
+                'type': 'int',
+            },
+            'pri_affinity_priority': {
+                'type': 'int',
+            },
+            'filter': {
+                'type': 'str',
+                'choices': ['sgm-sort-config']
+            },
+            'sgm_list': {
+                'type': 'list',
+                'sgm_name': {
+                    'type': 'str',
+                },
+                'sgm_port': {
+                    'type': 'int',
+                }
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'member_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'port': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'oper': {
+                    'type': 'dict',
+                    'state': {
+                        'type':
+                        'str',
+                        'choices': [
+                            'UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN',
+                            'DIS-MAINTENANCE'
+                        ]
+                    },
+                    'hm_key': {
+                        'type': 'int',
+                    },
+                    'hm_index': {
+                        'type': 'int',
+                    },
+                    'drs_list': {
+                        'type': 'list',
+                        'drs_name': {
+                            'type': 'str',
+                        },
+                        'drs_state': {
+                            'type': 'str',
+                        },
+                        'drs_hm_key': {
+                            'type': 'int',
+                        },
+                        'drs_hm_index': {
+                            'type': 'int',
+                        },
+                        'drs_port': {
+                            'type': 'int',
+                        },
+                        'drs_priority': {
+                            'type': 'int',
+                        },
+                        'drs_curr_conn': {
+                            'type': 'int',
+                        },
+                        'drs_pers_conn': {
+                            'type': 'int',
+                        },
+                        'drs_total_conn': {
+                            'type': 'int',
+                        },
+                        'drs_curr_req': {
+                            'type': 'int',
+                        },
+                        'drs_total_req': {
+                            'type': 'int',
+                        },
+                        'drs_total_req_succ': {
+                            'type': 'int',
+                        },
+                        'drs_rev_pkts': {
+                            'type': 'int',
+                        },
+                        'drs_fwd_pkts': {
+                            'type': 'int',
+                        },
+                        'drs_rev_bts': {
+                            'type': 'int',
+                        },
+                        'drs_fwd_bts': {
+                            'type': 'int',
+                        },
+                        'drs_peak_conn': {
+                            'type': 'int',
+                        },
+                        'drs_rsp_time': {
+                            'type': 'int',
+                        },
+                        'drs_frsp_time': {
+                            'type': 'int',
+                        },
+                        'drs_srsp_time': {
+                            'type': 'int',
+                        }
+                    },
+                    'alt_list': {
+                        'type': 'list',
+                        'alt_name': {
+                            'type': 'str',
+                        },
+                        'alt_port': {
+                            'type': 'int',
+                        },
+                        'alt_state': {
+                            'type': 'str',
+                        },
+                        'alt_curr_conn': {
+                            'type': 'int',
+                        },
+                        'alt_total_conn': {
+                            'type': 'int',
+                        },
+                        'alt_rev_pkts': {
+                            'type': 'int',
+                        },
+                        'alt_fwd_pkts': {
+                            'type': 'int',
+                        },
+                        'alt_peak_conn': {
+                            'type': 'int',
+                        }
+                    }
+                }
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'server_selection_fail_drop': {
+                'type': 'str',
+            },
+            'server_selection_fail_reset': {
+                'type': 'str',
+            },
+            'service_peak_conn': {
+                'type': 'str',
+            },
+            'service_healthy_host': {
+                'type': 'str',
+            },
+            'service_unhealthy_host': {
+                'type': 'str',
+            },
+            'service_req_count': {
+                'type': 'str',
+            },
+            'service_resp_count': {
+                'type': 'str',
+            },
+            'service_resp_2xx': {
+                'type': 'str',
+            },
+            'service_resp_3xx': {
+                'type': 'str',
+            },
+            'service_resp_4xx': {
+                'type': 'str',
+            },
+            'service_resp_5xx': {
+                'type': 'str',
+            },
+            'service_curr_conn_overflow': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'member_list': {
+                'type': 'list',
+                'name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'port': {
+                    'type': 'int',
+                    'required': True,
+                },
+                'stats': {
+                    'type': 'dict',
+                    'curr_conn': {
+                        'type': 'str',
+                    },
+                    'total_fwd_bytes': {
+                        'type': 'str',
+                    },
+                    'total_fwd_pkts': {
+                        'type': 'str',
+                    },
+                    'total_rev_bytes': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts': {
+                        'type': 'str',
+                    },
+                    'total_conn': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_status_code_2xx': {
+                        'type': 'str',
+                    },
+                    'total_rev_pkts_inspected_status_code_non_5xx': {
+                        'type': 'str',
+                    },
+                    'curr_req': {
+                        'type': 'str',
+                    },
+                    'total_req': {
+                        'type': 'str',
+                    },
+                    'total_req_succ': {
+                        'type': 'str',
+                    },
+                    'peak_conn': {
+                        'type': 'str',
+                    },
+                    'response_time': {
+                        'type': 'str',
+                    },
+                    'fastest_rsp_time': {
+                        'type': 'str',
+                    },
+                    'slowest_rsp_time': {
+                        'type': 'str',
+                    },
+                    'curr_ssl_conn': {
+                        'type': 'str',
+                    },
+                    'total_ssl_conn': {
+                        'type': 'str',
+                    },
+                    'curr_conn_overflow': {
+                        'type': 'str',
+                    }
+                }
+            }
+        }
     })
     return rv
 
@@ -407,8 +781,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -419,14 +792,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("service-group", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("service-group", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -460,12 +833,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -480,16 +851,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -498,15 +869,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -546,7 +917,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev
 description:
@@ -257,9 +256,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -271,9 +268,27 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["admin_preference", "auto_detect", "auto_map", "client_ip", "device_name", "gateway_ip_addr", "health_check_action", "ip_address", "max_client", "msg_format_acos_2x", "oper", "proto_aging_fast", "proto_aging_time", "proto_compatible", "rdt_value", "user_tag", "uuid", "vip_server", ]
+AVAILABLE_PROPERTIES = [
+    "admin_preference",
+    "auto_detect",
+    "auto_map",
+    "client_ip",
+    "device_name",
+    "gateway_ip_addr",
+    "health_check_action",
+    "ip_address",
+    "max_client",
+    "msg_format_acos_2x",
+    "oper",
+    "proto_aging_fast",
+    "proto_aging_time",
+    "proto_compatible",
+    "rdt_value",
+    "user_tag",
+    "uuid",
+    "vip_server",
+]
 
 
 def get_default_argspec():
@@ -281,39 +296,285 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'device_name': {'type': 'str', 'required': True, },
-        'ip_address': {'type': 'str', },
-        'admin_preference': {'type': 'int', },
-        'client_ip': {'type': 'str', },
-        'rdt_value': {'type': 'int', },
-        'auto_detect': {'type': 'str', 'choices': ['ip', 'port', 'ip-and-port', 'disabled']},
-        'auto_map': {'type': 'bool', },
-        'max_client': {'type': 'int', },
-        'proto_aging_time': {'type': 'int', },
-        'proto_aging_fast': {'type': 'bool', },
-        'health_check_action': {'type': 'str', 'choices': ['health-check', 'health-check-disable']},
-        'gateway_ip_addr': {'type': 'str', },
-        'proto_compatible': {'type': 'bool', },
-        'msg_format_acos_2x': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'vip_server': {'type': 'dict', 'vip_server_v4_list': {'type': 'list', 'ipv4': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'dev_vip_hits']}}}, 'vip_server_v6_list': {'type': 'list', 'ipv6': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'dev_vip_hits']}}}, 'vip_server_name_list': {'type': 'list', 'vip_name': {'type': 'str', 'required': True, }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'dev_vip_hits']}}}},
-        'oper': {'type': 'dict', 'dev_name': {'type': 'str', }, 'dev_ip': {'type': 'str', }, 'dev_attr': {'type': 'str', }, 'dev_admin_preference': {'type': 'int', }, 'dev_session_num': {'type': 'int', }, 'dev_session_util': {'type': 'int', }, 'dev_gw_state': {'type': 'str', }, 'dev_ip_cnt': {'type': 'int', }, 'dev_state': {'type': 'str', }, 'client_ldns_list': {'type': 'list', 'client_ip': {'type': 'str', }, 'age': {'type': 'int', }, 'ntype': {'type': 'str', }, 'rdt_sample1': {'type': 'int', }, 'rdt_sample2': {'type': 'int', }, 'rdt_sample3': {'type': 'int', }, 'rdt_sample4': {'type': 'int', }, 'rdt_sample5': {'type': 'int', }, 'rdt_sample6': {'type': 'int', }, 'rdt_sample7': {'type': 'int', }, 'rdt_sample8': {'type': 'int', }}, 'device_name': {'type': 'str', 'required': True, }, 'vip_server': {'type': 'dict', 'oper': {'type': 'dict', }, 'vip_server_v4_list': {'type': 'list', 'ipv4': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'dev_vip_addr': {'type': 'str', }, 'dev_vip_state': {'type': 'str', }, 'dev_vip_port_list': {'type': 'list', 'dev_vip_port_num': {'type': 'int', }, 'dev_vip_port_state': {'type': 'str', }}}}, 'vip_server_v6_list': {'type': 'list', 'ipv6': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'dev_vip_addr': {'type': 'str', }, 'dev_vip_state': {'type': 'str', }, 'dev_vip_port_list': {'type': 'list', 'dev_vip_port_num': {'type': 'int', }, 'dev_vip_port_state': {'type': 'str', }}}}, 'vip_server_name_list': {'type': 'list', 'vip_name': {'type': 'str', 'required': True, }, 'oper': {'type': 'dict', 'dev_vip_addr': {'type': 'str', }, 'dev_vip_state': {'type': 'str', }, 'dev_vip_port_list': {'type': 'list', 'dev_vip_port_num': {'type': 'int', }, 'dev_vip_port_state': {'type': 'str', }}}}}}
+    rv.update({
+        'device_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'ip_address': {
+            'type': 'str',
+        },
+        'admin_preference': {
+            'type': 'int',
+        },
+        'client_ip': {
+            'type': 'str',
+        },
+        'rdt_value': {
+            'type': 'int',
+        },
+        'auto_detect': {
+            'type': 'str',
+            'choices': ['ip', 'port', 'ip-and-port', 'disabled']
+        },
+        'auto_map': {
+            'type': 'bool',
+        },
+        'max_client': {
+            'type': 'int',
+        },
+        'proto_aging_time': {
+            'type': 'int',
+        },
+        'proto_aging_fast': {
+            'type': 'bool',
+        },
+        'health_check_action': {
+            'type': 'str',
+            'choices': ['health-check', 'health-check-disable']
+        },
+        'gateway_ip_addr': {
+            'type': 'str',
+        },
+        'proto_compatible': {
+            'type': 'bool',
+        },
+        'msg_format_acos_2x': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'vip_server': {
+            'type': 'dict',
+            'vip_server_v4_list': {
+                'type': 'list',
+                'ipv4': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                }
+            },
+            'vip_server_v6_list': {
+                'type': 'list',
+                'ipv6': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                }
+            },
+            'vip_server_name_list': {
+                'type': 'list',
+                'vip_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                }
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'dev_name': {
+                'type': 'str',
+            },
+            'dev_ip': {
+                'type': 'str',
+            },
+            'dev_attr': {
+                'type': 'str',
+            },
+            'dev_admin_preference': {
+                'type': 'int',
+            },
+            'dev_session_num': {
+                'type': 'int',
+            },
+            'dev_session_util': {
+                'type': 'int',
+            },
+            'dev_gw_state': {
+                'type': 'str',
+            },
+            'dev_ip_cnt': {
+                'type': 'int',
+            },
+            'dev_state': {
+                'type': 'str',
+            },
+            'client_ldns_list': {
+                'type': 'list',
+                'client_ip': {
+                    'type': 'str',
+                },
+                'age': {
+                    'type': 'int',
+                },
+                'ntype': {
+                    'type': 'str',
+                },
+                'rdt_sample1': {
+                    'type': 'int',
+                },
+                'rdt_sample2': {
+                    'type': 'int',
+                },
+                'rdt_sample3': {
+                    'type': 'int',
+                },
+                'rdt_sample4': {
+                    'type': 'int',
+                },
+                'rdt_sample5': {
+                    'type': 'int',
+                },
+                'rdt_sample6': {
+                    'type': 'int',
+                },
+                'rdt_sample7': {
+                    'type': 'int',
+                },
+                'rdt_sample8': {
+                    'type': 'int',
+                }
+            },
+            'device_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'vip_server': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                },
+                'vip_server_v4_list': {
+                    'type': 'list',
+                    'ipv4': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
+                    }
+                },
+                'vip_server_v6_list': {
+                    'type': 'list',
+                    'ipv6': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
+                    }
+                },
+                'vip_server_name_list': {
+                    'type': 'list',
+                    'vip_name': {
+                        'type': 'str',
+                        'required': True,
+                    },
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
+                    }
+                }
+            }
+        }
     })
     # Parent keys
-    rv.update(dict(
-        site_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(site_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -363,8 +624,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -375,8 +635,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -416,12 +675,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -436,16 +693,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -454,15 +711,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -499,7 +756,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

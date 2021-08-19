@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_cgnv6_ddos_protection
 description:
@@ -369,9 +368,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -383,9 +380,20 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable_nat_ip_by_bgp", "ip_entries", "l4_entries", "logging", "max_hw_entries", "packets_per_second", "sampling_enable", "stats", "toggle", "uuid", "zone", ]
+AVAILABLE_PROPERTIES = [
+    "disable_nat_ip_by_bgp",
+    "ip_entries",
+    "l4_entries",
+    "logging",
+    "max_hw_entries",
+    "packets_per_second",
+    "sampling_enable",
+    "stats",
+    "toggle",
+    "uuid",
+    "zone",
+]
 
 
 def get_default_argspec():
@@ -393,27 +401,237 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'toggle': {'type': 'str', 'choices': ['enable', 'disable']},
-        'logging': {'type': 'dict', 'logging_toggle': {'type': 'str', 'choices': ['enable', 'disable']}},
-        'packets_per_second': {'type': 'dict', 'ip': {'type': 'int', }, 'action': {'type': 'dict', 'action_type': {'type': 'str', 'choices': ['log', 'drop', 'redistribute-route']}, 'route_map': {'type': 'str', }, 'expiration': {'type': 'int', }, 'timer_multiply_max': {'type': 'int', }, 'remove_wait_timer': {'type': 'int', }}, 'tcp': {'type': 'int', }, 'udp': {'type': 'int', }, 'other': {'type': 'int', }, 'include_existing_session': {'type': 'bool', }},
-        'max_hw_entries': {'type': 'int', },
-        'zone': {'type': 'str', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'l3_entry_added', 'l3_entry_deleted', 'l3_entry_added_to_bgp', 'l3_entry_removed_from_bgp', 'l3_entry_added_to_hw', 'l3_entry_removed_from_hw', 'l3_entry_too_many', 'l3_entry_match_drop', 'l3_entry_match_drop_hw', 'l3_entry_drop_max_hw_exceeded', 'l4_entry_added', 'l4_entry_deleted', 'l4_entry_added_to_hw', 'l4_entry_removed_from_hw', 'l4_hw_out_of_entries', 'l4_entry_match_drop', 'l4_entry_match_drop_hw', 'l4_entry_drop_max_hw_exceeded', 'l4_entry_list_alloc', 'l4_entry_list_free', 'l4_entry_list_alloc_failure', 'ip_node_alloc', 'ip_node_free', 'ip_node_alloc_failure', 'ip_port_block_alloc', 'ip_port_block_free', 'ip_port_block_alloc_failure', 'ip_other_block_alloc', 'ip_other_block_free', 'ip_other_block_alloc_failure', 'entry_added_shadow', 'entry_invalidated', 'l3_entry_add_to_bgp_failure', 'l3_entry_remove_from_bgp_failure', 'l3_entry_add_to_hw_failure']}},
-        'l4_entries': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'ip_entries': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'disable_nat_ip_by_bgp': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'stats': {'type': 'dict', 'l3_entry_added': {'type': 'str', }, 'l3_entry_deleted': {'type': 'str', }, 'l3_entry_added_to_bgp': {'type': 'str', }, 'l3_entry_removed_from_bgp': {'type': 'str', }, 'l3_entry_added_to_hw': {'type': 'str', }, 'l3_entry_removed_from_hw': {'type': 'str', }, 'l3_entry_too_many': {'type': 'str', }, 'l3_entry_match_drop': {'type': 'str', }, 'l3_entry_match_drop_hw': {'type': 'str', }, 'l3_entry_drop_max_hw_exceeded': {'type': 'str', }, 'l4_entry_added': {'type': 'str', }, 'l4_entry_deleted': {'type': 'str', }, 'l4_entry_added_to_hw': {'type': 'str', }, 'l4_entry_removed_from_hw': {'type': 'str', }, 'l4_hw_out_of_entries': {'type': 'str', }, 'l4_entry_match_drop': {'type': 'str', }, 'l4_entry_match_drop_hw': {'type': 'str', }, 'l4_entry_drop_max_hw_exceeded': {'type': 'str', }, 'l4_entry_list_alloc': {'type': 'str', }, 'l4_entry_list_free': {'type': 'str', }, 'l4_entry_list_alloc_failure': {'type': 'str', }, 'ip_node_alloc': {'type': 'str', }, 'ip_node_free': {'type': 'str', }, 'ip_node_alloc_failure': {'type': 'str', }, 'ip_port_block_alloc': {'type': 'str', }, 'ip_port_block_free': {'type': 'str', }, 'ip_port_block_alloc_failure': {'type': 'str', }, 'ip_other_block_alloc': {'type': 'str', }, 'ip_other_block_free': {'type': 'str', }, 'ip_other_block_alloc_failure': {'type': 'str', }, 'entry_added_shadow': {'type': 'str', }, 'entry_invalidated': {'type': 'str', }, 'l3_entry_add_to_bgp_failure': {'type': 'str', }, 'l3_entry_remove_from_bgp_failure': {'type': 'str', }, 'l3_entry_add_to_hw_failure': {'type': 'str', }}
+    rv.update({
+        'toggle': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'logging': {
+            'type': 'dict',
+            'logging_toggle': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            }
+        },
+        'packets_per_second': {
+            'type': 'dict',
+            'ip': {
+                'type': 'int',
+            },
+            'action': {
+                'type': 'dict',
+                'action_type': {
+                    'type': 'str',
+                    'choices': ['log', 'drop', 'redistribute-route']
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'expiration': {
+                    'type': 'int',
+                },
+                'timer_multiply_max': {
+                    'type': 'int',
+                },
+                'remove_wait_timer': {
+                    'type': 'int',
+                }
+            },
+            'tcp': {
+                'type': 'int',
+            },
+            'udp': {
+                'type': 'int',
+            },
+            'other': {
+                'type': 'int',
+            },
+            'include_existing_session': {
+                'type': 'bool',
+            }
+        },
+        'max_hw_entries': {
+            'type': 'int',
+        },
+        'zone': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'l3_entry_added', 'l3_entry_deleted',
+                    'l3_entry_added_to_bgp', 'l3_entry_removed_from_bgp',
+                    'l3_entry_added_to_hw', 'l3_entry_removed_from_hw',
+                    'l3_entry_too_many', 'l3_entry_match_drop',
+                    'l3_entry_match_drop_hw', 'l3_entry_drop_max_hw_exceeded',
+                    'l4_entry_added', 'l4_entry_deleted',
+                    'l4_entry_added_to_hw', 'l4_entry_removed_from_hw',
+                    'l4_hw_out_of_entries', 'l4_entry_match_drop',
+                    'l4_entry_match_drop_hw', 'l4_entry_drop_max_hw_exceeded',
+                    'l4_entry_list_alloc', 'l4_entry_list_free',
+                    'l4_entry_list_alloc_failure', 'ip_node_alloc',
+                    'ip_node_free', 'ip_node_alloc_failure',
+                    'ip_port_block_alloc', 'ip_port_block_free',
+                    'ip_port_block_alloc_failure', 'ip_other_block_alloc',
+                    'ip_other_block_free', 'ip_other_block_alloc_failure',
+                    'entry_added_shadow', 'entry_invalidated',
+                    'l3_entry_add_to_bgp_failure',
+                    'l3_entry_remove_from_bgp_failure',
+                    'l3_entry_add_to_hw_failure'
+                ]
+            }
+        },
+        'l4_entries': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'ip_entries': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'disable_nat_ip_by_bgp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'l3_entry_added': {
+                'type': 'str',
+            },
+            'l3_entry_deleted': {
+                'type': 'str',
+            },
+            'l3_entry_added_to_bgp': {
+                'type': 'str',
+            },
+            'l3_entry_removed_from_bgp': {
+                'type': 'str',
+            },
+            'l3_entry_added_to_hw': {
+                'type': 'str',
+            },
+            'l3_entry_removed_from_hw': {
+                'type': 'str',
+            },
+            'l3_entry_too_many': {
+                'type': 'str',
+            },
+            'l3_entry_match_drop': {
+                'type': 'str',
+            },
+            'l3_entry_match_drop_hw': {
+                'type': 'str',
+            },
+            'l3_entry_drop_max_hw_exceeded': {
+                'type': 'str',
+            },
+            'l4_entry_added': {
+                'type': 'str',
+            },
+            'l4_entry_deleted': {
+                'type': 'str',
+            },
+            'l4_entry_added_to_hw': {
+                'type': 'str',
+            },
+            'l4_entry_removed_from_hw': {
+                'type': 'str',
+            },
+            'l4_hw_out_of_entries': {
+                'type': 'str',
+            },
+            'l4_entry_match_drop': {
+                'type': 'str',
+            },
+            'l4_entry_match_drop_hw': {
+                'type': 'str',
+            },
+            'l4_entry_drop_max_hw_exceeded': {
+                'type': 'str',
+            },
+            'l4_entry_list_alloc': {
+                'type': 'str',
+            },
+            'l4_entry_list_free': {
+                'type': 'str',
+            },
+            'l4_entry_list_alloc_failure': {
+                'type': 'str',
+            },
+            'ip_node_alloc': {
+                'type': 'str',
+            },
+            'ip_node_free': {
+                'type': 'str',
+            },
+            'ip_node_alloc_failure': {
+                'type': 'str',
+            },
+            'ip_port_block_alloc': {
+                'type': 'str',
+            },
+            'ip_port_block_free': {
+                'type': 'str',
+            },
+            'ip_port_block_alloc_failure': {
+                'type': 'str',
+            },
+            'ip_other_block_alloc': {
+                'type': 'str',
+            },
+            'ip_other_block_free': {
+                'type': 'str',
+            },
+            'ip_other_block_alloc_failure': {
+                'type': 'str',
+            },
+            'entry_added_shadow': {
+                'type': 'str',
+            },
+            'entry_invalidated': {
+                'type': 'str',
+            },
+            'l3_entry_add_to_bgp_failure': {
+                'type': 'str',
+            },
+            'l3_entry_remove_from_bgp_failure': {
+                'type': 'str',
+            },
+            'l3_entry_add_to_hw_failure': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -460,8 +678,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -472,14 +689,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("ddos-protection", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("ddos-protection", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -513,12 +730,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -533,16 +748,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -551,15 +766,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -596,7 +811,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

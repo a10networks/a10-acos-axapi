@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_router_bgp_neighbor_peer_group_neighbor
 description:
@@ -392,9 +391,7 @@ EXAMPLES = """
 
 import copy
 
-# standard ansible module imports
 from ansible.module_utils.basic import AnsibleModule
-
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     errors as a10_ex
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
@@ -406,9 +403,59 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["activate", "advertisement_interval", "allowas_in", "allowas_in_count", "as_origination_interval", "collide_established", "connect", "default_originate", "description", "disallow_infinite_holdtime", "distribute_lists", "dont_capability_negotiate", "dynamic", "ebgp_multihop", "ebgp_multihop_hop_count", "enforce_multihop", "ethernet", "inbound", "lif", "loopback", "maximum_prefix", "maximum_prefix_thres", "neighbor_filter_lists", "neighbor_prefix_lists", "neighbor_route_map_lists", "next_hop_self", "override_capability", "pass_encrypted", "pass_value", "passive", "peer_group", "peer_group_key", "peer_group_remote_as", "prefix_list_direction", "remove_private_as", "route_map", "route_refresh", "send_community_val", "shutdown", "strict_capability_match", "timers_holdtime", "timers_keepalive", "trunk", "tunnel", "unsuppress_map", "update_source_ip", "update_source_ipv6", "uuid", "ve", "weight", ]
+AVAILABLE_PROPERTIES = [
+    "activate",
+    "advertisement_interval",
+    "allowas_in",
+    "allowas_in_count",
+    "as_origination_interval",
+    "collide_established",
+    "connect",
+    "default_originate",
+    "description",
+    "disallow_infinite_holdtime",
+    "distribute_lists",
+    "dont_capability_negotiate",
+    "dynamic",
+    "ebgp_multihop",
+    "ebgp_multihop_hop_count",
+    "enforce_multihop",
+    "ethernet",
+    "inbound",
+    "lif",
+    "loopback",
+    "maximum_prefix",
+    "maximum_prefix_thres",
+    "neighbor_filter_lists",
+    "neighbor_prefix_lists",
+    "neighbor_route_map_lists",
+    "next_hop_self",
+    "override_capability",
+    "pass_encrypted",
+    "pass_value",
+    "passive",
+    "peer_group",
+    "peer_group_key",
+    "peer_group_remote_as",
+    "prefix_list_direction",
+    "remove_private_as",
+    "route_map",
+    "route_refresh",
+    "send_community_val",
+    "shutdown",
+    "strict_capability_match",
+    "timers_holdtime",
+    "timers_keepalive",
+    "trunk",
+    "tunnel",
+    "unsuppress_map",
+    "update_source_ip",
+    "update_source_ipv6",
+    "uuid",
+    "ve",
+    "weight",
+]
 
 
 def get_default_argspec():
@@ -416,71 +463,210 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'peer_group': {'type': 'str', 'required': True, },
-        'peer_group_key': {'type': 'bool', },
-        'peer_group_remote_as': {'type': 'int', },
-        'activate': {'type': 'bool', },
-        'advertisement_interval': {'type': 'int', },
-        'allowas_in': {'type': 'bool', },
-        'allowas_in_count': {'type': 'int', },
-        'as_origination_interval': {'type': 'int', },
-        'dynamic': {'type': 'bool', },
-        'prefix_list_direction': {'type': 'str', 'choices': ['both', 'receive', 'send']},
-        'route_refresh': {'type': 'bool', },
-        'collide_established': {'type': 'bool', },
-        'default_originate': {'type': 'bool', },
-        'route_map': {'type': 'str', },
-        'description': {'type': 'str', },
-        'disallow_infinite_holdtime': {'type': 'bool', },
-        'distribute_lists': {'type': 'list', 'distribute_list': {'type': 'str', }, 'distribute_list_direction': {'type': 'str', 'choices': ['in', 'out']}},
-        'dont_capability_negotiate': {'type': 'bool', },
-        'ebgp_multihop': {'type': 'bool', },
-        'ebgp_multihop_hop_count': {'type': 'int', },
-        'enforce_multihop': {'type': 'bool', },
-        'neighbor_filter_lists': {'type': 'list', 'filter_list': {'type': 'str', }, 'filter_list_direction': {'type': 'str', 'choices': ['in', 'out']}},
-        'maximum_prefix': {'type': 'int', },
-        'maximum_prefix_thres': {'type': 'int', },
-        'next_hop_self': {'type': 'bool', },
-        'override_capability': {'type': 'bool', },
-        'pass_value': {'type': 'str', },
-        'pass_encrypted': {'type': 'str', },
-        'passive': {'type': 'bool', },
-        'neighbor_prefix_lists': {'type': 'list', 'nbr_prefix_list': {'type': 'str', }, 'nbr_prefix_list_direction': {'type': 'str', 'choices': ['in', 'out']}},
-        'remove_private_as': {'type': 'bool', },
-        'neighbor_route_map_lists': {'type': 'list', 'nbr_route_map': {'type': 'str', }, 'nbr_rmap_direction': {'type': 'str', 'choices': ['in', 'out']}},
-        'send_community_val': {'type': 'str', 'choices': ['both', 'none', 'standard', 'extended']},
-        'inbound': {'type': 'bool', },
-        'shutdown': {'type': 'bool', },
-        'strict_capability_match': {'type': 'bool', },
-        'timers_keepalive': {'type': 'int', },
-        'timers_holdtime': {'type': 'int', },
-        'connect': {'type': 'int', },
-        'unsuppress_map': {'type': 'str', },
-        'update_source_ip': {'type': 'str', },
-        'update_source_ipv6': {'type': 'str', },
-        'ethernet': {'type': 'str', },
-        'loopback': {'type': 'str', },
-        've': {'type': 'str', },
-        'trunk': {'type': 'str', },
-        'lif': {'type': 'int', },
-        'tunnel': {'type': 'str', },
-        'weight': {'type': 'int', },
-        'uuid': {'type': 'str', }
+    rv.update({
+        'peer_group': {
+            'type': 'str',
+            'required': True,
+        },
+        'peer_group_key': {
+            'type': 'bool',
+        },
+        'peer_group_remote_as': {
+            'type': 'int',
+        },
+        'activate': {
+            'type': 'bool',
+        },
+        'advertisement_interval': {
+            'type': 'int',
+        },
+        'allowas_in': {
+            'type': 'bool',
+        },
+        'allowas_in_count': {
+            'type': 'int',
+        },
+        'as_origination_interval': {
+            'type': 'int',
+        },
+        'dynamic': {
+            'type': 'bool',
+        },
+        'prefix_list_direction': {
+            'type': 'str',
+            'choices': ['both', 'receive', 'send']
+        },
+        'route_refresh': {
+            'type': 'bool',
+        },
+        'collide_established': {
+            'type': 'bool',
+        },
+        'default_originate': {
+            'type': 'bool',
+        },
+        'route_map': {
+            'type': 'str',
+        },
+        'description': {
+            'type': 'str',
+        },
+        'disallow_infinite_holdtime': {
+            'type': 'bool',
+        },
+        'distribute_lists': {
+            'type': 'list',
+            'distribute_list': {
+                'type': 'str',
+            },
+            'distribute_list_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'dont_capability_negotiate': {
+            'type': 'bool',
+        },
+        'ebgp_multihop': {
+            'type': 'bool',
+        },
+        'ebgp_multihop_hop_count': {
+            'type': 'int',
+        },
+        'enforce_multihop': {
+            'type': 'bool',
+        },
+        'neighbor_filter_lists': {
+            'type': 'list',
+            'filter_list': {
+                'type': 'str',
+            },
+            'filter_list_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'maximum_prefix': {
+            'type': 'int',
+        },
+        'maximum_prefix_thres': {
+            'type': 'int',
+        },
+        'next_hop_self': {
+            'type': 'bool',
+        },
+        'override_capability': {
+            'type': 'bool',
+        },
+        'pass_value': {
+            'type': 'str',
+        },
+        'pass_encrypted': {
+            'type': 'str',
+        },
+        'passive': {
+            'type': 'bool',
+        },
+        'neighbor_prefix_lists': {
+            'type': 'list',
+            'nbr_prefix_list': {
+                'type': 'str',
+            },
+            'nbr_prefix_list_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'remove_private_as': {
+            'type': 'bool',
+        },
+        'neighbor_route_map_lists': {
+            'type': 'list',
+            'nbr_route_map': {
+                'type': 'str',
+            },
+            'nbr_rmap_direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            }
+        },
+        'send_community_val': {
+            'type': 'str',
+            'choices': ['both', 'none', 'standard', 'extended']
+        },
+        'inbound': {
+            'type': 'bool',
+        },
+        'shutdown': {
+            'type': 'bool',
+        },
+        'strict_capability_match': {
+            'type': 'bool',
+        },
+        'timers_keepalive': {
+            'type': 'int',
+        },
+        'timers_holdtime': {
+            'type': 'int',
+        },
+        'connect': {
+            'type': 'int',
+        },
+        'unsuppress_map': {
+            'type': 'str',
+        },
+        'update_source_ip': {
+            'type': 'str',
+        },
+        'update_source_ipv6': {
+            'type': 'str',
+        },
+        'ethernet': {
+            'type': 'str',
+        },
+        'loopback': {
+            'type': 'str',
+        },
+        've': {
+            'type': 'str',
+        },
+        'trunk': {
+            'type': 'str',
+        },
+        'lif': {
+            'type': 'int',
+        },
+        'tunnel': {
+            'type': 'str',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        }
     })
     # Parent keys
-    rv.update(dict(
-        bgp_as_number=dict(type='str', required=True),
-    ))
+    rv.update(dict(bgp_as_number=dict(type='str', required=True), ))
     return rv
 
 
@@ -530,8 +716,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -542,14 +727,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("peer-group-neighbor", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("peer-group-neighbor", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -583,12 +768,10 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[]
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[])
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -603,16 +786,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -621,15 +804,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -663,7 +846,8 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
