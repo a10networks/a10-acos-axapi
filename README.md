@@ -310,9 +310,7 @@ Action and module names are formatted based upon their API endpoint. For example
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        <b>a10_partition:</b>
-          <b>name: {{ partition_name }}</b>
-          <b>shared: 0</b>
+        <b>a10_partition: {{ partition_name }}</b>
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
 </pre>
