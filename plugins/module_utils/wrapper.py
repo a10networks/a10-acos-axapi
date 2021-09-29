@@ -28,15 +28,16 @@ def list_url(partial_url):
 def get(axapi_client, url, params={}):
     resp = None
     try:
-        resp = axapi_client.get(url, params=params)
+        resp, status_code = axapi_client.get(url, params=params)
     except a10_ex.NotFound:
-        resp = "Not Found"
+        resp, status_code = "Not Found", 400 
 
     call_result = {
         "endpoint": url,
         "http_method": "GET",
         "request_body": params,
         "response_body": resp,
+        "status_code": status_code
     }
     return call_result
 
@@ -64,30 +65,31 @@ def get_list(axapi_client, existing_url):
     return get(axapi_client, list_url(existing_url))
 
 
-def get_oper(axapi_client, existing_url):
+def get_oper(axapi_client, existing_url, params={}):
     query_params = {}
-    if module.params.get("oper"):
-        for k, v in module.params["oper"].items():
+    if params.get("oper"):
+        for k, v in params["oper"].items():
             query_params[k.replace('_', '-')] = v
     return get(axapi_client, oper_url(existing_url), params=query_params)
 
 
-def get_stats(axapi_client, existing_url):
+def get_stats(axapi_client, existing_url, params={}):
     query_params = {}
-    if module.params.get("stats"):
-        for k, v in module.params["stats"].items():
+    if params.get("stats"):
+        for k, v in params["stats"].items():
             query_params[k.replace('_', '-')] = v
     return get(axapi_client, stats_url(existing_url), params=query_params)
 
 
 def post(axapi_client, url, params={}):
-    resp = axapi_client.post(url, params=params)
+    resp, status_code = axapi_client.post(url, params=params)
     resp = resp if resp else {}
     call_result = {
         "endpoint": url,
         "http_method": "POST",
         "request_body": params,
         "response_body": resp,
+        "status_code": status_code
     }
     return call_result
 
@@ -97,9 +99,9 @@ def post_file(axapi_client, url, params={}, file_content=None, file_name=None):
         'file_content': file_content,
         'file_name': file_name
     }
-    resp = axapi_client.post(url, params=params,
-                             file_content=file_content,
-                             file_name=file_name)
+    resp, status_code = axapi_client.post(url, params=params,
+                                          file_content=file_content,
+                                          file_name=file_name)
     params.update(file_payload)
     resp = resp if resp else {}
     call_result = {
@@ -107,35 +109,42 @@ def post_file(axapi_client, url, params={}, file_content=None, file_name=None):
         "http_method": "POST",
         "request_body": params,
         "response_body": resp,
+        "status_code": status_code
     }
     return call_result
 
 
 def delete(axapi_client, url):
+    resp, status_code = axapi_client.delete(url)
     call_result = {
         "endpoint": url,
         "http_method": "DELETE",
         "request_body": {},
-        "response_body": axapi_client.delete(url),
+        "response_body": resp,
+        "status_code": status_code 
     }
     return call_result
 
 
 def switch_device_context(axapi_client, device_id):
+    resp, status_code = axapi_client.switch_device_context(device_id)
     call_result = {
         "endpoint": "/axapi/v3/device-context",
         "http_method": "POST",
         "request_body": {"device-id": device_id},
-        "response_body": axapi_client.switch_device_context(device_id)
+        "response_body": resp,
+        "status_code": status_code 
     }
     return call_result
 
 
 def active_partition(axapi_client, a10_partition):
+    resp, status_code = axapi_client.activate_partition(a10_partition)
     call_result = {
         "endpoint": "/axapi/v3/active-partition",
         "http_method": "POST",
         "request_body": {"curr_part_name": a10_partition},
-        "response_body": axapi_client.activate_partition(a10_partition)
+        "response_body": resp,
+        "status_code": status_code 
     }
     return call_result

@@ -13,7 +13,7 @@
 #    under the License.
 
 
-class Session(object):
+class ClientAuth(object):
 
     def __init__(self, http_client, username, password):
         self.http_client = http_client
@@ -45,23 +45,12 @@ class Session(object):
         if self.session_id is not None:
             self.close()
 
-        resp = self.http_client.post(url, payload)
-        # Validate json response
-        try:
-            resp = resp.json()
-        except ValueError as e:
-            # The response is not JSON but it still succeeded.
-            if resp.status_code in [200, 204]:
-                return resp.text
-            else:
-                raise e
-        self.http_client.eval_resp(resp, 'POST', url, self.header)
-
+        resp, resp_code = self.http_client.post(url, payload)
         if "authresponse" in resp:
             self.session_id = str(resp['authresponse']['signature'])
         else:
             self.session_id = None
-        return resp
+        return resp, resp_code
 
     def close(self):
         if self.session_id is None:
@@ -71,17 +60,5 @@ class Session(object):
         }
         self.session_id = None
         url = '/axapi/v3/logoff'
-        resp = self.http_client.post(url, headers=self.header)
-
-        # Validate json response
-        try:
-            resp = resp.json()
-        except ValueError as e:
-            # The response is not JSON but it still succeeded.
-            if resp.status_code in [200, 204]:
-                return resp.text
-            else:
-                raise e
-
-        self.http_client.eval_resp(resp, 'POST', url, self.header)
-        return resp
+        resp, resp_code = self.http_client.post(url, headers=self.header)
+        return resp, resp_code

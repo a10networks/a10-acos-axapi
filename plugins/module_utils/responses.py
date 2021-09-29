@@ -13,6 +13,7 @@
 #    under the License.
 
 import re
+from requests import exceptions as req_ex
 
 from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as ae
 
@@ -41,6 +42,11 @@ RESPONSE_CODES = {
     654311495: {
         '*': {
             '*': ae.Exists
+        }
+    },
+    654311505: {
+        '*': {
+            '*': ae.DhcpAcquireFailed,
         }
     },
     67240011: {
@@ -85,9 +91,9 @@ RESPONSE_CODES = {
             '*': ae.Exists
         }
     },
-    1023459339: {
+    1023459340: {
         '*': {
-            '/axapi/v3/slb/server': ae.Exists
+            '*': ae.Exists
         }
     },
     1023459393: {
@@ -97,7 +103,7 @@ RESPONSE_CODES = {
     },
     1023459335: {
         '*': {
-            '*': ae.Exists
+            '*': ae.FeatureNotSupported
         }
     },
     1023460352: {
@@ -138,11 +144,6 @@ RESPONSE_CODES = {
             '*': ae.NotFound
         }
     },
-    134479926: {
-        '*': {
-            '*': ae.ResourceNotFound
-        }
-    },
     1023656962: {
         '*': {
             '*': ae.NotFound
@@ -170,6 +171,11 @@ RESPONSE_CODES = {
             '*': ae.ConfigManagerNotReady
         }
     },
+    1208078344: {
+        '*': {
+            '*': ae.NotFound
+        }
+    },
     1023443968: {
         'DELETE': {
             '*': None
@@ -183,9 +189,34 @@ RESPONSE_CODES = {
             '*': ae.Exists
         }
     },
+    1023459337: {
+        '*': {
+            '*': ae.Exists
+        }
+    },
+    1023459339: {
+        '*': {
+            '*': ae.Exists
+        }
+    },
+    1023464192: {
+        '*': {
+            '*': ae.ACOSSystemNotReady
+        }
+    },
+    1023464193: {
+        '*': {
+            '*': ae.ACOSSystemIsBusy
+        }
+    },
     1023475727: {
         '*': {
             '*': ae.NotFound
+        }
+    },
+    1208008960: {
+        "*": {
+            "*": ae.AuthenticationFailure
         }
     },
     4294967295: {
@@ -244,3 +275,6 @@ def raise_axapi_ex(response, method, api_url):
         raise ae.ACOSException(code, response['response']['err']['msg'])
 
     raise ae.ACOSException()
+
+def axapi_retry_exceptions():
+    return (ae.ACOSSystemIsBusy, ae.ACOSSystemNotReady, req_ex.ConnectionError)

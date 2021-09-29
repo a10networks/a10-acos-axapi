@@ -103,3 +103,30 @@ class AxapiJsonFormatError(ACOSException):
 
 class ConfigManagerNotReady(ACOSException):
     pass
+
+class DhcpAcquireFailed(ACOSException):
+    pass
+
+
+class InvalidInteger(ACOSException):
+    pass
+
+
+class CertificateParsingFailed(ACOSException):
+    pass
+
+
+class KeyParsingFailed(ACOSException):
+    pass
+
+
+class FeatureNotSupported(ACOSException):
+    pass
+
+
+class ACOSSystemNotReady(ACOSException):
+    pass
+
+
+class ACOSSystemIsBusy(ACOSException):
+    pass
