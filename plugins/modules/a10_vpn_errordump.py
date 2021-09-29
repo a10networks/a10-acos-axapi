@@ -118,7 +118,7 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     wrapper as api_client
 from ansible_collections.a10.acos_axapi.plugins.module_utils import \
     utils
-from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_client import \
+from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
     client_factory
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
@@ -317,15 +317,17 @@ def run_command(module):
                     api_client.get_list(module.client, existing_url(module)))
             elif module.params.get("get_type") == "oper":
                 result["axapi_calls"].append(
-                    api_client.get_oper(module.client, existing_url(module)))
+                    api_client.get_oper(module.client,
+                                        existing_url(module),
+                                        params=module.params))
     except a10_ex.ACOSException as ex:
+        if module.client.auth_session.session_id:
+            module.client.auth_session.close()
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
+        if module.client.auth_session.session_id:
+            module.client.auth_session.close()
         raise gex
-    finally:
-        if module.client.session.session_id:
-            module.client.session.close()
-
     return result
 
 
