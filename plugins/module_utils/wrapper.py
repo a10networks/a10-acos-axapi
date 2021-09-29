@@ -30,7 +30,7 @@ def get(axapi_client, url, params={}):
     try:
         resp, status_code = axapi_client.get(url, params=params)
     except a10_ex.NotFound:
-        resp, status_code = "Not Found", 400 
+        resp, status_code = "NotFound", 400 
 
     call_result = {
         "endpoint": url,

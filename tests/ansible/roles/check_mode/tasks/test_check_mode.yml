@@ -32,11 +32,10 @@
         name: hm1
         state: noop
         get_type: single
-      no_log: True
-  rescue:
-    - assert:
-        that:
-          - "'NotFound' in ansible_failed_result['module_stderr']"
+      register: hm_info
+- assert:
+    that:
+      - "'NotFound' in hm_info['acos_info']"
 
 - name: (CHECK MODE) - Test creation of a virtual server w/ vport
   a10.acos_axapi.a10_slb_virtual_server:
@@ -55,11 +54,10 @@
         name: vs1
         state: noop
         get_type: single
-      no_log: True
-  rescue:
-    - assert:
-        that:
-          - "'NotFound' in ansible_failed_result['module_stderr']"
+      register: vs_info
+- assert:
+    that:
+      - "'NotFound' in vs_info['acos_info']"
 
 - name: Ensure that the vport doesn't exist
   block:
@@ -70,8 +68,7 @@
         protocol: "tcp"
         state: noop
         get_type: single
-      no_log: True
-  rescue:
-    - assert:
-        that:
-          - "'NotFound' in ansible_failed_result['module_stderr']"
+      register: vport_info
+- assert:
+    that:
+      - "'NotFound' in vport_info['acos_info']"

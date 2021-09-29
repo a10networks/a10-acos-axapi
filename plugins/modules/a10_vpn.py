@@ -2196,7 +2196,9 @@ def run_command(module):
     result = dict(changed=False,
                   messages="",
                   modified_values={},
-                  axapi_calls=[])
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -2241,7 +2243,7 @@ def run_command(module):
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
-        if existing_config['response_body'] != 'Not Found':
+        if existing_config['response_body'] != 'NotFound':
             existing_config = existing_config["response_body"]
         else:
             existing_config = None
@@ -2254,21 +2256,36 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                result["axapi_calls"].append(
-                    api_client.get(module.client, existing_url(module)))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
+                result["axapi_calls"].append(get_result)
+                info = get_result["response_body"]
+                result[
+                    "acos_info"] = info["vpn"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                result["axapi_calls"].append(
-                    api_client.get_list(module.client, existing_url(module)))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
+                result["axapi_calls"].append(get_list_result)
+
+                info = get_list_result["response_body"]
+                result["acos_info"] = info[
+                    "vpn-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                result["axapi_calls"].append(
-                    api_client.get_oper(module.client,
-                                        existing_url(module),
-                                        params=module.params))
+                get_oper_result = api_client.get_oper(module.client,
+                                                      existing_url(module),
+                                                      params=module.params)
+                result["axapi_calls"].append(get_oper_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["vpn"][
+                    "oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                result["axapi_calls"].append(
-                    api_client.get_stats(module.client,
-                                         existing_url(module),
-                                         params=module.params))
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
+                                                       params=module.params)
+                result["axapi_calls"].append(get_type_result)
+                info = get_oper_result["response_body"]
+                result["acos_info"] = info["vpn"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         if module.client.auth_session.session_id:
             module.client.auth_session.close()
