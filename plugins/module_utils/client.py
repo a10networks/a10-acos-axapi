@@ -64,20 +64,17 @@ class A10Client(object):
         return config
 
     def _request(self, method, url, params, **kwargs):
-        try:
-            resp, status_code = self.http_client.request(
-                method, url, params, self.auth_session.get_auth_header(),
-                **kwargs)
+        resp, status_code = self.http_client.request(
+            method, url, params, self.auth_session.get_auth_header(),
+            **kwargs)
 
-            if params.get('commandList'):
-                return self._parse_show_config_resp(resp.text)
-        except Exception as e:
-            self.auth_session.close()
-            raise e
+        if params.get('commandList'):
+            return self._parse_show_config_resp(resp.text)
+
         return resp, status_code
 
     def activate_partition(self, partition):
-        url = "/axapi/v3/active-partition"
+        url = "/axapi/v3/active-partition/{}"
         shared = "true" if partition == "shared" else "false"
         payload = {
             "active-partition": {
@@ -86,12 +83,14 @@ class A10Client(object):
             }
         }
         try:
-            resp, status_code = self.post(url, payload)
+            # Confirm partition exist first.
+            # Otherwise sessions will switch and fail to logoff.
+            self.get('/axapi/v3/partition/' + partition)
+            resp, status_code = self.post(url.format(partition), payload)
         except Exception as ex:
             raise Exception("Could not activate partition due to: {0}".format(ex))
-
-        if status_code == 204:
-            raise Exception("Partition {} does not exist".format(partition))
+        
+        return resp, status_code
 
     def switch_device_context(self, device_context_id):
         url = "/axapi/v3/device-context"
@@ -101,9 +100,11 @@ class A10Client(object):
             }
         }
         try:
-            self.post(url, payload)
+            resp, status_code = self.post(url, payload)
         except Exception as ex:
             raise Exception("Could not switch device context due to: {0}".format(ex))
+        
+        return resp, status_code
 
     def get(self, url, params={}, **kwargs):
         return self._request('GET', url, params, **kwargs)

@@ -42,16 +42,16 @@ def get(axapi_client, url, params={}):
     return call_result
 
 
-def get_file(axapi_client, filename, oper_url):
+def get_file(axapi_client, object_name, oper_url, filename):
     call_result = get(axapi_client, oper_url)
     file_info = call_result["response_body"]
     file_exists = False
     if file_info:
-        file_list = file_info["{{objkey}}"]["oper"].get("file-list", [])
+        file_list = file_info[object_name]["oper"].get("file-list", [])
         for file_obj in file_list:
             if file_obj['file'] == filename:
                 call_result["response_body"] = {
-                    "{{objkey}}": {
+                    object_name: {
                         "file": filename,
                         "file-handle": filename
                     }
