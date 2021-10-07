@@ -94,11 +94,13 @@ def post(axapi_client, url, params={}):
     return call_result
 
 
-def post_file(axapi_client, url, params={}, file_content=None, file_name=None):
+def post_file(axapi_client, url, params={}, file_path=None, file_name=None):
     file_payload = {
-        'file_content': file_content,
         'file_name': file_name
     }
+    if file_path:
+        with open(file_path, 'rb') as f:
+            file_content = f.read()
     resp, status_code = axapi_client.post(url, params=params,
                                           file_content=file_content,
                                           file_name=file_name)
