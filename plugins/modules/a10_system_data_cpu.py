@@ -1030,17 +1030,17 @@ def run_command(module):
                                                        existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
-                info = get_oper_result["response_body"]
+                info = get_type_result["response_body"]
                 result["acos_info"] = info["data-cpu"][
                     "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
-        if module.client.auth_session.session_id:
-            module.client.auth_session.close()
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
+        raise gex
+    finally:
         if module.client.auth_session.session_id:
             module.client.auth_session.close()
-        raise gex
+
     return result
 
 

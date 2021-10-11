@@ -359,13 +359,13 @@ def run_command(module):
                 result["acos_info"] = info["debug-files"][
                     "oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
-        if module.client.auth_session.session_id:
-            module.client.auth_session.close()
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
+        raise gex
+    finally:
         if module.client.auth_session.session_id:
             module.client.auth_session.close()
-        raise gex
+
     return result
 
 

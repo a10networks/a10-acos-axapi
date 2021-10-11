@@ -55,12 +55,10 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
-    file_content:
+    file_path:
         description:
-        - Content of the uploaded file
+        - Path to the file
         type: str
-        note:
-        - Use 'lookup' ansible command to provide required data
         required: False
     file_handle:
         description:
@@ -151,7 +149,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
-        'file_content': {
+        'file_path': {
             'type': 'str',
         },
         'file_handle': {
@@ -209,7 +207,7 @@ def create(module, result, payload={}):
             module.client,
             new_url(module),
             payload,
-            file_content=module.params["file_content"],
+            file_path=module.params["file_path"],
             file_name=module.params["file"])
     else:
         call_result = api_client.post(module.client, new_url(module), payload)
@@ -225,7 +223,7 @@ def update(module, result, existing_config, payload={}):
             module.client,
             existing_url(module),
             payload,
-            file_content=module.params["file_content"],
+            file_path=module.params["file_path"],
             file_name=module.params["file"])
     else:
         call_result = api_client.post(module.client, existing_url(module),
@@ -323,11 +321,13 @@ def run_command(module):
                 api_client.switch_device_context(module.client,
                                                  a10_device_context_id))
 
-        existing_config, file_info = api_client.get(module.client,
-                                                    existing_url(module))
+        file_url = api_client.oper_url(existing_url(module))
+        existing_config, file_exists = api_client.get_file(
+            module.client, "web-service-cert-key", file_url,
+            module.params['file'])
         result["axapi_calls"].append(existing_config)
 
-        if file_info:
+        if file_exists:
             existing_config = existing_config["response_body"]
         else:
             existing_config = None
@@ -355,13 +355,13 @@ def run_command(module):
                 result["acos_info"] = info[
                     "web-service-cert-key-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
-        if module.client.auth_session.session_id:
-            module.client.auth_session.close()
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
+        raise gex
+    finally:
         if module.client.auth_session.session_id:
             module.client.auth_session.close()
-        raise gex
+
     return result
 
 
