@@ -3,8 +3,8 @@
   a10.acos_axapi.a10_file_ssl_cert:
     file: MyCertificate.crt
     certificate_type: pem
-    file_handle: "MyCertificate.crt"
-    file_path: "/opt/stack/test_playbooks/MyCertificate.crt"
+    file_handle: MyCertificate.crt
+    file_path: MyCertificate.crt
     action: import
   register: ssl_cert
 - assert:
@@ -16,8 +16,8 @@
 - name: Upload key task
   a10.acos_axapi.a10_file_ssl_key:
     file: MyKey.key
-    file_handle: "MyKey.key"
-    file_path: "/opt/stack/test_playbooks/MyKey.key"
+    file_handle: MyKey.key
+    file_path: MyKey.key
     action: import
   register: ssl_key
 - assert:
