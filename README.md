@@ -328,6 +328,21 @@ Action and module names are formatted based upon their API endpoint. For example
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
 </pre>
 
+### Uploading a file directly
+*Note: Only available in modules with `file_path` argument*
+
+<pre>
+- name: &lt;Description of playbook&gt;
+  connection: local
+  hosts: &lt;inventory_hostname&gt;
+  tasks:
+    - name: &lt;Description of task&gt;
+      &lt;a10.acos_axapi.module_name&gt;:
+        <b>file_path: "/path/to/file"</b>
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
+</pre>
+
 ### Check Mode
 Check mode can be specified in two ways:
 
