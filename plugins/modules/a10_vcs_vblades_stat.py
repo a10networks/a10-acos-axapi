@@ -379,11 +379,7 @@ def present(module, result, existing_config):
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
-    elif not existing_config:
-        return create(module, result, payload)
-    elif existing_config and change_results.get('changed'):
-        return update(module, result, existing_config, payload)
-    return result
+    return update(module, result, existing_config, payload)
 
 
 def run_command(module):
