@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_aam_authentication_server_windows
 description:
@@ -95,7 +96,14 @@ options:
           polling-control-error'= Total NTLM Polling Control Error; 'kerberos-pw-expiry'=
           Total Kerberos password expiry; 'kerberos-pw-change-success'= Total Kerberos
           password change success; 'kerberos-pw-change-failure'= Total Kerberos password
-          change failure;"
+          change failure; 'kerberos-validate-kdc-success'= Total Kerberos KDC Validation
+          Success; 'kerberos-validate-kdc-failure'= Total Kerberos KDC Validation
+          Failure; 'kerberos-generate-kdc-keytab-success'= Total Kerberos KDC Keytab
+          Generation Success; 'kerberos-generate-kdc-keytab-failure'= Total Kerberos KDC
+          Keytab Generation Failure; 'kerberos-delete-kdc-keytab-success'= Total Kerberos
+          KDC Keytab Deletion Success; 'kerberos-delete-kdc-keytab-failure'= Total
+          Kerberos KDC Keytab Deletion Failure; 'kerberos-kdc-keytab-count'= Current
+          Kerberos KDC Keytab Count;"
                 type: str
     instance_list:
         description:
@@ -147,6 +155,10 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+            packet_capture_template:
+                description:
+                - "Name of the packet capture template to be bind with this object"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -293,6 +305,34 @@ options:
                 description:
                 - "Total Kerberos password change failure"
                 type: str
+            kerberos_validate_kdc_success:
+                description:
+                - "Total Kerberos KDC Validation Success"
+                type: str
+            kerberos_validate_kdc_failure:
+                description:
+                - "Total Kerberos KDC Validation Failure"
+                type: str
+            kerberos_generate_kdc_keytab_success:
+                description:
+                - "Total Kerberos KDC Keytab Generation Success"
+                type: str
+            kerberos_generate_kdc_keytab_failure:
+                description:
+                - "Total Kerberos KDC Keytab Generation Failure"
+                type: str
+            kerberos_delete_kdc_keytab_success:
+                description:
+                - "Total Kerberos KDC Keytab Deletion Success"
+                type: str
+            kerberos_delete_kdc_keytab_failure:
+                description:
+                - "Total Kerberos KDC Keytab Deletion Failure"
+                type: str
+            kerberos_kdc_keytab_count:
+                description:
+                - "Current Kerberos KDC Keytab Count"
+                type: str
             instance_list:
                 description:
                 - "Field instance_list"
@@ -350,13 +390,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "instance_list",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["instance_list", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -364,313 +400,20 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'kerberos-request-send', 'kerberos-response-get',
-                    'kerberos-timeout-error', 'kerberos-other-error',
-                    'ntlm-authentication-success',
-                    'ntlm-authentication-failure',
-                    'ntlm-proto-negotiation-success',
-                    'ntlm-proto-negotiation-failure',
-                    'ntlm-session-setup-success', 'ntlm-session-setup-failed',
-                    'kerberos-request-normal', 'kerberos-request-dropped',
-                    'kerberos-response-success', 'kerberos-response-failure',
-                    'kerberos-response-error', 'kerberos-response-timeout',
-                    'kerberos-response-other', 'kerberos-job-start-error',
-                    'kerberos-polling-control-error',
-                    'ntlm-prepare-req-success', 'ntlm-prepare-req-failed',
-                    'ntlm-timeout-error', 'ntlm-other-error',
-                    'ntlm-request-normal', 'ntlm-request-dropped',
-                    'ntlm-response-success', 'ntlm-response-failure',
-                    'ntlm-response-error', 'ntlm-response-timeout',
-                    'ntlm-response-other', 'ntlm-job-start-error',
-                    'ntlm-polling-control-error', 'kerberos-pw-expiry',
-                    'kerberos-pw-change-success', 'kerberos-pw-change-failure'
-                ]
-            }
-        },
-        'instance_list': {
-            'type': 'list',
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'host': {
-                'type': 'dict',
-                'hostip': {
-                    'type': 'str',
-                },
-                'hostipv6': {
-                    'type': 'str',
-                }
-            },
-            'timeout': {
-                'type': 'int',
-            },
-            'auth_protocol': {
-                'type': 'dict',
-                'ntlm_disable': {
-                    'type': 'bool',
-                },
-                'ntlm_version': {
-                    'type': 'int',
-                },
-                'ntlm_health_check': {
-                    'type': 'str',
-                },
-                'ntlm_health_check_disable': {
-                    'type': 'bool',
-                },
-                'kerberos_disable': {
-                    'type': 'bool',
-                },
-                'kerberos_port': {
-                    'type': 'int',
-                },
-                'kport_hm': {
-                    'type': 'str',
-                },
-                'kport_hm_disable': {
-                    'type': 'bool',
-                },
-                'kerberos_password_change_port': {
-                    'type': 'int',
-                }
-            },
-            'realm': {
-                'type': 'str',
-            },
-            'support_apacheds_kdc': {
-                'type': 'bool',
-            },
-            'health_check': {
-                'type': 'bool',
-            },
-            'health_check_string': {
-                'type': 'str',
-            },
-            'health_check_disable': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'krb_send_req_success', 'krb_get_resp_success',
-                        'krb_timeout_error', 'krb_other_error',
-                        'krb_pw_expiry', 'krb_pw_change_success',
-                        'krb_pw_change_failure', 'ntlm_proto_nego_success',
-                        'ntlm_proto_nego_failure',
-                        'ntlm_session_setup_success',
-                        'ntlm_session_setup_failure',
-                        'ntlm_prepare_req_success', 'ntlm_prepare_req_error',
-                        'ntlm_auth_success', 'ntlm_auth_failure',
-                        'ntlm_timeout_error', 'ntlm_other_error'
-                    ]
-                }
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'kerberos_request_send': {
-                'type': 'str',
-            },
-            'kerberos_response_get': {
-                'type': 'str',
-            },
-            'kerberos_timeout_error': {
-                'type': 'str',
-            },
-            'kerberos_other_error': {
-                'type': 'str',
-            },
-            'ntlm_authentication_success': {
-                'type': 'str',
-            },
-            'ntlm_authentication_failure': {
-                'type': 'str',
-            },
-            'ntlm_proto_negotiation_success': {
-                'type': 'str',
-            },
-            'ntlm_proto_negotiation_failure': {
-                'type': 'str',
-            },
-            'ntlm_session_setup_success': {
-                'type': 'str',
-            },
-            'ntlm_session_setup_failed': {
-                'type': 'str',
-            },
-            'kerberos_request_normal': {
-                'type': 'str',
-            },
-            'kerberos_request_dropped': {
-                'type': 'str',
-            },
-            'kerberos_response_success': {
-                'type': 'str',
-            },
-            'kerberos_response_failure': {
-                'type': 'str',
-            },
-            'kerberos_response_error': {
-                'type': 'str',
-            },
-            'kerberos_response_timeout': {
-                'type': 'str',
-            },
-            'kerberos_response_other': {
-                'type': 'str',
-            },
-            'kerberos_job_start_error': {
-                'type': 'str',
-            },
-            'kerberos_polling_control_error': {
-                'type': 'str',
-            },
-            'ntlm_prepare_req_success': {
-                'type': 'str',
-            },
-            'ntlm_prepare_req_failed': {
-                'type': 'str',
-            },
-            'ntlm_timeout_error': {
-                'type': 'str',
-            },
-            'ntlm_other_error': {
-                'type': 'str',
-            },
-            'ntlm_request_normal': {
-                'type': 'str',
-            },
-            'ntlm_request_dropped': {
-                'type': 'str',
-            },
-            'ntlm_response_success': {
-                'type': 'str',
-            },
-            'ntlm_response_failure': {
-                'type': 'str',
-            },
-            'ntlm_response_error': {
-                'type': 'str',
-            },
-            'ntlm_response_timeout': {
-                'type': 'str',
-            },
-            'ntlm_response_other': {
-                'type': 'str',
-            },
-            'ntlm_job_start_error': {
-                'type': 'str',
-            },
-            'ntlm_polling_control_error': {
-                'type': 'str',
-            },
-            'kerberos_pw_expiry': {
-                'type': 'str',
-            },
-            'kerberos_pw_change_success': {
-                'type': 'str',
-            },
-            'kerberos_pw_change_failure': {
-                'type': 'str',
-            },
-            'instance_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'stats': {
-                    'type': 'dict',
-                    'krb_send_req_success': {
-                        'type': 'str',
-                    },
-                    'krb_get_resp_success': {
-                        'type': 'str',
-                    },
-                    'krb_timeout_error': {
-                        'type': 'str',
-                    },
-                    'krb_other_error': {
-                        'type': 'str',
-                    },
-                    'krb_pw_expiry': {
-                        'type': 'str',
-                    },
-                    'krb_pw_change_success': {
-                        'type': 'str',
-                    },
-                    'krb_pw_change_failure': {
-                        'type': 'str',
-                    },
-                    'ntlm_proto_nego_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_proto_nego_failure': {
-                        'type': 'str',
-                    },
-                    'ntlm_session_setup_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_session_setup_failure': {
-                        'type': 'str',
-                    },
-                    'ntlm_prepare_req_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_prepare_req_error': {
-                        'type': 'str',
-                    },
-                    'ntlm_auth_success': {
-                        'type': 'str',
-                    },
-                    'ntlm_auth_failure': {
-                        'type': 'str',
-                    },
-                    'ntlm_timeout_error': {
-                        'type': 'str',
-                    },
-                    'ntlm_other_error': {
-                        'type': 'str',
-                    }
-                }
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'kerberos-request-send', 'kerberos-response-get', 'kerberos-timeout-error', 'kerberos-other-error', 'ntlm-authentication-success', 'ntlm-authentication-failure', 'ntlm-proto-negotiation-success', 'ntlm-proto-negotiation-failure', 'ntlm-session-setup-success', 'ntlm-session-setup-failed', 'kerberos-request-normal', 'kerberos-request-dropped', 'kerberos-response-success', 'kerberos-response-failure', 'kerberos-response-error', 'kerberos-response-timeout', 'kerberos-response-other', 'kerberos-job-start-error', 'kerberos-polling-control-error', 'ntlm-prepare-req-success', 'ntlm-prepare-req-failed', 'ntlm-timeout-error', 'ntlm-other-error', 'ntlm-request-normal', 'ntlm-request-dropped', 'ntlm-response-success', 'ntlm-response-failure', 'ntlm-response-error', 'ntlm-response-timeout', 'ntlm-response-other', 'ntlm-job-start-error', 'ntlm-polling-control-error', 'kerberos-pw-expiry', 'kerberos-pw-change-success', 'kerberos-pw-change-failure', 'kerberos-validate-kdc-success', 'kerberos-validate-kdc-failure', 'kerberos-generate-kdc-keytab-success', 'kerberos-generate-kdc-keytab-failure', 'kerberos-delete-kdc-keytab-success', 'kerberos-delete-kdc-keytab-failure', 'kerberos-kdc-keytab-count']}},
+        'instance_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'host': {'type': 'dict', 'hostip': {'type': 'str', }, 'hostipv6': {'type': 'str', }}, 'timeout': {'type': 'int', }, 'auth_protocol': {'type': 'dict', 'ntlm_disable': {'type': 'bool', }, 'ntlm_version': {'type': 'int', }, 'ntlm_health_check': {'type': 'str', }, 'ntlm_health_check_disable': {'type': 'bool', }, 'kerberos_disable': {'type': 'bool', }, 'kerberos_port': {'type': 'int', }, 'kport_hm': {'type': 'str', }, 'kport_hm_disable': {'type': 'bool', }, 'kerberos_password_change_port': {'type': 'int', }, 'kdc_validate': {'type': 'bool', }, 'kerberos_kdc_validation': {'type': 'dict', 'kdc_spn': {'type': 'str', }, 'kdc_account': {'type': 'str', }, 'kdc_password': {'type': 'bool', }, 'kdc_pwd': {'type': 'str', }, 'encrypted': {'type': 'str', }}}, 'realm': {'type': 'str', }, 'support_apacheds_kdc': {'type': 'bool', }, 'health_check': {'type': 'bool', }, 'health_check_string': {'type': 'str', }, 'health_check_disable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'krb_send_req_success', 'krb_get_resp_success', 'krb_timeout_error', 'krb_other_error', 'krb_pw_expiry', 'krb_pw_change_success', 'krb_pw_change_failure', 'ntlm_proto_nego_success', 'ntlm_proto_nego_failure', 'ntlm_session_setup_success', 'ntlm_session_setup_failure', 'ntlm_prepare_req_success', 'ntlm_prepare_req_error', 'ntlm_auth_success', 'ntlm_auth_failure', 'ntlm_timeout_error', 'ntlm_other_error', 'krb_validate_kdc_success', 'krb_validate_kdc_failure']}}, 'packet_capture_template': {'type': 'str', }},
+        'stats': {'type': 'dict', 'kerberos_request_send': {'type': 'str', }, 'kerberos_response_get': {'type': 'str', }, 'kerberos_timeout_error': {'type': 'str', }, 'kerberos_other_error': {'type': 'str', }, 'ntlm_authentication_success': {'type': 'str', }, 'ntlm_authentication_failure': {'type': 'str', }, 'ntlm_proto_negotiation_success': {'type': 'str', }, 'ntlm_proto_negotiation_failure': {'type': 'str', }, 'ntlm_session_setup_success': {'type': 'str', }, 'ntlm_session_setup_failed': {'type': 'str', }, 'kerberos_request_normal': {'type': 'str', }, 'kerberos_request_dropped': {'type': 'str', }, 'kerberos_response_success': {'type': 'str', }, 'kerberos_response_failure': {'type': 'str', }, 'kerberos_response_error': {'type': 'str', }, 'kerberos_response_timeout': {'type': 'str', }, 'kerberos_response_other': {'type': 'str', }, 'kerberos_job_start_error': {'type': 'str', }, 'kerberos_polling_control_error': {'type': 'str', }, 'ntlm_prepare_req_success': {'type': 'str', }, 'ntlm_prepare_req_failed': {'type': 'str', }, 'ntlm_timeout_error': {'type': 'str', }, 'ntlm_other_error': {'type': 'str', }, 'ntlm_request_normal': {'type': 'str', }, 'ntlm_request_dropped': {'type': 'str', }, 'ntlm_response_success': {'type': 'str', }, 'ntlm_response_failure': {'type': 'str', }, 'ntlm_response_error': {'type': 'str', }, 'ntlm_response_timeout': {'type': 'str', }, 'ntlm_response_other': {'type': 'str', }, 'ntlm_job_start_error': {'type': 'str', }, 'ntlm_polling_control_error': {'type': 'str', }, 'kerberos_pw_expiry': {'type': 'str', }, 'kerberos_pw_change_success': {'type': 'str', }, 'kerberos_pw_change_failure': {'type': 'str', }, 'kerberos_validate_kdc_success': {'type': 'str', }, 'kerberos_validate_kdc_failure': {'type': 'str', }, 'kerberos_generate_kdc_keytab_success': {'type': 'str', }, 'kerberos_generate_kdc_keytab_failure': {'type': 'str', }, 'kerberos_delete_kdc_keytab_success': {'type': 'str', }, 'kerberos_delete_kdc_keytab_failure': {'type': 'str', }, 'kerberos_kdc_keytab_count': {'type': 'str', }, 'instance_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'stats': {'type': 'dict', 'krb_send_req_success': {'type': 'str', }, 'krb_get_resp_success': {'type': 'str', }, 'krb_timeout_error': {'type': 'str', }, 'krb_other_error': {'type': 'str', }, 'krb_pw_expiry': {'type': 'str', }, 'krb_pw_change_success': {'type': 'str', }, 'krb_pw_change_failure': {'type': 'str', }, 'ntlm_proto_nego_success': {'type': 'str', }, 'ntlm_proto_nego_failure': {'type': 'str', }, 'ntlm_session_setup_success': {'type': 'str', }, 'ntlm_session_setup_failure': {'type': 'str', }, 'ntlm_prepare_req_success': {'type': 'str', }, 'ntlm_prepare_req_error': {'type': 'str', }, 'ntlm_auth_success': {'type': 'str', }, 'ntlm_auth_failure': {'type': 'str', }, 'ntlm_timeout_error': {'type': 'str', }, 'ntlm_other_error': {'type': 'str', }, 'krb_validate_kdc_success': {'type': 'str', }, 'krb_validate_kdc_failure': {'type': 'str', }}}}
     })
     return rv
 
@@ -717,7 +460,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -728,7 +472,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -768,12 +513,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -788,16 +535,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -806,15 +553,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -831,28 +578,22 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "windows"] if info != "NotFound" else info
+                result["acos_info"] = info["windows"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "windows-list"] if info != "NotFound" else info
+                result["acos_info"] = info["windows-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
+                get_type_result = api_client.get_stats(module.client, existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["windows"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["windows"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -865,11 +606,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

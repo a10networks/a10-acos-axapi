@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_l4
 description:
@@ -131,9 +132,22 @@ options:
           'synreceived_hw'= TCP SYN (HW SYN cookie); 'dns_id_switch'= DNS query id
           switch; 'server_down_del'= Server Down Del switch; 'dnssec_switch'= DNSSEC SG
           switch; 'rate_drop_reset_unkn'= Rate Drop reset; 'tcp_connections_closed'= TCP
-          Connections Closed; 'snat_force_preserve_alloc'= Snat port preserve allocated;
+          Connections Closed; 'gtp_c_invalid_port'= Invalid Packet Received on GTP VIP;
+          'gtp_c_invalid_header'= Invalid Header Received on GTP VIP;
+          'gtp_c_invalid_message'= Non Create Session/PDP Context Request/Response
+          Received on GTP VIP; 'reselect_svrselfail'= Server reselect failure;
+          'snat_port_overload_fail'= Snat port overload fail;
+          'snat_force_preserve_alloc'= Snat port preserve allocated;
           'snat_force_preserve_free'= Snat port preserve freed;
-          'snat_port_overload_fail'= Snat port overload fail;"
+          'slb_gtp_proxy_pkt_rcv_rr'= SLB GTP proxy packet received on RR;
+          'slb_gtp_proxy_smp_match'= SLB GTP proxy helper session found;
+          'slb_gtp_proxy_smp_no_match'= SLB GTP proxy helper session not found;
+          'slb_gtp_proxy_c_process_local_rr'= SLB GTP proxy messageprocessed locally on
+          RR; 'slb_gtp_proxy_smp_creation_failed'= SLB GTP proxy helper session creation
+          failed; 'slb_gtp_proxy_smp_created'= SLB GTP proxy helper session created;
+          'slb_gtp_proxy_smp_free_not_found'= SLB GTP proxy session helper not found
+          during cleanup; 'slb_gtp_proxy_smp_freed'= SLB GTP proxy session helper freed;
+          'slb_gtp_proxy_retx_requests'= SLB GTP proxy retx requests;"
                 type: str
     oper:
         description:
@@ -615,6 +629,26 @@ options:
                 description:
                 - "TCP Connections Closed"
                 type: str
+            gtp_c_invalid_port:
+                description:
+                - "Invalid Packet Received on GTP VIP"
+                type: str
+            gtp_c_invalid_header:
+                description:
+                - "Invalid Header Received on GTP VIP"
+                type: str
+            gtp_c_invalid_message:
+                description:
+                - "Non Create Session/PDP Context Request/Response Received on GTP VIP"
+                type: str
+            reselect_svrselfail:
+                description:
+                - "Server reselect failure"
+                type: str
+            snat_port_overload_fail:
+                description:
+                - "Snat port overload fail"
+                type: str
             snat_force_preserve_alloc:
                 description:
                 - "Snat port preserve allocated"
@@ -623,9 +657,37 @@ options:
                 description:
                 - "Snat port preserve freed"
                 type: str
-            snat_port_overload_fail:
+            slb_gtp_proxy_smp_match:
                 description:
-                - "Snat port overload fail"
+                - "SLB GTP proxy helper session found"
+                type: str
+            slb_gtp_proxy_smp_no_match:
+                description:
+                - "SLB GTP proxy helper session not found"
+                type: str
+            slb_gtp_proxy_c_process_local_rr:
+                description:
+                - "SLB GTP proxy messageprocessed locally on RR"
+                type: str
+            slb_gtp_proxy_smp_creation_failed:
+                description:
+                - "SLB GTP proxy helper session creation failed"
+                type: str
+            slb_gtp_proxy_smp_created:
+                description:
+                - "SLB GTP proxy helper session created"
+                type: str
+            slb_gtp_proxy_smp_free_not_found:
+                description:
+                - "SLB GTP proxy session helper not found during cleanup"
+                type: str
+            slb_gtp_proxy_smp_freed:
+                description:
+                - "SLB GTP proxy session helper freed"
+                type: str
+            slb_gtp_proxy_retx_requests:
+                description:
+                - "SLB GTP proxy retx requests"
                 type: str
 
 '''
@@ -680,13 +742,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -694,797 +752,20 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'intcp', 'synreceived', 'tcp_fwd_last_ack',
-                    'tcp_rev_last_ack', 'tcp_rev_fin', 'tcp_fwd_fin',
-                    'tcp_fwd_ackfin', 'inudp', 'syncookiessent',
-                    'syncookiessent_ts', 'syncookiessentfailed', 'outrst',
-                    'outrst_nosyn', 'outrst_broker', 'outrst_ack_attack',
-                    'outrst_aflex', 'outrst_stale_sess', 'syn_stale_sess',
-                    'outrst_tcpproxy', 'svrselfail', 'noroute', 'snat_fail',
-                    'snat_no_fwd_route', 'snat_no_rev_route',
-                    'snat_icmp_error_process', 'snat_icmp_no_match',
-                    'smart_nat_id_mismatch', 'syncookiescheckfailed',
-                    'novport_drop', 'no_vport_drop', 'nosyn_drop',
-                    'nosyn_drop_fin', 'nosyn_drop_rst', 'nosyn_drop_ack',
-                    'connlimit_drop', 'connlimit_reset',
-                    'conn_rate_limit_drop', 'conn_rate_limit_reset',
-                    'proxy_nosock_drop', 'drop_aflex', 'sess_aged_out',
-                    'tcp_sess_aged_out', 'udp_sess_aged_out',
-                    'other_sess_aged_out', 'tcp_no_slb', 'udp_no_slb',
-                    'throttle_syn', 'drop_gslb', 'inband_hm_retry',
-                    'inband_hm_reassign', 'auto_reassign', 'fast_aging_set',
-                    'fast_aging_reset', 'dns_policy_drop', 'tcp_invalid_drop',
-                    'anomaly_out_seq', 'anomaly_zero_win',
-                    'anomaly_bad_content', 'anomaly_pbslb_drop',
-                    'no_resourse_drop', 'reset_unknown_conn',
-                    'reset_l7_on_failover', 'ignore_msl', 'l2_dsr', 'l3_dsr',
-                    'port_preserve_attempt', 'port_preserve_succ',
-                    'tcpsyndata_drop', 'tcpotherflags_drop',
-                    'bw_rate_limit_exceed', 'bw_watermark_drop',
-                    'l4_cps_exceed', 'nat_cps_exceed', 'l7_cps_exceed',
-                    'ssl_cps_exceed', 'ssl_tpt_exceed', 'ssl_watermark_drop',
-                    'concurrent_conn_exceed', 'svr_syn_handshake_fail',
-                    'stateless_conn_timeout', 'tcp_ax_rexmit_syn',
-                    'tcp_syn_rcv_ack', 'tcp_syn_rcv_rst',
-                    'tcp_sess_noest_aged_out',
-                    'tcp_sess_noest_csyn_rcv_aged_out',
-                    'tcp_sess_noest_ssyn_xmit_aged_out', 'tcp_rexmit_syn',
-                    'tcp_rexmit_syn_delq', 'tcp_rexmit_synack',
-                    'tcp_rexmit_synack_delq', 'tcp_fwd_fin_dup',
-                    'tcp_rev_fin_dup', 'tcp_rev_ackfin', 'tcp_fwd_rst',
-                    'tcp_rev_rst', 'udp_req_oneplus_no_resp',
-                    'udp_req_one_oneplus_resp', 'udp_req_resp_notmatch',
-                    'udp_req_more_resp', 'udp_resp_more_req',
-                    'udp_req_oneplus', 'udp_resp_oneplus', 'out_seq_ack_drop',
-                    'tcp_est', 'synattack', 'syn_rate', 'syncookie_buff_drop',
-                    'syncookie_buff_queue', 'skip_insert_client_ip',
-                    'synreceived_hw', 'dns_id_switch', 'server_down_del',
-                    'dnssec_switch', 'rate_drop_reset_unkn',
-                    'tcp_connections_closed', 'snat_force_preserve_alloc',
-                    'snat_force_preserve_free', 'snat_port_overload_fail'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'l4_cpu_list': {
-                'type': 'list',
-                'ip_outnoroute': {
-                    'type': 'int',
-                },
-                'tcp_outrst': {
-                    'type': 'int',
-                },
-                'tcp_outrst_nosyn': {
-                    'type': 'int',
-                },
-                'tcp_outrst_broker': {
-                    'type': 'int',
-                },
-                'tcp_outrst_ack_attack': {
-                    'type': 'int',
-                },
-                'tcp_outrst_aflex': {
-                    'type': 'int',
-                },
-                'tcp_outrst_stale_sess': {
-                    'type': 'int',
-                },
-                'tcp_syn_stale_sess': {
-                    'type': 'int',
-                },
-                'tcp_outrst_tcpproxy': {
-                    'type': 'int',
-                },
-                'tcp_synreceived': {
-                    'type': 'int',
-                },
-                'tcp_synreceived_hw': {
-                    'type': 'int',
-                },
-                'tcp_syn_rate': {
-                    'type': 'int',
-                },
-                'tcp_syncookiessent': {
-                    'type': 'int',
-                },
-                'tcp_syncookiessent_ts': {
-                    'type': 'int',
-                },
-                'tcp_syncookiessentfailed': {
-                    'type': 'int',
-                },
-                'intcp': {
-                    'type': 'int',
-                },
-                'inudp': {
-                    'type': 'int',
-                },
-                'svr_sel_failed': {
-                    'type': 'int',
-                },
-                'snat_fail': {
-                    'type': 'int',
-                },
-                'snat_no_fwd_route': {
-                    'type': 'int',
-                },
-                'snat_no_rev_route': {
-                    'type': 'int',
-                },
-                'snat_icmp_error_process': {
-                    'type': 'int',
-                },
-                'snat_icmp_no_match': {
-                    'type': 'int',
-                },
-                'smart_nat_id_mismatch': {
-                    'type': 'int',
-                },
-                'tcp_syncookiescheckfailed': {
-                    'type': 'int',
-                },
-                'novport_drop': {
-                    'type': 'int',
-                },
-                'no_vport_drop': {
-                    'type': 'int',
-                },
-                'nosyn_drop': {
-                    'type': 'int',
-                },
-                'nosyn_drop_fin': {
-                    'type': 'int',
-                },
-                'nosyn_drop_rst': {
-                    'type': 'int',
-                },
-                'nosyn_drop_ack': {
-                    'type': 'int',
-                },
-                'connlimit_drop': {
-                    'type': 'int',
-                },
-                'connlimit_reset': {
-                    'type': 'int',
-                },
-                'conn_rate_limit_drop': {
-                    'type': 'int',
-                },
-                'conn_rate_limit_reset': {
-                    'type': 'int',
-                },
-                'proxy_nosock_drop': {
-                    'type': 'int',
-                },
-                'aflex_drop': {
-                    'type': 'int',
-                },
-                'sess_aged_out': {
-                    'type': 'int',
-                },
-                'tcp_sess_aged_out': {
-                    'type': 'int',
-                },
-                'udp_sess_aged_out': {
-                    'type': 'int',
-                },
-                'other_sess_aged_out': {
-                    'type': 'int',
-                },
-                'tcp_no_slb': {
-                    'type': 'int',
-                },
-                'udp_no_slb': {
-                    'type': 'int',
-                },
-                'throttle_syn': {
-                    'type': 'int',
-                },
-                'inband_hm_retry': {
-                    'type': 'int',
-                },
-                'inband_hm_reassign': {
-                    'type': 'int',
-                },
-                'auto_reassign': {
-                    'type': 'int',
-                },
-                'fast_aging_set': {
-                    'type': 'int',
-                },
-                'fast_aging_reset': {
-                    'type': 'int',
-                },
-                'tcp_invalid_drop': {
-                    'type': 'int',
-                },
-                'out_seq_ack_drop': {
-                    'type': 'int',
-                },
-                'anomaly_out_seq': {
-                    'type': 'int',
-                },
-                'anomaly_zero_win': {
-                    'type': 'int',
-                },
-                'anomaly_bad_content': {
-                    'type': 'int',
-                },
-                'anomaly_pbslb_drop': {
-                    'type': 'int',
-                },
-                'no_resource_drop': {
-                    'type': 'int',
-                },
-                'reset_unknown_conn': {
-                    'type': 'int',
-                },
-                'reset_l7_on_failover': {
-                    'type': 'int',
-                },
-                'tcp_syn_otherflags': {
-                    'type': 'int',
-                },
-                'tcp_syn_withdata': {
-                    'type': 'int',
-                },
-                'ignore_msl': {
-                    'type': 'int',
-                },
-                'l2_dsr': {
-                    'type': 'int',
-                },
-                'l3_dsr': {
-                    'type': 'int',
-                },
-                'port_preserve_attempt': {
-                    'type': 'int',
-                },
-                'port_preserve_succ': {
-                    'type': 'int',
-                },
-                'bw_rate_limit_exceed_drop': {
-                    'type': 'int',
-                },
-                'bw_watermark_drop': {
-                    'type': 'int',
-                },
-                'l4_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'nat_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'l7_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'ssl_cps_exceed_drop': {
-                    'type': 'int',
-                },
-                'ssl_tpt_exceed_drop': {
-                    'type': 'int',
-                },
-                'ssl_watermark_drop': {
-                    'type': 'int',
-                },
-                'conn_limit_exceed_drop': {
-                    'type': 'int',
-                },
-                'l4_svr_handshake_fail': {
-                    'type': 'int',
-                },
-                'stateless_conn_timeout': {
-                    'type': 'int',
-                },
-                'ax_rexmit_syn': {
-                    'type': 'int',
-                },
-                'rcv_ack_on_syn': {
-                    'type': 'int',
-                },
-                'rcv_rst_on_syn': {
-                    'type': 'int',
-                },
-                'tcp_noest_aged_out': {
-                    'type': 'int',
-                },
-                'noest_client_syn_aged_out': {
-                    'type': 'int',
-                },
-                'noest_server_syn_xmit_aged_out': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_syn': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_syn_delq': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_synack': {
-                    'type': 'int',
-                },
-                'rcv_rexmit_synack_delq': {
-                    'type': 'int',
-                },
-                'rcv_fwd_last_ack': {
-                    'type': 'int',
-                },
-                'rcv_rev_last_ack': {
-                    'type': 'int',
-                },
-                'rcv_fwd_fin': {
-                    'type': 'int',
-                },
-                'rcv_fwd_fin_dup': {
-                    'type': 'int',
-                },
-                'rcv_fwd_finack': {
-                    'type': 'int',
-                },
-                'rcv_rev_fin': {
-                    'type': 'int',
-                },
-                'rcv_rev_fin_dup': {
-                    'type': 'int',
-                },
-                'rcv_rev_finack': {
-                    'type': 'int',
-                },
-                'rcv_fwd_rst': {
-                    'type': 'int',
-                },
-                'rcv_rev_rst': {
-                    'type': 'int',
-                },
-                'rcv_reqs_no_rsp': {
-                    'type': 'int',
-                },
-                'rcv_req_rsps': {
-                    'type': 'int',
-                },
-                'rcv_req_not_match': {
-                    'type': 'int',
-                },
-                'rcv_req_morethan_rsps': {
-                    'type': 'int',
-                },
-                'rcv_rsps_morethan_reqs': {
-                    'type': 'int',
-                },
-                'rcv_udp_reqs': {
-                    'type': 'int',
-                },
-                'rcv_udp_rsps': {
-                    'type': 'int',
-                },
-                'tcp_est': {
-                    'type': 'int',
-                },
-                'synattack': {
-                    'type': 'int',
-                },
-                'skip_insert_client_ip': {
-                    'type': 'int',
-                },
-                'dns_id_switch': {
-                    'type': 'int',
-                },
-                'dnssec_switch': {
-                    'type': 'int',
-                },
-                'syncookies_buff_queue': {
-                    'type': 'int',
-                },
-                'syncookies_buff_drop': {
-                    'type': 'int',
-                },
-                'server_down_del': {
-                    'type': 'int',
-                },
-                'tcp_connections_closed': {
-                    'type': 'int',
-                },
-                'snat_force_preserve_alloc': {
-                    'type': 'int',
-                },
-                'snat_force_preserve_free': {
-                    'type': 'int',
-                },
-                'snat_port_overload_fail': {
-                    'type': 'int',
-                }
-            },
-            'cpu_count': {
-                'type': 'int',
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'intcp': {
-                'type': 'str',
-            },
-            'synreceived': {
-                'type': 'str',
-            },
-            'tcp_fwd_last_ack': {
-                'type': 'str',
-            },
-            'tcp_rev_last_ack': {
-                'type': 'str',
-            },
-            'tcp_rev_fin': {
-                'type': 'str',
-            },
-            'tcp_fwd_fin': {
-                'type': 'str',
-            },
-            'tcp_fwd_ackfin': {
-                'type': 'str',
-            },
-            'inudp': {
-                'type': 'str',
-            },
-            'syncookiessent': {
-                'type': 'str',
-            },
-            'syncookiessent_ts': {
-                'type': 'str',
-            },
-            'syncookiessentfailed': {
-                'type': 'str',
-            },
-            'outrst': {
-                'type': 'str',
-            },
-            'outrst_nosyn': {
-                'type': 'str',
-            },
-            'outrst_broker': {
-                'type': 'str',
-            },
-            'outrst_ack_attack': {
-                'type': 'str',
-            },
-            'outrst_aflex': {
-                'type': 'str',
-            },
-            'outrst_stale_sess': {
-                'type': 'str',
-            },
-            'syn_stale_sess': {
-                'type': 'str',
-            },
-            'outrst_tcpproxy': {
-                'type': 'str',
-            },
-            'svrselfail': {
-                'type': 'str',
-            },
-            'noroute': {
-                'type': 'str',
-            },
-            'snat_fail': {
-                'type': 'str',
-            },
-            'snat_no_fwd_route': {
-                'type': 'str',
-            },
-            'snat_no_rev_route': {
-                'type': 'str',
-            },
-            'snat_icmp_error_process': {
-                'type': 'str',
-            },
-            'snat_icmp_no_match': {
-                'type': 'str',
-            },
-            'smart_nat_id_mismatch': {
-                'type': 'str',
-            },
-            'syncookiescheckfailed': {
-                'type': 'str',
-            },
-            'novport_drop': {
-                'type': 'str',
-            },
-            'no_vport_drop': {
-                'type': 'str',
-            },
-            'nosyn_drop': {
-                'type': 'str',
-            },
-            'nosyn_drop_fin': {
-                'type': 'str',
-            },
-            'nosyn_drop_rst': {
-                'type': 'str',
-            },
-            'nosyn_drop_ack': {
-                'type': 'str',
-            },
-            'connlimit_drop': {
-                'type': 'str',
-            },
-            'connlimit_reset': {
-                'type': 'str',
-            },
-            'conn_rate_limit_drop': {
-                'type': 'str',
-            },
-            'conn_rate_limit_reset': {
-                'type': 'str',
-            },
-            'proxy_nosock_drop': {
-                'type': 'str',
-            },
-            'drop_aflex': {
-                'type': 'str',
-            },
-            'sess_aged_out': {
-                'type': 'str',
-            },
-            'tcp_sess_aged_out': {
-                'type': 'str',
-            },
-            'udp_sess_aged_out': {
-                'type': 'str',
-            },
-            'other_sess_aged_out': {
-                'type': 'str',
-            },
-            'tcp_no_slb': {
-                'type': 'str',
-            },
-            'udp_no_slb': {
-                'type': 'str',
-            },
-            'throttle_syn': {
-                'type': 'str',
-            },
-            'drop_gslb': {
-                'type': 'str',
-            },
-            'inband_hm_retry': {
-                'type': 'str',
-            },
-            'inband_hm_reassign': {
-                'type': 'str',
-            },
-            'auto_reassign': {
-                'type': 'str',
-            },
-            'fast_aging_set': {
-                'type': 'str',
-            },
-            'fast_aging_reset': {
-                'type': 'str',
-            },
-            'dns_policy_drop': {
-                'type': 'str',
-            },
-            'tcp_invalid_drop': {
-                'type': 'str',
-            },
-            'anomaly_out_seq': {
-                'type': 'str',
-            },
-            'anomaly_zero_win': {
-                'type': 'str',
-            },
-            'anomaly_bad_content': {
-                'type': 'str',
-            },
-            'anomaly_pbslb_drop': {
-                'type': 'str',
-            },
-            'no_resourse_drop': {
-                'type': 'str',
-            },
-            'reset_unknown_conn': {
-                'type': 'str',
-            },
-            'reset_l7_on_failover': {
-                'type': 'str',
-            },
-            'ignore_msl': {
-                'type': 'str',
-            },
-            'l2_dsr': {
-                'type': 'str',
-            },
-            'l3_dsr': {
-                'type': 'str',
-            },
-            'port_preserve_attempt': {
-                'type': 'str',
-            },
-            'port_preserve_succ': {
-                'type': 'str',
-            },
-            'tcpsyndata_drop': {
-                'type': 'str',
-            },
-            'tcpotherflags_drop': {
-                'type': 'str',
-            },
-            'bw_rate_limit_exceed': {
-                'type': 'str',
-            },
-            'bw_watermark_drop': {
-                'type': 'str',
-            },
-            'l4_cps_exceed': {
-                'type': 'str',
-            },
-            'nat_cps_exceed': {
-                'type': 'str',
-            },
-            'l7_cps_exceed': {
-                'type': 'str',
-            },
-            'ssl_cps_exceed': {
-                'type': 'str',
-            },
-            'ssl_tpt_exceed': {
-                'type': 'str',
-            },
-            'ssl_watermark_drop': {
-                'type': 'str',
-            },
-            'concurrent_conn_exceed': {
-                'type': 'str',
-            },
-            'svr_syn_handshake_fail': {
-                'type': 'str',
-            },
-            'stateless_conn_timeout': {
-                'type': 'str',
-            },
-            'tcp_ax_rexmit_syn': {
-                'type': 'str',
-            },
-            'tcp_syn_rcv_ack': {
-                'type': 'str',
-            },
-            'tcp_syn_rcv_rst': {
-                'type': 'str',
-            },
-            'tcp_sess_noest_aged_out': {
-                'type': 'str',
-            },
-            'tcp_sess_noest_csyn_rcv_aged_out': {
-                'type': 'str',
-            },
-            'tcp_sess_noest_ssyn_xmit_aged_out': {
-                'type': 'str',
-            },
-            'tcp_rexmit_syn': {
-                'type': 'str',
-            },
-            'tcp_rexmit_syn_delq': {
-                'type': 'str',
-            },
-            'tcp_rexmit_synack': {
-                'type': 'str',
-            },
-            'tcp_rexmit_synack_delq': {
-                'type': 'str',
-            },
-            'tcp_fwd_fin_dup': {
-                'type': 'str',
-            },
-            'tcp_rev_fin_dup': {
-                'type': 'str',
-            },
-            'tcp_rev_ackfin': {
-                'type': 'str',
-            },
-            'tcp_fwd_rst': {
-                'type': 'str',
-            },
-            'tcp_rev_rst': {
-                'type': 'str',
-            },
-            'udp_req_oneplus_no_resp': {
-                'type': 'str',
-            },
-            'udp_req_one_oneplus_resp': {
-                'type': 'str',
-            },
-            'udp_req_resp_notmatch': {
-                'type': 'str',
-            },
-            'udp_req_more_resp': {
-                'type': 'str',
-            },
-            'udp_resp_more_req': {
-                'type': 'str',
-            },
-            'udp_req_oneplus': {
-                'type': 'str',
-            },
-            'udp_resp_oneplus': {
-                'type': 'str',
-            },
-            'out_seq_ack_drop': {
-                'type': 'str',
-            },
-            'tcp_est': {
-                'type': 'str',
-            },
-            'synattack': {
-                'type': 'str',
-            },
-            'syn_rate': {
-                'type': 'str',
-            },
-            'syncookie_buff_drop': {
-                'type': 'str',
-            },
-            'syncookie_buff_queue': {
-                'type': 'str',
-            },
-            'skip_insert_client_ip': {
-                'type': 'str',
-            },
-            'synreceived_hw': {
-                'type': 'str',
-            },
-            'dns_id_switch': {
-                'type': 'str',
-            },
-            'server_down_del': {
-                'type': 'str',
-            },
-            'dnssec_switch': {
-                'type': 'str',
-            },
-            'rate_drop_reset_unkn': {
-                'type': 'str',
-            },
-            'tcp_connections_closed': {
-                'type': 'str',
-            },
-            'snat_force_preserve_alloc': {
-                'type': 'str',
-            },
-            'snat_force_preserve_free': {
-                'type': 'str',
-            },
-            'snat_port_overload_fail': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'intcp', 'synreceived', 'tcp_fwd_last_ack', 'tcp_rev_last_ack', 'tcp_rev_fin', 'tcp_fwd_fin', 'tcp_fwd_ackfin', 'inudp', 'syncookiessent', 'syncookiessent_ts', 'syncookiessentfailed', 'outrst', 'outrst_nosyn', 'outrst_broker', 'outrst_ack_attack', 'outrst_aflex', 'outrst_stale_sess', 'syn_stale_sess', 'outrst_tcpproxy', 'svrselfail', 'noroute', 'snat_fail', 'snat_no_fwd_route', 'snat_no_rev_route', 'snat_icmp_error_process', 'snat_icmp_no_match', 'smart_nat_id_mismatch', 'syncookiescheckfailed', 'novport_drop', 'no_vport_drop', 'nosyn_drop', 'nosyn_drop_fin', 'nosyn_drop_rst', 'nosyn_drop_ack', 'connlimit_drop', 'connlimit_reset', 'conn_rate_limit_drop', 'conn_rate_limit_reset', 'proxy_nosock_drop', 'drop_aflex', 'sess_aged_out', 'tcp_sess_aged_out', 'udp_sess_aged_out', 'other_sess_aged_out', 'tcp_no_slb', 'udp_no_slb', 'throttle_syn', 'drop_gslb', 'inband_hm_retry', 'inband_hm_reassign', 'auto_reassign', 'fast_aging_set', 'fast_aging_reset', 'dns_policy_drop', 'tcp_invalid_drop', 'anomaly_out_seq', 'anomaly_zero_win', 'anomaly_bad_content', 'anomaly_pbslb_drop', 'no_resourse_drop', 'reset_unknown_conn', 'reset_l7_on_failover', 'ignore_msl', 'l2_dsr', 'l3_dsr', 'port_preserve_attempt', 'port_preserve_succ', 'tcpsyndata_drop', 'tcpotherflags_drop', 'bw_rate_limit_exceed', 'bw_watermark_drop', 'l4_cps_exceed', 'nat_cps_exceed', 'l7_cps_exceed', 'ssl_cps_exceed', 'ssl_tpt_exceed', 'ssl_watermark_drop', 'concurrent_conn_exceed', 'svr_syn_handshake_fail', 'stateless_conn_timeout', 'tcp_ax_rexmit_syn', 'tcp_syn_rcv_ack', 'tcp_syn_rcv_rst', 'tcp_sess_noest_aged_out', 'tcp_sess_noest_csyn_rcv_aged_out', 'tcp_sess_noest_ssyn_xmit_aged_out', 'tcp_rexmit_syn', 'tcp_rexmit_syn_delq', 'tcp_rexmit_synack', 'tcp_rexmit_synack_delq', 'tcp_fwd_fin_dup', 'tcp_rev_fin_dup', 'tcp_rev_ackfin', 'tcp_fwd_rst', 'tcp_rev_rst', 'udp_req_oneplus_no_resp', 'udp_req_one_oneplus_resp', 'udp_req_resp_notmatch', 'udp_req_more_resp', 'udp_resp_more_req', 'udp_req_oneplus', 'udp_resp_oneplus', 'out_seq_ack_drop', 'tcp_est', 'synattack', 'syn_rate', 'syncookie_buff_drop', 'syncookie_buff_queue', 'skip_insert_client_ip', 'synreceived_hw', 'dns_id_switch', 'server_down_del', 'dnssec_switch', 'rate_drop_reset_unkn', 'tcp_connections_closed', 'gtp_c_invalid_port', 'gtp_c_invalid_header', 'gtp_c_invalid_message', 'reselect_svrselfail', 'snat_port_overload_fail', 'snat_force_preserve_alloc', 'snat_force_preserve_free', 'slb_gtp_proxy_pkt_rcv_rr', 'slb_gtp_proxy_smp_match', 'slb_gtp_proxy_smp_no_match', 'slb_gtp_proxy_c_process_local_rr', 'slb_gtp_proxy_smp_creation_failed', 'slb_gtp_proxy_smp_created', 'slb_gtp_proxy_smp_free_not_found', 'slb_gtp_proxy_smp_freed', 'slb_gtp_proxy_retx_requests']}},
+        'oper': {'type': 'dict', 'l4_cpu_list': {'type': 'list', 'ip_outnoroute': {'type': 'int', }, 'tcp_outrst': {'type': 'int', }, 'tcp_outrst_nosyn': {'type': 'int', }, 'tcp_outrst_broker': {'type': 'int', }, 'tcp_outrst_ack_attack': {'type': 'int', }, 'tcp_outrst_aflex': {'type': 'int', }, 'tcp_outrst_stale_sess': {'type': 'int', }, 'tcp_syn_stale_sess': {'type': 'int', }, 'tcp_outrst_tcpproxy': {'type': 'int', }, 'tcp_synreceived': {'type': 'int', }, 'tcp_synreceived_hw': {'type': 'int', }, 'tcp_syn_rate': {'type': 'int', }, 'tcp_syncookiessent': {'type': 'int', }, 'tcp_syncookiessent_ts': {'type': 'int', }, 'tcp_syncookiessentfailed': {'type': 'int', }, 'intcp': {'type': 'int', }, 'inudp': {'type': 'int', }, 'svr_sel_failed': {'type': 'int', }, 'snat_fail': {'type': 'int', }, 'snat_no_fwd_route': {'type': 'int', }, 'snat_no_rev_route': {'type': 'int', }, 'snat_icmp_error_process': {'type': 'int', }, 'snat_icmp_no_match': {'type': 'int', }, 'smart_nat_id_mismatch': {'type': 'int', }, 'tcp_syncookiescheckfailed': {'type': 'int', }, 'novport_drop': {'type': 'int', }, 'no_vport_drop': {'type': 'int', }, 'nosyn_drop': {'type': 'int', }, 'nosyn_drop_fin': {'type': 'int', }, 'nosyn_drop_rst': {'type': 'int', }, 'nosyn_drop_ack': {'type': 'int', }, 'connlimit_drop': {'type': 'int', }, 'connlimit_reset': {'type': 'int', }, 'conn_rate_limit_drop': {'type': 'int', }, 'conn_rate_limit_reset': {'type': 'int', }, 'proxy_nosock_drop': {'type': 'int', }, 'aflex_drop': {'type': 'int', }, 'sess_aged_out': {'type': 'int', }, 'tcp_sess_aged_out': {'type': 'int', }, 'udp_sess_aged_out': {'type': 'int', }, 'other_sess_aged_out': {'type': 'int', }, 'tcp_no_slb': {'type': 'int', }, 'udp_no_slb': {'type': 'int', }, 'throttle_syn': {'type': 'int', }, 'inband_hm_retry': {'type': 'int', }, 'inband_hm_reassign': {'type': 'int', }, 'auto_reassign': {'type': 'int', }, 'fast_aging_set': {'type': 'int', }, 'fast_aging_reset': {'type': 'int', }, 'tcp_invalid_drop': {'type': 'int', }, 'out_seq_ack_drop': {'type': 'int', }, 'anomaly_out_seq': {'type': 'int', }, 'anomaly_zero_win': {'type': 'int', }, 'anomaly_bad_content': {'type': 'int', }, 'anomaly_pbslb_drop': {'type': 'int', }, 'no_resource_drop': {'type': 'int', }, 'reset_unknown_conn': {'type': 'int', }, 'reset_l7_on_failover': {'type': 'int', }, 'tcp_syn_otherflags': {'type': 'int', }, 'tcp_syn_withdata': {'type': 'int', }, 'ignore_msl': {'type': 'int', }, 'l2_dsr': {'type': 'int', }, 'l3_dsr': {'type': 'int', }, 'port_preserve_attempt': {'type': 'int', }, 'port_preserve_succ': {'type': 'int', }, 'bw_rate_limit_exceed_drop': {'type': 'int', }, 'bw_watermark_drop': {'type': 'int', }, 'l4_cps_exceed_drop': {'type': 'int', }, 'nat_cps_exceed_drop': {'type': 'int', }, 'l7_cps_exceed_drop': {'type': 'int', }, 'ssl_cps_exceed_drop': {'type': 'int', }, 'ssl_tpt_exceed_drop': {'type': 'int', }, 'ssl_watermark_drop': {'type': 'int', }, 'conn_limit_exceed_drop': {'type': 'int', }, 'l4_svr_handshake_fail': {'type': 'int', }, 'stateless_conn_timeout': {'type': 'int', }, 'ax_rexmit_syn': {'type': 'int', }, 'rcv_ack_on_syn': {'type': 'int', }, 'rcv_rst_on_syn': {'type': 'int', }, 'tcp_noest_aged_out': {'type': 'int', }, 'noest_client_syn_aged_out': {'type': 'int', }, 'noest_server_syn_xmit_aged_out': {'type': 'int', }, 'rcv_rexmit_syn': {'type': 'int', }, 'rcv_rexmit_syn_delq': {'type': 'int', }, 'rcv_rexmit_synack': {'type': 'int', }, 'rcv_rexmit_synack_delq': {'type': 'int', }, 'rcv_fwd_last_ack': {'type': 'int', }, 'rcv_rev_last_ack': {'type': 'int', }, 'rcv_fwd_fin': {'type': 'int', }, 'rcv_fwd_fin_dup': {'type': 'int', }, 'rcv_fwd_finack': {'type': 'int', }, 'rcv_rev_fin': {'type': 'int', }, 'rcv_rev_fin_dup': {'type': 'int', }, 'rcv_rev_finack': {'type': 'int', }, 'rcv_fwd_rst': {'type': 'int', }, 'rcv_rev_rst': {'type': 'int', }, 'rcv_reqs_no_rsp': {'type': 'int', }, 'rcv_req_rsps': {'type': 'int', }, 'rcv_req_not_match': {'type': 'int', }, 'rcv_req_morethan_rsps': {'type': 'int', }, 'rcv_rsps_morethan_reqs': {'type': 'int', }, 'rcv_udp_reqs': {'type': 'int', }, 'rcv_udp_rsps': {'type': 'int', }, 'tcp_est': {'type': 'int', }, 'synattack': {'type': 'int', }, 'skip_insert_client_ip': {'type': 'int', }, 'dns_id_switch': {'type': 'int', }, 'dnssec_switch': {'type': 'int', }, 'syncookies_buff_queue': {'type': 'int', }, 'syncookies_buff_drop': {'type': 'int', }, 'server_down_del': {'type': 'int', }, 'tcp_connections_closed': {'type': 'int', }, 'gtp_c_invalid_port': {'type': 'int', }, 'gtp_c_invalid_header': {'type': 'int', }, 'gtp_c_invalid_message': {'type': 'int', }, 'reselect_svrselfail': {'type': 'int', }, 'snat_port_overload_fail': {'type': 'int', }, 'snat_force_preserve_alloc': {'type': 'int', }, 'snat_force_preserve_free': {'type': 'int', }, 'slb_gtp_proxy_pkt_rcv_rr': {'type': 'int', }, 'slb_gtp_proxy_smp_match': {'type': 'int', }, 'slb_gtp_proxy_smp_no_match': {'type': 'int', }, 'slb_gtp_proxy_c_process_local_rr': {'type': 'int', }, 'slb_gtp_proxy_smp_creation_failed': {'type': 'int', }, 'slb_gtp_proxy_smp_created': {'type': 'int', }, 'slb_gtp_proxy_smp_free_not_found': {'type': 'int', }, 'slb_gtp_proxy_smp_freed': {'type': 'int', }, 'slb_gtp_proxy_retx_requests': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
+        'stats': {'type': 'dict', 'intcp': {'type': 'str', }, 'synreceived': {'type': 'str', }, 'tcp_fwd_last_ack': {'type': 'str', }, 'tcp_rev_last_ack': {'type': 'str', }, 'tcp_rev_fin': {'type': 'str', }, 'tcp_fwd_fin': {'type': 'str', }, 'tcp_fwd_ackfin': {'type': 'str', }, 'inudp': {'type': 'str', }, 'syncookiessent': {'type': 'str', }, 'syncookiessent_ts': {'type': 'str', }, 'syncookiessentfailed': {'type': 'str', }, 'outrst': {'type': 'str', }, 'outrst_nosyn': {'type': 'str', }, 'outrst_broker': {'type': 'str', }, 'outrst_ack_attack': {'type': 'str', }, 'outrst_aflex': {'type': 'str', }, 'outrst_stale_sess': {'type': 'str', }, 'syn_stale_sess': {'type': 'str', }, 'outrst_tcpproxy': {'type': 'str', }, 'svrselfail': {'type': 'str', }, 'noroute': {'type': 'str', }, 'snat_fail': {'type': 'str', }, 'snat_no_fwd_route': {'type': 'str', }, 'snat_no_rev_route': {'type': 'str', }, 'snat_icmp_error_process': {'type': 'str', }, 'snat_icmp_no_match': {'type': 'str', }, 'smart_nat_id_mismatch': {'type': 'str', }, 'syncookiescheckfailed': {'type': 'str', }, 'novport_drop': {'type': 'str', }, 'no_vport_drop': {'type': 'str', }, 'nosyn_drop': {'type': 'str', }, 'nosyn_drop_fin': {'type': 'str', }, 'nosyn_drop_rst': {'type': 'str', }, 'nosyn_drop_ack': {'type': 'str', }, 'connlimit_drop': {'type': 'str', }, 'connlimit_reset': {'type': 'str', }, 'conn_rate_limit_drop': {'type': 'str', }, 'conn_rate_limit_reset': {'type': 'str', }, 'proxy_nosock_drop': {'type': 'str', }, 'drop_aflex': {'type': 'str', }, 'sess_aged_out': {'type': 'str', }, 'tcp_sess_aged_out': {'type': 'str', }, 'udp_sess_aged_out': {'type': 'str', }, 'other_sess_aged_out': {'type': 'str', }, 'tcp_no_slb': {'type': 'str', }, 'udp_no_slb': {'type': 'str', }, 'throttle_syn': {'type': 'str', }, 'drop_gslb': {'type': 'str', }, 'inband_hm_retry': {'type': 'str', }, 'inband_hm_reassign': {'type': 'str', }, 'auto_reassign': {'type': 'str', }, 'fast_aging_set': {'type': 'str', }, 'fast_aging_reset': {'type': 'str', }, 'dns_policy_drop': {'type': 'str', }, 'tcp_invalid_drop': {'type': 'str', }, 'anomaly_out_seq': {'type': 'str', }, 'anomaly_zero_win': {'type': 'str', }, 'anomaly_bad_content': {'type': 'str', }, 'anomaly_pbslb_drop': {'type': 'str', }, 'no_resourse_drop': {'type': 'str', }, 'reset_unknown_conn': {'type': 'str', }, 'reset_l7_on_failover': {'type': 'str', }, 'ignore_msl': {'type': 'str', }, 'l2_dsr': {'type': 'str', }, 'l3_dsr': {'type': 'str', }, 'port_preserve_attempt': {'type': 'str', }, 'port_preserve_succ': {'type': 'str', }, 'tcpsyndata_drop': {'type': 'str', }, 'tcpotherflags_drop': {'type': 'str', }, 'bw_rate_limit_exceed': {'type': 'str', }, 'bw_watermark_drop': {'type': 'str', }, 'l4_cps_exceed': {'type': 'str', }, 'nat_cps_exceed': {'type': 'str', }, 'l7_cps_exceed': {'type': 'str', }, 'ssl_cps_exceed': {'type': 'str', }, 'ssl_tpt_exceed': {'type': 'str', }, 'ssl_watermark_drop': {'type': 'str', }, 'concurrent_conn_exceed': {'type': 'str', }, 'svr_syn_handshake_fail': {'type': 'str', }, 'stateless_conn_timeout': {'type': 'str', }, 'tcp_ax_rexmit_syn': {'type': 'str', }, 'tcp_syn_rcv_ack': {'type': 'str', }, 'tcp_syn_rcv_rst': {'type': 'str', }, 'tcp_sess_noest_aged_out': {'type': 'str', }, 'tcp_sess_noest_csyn_rcv_aged_out': {'type': 'str', }, 'tcp_sess_noest_ssyn_xmit_aged_out': {'type': 'str', }, 'tcp_rexmit_syn': {'type': 'str', }, 'tcp_rexmit_syn_delq': {'type': 'str', }, 'tcp_rexmit_synack': {'type': 'str', }, 'tcp_rexmit_synack_delq': {'type': 'str', }, 'tcp_fwd_fin_dup': {'type': 'str', }, 'tcp_rev_fin_dup': {'type': 'str', }, 'tcp_rev_ackfin': {'type': 'str', }, 'tcp_fwd_rst': {'type': 'str', }, 'tcp_rev_rst': {'type': 'str', }, 'udp_req_oneplus_no_resp': {'type': 'str', }, 'udp_req_one_oneplus_resp': {'type': 'str', }, 'udp_req_resp_notmatch': {'type': 'str', }, 'udp_req_more_resp': {'type': 'str', }, 'udp_resp_more_req': {'type': 'str', }, 'udp_req_oneplus': {'type': 'str', }, 'udp_resp_oneplus': {'type': 'str', }, 'out_seq_ack_drop': {'type': 'str', }, 'tcp_est': {'type': 'str', }, 'synattack': {'type': 'str', }, 'syn_rate': {'type': 'str', }, 'syncookie_buff_drop': {'type': 'str', }, 'syncookie_buff_queue': {'type': 'str', }, 'skip_insert_client_ip': {'type': 'str', }, 'synreceived_hw': {'type': 'str', }, 'dns_id_switch': {'type': 'str', }, 'server_down_del': {'type': 'str', }, 'dnssec_switch': {'type': 'str', }, 'rate_drop_reset_unkn': {'type': 'str', }, 'tcp_connections_closed': {'type': 'str', }, 'gtp_c_invalid_port': {'type': 'str', }, 'gtp_c_invalid_header': {'type': 'str', }, 'gtp_c_invalid_message': {'type': 'str', }, 'reselect_svrselfail': {'type': 'str', }, 'snat_port_overload_fail': {'type': 'str', }, 'snat_force_preserve_alloc': {'type': 'str', }, 'snat_force_preserve_free': {'type': 'str', }, 'slb_gtp_proxy_smp_match': {'type': 'str', }, 'slb_gtp_proxy_smp_no_match': {'type': 'str', }, 'slb_gtp_proxy_c_process_local_rr': {'type': 'str', }, 'slb_gtp_proxy_smp_creation_failed': {'type': 'str', }, 'slb_gtp_proxy_smp_created': {'type': 'str', }, 'slb_gtp_proxy_smp_free_not_found': {'type': 'str', }, 'slb_gtp_proxy_smp_freed': {'type': 'str', }, 'slb_gtp_proxy_retx_requests': {'type': 'str', }}
     })
     return rv
 
@@ -1531,7 +812,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1542,7 +824,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -1582,12 +865,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1602,16 +887,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1620,15 +905,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1645,36 +930,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["l4"] if info != "NotFound" else info
+                result["acos_info"] = info["l4"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "l4-list"] if info != "NotFound" else info
+                result["acos_info"] = info["l4-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
+                get_oper_result = api_client.get_oper(module.client, existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["l4"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["l4"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
+                get_type_result = api_client.get_stats(module.client, existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["l4"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["l4"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1687,11 +964,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

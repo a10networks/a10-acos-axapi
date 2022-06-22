@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_debug_gslb
 description:
@@ -55,11 +56,246 @@ options:
         - Destination/target partition for object/command
         type: str
         required: False
+    glname:
+        description:
+        - "Debug for matched Geo-location"
+        type: str
+        required: False
+    memory:
+        description:
+        - "Debug GSLB memory"
+        type: bool
+        required: False
+    id:
+        description:
+        - "Specify ID"
+        type: int
+        required: False
+    ip_addr:
+        description:
+        - "Debug for matched IP address"
+        type: str
+        required: False
+    ipv6_addr:
+        description:
+        - "Debug for matched IPv6 address"
+        type: str
+        required: False
+    state:
+        description:
+        - "Keep GSLB state information"
+        type: bool
+        required: False
+    one_shot:
+        description:
+        - "Stop after get 64 states"
+        type: bool
+        required: False
     uuid:
         description:
         - "uuid of the object"
         type: str
         required: False
+    group:
+        description:
+        - "Field group"
+        type: dict
+        required: False
+        suboptions:
+            cache:
+                description:
+                - "Cache trace information"
+                type: bool
+            event:
+                description:
+                - "EVENTS trace information"
+                type: bool
+            all:
+                description:
+                - "All trace information"
+                type: bool
+            fsm:
+                description:
+                - "FSM trace information"
+                type: bool
+            ip:
+                description:
+                - "Remote IP address of GSLB controller of the group"
+                type: bool
+            peer_ipv4:
+                description:
+                - "Specify remote IPv4 Address"
+                type: str
+            peer_ipv6:
+                description:
+                - "Specify remote IPv6 Address"
+                type: str
+            ipc:
+                description:
+                - "IPC trace information"
+                type: bool
+            keep_alive:
+                description:
+                - "KEEPALIVE trace information"
+                type: bool
+            message:
+                description:
+                - "Debug GSLB group message"
+                type: bool
+            message_all:
+                description:
+                - "All messages"
+                type: bool
+            message_keepalive:
+                description:
+                - "GMP keepalive messages"
+                type: bool
+            message_notify:
+                description:
+                - "GMP notify messages"
+                type: bool
+            message_control:
+                description:
+                - "GMP control messages"
+                type: bool
+            message_query:
+                description:
+                - "GMP query messages"
+                type: bool
+            message_open:
+                description:
+                - "GMP open messages"
+                type: bool
+            message_group:
+                description:
+                - "GMP group messages"
+                type: bool
+            name:
+                description:
+                - "Name of GSLB group"
+                type: str
+            normal:
+                description:
+                - "Normal trace information"
+                type: bool
+            timer:
+                description:
+                - "Timer trace information"
+                type: bool
+            update:
+                description:
+                - "Update trace information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    protocol:
+        description:
+        - "Field protocol"
+        type: dict
+        required: False
+        suboptions:
+            cache:
+                description:
+                - "Cache trace information"
+                type: bool
+            event:
+                description:
+                - "EVENTS trace information"
+                type: bool
+            all:
+                description:
+                - "All trace information"
+                type: bool
+            active_rdt:
+                description:
+                - "ARDT trace information"
+                type: bool
+            fsm:
+                description:
+                - "FSM trace information"
+                type: bool
+            ip:
+                description:
+                - "Specify the remote IP address"
+                type: bool
+            peer_ipv4:
+                description:
+                - "Specify remote IPv4 Address"
+                type: str
+            peer_ipv6:
+                description:
+                - "Specify remote IPv6 Address"
+                type: str
+            ipc:
+                description:
+                - "IPC trace information"
+                type: bool
+            keep_alive:
+                description:
+                - "KEEPALIVE trace information"
+                type: bool
+            message:
+                description:
+                - "Debug GSLB protocol message"
+                type: bool
+            message_all:
+                description:
+                - "All messages"
+                type: bool
+            message_keepalive:
+                description:
+                - "GMP keepalive messages"
+                type: bool
+            message_notify:
+                description:
+                - "GMP notify messages"
+                type: bool
+            message_control:
+                description:
+                - "GMP control messages"
+                type: bool
+            message_query:
+                description:
+                - "GMP query messages"
+                type: bool
+            message_open:
+                description:
+                - "GMP open messages"
+                type: bool
+            message_update:
+                description:
+                - "GMP update messages"
+                type: bool
+            message_ardt_query:
+                description:
+                - "GMP ardt-query messages"
+                type: bool
+            message_ardt_report:
+                description:
+                - "GMP ardt-report messages"
+                type: bool
+            name:
+                description:
+                - "Specify the slb device name"
+                type: str
+            normal:
+                description:
+                - "Normal trace information"
+                type: bool
+            timer:
+                description:
+                - "Timer trace information"
+                type: bool
+            update:
+                description:
+                - "Update trace information"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -113,10 +349,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["glname", "group", "id", "ip_addr", "ipv6_addr", "memory", "one_shot", "protocol", "state", "uuid", ]
 
 
 def get_default_argspec():
@@ -124,28 +359,27 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {
-        'type': 'str',
-    }})
+    rv.update({'glname': {'type': 'str', },
+        'memory': {'type': 'bool', },
+        'id': {'type': 'int', },
+        'ip_addr': {'type': 'str', },
+        'ipv6_addr': {'type': 'str', },
+        'state': {'type': 'bool', },
+        'one_shot': {'type': 'bool', },
+        'uuid': {'type': 'str', },
+        'group': {'type': 'dict', 'cache': {'type': 'bool', }, 'event': {'type': 'bool', }, 'all': {'type': 'bool', }, 'fsm': {'type': 'bool', }, 'ip': {'type': 'bool', }, 'peer_ipv4': {'type': 'str', }, 'peer_ipv6': {'type': 'str', }, 'ipc': {'type': 'bool', }, 'keep_alive': {'type': 'bool', }, 'message': {'type': 'bool', }, 'message_all': {'type': 'bool', }, 'message_keepalive': {'type': 'bool', }, 'message_notify': {'type': 'bool', }, 'message_control': {'type': 'bool', }, 'message_query': {'type': 'bool', }, 'message_open': {'type': 'bool', }, 'message_group': {'type': 'bool', }, 'name': {'type': 'str', }, 'normal': {'type': 'bool', }, 'timer': {'type': 'bool', }, 'update': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'protocol': {'type': 'dict', 'cache': {'type': 'bool', }, 'event': {'type': 'bool', }, 'all': {'type': 'bool', }, 'active_rdt': {'type': 'bool', }, 'fsm': {'type': 'bool', }, 'ip': {'type': 'bool', }, 'peer_ipv4': {'type': 'str', }, 'peer_ipv6': {'type': 'str', }, 'ipc': {'type': 'bool', }, 'keep_alive': {'type': 'bool', }, 'message': {'type': 'bool', }, 'message_all': {'type': 'bool', }, 'message_keepalive': {'type': 'bool', }, 'message_notify': {'type': 'bool', }, 'message_control': {'type': 'bool', }, 'message_query': {'type': 'bool', }, 'message_open': {'type': 'bool', }, 'message_update': {'type': 'bool', }, 'message_ardt_query': {'type': 'bool', }, 'message_ardt_report': {'type': 'bool', }, 'name': {'type': 'str', }, 'normal': {'type': 'bool', }, 'timer': {'type': 'bool', }, 'update': {'type': 'bool', }, 'uuid': {'type': 'str', }}
+    })
     return rv
 
 
@@ -169,16 +403,30 @@ def new_url(module):
     return url_base.format(**f_dict)
 
 
-def report_changes(module, result, existing_config):
-    if existing_config:
-        result["changed"] = True
-    return result
+def report_changes(module, result, existing_config, payload):
+    change_results = copy.deepcopy(result)
+    if not existing_config:
+        change_results["modified_values"].update(**payload)
+        return change_results
+
+    config_changes = copy.deepcopy(existing_config)
+    for k, v in payload["gslb"].items():
+        v = 1 if str(v).lower() == "true" else v
+        v = 0 if str(v).lower() == "false" else v
+
+        if config_changes["gslb"].get(k) != v:
+            change_results["changed"] = True
+            config_changes["gslb"][k] = v
+
+    change_results["modified_values"].update(**config_changes)
+    return change_results
 
 
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -189,7 +437,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -229,12 +478,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -249,16 +500,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -267,15 +518,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -292,20 +543,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["gslb"] if info != "NotFound" else info
+                result["acos_info"] = info["gslb"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "gslb-list"] if info != "NotFound" else info
+                result["acos_info"] = info["gslb-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -318,11 +565,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

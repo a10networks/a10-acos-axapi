@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_scaleout_cluster
 description:
@@ -92,6 +93,11 @@ options:
                 description:
                 - "Field start_delay"
                 type: int
+            cluster_mode:
+                description:
+                - "'layer-2'= Nodes in cluster are layer 2 connected (default mode); 'layer-3'=
+          Nodes in cluster are l3 connected;"
+                type: str
             uuid:
                 description:
                 - "uuid of the object"
@@ -100,9 +106,17 @@ options:
                 description:
                 - "Field l2_redirect"
                 type: dict
-            session_sync_interface:
+            traffic_redirection:
                 description:
-                - "Field session_sync_interface"
+                - "Field traffic_redirection"
+                type: dict
+            session_sync:
+                description:
+                - "Field session_sync"
+                type: dict
+            exclude_interfaces:
+                description:
+                - "Field exclude_interfaces"
                 type: dict
             tracking_template:
                 description:
@@ -114,6 +128,10 @@ options:
         type: dict
         required: False
         suboptions:
+            enable:
+                description:
+                - "Field enable"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -136,6 +154,10 @@ options:
         type: dict
         required: False
         suboptions:
+            enable:
+                description:
+                - "Field enable"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -160,6 +182,10 @@ options:
         type: dict
         required: False
         suboptions:
+            enable:
+                description:
+                - "Field enable"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -174,6 +200,51 @@ options:
         type: dict
         required: False
         suboptions:
+            tickTime:
+                description:
+                - "Field tickTime"
+                type: int
+            initLimit:
+                description:
+                - "Field initLimit"
+                type: int
+            syncLimit:
+                description:
+                - "Field syncLimit"
+                type: int
+            minSessionTimeout:
+                description:
+                - "Field minSessionTimeout"
+                type: int
+            maxSessionTimeout:
+                description:
+                - "Field maxSessionTimeout"
+                type: int
+            client_recv_timeout:
+                description:
+                - "Field client_recv_timeout"
+                type: int
+            clientPort:
+                description:
+                - "client session port"
+                type: int
+            loopback_intf_support:
+                description:
+                - "support loopback interface for scaleout database (enabled by default)"
+                type: bool
+            broken_detect_timeout:
+                description:
+                - "database connection broken detection timeout (mseconds) (12000 mseconds for
+          default)"
+                type: int
+            more_election_packet:
+                description:
+                - "send more election packet in election period (enabled by default)"
+                type: bool
+            elect_conn_timeout:
+                description:
+                - "election connection timeout (mseconds) (1200 for default)"
+                type: int
             uuid:
                 description:
                 - "uuid of the object"
@@ -231,18 +302,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "cluster_devices",
-    "cluster_id",
-    "db_config",
-    "device_groups",
-    "follow_vcs",
-    "local_device",
-    "service_config",
-    "tracking_template",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["cluster_devices", "cluster_id", "db_config", "device_groups", "follow_vcs", "local_device", "service_config", "tracking_template", "uuid", ]
 
 
 def get_default_argspec():
@@ -250,252 +312,25 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'cluster_id': {
-            'type': 'int',
-            'required': True,
-        },
-        'follow_vcs': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'local_device': {
-            'type': 'dict',
-            'priority': {
-                'type': 'int',
-            },
-            'id': {
-                'type': 'int',
-            },
-            'action': {
-                'type': 'str',
-                'choices': ['enable', 'disable']
-            },
-            'start_delay': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'l2_redirect': {
-                'type': 'dict',
-                'redirect_eth': {
-                    'type': 'str',
-                },
-                'ethernet_vlan': {
-                    'type': 'int',
-                },
-                'redirect_trunk': {
-                    'type': 'int',
-                },
-                'trunk_vlan': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'session_sync_interface': {
-                'type': 'dict',
-                'eth_cfg': {
-                    'type': 'list',
-                    'ethernet': {
-                        'type': 'str',
-                    }
-                },
-                'trunk_cfg': {
-                    'type': 'list',
-                    'trunk': {
-                        'type': 'int',
-                    }
-                },
-                've_cfg': {
-                    'type': 'list',
-                    've': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'tracking_template': {
-                'type': 'dict',
-                'template_list': {
-                    'type': 'list',
-                    'template': {
-                        'type': 'str',
-                        'required': True,
-                    },
-                    'threshold_cfg': {
-                        'type': 'list',
-                        'threshold': {
-                            'type': 'int',
-                        },
-                        'action': {
-                            'type': 'str',
-                            'choices': ['down', 'exit-cluster']
-                        }
-                    },
-                    'uuid': {
-                        'type': 'str',
-                    },
-                    'user_tag': {
-                        'type': 'str',
-                    }
-                }
-            }
-        },
-        'cluster_devices': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'minimum_nodes': {
-                'type': 'dict',
-                'minimum_nodes_num': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'cluster_discovery_timeout': {
-                'type': 'dict',
-                'timer_val': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'device_id_list': {
-                'type': 'list',
-                'device_id': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'ip': {
-                    'type': 'str',
-                },
-                'action': {
-                    'type': 'str',
-                    'choices': ['enable', 'disable']
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'user_tag': {
-                    'type': 'str',
-                }
-            }
-        },
-        'device_groups': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'device_group_list': {
-                'type': 'list',
-                'device_group': {
-                    'type': 'int',
-                    'required': True,
-                },
-                'device_id_list': {
-                    'type': 'list',
-                    'device_id_start': {
-                        'type': 'int',
-                    },
-                    'device_id_end': {
-                        'type': 'int',
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'user_tag': {
-                    'type': 'str',
-                }
-            }
-        },
-        'tracking_template': {
-            'type': 'dict',
-            'template_list': {
-                'type': 'list',
-                'template': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'threshold_cfg': {
-                    'type': 'list',
-                    'threshold': {
-                        'type': 'int',
-                    },
-                    'action': {
-                        'type': 'str',
-                        'choices': ['down', 'exit-cluster']
-                    }
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'user_tag': {
-                    'type': 'str',
-                }
-            }
-        },
-        'service_config': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'template_list': {
-                'type': 'list',
-                'name': {
-                    'type': 'str',
-                    'required': True,
-                },
-                'bucket_count': {
-                    'type': 'int',
-                },
-                'device_group': {
-                    'type': 'int',
-                },
-                'uuid': {
-                    'type': 'str',
-                },
-                'user_tag': {
-                    'type': 'str',
-                }
-            }
-        },
-        'db_config': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        }
+    rv.update({'cluster_id': {'type': 'int', 'required': True, },
+        'follow_vcs': {'type': 'bool', },
+        'uuid': {'type': 'str', },
+        'local_device': {'type': 'dict', 'priority': {'type': 'int', }, 'id': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'start_delay': {'type': 'int', }, 'cluster_mode': {'type': 'str', 'choices': ['layer-2', 'layer-3']}, 'uuid': {'type': 'str', }, 'l2_redirect': {'type': 'dict', 'redirect_eth': {'type': 'str', }, 'ethernet_vlan': {'type': 'int', }, 'redirect_trunk': {'type': 'int', }, 'trunk_vlan': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'traffic_redirection': {'type': 'dict', 'follow_shared': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'interfaces': {'type': 'dict', 'eth_cfg': {'type': 'list', 'ethernet': {'type': 'str', }}, 'trunk_cfg': {'type': 'list', 'trunk': {'type': 'int', }}, 've_cfg': {'type': 'list', 've': {'type': 'int', }}, 'loopback_cfg': {'type': 'list', 'loopback': {'type': 'int', }}, 'uuid': {'type': 'str', }}, 'reachability_options': {'type': 'dict', 'skip_default_route': {'type': 'bool', }, 'uuid': {'type': 'str', }}}, 'session_sync': {'type': 'dict', 'follow_shared': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'interfaces': {'type': 'dict', 'eth_cfg': {'type': 'list', 'ethernet': {'type': 'str', }}, 'trunk_cfg': {'type': 'list', 'trunk': {'type': 'int', }}, 've_cfg': {'type': 'list', 've': {'type': 'int', }}, 'loopback_cfg': {'type': 'list', 'loopback': {'type': 'int', }}, 'uuid': {'type': 'str', }}, 'reachability_options': {'type': 'dict', 'skip_default_route': {'type': 'bool', }, 'uuid': {'type': 'str', }}}, 'exclude_interfaces': {'type': 'dict', 'eth_cfg': {'type': 'list', 'ethernet': {'type': 'str', }}, 'trunk_cfg': {'type': 'list', 'trunk': {'type': 'int', }}, 've_cfg': {'type': 'list', 've': {'type': 'int', }}, 'loopback_cfg': {'type': 'list', 'loopback': {'type': 'int', }}, 'uuid': {'type': 'str', }}, 'tracking_template': {'type': 'dict', 'template_list': {'type': 'list', 'template': {'type': 'str', 'required': True, }, 'threshold_cfg': {'type': 'list', 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}, 'multi_template_list': {'type': 'list', 'multi_template': {'type': 'str', 'required': True, }, 'template': {'type': 'list', 'template_name': {'type': 'str', }, 'partition_name': {'type': 'str', }}, 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}}},
+        'cluster_devices': {'type': 'dict', 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'minimum_nodes': {'type': 'dict', 'minimum_nodes_num': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'cluster_discovery_timeout': {'type': 'dict', 'timer_val': {'type': 'int', }, 'uuid': {'type': 'str', }}, 'device_id_list': {'type': 'list', 'device_id': {'type': 'int', 'required': True, }, 'ip': {'type': 'str', }, 'action': {'type': 'str', 'choices': ['enable', 'disable']}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}},
+        'device_groups': {'type': 'dict', 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'device_group_list': {'type': 'list', 'device_group': {'type': 'int', 'required': True, }, 'device_id_list': {'type': 'list', 'device_id_start': {'type': 'int', }, 'device_id_end': {'type': 'int', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}},
+        'tracking_template': {'type': 'dict', 'template_list': {'type': 'list', 'template': {'type': 'str', 'required': True, }, 'threshold_cfg': {'type': 'list', 'threshold': {'type': 'int', }, 'action': {'type': 'str', 'choices': ['down', 'exit-cluster']}}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}},
+        'service_config': {'type': 'dict', 'enable': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'template_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'bucket_count': {'type': 'int', }, 'device_group': {'type': 'int', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }}},
+        'db_config': {'type': 'dict', 'tickTime': {'type': 'int', }, 'initLimit': {'type': 'int', }, 'syncLimit': {'type': 'int', }, 'minSessionTimeout': {'type': 'int', }, 'maxSessionTimeout': {'type': 'int', }, 'client_recv_timeout': {'type': 'int', }, 'clientPort': {'type': 'int', }, 'loopback_intf_support': {'type': 'bool', }, 'broken_detect_timeout': {'type': 'int', }, 'more_election_packet': {'type': 'bool', }, 'elect_conn_timeout': {'type': 'int', }, 'uuid': {'type': 'str', }}
     })
     return rv
 
@@ -544,7 +379,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -555,7 +391,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -595,12 +432,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -615,16 +454,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -633,15 +472,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -658,20 +497,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "cluster"] if info != "NotFound" else info
+                result["acos_info"] = info["cluster"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "cluster-list"] if info != "NotFound" else info
+                result["acos_info"] = info["cluster-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -684,11 +519,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

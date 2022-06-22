@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_session_filter
 description:
@@ -106,42 +107,62 @@ options:
             app_category:
                 description:
                 - "'aaa'= Protocol/application used for AAA (Authentification, Authorization and
-          Accounting) purposes.; 'adult-content'= Adult content.; 'advertising'=
-          Advertising networks and applications.; 'analytics-and-statistics'= user-
-          analytics and statistics.; 'anonymizers-and-proxies'= Traffic-anonymization
-          protocol/application.; 'audio-chat'= Protocol/application used for Audio Chat.;
-          'basic'= Protocols required for basic classification, e.g., ARP, HTTP; 'blog'=
-          Blogging platform.; 'cdn'= Protocol/application used for Content-Delivery
-          Networks.; 'chat'= Protocol/application used for Text Chat.; 'classified-ads'=
-          Protocol/application used for Classified ads.; 'cloud-based-services'= SaaS
-          and/or PaaS cloud based services.; 'crowdfunding'= Service for funding a
-          project or venture by raising small amounts of money from a large number of
-          people.; 'cryptocurrency'= Cryptocurrency.; 'database'= Database-specific
-          protocols.; 'disposable-email'= Disposable email accounts.; 'ebook-reader'=
-          Services for e-book readers.; 'email'= Native email protocol.; 'enterprise'=
+          Accounting) purposes.; 'adult-content'= Adult content protocol/application.;
+          'advertising'= Advertising networks and applications.; 'application-enforcing-
+          tls'= Application known to enforce HSTS and thus use of TLS.; 'analytics-and-
+          statistics'= User analytics and statistics protocol/application.; 'anonymizers-
+          and-proxies'= Traffic-anonymization protocol/application.; 'audio-chat'=
+          Protocol/application used for Audio Chat.; 'basic'= Covers all protocols
+          required for basic classification, including most networking protocols as well
+          as standard protocols like HTTP.; 'blog'= Blogging platform
+          protocol/application.; 'cdn'= Protocol/application used for Content-Delivery
+          Networks.; 'certification-authority'= Certification Authority for SSL/TLS
+          certificate.; 'chat'= Protocol/application used for Text Chat.; 'classified-
+          ads'= Protocol/application used for Classified Advertisements.; 'cloud-based-
+          services'= SaaS and/or PaaS cloud based services.; 'crowdfunding'= Service for
+          funding a project or venture by raising small amounts of money from a large
+          number of people, typically via the Internet.; 'cryptocurrency'= Services for
+          mining cryptocurrencies, for example a Crypto Web Browser (an application that
+          mines crypto currency in the background while its user browses the web).;
+          'database'= Database-specific protocols.; 'disposable-email'= Service offering
+          Disposable Email Accounts (DEA). DEA is a technique to share temporary email
+          address between many users.; 'ebook-reader'= Services for e-book readers, i.e.
+          connected devices that display electronic books (typically using e-ink displays
+          to reduce glare and eye strain).; 'education'= Protocols offering education
+          services and online courses.; 'email'= Native email protocol.; 'enterprise'=
           Protocol/application used in an enterprise network.; 'file-management'=
-          Protocol/application designed specifically for file management and exchange,
-          e.g., Dropbox, SMB; 'file-transfer'= Protocol that offers file transferring as
-          a functionality as a secondary feature. e.g., Skype, Whatsapp; 'forum'= Online
-          forum.; 'gaming'= Protocol/application used by games.; 'instant-messaging-and-
-          multimedia-conferencing'= Protocol/application used for Instant messaging or
-          multiconferencing.; 'internet-of-things'= Internet Of Things
-          protocol/application.; 'mobile'= Mobile-specific protocol/application.; 'map-
-          service'= Digital Maps service.; 'multimedia-streaming'= Protocol/application
-          used for multimedia streaming.; 'networking'= Protocol used for (inter)
-          networking purpose.; 'news-portal'= Protocol/application used for News
-          Portals.; 'peer-to-peer'= Protocol/application used for Peer-to-peer purposes.;
-          'remote-access'= Protocol/application used for remote access.; 'scada'= SCADA
-          (Supervisory control and data acquisition) protocols, all generations.;
-          'social-networks'= Social networking application.; 'software-update'= Auto-
-          update protocol.; 'standards-based'= Protocol issued from standardized bodies
-          such as IETF, ITU, IEEE, ETSI, OIF.; 'transportation'= Transportation.; 'video-
-          chat'= Protocol/application used for Video Chat.; 'voip'= Application used for
-          Voice over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
+          Protocol/application designed specifically for file management and exchange.
+          This can include bona fide network protocols (like SMB) as well as web/cloud
+          services (like Dropbox).; 'file-transfer'= Protocol that offers file
+          transferring as a secondary feature. This typically includes IM, WebMail, and
+          other protocols that allow file transfers in addition to their principal
+          function.; 'forum'= Online forum protocol/application.; 'gaming'=
+          Protocol/application used by games.; 'healthcare'= Protocols offering medical
+          services, i.e protocols used in medical environment.; 'instant-messaging-and-
+          multimedia-conferencing'= Protocol/application used for Instant Messaging or
+          Multi-Conferencing.; 'internet-of-things'= Internet Of Things
+          protocol/application.; 'map-service'= Digital Maps service (web site and their
+          related API).; 'mobile'= Mobile-specific protocol/application.; 'multimedia-
+          streaming'= Protocol/application used for multimedia streaming.; 'networking'=
+          Protocol used for (inter) networking purpose.; 'news-portal'=
+          Protocol/application used for News Portals.; 'payment-service'= Application
+          offering online services for accepting electronic payments by a variety of
+          payment methods (credit card, bank-based payments such as direct debit, bank
+          transfer, etc).; 'peer-to-peer'= Protocol/application used for Peer-to-peer
+          purposes.; 'remote-access'= Protocol/application used for remote access.;
+          'scada'= SCADA (Supervisory control and data acquisition) protocols, all
+          generations.; 'social-networks'= Social networking application.; 'software-
+          update'= Auto-update protocol.; 'speedtest'= Speedtest application allowing to
+          access quality of Internet connection (upload, download, latency, etc).;
+          'standards-based'= Protocol issued from standardized bodies such as IETF, ITU,
+          IEEE, ETSI, OIF.; 'transportation'= Transportation services, for example
+          smartphone applications that allow users to hail a taxi.; 'video-chat'=
+          Protocol/application used for Video Chat.; 'voip'= Application used for Voice-
+          Over-IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
           purposes.; 'web'= Application based on HTTP/HTTPS.; 'web-e-commerce'=
           Protocol/application used for E-commerce websites.; 'web-search-engines'=
           Protocol/application used for Web search portals.; 'web-websites'=
-          Protocol/application used for Company Websites.; 'webmails'= Web email
+          Protocol/application used for Company Websites.; 'webmails'= Web-based e-mail
           application.; 'web-ext-adult'= Web Extension Adult; 'web-ext-auctions'= Web
           Extension Auctions; 'web-ext-blogs'= Web Extension Blogs; 'web-ext-business-
           and-economy'= Web Extension Business and Economy; 'web-ext-cdns'= Web Extension
@@ -234,13 +255,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "filter_cfg",
-    "name",
-    "set",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["filter_cfg", "name", "set", "uuid", ]
 
 
 def get_default_argspec():
@@ -248,110 +265,20 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'set': {
-            'type': 'bool',
-        },
-        'filter_cfg': {
-            'type': 'dict',
-            'session_type': {
-                'type': 'str',
-                'choices': ['ipv6', 'sip']
-            },
-            'source_addr': {
-                'type': 'str',
-            },
-            'source_mask': {
-                'type': 'str',
-            },
-            'source_port': {
-                'type': 'int',
-            },
-            'dest_addr': {
-                'type': 'str',
-            },
-            'dest_mask': {
-                'type': 'str',
-            },
-            'dport2': {
-                'type': 'int',
-            },
-            'app': {
-                'type': 'str',
-            },
-            'app_category': {
-                'type':
-                'str',
-                'choices': [
-                    'aaa', 'adult-content', 'advertising',
-                    'analytics-and-statistics', 'anonymizers-and-proxies',
-                    'audio-chat', 'basic', 'blog', 'cdn', 'chat',
-                    'classified-ads', 'cloud-based-services', 'crowdfunding',
-                    'cryptocurrency', 'database', 'disposable-email',
-                    'ebook-reader', 'email', 'enterprise', 'file-management',
-                    'file-transfer', 'forum', 'gaming',
-                    'instant-messaging-and-multimedia-conferencing',
-                    'internet-of-things', 'mobile', 'map-service',
-                    'multimedia-streaming', 'networking', 'news-portal',
-                    'peer-to-peer', 'remote-access', 'scada',
-                    'social-networks', 'software-update', 'standards-based',
-                    'transportation', 'video-chat', 'voip', 'vpn-tunnels',
-                    'web', 'web-e-commerce', 'web-search-engines',
-                    'web-websites', 'webmails', 'web-ext-adult',
-                    'web-ext-auctions', 'web-ext-blogs',
-                    'web-ext-business-and-economy', 'web-ext-cdns',
-                    'web-ext-collaboration',
-                    'web-ext-computer-and-internet-info',
-                    'web-ext-computer-and-internet-security', 'web-ext-dating',
-                    'web-ext-educational-institutions',
-                    'web-ext-entertainment-and-arts',
-                    'web-ext-fashion-and-beauty', 'web-ext-file-share',
-                    'web-ext-financial-services', 'web-ext-gambling',
-                    'web-ext-games', 'web-ext-government',
-                    'web-ext-health-and-medicine',
-                    'web-ext-individual-stock-advice-and-tools',
-                    'web-ext-internet-portals', 'web-ext-job-search',
-                    'web-ext-local-information', 'web-ext-malware',
-                    'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news',
-                    'web-ext-p2p', 'web-ext-parked-sites',
-                    'web-ext-proxy-avoid-and-anonymizers',
-                    'web-ext-real-estate', 'web-ext-reference-and-research',
-                    'web-ext-search-engines', 'web-ext-shopping',
-                    'web-ext-social-network', 'web-ext-society',
-                    'web-ext-software', 'web-ext-sports',
-                    'web-ext-streaming-media', 'web-ext-training-and-tools',
-                    'web-ext-translation', 'web-ext-travel',
-                    'web-ext-web-advertisements', 'web-ext-web-based-email',
-                    'web-ext-web-hosting', 'web-ext-web-service'
-                ]
-            }
-        },
-        'uuid': {
-            'type': 'str',
-        }
+    rv.update({'name': {'type': 'str', 'required': True, },
+        'set': {'type': 'bool', },
+        'filter_cfg': {'type': 'dict', 'session_type': {'type': 'str', 'choices': ['ipv6', 'sip']}, 'source_addr': {'type': 'str', }, 'source_mask': {'type': 'str', }, 'source_port': {'type': 'int', }, 'dest_addr': {'type': 'str', }, 'dest_mask': {'type': 'str', }, 'dport2': {'type': 'int', }, 'app': {'type': 'str', }, 'app_category': {'type': 'str', 'choices': ['aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency', 'database', 'disposable-email', 'ebook-reader', 'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming', 'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada', 'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites', 'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration', 'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions', 'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government', 'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals', 'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers', 'web-ext-real-estate', 'web-ext-reference-and-research', 'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements', 'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service']}},
+        'uuid': {'type': 'str', }
     })
     return rv
 
@@ -400,7 +327,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -411,14 +339,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("session-filter", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("session-filter", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -452,12 +380,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -472,16 +402,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -490,15 +420,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -515,20 +445,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "session-filter"] if info != "NotFound" else info
+                result["acos_info"] = info["session-filter"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "session-filter-list"] if info != "NotFound" else info
+                result["acos_info"] = info["session-filter-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -541,11 +467,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

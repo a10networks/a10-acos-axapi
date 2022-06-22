@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_resource_usage
 description:
@@ -125,6 +126,11 @@ options:
         - "Total configurable Server SSL Templates in the System"
         type: int
         required: False
+    link_cost_template_count:
+        description:
+        - "Total configurable Link-cost Templates in the System"
+        type: int
+        required: False
     service_group_count:
         description:
         - "Total Service Groups in the System"
@@ -143,6 +149,61 @@ options:
     virtual_server_count:
         description:
         - "Total Virtual Servers in the System"
+        type: int
+        required: False
+    gslb_site_count:
+        description:
+        - "Total GSLB sites in the System"
+        type: int
+        required: False
+    gslb_device_count:
+        description:
+        - "Total GSLB devices in the System"
+        type: int
+        required: False
+    gslb_service_ip_count:
+        description:
+        - "Total GSLB service-ip in the System"
+        type: int
+        required: False
+    gslb_service_port_count:
+        description:
+        - "Total GSLB service-port in the System"
+        type: int
+        required: False
+    gslb_zone_count:
+        description:
+        - "Total GSLB zones in the System"
+        type: int
+        required: False
+    gslb_service_count:
+        description:
+        - "Total GSLB services in the System"
+        type: int
+        required: False
+    gslb_policy_count:
+        description:
+        - "Total GSLB policies in the System"
+        type: int
+        required: False
+    gslb_geo_location_count:
+        description:
+        - "Total GSLB geo-location in the System"
+        type: int
+        required: False
+    gslb_ip_list_count:
+        description:
+        - "Total GSLB ip-list in the System"
+        type: int
+        required: False
+    gslb_template_count:
+        description:
+        - "Total GSLB templates in the System"
+        type: int
+        required: False
+    gslb_svc_group_count:
+        description:
+        - "Total GSLB services in the System"
         type: int
         required: False
     health_monitor_count:
@@ -338,6 +399,18 @@ options:
             server_ssl_template_default:
                 description:
                 - "Field server_ssl_template_default"
+                type: int
+            link_cost_template_min:
+                description:
+                - "Field link_cost_template_min"
+                type: int
+            link_cost_template_max:
+                description:
+                - "Field link_cost_template_max"
+                type: int
+            link_cost_template_default:
+                description:
+                - "Field link_cost_template_default"
                 type: int
             stream_template_min:
                 description:
@@ -608,32 +681,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "cache_template_count",
-    "client_ssl_template_count",
-    "conn_reuse_template_count",
-    "fast_tcp_template_count",
-    "fast_udp_template_count",
-    "fix_template_count",
-    "health_monitor_count",
-    "http_template_count",
-    "nat_pool_addr_count",
-    "oper",
-    "pbslb_subnet_count",
-    "persist_cookie_template_count",
-    "persist_srcip_template_count",
-    "proxy_template_count",
-    "real_port_count",
-    "real_server_count",
-    "server_ssl_template_count",
-    "service_group_count",
-    "slb_threshold_res_usage_percent",
-    "stream_template_count",
-    "uuid",
-    "virtual_port_count",
-    "virtual_server_count",
-]
+AVAILABLE_PROPERTIES = ["cache_template_count", "client_ssl_template_count", "conn_reuse_template_count", "fast_tcp_template_count", "fast_udp_template_count", "fix_template_count", "gslb_device_count", "gslb_geo_location_count", "gslb_ip_list_count", "gslb_policy_count", "gslb_service_count", "gslb_service_ip_count", "gslb_service_port_count", "gslb_site_count", "gslb_svc_group_count", "gslb_template_count", "gslb_zone_count", "health_monitor_count", "http_template_count", "link_cost_template_count", "nat_pool_addr_count", "oper", "pbslb_subnet_count", "persist_cookie_template_count", "persist_srcip_template_count", "proxy_template_count", "real_port_count", "real_server_count", "server_ssl_template_count", "service_group_count", "slb_threshold_res_usage_percent", "stream_template_count", "uuid", "virtual_port_count", "virtual_server_count", ]
 
 
 def get_default_argspec():
@@ -641,383 +691,51 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'client_ssl_template_count': {
-            'type': 'int',
-        },
-        'conn_reuse_template_count': {
-            'type': 'int',
-        },
-        'fast_tcp_template_count': {
-            'type': 'int',
-        },
-        'fast_udp_template_count': {
-            'type': 'int',
-        },
-        'http_template_count': {
-            'type': 'int',
-        },
-        'fix_template_count': {
-            'type': 'int',
-        },
-        'cache_template_count': {
-            'type': 'int',
-        },
-        'nat_pool_addr_count': {
-            'type': 'int',
-        },
-        'persist_cookie_template_count': {
-            'type': 'int',
-        },
-        'persist_srcip_template_count': {
-            'type': 'int',
-        },
-        'proxy_template_count': {
-            'type': 'int',
-        },
-        'real_port_count': {
-            'type': 'int',
-        },
-        'real_server_count': {
-            'type': 'int',
-        },
-        'server_ssl_template_count': {
-            'type': 'int',
-        },
-        'service_group_count': {
-            'type': 'int',
-        },
-        'stream_template_count': {
-            'type': 'int',
-        },
-        'virtual_port_count': {
-            'type': 'int',
-        },
-        'virtual_server_count': {
-            'type': 'int',
-        },
-        'health_monitor_count': {
-            'type': 'int',
-        },
-        'pbslb_subnet_count': {
-            'type': 'int',
-        },
-        'slb_threshold_res_usage_percent': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'oper': {
-            'type': 'dict',
-            'nat_pool_addr_min': {
-                'type': 'int',
-            },
-            'nat_pool_addr_max': {
-                'type': 'int',
-            },
-            'nat_pool_addr_default': {
-                'type': 'int',
-            },
-            'real_server_min': {
-                'type': 'int',
-            },
-            'real_server_max': {
-                'type': 'int',
-            },
-            'real_server_default': {
-                'type': 'int',
-            },
-            'real_port_min': {
-                'type': 'int',
-            },
-            'real_port_max': {
-                'type': 'int',
-            },
-            'real_port_default': {
-                'type': 'int',
-            },
-            'service_group_min': {
-                'type': 'int',
-            },
-            'service_group_max': {
-                'type': 'int',
-            },
-            'service_group_default': {
-                'type': 'int',
-            },
-            'virtual_port_min': {
-                'type': 'int',
-            },
-            'virtual_port_max': {
-                'type': 'int',
-            },
-            'virtual_port_default': {
-                'type': 'int',
-            },
-            'virtual_server_min': {
-                'type': 'int',
-            },
-            'virtual_server_max': {
-                'type': 'int',
-            },
-            'virtual_server_default': {
-                'type': 'int',
-            },
-            'http_template_min': {
-                'type': 'int',
-            },
-            'http_template_max': {
-                'type': 'int',
-            },
-            'http_template_default': {
-                'type': 'int',
-            },
-            'fix_template_min': {
-                'type': 'int',
-            },
-            'fix_template_max': {
-                'type': 'int',
-            },
-            'fix_template_default': {
-                'type': 'int',
-            },
-            'proxy_template_min': {
-                'type': 'int',
-            },
-            'proxy_template_max': {
-                'type': 'int',
-            },
-            'proxy_template_default': {
-                'type': 'int',
-            },
-            'conn_reuse_template_min': {
-                'type': 'int',
-            },
-            'conn_reuse_template_max': {
-                'type': 'int',
-            },
-            'conn_reuse_template_default': {
-                'type': 'int',
-            },
-            'fast_tcp_template_min': {
-                'type': 'int',
-            },
-            'fast_tcp_template_max': {
-                'type': 'int',
-            },
-            'fast_tcp_template_default': {
-                'type': 'int',
-            },
-            'fast_udp_template_min': {
-                'type': 'int',
-            },
-            'fast_udp_template_max': {
-                'type': 'int',
-            },
-            'fast_udp_template_default': {
-                'type': 'int',
-            },
-            'client_ssl_template_min': {
-                'type': 'int',
-            },
-            'client_ssl_template_max': {
-                'type': 'int',
-            },
-            'client_ssl_template_default': {
-                'type': 'int',
-            },
-            'server_ssl_template_min': {
-                'type': 'int',
-            },
-            'server_ssl_template_max': {
-                'type': 'int',
-            },
-            'server_ssl_template_default': {
-                'type': 'int',
-            },
-            'stream_template_min': {
-                'type': 'int',
-            },
-            'stream_template_max': {
-                'type': 'int',
-            },
-            'stream_template_default': {
-                'type': 'int',
-            },
-            'persist_cookie_template_min': {
-                'type': 'int',
-            },
-            'persist_cookie_template_max': {
-                'type': 'int',
-            },
-            'persist_cookie_template_default': {
-                'type': 'int',
-            },
-            'persist_srcip_template_min': {
-                'type': 'int',
-            },
-            'persist_srcip_template_max': {
-                'type': 'int',
-            },
-            'persist_srcip_template_default': {
-                'type': 'int',
-            },
-            'health_monitor_count_min': {
-                'type': 'int',
-            },
-            'health_monitor_count_max': {
-                'type': 'int',
-            },
-            'health_monitor_count_default': {
-                'type': 'int',
-            },
-            'pbslb_subnet_count_min': {
-                'type': 'int',
-            },
-            'pbslb_subnet_count_max': {
-                'type': 'int',
-            },
-            'pbslb_subnet_count_default': {
-                'type': 'int',
-            },
-            'gslb_site_count_min': {
-                'type': 'int',
-            },
-            'gslb_site_count_max': {
-                'type': 'int',
-            },
-            'gslb_site_count_default': {
-                'type': 'int',
-            },
-            'gslb_device_count_min': {
-                'type': 'int',
-            },
-            'gslb_device_count_max': {
-                'type': 'int',
-            },
-            'gslb_device_count_default': {
-                'type': 'int',
-            },
-            'gslb_service_ip_count_min': {
-                'type': 'int',
-            },
-            'gslb_service_ip_count_max': {
-                'type': 'int',
-            },
-            'gslb_service_ip_count_default': {
-                'type': 'int',
-            },
-            'gslb_service_port_count_min': {
-                'type': 'int',
-            },
-            'gslb_service_port_count_max': {
-                'type': 'int',
-            },
-            'gslb_service_port_count_default': {
-                'type': 'int',
-            },
-            'gslb_zone_count_min': {
-                'type': 'int',
-            },
-            'gslb_zone_count_max': {
-                'type': 'int',
-            },
-            'gslb_zone_count_default': {
-                'type': 'int',
-            },
-            'gslb_service_count_min': {
-                'type': 'int',
-            },
-            'gslb_service_count_max': {
-                'type': 'int',
-            },
-            'gslb_service_count_default': {
-                'type': 'int',
-            },
-            'gslb_policy_count_min': {
-                'type': 'int',
-            },
-            'gslb_policy_count_max': {
-                'type': 'int',
-            },
-            'gslb_policy_count_default': {
-                'type': 'int',
-            },
-            'gslb_geo_location_count_min': {
-                'type': 'int',
-            },
-            'gslb_geo_location_count_max': {
-                'type': 'int',
-            },
-            'gslb_geo_location_count_default': {
-                'type': 'int',
-            },
-            'gslb_ip_list_count_min': {
-                'type': 'int',
-            },
-            'gslb_ip_list_count_max': {
-                'type': 'int',
-            },
-            'gslb_ip_list_count_default': {
-                'type': 'int',
-            },
-            'gslb_template_count_min': {
-                'type': 'int',
-            },
-            'gslb_template_count_max': {
-                'type': 'int',
-            },
-            'gslb_template_count_default': {
-                'type': 'int',
-            },
-            'gslb_svcgroup_count_min': {
-                'type': 'int',
-            },
-            'gslb_svcgroup_count_max': {
-                'type': 'int',
-            },
-            'gslb_svcgroup_count_default': {
-                'type': 'int',
-            },
-            'cache_template_min': {
-                'type': 'int',
-            },
-            'cache_template_max': {
-                'type': 'int',
-            },
-            'cache_template_default': {
-                'type': 'int',
-            },
-            'slb_threshold_res_usage_default': {
-                'type': 'int',
-            },
-            'slb_threshold_res_usage_min': {
-                'type': 'int',
-            },
-            'slb_threshold_res_usage_max': {
-                'type': 'int',
-            }
-        }
+    rv.update({'client_ssl_template_count': {'type': 'int', },
+        'conn_reuse_template_count': {'type': 'int', },
+        'fast_tcp_template_count': {'type': 'int', },
+        'fast_udp_template_count': {'type': 'int', },
+        'http_template_count': {'type': 'int', },
+        'fix_template_count': {'type': 'int', },
+        'cache_template_count': {'type': 'int', },
+        'nat_pool_addr_count': {'type': 'int', },
+        'persist_cookie_template_count': {'type': 'int', },
+        'persist_srcip_template_count': {'type': 'int', },
+        'proxy_template_count': {'type': 'int', },
+        'real_port_count': {'type': 'int', },
+        'real_server_count': {'type': 'int', },
+        'server_ssl_template_count': {'type': 'int', },
+        'link_cost_template_count': {'type': 'int', },
+        'service_group_count': {'type': 'int', },
+        'stream_template_count': {'type': 'int', },
+        'virtual_port_count': {'type': 'int', },
+        'virtual_server_count': {'type': 'int', },
+        'gslb_site_count': {'type': 'int', },
+        'gslb_device_count': {'type': 'int', },
+        'gslb_service_ip_count': {'type': 'int', },
+        'gslb_service_port_count': {'type': 'int', },
+        'gslb_zone_count': {'type': 'int', },
+        'gslb_service_count': {'type': 'int', },
+        'gslb_policy_count': {'type': 'int', },
+        'gslb_geo_location_count': {'type': 'int', },
+        'gslb_ip_list_count': {'type': 'int', },
+        'gslb_template_count': {'type': 'int', },
+        'gslb_svc_group_count': {'type': 'int', },
+        'health_monitor_count': {'type': 'int', },
+        'pbslb_subnet_count': {'type': 'int', },
+        'slb_threshold_res_usage_percent': {'type': 'int', },
+        'uuid': {'type': 'str', },
+        'oper': {'type': 'dict', 'nat_pool_addr_min': {'type': 'int', }, 'nat_pool_addr_max': {'type': 'int', }, 'nat_pool_addr_default': {'type': 'int', }, 'real_server_min': {'type': 'int', }, 'real_server_max': {'type': 'int', }, 'real_server_default': {'type': 'int', }, 'real_port_min': {'type': 'int', }, 'real_port_max': {'type': 'int', }, 'real_port_default': {'type': 'int', }, 'service_group_min': {'type': 'int', }, 'service_group_max': {'type': 'int', }, 'service_group_default': {'type': 'int', }, 'virtual_port_min': {'type': 'int', }, 'virtual_port_max': {'type': 'int', }, 'virtual_port_default': {'type': 'int', }, 'virtual_server_min': {'type': 'int', }, 'virtual_server_max': {'type': 'int', }, 'virtual_server_default': {'type': 'int', }, 'http_template_min': {'type': 'int', }, 'http_template_max': {'type': 'int', }, 'http_template_default': {'type': 'int', }, 'fix_template_min': {'type': 'int', }, 'fix_template_max': {'type': 'int', }, 'fix_template_default': {'type': 'int', }, 'proxy_template_min': {'type': 'int', }, 'proxy_template_max': {'type': 'int', }, 'proxy_template_default': {'type': 'int', }, 'conn_reuse_template_min': {'type': 'int', }, 'conn_reuse_template_max': {'type': 'int', }, 'conn_reuse_template_default': {'type': 'int', }, 'fast_tcp_template_min': {'type': 'int', }, 'fast_tcp_template_max': {'type': 'int', }, 'fast_tcp_template_default': {'type': 'int', }, 'fast_udp_template_min': {'type': 'int', }, 'fast_udp_template_max': {'type': 'int', }, 'fast_udp_template_default': {'type': 'int', }, 'client_ssl_template_min': {'type': 'int', }, 'client_ssl_template_max': {'type': 'int', }, 'client_ssl_template_default': {'type': 'int', }, 'server_ssl_template_min': {'type': 'int', }, 'server_ssl_template_max': {'type': 'int', }, 'server_ssl_template_default': {'type': 'int', }, 'link_cost_template_min': {'type': 'int', }, 'link_cost_template_max': {'type': 'int', }, 'link_cost_template_default': {'type': 'int', }, 'stream_template_min': {'type': 'int', }, 'stream_template_max': {'type': 'int', }, 'stream_template_default': {'type': 'int', }, 'persist_cookie_template_min': {'type': 'int', }, 'persist_cookie_template_max': {'type': 'int', }, 'persist_cookie_template_default': {'type': 'int', }, 'persist_srcip_template_min': {'type': 'int', }, 'persist_srcip_template_max': {'type': 'int', }, 'persist_srcip_template_default': {'type': 'int', }, 'health_monitor_count_min': {'type': 'int', }, 'health_monitor_count_max': {'type': 'int', }, 'health_monitor_count_default': {'type': 'int', }, 'pbslb_subnet_count_min': {'type': 'int', }, 'pbslb_subnet_count_max': {'type': 'int', }, 'pbslb_subnet_count_default': {'type': 'int', }, 'gslb_site_count_min': {'type': 'int', }, 'gslb_site_count_max': {'type': 'int', }, 'gslb_site_count_default': {'type': 'int', }, 'gslb_device_count_min': {'type': 'int', }, 'gslb_device_count_max': {'type': 'int', }, 'gslb_device_count_default': {'type': 'int', }, 'gslb_service_ip_count_min': {'type': 'int', }, 'gslb_service_ip_count_max': {'type': 'int', }, 'gslb_service_ip_count_default': {'type': 'int', }, 'gslb_service_port_count_min': {'type': 'int', }, 'gslb_service_port_count_max': {'type': 'int', }, 'gslb_service_port_count_default': {'type': 'int', }, 'gslb_zone_count_min': {'type': 'int', }, 'gslb_zone_count_max': {'type': 'int', }, 'gslb_zone_count_default': {'type': 'int', }, 'gslb_service_count_min': {'type': 'int', }, 'gslb_service_count_max': {'type': 'int', }, 'gslb_service_count_default': {'type': 'int', }, 'gslb_policy_count_min': {'type': 'int', }, 'gslb_policy_count_max': {'type': 'int', }, 'gslb_policy_count_default': {'type': 'int', }, 'gslb_geo_location_count_min': {'type': 'int', }, 'gslb_geo_location_count_max': {'type': 'int', }, 'gslb_geo_location_count_default': {'type': 'int', }, 'gslb_ip_list_count_min': {'type': 'int', }, 'gslb_ip_list_count_max': {'type': 'int', }, 'gslb_ip_list_count_default': {'type': 'int', }, 'gslb_template_count_min': {'type': 'int', }, 'gslb_template_count_max': {'type': 'int', }, 'gslb_template_count_default': {'type': 'int', }, 'gslb_svcgroup_count_min': {'type': 'int', }, 'gslb_svcgroup_count_max': {'type': 'int', }, 'gslb_svcgroup_count_default': {'type': 'int', }, 'cache_template_min': {'type': 'int', }, 'cache_template_max': {'type': 'int', }, 'cache_template_default': {'type': 'int', }, 'slb_threshold_res_usage_default': {'type': 'int', }, 'slb_threshold_res_usage_min': {'type': 'int', }, 'slb_threshold_res_usage_max': {'type': 'int', }}
     })
     return rv
 
@@ -1064,7 +782,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1075,14 +794,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("resource-usage", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("resource-usage", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -1116,12 +835,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1136,16 +857,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1154,15 +875,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1179,28 +900,22 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "resource-usage"] if info != "NotFound" else info
+                result["acos_info"] = info["resource-usage"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "resource-usage-list"] if info != "NotFound" else info
+                result["acos_info"] = info["resource-usage-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
+                get_oper_result = api_client.get_oper(module.client, existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["resource-usage"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["resource-usage"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1213,11 +928,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_web_category
 description:
@@ -123,6 +124,11 @@ options:
     enable:
         description:
         - "Enable BrightCloud SDK"
+        type: bool
+        required: False
+    online_check_disable:
+        description:
+        - "Disables online queries for license. By default it is enabled."
         type: bool
         required: False
     uuid:
@@ -563,6 +569,14 @@ options:
                 description:
                 - "Category Food and Dining"
                 type: bool
+            nudity_artistic:
+                description:
+                - "Category Nudity join Entertainment and Arts"
+                type: bool
+            illegal_pornography:
+                description:
+                - "Category Illegal join Adult and Pornography"
+                type: bool
             uuid:
                 description:
                 - "uuid of the object"
@@ -589,6 +603,58 @@ options:
                 description:
                 - "Field sampling_enable"
                 type: list
+    reputation_scope_list:
+        description:
+        - "Field reputation_scope_list"
+        type: list
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Reputation Scope name"
+                type: str
+            greater_than:
+                description:
+                - "Field greater_than"
+                type: dict
+            less_than:
+                description:
+                - "Field less_than"
+                type: dict
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            user_tag:
+                description:
+                - "Customized tag"
+                type: str
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+                type: list
+    web_reputation:
+        description:
+        - "Field web_reputation"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+            intercepted_urls:
+                description:
+                - "Field intercepted_urls"
+                type: dict
+            bypassed_urls:
+                description:
+                - "Field bypassed_urls"
+                type: dict
+            url:
+                description:
+                - "Field url"
+                type: dict
     oper:
         description:
         - "Field oper"
@@ -655,6 +721,10 @@ options:
                 description:
                 - "Field statistics"
                 type: dict
+            web_reputation:
+                description:
+                - "Field web_reputation"
+                type: dict
 
 '''
 
@@ -708,32 +778,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "bypassed_urls",
-    "category_list_list",
-    "cloud_query_cache_size",
-    "cloud_query_disable",
-    "database_server",
-    "db_update_time",
-    "enable",
-    "intercepted_urls",
-    "license",
-    "oper",
-    "port",
-    "proxy_server",
-    "remote_syslog_enable",
-    "rtu_cache_size",
-    "rtu_update_disable",
-    "rtu_update_interval",
-    "server",
-    "server_timeout",
-    "ssl_port",
-    "statistics",
-    "url",
-    "use_mgmt_port",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["bypassed_urls", "category_list_list", "cloud_query_cache_size", "cloud_query_disable", "database_server", "db_update_time", "enable", "intercepted_urls", "license", "online_check_disable", "oper", "port", "proxy_server", "remote_syslog_enable", "reputation_scope_list", "rtu_cache_size", "rtu_update_disable", "rtu_update_interval", "server", "server_timeout", "ssl_port", "statistics", "url", "use_mgmt_port", "uuid", "web_reputation", ]
 
 
 def get_default_argspec():
@@ -741,619 +788,42 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'server': {
-            'type': 'str',
-        },
-        'database_server': {
-            'type': 'str',
-        },
-        'port': {
-            'type': 'int',
-        },
-        'ssl_port': {
-            'type': 'int',
-        },
-        'server_timeout': {
-            'type': 'int',
-        },
-        'cloud_query_disable': {
-            'type': 'bool',
-        },
-        'cloud_query_cache_size': {
-            'type': 'int',
-        },
-        'db_update_time': {
-            'type': 'str',
-        },
-        'rtu_update_disable': {
-            'type': 'bool',
-        },
-        'rtu_update_interval': {
-            'type': 'int',
-        },
-        'rtu_cache_size': {
-            'type': 'int',
-        },
-        'use_mgmt_port': {
-            'type': 'bool',
-        },
-        'remote_syslog_enable': {
-            'type': 'bool',
-        },
-        'enable': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'proxy_server': {
-            'type': 'dict',
-            'proxy_host': {
-                'type': 'str',
-            },
-            'http_port': {
-                'type': 'int',
-            },
-            'https_port': {
-                'type': 'int',
-            },
-            'auth_type': {
-                'type': 'str',
-                'choices': ['ntlm', 'basic']
-            },
-            'domain': {
-                'type': 'str',
-            },
-            'username': {
-                'type': 'str',
-            },
-            'password': {
-                'type': 'bool',
-            },
-            'secret_string': {
-                'type': 'str',
-            },
-            'encrypted': {
-                'type': 'str',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'intercepted_urls': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'bypassed_urls': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'url': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'license': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'category_list_list': {
-            'type': 'list',
-            'name': {
-                'type': 'str',
-                'required': True,
-            },
-            'uncategorized': {
-                'type': 'bool',
-            },
-            'real_estate': {
-                'type': 'bool',
-            },
-            'computer_and_internet_security': {
-                'type': 'bool',
-            },
-            'financial_services': {
-                'type': 'bool',
-            },
-            'business_and_economy': {
-                'type': 'bool',
-            },
-            'computer_and_internet_info': {
-                'type': 'bool',
-            },
-            'auctions': {
-                'type': 'bool',
-            },
-            'shopping': {
-                'type': 'bool',
-            },
-            'cult_and_occult': {
-                'type': 'bool',
-            },
-            'travel': {
-                'type': 'bool',
-            },
-            'drugs': {
-                'type': 'bool',
-            },
-            'adult_and_pornography': {
-                'type': 'bool',
-            },
-            'home_and_garden': {
-                'type': 'bool',
-            },
-            'military': {
-                'type': 'bool',
-            },
-            'social_network': {
-                'type': 'bool',
-            },
-            'dead_sites': {
-                'type': 'bool',
-            },
-            'stock_advice_and_tools': {
-                'type': 'bool',
-            },
-            'training_and_tools': {
-                'type': 'bool',
-            },
-            'dating': {
-                'type': 'bool',
-            },
-            'sex_education': {
-                'type': 'bool',
-            },
-            'religion': {
-                'type': 'bool',
-            },
-            'entertainment_and_arts': {
-                'type': 'bool',
-            },
-            'personal_sites_and_blogs': {
-                'type': 'bool',
-            },
-            'legal': {
-                'type': 'bool',
-            },
-            'local_information': {
-                'type': 'bool',
-            },
-            'streaming_media': {
-                'type': 'bool',
-            },
-            'job_search': {
-                'type': 'bool',
-            },
-            'gambling': {
-                'type': 'bool',
-            },
-            'translation': {
-                'type': 'bool',
-            },
-            'reference_and_research': {
-                'type': 'bool',
-            },
-            'shareware_and_freeware': {
-                'type': 'bool',
-            },
-            'peer_to_peer': {
-                'type': 'bool',
-            },
-            'marijuana': {
-                'type': 'bool',
-            },
-            'hacking': {
-                'type': 'bool',
-            },
-            'games': {
-                'type': 'bool',
-            },
-            'philosophy_and_politics': {
-                'type': 'bool',
-            },
-            'weapons': {
-                'type': 'bool',
-            },
-            'pay_to_surf': {
-                'type': 'bool',
-            },
-            'hunting_and_fishing': {
-                'type': 'bool',
-            },
-            'society': {
-                'type': 'bool',
-            },
-            'educational_institutions': {
-                'type': 'bool',
-            },
-            'online_greeting_cards': {
-                'type': 'bool',
-            },
-            'sports': {
-                'type': 'bool',
-            },
-            'swimsuits_and_intimate_apparel': {
-                'type': 'bool',
-            },
-            'questionable': {
-                'type': 'bool',
-            },
-            'kids': {
-                'type': 'bool',
-            },
-            'hate_and_racism': {
-                'type': 'bool',
-            },
-            'personal_storage': {
-                'type': 'bool',
-            },
-            'violence': {
-                'type': 'bool',
-            },
-            'keyloggers_and_monitoring': {
-                'type': 'bool',
-            },
-            'search_engines': {
-                'type': 'bool',
-            },
-            'internet_portals': {
-                'type': 'bool',
-            },
-            'web_advertisements': {
-                'type': 'bool',
-            },
-            'cheating': {
-                'type': 'bool',
-            },
-            'gross': {
-                'type': 'bool',
-            },
-            'web_based_email': {
-                'type': 'bool',
-            },
-            'malware_sites': {
-                'type': 'bool',
-            },
-            'phishing_and_other_fraud': {
-                'type': 'bool',
-            },
-            'proxy_avoid_and_anonymizers': {
-                'type': 'bool',
-            },
-            'spyware_and_adware': {
-                'type': 'bool',
-            },
-            'music': {
-                'type': 'bool',
-            },
-            'government': {
-                'type': 'bool',
-            },
-            'nudity': {
-                'type': 'bool',
-            },
-            'news_and_media': {
-                'type': 'bool',
-            },
-            'illegal': {
-                'type': 'bool',
-            },
-            'cdns': {
-                'type': 'bool',
-            },
-            'internet_communications': {
-                'type': 'bool',
-            },
-            'bot_nets': {
-                'type': 'bool',
-            },
-            'abortion': {
-                'type': 'bool',
-            },
-            'health_and_medicine': {
-                'type': 'bool',
-            },
-            'confirmed_spam_sources': {
-                'type': 'bool',
-            },
-            'spam_urls': {
-                'type': 'bool',
-            },
-            'unconfirmed_spam_sources': {
-                'type': 'bool',
-            },
-            'open_http_proxies': {
-                'type': 'bool',
-            },
-            'dynamic_comment': {
-                'type': 'bool',
-            },
-            'parked_domains': {
-                'type': 'bool',
-            },
-            'alcohol_and_tobacco': {
-                'type': 'bool',
-            },
-            'private_ip_addresses': {
-                'type': 'bool',
-            },
-            'image_and_video_search': {
-                'type': 'bool',
-            },
-            'fashion_and_beauty': {
-                'type': 'bool',
-            },
-            'recreation_and_hobbies': {
-                'type': 'bool',
-            },
-            'motor_vehicles': {
-                'type': 'bool',
-            },
-            'web_hosting_sites': {
-                'type': 'bool',
-            },
-            'food_and_dining': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'user_tag': {
-                'type': 'str',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'uncategorized', 'real-estate',
-                        'computer-and-internet-security', 'financial-services',
-                        'business-and-economy', 'computer-and-internet-info',
-                        'auctions', 'shopping', 'cult-and-occult', 'travel',
-                        'drugs', 'adult-and-pornography', 'home-and-garden',
-                        'military', 'social-network', 'dead-sites',
-                        'stock-advice-and-tools', 'training-and-tools',
-                        'dating', 'sex-education', 'religion',
-                        'entertainment-and-arts', 'personal-sites-and-blogs',
-                        'legal', 'local-information', 'streaming-media',
-                        'job-search', 'gambling', 'translation',
-                        'reference-and-research', 'shareware-and-freeware',
-                        'peer-to-peer', 'marijuana', 'hacking', 'games',
-                        'philosophy-and-politics', 'weapons', 'pay-to-surf',
-                        'hunting-and-fishing', 'society',
-                        'educational-institutions', 'online-greeting-cards',
-                        'sports', 'swimsuits-and-intimate-apparel',
-                        'questionable', 'kids', 'hate-and-racism',
-                        'personal-storage', 'violence',
-                        'keyloggers-and-monitoring', 'search-engines',
-                        'internet-portals', 'web-advertisements', 'cheating',
-                        'gross', 'web-based-email', 'malware-sites',
-                        'phishing-and-other-fraud',
-                        'proxy-avoid-and-anonymizers', 'spyware-and-adware',
-                        'music', 'government', 'nudity', 'news-and-media',
-                        'illegal', 'CDNs', 'internet-communications',
-                        'bot-nets', 'abortion', 'health-and-medicine',
-                        'confirmed-SPAM-sources', 'SPAM-URLs',
-                        'unconfirmed-SPAM-sources', 'open-HTTP-proxies',
-                        'dynamic-comment', 'parked-domains',
-                        'alcohol-and-tobacco', 'private-IP-addresses',
-                        'image-and-video-search', 'fashion-and-beauty',
-                        'recreation-and-hobbies', 'motor-vehicles',
-                        'web-hosting-sites', 'food-and-dining'
-                    ]
-                }
-            }
-        },
-        'statistics': {
-            'type': 'dict',
-            'uuid': {
-                'type': 'str',
-            },
-            'sampling_enable': {
-                'type': 'list',
-                'counters1': {
-                    'type':
-                    'str',
-                    'choices': [
-                        'all', 'db-lookup', 'cloud-cache-lookup',
-                        'cloud-lookup', 'rtu-lookup', 'lookup-latency',
-                        'db-mem', 'rtu-cache-mem', 'lookup-cache-mem'
-                    ]
-                }
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'web_cat_version': {
-                'type': 'str',
-            },
-            'web_cat_database_name': {
-                'type': 'str',
-            },
-            'web_cat_database_status': {
-                'type': 'str',
-            },
-            'web_cat_database_size': {
-                'type': 'str',
-            },
-            'web_cat_database_version': {
-                'type': 'int',
-            },
-            'web_cat_last_update_time': {
-                'type': 'str',
-            },
-            'web_cat_next_update_time': {
-                'type': 'str',
-            },
-            'web_cat_connection_status': {
-                'type': 'str',
-            },
-            'web_cat_failure_reason': {
-                'type': 'str',
-            },
-            'web_cat_last_successful_connection': {
-                'type': 'str',
-            },
-            'intercepted_urls': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'url_list': {
-                        'type': 'list',
-                        'url_name': {
-                            'type': 'str',
-                        }
-                    },
-                    'number_of_urls': {
-                        'type': 'int',
-                    },
-                    'all_urls': {
-                        'type': 'str',
-                        'choices': ['true']
-                    },
-                    'url_name': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'bypassed_urls': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'url_list': {
-                        'type': 'list',
-                        'url_name': {
-                            'type': 'str',
-                        }
-                    },
-                    'number_of_urls': {
-                        'type': 'int',
-                    },
-                    'all_urls': {
-                        'type': 'str',
-                        'choices': ['true']
-                    },
-                    'url_name': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'url': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'category_list': {
-                        'type': 'list',
-                        'category': {
-                            'type': 'str',
-                        }
-                    },
-                    'name': {
-                        'type': 'str',
-                    },
-                    'local_db_only': {
-                        'type': 'int',
-                    }
-                }
-            },
-            'license': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'module_status': {
-                        'type': 'str',
-                    },
-                    'license_status': {
-                        'type': 'str',
-                    },
-                    'license_type': {
-                        'type': 'str',
-                    },
-                    'license_expiry': {
-                        'type': 'str',
-                    },
-                    'remaining_period': {
-                        'type': 'str',
-                    },
-                    'is_grace': {
-                        'type': 'str',
-                    },
-                    'grace_period': {
-                        'type': 'str',
-                    },
-                    'serial_number': {
-                        'type': 'str',
-                    }
-                }
-            },
-            'statistics': {
-                'type': 'dict',
-                'oper': {
-                    'type': 'dict',
-                    'num_dplane_threads': {
-                        'type': 'int',
-                    },
-                    'num_lookup_threads': {
-                        'type': 'int',
-                    },
-                    'per_cpu_list': {
-                        'type': 'list',
-                        'req_queue': {
-                            'type': 'int',
-                        },
-                        'req_dropped': {
-                            'type': 'int',
-                        },
-                        'req_processed': {
-                            'type': 'int',
-                        },
-                        'req_lookup_processed': {
-                            'type': 'int',
-                        }
-                    },
-                    'total_req_queue': {
-                        'type': 'int',
-                    },
-                    'total_req_dropped': {
-                        'type': 'int',
-                    },
-                    'total_req_processed': {
-                        'type': 'int',
-                    },
-                    'total_req_lookup_processed': {
-                        'type': 'int',
-                    }
-                }
-            }
-        }
+    rv.update({'server': {'type': 'str', },
+        'database_server': {'type': 'str', },
+        'port': {'type': 'int', },
+        'ssl_port': {'type': 'int', },
+        'server_timeout': {'type': 'int', },
+        'cloud_query_disable': {'type': 'bool', },
+        'cloud_query_cache_size': {'type': 'int', },
+        'db_update_time': {'type': 'str', },
+        'rtu_update_disable': {'type': 'bool', },
+        'rtu_update_interval': {'type': 'int', },
+        'rtu_cache_size': {'type': 'int', },
+        'use_mgmt_port': {'type': 'bool', },
+        'remote_syslog_enable': {'type': 'bool', },
+        'enable': {'type': 'bool', },
+        'online_check_disable': {'type': 'bool', },
+        'uuid': {'type': 'str', },
+        'proxy_server': {'type': 'dict', 'proxy_host': {'type': 'str', }, 'http_port': {'type': 'int', }, 'https_port': {'type': 'int', }, 'auth_type': {'type': 'str', 'choices': ['ntlm', 'basic']}, 'domain': {'type': 'str', }, 'username': {'type': 'str', }, 'password': {'type': 'bool', }, 'secret_string': {'type': 'str', }, 'encrypted': {'type': 'str', }, 'uuid': {'type': 'str', }},
+        'intercepted_urls': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'bypassed_urls': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'url': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'license': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'category_list_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'uncategorized': {'type': 'bool', }, 'real_estate': {'type': 'bool', }, 'computer_and_internet_security': {'type': 'bool', }, 'financial_services': {'type': 'bool', }, 'business_and_economy': {'type': 'bool', }, 'computer_and_internet_info': {'type': 'bool', }, 'auctions': {'type': 'bool', }, 'shopping': {'type': 'bool', }, 'cult_and_occult': {'type': 'bool', }, 'travel': {'type': 'bool', }, 'drugs': {'type': 'bool', }, 'adult_and_pornography': {'type': 'bool', }, 'home_and_garden': {'type': 'bool', }, 'military': {'type': 'bool', }, 'social_network': {'type': 'bool', }, 'dead_sites': {'type': 'bool', }, 'stock_advice_and_tools': {'type': 'bool', }, 'training_and_tools': {'type': 'bool', }, 'dating': {'type': 'bool', }, 'sex_education': {'type': 'bool', }, 'religion': {'type': 'bool', }, 'entertainment_and_arts': {'type': 'bool', }, 'personal_sites_and_blogs': {'type': 'bool', }, 'legal': {'type': 'bool', }, 'local_information': {'type': 'bool', }, 'streaming_media': {'type': 'bool', }, 'job_search': {'type': 'bool', }, 'gambling': {'type': 'bool', }, 'translation': {'type': 'bool', }, 'reference_and_research': {'type': 'bool', }, 'shareware_and_freeware': {'type': 'bool', }, 'peer_to_peer': {'type': 'bool', }, 'marijuana': {'type': 'bool', }, 'hacking': {'type': 'bool', }, 'games': {'type': 'bool', }, 'philosophy_and_politics': {'type': 'bool', }, 'weapons': {'type': 'bool', }, 'pay_to_surf': {'type': 'bool', }, 'hunting_and_fishing': {'type': 'bool', }, 'society': {'type': 'bool', }, 'educational_institutions': {'type': 'bool', }, 'online_greeting_cards': {'type': 'bool', }, 'sports': {'type': 'bool', }, 'swimsuits_and_intimate_apparel': {'type': 'bool', }, 'questionable': {'type': 'bool', }, 'kids': {'type': 'bool', }, 'hate_and_racism': {'type': 'bool', }, 'personal_storage': {'type': 'bool', }, 'violence': {'type': 'bool', }, 'keyloggers_and_monitoring': {'type': 'bool', }, 'search_engines': {'type': 'bool', }, 'internet_portals': {'type': 'bool', }, 'web_advertisements': {'type': 'bool', }, 'cheating': {'type': 'bool', }, 'gross': {'type': 'bool', }, 'web_based_email': {'type': 'bool', }, 'malware_sites': {'type': 'bool', }, 'phishing_and_other_fraud': {'type': 'bool', }, 'proxy_avoid_and_anonymizers': {'type': 'bool', }, 'spyware_and_adware': {'type': 'bool', }, 'music': {'type': 'bool', }, 'government': {'type': 'bool', }, 'nudity': {'type': 'bool', }, 'news_and_media': {'type': 'bool', }, 'illegal': {'type': 'bool', }, 'cdns': {'type': 'bool', }, 'internet_communications': {'type': 'bool', }, 'bot_nets': {'type': 'bool', }, 'abortion': {'type': 'bool', }, 'health_and_medicine': {'type': 'bool', }, 'confirmed_spam_sources': {'type': 'bool', }, 'spam_urls': {'type': 'bool', }, 'unconfirmed_spam_sources': {'type': 'bool', }, 'open_http_proxies': {'type': 'bool', }, 'dynamic_comment': {'type': 'bool', }, 'parked_domains': {'type': 'bool', }, 'alcohol_and_tobacco': {'type': 'bool', }, 'private_ip_addresses': {'type': 'bool', }, 'image_and_video_search': {'type': 'bool', }, 'fashion_and_beauty': {'type': 'bool', }, 'recreation_and_hobbies': {'type': 'bool', }, 'motor_vehicles': {'type': 'bool', }, 'web_hosting_sites': {'type': 'bool', }, 'food_and_dining': {'type': 'bool', }, 'nudity_artistic': {'type': 'bool', }, 'illegal_pornography': {'type': 'bool', }, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'uncategorized', 'real-estate', 'computer-and-internet-security', 'financial-services', 'business-and-economy', 'computer-and-internet-info', 'auctions', 'shopping', 'cult-and-occult', 'travel', 'drugs', 'adult-and-pornography', 'home-and-garden', 'military', 'social-network', 'dead-sites', 'stock-advice-and-tools', 'training-and-tools', 'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games', 'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals', 'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'CDNs', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine', 'confirmed-SPAM-sources', 'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamic-comment', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'nudity-artistic', 'illegal-pornography']}}},
+        'statistics': {'type': 'dict', 'uuid': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'db-lookup', 'cloud-cache-lookup', 'cloud-lookup', 'rtu-lookup', 'lookup-latency', 'db-mem', 'rtu-cache-mem', 'lookup-cache-mem']}}},
+        'reputation_scope_list': {'type': 'list', 'name': {'type': 'str', 'required': True, }, 'greater_than': {'type': 'dict', 'greater_trustworthy': {'type': 'bool', }, 'greater_low_risk': {'type': 'bool', }, 'greater_moderate_risk': {'type': 'bool', }, 'greater_suspicious': {'type': 'bool', }, 'greater_malicious': {'type': 'bool', }, 'greater_threshold': {'type': 'int', }}, 'less_than': {'type': 'dict', 'less_trustworthy': {'type': 'bool', }, 'less_low_risk': {'type': 'bool', }, 'less_moderate_risk': {'type': 'bool', }, 'less_suspicious': {'type': 'bool', }, 'less_malicious': {'type': 'bool', }, 'less_threshold': {'type': 'int', }}, 'uuid': {'type': 'str', }, 'user_tag': {'type': 'str', }, 'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'trustworthy', 'low-risk', 'moderate-risk', 'suspicious', 'malicious']}}},
+        'web_reputation': {'type': 'dict', 'uuid': {'type': 'str', }, 'intercepted_urls': {'type': 'dict', 'uuid': {'type': 'str', }}, 'bypassed_urls': {'type': 'dict', 'uuid': {'type': 'str', }}, 'url': {'type': 'dict', 'uuid': {'type': 'str', }}},
+        'oper': {'type': 'dict', 'web_cat_version': {'type': 'str', }, 'web_cat_database_name': {'type': 'str', }, 'web_cat_database_status': {'type': 'str', }, 'web_cat_database_size': {'type': 'str', }, 'web_cat_database_version': {'type': 'int', }, 'web_cat_last_update_time': {'type': 'str', }, 'web_cat_next_update_time': {'type': 'str', }, 'web_cat_connection_status': {'type': 'str', }, 'web_cat_failure_reason': {'type': 'str', }, 'web_cat_last_successful_connection': {'type': 'str', }, 'intercepted_urls': {'type': 'dict', 'oper': {'type': 'dict', 'url_list': {'type': 'list', 'url_name': {'type': 'str', }}, 'number_of_urls': {'type': 'int', }, 'all_urls': {'type': 'str', 'choices': ['true']}, 'url_name': {'type': 'str', }}}, 'bypassed_urls': {'type': 'dict', 'oper': {'type': 'dict', 'url_list': {'type': 'list', 'url_name': {'type': 'str', }}, 'number_of_urls': {'type': 'int', }, 'all_urls': {'type': 'str', 'choices': ['true']}, 'url_name': {'type': 'str', }}}, 'url': {'type': 'dict', 'oper': {'type': 'dict', 'category_list': {'type': 'list', 'category': {'type': 'str', }}, 'name': {'type': 'str', }, 'local_db_only': {'type': 'int', }}}, 'license': {'type': 'dict', 'oper': {'type': 'dict', 'module_status': {'type': 'str', }, 'license_status': {'type': 'str', }, 'license_type': {'type': 'str', }, 'license_expiry': {'type': 'str', }, 'remaining_period': {'type': 'str', }, 'is_grace': {'type': 'str', }, 'grace_period': {'type': 'str', }, 'serial_number': {'type': 'str', }}}, 'statistics': {'type': 'dict', 'oper': {'type': 'dict', 'num_dplane_threads': {'type': 'int', }, 'num_lookup_threads': {'type': 'int', }, 'per_cpu_list': {'type': 'list', 'req_queue': {'type': 'int', }, 'req_dropped': {'type': 'int', }, 'req_processed': {'type': 'int', }, 'req_lookup_processed': {'type': 'int', }}, 'total_req_queue': {'type': 'int', }, 'total_req_dropped': {'type': 'int', }, 'total_req_processed': {'type': 'int', }, 'total_req_lookup_processed': {'type': 'int', }}}, 'web_reputation': {'type': 'dict', 'oper': {'type': 'dict', 'url_list': {'type': 'list', 'url_name': {'type': 'str', }}, 'number_of_urls': {'type': 'int', }, 'all_urls': {'type': 'str', 'choices': ['true']}, 'url_name': {'type': 'str', }}, 'intercepted_urls': {'type': 'dict', 'oper': {'type': 'dict', 'url_list': {'type': 'list', 'url_name': {'type': 'str', }}, 'number_of_urls': {'type': 'int', }, 'all_urls': {'type': 'str', 'choices': ['true']}, 'url_name': {'type': 'str', }}}, 'bypassed_urls': {'type': 'dict', 'oper': {'type': 'dict', 'url_list': {'type': 'list', 'url_name': {'type': 'str', }}, 'number_of_urls': {'type': 'int', }, 'all_urls': {'type': 'str', 'choices': ['true']}, 'url_name': {'type': 'str', }}}, 'url': {'type': 'dict', 'oper': {'type': 'dict', 'reputation_score': {'type': 'str', }, 'name': {'type': 'str', }, 'local_db_only': {'type': 'int', }}}}}
     })
     return rv
 
@@ -1400,7 +870,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1411,14 +882,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("web-category", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("web-category", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -1452,12 +923,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1472,16 +945,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1490,15 +963,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1515,28 +988,22 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "web-category"] if info != "NotFound" else info
+                result["acos_info"] = info["web-category"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "web-category-list"] if info != "NotFound" else info
+                result["acos_info"] = info["web-category-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
+                get_oper_result = api_client.get_oper(module.client, existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["web-category"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["web-category"]["oper"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1549,11 +1016,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

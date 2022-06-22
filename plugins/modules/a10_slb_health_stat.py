@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_health_stat
 description:
@@ -84,7 +85,9 @@ options:
           Total number; 'status_up'= Number of status ups; 'status_down'= Number of
           status downs; 'status_unkn'= Number of status unknowns; 'status_other'= Number
           of other status; 'running_time'= Running time; 'config_health_rate'= Config
-          health rate;"
+          health rate; 'ssl_post_handshake_packet'= Number of ssl post handshake packets
+          before client sends request; 'timeout_with_packet'= Number of pin timeouts
+          while socket has packets;"
                 type: str
     oper:
         description:
@@ -96,6 +99,46 @@ options:
                 description:
                 - "Field health_check_list"
                 type: list
+            num_pins:
+                description:
+                - "Field num_pins"
+                type: int
+            num_pins_stat_up:
+                description:
+                - "Field num_pins_stat_up"
+                type: int
+            num_pins_stat_down:
+                description:
+                - "Field num_pins_stat_down"
+                type: int
+            num_pins_stat_unkn:
+                description:
+                - "Field num_pins_stat_unkn"
+                type: int
+            num_pins_stat_else:
+                description:
+                - "Field num_pins_stat_else"
+                type: int
+            num_ssl_tickets:
+                description:
+                - "Field num_ssl_tickets"
+                type: int
+            total_stat:
+                description:
+                - "Field total_stat"
+                type: int
+            method:
+                description:
+                - "Field method"
+                type: str
+            clear_ssl_ticket:
+                description:
+                - "Field clear_ssl_ticket"
+                type: int
+            monitor:
+                description:
+                - "Field monitor"
+                type: str
     stats:
         description:
         - "Field stats"
@@ -214,6 +257,14 @@ options:
                 description:
                 - "Config health rate"
                 type: str
+            ssl_post_handshake_packet:
+                description:
+                - "Number of ssl post handshake packets before client sends request"
+                type: str
+            timeout_with_packet:
+                description:
+                - "Number of pin timeouts while socket has packets"
+                type: str
 
 '''
 
@@ -267,13 +318,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "oper",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -281,180 +328,20 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'num_burst', 'max_jiffie', 'min_jiffie',
-                    'avg_jiffie', 'open_socket', 'open_socket_failed',
-                    'close_socket', 'connect_failed', 'send_packet',
-                    'send_packet_failed', 'recv_packet', 'recv_packet_failed',
-                    'retry_times', 'timeout', 'unexpected_error',
-                    'conn_imdt_succ', 'sock_close_before_17',
-                    'sock_close_without_notify', 'curr_health_rate',
-                    'ext_health_rate', 'ext_health_rate_val', 'total_number',
-                    'status_up', 'status_down', 'status_unkn', 'status_other',
-                    'running_time', 'config_health_rate'
-                ]
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'health_check_list': {
-                'type': 'list',
-                'ip_address': {
-                    'type': 'str',
-                },
-                'port': {
-                    'type': 'str',
-                },
-                'health_monitor': {
-                    'type': 'str',
-                },
-                'status': {
-                    'type': 'str',
-                },
-                'up_cause': {
-                    'type': 'int',
-                },
-                'down_cause': {
-                    'type': 'int',
-                },
-                'down_state': {
-                    'type': 'int',
-                },
-                'reason': {
-                    'type': 'str',
-                },
-                'total_retry': {
-                    'type': 'int',
-                },
-                'retries': {
-                    'type': 'int',
-                },
-                'up_retries': {
-                    'type': 'int',
-                },
-                'partition_id': {
-                    'type': 'int',
-                },
-                'server': {
-                    'type': 'str',
-                }
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'num_burst': {
-                'type': 'str',
-            },
-            'max_jiffie': {
-                'type': 'str',
-            },
-            'min_jiffie': {
-                'type': 'str',
-            },
-            'avg_jiffie': {
-                'type': 'str',
-            },
-            'open_socket': {
-                'type': 'str',
-            },
-            'open_socket_failed': {
-                'type': 'str',
-            },
-            'close_socket': {
-                'type': 'str',
-            },
-            'connect_failed': {
-                'type': 'str',
-            },
-            'send_packet': {
-                'type': 'str',
-            },
-            'send_packet_failed': {
-                'type': 'str',
-            },
-            'recv_packet': {
-                'type': 'str',
-            },
-            'recv_packet_failed': {
-                'type': 'str',
-            },
-            'retry_times': {
-                'type': 'str',
-            },
-            'timeout': {
-                'type': 'str',
-            },
-            'unexpected_error': {
-                'type': 'str',
-            },
-            'conn_imdt_succ': {
-                'type': 'str',
-            },
-            'sock_close_before_17': {
-                'type': 'str',
-            },
-            'sock_close_without_notify': {
-                'type': 'str',
-            },
-            'curr_health_rate': {
-                'type': 'str',
-            },
-            'ext_health_rate': {
-                'type': 'str',
-            },
-            'ext_health_rate_val': {
-                'type': 'str',
-            },
-            'total_number': {
-                'type': 'str',
-            },
-            'status_up': {
-                'type': 'str',
-            },
-            'status_down': {
-                'type': 'str',
-            },
-            'status_unkn': {
-                'type': 'str',
-            },
-            'status_other': {
-                'type': 'str',
-            },
-            'running_time': {
-                'type': 'str',
-            },
-            'config_health_rate': {
-                'type': 'str',
-            }
-        }
+    rv.update({'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'num_burst', 'max_jiffie', 'min_jiffie', 'avg_jiffie', 'open_socket', 'open_socket_failed', 'close_socket', 'connect_failed', 'send_packet', 'send_packet_failed', 'recv_packet', 'recv_packet_failed', 'retry_times', 'timeout', 'unexpected_error', 'conn_imdt_succ', 'sock_close_before_17', 'sock_close_without_notify', 'curr_health_rate', 'ext_health_rate', 'ext_health_rate_val', 'total_number', 'status_up', 'status_down', 'status_unkn', 'status_other', 'running_time', 'config_health_rate', 'ssl_post_handshake_packet', 'timeout_with_packet']}},
+        'oper': {'type': 'dict', 'health_check_list': {'type': 'list', 'ip_address': {'type': 'str', }, 'port': {'type': 'str', }, 'health_monitor': {'type': 'str', }, 'status': {'type': 'str', }, 'up_cause': {'type': 'int', }, 'down_cause': {'type': 'int', }, 'down_state': {'type': 'int', }, 'reason': {'type': 'str', }, 'total_retry': {'type': 'int', }, 'retries': {'type': 'int', }, 'up_retries': {'type': 'int', }, 'partition_id': {'type': 'int', }, 'server': {'type': 'str', }, 'ssl_version': {'type': 'str', }, 'ssl_cipher': {'type': 'str', }, 'ssl_ticket': {'type': 'int', }}, 'num_pins': {'type': 'int', }, 'num_pins_stat_up': {'type': 'int', }, 'num_pins_stat_down': {'type': 'int', }, 'num_pins_stat_unkn': {'type': 'int', }, 'num_pins_stat_else': {'type': 'int', }, 'num_ssl_tickets': {'type': 'int', }, 'total_stat': {'type': 'int', }, 'method': {'type': 'str', 'choices': ['icmp', 'tcp', 'udp', 'http', 'ftp', 'snmp', 'smtp', 'dns', 'pop3', 'imap', 'sip', 'radius', 'ldap', 'rtsp', 'database', 'external', 'ntp', 'compound', 'https', 'kerberos-kdc', 'tacplus']}, 'clear_ssl_ticket': {'type': 'int', }, 'monitor': {'type': 'str', }},
+        'stats': {'type': 'dict', 'num_burst': {'type': 'str', }, 'max_jiffie': {'type': 'str', }, 'min_jiffie': {'type': 'str', }, 'avg_jiffie': {'type': 'str', }, 'open_socket': {'type': 'str', }, 'open_socket_failed': {'type': 'str', }, 'close_socket': {'type': 'str', }, 'connect_failed': {'type': 'str', }, 'send_packet': {'type': 'str', }, 'send_packet_failed': {'type': 'str', }, 'recv_packet': {'type': 'str', }, 'recv_packet_failed': {'type': 'str', }, 'retry_times': {'type': 'str', }, 'timeout': {'type': 'str', }, 'unexpected_error': {'type': 'str', }, 'conn_imdt_succ': {'type': 'str', }, 'sock_close_before_17': {'type': 'str', }, 'sock_close_without_notify': {'type': 'str', }, 'curr_health_rate': {'type': 'str', }, 'ext_health_rate': {'type': 'str', }, 'ext_health_rate_val': {'type': 'str', }, 'total_number': {'type': 'str', }, 'status_up': {'type': 'str', }, 'status_down': {'type': 'str', }, 'status_unkn': {'type': 'str', }, 'status_other': {'type': 'str', }, 'running_time': {'type': 'str', }, 'config_health_rate': {'type': 'str', }, 'ssl_post_handshake_packet': {'type': 'str', }, 'timeout_with_packet': {'type': 'str', }}
     })
     return rv
 
@@ -501,7 +388,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -512,14 +400,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("health-stat", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("health-stat", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -553,12 +441,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -573,16 +463,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -591,15 +481,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -616,36 +506,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "health-stat"] if info != "NotFound" else info
+                result["acos_info"] = info["health-stat"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "health-stat-list"] if info != "NotFound" else info
+                result["acos_info"] = info["health-stat-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
+                get_oper_result = api_client.get_oper(module.client, existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["health-stat"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["health-stat"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
+                get_type_result = api_client.get_stats(module.client, existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["health-stat"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["health-stat"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -658,11 +540,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

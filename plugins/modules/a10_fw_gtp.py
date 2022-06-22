@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_fw_gtp
 description:
@@ -60,6 +61,52 @@ options:
         - "'enable'= Enable GTP Inspection;"
         type: str
         required: False
+    network_element_list_v4:
+        description:
+        - "Class List (Class List Name)"
+        type: str
+        required: False
+    ne_v4_log_periodicity:
+        description:
+        - "Periodic Logging Frequency(In Minutes)"
+        type: int
+        required: False
+    network_element_list_v6:
+        description:
+        - "Class List (Class List Name)"
+        type: str
+        required: False
+    ne_v6_log_periodicity:
+        description:
+        - "Periodic Logging Frequency(In Minutes)"
+        type: int
+        required: False
+    apn_prefix_list:
+        description:
+        - "Class List (Class List Name)"
+        type: str
+        required: False
+    apn_log_periodicity:
+        description:
+        - "Periodic Logging Frequency(In Minutes)"
+        type: int
+        required: False
+    echo_timeout:
+        description:
+        - "echo message timeout (minutes) (echo-timeout (default 120))"
+        type: int
+        required: False
+    path_mgmt_logging:
+        description:
+        - "'enable-log'= Enable Log for Path Management;"
+        type: str
+        required: False
+    insertion_mode:
+        description:
+        - "'monitor'= Enable inline view-only mode; 'skip-state-checks'= Enable skip
+          stateful checks mode;"
+        type: str
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -73,47 +120,160 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'create-session-request'= Create Session Request; 'create-session-
-          response'= Create Session Response; 'path-management-message'= Path Management
-          Message; 'delete-session-request'= Delete Session Request; 'delete-session-
-          response'= Delete Session Response; 'reserved-field-set-drop'= Reserved field
-          set drop; 'tunnel-id-flag-drop'= Tunnel ID Flag Incorrect; 'message-filtering-
-          drop'= Message Filtering Drop; 'reserved-information-element-drop'= Resevered
-          Information Element Field Drop; 'mandatory-information-element-drop'= Mandatory
-          Information Element Field Drop; 'filter-list-drop'= APN IMSI Information
-          Filtering Drop; 'invalid-teid-drop'= Invalid TEID Drop; 'out-of-state-drop'=
-          Out Of State Drop; 'message-length-drop'= Message Length Exceeded;
-          'unsupported-message-type-v2'= GTP v2 message type is not supported; 'fast-
-          conn-setup'= Fast Conn Setup Attempt; 'out-of-session-memory'= Out of Session
-          Memory; 'no-fwd-route'= No Forward Route; 'no-rev-route'= NO Reverse Route;
-          'invalid-key'= Invalid TEID Field; 'create-session-request-retransmit'=
-          Retransmitted Create Session Request; 'delete-session-request-retransmit'=
-          Retransmitted Delete Session Request; 'response-cause-not-accepted'= Response
-          Cause indicates Request not Accepted; 'invalid-imsi-len-drop'= Invalid IMSI
-          Length Drop; 'invalid-apn-len-drop'= Invalid APN Length Drop; 'create-pdp-
-          context-request-v1'= GTP v1 Create PDP Context Request; 'create-pdp-context-
-          response-v1'= GTP v1 Create PDP Context Response; 'path-management-message-v1'=
-          GTP v1 Path Management Message; 'reserved-field-set-drop-v1'= GTP v1 Reserved
-          field set drop; 'message-filtering-drop-v1'= GTP v1 Message Filtering Drop;
-          'reserved-information-element-drop-v1'= GTP v1 Reserved Information Element
-          Field Drop; 'mandatory-information-element-drop-v1'= GTP v1 Mandatory
-          Information Element Field Drop; 'filter-list-drop-v1'= GTP v1 APN IMSI
-          Information Filtering Drop; 'invalid-teid-drop-v1'= GTP v1 Invalid TEID Drop;
-          'message-length-drop-v1'= GTP v1 Message Length Exceeded; 'version-not-
-          supported'= GTP version is not supported; 'unsupported-message-type-v1'= GTP v1
-          message type is not supported; 'delete-pdp-context-request-v1'= GTP v1 Delete
-          Context PDP Request; 'delete-pdp-context-response-v1'= GTP v1 Delete Context
-          PDP Response; 'create-pdp-context-request-v0'= GTP v0 Create PDP Context
-          Request; 'create-pdp-context-response-v0'= GTP v0 Create PDP Context Response;
-          'delete-pdp-context-request-v0'= GTP v0 Delete Context PDP Request; 'delete-
-          pdp-context-response-v0'= GTP v0 Delete Context PDP Response; 'path-management-
-          message-v0'= GTP v0 Path Management Message; 'message-filtering-drop-v0'= GTP
-          v0 Message Filtering Drop; 'unsupported-message-type-v0'= GTP v0 message type
-          is not supported; 'invalid-flow-label-drop-v0'= GTP v0 Invalid flow label drop;
-          'invalid-tid-drop-v0'= GTP v0 Invalid tid drop; 'message-length-drop-v0'= GTP
-          v0 Message Length Exceeded; 'mandatory-information-element-drop-v0'= GTP v0
-          Mandatory Information Element Field Drop; 'filter-list-drop-v0'= GTP v0 APN
-          IMSI Information Filtering Drop; 'gtp-in-gtp-drop'= GTP in GTP Filtering Drop;"
+                - "'all'= all; 'out-of-session-memory'= Out of Tunnel Memory; 'no-fwd-route'= No
+          Forward Route; 'no-rev-route'= No Reverse Route; 'gtp-smp-created'= GTP SMP
+          Created; 'gtp-smp-marked-deleted'= GTP SMP Marked Deleted; 'gtp-smp-deleted'=
+          GTP SMP Deleted; 'smp-creation-failed'= GTP-U SMP Helper Session Creation
+          Failed; 'gtp-smp-path-created'= GTP SMP PATH Created; 'gtp-smp-path-freed'= GTP
+          SMP PATH MEM freed; 'gtp-smp-path-allocated'= GTP SMP PATH MEM allocated; 'gtp-
+          smp-path-creation-failed'= GTP SMP PATH creation Failed; 'gtp-smp-path-check-
+          failed'= GTP SMP PATH check Failed; 'gtp-smp-check-failed'= GTP SMP check
+          Failed; 'gtp-smp-session-count-check-failed'= GTP-U session count is not in
+          range of 0-11 in GTP-C SMP; 'gtp-c-ref-count-smp-exceeded'= GTP-C session count
+          on C-smp exceeded 2; 'gtp-u-smp-in-rml-with-sess'= GTP-U smp is marked RML with
+          U-session; 'gtp-u-pkt-fwd-conn-create'= GTP-U pkt fwded while creating conn
+          with gtp toggling; 'gtp-c-pkt-fwd-conn-create'= GTP-C pkt fwded while creating
+          conn with gtp toggling; 'gtp-echo-pkt-fwd-conn-create'= GTP-ECHO pkt fwded
+          while creating conn with gtp toggling; 'gtp-tunnel-rate-limit-entry-create-
+          success'= GTP Tunnel Level Rate Limit Entry Create Success; 'gtp-tunnel-rate-
+          limit-entry-create-failure'= GTP Tunnel Level Rate Limit Entry Create Failure;
+          'gtp-tunnel-rate-limit-entry-deleted'= GTP Tunnel Level Rate Limit Entry
+          Deleted; 'gtp-rate-limit-smp-created'= GTP Rate Limit SMP Created; 'gtp-rate-
+          limit-smp-freed'= GTP Rate Limit SMP Freed; 'gtp-rate-limit-smp-create-
+          failure'= GTP Rate Limit SMP Create Failure; 'gtp-rate-limit-t3-ctr-create-
+          failure'= GTP Rate Limit Dynamic Counters Create Failure; 'gtp-rate-limit-
+          entry-create-failure'= GTP Rate Limit Entry Create Failure; 'gtp-echo-conn-
+          created'= GTP Echo Request Conn Created; 'gtp-echo-conn-deleted'= GTP Echo
+          Request conn Deleted; 'gtp-node-restart-echo'= GTP Node Restoration due to
+          Recovery IE in Echo; 'gtp-c-echo-path-failure'= GTP-C Path Failure due to Echo;
+          'drop-vld-gtp-echo-out-of-state-'= GTP Echo Out of State Drop; 'drop-vld-gtp-
+          echo-ie-len-exceed-msg-len'= GTP Echo IE Length Exceeds Message Length; 'gtp-
+          create-session-request-retransmit'= GTP-C Retransmitted Create Session Request;
+          'gtp-add-bearer-request-retransmit'= GTP-C Retransmitted Add Bearer Request;
+          'gtp-delete-session-request-retransmit'= GTP-C Retransmitted Delete Session
+          Request; 'gtp-handover-request-retransmit'= GTP Handover Request Retransmit;
+          'gtp-del-bearer-request-retransmit'= GTP-C Retransmitted Delete Bearer Request;
+          'gtp-add-bearer-response-retransmit'= GTP-C Retransmitted Add Bearer Response;
+          'gtp-create-session-request-retx-drop'= GTP-C Retransmitted Create Session
+          Request dropped; 'gtp-u-out-of-state-drop'= GTP-U Out of state Drop; 'gtp-c-
+          handover-request-out-of-state-drop'= GTP-C Handover Request Out of state Drop;
+          'gtp-v1-c-nsapi-not-found-in-delete-req'= GTPv1-C NSAPI Not Found in GTP
+          Request; 'gtp-v2-c-bearer-not-found-in-delete-req'= GTPv2-C Bearer Not Found in
+          GTP Request; 'gtp-v2-c-bearer-not-found-in-delete-resp'= GTPv2-C Bearer Not
+          Found in GTP Response; 'gtp-multiple-handover-request'= GTP Multiple Handover
+          Request; 'gtp-rr-message-drop'= GTP Message Dropped in RR Mode; 'gtp-rr-echo-
+          message-dcmsg'= GTP Echo Message Sent to home CPU in RR Mode; 'gtp-rr-c-
+          message-dcmsg'= GTP-C Message Sent to home CPU in RR Mode; 'drop-gtp-frag-or-
+          jumbo-pkt'= GTP Fragmented or JUMBO packet Drop; 'response-with-reject-cause-
+          forwarded'= GTP-C Response with Reject Cause Forwarded; 'gtp-c-message-
+          forwarded-without-conn'= GTP-C Message Forwarded without Conn; 'gtp-v0-c-ver-
+          not-supp'= GTPv0-C Version not supported indication; 'gtp-v1-c-ver-not-supp'=
+          GTPv1-C Version not supported indication; 'gtp-v2-c-ver-not-supp'= GTPv2-C
+          Version not supported indication; 'gtp-v1-extn-hdt-notif'= GTPV1 Supported
+          Extension header notification; 'gtp-u-error-ind'= GTP-U Error Indication;
+          'gtp-v0-c-uplink-ingress-packets'= GTPv0-C Uplink Ingress Packets;
+          'gtp-v0-c-uplink-egress-packets'= GTPv0-C Uplink Egress Packets;
+          'gtp-v0-c-downlink-ingress-packets'= GTPv0-C Downlink Ingress Packets;
+          'gtp-v0-c-downlink-egress-packets'= GTPv0-C Downlink Egress Packets;
+          'gtp-v0-c-uplink-ingress-bytes'= GTPv0-C Uplink Ingress Bytes;
+          'gtp-v0-c-uplink-egress-bytes'= GTPv0-C Uplink Egress Bytes;
+          'gtp-v0-c-downlink-ingress-bytes'= GTPv0-C Downlink Ingress Bytes;
+          'gtp-v0-c-downlink-egress-bytes'= GTPv0-C Downlink Egress Bytes;
+          'gtp-v1-c-uplink-ingress-packets'= GTPv1-C Uplink Ingress Packets;
+          'gtp-v1-c-uplink-egress-packets'= GTPv1-C Uplink Egress Packets;
+          'gtp-v1-c-downlink-ingress-packets'= GTPv1-C Downlink Ingress Packets;
+          'gtp-v1-c-downlink-egress-packets'= GTPv1-C Downlink Egress Packets;
+          'gtp-v1-c-uplink-ingress-bytes'= GTPv1-C Uplink Ingress Bytes;
+          'gtp-v1-c-uplink-egress-bytes'= GTPv1-C Uplink Egress Bytes;
+          'gtp-v1-c-downlink-ingress-bytes'= GTPv1-C Downlink Ingress Bytes;
+          'gtp-v1-c-downlink-egress-bytes'= GTPv1-C Downlink Egress Bytes;
+          'gtp-v2-c-uplink-ingress-packets'= GTPv2-C Uplink Ingress Packets;
+          'gtp-v2-c-uplink-egress-packets'= GTPv2-C Uplink Egress Packets;
+          'gtp-v2-c-downlink-ingress-packets'= GTPv2-C Downlink Ingress Packets;
+          'gtp-v2-c-downlink-egress-packets'= GTPv2-C Downlink Egress Packets;
+          'gtp-v2-c-uplink-ingress-bytes'= GTPv2-C Uplink Ingress Bytes;
+          'gtp-v2-c-uplink-egress-bytes'= GTPv2-C Uplink Egress Bytes;
+          'gtp-v2-c-downlink-ingress-bytes'= GTPv2-C Downlink Ingress Bytes;
+          'gtp-v2-c-downlink-egress-bytes'= GTPv2-C Downlink Egress Bytes; 'gtp-u-uplink-
+          ingress-packets'= GTP-U Uplink Ingress Packets; 'gtp-u-uplink-egress-packets'=
+          GTP-U Uplink Egress Packets; 'gtp-u-downlink-ingress-packets'= GTP-U Downlink
+          Ingress Packets; 'gtp-u-downlink-egress-packets'= GTP-U Downlink Egress
+          Packets; 'gtp-u-uplink-ingress-bytes'= GTP-U Uplink Ingress Bytes; 'gtp-u-
+          uplink-egress-bytes'= GTP-U Uplink Egress Bytes; 'gtp-u-downlink-ingress-
+          bytes'= GTP-U Downlink Ingress Bytes; 'gtp-u-downlink-egress-bytes'= GTP-U
+          Downlink Egress Bytes; 'gtp-v0-c-create-synced'= GTPv0-C Tunnel Create Synced;
+          'gtp-v1-c-create-synced'= GTPv1-C Tunnel Create Synced; 'gtp-v2-c-create-
+          synced'= GTPv2-C Tunnel Create Synced; 'gtp-v0-c-delete-synced'= GTPv0-C Tunnel
+          Delete Synced; 'gtp-v1-c-delete-synced'= GTPv1-C Tunnel Delete Synced;
+          'gtp-v2-c-delete-synced'= GTPv2-C Tunnel Delete Synced; 'gtp-v0-c-create-sync-
+          rx'= GTPv0-C Tunnel Create Sync Received on Standby; 'gtp-v1-c-create-sync-rx'=
+          GTPv1-C Tunnel Create Sync Received on Standby; 'gtp-v2-c-create-sync-rx'=
+          GTPv2-C Tunnel Create Sync Received on Standby; 'gtp-v0-c-delete-sync-rx'=
+          GTPv0-C Tunnel Delete Sync Received on Standby; 'gtp-v1-c-delete-sync-rx'=
+          GTPv1-C Tunnel Delete Sync Received on Standby; 'gtp-v2-c-delete-sync-rx'=
+          GTPv2-C Tunnel Delete Sync Received on Standby; 'gtp-handover-synced'= GTP
+          Handover Synced; 'gtp-handover-sync-rx'= GTP Handover Sync Received on Standby;
+          'gtp-smp-add-bearer-synced'= GTP SMP Add Bearer Synced; 'gtp-smp-del-bearer-
+          synced'= GTP SMP Del Bearer Synced; 'gtp-smp-additional-bearer-synced'= GTP SMP
+          Additional Bearer Synced; 'gtp-smp-add-bearer-sync-rx'= GTP SMP Add Bearer Sync
+          Received on Standby; 'gtp-smp-del-bearer-sync-rx'= GTP SMP Del Bearer Sync
+          Received on Standby; 'gtp-smp-additional-bearer-sync-rx'= GTP SMP Additional
+          Bearer Sync Received on Standby; 'gtp-add-bearer-sync-not-rx-on-standby'= GTP
+          Add Bearer Sync Not Received on Standby; 'gtp-add-bearer-sync-with-periodic-
+          update-on-standby'= GTP Bearer Added on Standby with Periodic Sync; 'gtp-
+          delete-bearer-sync-with-periodic-update-on-standby'= GTP Bearer Deleted on
+          Standy with Periodic Sync; 'gtp-v0-c-echo-create-synced'= GTPv0-C Echo Create
+          Synced;"
+                type: str
+            counters2:
+                description:
+                - "'gtp-v1-c-echo-create-synced'= GTPv1-C Echo Create Synced; 'gtp-v2-c-echo-
+          create-synced'= GTPv2-C Echo Create Synced; 'gtp-v0-c-echo-create-sync-rx'=
+          GTPv0-C-Echo Create Sync Received on Standby; 'gtp-v1-c-echo-create-sync-rx'=
+          GTPv1-C-Echo Create Sync Received on Standby; 'gtp-v2-c-echo-create-sync-rx'=
+          GTPv2-C-Echo Create Sync Received on Standby; 'gtp-v0-c-echo-del-synced'=
+          GTPv0-C Echo Delete Synced; 'gtp-v1-c-echo-del-synced'= GTPv1-C Echo Delete
+          Synced; 'gtp-v2-c-echo-del-synced'= GTPv2-C Echo Delete Synced; 'gtp-v0-c-echo-
+          del-sync-rx'= GTPv0-C-Echo Delete Sync Received on Standby; 'gtp-v1-c-echo-del-
+          sync-rx'= GTPv1-C-Echo Delete Sync Received on Standby; 'gtp-v2-c-echo-del-
+          sync-rx'= GTPv2-C-Echo Delete Sync Received on Standby; 'drop-gtp-conn-
+          creation-standby'= GTP Conn creation on Standby Drop; 'gtp-u-synced-before-
+          control'= GTP-U Tunnel synced before corresponding GTP-C; 'gtp-c-l5-synced-
+          before-l3'= GTP-C L5 conn synced before corresponding L3 GTP-C conn; 'gtp-smp-
+          path-del-synced'= GTP SMP path delete Synced; 'gtp-smp-path-del-sync-rx'= GTP
+          SMP path delete Sync Received on Standby; 'gtp-not-enabled-on-standby'= GTP Not
+          Enabled on Standby; 'gtp-ip-version-v4-v6'= GTP IP versions of V4&V6 in FTEID;
+          'drop-gtp-ip-version-mismatch-fteid'= GTP IP version mismatch for req &
+          response FTEIDs; 'drop-gtp-ip-version-mismatch-ho-fteid'= GTP IP version
+          mismatch in Handover SGW FTEID; 'gtp-u-message-length-mismatch'= GTP-U Message
+          Length Mismatch Across Layers; 'gtp-path-message-length-mismatch'= GTP-Path
+          Message Length Mismatch Across Layers; 'drop-gtp-missing-cond-ie-bearer-ctx'=
+          Missing conditional IE in bearer context Drop; 'drop-gtp-bearer-not-found-in-
+          resp'= GTP Bearer not found in response; 'gtp-stateless-forward'= GTP Stateless
+          Forward; 'gtp-l3-conn-deleted'= GTP L3 conn deleted; 'gtp-l5-conn-created'= GTP
+          L5 conn created; 'gtp-monitor-forward'= GTP messages forwarded via monitor
+          mode; 'gtp-u_inner-ip-not-present'= GTP-U inner IP not present; 'gtp-ext_hdr-
+          incorrect-length'= GTP Extension header incorrect length;"
+                type: str
+    apn_prefix:
+        description:
+        - "Field apn_prefix"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
+    network_element:
+        description:
+        - "Field network_element"
+        type: dict
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
                 type: str
     stats:
         description:
@@ -121,73 +281,9 @@ options:
         type: dict
         required: False
         suboptions:
-            create_session_request:
-                description:
-                - "Create Session Request"
-                type: str
-            create_session_response:
-                description:
-                - "Create Session Response"
-                type: str
-            path_management_message:
-                description:
-                - "Path Management Message"
-                type: str
-            delete_session_request:
-                description:
-                - "Delete Session Request"
-                type: str
-            delete_session_response:
-                description:
-                - "Delete Session Response"
-                type: str
-            reserved_field_set_drop:
-                description:
-                - "Reserved field set drop"
-                type: str
-            tunnel_id_flag_drop:
-                description:
-                - "Tunnel ID Flag Incorrect"
-                type: str
-            message_filtering_drop:
-                description:
-                - "Message Filtering Drop"
-                type: str
-            reserved_information_element_drop:
-                description:
-                - "Resevered Information Element Field Drop"
-                type: str
-            mandatory_information_element_drop:
-                description:
-                - "Mandatory Information Element Field Drop"
-                type: str
-            filter_list_drop:
-                description:
-                - "APN IMSI Information Filtering Drop"
-                type: str
-            invalid_teid_drop:
-                description:
-                - "Invalid TEID Drop"
-                type: str
-            out_of_state_drop:
-                description:
-                - "Out Of State Drop"
-                type: str
-            message_length_drop:
-                description:
-                - "Message Length Exceeded"
-                type: str
-            unsupported_message_type_v2:
-                description:
-                - "GTP v2 message type is not supported"
-                type: str
-            fast_conn_setup:
-                description:
-                - "Fast Conn Setup Attempt"
-                type: str
             out_of_session_memory:
                 description:
-                - "Out of Session Memory"
+                - "Out of Tunnel Memory"
                 type: str
             no_fwd_route:
                 description:
@@ -195,140 +291,256 @@ options:
                 type: str
             no_rev_route:
                 description:
-                - "NO Reverse Route"
+                - "No Reverse Route"
                 type: str
-            invalid_key:
+            gtp_smp_path_check_failed:
                 description:
-                - "Invalid TEID Field"
+                - "GTP SMP PATH check Failed"
                 type: str
-            create_session_request_retransmit:
+            gtp_smp_check_failed:
                 description:
-                - "Retransmitted Create Session Request"
+                - "GTP SMP check Failed"
                 type: str
-            delete_session_request_retransmit:
+            gtp_smp_session_count_check_failed:
                 description:
-                - "Retransmitted Delete Session Request"
+                - "GTP-U session count is not in range of 0-11 in GTP-C SMP"
                 type: str
-            response_cause_not_accepted:
+            gtp_c_ref_count_smp_exceeded:
                 description:
-                - "Response Cause indicates Request not Accepted"
+                - "GTP-C session count on C-smp exceeded 2"
                 type: str
-            invalid_imsi_len_drop:
+            gtp_u_smp_in_rml_with_sess:
                 description:
-                - "Invalid IMSI Length Drop"
+                - "GTP-U smp is marked RML with U-session"
                 type: str
-            invalid_apn_len_drop:
+            gtp_tunnel_rate_limit_entry_create_failure:
                 description:
-                - "Invalid APN Length Drop"
+                - "GTP Tunnel Level Rate Limit Entry Create Failure"
                 type: str
-            create_pdp_context_request_v1:
+            gtp_rate_limit_smp_create_failure:
                 description:
-                - "GTP v1 Create PDP Context Request"
+                - "GTP Rate Limit SMP Create Failure"
                 type: str
-            create_pdp_context_response_v1:
+            gtp_rate_limit_t3_ctr_create_failure:
                 description:
-                - "GTP v1 Create PDP Context Response"
+                - "GTP Rate Limit Dynamic Counters Create Failure"
                 type: str
-            path_management_message_v1:
+            gtp_rate_limit_entry_create_failure:
                 description:
-                - "GTP v1 Path Management Message"
+                - "GTP Rate Limit Entry Create Failure"
                 type: str
-            reserved_field_set_drop_v1:
+            gtp_node_restart_echo:
                 description:
-                - "GTP v1 Reserved field set drop"
+                - "GTP Node Restoration due to Recovery IE in Echo"
                 type: str
-            message_filtering_drop_v1:
+            gtp_c_echo_path_failure:
                 description:
-                - "GTP v1 Message Filtering Drop"
+                - "GTP-C Path Failure due to Echo"
                 type: str
-            reserved_information_element_drop_v1:
+            drop_vld_gtp_echo_out_of_state_:
                 description:
-                - "GTP v1 Reserved Information Element Field Drop"
+                - "GTP Echo Out of State Drop"
                 type: str
-            mandatory_information_element_drop_v1:
+            drop_vld_gtp_echo_ie_len_exceed_msg_len:
                 description:
-                - "GTP v1 Mandatory Information Element Field Drop"
+                - "GTP Echo IE Length Exceeds Message Length"
                 type: str
-            filter_list_drop_v1:
+            gtp_del_bearer_request_retransmit:
                 description:
-                - "GTP v1 APN IMSI Information Filtering Drop"
+                - "GTP-C Retransmitted Delete Bearer Request"
                 type: str
-            invalid_teid_drop_v1:
+            gtp_add_bearer_response_retransmit:
                 description:
-                - "GTP v1 Invalid TEID Drop"
+                - "GTP-C Retransmitted Add Bearer Response"
                 type: str
-            message_length_drop_v1:
+            gtp_u_out_of_state_drop:
                 description:
-                - "GTP v1 Message Length Exceeded"
+                - "GTP-U Out of state Drop"
                 type: str
-            version_not_supported:
+            gtp_c_handover_request_out_of_state_drop:
                 description:
-                - "GTP version is not supported"
+                - "GTP-C Handover Request Out of state Drop"
                 type: str
-            unsupported_message_type_v1:
+            gtp_v1_c_nsapi_not_found_in_delete_req:
                 description:
-                - "GTP v1 message type is not supported"
+                - "GTPv1-C NSAPI Not Found in GTP Request"
                 type: str
-            delete_pdp_context_request_v1:
+            gtp_v2_c_bearer_not_found_in_delete_req:
                 description:
-                - "GTP v1 Delete Context PDP Request"
+                - "GTPv2-C Bearer Not Found in GTP Request"
                 type: str
-            delete_pdp_context_response_v1:
+            gtp_v2_c_bearer_not_found_in_delete_resp:
                 description:
-                - "GTP v1 Delete Context PDP Response"
+                - "GTPv2-C Bearer Not Found in GTP Response"
                 type: str
-            create_pdp_context_request_v0:
+            gtp_rr_message_drop:
                 description:
-                - "GTP v0 Create PDP Context Request"
+                - "GTP Message Dropped in RR Mode"
                 type: str
-            create_pdp_context_response_v0:
+            drop_gtp_frag_or_jumbo_pkt:
                 description:
-                - "GTP v0 Create PDP Context Response"
+                - "GTP Fragmented or JUMBO packet Drop"
                 type: str
-            delete_pdp_context_request_v0:
+            gtp_v0_c_uplink_ingress_packets:
                 description:
-                - "GTP v0 Delete Context PDP Request"
+                - "GTPv0-C Uplink Ingress Packets"
                 type: str
-            delete_pdp_context_response_v0:
+            gtp_v0_c_uplink_egress_packets:
                 description:
-                - "GTP v0 Delete Context PDP Response"
+                - "GTPv0-C Uplink Egress Packets"
                 type: str
-            path_management_message_v0:
+            gtp_v0_c_downlink_ingress_packets:
                 description:
-                - "GTP v0 Path Management Message"
+                - "GTPv0-C Downlink Ingress Packets"
                 type: str
-            message_filtering_drop_v0:
+            gtp_v0_c_downlink_egress_packets:
                 description:
-                - "GTP v0 Message Filtering Drop"
+                - "GTPv0-C Downlink Egress Packets"
                 type: str
-            unsupported_message_type_v0:
+            gtp_v0_c_uplink_ingress_bytes:
                 description:
-                - "GTP v0 message type is not supported"
+                - "GTPv0-C Uplink Ingress Bytes"
                 type: str
-            invalid_flow_label_drop_v0:
+            gtp_v0_c_uplink_egress_bytes:
                 description:
-                - "GTP v0 Invalid flow label drop"
+                - "GTPv0-C Uplink Egress Bytes"
                 type: str
-            invalid_tid_drop_v0:
+            gtp_v0_c_downlink_ingress_bytes:
                 description:
-                - "GTP v0 Invalid tid drop"
+                - "GTPv0-C Downlink Ingress Bytes"
                 type: str
-            message_length_drop_v0:
+            gtp_v0_c_downlink_egress_bytes:
                 description:
-                - "GTP v0 Message Length Exceeded"
+                - "GTPv0-C Downlink Egress Bytes"
                 type: str
-            mandatory_information_element_drop_v0:
+            gtp_v1_c_uplink_ingress_packets:
                 description:
-                - "GTP v0 Mandatory Information Element Field Drop"
+                - "GTPv1-C Uplink Ingress Packets"
                 type: str
-            filter_list_drop_v0:
+            gtp_v1_c_uplink_egress_packets:
                 description:
-                - "GTP v0 APN IMSI Information Filtering Drop"
+                - "GTPv1-C Uplink Egress Packets"
                 type: str
-            gtp_in_gtp_drop:
+            gtp_v1_c_downlink_ingress_packets:
                 description:
-                - "GTP in GTP Filtering Drop"
+                - "GTPv1-C Downlink Ingress Packets"
                 type: str
+            gtp_v1_c_downlink_egress_packets:
+                description:
+                - "GTPv1-C Downlink Egress Packets"
+                type: str
+            gtp_v1_c_uplink_ingress_bytes:
+                description:
+                - "GTPv1-C Uplink Ingress Bytes"
+                type: str
+            gtp_v1_c_uplink_egress_bytes:
+                description:
+                - "GTPv1-C Uplink Egress Bytes"
+                type: str
+            gtp_v1_c_downlink_ingress_bytes:
+                description:
+                - "GTPv1-C Downlink Ingress Bytes"
+                type: str
+            gtp_v1_c_downlink_egress_bytes:
+                description:
+                - "GTPv1-C Downlink Egress Bytes"
+                type: str
+            gtp_v2_c_uplink_ingress_packets:
+                description:
+                - "GTPv2-C Uplink Ingress Packets"
+                type: str
+            gtp_v2_c_uplink_egress_packets:
+                description:
+                - "GTPv2-C Uplink Egress Packets"
+                type: str
+            gtp_v2_c_downlink_ingress_packets:
+                description:
+                - "GTPv2-C Downlink Ingress Packets"
+                type: str
+            gtp_v2_c_downlink_egress_packets:
+                description:
+                - "GTPv2-C Downlink Egress Packets"
+                type: str
+            gtp_v2_c_uplink_ingress_bytes:
+                description:
+                - "GTPv2-C Uplink Ingress Bytes"
+                type: str
+            gtp_v2_c_uplink_egress_bytes:
+                description:
+                - "GTPv2-C Uplink Egress Bytes"
+                type: str
+            gtp_v2_c_downlink_ingress_bytes:
+                description:
+                - "GTPv2-C Downlink Ingress Bytes"
+                type: str
+            gtp_v2_c_downlink_egress_bytes:
+                description:
+                - "GTPv2-C Downlink Egress Bytes"
+                type: str
+            gtp_u_uplink_ingress_packets:
+                description:
+                - "GTP-U Uplink Ingress Packets"
+                type: str
+            gtp_u_uplink_egress_packets:
+                description:
+                - "GTP-U Uplink Egress Packets"
+                type: str
+            gtp_u_downlink_ingress_packets:
+                description:
+                - "GTP-U Downlink Ingress Packets"
+                type: str
+            gtp_u_downlink_egress_packets:
+                description:
+                - "GTP-U Downlink Egress Packets"
+                type: str
+            gtp_u_uplink_ingress_bytes:
+                description:
+                - "GTP-U Uplink Ingress Bytes"
+                type: str
+            gtp_u_uplink_egress_bytes:
+                description:
+                - "GTP-U Uplink Egress Bytes"
+                type: str
+            gtp_u_downlink_ingress_bytes:
+                description:
+                - "GTP-U Downlink Ingress Bytes"
+                type: str
+            gtp_u_downlink_egress_bytes:
+                description:
+                - "GTP-U Downlink Egress Bytes"
+                type: str
+            gtp_u_message_length_mismatch:
+                description:
+                - "GTP-U Message Length Mismatch Across Layers"
+                type: str
+            gtp_path_message_length_mismatch:
+                description:
+                - "GTP-Path Message Length Mismatch Across Layers"
+                type: str
+            drop_gtp_missing_cond_ie_bearer_ctx:
+                description:
+                - "Missing conditional IE in bearer context Drop"
+                type: str
+            drop_gtp_bearer_not_found_in_resp:
+                description:
+                - "GTP Bearer not found in response"
+                type: str
+            gtp_stateless_forward:
+                description:
+                - "GTP Stateless Forward"
+                type: str
+            gtp_monitor_forward:
+                description:
+                - "GTP messages forwarded via monitor mode"
+                type: str
+            apn_prefix:
+                description:
+                - "Field apn_prefix"
+                type: dict
+            network_element:
+                description:
+                - "Field network_element"
+                type: dict
 
 '''
 
@@ -382,13 +594,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "gtp_value",
-    "sampling_enable",
-    "stats",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["apn_log_periodicity", "apn_prefix", "apn_prefix_list", "echo_timeout", "gtp_value", "insertion_mode", "ne_v4_log_periodicity", "ne_v6_log_periodicity", "network_element", "network_element_list_v4", "network_element_list_v6", "path_mgmt_logging", "sampling_enable", "stats", "uuid", ]
 
 
 def get_default_argspec():
@@ -396,235 +604,31 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'gtp_value': {
-            'type': 'str',
-            'choices': ['enable']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'create-session-request', 'create-session-response',
-                    'path-management-message', 'delete-session-request',
-                    'delete-session-response', 'reserved-field-set-drop',
-                    'tunnel-id-flag-drop', 'message-filtering-drop',
-                    'reserved-information-element-drop',
-                    'mandatory-information-element-drop', 'filter-list-drop',
-                    'invalid-teid-drop', 'out-of-state-drop',
-                    'message-length-drop', 'unsupported-message-type-v2',
-                    'fast-conn-setup', 'out-of-session-memory', 'no-fwd-route',
-                    'no-rev-route', 'invalid-key',
-                    'create-session-request-retransmit',
-                    'delete-session-request-retransmit',
-                    'response-cause-not-accepted', 'invalid-imsi-len-drop',
-                    'invalid-apn-len-drop', 'create-pdp-context-request-v1',
-                    'create-pdp-context-response-v1',
-                    'path-management-message-v1', 'reserved-field-set-drop-v1',
-                    'message-filtering-drop-v1',
-                    'reserved-information-element-drop-v1',
-                    'mandatory-information-element-drop-v1',
-                    'filter-list-drop-v1', 'invalid-teid-drop-v1',
-                    'message-length-drop-v1', 'version-not-supported',
-                    'unsupported-message-type-v1',
-                    'delete-pdp-context-request-v1',
-                    'delete-pdp-context-response-v1',
-                    'create-pdp-context-request-v0',
-                    'create-pdp-context-response-v0',
-                    'delete-pdp-context-request-v0',
-                    'delete-pdp-context-response-v0',
-                    'path-management-message-v0', 'message-filtering-drop-v0',
-                    'unsupported-message-type-v0',
-                    'invalid-flow-label-drop-v0', 'invalid-tid-drop-v0',
-                    'message-length-drop-v0',
-                    'mandatory-information-element-drop-v0',
-                    'filter-list-drop-v0', 'gtp-in-gtp-drop'
-                ]
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'create_session_request': {
-                'type': 'str',
-            },
-            'create_session_response': {
-                'type': 'str',
-            },
-            'path_management_message': {
-                'type': 'str',
-            },
-            'delete_session_request': {
-                'type': 'str',
-            },
-            'delete_session_response': {
-                'type': 'str',
-            },
-            'reserved_field_set_drop': {
-                'type': 'str',
-            },
-            'tunnel_id_flag_drop': {
-                'type': 'str',
-            },
-            'message_filtering_drop': {
-                'type': 'str',
-            },
-            'reserved_information_element_drop': {
-                'type': 'str',
-            },
-            'mandatory_information_element_drop': {
-                'type': 'str',
-            },
-            'filter_list_drop': {
-                'type': 'str',
-            },
-            'invalid_teid_drop': {
-                'type': 'str',
-            },
-            'out_of_state_drop': {
-                'type': 'str',
-            },
-            'message_length_drop': {
-                'type': 'str',
-            },
-            'unsupported_message_type_v2': {
-                'type': 'str',
-            },
-            'fast_conn_setup': {
-                'type': 'str',
-            },
-            'out_of_session_memory': {
-                'type': 'str',
-            },
-            'no_fwd_route': {
-                'type': 'str',
-            },
-            'no_rev_route': {
-                'type': 'str',
-            },
-            'invalid_key': {
-                'type': 'str',
-            },
-            'create_session_request_retransmit': {
-                'type': 'str',
-            },
-            'delete_session_request_retransmit': {
-                'type': 'str',
-            },
-            'response_cause_not_accepted': {
-                'type': 'str',
-            },
-            'invalid_imsi_len_drop': {
-                'type': 'str',
-            },
-            'invalid_apn_len_drop': {
-                'type': 'str',
-            },
-            'create_pdp_context_request_v1': {
-                'type': 'str',
-            },
-            'create_pdp_context_response_v1': {
-                'type': 'str',
-            },
-            'path_management_message_v1': {
-                'type': 'str',
-            },
-            'reserved_field_set_drop_v1': {
-                'type': 'str',
-            },
-            'message_filtering_drop_v1': {
-                'type': 'str',
-            },
-            'reserved_information_element_drop_v1': {
-                'type': 'str',
-            },
-            'mandatory_information_element_drop_v1': {
-                'type': 'str',
-            },
-            'filter_list_drop_v1': {
-                'type': 'str',
-            },
-            'invalid_teid_drop_v1': {
-                'type': 'str',
-            },
-            'message_length_drop_v1': {
-                'type': 'str',
-            },
-            'version_not_supported': {
-                'type': 'str',
-            },
-            'unsupported_message_type_v1': {
-                'type': 'str',
-            },
-            'delete_pdp_context_request_v1': {
-                'type': 'str',
-            },
-            'delete_pdp_context_response_v1': {
-                'type': 'str',
-            },
-            'create_pdp_context_request_v0': {
-                'type': 'str',
-            },
-            'create_pdp_context_response_v0': {
-                'type': 'str',
-            },
-            'delete_pdp_context_request_v0': {
-                'type': 'str',
-            },
-            'delete_pdp_context_response_v0': {
-                'type': 'str',
-            },
-            'path_management_message_v0': {
-                'type': 'str',
-            },
-            'message_filtering_drop_v0': {
-                'type': 'str',
-            },
-            'unsupported_message_type_v0': {
-                'type': 'str',
-            },
-            'invalid_flow_label_drop_v0': {
-                'type': 'str',
-            },
-            'invalid_tid_drop_v0': {
-                'type': 'str',
-            },
-            'message_length_drop_v0': {
-                'type': 'str',
-            },
-            'mandatory_information_element_drop_v0': {
-                'type': 'str',
-            },
-            'filter_list_drop_v0': {
-                'type': 'str',
-            },
-            'gtp_in_gtp_drop': {
-                'type': 'str',
-            }
-        }
+    rv.update({'gtp_value': {'type': 'str', 'choices': ['enable']},
+        'network_element_list_v4': {'type': 'str', },
+        'ne_v4_log_periodicity': {'type': 'int', },
+        'network_element_list_v6': {'type': 'str', },
+        'ne_v6_log_periodicity': {'type': 'int', },
+        'apn_prefix_list': {'type': 'str', },
+        'apn_log_periodicity': {'type': 'int', },
+        'echo_timeout': {'type': 'int', },
+        'path_mgmt_logging': {'type': 'str', 'choices': ['enable-log']},
+        'insertion_mode': {'type': 'str', 'choices': ['monitor', 'skip-state-checks']},
+        'uuid': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'out-of-session-memory', 'no-fwd-route', 'no-rev-route', 'gtp-smp-created', 'gtp-smp-marked-deleted', 'gtp-smp-deleted', 'smp-creation-failed', 'gtp-smp-path-created', 'gtp-smp-path-freed', 'gtp-smp-path-allocated', 'gtp-smp-path-creation-failed', 'gtp-smp-path-check-failed', 'gtp-smp-check-failed', 'gtp-smp-session-count-check-failed', 'gtp-c-ref-count-smp-exceeded', 'gtp-u-smp-in-rml-with-sess', 'gtp-u-pkt-fwd-conn-create', 'gtp-c-pkt-fwd-conn-create', 'gtp-echo-pkt-fwd-conn-create', 'gtp-tunnel-rate-limit-entry-create-success', 'gtp-tunnel-rate-limit-entry-create-failure', 'gtp-tunnel-rate-limit-entry-deleted', 'gtp-rate-limit-smp-created', 'gtp-rate-limit-smp-freed', 'gtp-rate-limit-smp-create-failure', 'gtp-rate-limit-t3-ctr-create-failure', 'gtp-rate-limit-entry-create-failure', 'gtp-echo-conn-created', 'gtp-echo-conn-deleted', 'gtp-node-restart-echo', 'gtp-c-echo-path-failure', 'drop-vld-gtp-echo-out-of-state-', 'drop-vld-gtp-echo-ie-len-exceed-msg-len', 'gtp-create-session-request-retransmit', 'gtp-add-bearer-request-retransmit', 'gtp-delete-session-request-retransmit', 'gtp-handover-request-retransmit', 'gtp-del-bearer-request-retransmit', 'gtp-add-bearer-response-retransmit', 'gtp-create-session-request-retx-drop', 'gtp-u-out-of-state-drop', 'gtp-c-handover-request-out-of-state-drop', 'gtp-v1-c-nsapi-not-found-in-delete-req', 'gtp-v2-c-bearer-not-found-in-delete-req', 'gtp-v2-c-bearer-not-found-in-delete-resp', 'gtp-multiple-handover-request', 'gtp-rr-message-drop', 'gtp-rr-echo-message-dcmsg', 'gtp-rr-c-message-dcmsg', 'drop-gtp-frag-or-jumbo-pkt', 'response-with-reject-cause-forwarded', 'gtp-c-message-forwarded-without-conn', 'gtp-v0-c-ver-not-supp', 'gtp-v1-c-ver-not-supp', 'gtp-v2-c-ver-not-supp', 'gtp-v1-extn-hdt-notif', 'gtp-u-error-ind', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets', 'gtp-v0-c-downlink-ingress-packets', 'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes', 'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes', 'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets', 'gtp-v1-c-downlink-ingress-packets', 'gtp-v1-c-downlink-egress-packets', 'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes', 'gtp-v1-c-downlink-ingress-bytes', 'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets', 'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets', 'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes', 'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes', 'gtp-v2-c-downlink-egress-bytes', 'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets', 'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes', 'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes', 'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced', 'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced', 'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced', 'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx', 'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced', 'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced', 'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx', 'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby', 'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced']}, 'counters2': {'type': 'str', 'choices': ['gtp-v1-c-echo-create-synced', 'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx', 'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced', 'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx', 'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced', 'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid', 'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch', 'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward', 'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u_inner-ip-not-present', 'gtp-ext_hdr-incorrect-length']}},
+        'apn_prefix': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'network_element': {'type': 'dict', 'uuid': {'type': 'str', }},
+        'stats': {'type': 'dict', 'out_of_session_memory': {'type': 'str', }, 'no_fwd_route': {'type': 'str', }, 'no_rev_route': {'type': 'str', }, 'gtp_smp_path_check_failed': {'type': 'str', }, 'gtp_smp_check_failed': {'type': 'str', }, 'gtp_smp_session_count_check_failed': {'type': 'str', }, 'gtp_c_ref_count_smp_exceeded': {'type': 'str', }, 'gtp_u_smp_in_rml_with_sess': {'type': 'str', }, 'gtp_tunnel_rate_limit_entry_create_failure': {'type': 'str', }, 'gtp_rate_limit_smp_create_failure': {'type': 'str', }, 'gtp_rate_limit_t3_ctr_create_failure': {'type': 'str', }, 'gtp_rate_limit_entry_create_failure': {'type': 'str', }, 'gtp_node_restart_echo': {'type': 'str', }, 'gtp_c_echo_path_failure': {'type': 'str', }, 'drop_vld_gtp_echo_out_of_state_': {'type': 'str', }, 'drop_vld_gtp_echo_ie_len_exceed_msg_len': {'type': 'str', }, 'gtp_del_bearer_request_retransmit': {'type': 'str', }, 'gtp_add_bearer_response_retransmit': {'type': 'str', }, 'gtp_u_out_of_state_drop': {'type': 'str', }, 'gtp_c_handover_request_out_of_state_drop': {'type': 'str', }, 'gtp_v1_c_nsapi_not_found_in_delete_req': {'type': 'str', }, 'gtp_v2_c_bearer_not_found_in_delete_req': {'type': 'str', }, 'gtp_v2_c_bearer_not_found_in_delete_resp': {'type': 'str', }, 'gtp_rr_message_drop': {'type': 'str', }, 'drop_gtp_frag_or_jumbo_pkt': {'type': 'str', }, 'gtp_v0_c_uplink_ingress_packets': {'type': 'str', }, 'gtp_v0_c_uplink_egress_packets': {'type': 'str', }, 'gtp_v0_c_downlink_ingress_packets': {'type': 'str', }, 'gtp_v0_c_downlink_egress_packets': {'type': 'str', }, 'gtp_v0_c_uplink_ingress_bytes': {'type': 'str', }, 'gtp_v0_c_uplink_egress_bytes': {'type': 'str', }, 'gtp_v0_c_downlink_ingress_bytes': {'type': 'str', }, 'gtp_v0_c_downlink_egress_bytes': {'type': 'str', }, 'gtp_v1_c_uplink_ingress_packets': {'type': 'str', }, 'gtp_v1_c_uplink_egress_packets': {'type': 'str', }, 'gtp_v1_c_downlink_ingress_packets': {'type': 'str', }, 'gtp_v1_c_downlink_egress_packets': {'type': 'str', }, 'gtp_v1_c_uplink_ingress_bytes': {'type': 'str', }, 'gtp_v1_c_uplink_egress_bytes': {'type': 'str', }, 'gtp_v1_c_downlink_ingress_bytes': {'type': 'str', }, 'gtp_v1_c_downlink_egress_bytes': {'type': 'str', }, 'gtp_v2_c_uplink_ingress_packets': {'type': 'str', }, 'gtp_v2_c_uplink_egress_packets': {'type': 'str', }, 'gtp_v2_c_downlink_ingress_packets': {'type': 'str', }, 'gtp_v2_c_downlink_egress_packets': {'type': 'str', }, 'gtp_v2_c_uplink_ingress_bytes': {'type': 'str', }, 'gtp_v2_c_uplink_egress_bytes': {'type': 'str', }, 'gtp_v2_c_downlink_ingress_bytes': {'type': 'str', }, 'gtp_v2_c_downlink_egress_bytes': {'type': 'str', }, 'gtp_u_uplink_ingress_packets': {'type': 'str', }, 'gtp_u_uplink_egress_packets': {'type': 'str', }, 'gtp_u_downlink_ingress_packets': {'type': 'str', }, 'gtp_u_downlink_egress_packets': {'type': 'str', }, 'gtp_u_uplink_ingress_bytes': {'type': 'str', }, 'gtp_u_uplink_egress_bytes': {'type': 'str', }, 'gtp_u_downlink_ingress_bytes': {'type': 'str', }, 'gtp_u_downlink_egress_bytes': {'type': 'str', }, 'gtp_u_message_length_mismatch': {'type': 'str', }, 'gtp_path_message_length_mismatch': {'type': 'str', }, 'drop_gtp_missing_cond_ie_bearer_ctx': {'type': 'str', }, 'drop_gtp_bearer_not_found_in_resp': {'type': 'str', }, 'gtp_stateless_forward': {'type': 'str', }, 'gtp_monitor_forward': {'type': 'str', }, 'apn_prefix': {'type': 'dict', 'stats': {'type': 'dict', 'key_name': {'type': 'str', }, 'uplink_bytes': {'type': 'str', }, 'downlink_bytes': {'type': 'str', }, 'uplink_pkts': {'type': 'str', }, 'downlink_pkts': {'type': 'str', }, 'gtp_v0_c_tunnel_created': {'type': 'str', }, 'gtp_v0_c_tunnel_half_open': {'type': 'str', }, 'gtp_v0_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_created': {'type': 'str', }, 'gtp_v1_c_tunnel_half_open': {'type': 'str', }, 'gtp_v1_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted': {'type': 'str', }, 'gtp_v1_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_created': {'type': 'str', }, 'gtp_v2_c_tunnel_half_open': {'type': 'str', }, 'gtp_v2_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted': {'type': 'str', }, 'gtp_v2_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_u_tunnel_created': {'type': 'str', }, 'gtp_u_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_mod_bearer_resp_unsuccess': {'type': 'str', }, 'gtp_v0_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_create_sess_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_piggyback_message': {'type': 'str', }, 'gtp_path_management_message': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v0_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_reserved_message_allow': {'type': 'str', }, 'gtp_v2_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v1_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v1_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v2_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v0_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v1_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v2_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v0_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v1_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v2_c_packet_dummy_msisdn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_reserved_field_set': {'type': 'str', }, 'drop_vld_tunnel_id_flag': {'type': 'str', }, 'drop_vld_invalid_flow_label_v0': {'type': 'str', }, 'drop_vld_invalid_teid': {'type': 'str', }, 'drop_vld_unsupported_message_type': {'type': 'str', }, 'drop_vld_out_of_state': {'type': 'str', }, 'drop_vld_mandatory_information_element': {'type': 'str', }, 'drop_vld_out_of_order_ie': {'type': 'str', }, 'drop_vld_out_of_state_ie': {'type': 'str', }, 'drop_vld_reserved_information_element': {'type': 'str', }, 'drop_vld_version_not_supported': {'type': 'str', }, 'drop_vld_message_length': {'type': 'str', }, 'drop_vld_cross_layer_correlation': {'type': 'str', }, 'drop_vld_country_code_mismatch': {'type': 'str', }, 'drop_vld_gtp_u_spoofed_source_address': {'type': 'str', }, 'drop_vld_gtp_bearer_count_exceed': {'type': 'str', }, 'drop_vld_gtp_v2_wrong_lbi_create_bearer_req': {'type': 'str', }, 'drop_vld_gtp_c_handover_in_progress': {'type': 'str', }, 'drop_vld_v0_reserved_message_drop': {'type': 'str', }, 'drop_vld_v1_reserved_message_drop': {'type': 'str', }, 'drop_vld_v2_reserved_message_drop': {'type': 'str', }, 'drop_vld_invalid_pkt_len_piggyback': {'type': 'str', }, 'drop_vld_sanity_failed_piggyback': {'type': 'str', }, 'drop_vld_sequence_num_correlation': {'type': 'str', }, 'drop_vld_gtpv0_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv1_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv2_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtp_invalid_imsi_len_drop': {'type': 'str', }, 'drop_vld_gtp_invalid_apn_len_drop': {'type': 'str', }, 'drop_vld_protocol_flag_unset': {'type': 'str', }, 'drop_vld_gtpv0_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv1_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv2_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtp_v0_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v1_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v2_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_flt_message_filtering': {'type': 'str', }, 'drop_flt_apn_filtering': {'type': 'str', }, 'drop_flt_msisdn_filtering': {'type': 'str', }, 'drop_flt_rat_type_filtering': {'type': 'str', }, 'drop_flt_gtp_in_gtp': {'type': 'str', }, 'drop_rl_gtp_v0_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_agg': {'type': 'str', }, 'drop_rl_gtp_v2_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_create_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_create_session_request': {'type': 'str', }, 'drop_rl_gtp_v1_c_update_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_modify_bearer_request': {'type': 'str', }, 'drop_rl_gtp_u_tunnel_create': {'type': 'str', }, 'drop_rl_gtp_u_uplink_byte': {'type': 'str', }, 'drop_rl_gtp_u_uplink_packet': {'type': 'str', }, 'drop_rl_gtp_u_downlink_byte': {'type': 'str', }, 'drop_rl_gtp_u_downlink_packet': {'type': 'str', }, 'drop_rl_gtp_u_total_byte': {'type': 'str', }, 'drop_rl_gtp_u_total_packet': {'type': 'str', }, 'drop_rl_gtp_u_max_concurrent_tunnels': {'type': 'str', }}}, 'network_element': {'type': 'dict', 'stats': {'type': 'dict', 'key_name': {'type': 'str', }, 'key_type': {'type': 'str', }, 'uplink_bytes': {'type': 'str', }, 'downlink_bytes': {'type': 'str', }, 'uplink_pkts': {'type': 'str', }, 'downlink_pkts': {'type': 'str', }, 'gtp_v0_c_tunnel_created': {'type': 'str', }, 'gtp_v0_c_tunnel_half_open': {'type': 'str', }, 'gtp_v0_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_created': {'type': 'str', }, 'gtp_v1_c_tunnel_half_open': {'type': 'str', }, 'gtp_v1_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted': {'type': 'str', }, 'gtp_v1_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_created': {'type': 'str', }, 'gtp_v2_c_tunnel_half_open': {'type': 'str', }, 'gtp_v2_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted': {'type': 'str', }, 'gtp_v2_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_u_tunnel_created': {'type': 'str', }, 'gtp_u_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_mod_bearer_resp_unsuccess': {'type': 'str', }, 'gtp_v0_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_create_sess_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_piggyback_message': {'type': 'str', }, 'gtp_path_management_message': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_node_restart_gtp_c': {'type': 'str', }, 'gtp_v0_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_reserved_message_allow': {'type': 'str', }, 'gtp_v2_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v1_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v1_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v2_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v0_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v1_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v2_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v0_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v1_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v2_c_packet_dummy_msisdn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_reserved_field_set': {'type': 'str', }, 'drop_vld_tunnel_id_flag': {'type': 'str', }, 'drop_vld_invalid_flow_label_v0': {'type': 'str', }, 'drop_vld_invalid_teid': {'type': 'str', }, 'drop_vld_unsupported_message_type': {'type': 'str', }, 'drop_vld_out_of_state': {'type': 'str', }, 'drop_vld_mandatory_information_element': {'type': 'str', }, 'drop_vld_out_of_order_ie': {'type': 'str', }, 'drop_vld_out_of_state_ie': {'type': 'str', }, 'drop_vld_reserved_information_element': {'type': 'str', }, 'drop_vld_version_not_supported': {'type': 'str', }, 'drop_vld_message_length': {'type': 'str', }, 'drop_vld_cross_layer_correlation': {'type': 'str', }, 'drop_vld_country_code_mismatch': {'type': 'str', }, 'drop_vld_gtp_u_spoofed_source_address': {'type': 'str', }, 'drop_vld_gtp_bearer_count_exceed': {'type': 'str', }, 'drop_vld_gtp_v2_wrong_lbi_create_bearer_req': {'type': 'str', }, 'drop_vld_gtp_c_handover_in_progress': {'type': 'str', }, 'drop_vld_v0_reserved_message_drop': {'type': 'str', }, 'drop_vld_v1_reserved_message_drop': {'type': 'str', }, 'drop_vld_v2_reserved_message_drop': {'type': 'str', }, 'drop_vld_invalid_pkt_len_piggyback': {'type': 'str', }, 'drop_vld_sanity_failed_piggyback': {'type': 'str', }, 'drop_vld_sequence_num_correlation': {'type': 'str', }, 'drop_vld_gtpv0_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv1_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv2_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtp_invalid_imsi_len_drop': {'type': 'str', }, 'drop_vld_gtp_invalid_apn_len_drop': {'type': 'str', }, 'drop_vld_protocol_flag_unset': {'type': 'str', }, 'drop_vld_gtpv0_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv1_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv2_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v0_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v1_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v2_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_length_mismatch': {'type': 'str', }, 'drop_flt_message_filtering': {'type': 'str', }, 'drop_flt_apn_filtering': {'type': 'str', }, 'drop_flt_msisdn_filtering': {'type': 'str', }, 'drop_flt_rat_type_filtering': {'type': 'str', }, 'drop_flt_gtp_in_gtp': {'type': 'str', }, 'drop_rl_gtp_v0_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_agg': {'type': 'str', }, 'drop_rl_gtp_v2_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_create_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_create_session_request': {'type': 'str', }, 'drop_rl_gtp_v1_c_update_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_modify_bearer_request': {'type': 'str', }, 'drop_rl_gtp_u_tunnel_create': {'type': 'str', }, 'drop_rl_gtp_u_uplink_byte': {'type': 'str', }, 'drop_rl_gtp_u_uplink_packet': {'type': 'str', }, 'drop_rl_gtp_u_downlink_byte': {'type': 'str', }, 'drop_rl_gtp_u_downlink_packet': {'type': 'str', }, 'drop_rl_gtp_u_total_byte': {'type': 'str', }, 'drop_rl_gtp_u_total_packet': {'type': 'str', }, 'drop_rl_gtp_u_max_concurrent_tunnels': {'type': 'str', }}}}
     })
     return rv
 
@@ -671,7 +675,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -682,7 +687,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -722,12 +728,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -742,16 +750,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -760,15 +768,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -785,28 +793,22 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["gtp"] if info != "NotFound" else info
+                result["acos_info"] = info["gtp"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "gtp-list"] if info != "NotFound" else info
+                result["acos_info"] = info["gtp-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
+                get_type_result = api_client.get_stats(module.client, existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["gtp"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["gtp"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -819,11 +821,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

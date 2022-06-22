@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_sys_ut_event_action
 description:
@@ -350,20 +351,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "delay",
-    "direction",
-    "drop",
-    "ignore_validation",
-    "l1",
-    "l2",
-    "l3",
-    "tcp",
-    "template",
-    "udp",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["delay", "direction", "drop", "ignore_validation", "l1", "l2", "l3", "tcp", "template", "udp", "uuid", ]
 
 
 def get_default_argspec():
@@ -371,322 +361,32 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'direction': {
-            'type': 'str',
-            'required': True,
-            'choices': ['send', 'expect', 'wait']
-        },
-        'template': {
-            'type': 'str',
-        },
-        'drop': {
-            'type': 'bool',
-        },
-        'delay': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'l1': {
-            'type': 'dict',
-            'eth_list': {
-                'type': 'list',
-                'ethernet_start': {
-                    'type': 'str',
-                },
-                'ethernet_end': {
-                    'type': 'str',
-                }
-            },
-            'trunk_list': {
-                'type': 'list',
-                'trunk_start': {
-                    'type': 'int',
-                },
-                'trunk_end': {
-                    'type': 'int',
-                }
-            },
-            'length': {
-                'type': 'bool',
-            },
-            'value': {
-                'type': 'int',
-            },
-            'auto': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'l2': {
-            'type': 'dict',
-            'ethertype': {
-                'type': 'bool',
-            },
-            'protocol': {
-                'type': 'str',
-                'choices': ['arp', 'ipv4', 'ipv6']
-            },
-            'value': {
-                'type': 'int',
-            },
-            'vlan': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'mac_list': {
-                'type': 'list',
-                'src_dst': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['dest', 'src']
-                },
-                'address_type': {
-                    'type': 'str',
-                    'choices': ['broadcast', 'multicast']
-                },
-                'virtual_server': {
-                    'type': 'str',
-                },
-                'nat_pool': {
-                    'type': 'str',
-                },
-                'ethernet': {
-                    'type': 'str',
-                },
-                've': {
-                    'type': 'str',
-                },
-                'trunk': {
-                    'type': 'str',
-                },
-                'value': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'l3': {
-            'type': 'dict',
-            'protocol': {
-                'type': 'bool',
-            },
-            'ntype': {
-                'type': 'str',
-                'choices': ['tcp', 'udp', 'icmp']
-            },
-            'value': {
-                'type': 'int',
-            },
-            'checksum': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'ttl': {
-                'type': 'int',
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'ip_list': {
-                'type': 'list',
-                'src_dst': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['dest', 'src']
-                },
-                'ipv4_address': {
-                    'type': 'str',
-                },
-                'ipv6_address': {
-                    'type': 'str',
-                },
-                'nat_pool': {
-                    'type': 'str',
-                },
-                'virtual_server': {
-                    'type': 'str',
-                },
-                'ethernet': {
-                    'type': 'str',
-                },
-                've': {
-                    'type': 'str',
-                },
-                'trunk': {
-                    'type': 'str',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'tcp': {
-            'type': 'dict',
-            'src_port': {
-                'type': 'int',
-            },
-            'dest_port': {
-                'type': 'bool',
-            },
-            'dest_port_value': {
-                'type': 'int',
-            },
-            'nat_pool': {
-                'type': 'str',
-            },
-            'seq_number': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'ack_seq_number': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'checksum': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'urgent': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'window': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'uuid': {
-                'type': 'str',
-            },
-            'flags': {
-                'type': 'dict',
-                'syn': {
-                    'type': 'bool',
-                },
-                'ack': {
-                    'type': 'bool',
-                },
-                'fin': {
-                    'type': 'bool',
-                },
-                'rst': {
-                    'type': 'bool',
-                },
-                'psh': {
-                    'type': 'bool',
-                },
-                'ece': {
-                    'type': 'bool',
-                },
-                'urg': {
-                    'type': 'bool',
-                },
-                'cwr': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            },
-            'options': {
-                'type': 'dict',
-                'mss': {
-                    'type': 'int',
-                },
-                'wscale': {
-                    'type': 'int',
-                },
-                'sack_type': {
-                    'type': 'str',
-                    'choices': ['permitted', 'block']
-                },
-                'time_stamp_enable': {
-                    'type': 'bool',
-                },
-                'nop': {
-                    'type': 'bool',
-                },
-                'uuid': {
-                    'type': 'str',
-                }
-            }
-        },
-        'udp': {
-            'type': 'dict',
-            'src_port': {
-                'type': 'int',
-            },
-            'dest_port': {
-                'type': 'bool',
-            },
-            'dest_port_value': {
-                'type': 'int',
-            },
-            'nat_pool': {
-                'type': 'str',
-            },
-            'length': {
-                'type': 'int',
-            },
-            'checksum': {
-                'type': 'str',
-                'choices': ['valid', 'invalid']
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        },
-        'ignore_validation': {
-            'type': 'dict',
-            'l1': {
-                'type': 'bool',
-            },
-            'l2': {
-                'type': 'bool',
-            },
-            'l3': {
-                'type': 'bool',
-            },
-            'l4': {
-                'type': 'bool',
-            },
-            'all': {
-                'type': 'bool',
-            },
-            'uuid': {
-                'type': 'str',
-            }
-        }
+    rv.update({'direction': {'type': 'str', 'required': True, 'choices': ['send', 'expect', 'wait']},
+        'template': {'type': 'str', },
+        'drop': {'type': 'bool', },
+        'delay': {'type': 'int', },
+        'uuid': {'type': 'str', },
+        'l1': {'type': 'dict', 'eth_list': {'type': 'list', 'ethernet_start': {'type': 'str', }, 'ethernet_end': {'type': 'str', }}, 'trunk_list': {'type': 'list', 'trunk_start': {'type': 'int', }, 'trunk_end': {'type': 'int', }}, 'length': {'type': 'bool', }, 'value': {'type': 'int', }, 'auto': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'l2': {'type': 'dict', 'ethertype': {'type': 'bool', }, 'protocol': {'type': 'str', 'choices': ['arp', 'ipv4', 'ipv6']}, 'value': {'type': 'int', }, 'vlan': {'type': 'int', }, 'uuid': {'type': 'str', }, 'mac_list': {'type': 'list', 'src_dst': {'type': 'str', 'required': True, 'choices': ['dest', 'src']}, 'address_type': {'type': 'str', 'choices': ['broadcast', 'multicast']}, 'virtual_server': {'type': 'str', }, 'nat_pool': {'type': 'str', }, 'ethernet': {'type': 'str', }, 've': {'type': 'str', }, 'trunk': {'type': 'str', }, 'value': {'type': 'str', }, 'uuid': {'type': 'str', }}},
+        'l3': {'type': 'dict', 'protocol': {'type': 'bool', }, 'ntype': {'type': 'str', 'choices': ['tcp', 'udp', 'icmp']}, 'value': {'type': 'int', }, 'checksum': {'type': 'str', 'choices': ['valid', 'invalid']}, 'ttl': {'type': 'int', }, 'uuid': {'type': 'str', }, 'ip_list': {'type': 'list', 'src_dst': {'type': 'str', 'required': True, 'choices': ['dest', 'src']}, 'ipv4_address': {'type': 'str', }, 'ipv6_address': {'type': 'str', }, 'nat_pool': {'type': 'str', }, 'virtual_server': {'type': 'str', }, 'ethernet': {'type': 'str', }, 've': {'type': 'str', }, 'trunk': {'type': 'str', }, 'uuid': {'type': 'str', }}},
+        'tcp': {'type': 'dict', 'src_port': {'type': 'int', }, 'dest_port': {'type': 'bool', }, 'dest_port_value': {'type': 'int', }, 'nat_pool': {'type': 'str', }, 'seq_number': {'type': 'str', 'choices': ['valid', 'invalid']}, 'ack_seq_number': {'type': 'str', 'choices': ['valid', 'invalid']}, 'checksum': {'type': 'str', 'choices': ['valid', 'invalid']}, 'urgent': {'type': 'str', 'choices': ['valid', 'invalid']}, 'window': {'type': 'str', 'choices': ['valid', 'invalid']}, 'uuid': {'type': 'str', }, 'flags': {'type': 'dict', 'syn': {'type': 'bool', }, 'ack': {'type': 'bool', }, 'fin': {'type': 'bool', }, 'rst': {'type': 'bool', }, 'psh': {'type': 'bool', }, 'ece': {'type': 'bool', }, 'urg': {'type': 'bool', }, 'cwr': {'type': 'bool', }, 'uuid': {'type': 'str', }}, 'options': {'type': 'dict', 'mss': {'type': 'int', }, 'wscale': {'type': 'int', }, 'sack_type': {'type': 'str', 'choices': ['permitted', 'block']}, 'time_stamp_enable': {'type': 'bool', }, 'nop': {'type': 'bool', }, 'uuid': {'type': 'str', }}},
+        'udp': {'type': 'dict', 'src_port': {'type': 'int', }, 'dest_port': {'type': 'bool', }, 'dest_port_value': {'type': 'int', }, 'nat_pool': {'type': 'str', }, 'length': {'type': 'int', }, 'checksum': {'type': 'str', 'choices': ['valid', 'invalid']}, 'uuid': {'type': 'str', }},
+        'ignore_validation': {'type': 'dict', 'l1': {'type': 'bool', }, 'l2': {'type': 'bool', }, 'l3': {'type': 'bool', }, 'l4': {'type': 'bool', }, 'all': {'type': 'bool', }, 'uuid': {'type': 'str', }}
     })
     # Parent keys
-    rv.update(dict(event_number=dict(type='str', required=True), ))
+    rv.update(dict(
+        event_number=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -736,7 +436,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -747,7 +448,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -787,12 +489,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -807,16 +511,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -825,15 +529,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -850,20 +554,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "action"] if info != "NotFound" else info
+                result["acos_info"] = info["action"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "action-list"] if info != "NotFound" else info
+                result["acos_info"] = info["action-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -876,11 +576,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

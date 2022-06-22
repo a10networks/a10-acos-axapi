@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_rule_set_rule
 description:
@@ -75,6 +76,11 @@ options:
         - "'enable'= Enable rule; 'disable'= Disable rule;"
         type: str
         required: False
+    ip_version:
+        description:
+        - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
+        type: str
+        required: False
     action:
         description:
         - "'permit'= permit; 'deny'= deny; 'reset'= reset;"
@@ -97,7 +103,13 @@ options:
         required: False
     policy:
         description:
-        - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet;"
+        - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet; 'ipsec'= Apply IPsec
+          encapsulation;"
+        type: str
+        required: False
+    vpn_ipsec_name:
+        description:
+        - "VPN IPsec name"
         type: str
         required: False
     forward_listen_on_port:
@@ -152,7 +164,8 @@ options:
         required: False
     cgnv6_policy:
         description:
-        - "'lsn-lid'= Apply specified CGNv6 LSN LID; 'fixed-nat'= Apply CGNv6 Fixed NAT;"
+        - "'lsn-lid'= Apply specified CGNv6 LSN LID; 'fixed-nat'= Apply CGNv6 Fixed NAT;
+          'ds-lite'= Apply CGNv6 DS-Lite;"
         type: str
         required: False
     cgnv6_fixed_nat_log:
@@ -165,14 +178,34 @@ options:
         - "LSN LID"
         type: int
         required: False
+    cgnv6_ds_lite:
+        description:
+        - "'lsn-lid'= Apply specified CGNv6 LSN LID;"
+        type: str
+        required: False
+    cgnv6_ds_lite_lsn_lid:
+        description:
+        - "LSN LID"
+        type: int
+        required: False
+    inspect_payload:
+        description:
+        - "Enable DS-Lite tunnel inspection"
+        type: bool
+        required: False
+    cgnv6_ds_lite_log:
+        description:
+        - "Enable logging"
+        type: bool
+        required: False
     cgnv6_lsn_log:
         description:
         - "Enable logging"
         type: bool
         required: False
-    ip_version:
+    gtp_template:
         description:
-        - "'v4'= IPv4 rule; 'v6'= IPv6 rule;"
+        - "Configure GTP Policy Template (GTP Template Policy Name)"
         type: str
         required: False
     src_class_list:
@@ -452,17 +485,38 @@ options:
                 type: str
             alg:
                 description:
-                - "'FTP'= FTP; 'TFTP'= TFTP; 'SIP'= SIP; 'DNS'= DNS; 'PPTP'= PPTP; 'RTSP'= RTSP;"
-                type: str
-            gtp_template:
-                description:
-                - "Configure GTP template (GTP Template Name)"
+                - "'FTP'= FTP; 'TFTP'= TFTP; 'SIP'= SIP; 'DNS'= DNS; 'PPTP'= PPTP; 'RTSP'= RTSP;
+          'ESP'= ESP;"
                 type: str
     idle_timeout:
         description:
         - "TCP/UDP idle-timeout"
         type: int
         required: False
+    dscp_list:
+        description:
+        - "Field dscp_list"
+        type: list
+        required: False
+        suboptions:
+            dscp_value:
+                description:
+                - "'default'= Default dscp (000000); 'af11'= AF11 (001010); 'af12'= AF12 (001100);
+          'af13'= AF13 (001110); 'af21'= AF21 (010010); 'af22'= AF22 (010100); 'af23'=
+          AF23 (010110); 'af31'= AF31 (011010); 'af32'= AF32 (011100); 'af33'= AF33
+          (011110); 'af41'= AF41 (100010); 'af42'= AF42 (100100); 'af43'= AF43 (100110);
+          'cs1'= CS1 (001000); 'cs2'= CS2 (010000); 'cs3'= CS3 (011000); 'cs4'= CS4
+          (100000); 'cs5'= CS5 (101000); 'cs6'= CS6 (110000); 'cs7'= CS7 (111000); 'ef'=
+          EF (101110);"
+                type: str
+            dscp_range_start:
+                description:
+                - "Start DSCP Number"
+                type: int
+            dscp_range_end:
+                description:
+                - "Ending DSCP Number"
+                type: int
     application_any:
         description:
         - "'any'= any;"
@@ -485,42 +539,62 @@ options:
             protocol_tag:
                 description:
                 - "'aaa'= Protocol/application used for AAA (Authentification, Authorization and
-          Accounting) purposes.; 'adult-content'= Adult content.; 'advertising'=
-          Advertising networks and applications.; 'analytics-and-statistics'= user-
-          analytics and statistics.; 'anonymizers-and-proxies'= Traffic-anonymization
-          protocol/application.; 'audio-chat'= Protocol/application used for Audio Chat.;
-          'basic'= Protocols required for basic classification, e.g., ARP, HTTP; 'blog'=
-          Blogging platform.; 'cdn'= Protocol/application used for Content-Delivery
-          Networks.; 'chat'= Protocol/application used for Text Chat.; 'classified-ads'=
-          Protocol/application used for Classified ads.; 'cloud-based-services'= SaaS
-          and/or PaaS cloud based services.; 'crowdfunding'= Service for funding a
-          project or venture by raising small amounts of money from a large number of
-          people.; 'cryptocurrency'= Cryptocurrency.; 'database'= Database-specific
-          protocols.; 'disposable-email'= Disposable email accounts.; 'ebook-reader'=
-          Services for e-book readers.; 'email'= Native email protocol.; 'enterprise'=
+          Accounting) purposes.; 'adult-content'= Adult content protocol/application.;
+          'advertising'= Advertising networks and applications.; 'application-enforcing-
+          tls'= Application known to enforce HSTS and thus use of TLS.; 'analytics-and-
+          statistics'= User analytics and statistics protocol/application.; 'anonymizers-
+          and-proxies'= Traffic-anonymization protocol/application.; 'audio-chat'=
+          Protocol/application used for Audio Chat.; 'basic'= Covers all protocols
+          required for basic classification, including most networking protocols as well
+          as standard protocols like HTTP.; 'blog'= Blogging platform
+          protocol/application.; 'cdn'= Protocol/application used for Content-Delivery
+          Networks.; 'certification-authority'= Certification Authority for SSL/TLS
+          certificate.; 'chat'= Protocol/application used for Text Chat.; 'classified-
+          ads'= Protocol/application used for Classified Advertisements.; 'cloud-based-
+          services'= SaaS and/or PaaS cloud based services.; 'crowdfunding'= Service for
+          funding a project or venture by raising small amounts of money from a large
+          number of people, typically via the Internet.; 'cryptocurrency'= Services for
+          mining cryptocurrencies, for example a Crypto Web Browser (an application that
+          mines crypto currency in the background while its user browses the web).;
+          'database'= Database-specific protocols.; 'disposable-email'= Service offering
+          Disposable Email Accounts (DEA). DEA is a technique to share temporary email
+          address between many users.; 'ebook-reader'= Services for e-book readers, i.e.
+          connected devices that display electronic books (typically using e-ink displays
+          to reduce glare and eye strain).; 'education'= Protocols offering education
+          services and online courses.; 'email'= Native email protocol.; 'enterprise'=
           Protocol/application used in an enterprise network.; 'file-management'=
-          Protocol/application designed specifically for file management and exchange,
-          e.g., Dropbox, SMB; 'file-transfer'= Protocol that offers file transferring as
-          a functionality as a secondary feature. e.g., Skype, Whatsapp; 'forum'= Online
-          forum.; 'gaming'= Protocol/application used by games.; 'instant-messaging-and-
-          multimedia-conferencing'= Protocol/application used for Instant messaging or
-          multiconferencing.; 'internet-of-things'= Internet Of Things
-          protocol/application.; 'mobile'= Mobile-specific protocol/application.; 'map-
-          service'= Digital Maps service.; 'multimedia-streaming'= Protocol/application
-          used for multimedia streaming.; 'networking'= Protocol used for (inter)
-          networking purpose.; 'news-portal'= Protocol/application used for News
-          Portals.; 'peer-to-peer'= Protocol/application used for Peer-to-peer purposes.;
-          'remote-access'= Protocol/application used for remote access.; 'scada'= SCADA
-          (Supervisory control and data acquisition) protocols, all generations.;
-          'social-networks'= Social networking application.; 'software-update'= Auto-
-          update protocol.; 'standards-based'= Protocol issued from standardized bodies
-          such as IETF, ITU, IEEE, ETSI, OIF.; 'transportation'= Transportation.; 'video-
-          chat'= Protocol/application used for Video Chat.; 'voip'= Application used for
-          Voice over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
+          Protocol/application designed specifically for file management and exchange.
+          This can include bona fide network protocols (like SMB) as well as web/cloud
+          services (like Dropbox).; 'file-transfer'= Protocol that offers file
+          transferring as a secondary feature. This typically includes IM, WebMail, and
+          other protocols that allow file transfers in addition to their principal
+          function.; 'forum'= Online forum protocol/application.; 'gaming'=
+          Protocol/application used by games.; 'healthcare'= Protocols offering medical
+          services, i.e protocols used in medical environment.; 'instant-messaging-and-
+          multimedia-conferencing'= Protocol/application used for Instant Messaging or
+          Multi-Conferencing.; 'internet-of-things'= Internet Of Things
+          protocol/application.; 'map-service'= Digital Maps service (web site and their
+          related API).; 'mobile'= Mobile-specific protocol/application.; 'multimedia-
+          streaming'= Protocol/application used for multimedia streaming.; 'networking'=
+          Protocol used for (inter) networking purpose.; 'news-portal'=
+          Protocol/application used for News Portals.; 'payment-service'= Application
+          offering online services for accepting electronic payments by a variety of
+          payment methods (credit card, bank-based payments such as direct debit, bank
+          transfer, etc).; 'peer-to-peer'= Protocol/application used for Peer-to-peer
+          purposes.; 'remote-access'= Protocol/application used for remote access.;
+          'scada'= SCADA (Supervisory control and data acquisition) protocols, all
+          generations.; 'social-networks'= Social networking application.; 'software-
+          update'= Auto-update protocol.; 'speedtest'= Speedtest application allowing to
+          access quality of Internet connection (upload, download, latency, etc).;
+          'standards-based'= Protocol issued from standardized bodies such as IETF, ITU,
+          IEEE, ETSI, OIF.; 'transportation'= Transportation services, for example
+          smartphone applications that allow users to hail a taxi.; 'video-chat'=
+          Protocol/application used for Video Chat.; 'voip'= Application used for Voice-
+          Over-IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling
           purposes.; 'web'= Application based on HTTP/HTTPS.; 'web-e-commerce'=
           Protocol/application used for E-commerce websites.; 'web-search-engines'=
           Protocol/application used for Web search portals.; 'web-websites'=
-          Protocol/application used for Company Websites.; 'webmails'= Web email
+          Protocol/application used for Company Websites.; 'webmails'= Web-based e-mail
           application.; 'web-ext-adult'= Web Extension Adult; 'web-ext-auctions'= Web
           Extension Auctions; 'web-ext-blogs'= Web Extension Blogs; 'web-ext-business-
           and-economy'= Web Extension Business and Economy; 'web-ext-cdns'= Web Extension
@@ -588,7 +662,88 @@ options:
           udp'= UDP session counter; 'session-icmp'= ICMP session counter; 'session-
           other'= Other protocol session counter; 'active-session-sctp'= Active SCTP
           session counter; 'session-sctp'= SCTP session counter; 'hitcount-timestamp'=
-          Last hit counts timestamp;"
+          Last hit counts timestamp; 'rate-limit-drops'= Rate Limit Drops;"
+                type: str
+    action_group:
+        description:
+        - "Field action_group"
+        type: dict
+        required: False
+        suboptions:
+            ntype:
+                description:
+                - "'permit'= permit; 'deny'= deny; 'reset'= reset;"
+                type: str
+            permit_log:
+                description:
+                - "Enable logging"
+                type: bool
+            reset_log:
+                description:
+                - "Enable logging"
+                type: bool
+            deny_log:
+                description:
+                - "Enable logging"
+                type: bool
+            listen_on_port:
+                description:
+                - "Listen on port"
+                type: bool
+            forward:
+                description:
+                - "Forward packet"
+                type: bool
+            ipsec:
+                description:
+                - "Apply IPsec encapsulation"
+                type: bool
+            vpn_ipsec_name:
+                description:
+                - "VPN IPsec name"
+                type: str
+            cgnv6:
+                description:
+                - "Apply CGNv6 policy"
+                type: bool
+            cgnv6_policy:
+                description:
+                - "'lsn-lid'= Apply specified CGNv6 LSN LID; 'fixed-nat'= Apply CGNv6 Fixed NAT;
+          'ds-lite'= Apply CGNv6 DS-Lite;"
+                type: str
+            cgnv6_lsn_lid:
+                description:
+                - "LSN LID"
+                type: int
+            cgnv6_ds_lite:
+                description:
+                - "'lsn-lid'= Apply specified CGNv6 LSN LID;"
+                type: str
+            cgnv6_ds_lite_lsn_lid:
+                description:
+                - "LSN LID"
+                type: int
+            inspect_payload:
+                description:
+                - "Enable DS-Lite tunnel inspection"
+                type: bool
+            permit_limit_policy:
+                description:
+                - "Limit policy Template"
+                type: int
+            permit_respond_to_user_mac:
+                description:
+                - "Use the user's source MAC for the next hop rather than the routing table
+          (default=off)"
+                type: bool
+            reset_respond_to_user_mac:
+                description:
+                - "Use the user's source MAC for the next hop rather than the routing table
+          (default=off)"
+                type: bool
+            uuid:
+                description:
+                - "uuid of the object"
                 type: str
     move_rule:
         description:
@@ -706,6 +861,10 @@ options:
                 description:
                 - "Field sessiontotal"
                 type: int
+            ratelimitdrops:
+                description:
+                - "Field ratelimitdrops"
+                type: int
             name:
                 description:
                 - "Rule name"
@@ -788,6 +947,10 @@ options:
                 description:
                 - "Last hit counts timestamp"
                 type: str
+            rate_limit_drops:
+                description:
+                - "Rate Limit Drops"
+                type: str
             name:
                 description:
                 - "Rule name"
@@ -845,65 +1008,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "action",
-    "app_list",
-    "application_any",
-    "cgnv6_fixed_nat_log",
-    "cgnv6_log",
-    "cgnv6_lsn_lid",
-    "cgnv6_lsn_log",
-    "cgnv6_policy",
-    "dest_list",
-    "dst_class_list",
-    "dst_domain_list",
-    "dst_geoloc_list",
-    "dst_geoloc_list_shared",
-    "dst_geoloc_name",
-    "dst_ipv4_any",
-    "dst_ipv6_any",
-    "dst_threat_list",
-    "dst_zone",
-    "dst_zone_any",
-    "forward_listen_on_port",
-    "forward_log",
-    "fw_log",
-    "fwlog",
-    "idle_timeout",
-    "ip_version",
-    "lid",
-    "lidlog",
-    "listen_on_port",
-    "listen_on_port_lid",
-    "listen_on_port_lidlog",
-    "log",
-    "move_rule",
-    "name",
-    "oper",
-    "policy",
-    "remark",
-    "reset_lid",
-    "reset_lidlog",
-    "sampling_enable",
-    "service_any",
-    "service_list",
-    "source_list",
-    "src_class_list",
-    "src_geoloc_list",
-    "src_geoloc_list_shared",
-    "src_geoloc_name",
-    "src_ipv4_any",
-    "src_ipv6_any",
-    "src_threat_list",
-    "src_zone",
-    "src_zone_any",
-    "stats",
-    "status",
-    "track_application",
-    "user_tag",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["action", "action_group", "app_list", "application_any", "cgnv6_ds_lite", "cgnv6_ds_lite_log", "cgnv6_ds_lite_lsn_lid", "cgnv6_fixed_nat_log", "cgnv6_log", "cgnv6_lsn_lid", "cgnv6_lsn_log", "cgnv6_policy", "dest_list", "dscp_list", "dst_class_list", "dst_domain_list", "dst_geoloc_list", "dst_geoloc_list_shared", "dst_geoloc_name", "dst_ipv4_any", "dst_ipv6_any", "dst_threat_list", "dst_zone", "dst_zone_any", "forward_listen_on_port", "forward_log", "fw_log", "fwlog", "gtp_template", "idle_timeout", "inspect_payload", "ip_version", "lid", "lidlog", "listen_on_port", "listen_on_port_lid", "listen_on_port_lidlog", "log", "move_rule", "name", "oper", "policy", "remark", "reset_lid", "reset_lidlog", "sampling_enable", "service_any", "service_list", "source_list", "src_class_list", "src_geoloc_list", "src_geoloc_list_shared", "src_geoloc_name", "src_ipv4_any", "src_ipv6_any", "src_threat_list", "src_zone", "src_zone_any", "stats", "status", "track_application", "user_tag", "uuid", "vpn_ipsec_name", ]
 
 
 def get_default_argspec():
@@ -911,555 +1018,85 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'remark': {
-            'type': 'str',
-        },
-        'status': {
-            'type': 'str',
-            'choices': ['enable', 'disable']
-        },
-        'action': {
-            'type': 'str',
-            'choices': ['permit', 'deny', 'reset']
-        },
-        'log': {
-            'type': 'bool',
-        },
-        'reset_lid': {
-            'type': 'int',
-        },
-        'listen_on_port': {
-            'type': 'bool',
-        },
-        'policy': {
-            'type': 'str',
-            'choices': ['cgnv6', 'forward']
-        },
-        'forward_listen_on_port': {
-            'type': 'bool',
-        },
-        'lid': {
-            'type': 'int',
-        },
-        'listen_on_port_lid': {
-            'type': 'int',
-        },
-        'fw_log': {
-            'type': 'bool',
-        },
-        'fwlog': {
-            'type': 'bool',
-        },
-        'cgnv6_log': {
-            'type': 'bool',
-        },
-        'forward_log': {
-            'type': 'bool',
-        },
-        'lidlog': {
-            'type': 'bool',
-        },
-        'reset_lidlog': {
-            'type': 'bool',
-        },
-        'listen_on_port_lidlog': {
-            'type': 'bool',
-        },
-        'cgnv6_policy': {
-            'type': 'str',
-            'choices': ['lsn-lid', 'fixed-nat']
-        },
-        'cgnv6_fixed_nat_log': {
-            'type': 'bool',
-        },
-        'cgnv6_lsn_lid': {
-            'type': 'int',
-        },
-        'cgnv6_lsn_log': {
-            'type': 'bool',
-        },
-        'ip_version': {
-            'type': 'str',
-            'choices': ['v4', 'v6']
-        },
-        'src_class_list': {
-            'type': 'str',
-        },
-        'src_geoloc_name': {
-            'type': 'str',
-        },
-        'src_geoloc_list': {
-            'type': 'str',
-        },
-        'src_geoloc_list_shared': {
-            'type': 'bool',
-        },
-        'src_ipv4_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'src_ipv6_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'source_list': {
-            'type': 'list',
-            'src_ip_subnet': {
-                'type': 'str',
-            },
-            'src_ipv6_subnet': {
-                'type': 'str',
-            },
-            'src_obj_network': {
-                'type': 'str',
-            },
-            'src_obj_grp_network': {
-                'type': 'str',
-            },
-            'src_slb_server': {
-                'type': 'str',
-            }
-        },
-        'src_zone': {
-            'type': 'str',
-        },
-        'src_zone_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'src_threat_list': {
-            'type': 'str',
-        },
-        'dst_class_list': {
-            'type': 'str',
-        },
-        'dst_geoloc_name': {
-            'type': 'str',
-        },
-        'dst_geoloc_list': {
-            'type': 'str',
-        },
-        'dst_geoloc_list_shared': {
-            'type': 'bool',
-        },
-        'dst_ipv4_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'dst_ipv6_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'dest_list': {
-            'type': 'list',
-            'dst_ip_subnet': {
-                'type': 'str',
-            },
-            'dst_ipv6_subnet': {
-                'type': 'str',
-            },
-            'dst_obj_network': {
-                'type': 'str',
-            },
-            'dst_obj_grp_network': {
-                'type': 'str',
-            },
-            'dst_slb_server': {
-                'type': 'str',
-            },
-            'dst_slb_vserver': {
-                'type': 'str',
-            }
-        },
-        'dst_domain_list': {
-            'type': 'str',
-        },
-        'dst_zone': {
-            'type': 'str',
-        },
-        'dst_zone_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'dst_threat_list': {
-            'type': 'str',
-        },
-        'service_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'service_list': {
-            'type': 'list',
-            'protocols': {
-                'type': 'str',
-                'choices': ['tcp', 'udp', 'sctp']
-            },
-            'proto_id': {
-                'type': 'int',
-            },
-            'obj_grp_service': {
-                'type': 'str',
-            },
-            'icmp': {
-                'type': 'bool',
-            },
-            'icmpv6': {
-                'type': 'bool',
-            },
-            'icmp_type': {
-                'type': 'int',
-            },
-            'special_type': {
-                'type':
-                'str',
-                'choices': [
-                    'any-type', 'echo-reply', 'echo-request', 'info-reply',
-                    'info-request', 'mask-reply', 'mask-request',
-                    'parameter-problem', 'redirect', 'source-quench',
-                    'time-exceeded', 'timestamp', 'timestamp-reply',
-                    'dest-unreachable'
-                ]
-            },
-            'icmp_code': {
-                'type': 'int',
-            },
-            'special_code': {
-                'type':
-                'str',
-                'choices': [
-                    'any-code', 'frag-required', 'host-unreachable',
-                    'network-unreachable', 'port-unreachable',
-                    'proto-unreachable', 'route-failed'
-                ]
-            },
-            'icmpv6_type': {
-                'type': 'int',
-            },
-            'special_v6_type': {
-                'type':
-                'str',
-                'choices': [
-                    'any-type', 'dest-unreachable', 'echo-reply',
-                    'echo-request', 'packet-too-big', 'param-prob',
-                    'time-exceeded'
-                ]
-            },
-            'icmpv6_code': {
-                'type': 'int',
-            },
-            'special_v6_code': {
-                'type':
-                'str',
-                'choices': [
-                    'any-code', 'addr-unreachable', 'admin-prohibited',
-                    'no-route', 'not-neighbour', 'port-unreachable'
-                ]
-            },
-            'eq_src_port': {
-                'type': 'int',
-            },
-            'gt_src_port': {
-                'type': 'int',
-            },
-            'lt_src_port': {
-                'type': 'int',
-            },
-            'range_src_port': {
-                'type': 'int',
-            },
-            'port_num_end_src': {
-                'type': 'int',
-            },
-            'eq_dst_port': {
-                'type': 'int',
-            },
-            'gt_dst_port': {
-                'type': 'int',
-            },
-            'lt_dst_port': {
-                'type': 'int',
-            },
-            'range_dst_port': {
-                'type': 'int',
-            },
-            'port_num_end_dst': {
-                'type': 'int',
-            },
-            'sctp_template': {
-                'type': 'str',
-            },
-            'alg': {
-                'type': 'str',
-                'choices': ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP']
-            },
-            'gtp_template': {
-                'type': 'str',
-            }
-        },
-        'idle_timeout': {
-            'type': 'int',
-        },
-        'application_any': {
-            'type': 'str',
-            'choices': ['any']
-        },
-        'app_list': {
-            'type': 'list',
-            'obj_grp_application': {
-                'type': 'str',
-            },
-            'protocol': {
-                'type': 'str',
-            },
-            'protocol_tag': {
-                'type':
-                'str',
-                'choices': [
-                    'aaa', 'adult-content', 'advertising',
-                    'analytics-and-statistics', 'anonymizers-and-proxies',
-                    'audio-chat', 'basic', 'blog', 'cdn', 'chat',
-                    'classified-ads', 'cloud-based-services', 'crowdfunding',
-                    'cryptocurrency', 'database', 'disposable-email',
-                    'ebook-reader', 'email', 'enterprise', 'file-management',
-                    'file-transfer', 'forum', 'gaming',
-                    'instant-messaging-and-multimedia-conferencing',
-                    'internet-of-things', 'mobile', 'map-service',
-                    'multimedia-streaming', 'networking', 'news-portal',
-                    'peer-to-peer', 'remote-access', 'scada',
-                    'social-networks', 'software-update', 'standards-based',
-                    'transportation', 'video-chat', 'voip', 'vpn-tunnels',
-                    'web', 'web-e-commerce', 'web-search-engines',
-                    'web-websites', 'webmails', 'web-ext-adult',
-                    'web-ext-auctions', 'web-ext-blogs',
-                    'web-ext-business-and-economy', 'web-ext-cdns',
-                    'web-ext-collaboration',
-                    'web-ext-computer-and-internet-info',
-                    'web-ext-computer-and-internet-security', 'web-ext-dating',
-                    'web-ext-educational-institutions',
-                    'web-ext-entertainment-and-arts',
-                    'web-ext-fashion-and-beauty', 'web-ext-file-share',
-                    'web-ext-financial-services', 'web-ext-gambling',
-                    'web-ext-games', 'web-ext-government',
-                    'web-ext-health-and-medicine',
-                    'web-ext-individual-stock-advice-and-tools',
-                    'web-ext-internet-portals', 'web-ext-job-search',
-                    'web-ext-local-information', 'web-ext-malware',
-                    'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news',
-                    'web-ext-p2p', 'web-ext-parked-sites',
-                    'web-ext-proxy-avoid-and-anonymizers',
-                    'web-ext-real-estate', 'web-ext-reference-and-research',
-                    'web-ext-search-engines', 'web-ext-shopping',
-                    'web-ext-social-network', 'web-ext-society',
-                    'web-ext-software', 'web-ext-sports',
-                    'web-ext-streaming-media', 'web-ext-training-and-tools',
-                    'web-ext-translation', 'web-ext-travel',
-                    'web-ext-web-advertisements', 'web-ext-web-based-email',
-                    'web-ext-web-hosting', 'web-ext-web-service'
-                ]
-            }
-        },
-        'track_application': {
-            'type': 'bool',
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        },
-        'sampling_enable': {
-            'type': 'list',
-            'counters1': {
-                'type':
-                'str',
-                'choices': [
-                    'all', 'hit-count', 'permit-bytes', 'deny-bytes',
-                    'reset-bytes', 'permit-packets', 'deny-packets',
-                    'reset-packets', 'active-session-tcp',
-                    'active-session-udp', 'active-session-icmp',
-                    'active-session-other', 'session-tcp', 'session-udp',
-                    'session-icmp', 'session-other', 'active-session-sctp',
-                    'session-sctp', 'hitcount-timestamp'
-                ]
-            }
-        },
-        'move_rule': {
-            'type': 'dict',
-            'location': {
-                'type': 'str',
-                'choices': ['top', 'before', 'after', 'bottom']
-            },
-            'target_rule': {
-                'type': 'str',
-            }
-        },
-        'oper': {
-            'type': 'dict',
-            'hitcount': {
-                'type': 'int',
-            },
-            'last_hitcount_time': {
-                'type': 'str',
-            },
-            'action': {
-                'type': 'str',
-            },
-            'status': {
-                'type': 'str',
-            },
-            'permitbytes': {
-                'type': 'int',
-            },
-            'denybytes': {
-                'type': 'int',
-            },
-            'resetbytes': {
-                'type': 'int',
-            },
-            'totalbytes': {
-                'type': 'int',
-            },
-            'permitpackets': {
-                'type': 'int',
-            },
-            'denypackets': {
-                'type': 'int',
-            },
-            'resetpackets': {
-                'type': 'int',
-            },
-            'totalpackets': {
-                'type': 'int',
-            },
-            'activesessiontcp': {
-                'type': 'int',
-            },
-            'activesessionudp': {
-                'type': 'int',
-            },
-            'activesessionicmp': {
-                'type': 'int',
-            },
-            'activesessionsctp': {
-                'type': 'int',
-            },
-            'activesessionother': {
-                'type': 'int',
-            },
-            'activesessiontotal': {
-                'type': 'int',
-            },
-            'sessiontcp': {
-                'type': 'int',
-            },
-            'sessionudp': {
-                'type': 'int',
-            },
-            'sessionicmp': {
-                'type': 'int',
-            },
-            'sessionsctp': {
-                'type': 'int',
-            },
-            'sessionother': {
-                'type': 'int',
-            },
-            'sessiontotal': {
-                'type': 'int',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
-        },
-        'stats': {
-            'type': 'dict',
-            'hit_count': {
-                'type': 'str',
-            },
-            'permit_bytes': {
-                'type': 'str',
-            },
-            'deny_bytes': {
-                'type': 'str',
-            },
-            'reset_bytes': {
-                'type': 'str',
-            },
-            'permit_packets': {
-                'type': 'str',
-            },
-            'deny_packets': {
-                'type': 'str',
-            },
-            'reset_packets': {
-                'type': 'str',
-            },
-            'active_session_tcp': {
-                'type': 'str',
-            },
-            'active_session_udp': {
-                'type': 'str',
-            },
-            'active_session_icmp': {
-                'type': 'str',
-            },
-            'active_session_other': {
-                'type': 'str',
-            },
-            'session_tcp': {
-                'type': 'str',
-            },
-            'session_udp': {
-                'type': 'str',
-            },
-            'session_icmp': {
-                'type': 'str',
-            },
-            'session_other': {
-                'type': 'str',
-            },
-            'active_session_sctp': {
-                'type': 'str',
-            },
-            'session_sctp': {
-                'type': 'str',
-            },
-            'hitcount_timestamp': {
-                'type': 'str',
-            },
-            'name': {
-                'type': 'str',
-                'required': True,
-            }
-        }
+    rv.update({'name': {'type': 'str', 'required': True, },
+        'remark': {'type': 'str', },
+        'status': {'type': 'str', 'choices': ['enable', 'disable']},
+        'ip_version': {'type': 'str', 'choices': ['v4', 'v6']},
+        'action': {'type': 'str', 'choices': ['permit', 'deny', 'reset']},
+        'log': {'type': 'bool', },
+        'reset_lid': {'type': 'int', },
+        'listen_on_port': {'type': 'bool', },
+        'policy': {'type': 'str', 'choices': ['cgnv6', 'forward', 'ipsec']},
+        'vpn_ipsec_name': {'type': 'str', },
+        'forward_listen_on_port': {'type': 'bool', },
+        'lid': {'type': 'int', },
+        'listen_on_port_lid': {'type': 'int', },
+        'fw_log': {'type': 'bool', },
+        'fwlog': {'type': 'bool', },
+        'cgnv6_log': {'type': 'bool', },
+        'forward_log': {'type': 'bool', },
+        'lidlog': {'type': 'bool', },
+        'reset_lidlog': {'type': 'bool', },
+        'listen_on_port_lidlog': {'type': 'bool', },
+        'cgnv6_policy': {'type': 'str', 'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']},
+        'cgnv6_fixed_nat_log': {'type': 'bool', },
+        'cgnv6_lsn_lid': {'type': 'int', },
+        'cgnv6_ds_lite': {'type': 'str', 'choices': ['lsn-lid']},
+        'cgnv6_ds_lite_lsn_lid': {'type': 'int', },
+        'inspect_payload': {'type': 'bool', },
+        'cgnv6_ds_lite_log': {'type': 'bool', },
+        'cgnv6_lsn_log': {'type': 'bool', },
+        'gtp_template': {'type': 'str', },
+        'src_class_list': {'type': 'str', },
+        'src_geoloc_name': {'type': 'str', },
+        'src_geoloc_list': {'type': 'str', },
+        'src_geoloc_list_shared': {'type': 'bool', },
+        'src_ipv4_any': {'type': 'str', 'choices': ['any']},
+        'src_ipv6_any': {'type': 'str', 'choices': ['any']},
+        'source_list': {'type': 'list', 'src_ip_subnet': {'type': 'str', }, 'src_ipv6_subnet': {'type': 'str', }, 'src_obj_network': {'type': 'str', }, 'src_obj_grp_network': {'type': 'str', }, 'src_slb_server': {'type': 'str', }},
+        'src_zone': {'type': 'str', },
+        'src_zone_any': {'type': 'str', 'choices': ['any']},
+        'src_threat_list': {'type': 'str', },
+        'dst_class_list': {'type': 'str', },
+        'dst_geoloc_name': {'type': 'str', },
+        'dst_geoloc_list': {'type': 'str', },
+        'dst_geoloc_list_shared': {'type': 'bool', },
+        'dst_ipv4_any': {'type': 'str', 'choices': ['any']},
+        'dst_ipv6_any': {'type': 'str', 'choices': ['any']},
+        'dest_list': {'type': 'list', 'dst_ip_subnet': {'type': 'str', }, 'dst_ipv6_subnet': {'type': 'str', }, 'dst_obj_network': {'type': 'str', }, 'dst_obj_grp_network': {'type': 'str', }, 'dst_slb_server': {'type': 'str', }, 'dst_slb_vserver': {'type': 'str', }},
+        'dst_domain_list': {'type': 'str', },
+        'dst_zone': {'type': 'str', },
+        'dst_zone_any': {'type': 'str', 'choices': ['any']},
+        'dst_threat_list': {'type': 'str', },
+        'service_any': {'type': 'str', 'choices': ['any']},
+        'service_list': {'type': 'list', 'protocols': {'type': 'str', 'choices': ['tcp', 'udp', 'sctp']}, 'proto_id': {'type': 'int', }, 'obj_grp_service': {'type': 'str', }, 'icmp': {'type': 'bool', }, 'icmpv6': {'type': 'bool', }, 'icmp_type': {'type': 'int', }, 'special_type': {'type': 'str', 'choices': ['any-type', 'echo-reply', 'echo-request', 'info-reply', 'info-request', 'mask-reply', 'mask-request', 'parameter-problem', 'redirect', 'source-quench', 'time-exceeded', 'timestamp', 'timestamp-reply', 'dest-unreachable']}, 'icmp_code': {'type': 'int', }, 'special_code': {'type': 'str', 'choices': ['any-code', 'frag-required', 'host-unreachable', 'network-unreachable', 'port-unreachable', 'proto-unreachable', 'route-failed']}, 'icmpv6_type': {'type': 'int', }, 'special_v6_type': {'type': 'str', 'choices': ['any-type', 'dest-unreachable', 'echo-reply', 'echo-request', 'packet-too-big', 'param-prob', 'time-exceeded']}, 'icmpv6_code': {'type': 'int', }, 'special_v6_code': {'type': 'str', 'choices': ['any-code', 'addr-unreachable', 'admin-prohibited', 'no-route', 'not-neighbour', 'port-unreachable']}, 'eq_src_port': {'type': 'int', }, 'gt_src_port': {'type': 'int', }, 'lt_src_port': {'type': 'int', }, 'range_src_port': {'type': 'int', }, 'port_num_end_src': {'type': 'int', }, 'eq_dst_port': {'type': 'int', }, 'gt_dst_port': {'type': 'int', }, 'lt_dst_port': {'type': 'int', }, 'range_dst_port': {'type': 'int', }, 'port_num_end_dst': {'type': 'int', }, 'sctp_template': {'type': 'str', }, 'alg': {'type': 'str', 'choices': ['FTP', 'TFTP', 'SIP', 'DNS', 'PPTP', 'RTSP', 'ESP']}},
+        'idle_timeout': {'type': 'int', },
+        'dscp_list': {'type': 'list', 'dscp_value': {'type': 'str', 'choices': ['default', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33', 'af41', 'af42', 'af43', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7', 'ef']}, 'dscp_range_start': {'type': 'int', }, 'dscp_range_end': {'type': 'int', }},
+        'application_any': {'type': 'str', 'choices': ['any']},
+        'app_list': {'type': 'list', 'obj_grp_application': {'type': 'str', }, 'protocol': {'type': 'str', }, 'protocol_tag': {'type': 'str', 'choices': ['aaa', 'adult-content', 'advertising', 'application-enforcing-tls', 'analytics-and-statistics', 'anonymizers-and-proxies', 'audio-chat', 'basic', 'blog', 'cdn', 'certification-authority', 'chat', 'classified-ads', 'cloud-based-services', 'crowdfunding', 'cryptocurrency', 'database', 'disposable-email', 'ebook-reader', 'education', 'email', 'enterprise', 'file-management', 'file-transfer', 'forum', 'gaming', 'healthcare', 'instant-messaging-and-multimedia-conferencing', 'internet-of-things', 'map-service', 'mobile', 'multimedia-streaming', 'networking', 'news-portal', 'payment-service', 'peer-to-peer', 'remote-access', 'scada', 'social-networks', 'software-update', 'speedtest', 'standards-based', 'transportation', 'video-chat', 'voip', 'vpn-tunnels', 'web', 'web-e-commerce', 'web-search-engines', 'web-websites', 'webmails', 'web-ext-adult', 'web-ext-auctions', 'web-ext-blogs', 'web-ext-business-and-economy', 'web-ext-cdns', 'web-ext-collaboration', 'web-ext-computer-and-internet-info', 'web-ext-computer-and-internet-security', 'web-ext-dating', 'web-ext-educational-institutions', 'web-ext-entertainment-and-arts', 'web-ext-fashion-and-beauty', 'web-ext-file-share', 'web-ext-financial-services', 'web-ext-gambling', 'web-ext-games', 'web-ext-government', 'web-ext-health-and-medicine', 'web-ext-individual-stock-advice-and-tools', 'web-ext-internet-portals', 'web-ext-job-search', 'web-ext-local-information', 'web-ext-malware', 'web-ext-motor-vehicles', 'web-ext-music', 'web-ext-news', 'web-ext-p2p', 'web-ext-parked-sites', 'web-ext-proxy-avoid-and-anonymizers', 'web-ext-real-estate', 'web-ext-reference-and-research', 'web-ext-search-engines', 'web-ext-shopping', 'web-ext-social-network', 'web-ext-society', 'web-ext-software', 'web-ext-sports', 'web-ext-streaming-media', 'web-ext-training-and-tools', 'web-ext-translation', 'web-ext-travel', 'web-ext-web-advertisements', 'web-ext-web-based-email', 'web-ext-web-hosting', 'web-ext-web-service']}},
+        'track_application': {'type': 'bool', },
+        'uuid': {'type': 'str', },
+        'user_tag': {'type': 'str', },
+        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'hit-count', 'permit-bytes', 'deny-bytes', 'reset-bytes', 'permit-packets', 'deny-packets', 'reset-packets', 'active-session-tcp', 'active-session-udp', 'active-session-icmp', 'active-session-other', 'session-tcp', 'session-udp', 'session-icmp', 'session-other', 'active-session-sctp', 'session-sctp', 'hitcount-timestamp', 'rate-limit-drops']}},
+        'action_group': {'type': 'dict', 'ntype': {'type': 'str', 'choices': ['permit', 'deny', 'reset']}, 'permit_log': {'type': 'bool', }, 'reset_log': {'type': 'bool', }, 'deny_log': {'type': 'bool', }, 'listen_on_port': {'type': 'bool', }, 'forward': {'type': 'bool', }, 'ipsec': {'type': 'bool', }, 'vpn_ipsec_name': {'type': 'str', }, 'cgnv6': {'type': 'bool', }, 'cgnv6_policy': {'type': 'str', 'choices': ['lsn-lid', 'fixed-nat', 'ds-lite']}, 'cgnv6_lsn_lid': {'type': 'int', }, 'cgnv6_ds_lite': {'type': 'str', 'choices': ['lsn-lid']}, 'cgnv6_ds_lite_lsn_lid': {'type': 'int', }, 'inspect_payload': {'type': 'bool', }, 'permit_limit_policy': {'type': 'int', }, 'permit_respond_to_user_mac': {'type': 'bool', }, 'reset_respond_to_user_mac': {'type': 'bool', }, 'uuid': {'type': 'str', }},
+        'move_rule': {'type': 'dict', 'location': {'type': 'str', 'choices': ['top', 'before', 'after', 'bottom']}, 'target_rule': {'type': 'str', }},
+        'oper': {'type': 'dict', 'hitcount': {'type': 'int', }, 'last_hitcount_time': {'type': 'str', }, 'action': {'type': 'str', }, 'status': {'type': 'str', }, 'permitbytes': {'type': 'int', }, 'denybytes': {'type': 'int', }, 'resetbytes': {'type': 'int', }, 'totalbytes': {'type': 'int', }, 'permitpackets': {'type': 'int', }, 'denypackets': {'type': 'int', }, 'resetpackets': {'type': 'int', }, 'totalpackets': {'type': 'int', }, 'activesessiontcp': {'type': 'int', }, 'activesessionudp': {'type': 'int', }, 'activesessionicmp': {'type': 'int', }, 'activesessionsctp': {'type': 'int', }, 'activesessionother': {'type': 'int', }, 'activesessiontotal': {'type': 'int', }, 'sessiontcp': {'type': 'int', }, 'sessionudp': {'type': 'int', }, 'sessionicmp': {'type': 'int', }, 'sessionsctp': {'type': 'int', }, 'sessionother': {'type': 'int', }, 'sessiontotal': {'type': 'int', }, 'ratelimitdrops': {'type': 'int', }, 'name': {'type': 'str', 'required': True, }},
+        'stats': {'type': 'dict', 'hit_count': {'type': 'str', }, 'permit_bytes': {'type': 'str', }, 'deny_bytes': {'type': 'str', }, 'reset_bytes': {'type': 'str', }, 'permit_packets': {'type': 'str', }, 'deny_packets': {'type': 'str', }, 'reset_packets': {'type': 'str', }, 'active_session_tcp': {'type': 'str', }, 'active_session_udp': {'type': 'str', }, 'active_session_icmp': {'type': 'str', }, 'active_session_other': {'type': 'str', }, 'session_tcp': {'type': 'str', }, 'session_udp': {'type': 'str', }, 'session_icmp': {'type': 'str', }, 'session_other': {'type': 'str', }, 'active_session_sctp': {'type': 'str', }, 'session_sctp': {'type': 'str', }, 'hitcount_timestamp': {'type': 'str', }, 'rate_limit_drops': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
     })
     # Parent keys
-    rv.update(dict(rule_set_name=dict(type='str', required=True), ))
+    rv.update(dict(
+        rule_set_name=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -1509,7 +1146,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1520,7 +1158,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -1560,12 +1199,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1580,16 +1221,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1598,15 +1239,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1623,36 +1264,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["rule"] if info != "NotFound" else info
+                result["acos_info"] = info["rule"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "rule-list"] if info != "NotFound" else info
+                result["acos_info"] = info["rule-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client,
-                                                      existing_url(module),
+                get_oper_result = api_client.get_oper(module.client, existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["rule"][
-                    "oper"] if info != "NotFound" else info
+                result["acos_info"] = info["rule"]["oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client,
-                                                       existing_url(module),
+                get_type_result = api_client.get_stats(module.client, existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["rule"][
-                    "stats"] if info != "NotFound" else info
+                result["acos_info"] = info["rule"]["stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1665,11 +1298,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

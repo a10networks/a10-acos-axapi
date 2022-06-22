@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_slb_template_http
 description:
@@ -121,6 +122,12 @@ options:
         - "Minimum Content Length (Minimum content length for compression in bytes.
           Default is 120.)"
         type: int
+        required: False
+    default_charset:
+        description:
+        - "'iso-8859-1'= Use ISO-8859-1 as the default charset; 'utf-8'= Use UTF-8 as the
+          default charset; 'us-ascii'= Use US-ASCII as the default charset;"
+        type: str
         required: False
     max_concurrent_streams:
         description:
@@ -472,6 +479,52 @@ options:
         - "Customized tag"
         type: str
         required: False
+    http_protocol_check:
+        description:
+        - "Field http_protocol_check"
+        type: dict
+        required: False
+        suboptions:
+            h2up_content_length_alias:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            malformed_h2up_header_value:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            malformed_h2up_scheme_value:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            h2up_with_transfer_encoding:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            multiple_content_length:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            multiple_transfer_encoding:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            transfer_encoding_and_content_length:
+                description:
+                - "'drop'= Drop the request and Send 400 to the client side;"
+                type: str
+            get_and_payload:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            h2up_with_host_and_auth:
+                description:
+                - "'drop'= Drop the request and send 400 to the client side;"
+                type: str
+            uuid:
+                description:
+                - "uuid of the object"
+                type: str
 
 '''
 
@@ -525,68 +578,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "http_100_cont_wait_for_req_complete",
-    "bypass_sg",
-    "client_ip_hdr_replace",
-    "client_port_hdr_replace",
-    "compression_auto_disable_on_high_cpu",
-    "compression_content_type",
-    "compression_enable",
-    "compression_exclude_content_type",
-    "compression_exclude_uri",
-    "compression_keep_accept_encoding",
-    "compression_keep_accept_encoding_enable",
-    "compression_level",
-    "compression_minimum_content_length",
-    "cookie_format",
-    "cookie_samesite",
-    "failover_url",
-    "frame_limit",
-    "host_switching",
-    "insert_client_ip",
-    "insert_client_ip_header_name",
-    "insert_client_port",
-    "insert_client_port_header_name",
-    "keep_client_alive",
-    "log_retry",
-    "max_concurrent_streams",
-    "name",
-    "non_http_bypass",
-    "persist_on_401",
-    "prefix",
-    "rd_port",
-    "rd_resp_code",
-    "rd_secure",
-    "rd_simple_loc",
-    "redirect",
-    "redirect_rewrite",
-    "req_hdr_wait_time",
-    "req_hdr_wait_time_val",
-    "request_header_erase_list",
-    "request_header_insert_list",
-    "request_line_case_insensitive",
-    "request_timeout",
-    "response_content_replace_list",
-    "response_header_erase_list",
-    "response_header_insert_list",
-    "retry_on_5xx",
-    "retry_on_5xx_per_req",
-    "retry_on_5xx_per_req_val",
-    "retry_on_5xx_val",
-    "strict_transaction_switch",
-    "template",
-    "term_11client_hdr_conn_close",
-    "url_hash_first",
-    "url_hash_last",
-    "url_hash_offset",
-    "url_hash_persist",
-    "url_switching",
-    "use_server_status",
-    "user_tag",
-    "uuid",
-]
+AVAILABLE_PROPERTIES = ["http_100_cont_wait_for_req_complete", "bypass_sg", "client_ip_hdr_replace", "client_port_hdr_replace", "compression_auto_disable_on_high_cpu", "compression_content_type", "compression_enable", "compression_exclude_content_type", "compression_exclude_uri", "compression_keep_accept_encoding", "compression_keep_accept_encoding_enable", "compression_level", "compression_minimum_content_length", "cookie_format", "cookie_samesite", "default_charset", "failover_url", "frame_limit", "host_switching", "http_protocol_check", "insert_client_ip", "insert_client_ip_header_name", "insert_client_port", "insert_client_port_header_name", "keep_client_alive", "log_retry", "max_concurrent_streams", "name", "non_http_bypass", "persist_on_401", "prefix", "rd_port", "rd_resp_code", "rd_secure", "rd_simple_loc", "redirect", "redirect_rewrite", "req_hdr_wait_time", "req_hdr_wait_time_val", "request_header_erase_list", "request_header_insert_list", "request_line_case_insensitive", "request_timeout", "response_content_replace_list", "response_header_erase_list", "response_header_insert_list", "retry_on_5xx", "retry_on_5xx_per_req", "retry_on_5xx_per_req_val", "retry_on_5xx_val", "strict_transaction_switch", "template", "term_11client_hdr_conn_close", "url_hash_first", "url_hash_last", "url_hash_offset", "url_hash_persist", "url_switching", "use_server_status", "user_tag", "uuid", ]
 
 
 def get_default_argspec():
@@ -594,289 +588,77 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str',
-                   default="present",
-                   choices=['noop', 'present', 'absent']),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'name': {
-            'type': 'str',
-            'required': True,
-        },
-        'compression_auto_disable_on_high_cpu': {
-            'type': 'int',
-        },
-        'compression_content_type': {
-            'type': 'list',
-            'content_type': {
-                'type': 'str',
-            }
-        },
-        'compression_enable': {
-            'type': 'bool',
-        },
-        'compression_exclude_content_type': {
-            'type': 'list',
-            'exclude_content_type': {
-                'type': 'str',
-            }
-        },
-        'compression_exclude_uri': {
-            'type': 'list',
-            'exclude_uri': {
-                'type': 'str',
-            }
-        },
-        'compression_keep_accept_encoding': {
-            'type': 'bool',
-        },
-        'compression_keep_accept_encoding_enable': {
-            'type': 'bool',
-        },
-        'compression_level': {
-            'type': 'int',
-        },
-        'compression_minimum_content_length': {
-            'type': 'int',
-        },
-        'max_concurrent_streams': {
-            'type': 'int',
-        },
-        'frame_limit': {
-            'type': 'int',
-        },
-        'failover_url': {
-            'type': 'str',
-        },
-        'host_switching': {
-            'type': 'list',
-            'host_switching_type': {
-                'type':
-                'str',
-                'choices': [
-                    'contains', 'ends-with', 'equals', 'starts-with',
-                    'regex-match', 'host-hits-enable'
-                ]
-            },
-            'host_match_string': {
-                'type': 'str',
-            },
-            'host_service_group': {
-                'type': 'str',
-            }
-        },
-        'insert_client_ip': {
-            'type': 'bool',
-        },
-        'insert_client_ip_header_name': {
-            'type': 'str',
-        },
-        'client_ip_hdr_replace': {
-            'type': 'bool',
-        },
-        'insert_client_port': {
-            'type': 'bool',
-        },
-        'insert_client_port_header_name': {
-            'type': 'str',
-        },
-        'client_port_hdr_replace': {
-            'type': 'bool',
-        },
-        'log_retry': {
-            'type': 'bool',
-        },
-        'non_http_bypass': {
-            'type': 'bool',
-        },
-        'bypass_sg': {
-            'type': 'str',
-        },
-        'redirect': {
-            'type': 'bool',
-        },
-        'rd_simple_loc': {
-            'type': 'str',
-        },
-        'rd_secure': {
-            'type': 'bool',
-        },
-        'rd_port': {
-            'type': 'int',
-        },
-        'rd_resp_code': {
-            'type': 'str',
-            'choices': ['301', '302', '303', '307']
-        },
-        'redirect_rewrite': {
-            'type': 'dict',
-            'match_list': {
-                'type': 'list',
-                'redirect_match': {
-                    'type': 'str',
-                },
-                'rewrite_to': {
-                    'type': 'str',
-                }
-            },
-            'redirect_secure': {
-                'type': 'bool',
-            },
-            'redirect_secure_port': {
-                'type': 'int',
-            }
-        },
-        'request_header_erase_list': {
-            'type': 'list',
-            'request_header_erase': {
-                'type': 'str',
-            }
-        },
-        'request_header_insert_list': {
-            'type': 'list',
-            'request_header_insert': {
-                'type': 'str',
-            },
-            'request_header_insert_type': {
-                'type': 'str',
-                'choices': ['insert-if-not-exist', 'insert-always']
-            }
-        },
-        'response_content_replace_list': {
-            'type': 'list',
-            'response_content_replace': {
-                'type': 'str',
-            },
-            'response_new_string': {
-                'type': 'str',
-            }
-        },
-        'response_header_erase_list': {
-            'type': 'list',
-            'response_header_erase': {
-                'type': 'str',
-            }
-        },
-        'response_header_insert_list': {
-            'type': 'list',
-            'response_header_insert': {
-                'type': 'str',
-            },
-            'response_header_insert_type': {
-                'type': 'str',
-                'choices': ['insert-if-not-exist', 'insert-always']
-            }
-        },
-        'request_timeout': {
-            'type': 'int',
-        },
-        'retry_on_5xx': {
-            'type': 'bool',
-        },
-        'retry_on_5xx_val': {
-            'type': 'int',
-        },
-        'retry_on_5xx_per_req': {
-            'type': 'bool',
-        },
-        'retry_on_5xx_per_req_val': {
-            'type': 'int',
-        },
-        'strict_transaction_switch': {
-            'type': 'bool',
-        },
-        'template': {
-            'type': 'dict',
-            'logging': {
-                'type': 'str',
-            }
-        },
-        'term_11client_hdr_conn_close': {
-            'type': 'bool',
-        },
-        'persist_on_401': {
-            'type': 'bool',
-        },
-        'http_100_cont_wait_for_req_complete': {
-            'type': 'bool',
-        },
-        'url_hash_persist': {
-            'type': 'bool',
-        },
-        'url_hash_offset': {
-            'type': 'int',
-        },
-        'url_hash_first': {
-            'type': 'int',
-        },
-        'url_hash_last': {
-            'type': 'int',
-        },
-        'use_server_status': {
-            'type': 'bool',
-        },
-        'url_switching': {
-            'type': 'list',
-            'url_switching_type': {
-                'type':
-                'str',
-                'choices': [
-                    'contains', 'ends-with', 'equals', 'starts-with',
-                    'regex-match', 'url-case-insensitive', 'url-hits-enable'
-                ]
-            },
-            'url_match_string': {
-                'type': 'str',
-            },
-            'url_service_group': {
-                'type': 'str',
-            }
-        },
-        'req_hdr_wait_time': {
-            'type': 'bool',
-        },
-        'req_hdr_wait_time_val': {
-            'type': 'int',
-        },
-        'request_line_case_insensitive': {
-            'type': 'bool',
-        },
-        'keep_client_alive': {
-            'type': 'bool',
-        },
-        'cookie_format': {
-            'type': 'str',
-            'choices': ['rfc6265']
-        },
-        'prefix': {
-            'type': 'str',
-            'choices': ['host', 'secure', 'check']
-        },
-        'cookie_samesite': {
-            'type': 'str',
-            'choices': ['none', 'lax', 'strict']
-        },
-        'uuid': {
-            'type': 'str',
-        },
-        'user_tag': {
-            'type': 'str',
-        }
+    rv.update({'name': {'type': 'str', 'required': True, },
+        'compression_auto_disable_on_high_cpu': {'type': 'int', },
+        'compression_content_type': {'type': 'list', 'content_type': {'type': 'str', }},
+        'compression_enable': {'type': 'bool', },
+        'compression_exclude_content_type': {'type': 'list', 'exclude_content_type': {'type': 'str', }},
+        'compression_exclude_uri': {'type': 'list', 'exclude_uri': {'type': 'str', }},
+        'compression_keep_accept_encoding': {'type': 'bool', },
+        'compression_keep_accept_encoding_enable': {'type': 'bool', },
+        'compression_level': {'type': 'int', },
+        'compression_minimum_content_length': {'type': 'int', },
+        'default_charset': {'type': 'str', 'choices': ['iso-8859-1', 'utf-8', 'us-ascii']},
+        'max_concurrent_streams': {'type': 'int', },
+        'frame_limit': {'type': 'int', },
+        'failover_url': {'type': 'str', },
+        'host_switching': {'type': 'list', 'host_switching_type': {'type': 'str', 'choices': ['contains', 'ends-with', 'equals', 'starts-with', 'regex-match', 'host-hits-enable']}, 'host_match_string': {'type': 'str', }, 'host_service_group': {'type': 'str', }},
+        'insert_client_ip': {'type': 'bool', },
+        'insert_client_ip_header_name': {'type': 'str', },
+        'client_ip_hdr_replace': {'type': 'bool', },
+        'insert_client_port': {'type': 'bool', },
+        'insert_client_port_header_name': {'type': 'str', },
+        'client_port_hdr_replace': {'type': 'bool', },
+        'log_retry': {'type': 'bool', },
+        'non_http_bypass': {'type': 'bool', },
+        'bypass_sg': {'type': 'str', },
+        'redirect': {'type': 'bool', },
+        'rd_simple_loc': {'type': 'str', },
+        'rd_secure': {'type': 'bool', },
+        'rd_port': {'type': 'int', },
+        'rd_resp_code': {'type': 'str', 'choices': ['301', '302', '303', '307']},
+        'redirect_rewrite': {'type': 'dict', 'match_list': {'type': 'list', 'redirect_match': {'type': 'str', }, 'rewrite_to': {'type': 'str', }}, 'redirect_secure': {'type': 'bool', }, 'redirect_secure_port': {'type': 'int', }},
+        'request_header_erase_list': {'type': 'list', 'request_header_erase': {'type': 'str', }},
+        'request_header_insert_list': {'type': 'list', 'request_header_insert': {'type': 'str', }, 'request_header_insert_type': {'type': 'str', 'choices': ['insert-if-not-exist', 'insert-always']}},
+        'response_content_replace_list': {'type': 'list', 'response_content_replace': {'type': 'str', }, 'response_new_string': {'type': 'str', }},
+        'response_header_erase_list': {'type': 'list', 'response_header_erase': {'type': 'str', }},
+        'response_header_insert_list': {'type': 'list', 'response_header_insert': {'type': 'str', }, 'response_header_insert_type': {'type': 'str', 'choices': ['insert-if-not-exist', 'insert-always']}},
+        'request_timeout': {'type': 'int', },
+        'retry_on_5xx': {'type': 'bool', },
+        'retry_on_5xx_val': {'type': 'int', },
+        'retry_on_5xx_per_req': {'type': 'bool', },
+        'retry_on_5xx_per_req_val': {'type': 'int', },
+        'strict_transaction_switch': {'type': 'bool', },
+        'template': {'type': 'dict', 'logging': {'type': 'str', }},
+        'term_11client_hdr_conn_close': {'type': 'bool', },
+        'persist_on_401': {'type': 'bool', },
+        'http_100_cont_wait_for_req_complete': {'type': 'bool', },
+        'url_hash_persist': {'type': 'bool', },
+        'url_hash_offset': {'type': 'int', },
+        'url_hash_first': {'type': 'int', },
+        'url_hash_last': {'type': 'int', },
+        'use_server_status': {'type': 'bool', },
+        'url_switching': {'type': 'list', 'url_switching_type': {'type': 'str', 'choices': ['contains', 'ends-with', 'equals', 'starts-with', 'regex-match', 'url-case-insensitive', 'url-hits-enable']}, 'url_match_string': {'type': 'str', }, 'url_service_group': {'type': 'str', }},
+        'req_hdr_wait_time': {'type': 'bool', },
+        'req_hdr_wait_time_val': {'type': 'int', },
+        'request_line_case_insensitive': {'type': 'bool', },
+        'keep_client_alive': {'type': 'bool', },
+        'cookie_format': {'type': 'str', 'choices': ['rfc6265']},
+        'prefix': {'type': 'str', 'choices': ['host', 'secure', 'check']},
+        'cookie_samesite': {'type': 'str', 'choices': ['none', 'lax', 'strict']},
+        'uuid': {'type': 'str', },
+        'user_tag': {'type': 'str', },
+        'http_protocol_check': {'type': 'dict', 'h2up_content_length_alias': {'type': 'str', 'choices': ['drop']}, 'malformed_h2up_header_value': {'type': 'str', 'choices': ['drop']}, 'malformed_h2up_scheme_value': {'type': 'str', 'choices': ['drop']}, 'h2up_with_transfer_encoding': {'type': 'str', 'choices': ['drop']}, 'multiple_content_length': {'type': 'str', 'choices': ['drop']}, 'multiple_transfer_encoding': {'type': 'str', 'choices': ['drop']}, 'transfer_encoding_and_content_length': {'type': 'str', 'choices': ['drop']}, 'get_and_payload': {'type': 'str', 'choices': ['drop']}, 'h2up_with_host_and_auth': {'type': 'str', 'choices': ['drop']}, 'uuid': {'type': 'str', }}
     })
     return rv
 
@@ -925,7 +707,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -936,7 +719,8 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -976,12 +760,14 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -996,16 +782,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1014,15 +800,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1039,20 +825,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result[
-                    "acos_info"] = info["http"] if info != "NotFound" else info
+                result["acos_info"] = info["http"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "http-list"] if info != "NotFound" else info
+                result["acos_info"] = info["http-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1065,11 +847,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()

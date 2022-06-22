@@ -9,6 +9,7 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_app_resources
 description:
@@ -296,6 +297,216 @@ options:
                 description:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
                 type: int
+    virtual_port_cfg:
+        description:
+        - "Field virtual_port_cfg"
+        type: dict
+        required: False
+        suboptions:
+            virtual_port_max:
+                description:
+                - "Enter the number of virtual-port allowed (virtual-port count (default is max-
+          value))"
+                type: int
+            virtual_port_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    cache_template_cfg:
+        description:
+        - "Field cache_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            cache_template_max:
+                description:
+                - "Enter the number of cache-template allowed (cache-template count (default is
+          max-value))"
+                type: int
+            cache_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    client_ssl_template_cfg:
+        description:
+        - "Field client_ssl_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            client_ssl_template_max:
+                description:
+                - "Enter the number of client-ssl-template allowed (client-ssl-template count
+          (default is max-value))"
+                type: int
+            client_ssl_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    conn_reuse_template_cfg:
+        description:
+        - "Field conn_reuse_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            conn_reuse_template_max:
+                description:
+                - "Enter the number of conn-reuse-template allowed (conn-reuse-template count
+          (default is max-value))"
+                type: int
+            conn_reuse_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    fast_tcp_template_cfg:
+        description:
+        - "Field fast_tcp_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fast_tcp_template_max:
+                description:
+                - "Enter the number of fast-tcp-template allowed (fast-tcp-template count (default
+          is max-value))"
+                type: int
+            fast_tcp_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    fast_udp_template_cfg:
+        description:
+        - "Field fast_udp_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fast_udp_template_max:
+                description:
+                - "Enter the number of fast-udp-template allowed (fast-udp-template count (default
+          is max-value))"
+                type: int
+            fast_udp_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    fix_template_cfg:
+        description:
+        - "Field fix_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            fix_template_max:
+                description:
+                - "Enter the number of fix-template allowed (fix-template count (default is max-
+          value))"
+                type: int
+            fix_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    http_template_cfg:
+        description:
+        - "Field http_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            http_template_max:
+                description:
+                - "Enter the number of http-template allowed (http-template count (default is max-
+          value))"
+                type: int
+            http_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    link_cost_template_cfg:
+        description:
+        - "Field link_cost_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            link_cost_template_max:
+                description:
+                - "Enter the number of link-cost-template allowed (link-cost-template count
+          (default is max-value))"
+                type: int
+            link_cost_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    persist_cookie_template_cfg:
+        description:
+        - "Field persist_cookie_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            persist_cookie_template_max:
+                description:
+                - "Enter the number of persist-cookie-template allowed (persist-cookie-template
+          count (default is max-value))"
+                type: int
+            persist_cookie_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    persist_srcip_template_cfg:
+        description:
+        - "Field persist_srcip_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            persist_srcip_template_max:
+                description:
+                - "Enter the number of persist-srcip-template allowed (persist-source-ip-template
+          count (default is max-value))"
+                type: int
+            persist_srcip_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    server_ssl_template_cfg:
+        description:
+        - "Field server_ssl_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            server_ssl_template_max:
+                description:
+                - "Enter the number of server-ssl-template allowed (server-ssl-template count
+          (default is max-value))"
+                type: int
+            server_ssl_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    proxy_template_cfg:
+        description:
+        - "Field proxy_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            proxy_template_max:
+                description:
+                - "Enter the number of proxy-template allowed (server-ssl-template count (default
+          is max-value))"
+                type: int
+            proxy_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
+    stream_template_cfg:
+        description:
+        - "Field stream_template_cfg"
+        type: dict
+        required: False
+        suboptions:
+            stream_template_max:
+                description:
+                - "Enter the number of stream-template allowed (server-ssl-template count (default
+          is max-value))"
+                type: int
+            stream_template_min_guarantee:
+                description:
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
+                type: int
     threshold:
         description:
         - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
@@ -359,27 +570,9 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
+
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = [
-    "gslb_device_cfg",
-    "gslb_geo_location_cfg",
-    "gslb_ip_list_cfg",
-    "gslb_policy_cfg",
-    "gslb_service_cfg",
-    "gslb_service_ip_cfg",
-    "gslb_service_port_cfg",
-    "gslb_site_cfg",
-    "gslb_svc_group_cfg",
-    "gslb_template_cfg",
-    "gslb_zone_cfg",
-    "health_monitor_cfg",
-    "real_port_cfg",
-    "real_server_cfg",
-    "service_group_cfg",
-    "threshold",
-    "uuid",
-    "virtual_server_cfg",
-]
+AVAILABLE_PROPERTIES = ["cache_template_cfg", "client_ssl_template_cfg", "conn_reuse_template_cfg", "fast_tcp_template_cfg", "fast_udp_template_cfg", "fix_template_cfg", "gslb_device_cfg", "gslb_geo_location_cfg", "gslb_ip_list_cfg", "gslb_policy_cfg", "gslb_service_cfg", "gslb_service_ip_cfg", "gslb_service_port_cfg", "gslb_site_cfg", "gslb_svc_group_cfg", "gslb_template_cfg", "gslb_zone_cfg", "health_monitor_cfg", "http_template_cfg", "link_cost_template_cfg", "persist_cookie_template_cfg", "persist_srcip_template_cfg", "proxy_template_cfg", "real_port_cfg", "real_server_cfg", "server_ssl_template_cfg", "service_group_cfg", "stream_template_cfg", "threshold", "uuid", "virtual_port_cfg", "virtual_server_cfg", ]
 
 
 def get_default_argspec():
@@ -389,175 +582,51 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(
-            type='str',
-            required=False,
-        ),
-        a10_device_context_id=dict(
-            type='int',
-            choices=[1, 2, 3, 4, 5, 6, 7, 8],
-            required=False,
-        ),
+        a10_partition=dict(type='str', required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({
-        'gslb_device_cfg': {
-            'type': 'dict',
-            'gslb_device_max': {
-                'type': 'int',
-            },
-            'gslb_device_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_geo_location_cfg': {
-            'type': 'dict',
-            'gslb_geo_location_max': {
-                'type': 'int',
-            },
-            'gslb_geo_location_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_ip_list_cfg': {
-            'type': 'dict',
-            'gslb_ip_list_max': {
-                'type': 'int',
-            },
-            'gslb_ip_list_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_policy_cfg': {
-            'type': 'dict',
-            'gslb_policy_max': {
-                'type': 'int',
-            },
-            'gslb_policy_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_service_cfg': {
-            'type': 'dict',
-            'gslb_service_max': {
-                'type': 'int',
-            },
-            'gslb_service_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_service_ip_cfg': {
-            'type': 'dict',
-            'gslb_service_ip_max': {
-                'type': 'int',
-            },
-            'gslb_service_ip_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_service_port_cfg': {
-            'type': 'dict',
-            'gslb_service_port_max': {
-                'type': 'int',
-            },
-            'gslb_service_port_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_site_cfg': {
-            'type': 'dict',
-            'gslb_site_max': {
-                'type': 'int',
-            },
-            'gslb_site_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_svc_group_cfg': {
-            'type': 'dict',
-            'gslb_svc_group_max': {
-                'type': 'int',
-            },
-            'gslb_svc_group_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_template_cfg': {
-            'type': 'dict',
-            'gslb_template_max': {
-                'type': 'int',
-            },
-            'gslb_template_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'gslb_zone_cfg': {
-            'type': 'dict',
-            'gslb_zone_max': {
-                'type': 'int',
-            },
-            'gslb_zone_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'health_monitor_cfg': {
-            'type': 'dict',
-            'health_monitor_max': {
-                'type': 'int',
-            },
-            'health_monitor_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'real_port_cfg': {
-            'type': 'dict',
-            'real_port_max': {
-                'type': 'int',
-            },
-            'real_port_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'real_server_cfg': {
-            'type': 'dict',
-            'real_server_max': {
-                'type': 'int',
-            },
-            'real_server_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'service_group_cfg': {
-            'type': 'dict',
-            'service_group_max': {
-                'type': 'int',
-            },
-            'service_group_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'virtual_server_cfg': {
-            'type': 'dict',
-            'virtual_server_max': {
-                'type': 'int',
-            },
-            'virtual_server_min_guarantee': {
-                'type': 'int',
-            }
-        },
-        'threshold': {
-            'type': 'int',
-        },
-        'uuid': {
-            'type': 'str',
-        }
+    rv.update({'gslb_device_cfg': {'type': 'dict', 'gslb_device_max': {'type': 'int', }, 'gslb_device_min_guarantee': {'type': 'int', }},
+        'gslb_geo_location_cfg': {'type': 'dict', 'gslb_geo_location_max': {'type': 'int', }, 'gslb_geo_location_min_guarantee': {'type': 'int', }},
+        'gslb_ip_list_cfg': {'type': 'dict', 'gslb_ip_list_max': {'type': 'int', }, 'gslb_ip_list_min_guarantee': {'type': 'int', }},
+        'gslb_policy_cfg': {'type': 'dict', 'gslb_policy_max': {'type': 'int', }, 'gslb_policy_min_guarantee': {'type': 'int', }},
+        'gslb_service_cfg': {'type': 'dict', 'gslb_service_max': {'type': 'int', }, 'gslb_service_min_guarantee': {'type': 'int', }},
+        'gslb_service_ip_cfg': {'type': 'dict', 'gslb_service_ip_max': {'type': 'int', }, 'gslb_service_ip_min_guarantee': {'type': 'int', }},
+        'gslb_service_port_cfg': {'type': 'dict', 'gslb_service_port_max': {'type': 'int', }, 'gslb_service_port_min_guarantee': {'type': 'int', }},
+        'gslb_site_cfg': {'type': 'dict', 'gslb_site_max': {'type': 'int', }, 'gslb_site_min_guarantee': {'type': 'int', }},
+        'gslb_svc_group_cfg': {'type': 'dict', 'gslb_svc_group_max': {'type': 'int', }, 'gslb_svc_group_min_guarantee': {'type': 'int', }},
+        'gslb_template_cfg': {'type': 'dict', 'gslb_template_max': {'type': 'int', }, 'gslb_template_min_guarantee': {'type': 'int', }},
+        'gslb_zone_cfg': {'type': 'dict', 'gslb_zone_max': {'type': 'int', }, 'gslb_zone_min_guarantee': {'type': 'int', }},
+        'health_monitor_cfg': {'type': 'dict', 'health_monitor_max': {'type': 'int', }, 'health_monitor_min_guarantee': {'type': 'int', }},
+        'real_port_cfg': {'type': 'dict', 'real_port_max': {'type': 'int', }, 'real_port_min_guarantee': {'type': 'int', }},
+        'real_server_cfg': {'type': 'dict', 'real_server_max': {'type': 'int', }, 'real_server_min_guarantee': {'type': 'int', }},
+        'service_group_cfg': {'type': 'dict', 'service_group_max': {'type': 'int', }, 'service_group_min_guarantee': {'type': 'int', }},
+        'virtual_server_cfg': {'type': 'dict', 'virtual_server_max': {'type': 'int', }, 'virtual_server_min_guarantee': {'type': 'int', }},
+        'virtual_port_cfg': {'type': 'dict', 'virtual_port_max': {'type': 'int', }, 'virtual_port_min_guarantee': {'type': 'int', }},
+        'cache_template_cfg': {'type': 'dict', 'cache_template_max': {'type': 'int', }, 'cache_template_min_guarantee': {'type': 'int', }},
+        'client_ssl_template_cfg': {'type': 'dict', 'client_ssl_template_max': {'type': 'int', }, 'client_ssl_template_min_guarantee': {'type': 'int', }},
+        'conn_reuse_template_cfg': {'type': 'dict', 'conn_reuse_template_max': {'type': 'int', }, 'conn_reuse_template_min_guarantee': {'type': 'int', }},
+        'fast_tcp_template_cfg': {'type': 'dict', 'fast_tcp_template_max': {'type': 'int', }, 'fast_tcp_template_min_guarantee': {'type': 'int', }},
+        'fast_udp_template_cfg': {'type': 'dict', 'fast_udp_template_max': {'type': 'int', }, 'fast_udp_template_min_guarantee': {'type': 'int', }},
+        'fix_template_cfg': {'type': 'dict', 'fix_template_max': {'type': 'int', }, 'fix_template_min_guarantee': {'type': 'int', }},
+        'http_template_cfg': {'type': 'dict', 'http_template_max': {'type': 'int', }, 'http_template_min_guarantee': {'type': 'int', }},
+        'link_cost_template_cfg': {'type': 'dict', 'link_cost_template_max': {'type': 'int', }, 'link_cost_template_min_guarantee': {'type': 'int', }},
+        'persist_cookie_template_cfg': {'type': 'dict', 'persist_cookie_template_max': {'type': 'int', }, 'persist_cookie_template_min_guarantee': {'type': 'int', }},
+        'persist_srcip_template_cfg': {'type': 'dict', 'persist_srcip_template_max': {'type': 'int', }, 'persist_srcip_template_min_guarantee': {'type': 'int', }},
+        'server_ssl_template_cfg': {'type': 'dict', 'server_ssl_template_max': {'type': 'int', }, 'server_ssl_template_min_guarantee': {'type': 'int', }},
+        'proxy_template_cfg': {'type': 'dict', 'proxy_template_max': {'type': 'int', }, 'proxy_template_min_guarantee': {'type': 'int', }},
+        'stream_template_cfg': {'type': 'dict', 'stream_template_max': {'type': 'int', }, 'stream_template_min_guarantee': {'type': 'int', }},
+        'threshold': {'type': 'int', },
+        'uuid': {'type': 'str', }
     })
     # Parent keys
-    rv.update(dict(template_name=dict(type='str', required=True), ))
+    rv.update(dict(
+        template_name=dict(type='str', required=True),
+    ))
     return rv
 
 
@@ -605,7 +674,8 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(**call_result["response_body"])
+    result["modified_values"].update(
+        **call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -616,14 +686,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(**call_result["response_body"])
+        result["modified_values"].update(
+            **call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("app-resources", module.params,
-                               AVAILABLE_PROPERTIES)
+    payload = utils.build_json("app-resources", module.params, AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -635,12 +705,14 @@ def present(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(changed=False,
-                  messages="",
-                  modified_values={},
-                  axapi_calls=[],
-                  ansible_facts={},
-                  acos_info={})
+    result = dict(
+        changed=False,
+        messages="",
+        modified_values={},
+        axapi_calls=[],
+        ansible_facts={},
+        acos_info={}
+    )
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -655,16 +727,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port, protocol,
-                                   ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port,
+                                   protocol, ansible_username,
+                                   ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params,
-                                                  requires_one_of)
+        valid, validation_errors = utils.validate(module.params, requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -673,15 +745,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
+
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-            result["axapi_calls"].append(
-                api_client.switch_device_context(module.client,
-                                                 a10_device_context_id))
+             result["axapi_calls"].append(
+                api_client.switch_device_context(module.client, a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -695,20 +767,16 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client,
-                                            existing_url(module))
+                get_result = api_client.get(module.client, existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info[
-                    "app-resources"] if info != "NotFound" else info
+                result["acos_info"] = info["app-resources"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client,
-                                                      existing_url(module))
+                get_list_result = api_client.get_list(module.client, existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info[
-                    "app-resources-list"] if info != "NotFound" else info
+                result["acos_info"] = info["app-resources-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -721,11 +789,9 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(),
-                           supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
-
 
 if __name__ == '__main__':
     main()
