@@ -74,7 +74,7 @@ class A10Client(object):
         return resp, status_code
 
     def activate_partition(self, partition):
-        url = "/axapi/v3/active-partition/{}"
+        url = "/axapi/v3/active-partition/"
         shared = "true" if partition == "shared" else "false"
         payload = {
             "active-partition": {
@@ -85,7 +85,7 @@ class A10Client(object):
         try:
             # Confirm partition exist first.
             # Otherwise sessions will switch and fail to logoff.
-            self.get('/axapi/v3/partition/' + partition)
+            self.post(url + partition)
             resp, status_code = self.post(url.format(partition), payload)
         except Exception as ex:
             raise Exception("Could not activate partition due to: {0}".format(ex))
