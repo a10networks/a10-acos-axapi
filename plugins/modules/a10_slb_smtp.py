@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_smtp
 description:
@@ -490,9 +489,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -500,20 +503,535 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'curr_proxy', 'total_proxy', 'request', 'request_success', 'no_proxy', 'client_reset', 'server_reset', 'no_tuple', 'parse_req_fail', 'server_select_fail', 'forward_req_fail', 'forward_req_data_fail', 'req_retran', 'req_ofo', 'server_reselect', 'server_prem_close', 'new_server_conn', 'snat_fail', 'tcp_out_reset', 'Aflex_switch', 'Aflex_switch_ok', 'recv_client_command_EHLO', 'recv_client_command_HELO', 'recv_client_command_MAIL', 'recv_client_command_RCPT', 'recv_client_command_DATA', 'recv_client_command_RSET', 'recv_client_command_VRFY', 'recv_client_command_EXPN', 'recv_client_command_HELP', 'recv_client_command_NOOP', 'recv_client_command_QUIT', 'recv_client_command_STARTTLS', 'recv_client_command_others', 'send_client_service_ready', 'send_client_service_not_ready', 'send_client_close_connection', 'send_client_go_ahead', 'send_client_start_TLS_first', 'send_client_TLS_not_available', 'send_client_no_command', 'send_server_cmd_reset', 'TLS_established', 'L4_switch', 'recv_server_service_not_ready', 'recv_server_unknow_reply_code', 'client_domain_switch', 'client_domain_switch_ok', 'LB_switch', 'LB_switch_ok', 'read_request_line_fail', 'get_all_headers_fail', 'too_many_headers', 'line_too_long', 'line_across_packet', 'line_extend', 'line_extend_fail', 'line_table_extend', 'line_table_extend_fail', 'parse_request_line_fail', 'insert_resonse_line_fail', 'remove_resonse_line_fail', 'parse_resonse_line_fail', 'Aflex_lb_reselect', 'Aflex_lb_reselect_ok', 'server_STARTTLS_init', 'server_STARTTLS_fail', 'rserver_STARTTLS_disable', 'recv_client_command_TURN', 'recv_client_command_ETRN', 'send_server_ehlo', 'fail_to_save_client_ehlo', 'aflex_mail_fail', 'drop_server_ehlo_ok', 'client_ehlo_saved']}},
-        'oper': {'type': 'dict', 'smtp_cpu_list': {'type': 'list', 'curr_proxy': {'type': 'int', }, 'total_proxy': {'type': 'int', }, 'request': {'type': 'int', }, 'request_success': {'type': 'int', }, 'no_proxy': {'type': 'int', }, 'client_reset': {'type': 'int', }, 'server_reset': {'type': 'int', }, 'no_tuple': {'type': 'int', }, 'parse_req_fail': {'type': 'int', }, 'server_select_fail': {'type': 'int', }, 'forward_req_fail': {'type': 'int', }, 'forward_req_data_fail': {'type': 'int', }, 'req_retran': {'type': 'int', }, 'req_ofo': {'type': 'int', }, 'server_reselect': {'type': 'int', }, 'server_prem_close': {'type': 'int', }, 'new_server_conn': {'type': 'int', }, 'snat_fail': {'type': 'int', }, 'tcp_out_reset': {'type': 'int', }, 'recv_client_command_EHLO': {'type': 'int', }, 'recv_client_command_HELO': {'type': 'int', }, 'recv_client_command_MAIL': {'type': 'int', }, 'recv_client_command_RCPT': {'type': 'int', }, 'recv_client_command_DATA': {'type': 'int', }, 'recv_client_command_RSET': {'type': 'int', }, 'recv_client_command_VRFY': {'type': 'int', }, 'recv_client_command_EXPN': {'type': 'int', }, 'recv_client_command_HELP': {'type': 'int', }, 'recv_client_command_NOOP': {'type': 'int', }, 'recv_client_command_QUIT': {'type': 'int', }, 'recv_client_command_STARTTLS': {'type': 'int', }, 'recv_client_command_TURN': {'type': 'int', }, 'recv_client_command_ETRN': {'type': 'int', }, 'recv_client_command_others': {'type': 'int', }, 'recv_server_service_not_ready': {'type': 'int', }, 'recv_server_unknow_reply_code': {'type': 'int', }, 'send_client_service_ready': {'type': 'int', }, 'send_client_service_not_ready': {'type': 'int', }, 'send_client_close_connection': {'type': 'int', }, 'send_client_go_ahead': {'type': 'int', }, 'send_client_start_TLS_first': {'type': 'int', }, 'send_client_TLS_not_available': {'type': 'int', }, 'send_client_no_command': {'type': 'int', }, 'send_server_cmd_reset': {'type': 'int', }, 'TLS_established': {'type': 'int', }, 'L4_switch': {'type': 'int', }, 'Aflex_switch': {'type': 'int', }, 'Aflex_switch_ok': {'type': 'int', }, 'client_domain_switch': {'type': 'int', }, 'client_domain_switch_ok': {'type': 'int', }, 'LB_switch': {'type': 'int', }, 'LB_switch_ok': {'type': 'int', }, 'read_request_line_fail': {'type': 'int', }, 'get_all_headers_fail': {'type': 'int', }, 'too_many_headers': {'type': 'int', }, 'line_too_long': {'type': 'int', }, 'line_across_packet': {'type': 'int', }, 'line_extend': {'type': 'int', }, 'line_extend_fail': {'type': 'int', }, 'line_table_extend': {'type': 'int', }, 'line_table_extend_fail': {'type': 'int', }, 'parse_request_line_fail': {'type': 'int', }, 'insert_resonse_line_fail': {'type': 'int', }, 'remove_resonse_line_fail': {'type': 'int', }, 'parse_resonse_line_fail': {'type': 'int', }, 'Aflex_lb_reselect': {'type': 'int', }, 'Aflex_lb_reselect_ok': {'type': 'int', }, 'server_STARTTLS_init': {'type': 'int', }, 'server_STARTTLS_fail': {'type': 'int', }, 'rserver_STARTTLS_disable': {'type': 'int', }, 'send_server_ehlo': {'type': 'int', }, 'fail_to_save_client_ehlo': {'type': 'int', }, 'aflex_mail_fail': {'type': 'int', }, 'drop_server_ehlo_ok': {'type': 'int', }, 'client_ehlo_saved': {'type': 'int', }}, 'cpu_count': {'type': 'int', }},
-        'stats': {'type': 'dict', 'curr_proxy': {'type': 'str', }, 'total_proxy': {'type': 'str', }, 'request': {'type': 'str', }, 'request_success': {'type': 'str', }, 'no_proxy': {'type': 'str', }, 'client_reset': {'type': 'str', }, 'server_reset': {'type': 'str', }, 'no_tuple': {'type': 'str', }, 'parse_req_fail': {'type': 'str', }, 'server_select_fail': {'type': 'str', }, 'forward_req_fail': {'type': 'str', }, 'forward_req_data_fail': {'type': 'str', }, 'req_retran': {'type': 'str', }, 'req_ofo': {'type': 'str', }, 'server_reselect': {'type': 'str', }, 'server_prem_close': {'type': 'str', }, 'new_server_conn': {'type': 'str', }, 'snat_fail': {'type': 'str', }, 'tcp_out_reset': {'type': 'str', }, 'Aflex_switch': {'type': 'str', }, 'Aflex_switch_ok': {'type': 'str', }, 'recv_client_command_EHLO': {'type': 'str', }, 'recv_client_command_HELO': {'type': 'str', }, 'recv_client_command_MAIL': {'type': 'str', }, 'recv_client_command_RCPT': {'type': 'str', }, 'recv_client_command_DATA': {'type': 'str', }, 'recv_client_command_RSET': {'type': 'str', }, 'recv_client_command_VRFY': {'type': 'str', }, 'recv_client_command_EXPN': {'type': 'str', }, 'recv_client_command_HELP': {'type': 'str', }, 'recv_client_command_NOOP': {'type': 'str', }, 'recv_client_command_QUIT': {'type': 'str', }, 'recv_client_command_STARTTLS': {'type': 'str', }, 'recv_client_command_others': {'type': 'str', }, 'send_client_service_ready': {'type': 'str', }, 'send_client_service_not_ready': {'type': 'str', }, 'send_client_close_connection': {'type': 'str', }, 'send_client_go_ahead': {'type': 'str', }, 'send_client_start_TLS_first': {'type': 'str', }, 'send_client_TLS_not_available': {'type': 'str', }, 'send_client_no_command': {'type': 'str', }, 'send_server_cmd_reset': {'type': 'str', }, 'TLS_established': {'type': 'str', }, 'L4_switch': {'type': 'str', }, 'recv_server_service_not_ready': {'type': 'str', }, 'recv_server_unknow_reply_code': {'type': 'str', }, 'client_domain_switch': {'type': 'str', }, 'client_domain_switch_ok': {'type': 'str', }, 'LB_switch': {'type': 'str', }, 'LB_switch_ok': {'type': 'str', }, 'read_request_line_fail': {'type': 'str', }, 'get_all_headers_fail': {'type': 'str', }, 'too_many_headers': {'type': 'str', }, 'line_too_long': {'type': 'str', }, 'line_across_packet': {'type': 'str', }, 'line_extend': {'type': 'str', }, 'line_extend_fail': {'type': 'str', }, 'line_table_extend': {'type': 'str', }, 'line_table_extend_fail': {'type': 'str', }, 'parse_request_line_fail': {'type': 'str', }, 'insert_resonse_line_fail': {'type': 'str', }, 'remove_resonse_line_fail': {'type': 'str', }, 'parse_resonse_line_fail': {'type': 'str', }, 'Aflex_lb_reselect': {'type': 'str', }, 'Aflex_lb_reselect_ok': {'type': 'str', }, 'server_STARTTLS_init': {'type': 'str', }, 'server_STARTTLS_fail': {'type': 'str', }, 'rserver_STARTTLS_disable': {'type': 'str', }, 'recv_client_command_TURN': {'type': 'str', }, 'recv_client_command_ETRN': {'type': 'str', }, 'send_server_ehlo': {'type': 'str', }, 'fail_to_save_client_ehlo': {'type': 'str', }, 'aflex_mail_fail': {'type': 'str', }, 'drop_server_ehlo_ok': {'type': 'str', }, 'client_ehlo_saved': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'curr_proxy', 'total_proxy', 'request',
+                    'request_success', 'no_proxy', 'client_reset',
+                    'server_reset', 'no_tuple', 'parse_req_fail',
+                    'server_select_fail', 'forward_req_fail',
+                    'forward_req_data_fail', 'req_retran', 'req_ofo',
+                    'server_reselect', 'server_prem_close', 'new_server_conn',
+                    'snat_fail', 'tcp_out_reset', 'Aflex_switch',
+                    'Aflex_switch_ok', 'recv_client_command_EHLO',
+                    'recv_client_command_HELO', 'recv_client_command_MAIL',
+                    'recv_client_command_RCPT', 'recv_client_command_DATA',
+                    'recv_client_command_RSET', 'recv_client_command_VRFY',
+                    'recv_client_command_EXPN', 'recv_client_command_HELP',
+                    'recv_client_command_NOOP', 'recv_client_command_QUIT',
+                    'recv_client_command_STARTTLS',
+                    'recv_client_command_others', 'send_client_service_ready',
+                    'send_client_service_not_ready',
+                    'send_client_close_connection', 'send_client_go_ahead',
+                    'send_client_start_TLS_first',
+                    'send_client_TLS_not_available', 'send_client_no_command',
+                    'send_server_cmd_reset', 'TLS_established', 'L4_switch',
+                    'recv_server_service_not_ready',
+                    'recv_server_unknow_reply_code', 'client_domain_switch',
+                    'client_domain_switch_ok', 'LB_switch', 'LB_switch_ok',
+                    'read_request_line_fail', 'get_all_headers_fail',
+                    'too_many_headers', 'line_too_long', 'line_across_packet',
+                    'line_extend', 'line_extend_fail', 'line_table_extend',
+                    'line_table_extend_fail', 'parse_request_line_fail',
+                    'insert_resonse_line_fail', 'remove_resonse_line_fail',
+                    'parse_resonse_line_fail', 'Aflex_lb_reselect',
+                    'Aflex_lb_reselect_ok', 'server_STARTTLS_init',
+                    'server_STARTTLS_fail', 'rserver_STARTTLS_disable',
+                    'recv_client_command_TURN', 'recv_client_command_ETRN',
+                    'send_server_ehlo', 'fail_to_save_client_ehlo',
+                    'aflex_mail_fail', 'drop_server_ehlo_ok',
+                    'client_ehlo_saved'
+                ]
+            }
+        },
+        'oper': {
+            'type': 'dict',
+            'smtp_cpu_list': {
+                'type': 'list',
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'request': {
+                    'type': 'int',
+                },
+                'request_success': {
+                    'type': 'int',
+                },
+                'no_proxy': {
+                    'type': 'int',
+                },
+                'client_reset': {
+                    'type': 'int',
+                },
+                'server_reset': {
+                    'type': 'int',
+                },
+                'no_tuple': {
+                    'type': 'int',
+                },
+                'parse_req_fail': {
+                    'type': 'int',
+                },
+                'server_select_fail': {
+                    'type': 'int',
+                },
+                'forward_req_fail': {
+                    'type': 'int',
+                },
+                'forward_req_data_fail': {
+                    'type': 'int',
+                },
+                'req_retran': {
+                    'type': 'int',
+                },
+                'req_ofo': {
+                    'type': 'int',
+                },
+                'server_reselect': {
+                    'type': 'int',
+                },
+                'server_prem_close': {
+                    'type': 'int',
+                },
+                'new_server_conn': {
+                    'type': 'int',
+                },
+                'snat_fail': {
+                    'type': 'int',
+                },
+                'tcp_out_reset': {
+                    'type': 'int',
+                },
+                'recv_client_command_EHLO': {
+                    'type': 'int',
+                },
+                'recv_client_command_HELO': {
+                    'type': 'int',
+                },
+                'recv_client_command_MAIL': {
+                    'type': 'int',
+                },
+                'recv_client_command_RCPT': {
+                    'type': 'int',
+                },
+                'recv_client_command_DATA': {
+                    'type': 'int',
+                },
+                'recv_client_command_RSET': {
+                    'type': 'int',
+                },
+                'recv_client_command_VRFY': {
+                    'type': 'int',
+                },
+                'recv_client_command_EXPN': {
+                    'type': 'int',
+                },
+                'recv_client_command_HELP': {
+                    'type': 'int',
+                },
+                'recv_client_command_NOOP': {
+                    'type': 'int',
+                },
+                'recv_client_command_QUIT': {
+                    'type': 'int',
+                },
+                'recv_client_command_STARTTLS': {
+                    'type': 'int',
+                },
+                'recv_client_command_TURN': {
+                    'type': 'int',
+                },
+                'recv_client_command_ETRN': {
+                    'type': 'int',
+                },
+                'recv_client_command_others': {
+                    'type': 'int',
+                },
+                'recv_server_service_not_ready': {
+                    'type': 'int',
+                },
+                'recv_server_unknow_reply_code': {
+                    'type': 'int',
+                },
+                'send_client_service_ready': {
+                    'type': 'int',
+                },
+                'send_client_service_not_ready': {
+                    'type': 'int',
+                },
+                'send_client_close_connection': {
+                    'type': 'int',
+                },
+                'send_client_go_ahead': {
+                    'type': 'int',
+                },
+                'send_client_start_TLS_first': {
+                    'type': 'int',
+                },
+                'send_client_TLS_not_available': {
+                    'type': 'int',
+                },
+                'send_client_no_command': {
+                    'type': 'int',
+                },
+                'send_server_cmd_reset': {
+                    'type': 'int',
+                },
+                'TLS_established': {
+                    'type': 'int',
+                },
+                'L4_switch': {
+                    'type': 'int',
+                },
+                'Aflex_switch': {
+                    'type': 'int',
+                },
+                'Aflex_switch_ok': {
+                    'type': 'int',
+                },
+                'client_domain_switch': {
+                    'type': 'int',
+                },
+                'client_domain_switch_ok': {
+                    'type': 'int',
+                },
+                'LB_switch': {
+                    'type': 'int',
+                },
+                'LB_switch_ok': {
+                    'type': 'int',
+                },
+                'read_request_line_fail': {
+                    'type': 'int',
+                },
+                'get_all_headers_fail': {
+                    'type': 'int',
+                },
+                'too_many_headers': {
+                    'type': 'int',
+                },
+                'line_too_long': {
+                    'type': 'int',
+                },
+                'line_across_packet': {
+                    'type': 'int',
+                },
+                'line_extend': {
+                    'type': 'int',
+                },
+                'line_extend_fail': {
+                    'type': 'int',
+                },
+                'line_table_extend': {
+                    'type': 'int',
+                },
+                'line_table_extend_fail': {
+                    'type': 'int',
+                },
+                'parse_request_line_fail': {
+                    'type': 'int',
+                },
+                'insert_resonse_line_fail': {
+                    'type': 'int',
+                },
+                'remove_resonse_line_fail': {
+                    'type': 'int',
+                },
+                'parse_resonse_line_fail': {
+                    'type': 'int',
+                },
+                'Aflex_lb_reselect': {
+                    'type': 'int',
+                },
+                'Aflex_lb_reselect_ok': {
+                    'type': 'int',
+                },
+                'server_STARTTLS_init': {
+                    'type': 'int',
+                },
+                'server_STARTTLS_fail': {
+                    'type': 'int',
+                },
+                'rserver_STARTTLS_disable': {
+                    'type': 'int',
+                },
+                'send_server_ehlo': {
+                    'type': 'int',
+                },
+                'fail_to_save_client_ehlo': {
+                    'type': 'int',
+                },
+                'aflex_mail_fail': {
+                    'type': 'int',
+                },
+                'drop_server_ehlo_ok': {
+                    'type': 'int',
+                },
+                'client_ehlo_saved': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'curr_proxy': {
+                'type': 'str',
+            },
+            'total_proxy': {
+                'type': 'str',
+            },
+            'request': {
+                'type': 'str',
+            },
+            'request_success': {
+                'type': 'str',
+            },
+            'no_proxy': {
+                'type': 'str',
+            },
+            'client_reset': {
+                'type': 'str',
+            },
+            'server_reset': {
+                'type': 'str',
+            },
+            'no_tuple': {
+                'type': 'str',
+            },
+            'parse_req_fail': {
+                'type': 'str',
+            },
+            'server_select_fail': {
+                'type': 'str',
+            },
+            'forward_req_fail': {
+                'type': 'str',
+            },
+            'forward_req_data_fail': {
+                'type': 'str',
+            },
+            'req_retran': {
+                'type': 'str',
+            },
+            'req_ofo': {
+                'type': 'str',
+            },
+            'server_reselect': {
+                'type': 'str',
+            },
+            'server_prem_close': {
+                'type': 'str',
+            },
+            'new_server_conn': {
+                'type': 'str',
+            },
+            'snat_fail': {
+                'type': 'str',
+            },
+            'tcp_out_reset': {
+                'type': 'str',
+            },
+            'Aflex_switch': {
+                'type': 'str',
+            },
+            'Aflex_switch_ok': {
+                'type': 'str',
+            },
+            'recv_client_command_EHLO': {
+                'type': 'str',
+            },
+            'recv_client_command_HELO': {
+                'type': 'str',
+            },
+            'recv_client_command_MAIL': {
+                'type': 'str',
+            },
+            'recv_client_command_RCPT': {
+                'type': 'str',
+            },
+            'recv_client_command_DATA': {
+                'type': 'str',
+            },
+            'recv_client_command_RSET': {
+                'type': 'str',
+            },
+            'recv_client_command_VRFY': {
+                'type': 'str',
+            },
+            'recv_client_command_EXPN': {
+                'type': 'str',
+            },
+            'recv_client_command_HELP': {
+                'type': 'str',
+            },
+            'recv_client_command_NOOP': {
+                'type': 'str',
+            },
+            'recv_client_command_QUIT': {
+                'type': 'str',
+            },
+            'recv_client_command_STARTTLS': {
+                'type': 'str',
+            },
+            'recv_client_command_others': {
+                'type': 'str',
+            },
+            'send_client_service_ready': {
+                'type': 'str',
+            },
+            'send_client_service_not_ready': {
+                'type': 'str',
+            },
+            'send_client_close_connection': {
+                'type': 'str',
+            },
+            'send_client_go_ahead': {
+                'type': 'str',
+            },
+            'send_client_start_TLS_first': {
+                'type': 'str',
+            },
+            'send_client_TLS_not_available': {
+                'type': 'str',
+            },
+            'send_client_no_command': {
+                'type': 'str',
+            },
+            'send_server_cmd_reset': {
+                'type': 'str',
+            },
+            'TLS_established': {
+                'type': 'str',
+            },
+            'L4_switch': {
+                'type': 'str',
+            },
+            'recv_server_service_not_ready': {
+                'type': 'str',
+            },
+            'recv_server_unknow_reply_code': {
+                'type': 'str',
+            },
+            'client_domain_switch': {
+                'type': 'str',
+            },
+            'client_domain_switch_ok': {
+                'type': 'str',
+            },
+            'LB_switch': {
+                'type': 'str',
+            },
+            'LB_switch_ok': {
+                'type': 'str',
+            },
+            'read_request_line_fail': {
+                'type': 'str',
+            },
+            'get_all_headers_fail': {
+                'type': 'str',
+            },
+            'too_many_headers': {
+                'type': 'str',
+            },
+            'line_too_long': {
+                'type': 'str',
+            },
+            'line_across_packet': {
+                'type': 'str',
+            },
+            'line_extend': {
+                'type': 'str',
+            },
+            'line_extend_fail': {
+                'type': 'str',
+            },
+            'line_table_extend': {
+                'type': 'str',
+            },
+            'line_table_extend_fail': {
+                'type': 'str',
+            },
+            'parse_request_line_fail': {
+                'type': 'str',
+            },
+            'insert_resonse_line_fail': {
+                'type': 'str',
+            },
+            'remove_resonse_line_fail': {
+                'type': 'str',
+            },
+            'parse_resonse_line_fail': {
+                'type': 'str',
+            },
+            'Aflex_lb_reselect': {
+                'type': 'str',
+            },
+            'Aflex_lb_reselect_ok': {
+                'type': 'str',
+            },
+            'server_STARTTLS_init': {
+                'type': 'str',
+            },
+            'server_STARTTLS_fail': {
+                'type': 'str',
+            },
+            'rserver_STARTTLS_disable': {
+                'type': 'str',
+            },
+            'recv_client_command_TURN': {
+                'type': 'str',
+            },
+            'recv_client_command_ETRN': {
+                'type': 'str',
+            },
+            'send_server_ehlo': {
+                'type': 'str',
+            },
+            'fail_to_save_client_ehlo': {
+                'type': 'str',
+            },
+            'aflex_mail_fail': {
+                'type': 'str',
+            },
+            'drop_server_ehlo_ok': {
+                'type': 'str',
+            },
+            'client_ehlo_saved': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -560,8 +1078,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -572,8 +1089,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -613,14 +1129,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -635,16 +1149,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -653,15 +1167,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -678,28 +1192,36 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["smtp"] if info != "NotFound" else info
+                result[
+                    "acos_info"] = info["smtp"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["smtp-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "smtp-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "oper":
-                get_oper_result = api_client.get_oper(module.client, existing_url(module),
+                get_oper_result = api_client.get_oper(module.client,
+                                                      existing_url(module),
                                                       params=module.params)
                 result["axapi_calls"].append(get_oper_result)
                 info = get_oper_result["response_body"]
-                result["acos_info"] = info["smtp"]["oper"] if info != "NotFound" else info
+                result["acos_info"] = info["smtp"][
+                    "oper"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["smtp"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["smtp"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -712,9 +1234,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

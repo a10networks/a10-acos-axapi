@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_template_gtp_logging_policy
 description:
@@ -195,9 +194,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["log", "name", "user_tag", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "log",
+    "name",
+    "user_tag",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -205,20 +208,87 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'log': {'type': 'dict', 'mandatory_ie_check': {'type': 'bool', }, 'out_of_state_ie_check': {'type': 'bool', }, 'out_of_order_ie_check': {'type': 'bool', }, 'invalid_teid_check': {'type': 'bool', }, 'reserved_ie_check': {'type': 'bool', }, 'message_filtering': {'type': 'bool', }, 'apn_imsi_filtering': {'type': 'bool', }, 'rat_type_filtering': {'type': 'bool', }, 'msisdn_filtering': {'type': 'bool', }, 'crosslayer_correlation': {'type': 'bool', }, 'anti_spoofing_check': {'type': 'bool', }, 'msisdn_imsi_correlation': {'type': 'bool', }, 'max_message_length_check': {'type': 'bool', }, 'gtp_in_gtp_filtering': {'type': 'bool', }, 'sequence_num_correlation': {'type': 'bool', }, 'invalid_header_check': {'type': 'bool', }},
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', }
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'log': {
+            'type': 'dict',
+            'mandatory_ie_check': {
+                'type': 'bool',
+            },
+            'out_of_state_ie_check': {
+                'type': 'bool',
+            },
+            'out_of_order_ie_check': {
+                'type': 'bool',
+            },
+            'invalid_teid_check': {
+                'type': 'bool',
+            },
+            'reserved_ie_check': {
+                'type': 'bool',
+            },
+            'message_filtering': {
+                'type': 'bool',
+            },
+            'apn_imsi_filtering': {
+                'type': 'bool',
+            },
+            'rat_type_filtering': {
+                'type': 'bool',
+            },
+            'msisdn_filtering': {
+                'type': 'bool',
+            },
+            'crosslayer_correlation': {
+                'type': 'bool',
+            },
+            'anti_spoofing_check': {
+                'type': 'bool',
+            },
+            'msisdn_imsi_correlation': {
+                'type': 'bool',
+            },
+            'max_message_length_check': {
+                'type': 'bool',
+            },
+            'gtp_in_gtp_filtering': {
+                'type': 'bool',
+            },
+            'sequence_num_correlation': {
+                'type': 'bool',
+            },
+            'invalid_header_check': {
+                'type': 'bool',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        }
     })
     return rv
 
@@ -267,8 +337,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -279,14 +348,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("logging-policy", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("logging-policy", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -320,14 +389,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -342,16 +409,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -360,15 +427,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -385,16 +452,20 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["logging-policy"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "logging-policy"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["logging-policy-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "logging-policy-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -407,9 +478,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

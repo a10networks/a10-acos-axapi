@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_visibility_packet_capture_global_templates_template_trigger_sys_obj_stats_change_slb_http2_trigger_stats_inc
 description:
@@ -461,9 +460,77 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alloc_fail_total", "bad_connection_preface", "bad_frame_type_for_stream_state", "buff_alloc_error", "cancel", "cant_allocate_control_frame", "cant_allocate_goaway_frame", "cant_allocate_ping_frame", "cant_allocate_rst_frame", "cant_allocate_settings_frame", "cant_allocate_stream", "cant_allocate_window_frame", "closed_state_unexpected_frame", "compression_error", "connect_error", "continuation_before_headers", "data_no_stream", "data_queue_alloc_error", "deflate_alloc_fail", "enhance_your_calm", "err_rcvd_total", "err_sent_cancel", "err_sent_compression_err", "err_sent_connect_err", "err_sent_flow_control", "err_sent_frame_size_err", "err_sent_http11_required", "err_sent_inadequate_security", "err_sent_internal_err", "err_sent_proto_err", "err_sent_refused_stream", "err_sent_setting_timeout", "err_sent_stream_closed", "err_sent_total", "err_sent_your_calm", "error_max_invalid_stream", "exceeds_max_window_size_stream", "flow_control_error", "frame_size_error", "half_closed_remote_state_unexpected_fra", "header_no_stream", "header_padlen_gt_frame_payload", "headers_after_continuation", "headers_interleaved", "http_1_1_required", "idle_state_unexpected_frame", "inadequate_security", "inflate_alloc_fail", "inflate_header_fail", "internal_error", "invalid_frame_during_headers", "invalid_frame_size", "invalid_push_promise", "invalid_setting_value", "invalid_stream_id", "invalid_window_update", "protocol_error", "proxy_alloc_error", "refused_stream", "reserved_local_state_unexpected_frame", "reserved_remote_state_unexpected_frame", "settings_timeout", "split_buff_fail", "streams_gt_max_concur_streams", "trailers_no_end_stream", "uuid", "wrong_stream_state", "zero_window_size_on_stream", ]
+AVAILABLE_PROPERTIES = [
+    "alloc_fail_total",
+    "bad_connection_preface",
+    "bad_frame_type_for_stream_state",
+    "buff_alloc_error",
+    "cancel",
+    "cant_allocate_control_frame",
+    "cant_allocate_goaway_frame",
+    "cant_allocate_ping_frame",
+    "cant_allocate_rst_frame",
+    "cant_allocate_settings_frame",
+    "cant_allocate_stream",
+    "cant_allocate_window_frame",
+    "closed_state_unexpected_frame",
+    "compression_error",
+    "connect_error",
+    "continuation_before_headers",
+    "data_no_stream",
+    "data_queue_alloc_error",
+    "deflate_alloc_fail",
+    "enhance_your_calm",
+    "err_rcvd_total",
+    "err_sent_cancel",
+    "err_sent_compression_err",
+    "err_sent_connect_err",
+    "err_sent_flow_control",
+    "err_sent_frame_size_err",
+    "err_sent_http11_required",
+    "err_sent_inadequate_security",
+    "err_sent_internal_err",
+    "err_sent_proto_err",
+    "err_sent_refused_stream",
+    "err_sent_setting_timeout",
+    "err_sent_stream_closed",
+    "err_sent_total",
+    "err_sent_your_calm",
+    "error_max_invalid_stream",
+    "exceeds_max_window_size_stream",
+    "flow_control_error",
+    "frame_size_error",
+    "half_closed_remote_state_unexpected_fra",
+    "header_no_stream",
+    "header_padlen_gt_frame_payload",
+    "headers_after_continuation",
+    "headers_interleaved",
+    "http_1_1_required",
+    "idle_state_unexpected_frame",
+    "inadequate_security",
+    "inflate_alloc_fail",
+    "inflate_header_fail",
+    "internal_error",
+    "invalid_frame_during_headers",
+    "invalid_frame_size",
+    "invalid_push_promise",
+    "invalid_setting_value",
+    "invalid_stream_id",
+    "invalid_window_update",
+    "protocol_error",
+    "proxy_alloc_error",
+    "refused_stream",
+    "reserved_local_state_unexpected_frame",
+    "reserved_remote_state_unexpected_frame",
+    "settings_timeout",
+    "split_buff_fail",
+    "streams_gt_max_concur_streams",
+    "trailers_no_end_stream",
+    "uuid",
+    "wrong_stream_state",
+    "zero_window_size_on_stream",
+]
 
 
 def get_default_argspec():
@@ -471,89 +538,233 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'protocol_error': {'type': 'bool', },
-        'internal_error': {'type': 'bool', },
-        'proxy_alloc_error': {'type': 'bool', },
-        'split_buff_fail': {'type': 'bool', },
-        'invalid_frame_size': {'type': 'bool', },
-        'error_max_invalid_stream': {'type': 'bool', },
-        'data_no_stream': {'type': 'bool', },
-        'flow_control_error': {'type': 'bool', },
-        'settings_timeout': {'type': 'bool', },
-        'frame_size_error': {'type': 'bool', },
-        'refused_stream': {'type': 'bool', },
-        'cancel': {'type': 'bool', },
-        'compression_error': {'type': 'bool', },
-        'connect_error': {'type': 'bool', },
-        'enhance_your_calm': {'type': 'bool', },
-        'inadequate_security': {'type': 'bool', },
-        'http_1_1_required': {'type': 'bool', },
-        'deflate_alloc_fail': {'type': 'bool', },
-        'inflate_alloc_fail': {'type': 'bool', },
-        'inflate_header_fail': {'type': 'bool', },
-        'bad_connection_preface': {'type': 'bool', },
-        'cant_allocate_control_frame': {'type': 'bool', },
-        'cant_allocate_settings_frame': {'type': 'bool', },
-        'bad_frame_type_for_stream_state': {'type': 'bool', },
-        'wrong_stream_state': {'type': 'bool', },
-        'data_queue_alloc_error': {'type': 'bool', },
-        'buff_alloc_error': {'type': 'bool', },
-        'cant_allocate_rst_frame': {'type': 'bool', },
-        'cant_allocate_goaway_frame': {'type': 'bool', },
-        'cant_allocate_ping_frame': {'type': 'bool', },
-        'cant_allocate_stream': {'type': 'bool', },
-        'cant_allocate_window_frame': {'type': 'bool', },
-        'header_no_stream': {'type': 'bool', },
-        'header_padlen_gt_frame_payload': {'type': 'bool', },
-        'streams_gt_max_concur_streams': {'type': 'bool', },
-        'idle_state_unexpected_frame': {'type': 'bool', },
-        'reserved_local_state_unexpected_frame': {'type': 'bool', },
-        'reserved_remote_state_unexpected_frame': {'type': 'bool', },
-        'half_closed_remote_state_unexpected_fra': {'type': 'bool', },
-        'closed_state_unexpected_frame': {'type': 'bool', },
-        'zero_window_size_on_stream': {'type': 'bool', },
-        'exceeds_max_window_size_stream': {'type': 'bool', },
-        'continuation_before_headers': {'type': 'bool', },
-        'invalid_frame_during_headers': {'type': 'bool', },
-        'headers_after_continuation': {'type': 'bool', },
-        'invalid_push_promise': {'type': 'bool', },
-        'invalid_stream_id': {'type': 'bool', },
-        'headers_interleaved': {'type': 'bool', },
-        'trailers_no_end_stream': {'type': 'bool', },
-        'invalid_setting_value': {'type': 'bool', },
-        'invalid_window_update': {'type': 'bool', },
-        'alloc_fail_total': {'type': 'bool', },
-        'err_rcvd_total': {'type': 'bool', },
-        'err_sent_total': {'type': 'bool', },
-        'err_sent_proto_err': {'type': 'bool', },
-        'err_sent_internal_err': {'type': 'bool', },
-        'err_sent_flow_control': {'type': 'bool', },
-        'err_sent_setting_timeout': {'type': 'bool', },
-        'err_sent_stream_closed': {'type': 'bool', },
-        'err_sent_frame_size_err': {'type': 'bool', },
-        'err_sent_refused_stream': {'type': 'bool', },
-        'err_sent_cancel': {'type': 'bool', },
-        'err_sent_compression_err': {'type': 'bool', },
-        'err_sent_connect_err': {'type': 'bool', },
-        'err_sent_your_calm': {'type': 'bool', },
-        'err_sent_inadequate_security': {'type': 'bool', },
-        'err_sent_http11_required': {'type': 'bool', },
-        'uuid': {'type': 'str', }
+    rv.update({
+        'protocol_error': {
+            'type': 'bool',
+        },
+        'internal_error': {
+            'type': 'bool',
+        },
+        'proxy_alloc_error': {
+            'type': 'bool',
+        },
+        'split_buff_fail': {
+            'type': 'bool',
+        },
+        'invalid_frame_size': {
+            'type': 'bool',
+        },
+        'error_max_invalid_stream': {
+            'type': 'bool',
+        },
+        'data_no_stream': {
+            'type': 'bool',
+        },
+        'flow_control_error': {
+            'type': 'bool',
+        },
+        'settings_timeout': {
+            'type': 'bool',
+        },
+        'frame_size_error': {
+            'type': 'bool',
+        },
+        'refused_stream': {
+            'type': 'bool',
+        },
+        'cancel': {
+            'type': 'bool',
+        },
+        'compression_error': {
+            'type': 'bool',
+        },
+        'connect_error': {
+            'type': 'bool',
+        },
+        'enhance_your_calm': {
+            'type': 'bool',
+        },
+        'inadequate_security': {
+            'type': 'bool',
+        },
+        'http_1_1_required': {
+            'type': 'bool',
+        },
+        'deflate_alloc_fail': {
+            'type': 'bool',
+        },
+        'inflate_alloc_fail': {
+            'type': 'bool',
+        },
+        'inflate_header_fail': {
+            'type': 'bool',
+        },
+        'bad_connection_preface': {
+            'type': 'bool',
+        },
+        'cant_allocate_control_frame': {
+            'type': 'bool',
+        },
+        'cant_allocate_settings_frame': {
+            'type': 'bool',
+        },
+        'bad_frame_type_for_stream_state': {
+            'type': 'bool',
+        },
+        'wrong_stream_state': {
+            'type': 'bool',
+        },
+        'data_queue_alloc_error': {
+            'type': 'bool',
+        },
+        'buff_alloc_error': {
+            'type': 'bool',
+        },
+        'cant_allocate_rst_frame': {
+            'type': 'bool',
+        },
+        'cant_allocate_goaway_frame': {
+            'type': 'bool',
+        },
+        'cant_allocate_ping_frame': {
+            'type': 'bool',
+        },
+        'cant_allocate_stream': {
+            'type': 'bool',
+        },
+        'cant_allocate_window_frame': {
+            'type': 'bool',
+        },
+        'header_no_stream': {
+            'type': 'bool',
+        },
+        'header_padlen_gt_frame_payload': {
+            'type': 'bool',
+        },
+        'streams_gt_max_concur_streams': {
+            'type': 'bool',
+        },
+        'idle_state_unexpected_frame': {
+            'type': 'bool',
+        },
+        'reserved_local_state_unexpected_frame': {
+            'type': 'bool',
+        },
+        'reserved_remote_state_unexpected_frame': {
+            'type': 'bool',
+        },
+        'half_closed_remote_state_unexpected_fra': {
+            'type': 'bool',
+        },
+        'closed_state_unexpected_frame': {
+            'type': 'bool',
+        },
+        'zero_window_size_on_stream': {
+            'type': 'bool',
+        },
+        'exceeds_max_window_size_stream': {
+            'type': 'bool',
+        },
+        'continuation_before_headers': {
+            'type': 'bool',
+        },
+        'invalid_frame_during_headers': {
+            'type': 'bool',
+        },
+        'headers_after_continuation': {
+            'type': 'bool',
+        },
+        'invalid_push_promise': {
+            'type': 'bool',
+        },
+        'invalid_stream_id': {
+            'type': 'bool',
+        },
+        'headers_interleaved': {
+            'type': 'bool',
+        },
+        'trailers_no_end_stream': {
+            'type': 'bool',
+        },
+        'invalid_setting_value': {
+            'type': 'bool',
+        },
+        'invalid_window_update': {
+            'type': 'bool',
+        },
+        'alloc_fail_total': {
+            'type': 'bool',
+        },
+        'err_rcvd_total': {
+            'type': 'bool',
+        },
+        'err_sent_total': {
+            'type': 'bool',
+        },
+        'err_sent_proto_err': {
+            'type': 'bool',
+        },
+        'err_sent_internal_err': {
+            'type': 'bool',
+        },
+        'err_sent_flow_control': {
+            'type': 'bool',
+        },
+        'err_sent_setting_timeout': {
+            'type': 'bool',
+        },
+        'err_sent_stream_closed': {
+            'type': 'bool',
+        },
+        'err_sent_frame_size_err': {
+            'type': 'bool',
+        },
+        'err_sent_refused_stream': {
+            'type': 'bool',
+        },
+        'err_sent_cancel': {
+            'type': 'bool',
+        },
+        'err_sent_compression_err': {
+            'type': 'bool',
+        },
+        'err_sent_connect_err': {
+            'type': 'bool',
+        },
+        'err_sent_your_calm': {
+            'type': 'bool',
+        },
+        'err_sent_inadequate_security': {
+            'type': 'bool',
+        },
+        'err_sent_http11_required': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        }
     })
     # Parent keys
-    rv.update(dict(
-        template_name=dict(type='str', required=True),
-    ))
+    rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
 
 
@@ -601,8 +812,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -613,14 +823,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("trigger-stats-inc", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("trigger-stats-inc", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -654,14 +864,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -676,16 +884,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -694,15 +902,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -719,16 +927,20 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["trigger-stats-inc-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "trigger-stats-inc-list"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -741,9 +953,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

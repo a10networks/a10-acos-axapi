@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_fw_gtp
 description:
@@ -594,9 +593,24 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["apn_log_periodicity", "apn_prefix", "apn_prefix_list", "echo_timeout", "gtp_value", "insertion_mode", "ne_v4_log_periodicity", "ne_v6_log_periodicity", "network_element", "network_element_list_v4", "network_element_list_v6", "path_mgmt_logging", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "apn_log_periodicity",
+    "apn_prefix",
+    "apn_prefix_list",
+    "echo_timeout",
+    "gtp_value",
+    "insertion_mode",
+    "ne_v4_log_periodicity",
+    "ne_v6_log_periodicity",
+    "network_element",
+    "network_element_list_v4",
+    "network_element_list_v6",
+    "path_mgmt_logging",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -604,31 +618,1111 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'gtp_value': {'type': 'str', 'choices': ['enable']},
-        'network_element_list_v4': {'type': 'str', },
-        'ne_v4_log_periodicity': {'type': 'int', },
-        'network_element_list_v6': {'type': 'str', },
-        'ne_v6_log_periodicity': {'type': 'int', },
-        'apn_prefix_list': {'type': 'str', },
-        'apn_log_periodicity': {'type': 'int', },
-        'echo_timeout': {'type': 'int', },
-        'path_mgmt_logging': {'type': 'str', 'choices': ['enable-log']},
-        'insertion_mode': {'type': 'str', 'choices': ['monitor', 'skip-state-checks']},
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'out-of-session-memory', 'no-fwd-route', 'no-rev-route', 'gtp-smp-created', 'gtp-smp-marked-deleted', 'gtp-smp-deleted', 'smp-creation-failed', 'gtp-smp-path-created', 'gtp-smp-path-freed', 'gtp-smp-path-allocated', 'gtp-smp-path-creation-failed', 'gtp-smp-path-check-failed', 'gtp-smp-check-failed', 'gtp-smp-session-count-check-failed', 'gtp-c-ref-count-smp-exceeded', 'gtp-u-smp-in-rml-with-sess', 'gtp-u-pkt-fwd-conn-create', 'gtp-c-pkt-fwd-conn-create', 'gtp-echo-pkt-fwd-conn-create', 'gtp-tunnel-rate-limit-entry-create-success', 'gtp-tunnel-rate-limit-entry-create-failure', 'gtp-tunnel-rate-limit-entry-deleted', 'gtp-rate-limit-smp-created', 'gtp-rate-limit-smp-freed', 'gtp-rate-limit-smp-create-failure', 'gtp-rate-limit-t3-ctr-create-failure', 'gtp-rate-limit-entry-create-failure', 'gtp-echo-conn-created', 'gtp-echo-conn-deleted', 'gtp-node-restart-echo', 'gtp-c-echo-path-failure', 'drop-vld-gtp-echo-out-of-state-', 'drop-vld-gtp-echo-ie-len-exceed-msg-len', 'gtp-create-session-request-retransmit', 'gtp-add-bearer-request-retransmit', 'gtp-delete-session-request-retransmit', 'gtp-handover-request-retransmit', 'gtp-del-bearer-request-retransmit', 'gtp-add-bearer-response-retransmit', 'gtp-create-session-request-retx-drop', 'gtp-u-out-of-state-drop', 'gtp-c-handover-request-out-of-state-drop', 'gtp-v1-c-nsapi-not-found-in-delete-req', 'gtp-v2-c-bearer-not-found-in-delete-req', 'gtp-v2-c-bearer-not-found-in-delete-resp', 'gtp-multiple-handover-request', 'gtp-rr-message-drop', 'gtp-rr-echo-message-dcmsg', 'gtp-rr-c-message-dcmsg', 'drop-gtp-frag-or-jumbo-pkt', 'response-with-reject-cause-forwarded', 'gtp-c-message-forwarded-without-conn', 'gtp-v0-c-ver-not-supp', 'gtp-v1-c-ver-not-supp', 'gtp-v2-c-ver-not-supp', 'gtp-v1-extn-hdt-notif', 'gtp-u-error-ind', 'gtp-v0-c-uplink-ingress-packets', 'gtp-v0-c-uplink-egress-packets', 'gtp-v0-c-downlink-ingress-packets', 'gtp-v0-c-downlink-egress-packets', 'gtp-v0-c-uplink-ingress-bytes', 'gtp-v0-c-uplink-egress-bytes', 'gtp-v0-c-downlink-ingress-bytes', 'gtp-v0-c-downlink-egress-bytes', 'gtp-v1-c-uplink-ingress-packets', 'gtp-v1-c-uplink-egress-packets', 'gtp-v1-c-downlink-ingress-packets', 'gtp-v1-c-downlink-egress-packets', 'gtp-v1-c-uplink-ingress-bytes', 'gtp-v1-c-uplink-egress-bytes', 'gtp-v1-c-downlink-ingress-bytes', 'gtp-v1-c-downlink-egress-bytes', 'gtp-v2-c-uplink-ingress-packets', 'gtp-v2-c-uplink-egress-packets', 'gtp-v2-c-downlink-ingress-packets', 'gtp-v2-c-downlink-egress-packets', 'gtp-v2-c-uplink-ingress-bytes', 'gtp-v2-c-uplink-egress-bytes', 'gtp-v2-c-downlink-ingress-bytes', 'gtp-v2-c-downlink-egress-bytes', 'gtp-u-uplink-ingress-packets', 'gtp-u-uplink-egress-packets', 'gtp-u-downlink-ingress-packets', 'gtp-u-downlink-egress-packets', 'gtp-u-uplink-ingress-bytes', 'gtp-u-uplink-egress-bytes', 'gtp-u-downlink-ingress-bytes', 'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced', 'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced', 'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced', 'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx', 'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx', 'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx', 'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced', 'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced', 'gtp-smp-del-bearer-synced', 'gtp-smp-additional-bearer-synced', 'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx', 'gtp-smp-additional-bearer-sync-rx', 'gtp-add-bearer-sync-not-rx-on-standby', 'gtp-add-bearer-sync-with-periodic-update-on-standby', 'gtp-delete-bearer-sync-with-periodic-update-on-standby', 'gtp-v0-c-echo-create-synced']}, 'counters2': {'type': 'str', 'choices': ['gtp-v1-c-echo-create-synced', 'gtp-v2-c-echo-create-synced', 'gtp-v0-c-echo-create-sync-rx', 'gtp-v1-c-echo-create-sync-rx', 'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced', 'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced', 'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx', 'gtp-v2-c-echo-del-sync-rx', 'drop-gtp-conn-creation-standby', 'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3', 'gtp-smp-path-del-synced', 'gtp-smp-path-del-sync-rx', 'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6', 'drop-gtp-ip-version-mismatch-fteid', 'drop-gtp-ip-version-mismatch-ho-fteid', 'gtp-u-message-length-mismatch', 'gtp-path-message-length-mismatch', 'drop-gtp-missing-cond-ie-bearer-ctx', 'drop-gtp-bearer-not-found-in-resp', 'gtp-stateless-forward', 'gtp-l3-conn-deleted', 'gtp-l5-conn-created', 'gtp-monitor-forward', 'gtp-u_inner-ip-not-present', 'gtp-ext_hdr-incorrect-length']}},
-        'apn_prefix': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'network_element': {'type': 'dict', 'uuid': {'type': 'str', }},
-        'stats': {'type': 'dict', 'out_of_session_memory': {'type': 'str', }, 'no_fwd_route': {'type': 'str', }, 'no_rev_route': {'type': 'str', }, 'gtp_smp_path_check_failed': {'type': 'str', }, 'gtp_smp_check_failed': {'type': 'str', }, 'gtp_smp_session_count_check_failed': {'type': 'str', }, 'gtp_c_ref_count_smp_exceeded': {'type': 'str', }, 'gtp_u_smp_in_rml_with_sess': {'type': 'str', }, 'gtp_tunnel_rate_limit_entry_create_failure': {'type': 'str', }, 'gtp_rate_limit_smp_create_failure': {'type': 'str', }, 'gtp_rate_limit_t3_ctr_create_failure': {'type': 'str', }, 'gtp_rate_limit_entry_create_failure': {'type': 'str', }, 'gtp_node_restart_echo': {'type': 'str', }, 'gtp_c_echo_path_failure': {'type': 'str', }, 'drop_vld_gtp_echo_out_of_state_': {'type': 'str', }, 'drop_vld_gtp_echo_ie_len_exceed_msg_len': {'type': 'str', }, 'gtp_del_bearer_request_retransmit': {'type': 'str', }, 'gtp_add_bearer_response_retransmit': {'type': 'str', }, 'gtp_u_out_of_state_drop': {'type': 'str', }, 'gtp_c_handover_request_out_of_state_drop': {'type': 'str', }, 'gtp_v1_c_nsapi_not_found_in_delete_req': {'type': 'str', }, 'gtp_v2_c_bearer_not_found_in_delete_req': {'type': 'str', }, 'gtp_v2_c_bearer_not_found_in_delete_resp': {'type': 'str', }, 'gtp_rr_message_drop': {'type': 'str', }, 'drop_gtp_frag_or_jumbo_pkt': {'type': 'str', }, 'gtp_v0_c_uplink_ingress_packets': {'type': 'str', }, 'gtp_v0_c_uplink_egress_packets': {'type': 'str', }, 'gtp_v0_c_downlink_ingress_packets': {'type': 'str', }, 'gtp_v0_c_downlink_egress_packets': {'type': 'str', }, 'gtp_v0_c_uplink_ingress_bytes': {'type': 'str', }, 'gtp_v0_c_uplink_egress_bytes': {'type': 'str', }, 'gtp_v0_c_downlink_ingress_bytes': {'type': 'str', }, 'gtp_v0_c_downlink_egress_bytes': {'type': 'str', }, 'gtp_v1_c_uplink_ingress_packets': {'type': 'str', }, 'gtp_v1_c_uplink_egress_packets': {'type': 'str', }, 'gtp_v1_c_downlink_ingress_packets': {'type': 'str', }, 'gtp_v1_c_downlink_egress_packets': {'type': 'str', }, 'gtp_v1_c_uplink_ingress_bytes': {'type': 'str', }, 'gtp_v1_c_uplink_egress_bytes': {'type': 'str', }, 'gtp_v1_c_downlink_ingress_bytes': {'type': 'str', }, 'gtp_v1_c_downlink_egress_bytes': {'type': 'str', }, 'gtp_v2_c_uplink_ingress_packets': {'type': 'str', }, 'gtp_v2_c_uplink_egress_packets': {'type': 'str', }, 'gtp_v2_c_downlink_ingress_packets': {'type': 'str', }, 'gtp_v2_c_downlink_egress_packets': {'type': 'str', }, 'gtp_v2_c_uplink_ingress_bytes': {'type': 'str', }, 'gtp_v2_c_uplink_egress_bytes': {'type': 'str', }, 'gtp_v2_c_downlink_ingress_bytes': {'type': 'str', }, 'gtp_v2_c_downlink_egress_bytes': {'type': 'str', }, 'gtp_u_uplink_ingress_packets': {'type': 'str', }, 'gtp_u_uplink_egress_packets': {'type': 'str', }, 'gtp_u_downlink_ingress_packets': {'type': 'str', }, 'gtp_u_downlink_egress_packets': {'type': 'str', }, 'gtp_u_uplink_ingress_bytes': {'type': 'str', }, 'gtp_u_uplink_egress_bytes': {'type': 'str', }, 'gtp_u_downlink_ingress_bytes': {'type': 'str', }, 'gtp_u_downlink_egress_bytes': {'type': 'str', }, 'gtp_u_message_length_mismatch': {'type': 'str', }, 'gtp_path_message_length_mismatch': {'type': 'str', }, 'drop_gtp_missing_cond_ie_bearer_ctx': {'type': 'str', }, 'drop_gtp_bearer_not_found_in_resp': {'type': 'str', }, 'gtp_stateless_forward': {'type': 'str', }, 'gtp_monitor_forward': {'type': 'str', }, 'apn_prefix': {'type': 'dict', 'stats': {'type': 'dict', 'key_name': {'type': 'str', }, 'uplink_bytes': {'type': 'str', }, 'downlink_bytes': {'type': 'str', }, 'uplink_pkts': {'type': 'str', }, 'downlink_pkts': {'type': 'str', }, 'gtp_v0_c_tunnel_created': {'type': 'str', }, 'gtp_v0_c_tunnel_half_open': {'type': 'str', }, 'gtp_v0_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_created': {'type': 'str', }, 'gtp_v1_c_tunnel_half_open': {'type': 'str', }, 'gtp_v1_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted': {'type': 'str', }, 'gtp_v1_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_created': {'type': 'str', }, 'gtp_v2_c_tunnel_half_open': {'type': 'str', }, 'gtp_v2_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted': {'type': 'str', }, 'gtp_v2_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_u_tunnel_created': {'type': 'str', }, 'gtp_u_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_mod_bearer_resp_unsuccess': {'type': 'str', }, 'gtp_v0_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_create_sess_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_piggyback_message': {'type': 'str', }, 'gtp_path_management_message': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v0_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_reserved_message_allow': {'type': 'str', }, 'gtp_v2_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v1_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v1_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v2_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v0_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v1_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v2_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v0_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v1_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v2_c_packet_dummy_msisdn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_reserved_field_set': {'type': 'str', }, 'drop_vld_tunnel_id_flag': {'type': 'str', }, 'drop_vld_invalid_flow_label_v0': {'type': 'str', }, 'drop_vld_invalid_teid': {'type': 'str', }, 'drop_vld_unsupported_message_type': {'type': 'str', }, 'drop_vld_out_of_state': {'type': 'str', }, 'drop_vld_mandatory_information_element': {'type': 'str', }, 'drop_vld_out_of_order_ie': {'type': 'str', }, 'drop_vld_out_of_state_ie': {'type': 'str', }, 'drop_vld_reserved_information_element': {'type': 'str', }, 'drop_vld_version_not_supported': {'type': 'str', }, 'drop_vld_message_length': {'type': 'str', }, 'drop_vld_cross_layer_correlation': {'type': 'str', }, 'drop_vld_country_code_mismatch': {'type': 'str', }, 'drop_vld_gtp_u_spoofed_source_address': {'type': 'str', }, 'drop_vld_gtp_bearer_count_exceed': {'type': 'str', }, 'drop_vld_gtp_v2_wrong_lbi_create_bearer_req': {'type': 'str', }, 'drop_vld_gtp_c_handover_in_progress': {'type': 'str', }, 'drop_vld_v0_reserved_message_drop': {'type': 'str', }, 'drop_vld_v1_reserved_message_drop': {'type': 'str', }, 'drop_vld_v2_reserved_message_drop': {'type': 'str', }, 'drop_vld_invalid_pkt_len_piggyback': {'type': 'str', }, 'drop_vld_sanity_failed_piggyback': {'type': 'str', }, 'drop_vld_sequence_num_correlation': {'type': 'str', }, 'drop_vld_gtpv0_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv1_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv2_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtp_invalid_imsi_len_drop': {'type': 'str', }, 'drop_vld_gtp_invalid_apn_len_drop': {'type': 'str', }, 'drop_vld_protocol_flag_unset': {'type': 'str', }, 'drop_vld_gtpv0_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv1_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv2_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtp_v0_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v1_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v2_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_flt_message_filtering': {'type': 'str', }, 'drop_flt_apn_filtering': {'type': 'str', }, 'drop_flt_msisdn_filtering': {'type': 'str', }, 'drop_flt_rat_type_filtering': {'type': 'str', }, 'drop_flt_gtp_in_gtp': {'type': 'str', }, 'drop_rl_gtp_v0_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_agg': {'type': 'str', }, 'drop_rl_gtp_v2_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_create_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_create_session_request': {'type': 'str', }, 'drop_rl_gtp_v1_c_update_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_modify_bearer_request': {'type': 'str', }, 'drop_rl_gtp_u_tunnel_create': {'type': 'str', }, 'drop_rl_gtp_u_uplink_byte': {'type': 'str', }, 'drop_rl_gtp_u_uplink_packet': {'type': 'str', }, 'drop_rl_gtp_u_downlink_byte': {'type': 'str', }, 'drop_rl_gtp_u_downlink_packet': {'type': 'str', }, 'drop_rl_gtp_u_total_byte': {'type': 'str', }, 'drop_rl_gtp_u_total_packet': {'type': 'str', }, 'drop_rl_gtp_u_max_concurrent_tunnels': {'type': 'str', }}}, 'network_element': {'type': 'dict', 'stats': {'type': 'dict', 'key_name': {'type': 'str', }, 'key_type': {'type': 'str', }, 'uplink_bytes': {'type': 'str', }, 'downlink_bytes': {'type': 'str', }, 'uplink_pkts': {'type': 'str', }, 'downlink_pkts': {'type': 'str', }, 'gtp_v0_c_tunnel_created': {'type': 'str', }, 'gtp_v0_c_tunnel_half_open': {'type': 'str', }, 'gtp_v0_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_closed': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_created': {'type': 'str', }, 'gtp_v1_c_tunnel_half_open': {'type': 'str', }, 'gtp_v1_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_closed': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted': {'type': 'str', }, 'gtp_v1_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_created': {'type': 'str', }, 'gtp_v2_c_tunnel_half_open': {'type': 'str', }, 'gtp_v2_c_tunnel_half_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_closed': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted': {'type': 'str', }, 'gtp_v2_c_half_open_tunnel_closed': {'type': 'str', }, 'gtp_u_tunnel_created': {'type': 'str', }, 'gtp_u_tunnel_deleted': {'type': 'str', }, 'gtp_v0_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_update_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_mod_bearer_resp_unsuccess': {'type': 'str', }, 'gtp_v0_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v1_c_create_pdp_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_create_sess_resp_unsuccess': {'type': 'str', }, 'gtp_v2_c_piggyback_message': {'type': 'str', }, 'gtp_path_management_message': {'type': 'str', }, 'gtp_v0_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v1_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_v2_c_tunnel_deleted_restart': {'type': 'str', }, 'gtp_node_restart_gtp_c': {'type': 'str', }, 'gtp_v0_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_reserved_message_allow': {'type': 'str', }, 'gtp_v2_c_reserved_message_allow': {'type': 'str', }, 'gtp_v1_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v1_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_request_forward': {'type': 'str', }, 'gtp_v0_c_pdu_notification_reject_request_forward': {'type': 'str', }, 'gtp_v0_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v1_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v2_c_message_skipped_apn_filtering_no_imsi': {'type': 'str', }, 'gtp_v0_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v1_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v2_c_message_skipped_msisdn_filtering_no_msisdn': {'type': 'str', }, 'gtp_v0_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v1_c_packet_dummy_msisdn': {'type': 'str', }, 'gtp_v2_c_packet_dummy_msisdn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_with_teid_zero_expected': {'type': 'str', }, 'drop_vld_reserved_field_set': {'type': 'str', }, 'drop_vld_tunnel_id_flag': {'type': 'str', }, 'drop_vld_invalid_flow_label_v0': {'type': 'str', }, 'drop_vld_invalid_teid': {'type': 'str', }, 'drop_vld_unsupported_message_type': {'type': 'str', }, 'drop_vld_out_of_state': {'type': 'str', }, 'drop_vld_mandatory_information_element': {'type': 'str', }, 'drop_vld_out_of_order_ie': {'type': 'str', }, 'drop_vld_out_of_state_ie': {'type': 'str', }, 'drop_vld_reserved_information_element': {'type': 'str', }, 'drop_vld_version_not_supported': {'type': 'str', }, 'drop_vld_message_length': {'type': 'str', }, 'drop_vld_cross_layer_correlation': {'type': 'str', }, 'drop_vld_country_code_mismatch': {'type': 'str', }, 'drop_vld_gtp_u_spoofed_source_address': {'type': 'str', }, 'drop_vld_gtp_bearer_count_exceed': {'type': 'str', }, 'drop_vld_gtp_v2_wrong_lbi_create_bearer_req': {'type': 'str', }, 'drop_vld_gtp_c_handover_in_progress': {'type': 'str', }, 'drop_vld_v0_reserved_message_drop': {'type': 'str', }, 'drop_vld_v1_reserved_message_drop': {'type': 'str', }, 'drop_vld_v2_reserved_message_drop': {'type': 'str', }, 'drop_vld_invalid_pkt_len_piggyback': {'type': 'str', }, 'drop_vld_sanity_failed_piggyback': {'type': 'str', }, 'drop_vld_sequence_num_correlation': {'type': 'str', }, 'drop_vld_gtpv0_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv1_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtpv2_seqnum_buffer_full': {'type': 'str', }, 'drop_vld_gtp_invalid_imsi_len_drop': {'type': 'str', }, 'drop_vld_gtp_invalid_apn_len_drop': {'type': 'str', }, 'drop_vld_protocol_flag_unset': {'type': 'str', }, 'drop_vld_gtpv0_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv1_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtpv2_subscriber_attr_miss': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_dropped_apn_filtering_no_apn': {'type': 'str', }, 'drop_vld_gtp_v0_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v1_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v2_c_ie_len_exceed_msg_len': {'type': 'str', }, 'drop_vld_gtp_v0_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v1_c_message_length_mismatch': {'type': 'str', }, 'drop_vld_gtp_v2_c_message_length_mismatch': {'type': 'str', }, 'drop_flt_message_filtering': {'type': 'str', }, 'drop_flt_apn_filtering': {'type': 'str', }, 'drop_flt_msisdn_filtering': {'type': 'str', }, 'drop_flt_rat_type_filtering': {'type': 'str', }, 'drop_flt_gtp_in_gtp': {'type': 'str', }, 'drop_rl_gtp_v0_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_agg': {'type': 'str', }, 'drop_rl_gtp_v2_c_agg': {'type': 'str', }, 'drop_rl_gtp_v1_c_create_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_create_session_request': {'type': 'str', }, 'drop_rl_gtp_v1_c_update_pdp_request': {'type': 'str', }, 'drop_rl_gtp_v2_c_modify_bearer_request': {'type': 'str', }, 'drop_rl_gtp_u_tunnel_create': {'type': 'str', }, 'drop_rl_gtp_u_uplink_byte': {'type': 'str', }, 'drop_rl_gtp_u_uplink_packet': {'type': 'str', }, 'drop_rl_gtp_u_downlink_byte': {'type': 'str', }, 'drop_rl_gtp_u_downlink_packet': {'type': 'str', }, 'drop_rl_gtp_u_total_byte': {'type': 'str', }, 'drop_rl_gtp_u_total_packet': {'type': 'str', }, 'drop_rl_gtp_u_max_concurrent_tunnels': {'type': 'str', }}}}
+    rv.update({
+        'gtp_value': {
+            'type': 'str',
+            'choices': ['enable']
+        },
+        'network_element_list_v4': {
+            'type': 'str',
+        },
+        'ne_v4_log_periodicity': {
+            'type': 'int',
+        },
+        'network_element_list_v6': {
+            'type': 'str',
+        },
+        'ne_v6_log_periodicity': {
+            'type': 'int',
+        },
+        'apn_prefix_list': {
+            'type': 'str',
+        },
+        'apn_log_periodicity': {
+            'type': 'int',
+        },
+        'echo_timeout': {
+            'type': 'int',
+        },
+        'path_mgmt_logging': {
+            'type': 'str',
+            'choices': ['enable-log']
+        },
+        'insertion_mode': {
+            'type': 'str',
+            'choices': ['monitor', 'skip-state-checks']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'out-of-session-memory', 'no-fwd-route',
+                    'no-rev-route', 'gtp-smp-created',
+                    'gtp-smp-marked-deleted', 'gtp-smp-deleted',
+                    'smp-creation-failed', 'gtp-smp-path-created',
+                    'gtp-smp-path-freed', 'gtp-smp-path-allocated',
+                    'gtp-smp-path-creation-failed',
+                    'gtp-smp-path-check-failed', 'gtp-smp-check-failed',
+                    'gtp-smp-session-count-check-failed',
+                    'gtp-c-ref-count-smp-exceeded',
+                    'gtp-u-smp-in-rml-with-sess', 'gtp-u-pkt-fwd-conn-create',
+                    'gtp-c-pkt-fwd-conn-create',
+                    'gtp-echo-pkt-fwd-conn-create',
+                    'gtp-tunnel-rate-limit-entry-create-success',
+                    'gtp-tunnel-rate-limit-entry-create-failure',
+                    'gtp-tunnel-rate-limit-entry-deleted',
+                    'gtp-rate-limit-smp-created', 'gtp-rate-limit-smp-freed',
+                    'gtp-rate-limit-smp-create-failure',
+                    'gtp-rate-limit-t3-ctr-create-failure',
+                    'gtp-rate-limit-entry-create-failure',
+                    'gtp-echo-conn-created', 'gtp-echo-conn-deleted',
+                    'gtp-node-restart-echo', 'gtp-c-echo-path-failure',
+                    'drop-vld-gtp-echo-out-of-state-',
+                    'drop-vld-gtp-echo-ie-len-exceed-msg-len',
+                    'gtp-create-session-request-retransmit',
+                    'gtp-add-bearer-request-retransmit',
+                    'gtp-delete-session-request-retransmit',
+                    'gtp-handover-request-retransmit',
+                    'gtp-del-bearer-request-retransmit',
+                    'gtp-add-bearer-response-retransmit',
+                    'gtp-create-session-request-retx-drop',
+                    'gtp-u-out-of-state-drop',
+                    'gtp-c-handover-request-out-of-state-drop',
+                    'gtp-v1-c-nsapi-not-found-in-delete-req',
+                    'gtp-v2-c-bearer-not-found-in-delete-req',
+                    'gtp-v2-c-bearer-not-found-in-delete-resp',
+                    'gtp-multiple-handover-request', 'gtp-rr-message-drop',
+                    'gtp-rr-echo-message-dcmsg', 'gtp-rr-c-message-dcmsg',
+                    'drop-gtp-frag-or-jumbo-pkt',
+                    'response-with-reject-cause-forwarded',
+                    'gtp-c-message-forwarded-without-conn',
+                    'gtp-v0-c-ver-not-supp', 'gtp-v1-c-ver-not-supp',
+                    'gtp-v2-c-ver-not-supp', 'gtp-v1-extn-hdt-notif',
+                    'gtp-u-error-ind', 'gtp-v0-c-uplink-ingress-packets',
+                    'gtp-v0-c-uplink-egress-packets',
+                    'gtp-v0-c-downlink-ingress-packets',
+                    'gtp-v0-c-downlink-egress-packets',
+                    'gtp-v0-c-uplink-ingress-bytes',
+                    'gtp-v0-c-uplink-egress-bytes',
+                    'gtp-v0-c-downlink-ingress-bytes',
+                    'gtp-v0-c-downlink-egress-bytes',
+                    'gtp-v1-c-uplink-ingress-packets',
+                    'gtp-v1-c-uplink-egress-packets',
+                    'gtp-v1-c-downlink-ingress-packets',
+                    'gtp-v1-c-downlink-egress-packets',
+                    'gtp-v1-c-uplink-ingress-bytes',
+                    'gtp-v1-c-uplink-egress-bytes',
+                    'gtp-v1-c-downlink-ingress-bytes',
+                    'gtp-v1-c-downlink-egress-bytes',
+                    'gtp-v2-c-uplink-ingress-packets',
+                    'gtp-v2-c-uplink-egress-packets',
+                    'gtp-v2-c-downlink-ingress-packets',
+                    'gtp-v2-c-downlink-egress-packets',
+                    'gtp-v2-c-uplink-ingress-bytes',
+                    'gtp-v2-c-uplink-egress-bytes',
+                    'gtp-v2-c-downlink-ingress-bytes',
+                    'gtp-v2-c-downlink-egress-bytes',
+                    'gtp-u-uplink-ingress-packets',
+                    'gtp-u-uplink-egress-packets',
+                    'gtp-u-downlink-ingress-packets',
+                    'gtp-u-downlink-egress-packets',
+                    'gtp-u-uplink-ingress-bytes', 'gtp-u-uplink-egress-bytes',
+                    'gtp-u-downlink-ingress-bytes',
+                    'gtp-u-downlink-egress-bytes', 'gtp-v0-c-create-synced',
+                    'gtp-v1-c-create-synced', 'gtp-v2-c-create-synced',
+                    'gtp-v0-c-delete-synced', 'gtp-v1-c-delete-synced',
+                    'gtp-v2-c-delete-synced', 'gtp-v0-c-create-sync-rx',
+                    'gtp-v1-c-create-sync-rx', 'gtp-v2-c-create-sync-rx',
+                    'gtp-v0-c-delete-sync-rx', 'gtp-v1-c-delete-sync-rx',
+                    'gtp-v2-c-delete-sync-rx', 'gtp-handover-synced',
+                    'gtp-handover-sync-rx', 'gtp-smp-add-bearer-synced',
+                    'gtp-smp-del-bearer-synced',
+                    'gtp-smp-additional-bearer-synced',
+                    'gtp-smp-add-bearer-sync-rx', 'gtp-smp-del-bearer-sync-rx',
+                    'gtp-smp-additional-bearer-sync-rx',
+                    'gtp-add-bearer-sync-not-rx-on-standby',
+                    'gtp-add-bearer-sync-with-periodic-update-on-standby',
+                    'gtp-delete-bearer-sync-with-periodic-update-on-standby',
+                    'gtp-v0-c-echo-create-synced'
+                ]
+            },
+            'counters2': {
+                'type':
+                'str',
+                'choices': [
+                    'gtp-v1-c-echo-create-synced',
+                    'gtp-v2-c-echo-create-synced',
+                    'gtp-v0-c-echo-create-sync-rx',
+                    'gtp-v1-c-echo-create-sync-rx',
+                    'gtp-v2-c-echo-create-sync-rx', 'gtp-v0-c-echo-del-synced',
+                    'gtp-v1-c-echo-del-synced', 'gtp-v2-c-echo-del-synced',
+                    'gtp-v0-c-echo-del-sync-rx', 'gtp-v1-c-echo-del-sync-rx',
+                    'gtp-v2-c-echo-del-sync-rx',
+                    'drop-gtp-conn-creation-standby',
+                    'gtp-u-synced-before-control', 'gtp-c-l5-synced-before-l3',
+                    'gtp-smp-path-del-synced', 'gtp-smp-path-del-sync-rx',
+                    'gtp-not-enabled-on-standby', 'gtp-ip-version-v4-v6',
+                    'drop-gtp-ip-version-mismatch-fteid',
+                    'drop-gtp-ip-version-mismatch-ho-fteid',
+                    'gtp-u-message-length-mismatch',
+                    'gtp-path-message-length-mismatch',
+                    'drop-gtp-missing-cond-ie-bearer-ctx',
+                    'drop-gtp-bearer-not-found-in-resp',
+                    'gtp-stateless-forward', 'gtp-l3-conn-deleted',
+                    'gtp-l5-conn-created', 'gtp-monitor-forward',
+                    'gtp-u_inner-ip-not-present',
+                    'gtp-ext_hdr-incorrect-length'
+                ]
+            }
+        },
+        'apn_prefix': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'network_element': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'out_of_session_memory': {
+                'type': 'str',
+            },
+            'no_fwd_route': {
+                'type': 'str',
+            },
+            'no_rev_route': {
+                'type': 'str',
+            },
+            'gtp_smp_path_check_failed': {
+                'type': 'str',
+            },
+            'gtp_smp_check_failed': {
+                'type': 'str',
+            },
+            'gtp_smp_session_count_check_failed': {
+                'type': 'str',
+            },
+            'gtp_c_ref_count_smp_exceeded': {
+                'type': 'str',
+            },
+            'gtp_u_smp_in_rml_with_sess': {
+                'type': 'str',
+            },
+            'gtp_tunnel_rate_limit_entry_create_failure': {
+                'type': 'str',
+            },
+            'gtp_rate_limit_smp_create_failure': {
+                'type': 'str',
+            },
+            'gtp_rate_limit_t3_ctr_create_failure': {
+                'type': 'str',
+            },
+            'gtp_rate_limit_entry_create_failure': {
+                'type': 'str',
+            },
+            'gtp_node_restart_echo': {
+                'type': 'str',
+            },
+            'gtp_c_echo_path_failure': {
+                'type': 'str',
+            },
+            'drop_vld_gtp_echo_out_of_state_': {
+                'type': 'str',
+            },
+            'drop_vld_gtp_echo_ie_len_exceed_msg_len': {
+                'type': 'str',
+            },
+            'gtp_del_bearer_request_retransmit': {
+                'type': 'str',
+            },
+            'gtp_add_bearer_response_retransmit': {
+                'type': 'str',
+            },
+            'gtp_u_out_of_state_drop': {
+                'type': 'str',
+            },
+            'gtp_c_handover_request_out_of_state_drop': {
+                'type': 'str',
+            },
+            'gtp_v1_c_nsapi_not_found_in_delete_req': {
+                'type': 'str',
+            },
+            'gtp_v2_c_bearer_not_found_in_delete_req': {
+                'type': 'str',
+            },
+            'gtp_v2_c_bearer_not_found_in_delete_resp': {
+                'type': 'str',
+            },
+            'gtp_rr_message_drop': {
+                'type': 'str',
+            },
+            'drop_gtp_frag_or_jumbo_pkt': {
+                'type': 'str',
+            },
+            'gtp_v0_c_uplink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_v0_c_uplink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_v0_c_downlink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_v0_c_downlink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_v0_c_uplink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v0_c_uplink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v0_c_downlink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v0_c_downlink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v1_c_uplink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_v1_c_uplink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_v1_c_downlink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_v1_c_downlink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_v1_c_uplink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v1_c_uplink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v1_c_downlink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v1_c_downlink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v2_c_uplink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_v2_c_uplink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_v2_c_downlink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_v2_c_downlink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_v2_c_uplink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v2_c_uplink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v2_c_downlink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_v2_c_downlink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_u_uplink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_u_uplink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_u_downlink_ingress_packets': {
+                'type': 'str',
+            },
+            'gtp_u_downlink_egress_packets': {
+                'type': 'str',
+            },
+            'gtp_u_uplink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_u_uplink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_u_downlink_ingress_bytes': {
+                'type': 'str',
+            },
+            'gtp_u_downlink_egress_bytes': {
+                'type': 'str',
+            },
+            'gtp_u_message_length_mismatch': {
+                'type': 'str',
+            },
+            'gtp_path_message_length_mismatch': {
+                'type': 'str',
+            },
+            'drop_gtp_missing_cond_ie_bearer_ctx': {
+                'type': 'str',
+            },
+            'drop_gtp_bearer_not_found_in_resp': {
+                'type': 'str',
+            },
+            'gtp_stateless_forward': {
+                'type': 'str',
+            },
+            'gtp_monitor_forward': {
+                'type': 'str',
+            },
+            'apn_prefix': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'key_name': {
+                        'type': 'str',
+                    },
+                    'uplink_bytes': {
+                        'type': 'str',
+                    },
+                    'downlink_bytes': {
+                        'type': 'str',
+                    },
+                    'uplink_pkts': {
+                        'type': 'str',
+                    },
+                    'downlink_pkts': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_half_open': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_half_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_half_open_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_half_open': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_half_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_half_open_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_half_open': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_half_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_half_open_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_u_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_u_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_update_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_update_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_mod_bearer_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_create_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_create_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_create_sess_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_piggyback_message': {
+                        'type': 'str',
+                    },
+                    'gtp_path_management_message': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_deleted_restart': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_deleted_restart': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_deleted_restart': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_reserved_message_allow': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_reserved_message_allow': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_reserved_message_allow': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_pdu_notification_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_pdu_notification_reject_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_pdu_notification_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_pdu_notification_reject_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_message_skipped_apn_filtering_no_imsi': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_message_skipped_apn_filtering_no_imsi': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_message_skipped_apn_filtering_no_imsi': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_message_skipped_msisdn_filtering_no_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_message_skipped_msisdn_filtering_no_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_message_skipped_msisdn_filtering_no_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_packet_dummy_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_packet_dummy_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_packet_dummy_msisdn': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_message_with_teid_zero_expected': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_message_with_teid_zero_expected': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_message_with_teid_zero_expected': {
+                        'type': 'str',
+                    },
+                    'drop_vld_reserved_field_set': {
+                        'type': 'str',
+                    },
+                    'drop_vld_tunnel_id_flag': {
+                        'type': 'str',
+                    },
+                    'drop_vld_invalid_flow_label_v0': {
+                        'type': 'str',
+                    },
+                    'drop_vld_invalid_teid': {
+                        'type': 'str',
+                    },
+                    'drop_vld_unsupported_message_type': {
+                        'type': 'str',
+                    },
+                    'drop_vld_out_of_state': {
+                        'type': 'str',
+                    },
+                    'drop_vld_mandatory_information_element': {
+                        'type': 'str',
+                    },
+                    'drop_vld_out_of_order_ie': {
+                        'type': 'str',
+                    },
+                    'drop_vld_out_of_state_ie': {
+                        'type': 'str',
+                    },
+                    'drop_vld_reserved_information_element': {
+                        'type': 'str',
+                    },
+                    'drop_vld_version_not_supported': {
+                        'type': 'str',
+                    },
+                    'drop_vld_message_length': {
+                        'type': 'str',
+                    },
+                    'drop_vld_cross_layer_correlation': {
+                        'type': 'str',
+                    },
+                    'drop_vld_country_code_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_u_spoofed_source_address': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_bearer_count_exceed': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_wrong_lbi_create_bearer_req': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_c_handover_in_progress': {
+                        'type': 'str',
+                    },
+                    'drop_vld_v0_reserved_message_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_v1_reserved_message_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_v2_reserved_message_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_invalid_pkt_len_piggyback': {
+                        'type': 'str',
+                    },
+                    'drop_vld_sanity_failed_piggyback': {
+                        'type': 'str',
+                    },
+                    'drop_vld_sequence_num_correlation': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv0_seqnum_buffer_full': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv1_seqnum_buffer_full': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv2_seqnum_buffer_full': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_invalid_imsi_len_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_invalid_apn_len_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_protocol_flag_unset': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv0_subscriber_attr_miss': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv1_subscriber_attr_miss': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv2_subscriber_attr_miss': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_ie_len_exceed_msg_len': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_ie_len_exceed_msg_len': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_ie_len_exceed_msg_len': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_message_length_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_message_length_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_message_length_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_message_dropped_apn_filtering_no_apn': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_message_dropped_apn_filtering_no_apn': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_message_dropped_apn_filtering_no_apn': {
+                        'type': 'str',
+                    },
+                    'drop_flt_message_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_apn_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_msisdn_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_rat_type_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_gtp_in_gtp': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v0_c_agg': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v1_c_agg': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v2_c_agg': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v1_c_create_pdp_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v2_c_create_session_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v1_c_update_pdp_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v2_c_modify_bearer_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_tunnel_create': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_uplink_byte': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_uplink_packet': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_downlink_byte': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_downlink_packet': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_total_byte': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_total_packet': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_max_concurrent_tunnels': {
+                        'type': 'str',
+                    }
+                }
+            },
+            'network_element': {
+                'type': 'dict',
+                'stats': {
+                    'type': 'dict',
+                    'key_name': {
+                        'type': 'str',
+                    },
+                    'key_type': {
+                        'type': 'str',
+                    },
+                    'uplink_bytes': {
+                        'type': 'str',
+                    },
+                    'downlink_bytes': {
+                        'type': 'str',
+                    },
+                    'uplink_pkts': {
+                        'type': 'str',
+                    },
+                    'downlink_pkts': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_half_open': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_half_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_half_open_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_half_open': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_half_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_half_open_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_half_open': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_half_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_half_open_tunnel_closed': {
+                        'type': 'str',
+                    },
+                    'gtp_u_tunnel_created': {
+                        'type': 'str',
+                    },
+                    'gtp_u_tunnel_deleted': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_update_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_update_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_mod_bearer_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_create_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_create_pdp_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_create_sess_resp_unsuccess': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_piggyback_message': {
+                        'type': 'str',
+                    },
+                    'gtp_path_management_message': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_tunnel_deleted_restart': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_tunnel_deleted_restart': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_tunnel_deleted_restart': {
+                        'type': 'str',
+                    },
+                    'gtp_node_restart_gtp_c': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_reserved_message_allow': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_reserved_message_allow': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_reserved_message_allow': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_pdu_notification_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_pdu_notification_reject_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_pdu_notification_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_pdu_notification_reject_request_forward': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_message_skipped_apn_filtering_no_imsi': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_message_skipped_apn_filtering_no_imsi': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_message_skipped_apn_filtering_no_imsi': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_message_skipped_msisdn_filtering_no_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_message_skipped_msisdn_filtering_no_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_message_skipped_msisdn_filtering_no_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v0_c_packet_dummy_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v1_c_packet_dummy_msisdn': {
+                        'type': 'str',
+                    },
+                    'gtp_v2_c_packet_dummy_msisdn': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_message_with_teid_zero_expected': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_message_with_teid_zero_expected': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_message_with_teid_zero_expected': {
+                        'type': 'str',
+                    },
+                    'drop_vld_reserved_field_set': {
+                        'type': 'str',
+                    },
+                    'drop_vld_tunnel_id_flag': {
+                        'type': 'str',
+                    },
+                    'drop_vld_invalid_flow_label_v0': {
+                        'type': 'str',
+                    },
+                    'drop_vld_invalid_teid': {
+                        'type': 'str',
+                    },
+                    'drop_vld_unsupported_message_type': {
+                        'type': 'str',
+                    },
+                    'drop_vld_out_of_state': {
+                        'type': 'str',
+                    },
+                    'drop_vld_mandatory_information_element': {
+                        'type': 'str',
+                    },
+                    'drop_vld_out_of_order_ie': {
+                        'type': 'str',
+                    },
+                    'drop_vld_out_of_state_ie': {
+                        'type': 'str',
+                    },
+                    'drop_vld_reserved_information_element': {
+                        'type': 'str',
+                    },
+                    'drop_vld_version_not_supported': {
+                        'type': 'str',
+                    },
+                    'drop_vld_message_length': {
+                        'type': 'str',
+                    },
+                    'drop_vld_cross_layer_correlation': {
+                        'type': 'str',
+                    },
+                    'drop_vld_country_code_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_u_spoofed_source_address': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_bearer_count_exceed': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_wrong_lbi_create_bearer_req': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_c_handover_in_progress': {
+                        'type': 'str',
+                    },
+                    'drop_vld_v0_reserved_message_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_v1_reserved_message_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_v2_reserved_message_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_invalid_pkt_len_piggyback': {
+                        'type': 'str',
+                    },
+                    'drop_vld_sanity_failed_piggyback': {
+                        'type': 'str',
+                    },
+                    'drop_vld_sequence_num_correlation': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv0_seqnum_buffer_full': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv1_seqnum_buffer_full': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv2_seqnum_buffer_full': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_invalid_imsi_len_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_invalid_apn_len_drop': {
+                        'type': 'str',
+                    },
+                    'drop_vld_protocol_flag_unset': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv0_subscriber_attr_miss': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv1_subscriber_attr_miss': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtpv2_subscriber_attr_miss': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_message_dropped_apn_filtering_no_apn': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_message_dropped_apn_filtering_no_apn': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_message_dropped_apn_filtering_no_apn': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_ie_len_exceed_msg_len': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_ie_len_exceed_msg_len': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_ie_len_exceed_msg_len': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v0_c_message_length_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v1_c_message_length_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_vld_gtp_v2_c_message_length_mismatch': {
+                        'type': 'str',
+                    },
+                    'drop_flt_message_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_apn_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_msisdn_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_rat_type_filtering': {
+                        'type': 'str',
+                    },
+                    'drop_flt_gtp_in_gtp': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v0_c_agg': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v1_c_agg': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v2_c_agg': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v1_c_create_pdp_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v2_c_create_session_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v1_c_update_pdp_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_v2_c_modify_bearer_request': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_tunnel_create': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_uplink_byte': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_uplink_packet': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_downlink_byte': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_downlink_packet': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_total_byte': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_total_packet': {
+                        'type': 'str',
+                    },
+                    'drop_rl_gtp_u_max_concurrent_tunnels': {
+                        'type': 'str',
+                    }
+                }
+            }
+        }
     })
     return rv
 
@@ -675,8 +1769,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -687,8 +1780,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -728,14 +1820,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -750,16 +1840,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -768,15 +1858,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -793,22 +1883,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["gtp"] if info != "NotFound" else info
+                result[
+                    "acos_info"] = info["gtp"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["gtp-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "gtp-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["gtp"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["gtp"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -821,9 +1917,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_web_category_category_list
 description:
@@ -968,9 +967,100 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["abortion", "adult_and_pornography", "alcohol_and_tobacco", "auctions", "bot_nets", "business_and_economy", "cdns", "cheating", "computer_and_internet_info", "computer_and_internet_security", "confirmed_spam_sources", "cult_and_occult", "dating", "dead_sites", "drugs", "dynamic_comment", "educational_institutions", "entertainment_and_arts", "fashion_and_beauty", "financial_services", "food_and_dining", "gambling", "games", "government", "gross", "hacking", "hate_and_racism", "health_and_medicine", "home_and_garden", "hunting_and_fishing", "illegal", "illegal_pornography", "image_and_video_search", "internet_communications", "internet_portals", "job_search", "keyloggers_and_monitoring", "kids", "legal", "local_information", "malware_sites", "marijuana", "military", "motor_vehicles", "music", "name", "news_and_media", "nudity", "nudity_artistic", "online_greeting_cards", "open_http_proxies", "parked_domains", "pay_to_surf", "peer_to_peer", "personal_sites_and_blogs", "personal_storage", "philosophy_and_politics", "phishing_and_other_fraud", "private_ip_addresses", "proxy_avoid_and_anonymizers", "questionable", "real_estate", "recreation_and_hobbies", "reference_and_research", "religion", "sampling_enable", "search_engines", "sex_education", "shareware_and_freeware", "shopping", "social_network", "society", "spam_urls", "sports", "spyware_and_adware", "stats", "stock_advice_and_tools", "streaming_media", "swimsuits_and_intimate_apparel", "training_and_tools", "translation", "travel", "uncategorized", "unconfirmed_spam_sources", "user_tag", "uuid", "violence", "weapons", "web_advertisements", "web_based_email", "web_hosting_sites", ]
+AVAILABLE_PROPERTIES = [
+    "abortion",
+    "adult_and_pornography",
+    "alcohol_and_tobacco",
+    "auctions",
+    "bot_nets",
+    "business_and_economy",
+    "cdns",
+    "cheating",
+    "computer_and_internet_info",
+    "computer_and_internet_security",
+    "confirmed_spam_sources",
+    "cult_and_occult",
+    "dating",
+    "dead_sites",
+    "drugs",
+    "dynamic_comment",
+    "educational_institutions",
+    "entertainment_and_arts",
+    "fashion_and_beauty",
+    "financial_services",
+    "food_and_dining",
+    "gambling",
+    "games",
+    "government",
+    "gross",
+    "hacking",
+    "hate_and_racism",
+    "health_and_medicine",
+    "home_and_garden",
+    "hunting_and_fishing",
+    "illegal",
+    "illegal_pornography",
+    "image_and_video_search",
+    "internet_communications",
+    "internet_portals",
+    "job_search",
+    "keyloggers_and_monitoring",
+    "kids",
+    "legal",
+    "local_information",
+    "malware_sites",
+    "marijuana",
+    "military",
+    "motor_vehicles",
+    "music",
+    "name",
+    "news_and_media",
+    "nudity",
+    "nudity_artistic",
+    "online_greeting_cards",
+    "open_http_proxies",
+    "parked_domains",
+    "pay_to_surf",
+    "peer_to_peer",
+    "personal_sites_and_blogs",
+    "personal_storage",
+    "philosophy_and_politics",
+    "phishing_and_other_fraud",
+    "private_ip_addresses",
+    "proxy_avoid_and_anonymizers",
+    "questionable",
+    "real_estate",
+    "recreation_and_hobbies",
+    "reference_and_research",
+    "religion",
+    "sampling_enable",
+    "search_engines",
+    "sex_education",
+    "shareware_and_freeware",
+    "shopping",
+    "social_network",
+    "society",
+    "spam_urls",
+    "sports",
+    "spyware_and_adware",
+    "stats",
+    "stock_advice_and_tools",
+    "streaming_media",
+    "swimsuits_and_intimate_apparel",
+    "training_and_tools",
+    "translation",
+    "travel",
+    "uncategorized",
+    "unconfirmed_spam_sources",
+    "user_tag",
+    "uuid",
+    "violence",
+    "weapons",
+    "web_advertisements",
+    "web_based_email",
+    "web_hosting_sites",
+]
 
 
 def get_default_argspec():
@@ -978,107 +1068,600 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'name': {'type': 'str', 'required': True, },
-        'uncategorized': {'type': 'bool', },
-        'real_estate': {'type': 'bool', },
-        'computer_and_internet_security': {'type': 'bool', },
-        'financial_services': {'type': 'bool', },
-        'business_and_economy': {'type': 'bool', },
-        'computer_and_internet_info': {'type': 'bool', },
-        'auctions': {'type': 'bool', },
-        'shopping': {'type': 'bool', },
-        'cult_and_occult': {'type': 'bool', },
-        'travel': {'type': 'bool', },
-        'drugs': {'type': 'bool', },
-        'adult_and_pornography': {'type': 'bool', },
-        'home_and_garden': {'type': 'bool', },
-        'military': {'type': 'bool', },
-        'social_network': {'type': 'bool', },
-        'dead_sites': {'type': 'bool', },
-        'stock_advice_and_tools': {'type': 'bool', },
-        'training_and_tools': {'type': 'bool', },
-        'dating': {'type': 'bool', },
-        'sex_education': {'type': 'bool', },
-        'religion': {'type': 'bool', },
-        'entertainment_and_arts': {'type': 'bool', },
-        'personal_sites_and_blogs': {'type': 'bool', },
-        'legal': {'type': 'bool', },
-        'local_information': {'type': 'bool', },
-        'streaming_media': {'type': 'bool', },
-        'job_search': {'type': 'bool', },
-        'gambling': {'type': 'bool', },
-        'translation': {'type': 'bool', },
-        'reference_and_research': {'type': 'bool', },
-        'shareware_and_freeware': {'type': 'bool', },
-        'peer_to_peer': {'type': 'bool', },
-        'marijuana': {'type': 'bool', },
-        'hacking': {'type': 'bool', },
-        'games': {'type': 'bool', },
-        'philosophy_and_politics': {'type': 'bool', },
-        'weapons': {'type': 'bool', },
-        'pay_to_surf': {'type': 'bool', },
-        'hunting_and_fishing': {'type': 'bool', },
-        'society': {'type': 'bool', },
-        'educational_institutions': {'type': 'bool', },
-        'online_greeting_cards': {'type': 'bool', },
-        'sports': {'type': 'bool', },
-        'swimsuits_and_intimate_apparel': {'type': 'bool', },
-        'questionable': {'type': 'bool', },
-        'kids': {'type': 'bool', },
-        'hate_and_racism': {'type': 'bool', },
-        'personal_storage': {'type': 'bool', },
-        'violence': {'type': 'bool', },
-        'keyloggers_and_monitoring': {'type': 'bool', },
-        'search_engines': {'type': 'bool', },
-        'internet_portals': {'type': 'bool', },
-        'web_advertisements': {'type': 'bool', },
-        'cheating': {'type': 'bool', },
-        'gross': {'type': 'bool', },
-        'web_based_email': {'type': 'bool', },
-        'malware_sites': {'type': 'bool', },
-        'phishing_and_other_fraud': {'type': 'bool', },
-        'proxy_avoid_and_anonymizers': {'type': 'bool', },
-        'spyware_and_adware': {'type': 'bool', },
-        'music': {'type': 'bool', },
-        'government': {'type': 'bool', },
-        'nudity': {'type': 'bool', },
-        'news_and_media': {'type': 'bool', },
-        'illegal': {'type': 'bool', },
-        'cdns': {'type': 'bool', },
-        'internet_communications': {'type': 'bool', },
-        'bot_nets': {'type': 'bool', },
-        'abortion': {'type': 'bool', },
-        'health_and_medicine': {'type': 'bool', },
-        'confirmed_spam_sources': {'type': 'bool', },
-        'spam_urls': {'type': 'bool', },
-        'unconfirmed_spam_sources': {'type': 'bool', },
-        'open_http_proxies': {'type': 'bool', },
-        'dynamic_comment': {'type': 'bool', },
-        'parked_domains': {'type': 'bool', },
-        'alcohol_and_tobacco': {'type': 'bool', },
-        'private_ip_addresses': {'type': 'bool', },
-        'image_and_video_search': {'type': 'bool', },
-        'fashion_and_beauty': {'type': 'bool', },
-        'recreation_and_hobbies': {'type': 'bool', },
-        'motor_vehicles': {'type': 'bool', },
-        'web_hosting_sites': {'type': 'bool', },
-        'food_and_dining': {'type': 'bool', },
-        'nudity_artistic': {'type': 'bool', },
-        'illegal_pornography': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'user_tag': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'uncategorized', 'real-estate', 'computer-and-internet-security', 'financial-services', 'business-and-economy', 'computer-and-internet-info', 'auctions', 'shopping', 'cult-and-occult', 'travel', 'drugs', 'adult-and-pornography', 'home-and-garden', 'military', 'social-network', 'dead-sites', 'stock-advice-and-tools', 'training-and-tools', 'dating', 'sex-education', 'religion', 'entertainment-and-arts', 'personal-sites-and-blogs', 'legal', 'local-information', 'streaming-media', 'job-search', 'gambling', 'translation', 'reference-and-research', 'shareware-and-freeware', 'peer-to-peer', 'marijuana', 'hacking', 'games', 'philosophy-and-politics', 'weapons', 'pay-to-surf', 'hunting-and-fishing', 'society', 'educational-institutions', 'online-greeting-cards', 'sports', 'swimsuits-and-intimate-apparel', 'questionable', 'kids', 'hate-and-racism', 'personal-storage', 'violence', 'keyloggers-and-monitoring', 'search-engines', 'internet-portals', 'web-advertisements', 'cheating', 'gross', 'web-based-email', 'malware-sites', 'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers', 'spyware-and-adware', 'music', 'government', 'nudity', 'news-and-media', 'illegal', 'CDNs', 'internet-communications', 'bot-nets', 'abortion', 'health-and-medicine', 'confirmed-SPAM-sources', 'SPAM-URLs', 'unconfirmed-SPAM-sources', 'open-HTTP-proxies', 'dynamic-comment', 'parked-domains', 'alcohol-and-tobacco', 'private-IP-addresses', 'image-and-video-search', 'fashion-and-beauty', 'recreation-and-hobbies', 'motor-vehicles', 'web-hosting-sites', 'food-and-dining', 'nudity-artistic', 'illegal-pornography']}},
-        'stats': {'type': 'dict', 'uncategorized': {'type': 'str', }, 'real_estate': {'type': 'str', }, 'computer_and_internet_security': {'type': 'str', }, 'financial_services': {'type': 'str', }, 'business_and_economy': {'type': 'str', }, 'computer_and_internet_info': {'type': 'str', }, 'auctions': {'type': 'str', }, 'shopping': {'type': 'str', }, 'cult_and_occult': {'type': 'str', }, 'travel': {'type': 'str', }, 'drugs': {'type': 'str', }, 'adult_and_pornography': {'type': 'str', }, 'home_and_garden': {'type': 'str', }, 'military': {'type': 'str', }, 'social_network': {'type': 'str', }, 'dead_sites': {'type': 'str', }, 'stock_advice_and_tools': {'type': 'str', }, 'training_and_tools': {'type': 'str', }, 'dating': {'type': 'str', }, 'sex_education': {'type': 'str', }, 'religion': {'type': 'str', }, 'entertainment_and_arts': {'type': 'str', }, 'personal_sites_and_blogs': {'type': 'str', }, 'legal': {'type': 'str', }, 'local_information': {'type': 'str', }, 'streaming_media': {'type': 'str', }, 'job_search': {'type': 'str', }, 'gambling': {'type': 'str', }, 'translation': {'type': 'str', }, 'reference_and_research': {'type': 'str', }, 'shareware_and_freeware': {'type': 'str', }, 'peer_to_peer': {'type': 'str', }, 'marijuana': {'type': 'str', }, 'hacking': {'type': 'str', }, 'games': {'type': 'str', }, 'philosophy_and_politics': {'type': 'str', }, 'weapons': {'type': 'str', }, 'pay_to_surf': {'type': 'str', }, 'hunting_and_fishing': {'type': 'str', }, 'society': {'type': 'str', }, 'educational_institutions': {'type': 'str', }, 'online_greeting_cards': {'type': 'str', }, 'sports': {'type': 'str', }, 'swimsuits_and_intimate_apparel': {'type': 'str', }, 'questionable': {'type': 'str', }, 'kids': {'type': 'str', }, 'hate_and_racism': {'type': 'str', }, 'personal_storage': {'type': 'str', }, 'violence': {'type': 'str', }, 'keyloggers_and_monitoring': {'type': 'str', }, 'search_engines': {'type': 'str', }, 'internet_portals': {'type': 'str', }, 'web_advertisements': {'type': 'str', }, 'cheating': {'type': 'str', }, 'gross': {'type': 'str', }, 'web_based_email': {'type': 'str', }, 'malware_sites': {'type': 'str', }, 'phishing_and_other_fraud': {'type': 'str', }, 'proxy_avoid_and_anonymizers': {'type': 'str', }, 'spyware_and_adware': {'type': 'str', }, 'music': {'type': 'str', }, 'government': {'type': 'str', }, 'nudity': {'type': 'str', }, 'news_and_media': {'type': 'str', }, 'illegal': {'type': 'str', }, 'CDNs': {'type': 'str', }, 'internet_communications': {'type': 'str', }, 'bot_nets': {'type': 'str', }, 'abortion': {'type': 'str', }, 'health_and_medicine': {'type': 'str', }, 'confirmed_SPAM_sources': {'type': 'str', }, 'SPAM_URLs': {'type': 'str', }, 'unconfirmed_SPAM_sources': {'type': 'str', }, 'open_HTTP_proxies': {'type': 'str', }, 'dynamic_comment': {'type': 'str', }, 'parked_domains': {'type': 'str', }, 'alcohol_and_tobacco': {'type': 'str', }, 'private_IP_addresses': {'type': 'str', }, 'image_and_video_search': {'type': 'str', }, 'fashion_and_beauty': {'type': 'str', }, 'recreation_and_hobbies': {'type': 'str', }, 'motor_vehicles': {'type': 'str', }, 'web_hosting_sites': {'type': 'str', }, 'food_and_dining': {'type': 'str', }, 'nudity_artistic': {'type': 'str', }, 'illegal_pornography': {'type': 'str', }, 'name': {'type': 'str', 'required': True, }}
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'uncategorized': {
+            'type': 'bool',
+        },
+        'real_estate': {
+            'type': 'bool',
+        },
+        'computer_and_internet_security': {
+            'type': 'bool',
+        },
+        'financial_services': {
+            'type': 'bool',
+        },
+        'business_and_economy': {
+            'type': 'bool',
+        },
+        'computer_and_internet_info': {
+            'type': 'bool',
+        },
+        'auctions': {
+            'type': 'bool',
+        },
+        'shopping': {
+            'type': 'bool',
+        },
+        'cult_and_occult': {
+            'type': 'bool',
+        },
+        'travel': {
+            'type': 'bool',
+        },
+        'drugs': {
+            'type': 'bool',
+        },
+        'adult_and_pornography': {
+            'type': 'bool',
+        },
+        'home_and_garden': {
+            'type': 'bool',
+        },
+        'military': {
+            'type': 'bool',
+        },
+        'social_network': {
+            'type': 'bool',
+        },
+        'dead_sites': {
+            'type': 'bool',
+        },
+        'stock_advice_and_tools': {
+            'type': 'bool',
+        },
+        'training_and_tools': {
+            'type': 'bool',
+        },
+        'dating': {
+            'type': 'bool',
+        },
+        'sex_education': {
+            'type': 'bool',
+        },
+        'religion': {
+            'type': 'bool',
+        },
+        'entertainment_and_arts': {
+            'type': 'bool',
+        },
+        'personal_sites_and_blogs': {
+            'type': 'bool',
+        },
+        'legal': {
+            'type': 'bool',
+        },
+        'local_information': {
+            'type': 'bool',
+        },
+        'streaming_media': {
+            'type': 'bool',
+        },
+        'job_search': {
+            'type': 'bool',
+        },
+        'gambling': {
+            'type': 'bool',
+        },
+        'translation': {
+            'type': 'bool',
+        },
+        'reference_and_research': {
+            'type': 'bool',
+        },
+        'shareware_and_freeware': {
+            'type': 'bool',
+        },
+        'peer_to_peer': {
+            'type': 'bool',
+        },
+        'marijuana': {
+            'type': 'bool',
+        },
+        'hacking': {
+            'type': 'bool',
+        },
+        'games': {
+            'type': 'bool',
+        },
+        'philosophy_and_politics': {
+            'type': 'bool',
+        },
+        'weapons': {
+            'type': 'bool',
+        },
+        'pay_to_surf': {
+            'type': 'bool',
+        },
+        'hunting_and_fishing': {
+            'type': 'bool',
+        },
+        'society': {
+            'type': 'bool',
+        },
+        'educational_institutions': {
+            'type': 'bool',
+        },
+        'online_greeting_cards': {
+            'type': 'bool',
+        },
+        'sports': {
+            'type': 'bool',
+        },
+        'swimsuits_and_intimate_apparel': {
+            'type': 'bool',
+        },
+        'questionable': {
+            'type': 'bool',
+        },
+        'kids': {
+            'type': 'bool',
+        },
+        'hate_and_racism': {
+            'type': 'bool',
+        },
+        'personal_storage': {
+            'type': 'bool',
+        },
+        'violence': {
+            'type': 'bool',
+        },
+        'keyloggers_and_monitoring': {
+            'type': 'bool',
+        },
+        'search_engines': {
+            'type': 'bool',
+        },
+        'internet_portals': {
+            'type': 'bool',
+        },
+        'web_advertisements': {
+            'type': 'bool',
+        },
+        'cheating': {
+            'type': 'bool',
+        },
+        'gross': {
+            'type': 'bool',
+        },
+        'web_based_email': {
+            'type': 'bool',
+        },
+        'malware_sites': {
+            'type': 'bool',
+        },
+        'phishing_and_other_fraud': {
+            'type': 'bool',
+        },
+        'proxy_avoid_and_anonymizers': {
+            'type': 'bool',
+        },
+        'spyware_and_adware': {
+            'type': 'bool',
+        },
+        'music': {
+            'type': 'bool',
+        },
+        'government': {
+            'type': 'bool',
+        },
+        'nudity': {
+            'type': 'bool',
+        },
+        'news_and_media': {
+            'type': 'bool',
+        },
+        'illegal': {
+            'type': 'bool',
+        },
+        'cdns': {
+            'type': 'bool',
+        },
+        'internet_communications': {
+            'type': 'bool',
+        },
+        'bot_nets': {
+            'type': 'bool',
+        },
+        'abortion': {
+            'type': 'bool',
+        },
+        'health_and_medicine': {
+            'type': 'bool',
+        },
+        'confirmed_spam_sources': {
+            'type': 'bool',
+        },
+        'spam_urls': {
+            'type': 'bool',
+        },
+        'unconfirmed_spam_sources': {
+            'type': 'bool',
+        },
+        'open_http_proxies': {
+            'type': 'bool',
+        },
+        'dynamic_comment': {
+            'type': 'bool',
+        },
+        'parked_domains': {
+            'type': 'bool',
+        },
+        'alcohol_and_tobacco': {
+            'type': 'bool',
+        },
+        'private_ip_addresses': {
+            'type': 'bool',
+        },
+        'image_and_video_search': {
+            'type': 'bool',
+        },
+        'fashion_and_beauty': {
+            'type': 'bool',
+        },
+        'recreation_and_hobbies': {
+            'type': 'bool',
+        },
+        'motor_vehicles': {
+            'type': 'bool',
+        },
+        'web_hosting_sites': {
+            'type': 'bool',
+        },
+        'food_and_dining': {
+            'type': 'bool',
+        },
+        'nudity_artistic': {
+            'type': 'bool',
+        },
+        'illegal_pornography': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'uncategorized', 'real-estate',
+                    'computer-and-internet-security', 'financial-services',
+                    'business-and-economy', 'computer-and-internet-info',
+                    'auctions', 'shopping', 'cult-and-occult', 'travel',
+                    'drugs', 'adult-and-pornography', 'home-and-garden',
+                    'military', 'social-network', 'dead-sites',
+                    'stock-advice-and-tools', 'training-and-tools', 'dating',
+                    'sex-education', 'religion', 'entertainment-and-arts',
+                    'personal-sites-and-blogs', 'legal', 'local-information',
+                    'streaming-media', 'job-search', 'gambling', 'translation',
+                    'reference-and-research', 'shareware-and-freeware',
+                    'peer-to-peer', 'marijuana', 'hacking', 'games',
+                    'philosophy-and-politics', 'weapons', 'pay-to-surf',
+                    'hunting-and-fishing', 'society',
+                    'educational-institutions', 'online-greeting-cards',
+                    'sports', 'swimsuits-and-intimate-apparel', 'questionable',
+                    'kids', 'hate-and-racism', 'personal-storage', 'violence',
+                    'keyloggers-and-monitoring', 'search-engines',
+                    'internet-portals', 'web-advertisements', 'cheating',
+                    'gross', 'web-based-email', 'malware-sites',
+                    'phishing-and-other-fraud', 'proxy-avoid-and-anonymizers',
+                    'spyware-and-adware', 'music', 'government', 'nudity',
+                    'news-and-media', 'illegal', 'CDNs',
+                    'internet-communications', 'bot-nets', 'abortion',
+                    'health-and-medicine', 'confirmed-SPAM-sources',
+                    'SPAM-URLs', 'unconfirmed-SPAM-sources',
+                    'open-HTTP-proxies', 'dynamic-comment', 'parked-domains',
+                    'alcohol-and-tobacco', 'private-IP-addresses',
+                    'image-and-video-search', 'fashion-and-beauty',
+                    'recreation-and-hobbies', 'motor-vehicles',
+                    'web-hosting-sites', 'food-and-dining', 'nudity-artistic',
+                    'illegal-pornography'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'uncategorized': {
+                'type': 'str',
+            },
+            'real_estate': {
+                'type': 'str',
+            },
+            'computer_and_internet_security': {
+                'type': 'str',
+            },
+            'financial_services': {
+                'type': 'str',
+            },
+            'business_and_economy': {
+                'type': 'str',
+            },
+            'computer_and_internet_info': {
+                'type': 'str',
+            },
+            'auctions': {
+                'type': 'str',
+            },
+            'shopping': {
+                'type': 'str',
+            },
+            'cult_and_occult': {
+                'type': 'str',
+            },
+            'travel': {
+                'type': 'str',
+            },
+            'drugs': {
+                'type': 'str',
+            },
+            'adult_and_pornography': {
+                'type': 'str',
+            },
+            'home_and_garden': {
+                'type': 'str',
+            },
+            'military': {
+                'type': 'str',
+            },
+            'social_network': {
+                'type': 'str',
+            },
+            'dead_sites': {
+                'type': 'str',
+            },
+            'stock_advice_and_tools': {
+                'type': 'str',
+            },
+            'training_and_tools': {
+                'type': 'str',
+            },
+            'dating': {
+                'type': 'str',
+            },
+            'sex_education': {
+                'type': 'str',
+            },
+            'religion': {
+                'type': 'str',
+            },
+            'entertainment_and_arts': {
+                'type': 'str',
+            },
+            'personal_sites_and_blogs': {
+                'type': 'str',
+            },
+            'legal': {
+                'type': 'str',
+            },
+            'local_information': {
+                'type': 'str',
+            },
+            'streaming_media': {
+                'type': 'str',
+            },
+            'job_search': {
+                'type': 'str',
+            },
+            'gambling': {
+                'type': 'str',
+            },
+            'translation': {
+                'type': 'str',
+            },
+            'reference_and_research': {
+                'type': 'str',
+            },
+            'shareware_and_freeware': {
+                'type': 'str',
+            },
+            'peer_to_peer': {
+                'type': 'str',
+            },
+            'marijuana': {
+                'type': 'str',
+            },
+            'hacking': {
+                'type': 'str',
+            },
+            'games': {
+                'type': 'str',
+            },
+            'philosophy_and_politics': {
+                'type': 'str',
+            },
+            'weapons': {
+                'type': 'str',
+            },
+            'pay_to_surf': {
+                'type': 'str',
+            },
+            'hunting_and_fishing': {
+                'type': 'str',
+            },
+            'society': {
+                'type': 'str',
+            },
+            'educational_institutions': {
+                'type': 'str',
+            },
+            'online_greeting_cards': {
+                'type': 'str',
+            },
+            'sports': {
+                'type': 'str',
+            },
+            'swimsuits_and_intimate_apparel': {
+                'type': 'str',
+            },
+            'questionable': {
+                'type': 'str',
+            },
+            'kids': {
+                'type': 'str',
+            },
+            'hate_and_racism': {
+                'type': 'str',
+            },
+            'personal_storage': {
+                'type': 'str',
+            },
+            'violence': {
+                'type': 'str',
+            },
+            'keyloggers_and_monitoring': {
+                'type': 'str',
+            },
+            'search_engines': {
+                'type': 'str',
+            },
+            'internet_portals': {
+                'type': 'str',
+            },
+            'web_advertisements': {
+                'type': 'str',
+            },
+            'cheating': {
+                'type': 'str',
+            },
+            'gross': {
+                'type': 'str',
+            },
+            'web_based_email': {
+                'type': 'str',
+            },
+            'malware_sites': {
+                'type': 'str',
+            },
+            'phishing_and_other_fraud': {
+                'type': 'str',
+            },
+            'proxy_avoid_and_anonymizers': {
+                'type': 'str',
+            },
+            'spyware_and_adware': {
+                'type': 'str',
+            },
+            'music': {
+                'type': 'str',
+            },
+            'government': {
+                'type': 'str',
+            },
+            'nudity': {
+                'type': 'str',
+            },
+            'news_and_media': {
+                'type': 'str',
+            },
+            'illegal': {
+                'type': 'str',
+            },
+            'CDNs': {
+                'type': 'str',
+            },
+            'internet_communications': {
+                'type': 'str',
+            },
+            'bot_nets': {
+                'type': 'str',
+            },
+            'abortion': {
+                'type': 'str',
+            },
+            'health_and_medicine': {
+                'type': 'str',
+            },
+            'confirmed_SPAM_sources': {
+                'type': 'str',
+            },
+            'SPAM_URLs': {
+                'type': 'str',
+            },
+            'unconfirmed_SPAM_sources': {
+                'type': 'str',
+            },
+            'open_HTTP_proxies': {
+                'type': 'str',
+            },
+            'dynamic_comment': {
+                'type': 'str',
+            },
+            'parked_domains': {
+                'type': 'str',
+            },
+            'alcohol_and_tobacco': {
+                'type': 'str',
+            },
+            'private_IP_addresses': {
+                'type': 'str',
+            },
+            'image_and_video_search': {
+                'type': 'str',
+            },
+            'fashion_and_beauty': {
+                'type': 'str',
+            },
+            'recreation_and_hobbies': {
+                'type': 'str',
+            },
+            'motor_vehicles': {
+                'type': 'str',
+            },
+            'web_hosting_sites': {
+                'type': 'str',
+            },
+            'food_and_dining': {
+                'type': 'str',
+            },
+            'nudity_artistic': {
+                'type': 'str',
+            },
+            'illegal_pornography': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            }
+        }
     })
     return rv
 
@@ -1127,8 +1710,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1139,14 +1721,14 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
 
 def present(module, result, existing_config):
-    payload = utils.build_json("category-list", module.params, AVAILABLE_PROPERTIES)
+    payload = utils.build_json("category-list", module.params,
+                               AVAILABLE_PROPERTIES)
     change_results = report_changes(module, result, existing_config, payload)
     if module.check_mode:
         return change_results
@@ -1180,14 +1762,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1202,16 +1782,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -1220,15 +1800,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -1245,22 +1825,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["category-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "category-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["category-list-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "category-list-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["category-list"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["category-list"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -1273,9 +1859,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

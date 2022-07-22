@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_slb_dns
 description:
@@ -288,9 +287,12 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -298,19 +300,159 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused', 'filter_type_drop', 'filter_class_drop', 'filter_type_any_drop', 'slb_dns_client_ssl_succ', 'slb_dns_server_ssl_succ', 'slb_dns_udp_conn', 'slb_dns_udp_conn_succ', 'slb_dns_padding_to_server_removed', 'slb_dns_padding_to_client_added', 'slb_dns_edns_subnet_to_server_removed', 'slb_dns_udp_retransmit', 'slb_dns_udp_retransmit_fail', 'rpz_action_drop', 'rpz_action_pass_thru', 'rpz_action_tcp_only', 'rpz_action_nxdomain', 'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop', 'nat_slb_drop', 'invalid_q_len_to_udp']}},
-        'stats': {'type': 'dict', 'slb_req': {'type': 'str', }, 'slb_resp': {'type': 'str', }, 'slb_no_resp': {'type': 'str', }, 'slb_req_rexmit': {'type': 'str', }, 'slb_resp_no_match': {'type': 'str', }, 'slb_no_resource': {'type': 'str', }, 'nat_req': {'type': 'str', }, 'nat_resp': {'type': 'str', }, 'nat_no_resp': {'type': 'str', }, 'nat_req_rexmit': {'type': 'str', }, 'nat_resp_no_match': {'type': 'str', }, 'nat_no_resource': {'type': 'str', }, 'nat_xid_reused': {'type': 'str', }, 'filter_type_drop': {'type': 'str', }, 'filter_class_drop': {'type': 'str', }, 'filter_type_any_drop': {'type': 'str', }, 'slb_dns_client_ssl_succ': {'type': 'str', }, 'slb_dns_server_ssl_succ': {'type': 'str', }, 'slb_dns_udp_conn': {'type': 'str', }, 'slb_dns_udp_conn_succ': {'type': 'str', }, 'slb_dns_padding_to_server_removed': {'type': 'str', }, 'slb_dns_padding_to_client_added': {'type': 'str', }, 'slb_dns_edns_subnet_to_server_removed': {'type': 'str', }, 'slb_dns_udp_retransmit': {'type': 'str', }, 'slb_dns_udp_retransmit_fail': {'type': 'str', }, 'rpz_action_drop': {'type': 'str', }, 'rpz_action_pass_thru': {'type': 'str', }, 'rpz_action_tcp_only': {'type': 'str', }, 'rpz_action_nxdomain': {'type': 'str', }, 'rpz_action_nodata': {'type': 'str', }, 'rpz_action_local_data': {'type': 'str', }, 'slb_drop': {'type': 'str', }, 'nat_slb_drop': {'type': 'str', }, 'invalid_q_len_to_udp': {'type': 'str', }}
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'slb_req', 'slb_resp', 'slb_no_resp',
+                    'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource',
+                    'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit',
+                    'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused',
+                    'filter_type_drop', 'filter_class_drop',
+                    'filter_type_any_drop', 'slb_dns_client_ssl_succ',
+                    'slb_dns_server_ssl_succ', 'slb_dns_udp_conn',
+                    'slb_dns_udp_conn_succ',
+                    'slb_dns_padding_to_server_removed',
+                    'slb_dns_padding_to_client_added',
+                    'slb_dns_edns_subnet_to_server_removed',
+                    'slb_dns_udp_retransmit', 'slb_dns_udp_retransmit_fail',
+                    'rpz_action_drop', 'rpz_action_pass_thru',
+                    'rpz_action_tcp_only', 'rpz_action_nxdomain',
+                    'rpz_action_nodata', 'rpz_action_local_data', 'slb_drop',
+                    'nat_slb_drop', 'invalid_q_len_to_udp'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'slb_req': {
+                'type': 'str',
+            },
+            'slb_resp': {
+                'type': 'str',
+            },
+            'slb_no_resp': {
+                'type': 'str',
+            },
+            'slb_req_rexmit': {
+                'type': 'str',
+            },
+            'slb_resp_no_match': {
+                'type': 'str',
+            },
+            'slb_no_resource': {
+                'type': 'str',
+            },
+            'nat_req': {
+                'type': 'str',
+            },
+            'nat_resp': {
+                'type': 'str',
+            },
+            'nat_no_resp': {
+                'type': 'str',
+            },
+            'nat_req_rexmit': {
+                'type': 'str',
+            },
+            'nat_resp_no_match': {
+                'type': 'str',
+            },
+            'nat_no_resource': {
+                'type': 'str',
+            },
+            'nat_xid_reused': {
+                'type': 'str',
+            },
+            'filter_type_drop': {
+                'type': 'str',
+            },
+            'filter_class_drop': {
+                'type': 'str',
+            },
+            'filter_type_any_drop': {
+                'type': 'str',
+            },
+            'slb_dns_client_ssl_succ': {
+                'type': 'str',
+            },
+            'slb_dns_server_ssl_succ': {
+                'type': 'str',
+            },
+            'slb_dns_udp_conn': {
+                'type': 'str',
+            },
+            'slb_dns_udp_conn_succ': {
+                'type': 'str',
+            },
+            'slb_dns_padding_to_server_removed': {
+                'type': 'str',
+            },
+            'slb_dns_padding_to_client_added': {
+                'type': 'str',
+            },
+            'slb_dns_edns_subnet_to_server_removed': {
+                'type': 'str',
+            },
+            'slb_dns_udp_retransmit': {
+                'type': 'str',
+            },
+            'slb_dns_udp_retransmit_fail': {
+                'type': 'str',
+            },
+            'rpz_action_drop': {
+                'type': 'str',
+            },
+            'rpz_action_pass_thru': {
+                'type': 'str',
+            },
+            'rpz_action_tcp_only': {
+                'type': 'str',
+            },
+            'rpz_action_nxdomain': {
+                'type': 'str',
+            },
+            'rpz_action_nodata': {
+                'type': 'str',
+            },
+            'rpz_action_local_data': {
+                'type': 'str',
+            },
+            'slb_drop': {
+                'type': 'str',
+            },
+            'nat_slb_drop': {
+                'type': 'str',
+            },
+            'invalid_q_len_to_udp': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -357,8 +499,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -369,8 +510,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -410,14 +550,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -432,16 +570,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -450,15 +588,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -475,22 +613,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["dns"] if info != "NotFound" else info
+                result[
+                    "acos_info"] = info["dns"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["dns-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "dns-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["dns"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["dns"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -503,9 +647,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

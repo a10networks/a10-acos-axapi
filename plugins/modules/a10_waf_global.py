@@ -9,7 +9,6 @@ REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-
 DOCUMENTATION = r'''
 module: a10_waf_global
 description:
@@ -1852,9 +1851,13 @@ from ansible_collections.a10.acos_axapi.plugins.module_utils.client import \
 from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
     KW_OUT, translate_blacklist as translateBlacklist
 
-
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["immediate_action", "sampling_enable", "stats", "uuid", ]
+AVAILABLE_PROPERTIES = [
+    "immediate_action",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
 
 def get_default_argspec():
@@ -1862,20 +1865,1379 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='str', required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='str',
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 
 def get_argspec():
     rv = get_default_argspec()
-    rv.update({'immediate_action': {'type': 'bool', },
-        'uuid': {'type': 'str', },
-        'sampling_enable': {'type': 'list', 'counters1': {'type': 'str', 'choices': ['all', 'total_req', 'req_allowed', 'req_denied', 'resp_denied', 'brute_force_success', 'brute_force_violation', 'brute_force_challenge_cookie_sent', 'brute_force_challenge_cookie_success', 'brute_force_challenge_cookie_violation', 'brute_force_challenge_javascript_sent', 'brute_force_challenge_javascript_success', 'brute_force_challenge_javascript_violation', 'brute_force_challenge_captcha_sent', 'brute_force_challenge_captcha_success', 'brute_force_challenge_captcha_violation', 'brute_force_lockout_limit_success', 'brute_force_lockout_limit_violation', 'brute_force_challenge_limit_success', 'brute_force_challenge_limit_violation', 'brute_force_response_codes_triggered', 'brute_force_response_headers_triggered', 'brute_force_response_string_triggered', 'cookie_security_encrypt_success', 'cookie_security_encrypt_violation', 'cookie_security_encrypt_limit_exceeded', 'cookie_security_encrypt_skip_rcache', 'cookie_security_decrypt_success', 'cookie_security_decrypt_violation', 'cookie_security_sign_success', 'cookie_security_sign_violation', 'cookie_security_sign_limit_exceeded', 'cookie_security_sign_skip_rcache', 'cookie_security_signature_check_success', 'cookie_security_signature_check_violation', 'cookie_security_add_http_only_success', 'cookie_security_add_http_only_violation', 'cookie_security_add_secure_success', 'cookie_security_add_secure_violation', 'cookie_security_missing_cookie_success', 'cookie_security_missing_cookie_violation', 'cookie_security_unrecognized_cookie_success', 'cookie_security_unrecognized_cookie_violation', 'cookie_security_cookie_policy_success', 'cookie_security_cookie_policy_violation', 'cookie_security_persistent_cookies', 'cookie_security_persistent_cookies_encrypted', 'cookie_security_persistent_cookies_signed', 'cookie_security_session_cookies', 'cookie_security_session_cookies_encrypted', 'cookie_security_session_cookies_signed', 'cookie_security_allowed_session_cookies', 'cookie_security_allowed_persistent_cookies', 'cookie_security_disallowed_session_cookies', 'cookie_security_disallowed_persistent_cookies', 'cookie_security_allowed_session_set_cookies', 'cookie_security_allowed_persistent_set_cookies', 'cookie_security_disallowed_session_set_cookies', 'cookie_security_disallowed_persistent_set_cookies', 'csp_header_violation', 'csp_header_success', 'csp_header_inserted', 'form_csrf_tag_success', 'form_csrf_tag_violation', 'form_consistency_success', 'form_consistency_violation', 'form_tag_inserted', 'form_non_ssl_success', 'form_non_ssl_violation', 'form_request_non_post_success', 'form_request_non_post_violation', 'form_check_success', 'form_check_violation', 'form_check_sanitize', 'form_non_masked_password_success', 'form_non_masked_password_violation', 'form_non_ssl_password_success', 'form_non_ssl_password_violation', 'form_password_autocomplete_success', 'form_password_autocomplete_violation', 'form_set_no_cache_success', 'form_set_no_cache', 'dlp_ccn_success', 'dlp_ccn_amex_violation', 'dlp_ccn_amex_masked', 'dlp_ccn_diners_violation', 'dlp_ccn_diners_masked', 'dlp_ccn_visa_violation', 'dlp_ccn_visa_masked', 'dlp_ccn_mastercard_violation', 'dlp_ccn_mastercard_masked', 'dlp_ccn_discover_violation', 'dlp_ccn_discover_masked', 'dlp_ccn_jcb_violation', 'dlp_ccn_jcb_masked', 'dlp_ssn_success', 'dlp_ssn_violation', 'dlp_pcre_success', 'dlp_pcre_violation', 'dlp_pcre_masked', 'evasion_check_apache_whitespace_success', 'evasion_check_apache_whitespace_violation', 'evasion_check_decode_entities_success', 'evasion_check_decode_entities_violation', 'evasion_check_decode_escaped_chars_success', 'evasion_check_decode_escaped_chars_violation', 'evasion_check_decode_unicode_chars_success', 'evasion_check_decode_unicode_chars_violation', 'evasion_check_dir_traversal_success', 'evasion_check_dir_traversal_violation']}, 'counters2': {'type': 'str', 'choices': ['evasion_check_high_ascii_bytes_success', 'evasion_check_high_ascii_bytes_violation', 'evasion_check_invalid_hex_encoding_success', 'evasion_check_invalid_hex_encoding_violation', 'evasion_check_multiple_encoding_levels_success', 'evasion_check_multiple_encoding_levels_violation', 'evasion_check_multiple_slashes_success', 'evasion_check_multiple_slashes_violation', 'evasion_check_max_levels_success', 'evasion_check_max_levels_violation', 'evasion_check_remove_comments_success', 'evasion_check_remove_comments_violation', 'evasion_check_remove_spaces_success', 'evasion_check_remove_spaces_violation', 'http_limit_max_content_length_success', 'http_limit_max_content_length_violation', 'http_limit_max_cookie_header_length_success', 'http_limit_max_cookie_header_length_violation', 'http_limit_max_cookie_name_length_success', 'http_limit_max_cookie_name_length_violation', 'http_limit_max_cookie_value_length_success', 'http_limit_max_cookie_value_length_violation', 'http_limit_max_cookies_success', 'http_limit_max_cookies_violation', 'http_limit_max_cookies_length_success', 'http_limit_max_cookies_length_violation', 'http_limit_max_data_parse_success', 'http_limit_max_data_parse_violation', 'http_limit_max_entities_success', 'http_limit_max_entities_violation', 'http_limit_max_header_length_success', 'http_limit_max_header_length_violation', 'http_limit_max_header_name_length_success', 'http_limit_max_header_name_length_violation', 'http_limit_max_header_value_length_success', 'http_limit_max_header_value_length_violation', 'http_limit_max_headers_success', 'http_limit_max_headers_violation', 'http_limit_max_headers_length_success', 'http_limit_max_headers_length_violation', 'http_limit_max_param_name_length_success', 'http_limit_max_param_name_length_violation', 'http_limit_max_param_value_length_success', 'http_limit_max_param_value_length_violation', 'http_limit_max_params_success', 'http_limit_max_params_violation', 'http_limit_max_params_length_success', 'http_limit_max_params_length_violation', 'http_limit_max_post_length_success', 'http_limit_max_post_length_violation', 'http_limit_max_query_length_success', 'http_limit_max_query_length_violation', 'http_limit_max_request_length_success', 'http_limit_max_request_length_violation', 'http_limit_max_request_line_length_success', 'http_limit_max_request_line_length_violation', 'max_url_length_success', 'max_url_length_violation', 'http_protocol_allowed_headers_success', 'http_protocol_allowed_headers_violation', 'http_protocol_allowed_versions_success', 'http_protocol_allowed_versions_violation', 'http_protocol_allowed_method_check_success', 'http_protocol_allowed_method_check_violation', 'http_protocol_bad_multipart_request_success', 'http_protocol_bad_multipart_request_violation', 'http_protocol_get_with_content_success', 'http_protocol_get_with_content_violation', 'http_protocol_head_with_content_success', 'http_protocol_head_with_content_violation', 'http_protocol_host_header_with_ip_success', 'http_protocol_host_header_with_ip_violation', 'http_protocol_invalid_url_encoding_success', 'http_protocol_invalid_url_encoding_violation', 'http_protocol_malformed_content_length_success', 'http_protocol_malformed_content_length_violation', 'http_protocol_malformed_header_success', 'http_protocol_malformed_header_violation', 'http_protocol_malformed_parameter_success', 'http_protocol_malformed_parameter_violation', 'http_protocol_malformed_request_success', 'http_protocol_malformed_request_violation', 'http_protocol_malformed_request_line_success', 'http_protocol_malformed_request_line_violation', 'http_protocol_missing_header_value_success', 'http_protocol_missing_header_value_violation', 'http_protocol_missing_host_header_success', 'http_protocol_missing_host_header_violation', 'http_protocol_multiple_content_length_success', 'http_protocol_multiple_content_length_violation', 'http_protocol_post_with_0_content_success', 'http_protocol_post_with_0_content_violation', 'http_protocol_post_without_content_success', 'http_protocol_post_without_content_violation', 'http_protocol_success', 'http_protocol_violation', 'json_check_format_success']}, 'counters3': {'type': 'str', 'choices': ['json_check_format_violation', 'json_check_max_array_value_count_success', 'json_check_max_array_value_count_violation', 'json_check_max_depth_success', 'json_check_max_depth_violation', 'json_check_max_object_member_count_success', 'json_check_max_object_member_count_violation', 'json_check_max_string_success', 'json_check_max_string_violation', 'request_check_bot_success', 'request_check_bot_violation', 'request_check_redirect_wlist_success', 'request_check_redirect_wlist_violation', 'request_check_redirect_wlist_learn', 'request_check_referer_success', 'request_check_referer_violation', 'request_check_referer_redirect', 'request_check_session_check_none', 'request_check_session_check_success', 'request_check_session_check_violation', 'request_check_sqlia_url_success', 'request_check_sqlia_url_violation', 'request_check_sqlia_url_sanitize', 'request_check_sqlia_post_body_success', 'request_check_sqlia_post_body_violation', 'request_check_sqlia_post_body_sanitize', 'request_check_url_list_success', 'request_check_url_list_violation', 'request_check_url_list_learn', 'request_check_url_whitelist_success', 'request_check_url_whitelist_violation', 'request_check_url_blacklist_success', 'request_check_url_blacklist_violation', 'request_check_xss_cookie_success', 'request_check_xss_cookie_violation', 'request_check_xss_cookie_sanitize', 'request_check_xss_url_success', 'request_check_xss_url_violation', 'request_check_xss_url_sanitize', 'request_check_xss_post_body_success', 'request_check_xss_post_body_violation', 'request_check_xss_post_body_sanitize', 'response_cloaking_hide_status_code_success', 'response_cloaking_hide_status_code_violation', 'response_cloaking_filter_headers_success', 'response_cloaking_filter_headers_violation', 'soap_check_success', 'soap_check_violation', 'xml_check_format_success', 'xml_check_format_violation', 'xml_check_max_attr_success', 'xml_check_max_attr_violation', 'xml_check_max_attr_name_len_success', 'xml_check_max_attr_name_len_violation', 'xml_check_max_attr_value_len_success', 'xml_check_max_attr_value_len_violation', 'xml_check_max_cdata_len_success', 'xml_check_max_cdata_len_violation', 'xml_check_max_elem_success', 'xml_check_max_elem_violation', 'xml_check_max_elem_child_success', 'xml_check_max_elem_child_violation', 'xml_check_max_elem_depth_success', 'xml_check_max_elem_depth_violation', 'xml_check_max_elem_name_len_success', 'xml_check_max_elem_name_len_violation', 'xml_check_max_entity_exp_success', 'xml_check_max_entity_exp_violation', 'xml_check_max_entity_exp_depth_success', 'xml_check_max_entity_exp_depth_violation', 'xml_check_max_namespace_success', 'xml_check_max_namespace_violation', 'xml_check_namespace_uri_len_success', 'xml_check_namespace_uri_len_violation', 'xml_check_sqlia_success', 'xml_check_sqlia_violation', 'xml_check_xss_success', 'xml_check_xss_violation', 'xml_content_check_schema_success', 'xml_content_check_schema_violation', 'xml_content_check_wsdl_success', 'xml_content_check_wsdl_violation', 'learning_list_full', 'action_allow', 'action_deny_200', 'action_deny_403', 'action_deny_redirect', 'action_deny_reset', 'action_drop', 'action_deny_custom_response', 'action_learn', 'action_log', 'policy_limit_exceeded', 'sessions_alloc', 'sessions_freed', 'out_of_sessions', 'too_many_sessions', 'regex_violation', 'request_check_command_injection_cookies_success', 'request_check_command_injection_cookies_violation', 'request_check_command_injection_headers_success', 'request_check_command_injection_headers_violation', 'request_check_command_injection_uri_query_success', 'request_check_command_injection_uri_query_violation', 'request_check_command_injection_form_body_success', 'request_check_command_injection_form_body_violation', 'cookie_security_decrypt_in_grace_period_violation', 'form_response_non_post_success', 'form_response_non_post_violation', 'form_response_non_post_sanitize', 'xml_check_max_entity_decl_success', 'xml_check_max_entity_decl_violation', 'xml_check_max_entity_depth_success', 'xml_check_max_entity_depth_violation', 'action_response_allow', 'action_response_deny_200']}, 'counters4': {'type': 'str', 'choices': ['action_response_deny_403', 'action_response_deny_redirect', 'action_response_deny_reset', 'action_response_drop', 'action_response_deny_custom_response', 'action_response_learn', 'action_response_log', 'http_protocol_post_without_content_type_success', 'http_protocol_post_without_content_type_violation', 'http_protocol_body_without_content_type_success', 'http_protocol_body_without_content_type_violation', 'http_protocol_non_ssl_cookie_prefix_success', 'http_protocol_non_ssl_cookie_prefix_violation', 'cookie_security_add_samesite_success', 'cookie_security_add_samesite_violation', 'rule_set_request', 'rule_set_response', 'phase1_pass', 'phase1_allow', 'phase1_deny', 'phase1_drop', 'phase1_redirect', 'phase1_other', 'phase2_pass', 'phase2_allow', 'phase2_deny', 'phase2_drop', 'phase2_redirect', 'phase2_other', 'phase3_pass', 'phase3_allow', 'phase3_deny', 'phase3_drop', 'phase3_redirect', 'phase3_other', 'phase4_pass', 'phase4_allow', 'phase4_deny', 'phase4_drop', 'phase4_redirect', 'phase4_other']}},
-        'stats': {'type': 'dict', 'total_req': {'type': 'str', }, 'req_allowed': {'type': 'str', }, 'req_denied': {'type': 'str', }, 'resp_denied': {'type': 'str', }, 'brute_force_success': {'type': 'str', }, 'brute_force_violation': {'type': 'str', }, 'brute_force_challenge_cookie_sent': {'type': 'str', }, 'brute_force_challenge_cookie_success': {'type': 'str', }, 'brute_force_challenge_cookie_violation': {'type': 'str', }, 'brute_force_challenge_javascript_sent': {'type': 'str', }, 'brute_force_challenge_javascript_success': {'type': 'str', }, 'brute_force_challenge_javascript_violation': {'type': 'str', }, 'brute_force_challenge_captcha_sent': {'type': 'str', }, 'brute_force_challenge_captcha_success': {'type': 'str', }, 'brute_force_challenge_captcha_violation': {'type': 'str', }, 'brute_force_lockout_limit_success': {'type': 'str', }, 'brute_force_lockout_limit_violation': {'type': 'str', }, 'brute_force_challenge_limit_success': {'type': 'str', }, 'brute_force_challenge_limit_violation': {'type': 'str', }, 'brute_force_response_codes_triggered': {'type': 'str', }, 'brute_force_response_headers_triggered': {'type': 'str', }, 'brute_force_response_string_triggered': {'type': 'str', }, 'cookie_security_encrypt_success': {'type': 'str', }, 'cookie_security_encrypt_violation': {'type': 'str', }, 'cookie_security_encrypt_limit_exceeded': {'type': 'str', }, 'cookie_security_encrypt_skip_rcache': {'type': 'str', }, 'cookie_security_decrypt_success': {'type': 'str', }, 'cookie_security_decrypt_violation': {'type': 'str', }, 'cookie_security_sign_success': {'type': 'str', }, 'cookie_security_sign_violation': {'type': 'str', }, 'cookie_security_sign_limit_exceeded': {'type': 'str', }, 'cookie_security_sign_skip_rcache': {'type': 'str', }, 'cookie_security_signature_check_success': {'type': 'str', }, 'cookie_security_signature_check_violation': {'type': 'str', }, 'cookie_security_add_http_only_success': {'type': 'str', }, 'cookie_security_add_http_only_violation': {'type': 'str', }, 'cookie_security_add_secure_success': {'type': 'str', }, 'cookie_security_add_secure_violation': {'type': 'str', }, 'cookie_security_missing_cookie_success': {'type': 'str', }, 'cookie_security_missing_cookie_violation': {'type': 'str', }, 'cookie_security_unrecognized_cookie_success': {'type': 'str', }, 'cookie_security_unrecognized_cookie_violation': {'type': 'str', }, 'cookie_security_cookie_policy_success': {'type': 'str', }, 'cookie_security_cookie_policy_violation': {'type': 'str', }, 'cookie_security_persistent_cookies': {'type': 'str', }, 'cookie_security_persistent_cookies_encrypted': {'type': 'str', }, 'cookie_security_persistent_cookies_signed': {'type': 'str', }, 'cookie_security_session_cookies': {'type': 'str', }, 'cookie_security_session_cookies_encrypted': {'type': 'str', }, 'cookie_security_session_cookies_signed': {'type': 'str', }, 'cookie_security_allowed_session_cookies': {'type': 'str', }, 'cookie_security_allowed_persistent_cookies': {'type': 'str', }, 'cookie_security_disallowed_session_cookies': {'type': 'str', }, 'cookie_security_disallowed_persistent_cookies': {'type': 'str', }, 'cookie_security_allowed_session_set_cookies': {'type': 'str', }, 'cookie_security_allowed_persistent_set_cookies': {'type': 'str', }, 'cookie_security_disallowed_session_set_cookies': {'type': 'str', }, 'cookie_security_disallowed_persistent_set_cookies': {'type': 'str', }, 'csp_header_violation': {'type': 'str', }, 'csp_header_success': {'type': 'str', }, 'csp_header_inserted': {'type': 'str', }, 'form_csrf_tag_success': {'type': 'str', }, 'form_csrf_tag_violation': {'type': 'str', }, 'form_consistency_success': {'type': 'str', }, 'form_consistency_violation': {'type': 'str', }, 'form_tag_inserted': {'type': 'str', }, 'form_non_ssl_success': {'type': 'str', }, 'form_non_ssl_violation': {'type': 'str', }, 'form_request_non_post_success': {'type': 'str', }, 'form_request_non_post_violation': {'type': 'str', }, 'form_check_success': {'type': 'str', }, 'form_check_violation': {'type': 'str', }, 'form_check_sanitize': {'type': 'str', }, 'form_non_masked_password_success': {'type': 'str', }, 'form_non_masked_password_violation': {'type': 'str', }, 'form_non_ssl_password_success': {'type': 'str', }, 'form_non_ssl_password_violation': {'type': 'str', }, 'form_password_autocomplete_success': {'type': 'str', }, 'form_password_autocomplete_violation': {'type': 'str', }, 'form_set_no_cache_success': {'type': 'str', }, 'form_set_no_cache': {'type': 'str', }, 'dlp_ccn_success': {'type': 'str', }, 'dlp_ccn_amex_violation': {'type': 'str', }, 'dlp_ccn_amex_masked': {'type': 'str', }, 'dlp_ccn_diners_violation': {'type': 'str', }, 'dlp_ccn_diners_masked': {'type': 'str', }, 'dlp_ccn_visa_violation': {'type': 'str', }, 'dlp_ccn_visa_masked': {'type': 'str', }, 'dlp_ccn_mastercard_violation': {'type': 'str', }, 'dlp_ccn_mastercard_masked': {'type': 'str', }, 'dlp_ccn_discover_violation': {'type': 'str', }, 'dlp_ccn_discover_masked': {'type': 'str', }, 'dlp_ccn_jcb_violation': {'type': 'str', }, 'dlp_ccn_jcb_masked': {'type': 'str', }, 'dlp_ssn_success': {'type': 'str', }, 'dlp_ssn_violation': {'type': 'str', }, 'dlp_pcre_success': {'type': 'str', }, 'dlp_pcre_violation': {'type': 'str', }, 'dlp_pcre_masked': {'type': 'str', }, 'evasion_check_apache_whitespace_success': {'type': 'str', }, 'evasion_check_apache_whitespace_violation': {'type': 'str', }, 'evasion_check_decode_entities_success': {'type': 'str', }, 'evasion_check_decode_entities_violation': {'type': 'str', }, 'evasion_check_decode_escaped_chars_success': {'type': 'str', }, 'evasion_check_decode_escaped_chars_violation': {'type': 'str', }, 'evasion_check_decode_unicode_chars_success': {'type': 'str', }, 'evasion_check_decode_unicode_chars_violation': {'type': 'str', }, 'evasion_check_dir_traversal_success': {'type': 'str', }, 'evasion_check_dir_traversal_violation': {'type': 'str', }, 'evasion_check_high_ascii_bytes_success': {'type': 'str', }, 'evasion_check_high_ascii_bytes_violation': {'type': 'str', }, 'evasion_check_invalid_hex_encoding_success': {'type': 'str', }, 'evasion_check_invalid_hex_encoding_violation': {'type': 'str', }, 'evasion_check_multiple_encoding_levels_success': {'type': 'str', }, 'evasion_check_multiple_encoding_levels_violation': {'type': 'str', }, 'evasion_check_multiple_slashes_success': {'type': 'str', }, 'evasion_check_multiple_slashes_violation': {'type': 'str', }, 'evasion_check_max_levels_success': {'type': 'str', }, 'evasion_check_max_levels_violation': {'type': 'str', }, 'evasion_check_remove_comments_success': {'type': 'str', }, 'evasion_check_remove_comments_violation': {'type': 'str', }, 'evasion_check_remove_spaces_success': {'type': 'str', }, 'evasion_check_remove_spaces_violation': {'type': 'str', }, 'http_limit_max_content_length_success': {'type': 'str', }, 'http_limit_max_content_length_violation': {'type': 'str', }, 'http_limit_max_cookie_header_length_success': {'type': 'str', }, 'http_limit_max_cookie_header_length_violation': {'type': 'str', }, 'http_limit_max_cookie_name_length_success': {'type': 'str', }, 'http_limit_max_cookie_name_length_violation': {'type': 'str', }, 'http_limit_max_cookie_value_length_success': {'type': 'str', }, 'http_limit_max_cookie_value_length_violation': {'type': 'str', }, 'http_limit_max_cookies_success': {'type': 'str', }, 'http_limit_max_cookies_violation': {'type': 'str', }, 'http_limit_max_cookies_length_success': {'type': 'str', }, 'http_limit_max_cookies_length_violation': {'type': 'str', }, 'http_limit_max_data_parse_success': {'type': 'str', }, 'http_limit_max_data_parse_violation': {'type': 'str', }, 'http_limit_max_entities_success': {'type': 'str', }, 'http_limit_max_entities_violation': {'type': 'str', }, 'http_limit_max_header_length_success': {'type': 'str', }, 'http_limit_max_header_length_violation': {'type': 'str', }, 'http_limit_max_header_name_length_success': {'type': 'str', }, 'http_limit_max_header_name_length_violation': {'type': 'str', }, 'http_limit_max_header_value_length_success': {'type': 'str', }, 'http_limit_max_header_value_length_violation': {'type': 'str', }, 'http_limit_max_headers_success': {'type': 'str', }, 'http_limit_max_headers_violation': {'type': 'str', }, 'http_limit_max_headers_length_success': {'type': 'str', }, 'http_limit_max_headers_length_violation': {'type': 'str', }, 'http_limit_max_param_name_length_success': {'type': 'str', }, 'http_limit_max_param_name_length_violation': {'type': 'str', }, 'http_limit_max_param_value_length_success': {'type': 'str', }, 'http_limit_max_param_value_length_violation': {'type': 'str', }, 'http_limit_max_params_success': {'type': 'str', }, 'http_limit_max_params_violation': {'type': 'str', }, 'http_limit_max_params_length_success': {'type': 'str', }, 'http_limit_max_params_length_violation': {'type': 'str', }, 'http_limit_max_post_length_success': {'type': 'str', }, 'http_limit_max_post_length_violation': {'type': 'str', }, 'http_limit_max_query_length_success': {'type': 'str', }, 'http_limit_max_query_length_violation': {'type': 'str', }, 'http_limit_max_request_length_success': {'type': 'str', }, 'http_limit_max_request_length_violation': {'type': 'str', }, 'http_limit_max_request_line_length_success': {'type': 'str', }, 'http_limit_max_request_line_length_violation': {'type': 'str', }, 'max_url_length_success': {'type': 'str', }, 'max_url_length_violation': {'type': 'str', }, 'http_protocol_allowed_headers_success': {'type': 'str', }, 'http_protocol_allowed_headers_violation': {'type': 'str', }, 'http_protocol_allowed_versions_success': {'type': 'str', }, 'http_protocol_allowed_versions_violation': {'type': 'str', }, 'http_protocol_allowed_method_check_success': {'type': 'str', }, 'http_protocol_allowed_method_check_violation': {'type': 'str', }, 'http_protocol_bad_multipart_request_success': {'type': 'str', }, 'http_protocol_bad_multipart_request_violation': {'type': 'str', }, 'http_protocol_get_with_content_success': {'type': 'str', }, 'http_protocol_get_with_content_violation': {'type': 'str', }, 'http_protocol_head_with_content_success': {'type': 'str', }, 'http_protocol_head_with_content_violation': {'type': 'str', }, 'http_protocol_host_header_with_ip_success': {'type': 'str', }, 'http_protocol_host_header_with_ip_violation': {'type': 'str', }, 'http_protocol_invalid_url_encoding_success': {'type': 'str', }, 'http_protocol_invalid_url_encoding_violation': {'type': 'str', }, 'http_protocol_malformed_content_length_success': {'type': 'str', }, 'http_protocol_malformed_content_length_violation': {'type': 'str', }, 'http_protocol_malformed_header_success': {'type': 'str', }, 'http_protocol_malformed_header_violation': {'type': 'str', }, 'http_protocol_malformed_parameter_success': {'type': 'str', }, 'http_protocol_malformed_parameter_violation': {'type': 'str', }, 'http_protocol_malformed_request_success': {'type': 'str', }, 'http_protocol_malformed_request_violation': {'type': 'str', }, 'http_protocol_malformed_request_line_success': {'type': 'str', }, 'http_protocol_malformed_request_line_violation': {'type': 'str', }, 'http_protocol_missing_header_value_success': {'type': 'str', }, 'http_protocol_missing_header_value_violation': {'type': 'str', }, 'http_protocol_missing_host_header_success': {'type': 'str', }, 'http_protocol_missing_host_header_violation': {'type': 'str', }, 'http_protocol_multiple_content_length_success': {'type': 'str', }, 'http_protocol_multiple_content_length_violation': {'type': 'str', }, 'http_protocol_post_with_0_content_success': {'type': 'str', }, 'http_protocol_post_with_0_content_violation': {'type': 'str', }, 'http_protocol_post_without_content_success': {'type': 'str', }, 'http_protocol_post_without_content_violation': {'type': 'str', }, 'http_protocol_success': {'type': 'str', }, 'http_protocol_violation': {'type': 'str', }, 'json_check_format_success': {'type': 'str', }, 'json_check_format_violation': {'type': 'str', }, 'json_check_max_array_value_count_success': {'type': 'str', }, 'json_check_max_array_value_count_violation': {'type': 'str', }, 'json_check_max_depth_success': {'type': 'str', }, 'json_check_max_depth_violation': {'type': 'str', }, 'json_check_max_object_member_count_success': {'type': 'str', }, 'json_check_max_object_member_count_violation': {'type': 'str', }, 'json_check_max_string_success': {'type': 'str', }, 'json_check_max_string_violation': {'type': 'str', }, 'request_check_bot_success': {'type': 'str', }, 'request_check_bot_violation': {'type': 'str', }, 'request_check_redirect_wlist_success': {'type': 'str', }, 'request_check_redirect_wlist_violation': {'type': 'str', }, 'request_check_redirect_wlist_learn': {'type': 'str', }, 'request_check_referer_success': {'type': 'str', }, 'request_check_referer_violation': {'type': 'str', }, 'request_check_referer_redirect': {'type': 'str', }, 'request_check_session_check_none': {'type': 'str', }, 'request_check_session_check_success': {'type': 'str', }, 'request_check_session_check_violation': {'type': 'str', }, 'request_check_sqlia_url_success': {'type': 'str', }, 'request_check_sqlia_url_violation': {'type': 'str', }, 'request_check_sqlia_url_sanitize': {'type': 'str', }, 'request_check_sqlia_post_body_success': {'type': 'str', }, 'request_check_sqlia_post_body_violation': {'type': 'str', }, 'request_check_sqlia_post_body_sanitize': {'type': 'str', }, 'request_check_url_list_success': {'type': 'str', }, 'request_check_url_list_violation': {'type': 'str', }, 'request_check_url_list_learn': {'type': 'str', }, 'request_check_url_whitelist_success': {'type': 'str', }, 'request_check_url_whitelist_violation': {'type': 'str', }, 'request_check_url_blacklist_success': {'type': 'str', }, 'request_check_url_blacklist_violation': {'type': 'str', }, 'request_check_xss_cookie_success': {'type': 'str', }, 'request_check_xss_cookie_violation': {'type': 'str', }, 'request_check_xss_cookie_sanitize': {'type': 'str', }, 'request_check_xss_url_success': {'type': 'str', }, 'request_check_xss_url_violation': {'type': 'str', }, 'request_check_xss_url_sanitize': {'type': 'str', }, 'request_check_xss_post_body_success': {'type': 'str', }, 'request_check_xss_post_body_violation': {'type': 'str', }, 'request_check_xss_post_body_sanitize': {'type': 'str', }, 'response_cloaking_hide_status_code_success': {'type': 'str', }, 'response_cloaking_hide_status_code_violation': {'type': 'str', }, 'response_cloaking_filter_headers_success': {'type': 'str', }, 'response_cloaking_filter_headers_violation': {'type': 'str', }, 'soap_check_success': {'type': 'str', }, 'soap_check_violation': {'type': 'str', }, 'xml_check_format_success': {'type': 'str', }, 'xml_check_format_violation': {'type': 'str', }, 'xml_check_max_attr_success': {'type': 'str', }, 'xml_check_max_attr_violation': {'type': 'str', }, 'xml_check_max_attr_name_len_success': {'type': 'str', }, 'xml_check_max_attr_name_len_violation': {'type': 'str', }, 'xml_check_max_attr_value_len_success': {'type': 'str', }, 'xml_check_max_attr_value_len_violation': {'type': 'str', }, 'xml_check_max_cdata_len_success': {'type': 'str', }, 'xml_check_max_cdata_len_violation': {'type': 'str', }, 'xml_check_max_elem_success': {'type': 'str', }, 'xml_check_max_elem_violation': {'type': 'str', }, 'xml_check_max_elem_child_success': {'type': 'str', }, 'xml_check_max_elem_child_violation': {'type': 'str', }, 'xml_check_max_elem_depth_success': {'type': 'str', }, 'xml_check_max_elem_depth_violation': {'type': 'str', }, 'xml_check_max_elem_name_len_success': {'type': 'str', }, 'xml_check_max_elem_name_len_violation': {'type': 'str', }, 'xml_check_max_entity_exp_success': {'type': 'str', }, 'xml_check_max_entity_exp_violation': {'type': 'str', }, 'xml_check_max_entity_exp_depth_success': {'type': 'str', }, 'xml_check_max_entity_exp_depth_violation': {'type': 'str', }, 'xml_check_max_namespace_success': {'type': 'str', }, 'xml_check_max_namespace_violation': {'type': 'str', }, 'xml_check_namespace_uri_len_success': {'type': 'str', }, 'xml_check_namespace_uri_len_violation': {'type': 'str', }, 'xml_check_sqlia_success': {'type': 'str', }, 'xml_check_sqlia_violation': {'type': 'str', }, 'xml_check_xss_success': {'type': 'str', }, 'xml_check_xss_violation': {'type': 'str', }, 'xml_content_check_schema_success': {'type': 'str', }, 'xml_content_check_schema_violation': {'type': 'str', }, 'xml_content_check_wsdl_success': {'type': 'str', }, 'xml_content_check_wsdl_violation': {'type': 'str', }, 'learning_list_full': {'type': 'str', }, 'action_allow': {'type': 'str', }, 'action_deny_200': {'type': 'str', }, 'action_deny_403': {'type': 'str', }, 'action_deny_redirect': {'type': 'str', }, 'action_deny_reset': {'type': 'str', }, 'action_drop': {'type': 'str', }, 'action_deny_custom_response': {'type': 'str', }, 'action_learn': {'type': 'str', }, 'action_log': {'type': 'str', }, 'policy_limit_exceeded': {'type': 'str', }, 'sessions_alloc': {'type': 'str', }, 'sessions_freed': {'type': 'str', }, 'out_of_sessions': {'type': 'str', }, 'too_many_sessions': {'type': 'str', }, 'regex_violation': {'type': 'str', }, 'request_check_command_injection_cookies_success': {'type': 'str', }, 'request_check_command_injection_cookies_violation': {'type': 'str', }, 'request_check_command_injection_headers_success': {'type': 'str', }, 'request_check_command_injection_headers_violation': {'type': 'str', }, 'request_check_command_injection_uri_query_success': {'type': 'str', }, 'request_check_command_injection_uri_query_violation': {'type': 'str', }, 'request_check_command_injection_form_body_success': {'type': 'str', }, 'request_check_command_injection_form_body_violation': {'type': 'str', }, 'cookie_security_decrypt_in_grace_period_violation': {'type': 'str', }, 'form_response_non_post_success': {'type': 'str', }, 'form_response_non_post_violation': {'type': 'str', }, 'form_response_non_post_sanitize': {'type': 'str', }, 'xml_check_max_entity_decl_success': {'type': 'str', }, 'xml_check_max_entity_decl_violation': {'type': 'str', }, 'xml_check_max_entity_depth_success': {'type': 'str', }, 'xml_check_max_entity_depth_violation': {'type': 'str', }, 'action_response_allow': {'type': 'str', }, 'action_response_deny_200': {'type': 'str', }, 'action_response_deny_403': {'type': 'str', }, 'action_response_deny_redirect': {'type': 'str', }, 'action_response_deny_reset': {'type': 'str', }, 'action_response_drop': {'type': 'str', }, 'action_response_deny_custom_response': {'type': 'str', }, 'action_response_learn': {'type': 'str', }, 'action_response_log': {'type': 'str', }, 'http_protocol_post_without_content_type_success': {'type': 'str', }, 'http_protocol_post_without_content_type_violation': {'type': 'str', }, 'http_protocol_body_without_content_type_success': {'type': 'str', }, 'http_protocol_body_without_content_type_violation': {'type': 'str', }, 'http_protocol_non_ssl_cookie_prefix_success': {'type': 'str', }, 'http_protocol_non_ssl_cookie_prefix_violation': {'type': 'str', }, 'cookie_security_add_samesite_success': {'type': 'str', }, 'cookie_security_add_samesite_violation': {'type': 'str', }}
+    rv.update({
+        'immediate_action': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'total_req', 'req_allowed', 'req_denied',
+                    'resp_denied', 'brute_force_success',
+                    'brute_force_violation',
+                    'brute_force_challenge_cookie_sent',
+                    'brute_force_challenge_cookie_success',
+                    'brute_force_challenge_cookie_violation',
+                    'brute_force_challenge_javascript_sent',
+                    'brute_force_challenge_javascript_success',
+                    'brute_force_challenge_javascript_violation',
+                    'brute_force_challenge_captcha_sent',
+                    'brute_force_challenge_captcha_success',
+                    'brute_force_challenge_captcha_violation',
+                    'brute_force_lockout_limit_success',
+                    'brute_force_lockout_limit_violation',
+                    'brute_force_challenge_limit_success',
+                    'brute_force_challenge_limit_violation',
+                    'brute_force_response_codes_triggered',
+                    'brute_force_response_headers_triggered',
+                    'brute_force_response_string_triggered',
+                    'cookie_security_encrypt_success',
+                    'cookie_security_encrypt_violation',
+                    'cookie_security_encrypt_limit_exceeded',
+                    'cookie_security_encrypt_skip_rcache',
+                    'cookie_security_decrypt_success',
+                    'cookie_security_decrypt_violation',
+                    'cookie_security_sign_success',
+                    'cookie_security_sign_violation',
+                    'cookie_security_sign_limit_exceeded',
+                    'cookie_security_sign_skip_rcache',
+                    'cookie_security_signature_check_success',
+                    'cookie_security_signature_check_violation',
+                    'cookie_security_add_http_only_success',
+                    'cookie_security_add_http_only_violation',
+                    'cookie_security_add_secure_success',
+                    'cookie_security_add_secure_violation',
+                    'cookie_security_missing_cookie_success',
+                    'cookie_security_missing_cookie_violation',
+                    'cookie_security_unrecognized_cookie_success',
+                    'cookie_security_unrecognized_cookie_violation',
+                    'cookie_security_cookie_policy_success',
+                    'cookie_security_cookie_policy_violation',
+                    'cookie_security_persistent_cookies',
+                    'cookie_security_persistent_cookies_encrypted',
+                    'cookie_security_persistent_cookies_signed',
+                    'cookie_security_session_cookies',
+                    'cookie_security_session_cookies_encrypted',
+                    'cookie_security_session_cookies_signed',
+                    'cookie_security_allowed_session_cookies',
+                    'cookie_security_allowed_persistent_cookies',
+                    'cookie_security_disallowed_session_cookies',
+                    'cookie_security_disallowed_persistent_cookies',
+                    'cookie_security_allowed_session_set_cookies',
+                    'cookie_security_allowed_persistent_set_cookies',
+                    'cookie_security_disallowed_session_set_cookies',
+                    'cookie_security_disallowed_persistent_set_cookies',
+                    'csp_header_violation', 'csp_header_success',
+                    'csp_header_inserted', 'form_csrf_tag_success',
+                    'form_csrf_tag_violation', 'form_consistency_success',
+                    'form_consistency_violation', 'form_tag_inserted',
+                    'form_non_ssl_success', 'form_non_ssl_violation',
+                    'form_request_non_post_success',
+                    'form_request_non_post_violation', 'form_check_success',
+                    'form_check_violation', 'form_check_sanitize',
+                    'form_non_masked_password_success',
+                    'form_non_masked_password_violation',
+                    'form_non_ssl_password_success',
+                    'form_non_ssl_password_violation',
+                    'form_password_autocomplete_success',
+                    'form_password_autocomplete_violation',
+                    'form_set_no_cache_success', 'form_set_no_cache',
+                    'dlp_ccn_success', 'dlp_ccn_amex_violation',
+                    'dlp_ccn_amex_masked', 'dlp_ccn_diners_violation',
+                    'dlp_ccn_diners_masked', 'dlp_ccn_visa_violation',
+                    'dlp_ccn_visa_masked', 'dlp_ccn_mastercard_violation',
+                    'dlp_ccn_mastercard_masked', 'dlp_ccn_discover_violation',
+                    'dlp_ccn_discover_masked', 'dlp_ccn_jcb_violation',
+                    'dlp_ccn_jcb_masked', 'dlp_ssn_success',
+                    'dlp_ssn_violation', 'dlp_pcre_success',
+                    'dlp_pcre_violation', 'dlp_pcre_masked',
+                    'evasion_check_apache_whitespace_success',
+                    'evasion_check_apache_whitespace_violation',
+                    'evasion_check_decode_entities_success',
+                    'evasion_check_decode_entities_violation',
+                    'evasion_check_decode_escaped_chars_success',
+                    'evasion_check_decode_escaped_chars_violation',
+                    'evasion_check_decode_unicode_chars_success',
+                    'evasion_check_decode_unicode_chars_violation',
+                    'evasion_check_dir_traversal_success',
+                    'evasion_check_dir_traversal_violation'
+                ]
+            },
+            'counters2': {
+                'type':
+                'str',
+                'choices': [
+                    'evasion_check_high_ascii_bytes_success',
+                    'evasion_check_high_ascii_bytes_violation',
+                    'evasion_check_invalid_hex_encoding_success',
+                    'evasion_check_invalid_hex_encoding_violation',
+                    'evasion_check_multiple_encoding_levels_success',
+                    'evasion_check_multiple_encoding_levels_violation',
+                    'evasion_check_multiple_slashes_success',
+                    'evasion_check_multiple_slashes_violation',
+                    'evasion_check_max_levels_success',
+                    'evasion_check_max_levels_violation',
+                    'evasion_check_remove_comments_success',
+                    'evasion_check_remove_comments_violation',
+                    'evasion_check_remove_spaces_success',
+                    'evasion_check_remove_spaces_violation',
+                    'http_limit_max_content_length_success',
+                    'http_limit_max_content_length_violation',
+                    'http_limit_max_cookie_header_length_success',
+                    'http_limit_max_cookie_header_length_violation',
+                    'http_limit_max_cookie_name_length_success',
+                    'http_limit_max_cookie_name_length_violation',
+                    'http_limit_max_cookie_value_length_success',
+                    'http_limit_max_cookie_value_length_violation',
+                    'http_limit_max_cookies_success',
+                    'http_limit_max_cookies_violation',
+                    'http_limit_max_cookies_length_success',
+                    'http_limit_max_cookies_length_violation',
+                    'http_limit_max_data_parse_success',
+                    'http_limit_max_data_parse_violation',
+                    'http_limit_max_entities_success',
+                    'http_limit_max_entities_violation',
+                    'http_limit_max_header_length_success',
+                    'http_limit_max_header_length_violation',
+                    'http_limit_max_header_name_length_success',
+                    'http_limit_max_header_name_length_violation',
+                    'http_limit_max_header_value_length_success',
+                    'http_limit_max_header_value_length_violation',
+                    'http_limit_max_headers_success',
+                    'http_limit_max_headers_violation',
+                    'http_limit_max_headers_length_success',
+                    'http_limit_max_headers_length_violation',
+                    'http_limit_max_param_name_length_success',
+                    'http_limit_max_param_name_length_violation',
+                    'http_limit_max_param_value_length_success',
+                    'http_limit_max_param_value_length_violation',
+                    'http_limit_max_params_success',
+                    'http_limit_max_params_violation',
+                    'http_limit_max_params_length_success',
+                    'http_limit_max_params_length_violation',
+                    'http_limit_max_post_length_success',
+                    'http_limit_max_post_length_violation',
+                    'http_limit_max_query_length_success',
+                    'http_limit_max_query_length_violation',
+                    'http_limit_max_request_length_success',
+                    'http_limit_max_request_length_violation',
+                    'http_limit_max_request_line_length_success',
+                    'http_limit_max_request_line_length_violation',
+                    'max_url_length_success', 'max_url_length_violation',
+                    'http_protocol_allowed_headers_success',
+                    'http_protocol_allowed_headers_violation',
+                    'http_protocol_allowed_versions_success',
+                    'http_protocol_allowed_versions_violation',
+                    'http_protocol_allowed_method_check_success',
+                    'http_protocol_allowed_method_check_violation',
+                    'http_protocol_bad_multipart_request_success',
+                    'http_protocol_bad_multipart_request_violation',
+                    'http_protocol_get_with_content_success',
+                    'http_protocol_get_with_content_violation',
+                    'http_protocol_head_with_content_success',
+                    'http_protocol_head_with_content_violation',
+                    'http_protocol_host_header_with_ip_success',
+                    'http_protocol_host_header_with_ip_violation',
+                    'http_protocol_invalid_url_encoding_success',
+                    'http_protocol_invalid_url_encoding_violation',
+                    'http_protocol_malformed_content_length_success',
+                    'http_protocol_malformed_content_length_violation',
+                    'http_protocol_malformed_header_success',
+                    'http_protocol_malformed_header_violation',
+                    'http_protocol_malformed_parameter_success',
+                    'http_protocol_malformed_parameter_violation',
+                    'http_protocol_malformed_request_success',
+                    'http_protocol_malformed_request_violation',
+                    'http_protocol_malformed_request_line_success',
+                    'http_protocol_malformed_request_line_violation',
+                    'http_protocol_missing_header_value_success',
+                    'http_protocol_missing_header_value_violation',
+                    'http_protocol_missing_host_header_success',
+                    'http_protocol_missing_host_header_violation',
+                    'http_protocol_multiple_content_length_success',
+                    'http_protocol_multiple_content_length_violation',
+                    'http_protocol_post_with_0_content_success',
+                    'http_protocol_post_with_0_content_violation',
+                    'http_protocol_post_without_content_success',
+                    'http_protocol_post_without_content_violation',
+                    'http_protocol_success', 'http_protocol_violation',
+                    'json_check_format_success'
+                ]
+            },
+            'counters3': {
+                'type':
+                'str',
+                'choices': [
+                    'json_check_format_violation',
+                    'json_check_max_array_value_count_success',
+                    'json_check_max_array_value_count_violation',
+                    'json_check_max_depth_success',
+                    'json_check_max_depth_violation',
+                    'json_check_max_object_member_count_success',
+                    'json_check_max_object_member_count_violation',
+                    'json_check_max_string_success',
+                    'json_check_max_string_violation',
+                    'request_check_bot_success', 'request_check_bot_violation',
+                    'request_check_redirect_wlist_success',
+                    'request_check_redirect_wlist_violation',
+                    'request_check_redirect_wlist_learn',
+                    'request_check_referer_success',
+                    'request_check_referer_violation',
+                    'request_check_referer_redirect',
+                    'request_check_session_check_none',
+                    'request_check_session_check_success',
+                    'request_check_session_check_violation',
+                    'request_check_sqlia_url_success',
+                    'request_check_sqlia_url_violation',
+                    'request_check_sqlia_url_sanitize',
+                    'request_check_sqlia_post_body_success',
+                    'request_check_sqlia_post_body_violation',
+                    'request_check_sqlia_post_body_sanitize',
+                    'request_check_url_list_success',
+                    'request_check_url_list_violation',
+                    'request_check_url_list_learn',
+                    'request_check_url_whitelist_success',
+                    'request_check_url_whitelist_violation',
+                    'request_check_url_blacklist_success',
+                    'request_check_url_blacklist_violation',
+                    'request_check_xss_cookie_success',
+                    'request_check_xss_cookie_violation',
+                    'request_check_xss_cookie_sanitize',
+                    'request_check_xss_url_success',
+                    'request_check_xss_url_violation',
+                    'request_check_xss_url_sanitize',
+                    'request_check_xss_post_body_success',
+                    'request_check_xss_post_body_violation',
+                    'request_check_xss_post_body_sanitize',
+                    'response_cloaking_hide_status_code_success',
+                    'response_cloaking_hide_status_code_violation',
+                    'response_cloaking_filter_headers_success',
+                    'response_cloaking_filter_headers_violation',
+                    'soap_check_success', 'soap_check_violation',
+                    'xml_check_format_success', 'xml_check_format_violation',
+                    'xml_check_max_attr_success',
+                    'xml_check_max_attr_violation',
+                    'xml_check_max_attr_name_len_success',
+                    'xml_check_max_attr_name_len_violation',
+                    'xml_check_max_attr_value_len_success',
+                    'xml_check_max_attr_value_len_violation',
+                    'xml_check_max_cdata_len_success',
+                    'xml_check_max_cdata_len_violation',
+                    'xml_check_max_elem_success',
+                    'xml_check_max_elem_violation',
+                    'xml_check_max_elem_child_success',
+                    'xml_check_max_elem_child_violation',
+                    'xml_check_max_elem_depth_success',
+                    'xml_check_max_elem_depth_violation',
+                    'xml_check_max_elem_name_len_success',
+                    'xml_check_max_elem_name_len_violation',
+                    'xml_check_max_entity_exp_success',
+                    'xml_check_max_entity_exp_violation',
+                    'xml_check_max_entity_exp_depth_success',
+                    'xml_check_max_entity_exp_depth_violation',
+                    'xml_check_max_namespace_success',
+                    'xml_check_max_namespace_violation',
+                    'xml_check_namespace_uri_len_success',
+                    'xml_check_namespace_uri_len_violation',
+                    'xml_check_sqlia_success', 'xml_check_sqlia_violation',
+                    'xml_check_xss_success', 'xml_check_xss_violation',
+                    'xml_content_check_schema_success',
+                    'xml_content_check_schema_violation',
+                    'xml_content_check_wsdl_success',
+                    'xml_content_check_wsdl_violation', 'learning_list_full',
+                    'action_allow', 'action_deny_200', 'action_deny_403',
+                    'action_deny_redirect', 'action_deny_reset', 'action_drop',
+                    'action_deny_custom_response', 'action_learn',
+                    'action_log', 'policy_limit_exceeded', 'sessions_alloc',
+                    'sessions_freed', 'out_of_sessions', 'too_many_sessions',
+                    'regex_violation',
+                    'request_check_command_injection_cookies_success',
+                    'request_check_command_injection_cookies_violation',
+                    'request_check_command_injection_headers_success',
+                    'request_check_command_injection_headers_violation',
+                    'request_check_command_injection_uri_query_success',
+                    'request_check_command_injection_uri_query_violation',
+                    'request_check_command_injection_form_body_success',
+                    'request_check_command_injection_form_body_violation',
+                    'cookie_security_decrypt_in_grace_period_violation',
+                    'form_response_non_post_success',
+                    'form_response_non_post_violation',
+                    'form_response_non_post_sanitize',
+                    'xml_check_max_entity_decl_success',
+                    'xml_check_max_entity_decl_violation',
+                    'xml_check_max_entity_depth_success',
+                    'xml_check_max_entity_depth_violation',
+                    'action_response_allow', 'action_response_deny_200'
+                ]
+            },
+            'counters4': {
+                'type':
+                'str',
+                'choices': [
+                    'action_response_deny_403',
+                    'action_response_deny_redirect',
+                    'action_response_deny_reset', 'action_response_drop',
+                    'action_response_deny_custom_response',
+                    'action_response_learn', 'action_response_log',
+                    'http_protocol_post_without_content_type_success',
+                    'http_protocol_post_without_content_type_violation',
+                    'http_protocol_body_without_content_type_success',
+                    'http_protocol_body_without_content_type_violation',
+                    'http_protocol_non_ssl_cookie_prefix_success',
+                    'http_protocol_non_ssl_cookie_prefix_violation',
+                    'cookie_security_add_samesite_success',
+                    'cookie_security_add_samesite_violation',
+                    'rule_set_request', 'rule_set_response', 'phase1_pass',
+                    'phase1_allow', 'phase1_deny', 'phase1_drop',
+                    'phase1_redirect', 'phase1_other', 'phase2_pass',
+                    'phase2_allow', 'phase2_deny', 'phase2_drop',
+                    'phase2_redirect', 'phase2_other', 'phase3_pass',
+                    'phase3_allow', 'phase3_deny', 'phase3_drop',
+                    'phase3_redirect', 'phase3_other', 'phase4_pass',
+                    'phase4_allow', 'phase4_deny', 'phase4_drop',
+                    'phase4_redirect', 'phase4_other'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'total_req': {
+                'type': 'str',
+            },
+            'req_allowed': {
+                'type': 'str',
+            },
+            'req_denied': {
+                'type': 'str',
+            },
+            'resp_denied': {
+                'type': 'str',
+            },
+            'brute_force_success': {
+                'type': 'str',
+            },
+            'brute_force_violation': {
+                'type': 'str',
+            },
+            'brute_force_challenge_cookie_sent': {
+                'type': 'str',
+            },
+            'brute_force_challenge_cookie_success': {
+                'type': 'str',
+            },
+            'brute_force_challenge_cookie_violation': {
+                'type': 'str',
+            },
+            'brute_force_challenge_javascript_sent': {
+                'type': 'str',
+            },
+            'brute_force_challenge_javascript_success': {
+                'type': 'str',
+            },
+            'brute_force_challenge_javascript_violation': {
+                'type': 'str',
+            },
+            'brute_force_challenge_captcha_sent': {
+                'type': 'str',
+            },
+            'brute_force_challenge_captcha_success': {
+                'type': 'str',
+            },
+            'brute_force_challenge_captcha_violation': {
+                'type': 'str',
+            },
+            'brute_force_lockout_limit_success': {
+                'type': 'str',
+            },
+            'brute_force_lockout_limit_violation': {
+                'type': 'str',
+            },
+            'brute_force_challenge_limit_success': {
+                'type': 'str',
+            },
+            'brute_force_challenge_limit_violation': {
+                'type': 'str',
+            },
+            'brute_force_response_codes_triggered': {
+                'type': 'str',
+            },
+            'brute_force_response_headers_triggered': {
+                'type': 'str',
+            },
+            'brute_force_response_string_triggered': {
+                'type': 'str',
+            },
+            'cookie_security_encrypt_success': {
+                'type': 'str',
+            },
+            'cookie_security_encrypt_violation': {
+                'type': 'str',
+            },
+            'cookie_security_encrypt_limit_exceeded': {
+                'type': 'str',
+            },
+            'cookie_security_encrypt_skip_rcache': {
+                'type': 'str',
+            },
+            'cookie_security_decrypt_success': {
+                'type': 'str',
+            },
+            'cookie_security_decrypt_violation': {
+                'type': 'str',
+            },
+            'cookie_security_sign_success': {
+                'type': 'str',
+            },
+            'cookie_security_sign_violation': {
+                'type': 'str',
+            },
+            'cookie_security_sign_limit_exceeded': {
+                'type': 'str',
+            },
+            'cookie_security_sign_skip_rcache': {
+                'type': 'str',
+            },
+            'cookie_security_signature_check_success': {
+                'type': 'str',
+            },
+            'cookie_security_signature_check_violation': {
+                'type': 'str',
+            },
+            'cookie_security_add_http_only_success': {
+                'type': 'str',
+            },
+            'cookie_security_add_http_only_violation': {
+                'type': 'str',
+            },
+            'cookie_security_add_secure_success': {
+                'type': 'str',
+            },
+            'cookie_security_add_secure_violation': {
+                'type': 'str',
+            },
+            'cookie_security_missing_cookie_success': {
+                'type': 'str',
+            },
+            'cookie_security_missing_cookie_violation': {
+                'type': 'str',
+            },
+            'cookie_security_unrecognized_cookie_success': {
+                'type': 'str',
+            },
+            'cookie_security_unrecognized_cookie_violation': {
+                'type': 'str',
+            },
+            'cookie_security_cookie_policy_success': {
+                'type': 'str',
+            },
+            'cookie_security_cookie_policy_violation': {
+                'type': 'str',
+            },
+            'cookie_security_persistent_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_persistent_cookies_encrypted': {
+                'type': 'str',
+            },
+            'cookie_security_persistent_cookies_signed': {
+                'type': 'str',
+            },
+            'cookie_security_session_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_session_cookies_encrypted': {
+                'type': 'str',
+            },
+            'cookie_security_session_cookies_signed': {
+                'type': 'str',
+            },
+            'cookie_security_allowed_session_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_allowed_persistent_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_disallowed_session_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_disallowed_persistent_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_allowed_session_set_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_allowed_persistent_set_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_disallowed_session_set_cookies': {
+                'type': 'str',
+            },
+            'cookie_security_disallowed_persistent_set_cookies': {
+                'type': 'str',
+            },
+            'csp_header_violation': {
+                'type': 'str',
+            },
+            'csp_header_success': {
+                'type': 'str',
+            },
+            'csp_header_inserted': {
+                'type': 'str',
+            },
+            'form_csrf_tag_success': {
+                'type': 'str',
+            },
+            'form_csrf_tag_violation': {
+                'type': 'str',
+            },
+            'form_consistency_success': {
+                'type': 'str',
+            },
+            'form_consistency_violation': {
+                'type': 'str',
+            },
+            'form_tag_inserted': {
+                'type': 'str',
+            },
+            'form_non_ssl_success': {
+                'type': 'str',
+            },
+            'form_non_ssl_violation': {
+                'type': 'str',
+            },
+            'form_request_non_post_success': {
+                'type': 'str',
+            },
+            'form_request_non_post_violation': {
+                'type': 'str',
+            },
+            'form_check_success': {
+                'type': 'str',
+            },
+            'form_check_violation': {
+                'type': 'str',
+            },
+            'form_check_sanitize': {
+                'type': 'str',
+            },
+            'form_non_masked_password_success': {
+                'type': 'str',
+            },
+            'form_non_masked_password_violation': {
+                'type': 'str',
+            },
+            'form_non_ssl_password_success': {
+                'type': 'str',
+            },
+            'form_non_ssl_password_violation': {
+                'type': 'str',
+            },
+            'form_password_autocomplete_success': {
+                'type': 'str',
+            },
+            'form_password_autocomplete_violation': {
+                'type': 'str',
+            },
+            'form_set_no_cache_success': {
+                'type': 'str',
+            },
+            'form_set_no_cache': {
+                'type': 'str',
+            },
+            'dlp_ccn_success': {
+                'type': 'str',
+            },
+            'dlp_ccn_amex_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_amex_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_diners_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_diners_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_visa_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_visa_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_mastercard_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_mastercard_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_discover_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_discover_masked': {
+                'type': 'str',
+            },
+            'dlp_ccn_jcb_violation': {
+                'type': 'str',
+            },
+            'dlp_ccn_jcb_masked': {
+                'type': 'str',
+            },
+            'dlp_ssn_success': {
+                'type': 'str',
+            },
+            'dlp_ssn_violation': {
+                'type': 'str',
+            },
+            'dlp_pcre_success': {
+                'type': 'str',
+            },
+            'dlp_pcre_violation': {
+                'type': 'str',
+            },
+            'dlp_pcre_masked': {
+                'type': 'str',
+            },
+            'evasion_check_apache_whitespace_success': {
+                'type': 'str',
+            },
+            'evasion_check_apache_whitespace_violation': {
+                'type': 'str',
+            },
+            'evasion_check_decode_entities_success': {
+                'type': 'str',
+            },
+            'evasion_check_decode_entities_violation': {
+                'type': 'str',
+            },
+            'evasion_check_decode_escaped_chars_success': {
+                'type': 'str',
+            },
+            'evasion_check_decode_escaped_chars_violation': {
+                'type': 'str',
+            },
+            'evasion_check_decode_unicode_chars_success': {
+                'type': 'str',
+            },
+            'evasion_check_decode_unicode_chars_violation': {
+                'type': 'str',
+            },
+            'evasion_check_dir_traversal_success': {
+                'type': 'str',
+            },
+            'evasion_check_dir_traversal_violation': {
+                'type': 'str',
+            },
+            'evasion_check_high_ascii_bytes_success': {
+                'type': 'str',
+            },
+            'evasion_check_high_ascii_bytes_violation': {
+                'type': 'str',
+            },
+            'evasion_check_invalid_hex_encoding_success': {
+                'type': 'str',
+            },
+            'evasion_check_invalid_hex_encoding_violation': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_encoding_levels_success': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_encoding_levels_violation': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_slashes_success': {
+                'type': 'str',
+            },
+            'evasion_check_multiple_slashes_violation': {
+                'type': 'str',
+            },
+            'evasion_check_max_levels_success': {
+                'type': 'str',
+            },
+            'evasion_check_max_levels_violation': {
+                'type': 'str',
+            },
+            'evasion_check_remove_comments_success': {
+                'type': 'str',
+            },
+            'evasion_check_remove_comments_violation': {
+                'type': 'str',
+            },
+            'evasion_check_remove_spaces_success': {
+                'type': 'str',
+            },
+            'evasion_check_remove_spaces_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_content_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_content_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_header_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_header_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_name_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_name_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_value_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookie_value_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_cookies_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_data_parse_success': {
+                'type': 'str',
+            },
+            'http_limit_max_data_parse_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_entities_success': {
+                'type': 'str',
+            },
+            'http_limit_max_entities_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_header_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_header_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_header_name_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_header_name_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_header_value_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_header_value_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_success': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_headers_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_param_name_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_param_name_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_param_value_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_param_value_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_params_success': {
+                'type': 'str',
+            },
+            'http_limit_max_params_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_params_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_params_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_post_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_post_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_query_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_query_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_request_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_request_length_violation': {
+                'type': 'str',
+            },
+            'http_limit_max_request_line_length_success': {
+                'type': 'str',
+            },
+            'http_limit_max_request_line_length_violation': {
+                'type': 'str',
+            },
+            'max_url_length_success': {
+                'type': 'str',
+            },
+            'max_url_length_violation': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_headers_success': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_headers_violation': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_versions_success': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_versions_violation': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_method_check_success': {
+                'type': 'str',
+            },
+            'http_protocol_allowed_method_check_violation': {
+                'type': 'str',
+            },
+            'http_protocol_bad_multipart_request_success': {
+                'type': 'str',
+            },
+            'http_protocol_bad_multipart_request_violation': {
+                'type': 'str',
+            },
+            'http_protocol_get_with_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_get_with_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_head_with_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_head_with_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_host_header_with_ip_success': {
+                'type': 'str',
+            },
+            'http_protocol_host_header_with_ip_violation': {
+                'type': 'str',
+            },
+            'http_protocol_invalid_url_encoding_success': {
+                'type': 'str',
+            },
+            'http_protocol_invalid_url_encoding_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_content_length_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_content_length_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_header_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_header_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_parameter_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_parameter_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_violation': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_line_success': {
+                'type': 'str',
+            },
+            'http_protocol_malformed_request_line_violation': {
+                'type': 'str',
+            },
+            'http_protocol_missing_header_value_success': {
+                'type': 'str',
+            },
+            'http_protocol_missing_header_value_violation': {
+                'type': 'str',
+            },
+            'http_protocol_missing_host_header_success': {
+                'type': 'str',
+            },
+            'http_protocol_missing_host_header_violation': {
+                'type': 'str',
+            },
+            'http_protocol_multiple_content_length_success': {
+                'type': 'str',
+            },
+            'http_protocol_multiple_content_length_violation': {
+                'type': 'str',
+            },
+            'http_protocol_post_with_0_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_post_with_0_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_success': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_violation': {
+                'type': 'str',
+            },
+            'http_protocol_success': {
+                'type': 'str',
+            },
+            'http_protocol_violation': {
+                'type': 'str',
+            },
+            'json_check_format_success': {
+                'type': 'str',
+            },
+            'json_check_format_violation': {
+                'type': 'str',
+            },
+            'json_check_max_array_value_count_success': {
+                'type': 'str',
+            },
+            'json_check_max_array_value_count_violation': {
+                'type': 'str',
+            },
+            'json_check_max_depth_success': {
+                'type': 'str',
+            },
+            'json_check_max_depth_violation': {
+                'type': 'str',
+            },
+            'json_check_max_object_member_count_success': {
+                'type': 'str',
+            },
+            'json_check_max_object_member_count_violation': {
+                'type': 'str',
+            },
+            'json_check_max_string_success': {
+                'type': 'str',
+            },
+            'json_check_max_string_violation': {
+                'type': 'str',
+            },
+            'request_check_bot_success': {
+                'type': 'str',
+            },
+            'request_check_bot_violation': {
+                'type': 'str',
+            },
+            'request_check_redirect_wlist_success': {
+                'type': 'str',
+            },
+            'request_check_redirect_wlist_violation': {
+                'type': 'str',
+            },
+            'request_check_redirect_wlist_learn': {
+                'type': 'str',
+            },
+            'request_check_referer_success': {
+                'type': 'str',
+            },
+            'request_check_referer_violation': {
+                'type': 'str',
+            },
+            'request_check_referer_redirect': {
+                'type': 'str',
+            },
+            'request_check_session_check_none': {
+                'type': 'str',
+            },
+            'request_check_session_check_success': {
+                'type': 'str',
+            },
+            'request_check_session_check_violation': {
+                'type': 'str',
+            },
+            'request_check_sqlia_url_success': {
+                'type': 'str',
+            },
+            'request_check_sqlia_url_violation': {
+                'type': 'str',
+            },
+            'request_check_sqlia_url_sanitize': {
+                'type': 'str',
+            },
+            'request_check_sqlia_post_body_success': {
+                'type': 'str',
+            },
+            'request_check_sqlia_post_body_violation': {
+                'type': 'str',
+            },
+            'request_check_sqlia_post_body_sanitize': {
+                'type': 'str',
+            },
+            'request_check_url_list_success': {
+                'type': 'str',
+            },
+            'request_check_url_list_violation': {
+                'type': 'str',
+            },
+            'request_check_url_list_learn': {
+                'type': 'str',
+            },
+            'request_check_url_whitelist_success': {
+                'type': 'str',
+            },
+            'request_check_url_whitelist_violation': {
+                'type': 'str',
+            },
+            'request_check_url_blacklist_success': {
+                'type': 'str',
+            },
+            'request_check_url_blacklist_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_cookie_success': {
+                'type': 'str',
+            },
+            'request_check_xss_cookie_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_cookie_sanitize': {
+                'type': 'str',
+            },
+            'request_check_xss_url_success': {
+                'type': 'str',
+            },
+            'request_check_xss_url_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_url_sanitize': {
+                'type': 'str',
+            },
+            'request_check_xss_post_body_success': {
+                'type': 'str',
+            },
+            'request_check_xss_post_body_violation': {
+                'type': 'str',
+            },
+            'request_check_xss_post_body_sanitize': {
+                'type': 'str',
+            },
+            'response_cloaking_hide_status_code_success': {
+                'type': 'str',
+            },
+            'response_cloaking_hide_status_code_violation': {
+                'type': 'str',
+            },
+            'response_cloaking_filter_headers_success': {
+                'type': 'str',
+            },
+            'response_cloaking_filter_headers_violation': {
+                'type': 'str',
+            },
+            'soap_check_success': {
+                'type': 'str',
+            },
+            'soap_check_violation': {
+                'type': 'str',
+            },
+            'xml_check_format_success': {
+                'type': 'str',
+            },
+            'xml_check_format_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_success': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_name_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_name_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_value_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_attr_value_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_cdata_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_cdata_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_child_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_child_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_depth_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_depth_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_name_len_success': {
+                'type': 'str',
+            },
+            'xml_check_max_elem_name_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_depth_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_exp_depth_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_namespace_success': {
+                'type': 'str',
+            },
+            'xml_check_max_namespace_violation': {
+                'type': 'str',
+            },
+            'xml_check_namespace_uri_len_success': {
+                'type': 'str',
+            },
+            'xml_check_namespace_uri_len_violation': {
+                'type': 'str',
+            },
+            'xml_check_sqlia_success': {
+                'type': 'str',
+            },
+            'xml_check_sqlia_violation': {
+                'type': 'str',
+            },
+            'xml_check_xss_success': {
+                'type': 'str',
+            },
+            'xml_check_xss_violation': {
+                'type': 'str',
+            },
+            'xml_content_check_schema_success': {
+                'type': 'str',
+            },
+            'xml_content_check_schema_violation': {
+                'type': 'str',
+            },
+            'xml_content_check_wsdl_success': {
+                'type': 'str',
+            },
+            'xml_content_check_wsdl_violation': {
+                'type': 'str',
+            },
+            'learning_list_full': {
+                'type': 'str',
+            },
+            'action_allow': {
+                'type': 'str',
+            },
+            'action_deny_200': {
+                'type': 'str',
+            },
+            'action_deny_403': {
+                'type': 'str',
+            },
+            'action_deny_redirect': {
+                'type': 'str',
+            },
+            'action_deny_reset': {
+                'type': 'str',
+            },
+            'action_drop': {
+                'type': 'str',
+            },
+            'action_deny_custom_response': {
+                'type': 'str',
+            },
+            'action_learn': {
+                'type': 'str',
+            },
+            'action_log': {
+                'type': 'str',
+            },
+            'policy_limit_exceeded': {
+                'type': 'str',
+            },
+            'sessions_alloc': {
+                'type': 'str',
+            },
+            'sessions_freed': {
+                'type': 'str',
+            },
+            'out_of_sessions': {
+                'type': 'str',
+            },
+            'too_many_sessions': {
+                'type': 'str',
+            },
+            'regex_violation': {
+                'type': 'str',
+            },
+            'request_check_command_injection_cookies_success': {
+                'type': 'str',
+            },
+            'request_check_command_injection_cookies_violation': {
+                'type': 'str',
+            },
+            'request_check_command_injection_headers_success': {
+                'type': 'str',
+            },
+            'request_check_command_injection_headers_violation': {
+                'type': 'str',
+            },
+            'request_check_command_injection_uri_query_success': {
+                'type': 'str',
+            },
+            'request_check_command_injection_uri_query_violation': {
+                'type': 'str',
+            },
+            'request_check_command_injection_form_body_success': {
+                'type': 'str',
+            },
+            'request_check_command_injection_form_body_violation': {
+                'type': 'str',
+            },
+            'cookie_security_decrypt_in_grace_period_violation': {
+                'type': 'str',
+            },
+            'form_response_non_post_success': {
+                'type': 'str',
+            },
+            'form_response_non_post_violation': {
+                'type': 'str',
+            },
+            'form_response_non_post_sanitize': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_decl_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_decl_violation': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_depth_success': {
+                'type': 'str',
+            },
+            'xml_check_max_entity_depth_violation': {
+                'type': 'str',
+            },
+            'action_response_allow': {
+                'type': 'str',
+            },
+            'action_response_deny_200': {
+                'type': 'str',
+            },
+            'action_response_deny_403': {
+                'type': 'str',
+            },
+            'action_response_deny_redirect': {
+                'type': 'str',
+            },
+            'action_response_deny_reset': {
+                'type': 'str',
+            },
+            'action_response_drop': {
+                'type': 'str',
+            },
+            'action_response_deny_custom_response': {
+                'type': 'str',
+            },
+            'action_response_learn': {
+                'type': 'str',
+            },
+            'action_response_log': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_type_success': {
+                'type': 'str',
+            },
+            'http_protocol_post_without_content_type_violation': {
+                'type': 'str',
+            },
+            'http_protocol_body_without_content_type_success': {
+                'type': 'str',
+            },
+            'http_protocol_body_without_content_type_violation': {
+                'type': 'str',
+            },
+            'http_protocol_non_ssl_cookie_prefix_success': {
+                'type': 'str',
+            },
+            'http_protocol_non_ssl_cookie_prefix_violation': {
+                'type': 'str',
+            },
+            'cookie_security_add_samesite_success': {
+                'type': 'str',
+            },
+            'cookie_security_add_samesite_violation': {
+                'type': 'str',
+            }
+        }
     })
     return rv
 
@@ -1922,8 +3284,7 @@ def report_changes(module, result, existing_config, payload):
 def create(module, result, payload={}):
     call_result = api_client.post(module.client, new_url(module), payload)
     result["axapi_calls"].append(call_result)
-    result["modified_values"].update(
-        **call_result["response_body"])
+    result["modified_values"].update(**call_result["response_body"])
     result["changed"] = True
     return result
 
@@ -1934,8 +3295,7 @@ def update(module, result, existing_config, payload={}):
     if call_result["response_body"] == existing_config:
         result["changed"] = False
     else:
-        result["modified_values"].update(
-            **call_result["response_body"])
+        result["modified_values"].update(**call_result["response_body"])
         result["changed"] = True
     return result
 
@@ -1975,14 +3335,12 @@ def absent(module, result, existing_config):
 
 
 def run_command(module):
-    result = dict(
-        changed=False,
-        messages="",
-        modified_values={},
-        axapi_calls=[],
-        ansible_facts={},
-        acos_info={}
-    )
+    result = dict(changed=False,
+                  messages="",
+                  modified_values={},
+                  axapi_calls=[],
+                  ansible_facts={},
+                  acos_info={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1997,16 +3355,16 @@ def run_command(module):
     elif ansible_port == 443:
         protocol = "https"
 
-    module.client = client_factory(ansible_host, ansible_port,
-                                   protocol, ansible_username,
-                                   ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
 
     valid = True
 
     run_errors = []
     if state == 'present':
         requires_one_of = sorted([])
-        valid, validation_errors = utils.validate(module.params, requires_one_of)
+        valid, validation_errors = utils.validate(module.params,
+                                                  requires_one_of)
         for ve in validation_errors:
             run_errors.append(ve)
 
@@ -2015,15 +3373,15 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-
     try:
         if a10_partition:
             result["axapi_calls"].append(
                 api_client.active_partition(module.client, a10_partition))
 
         if a10_device_context_id:
-             result["axapi_calls"].append(
-                api_client.switch_device_context(module.client, a10_device_context_id))
+            result["axapi_calls"].append(
+                api_client.switch_device_context(module.client,
+                                                 a10_device_context_id))
 
         existing_config = api_client.get(module.client, existing_url(module))
         result["axapi_calls"].append(existing_config)
@@ -2040,22 +3398,28 @@ def run_command(module):
 
         if state == 'noop':
             if module.params.get("get_type") == "single":
-                get_result = api_client.get(module.client, existing_url(module))
+                get_result = api_client.get(module.client,
+                                            existing_url(module))
                 result["axapi_calls"].append(get_result)
                 info = get_result["response_body"]
-                result["acos_info"] = info["global"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "global"] if info != "NotFound" else info
             elif module.params.get("get_type") == "list":
-                get_list_result = api_client.get_list(module.client, existing_url(module))
+                get_list_result = api_client.get_list(module.client,
+                                                      existing_url(module))
                 result["axapi_calls"].append(get_list_result)
 
                 info = get_list_result["response_body"]
-                result["acos_info"] = info["global-list"] if info != "NotFound" else info
+                result["acos_info"] = info[
+                    "global-list"] if info != "NotFound" else info
             elif module.params.get("get_type") == "stats":
-                get_type_result = api_client.get_stats(module.client, existing_url(module),
+                get_type_result = api_client.get_stats(module.client,
+                                                       existing_url(module),
                                                        params=module.params)
                 result["axapi_calls"].append(get_type_result)
                 info = get_type_result["response_body"]
-                result["acos_info"] = info["global"]["stats"] if info != "NotFound" else info
+                result["acos_info"] = info["global"][
+                    "stats"] if info != "NotFound" else info
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -2068,9 +3432,11 @@ def run_command(module):
 
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()
